@@ -87,7 +87,7 @@ The outputs will be saved in the `validation/scenario-pass/` and `validation/sce
       "snapshots": [
         {
           "id": "1",
-          "path": "data/resource.json",
+          "path": "data/resource-pass.json",
           "structure": "filesystem",
           "reference": "master",
           "source": "connector"
@@ -121,7 +121,7 @@ Now, let's check the result of the other test.
       "snapshots": [
         {
           "id": "1",
-          "path": "data/resource-fails.json",
+          "path": "data/resource-fail.json",
           "structure": "filesystem",
           "reference": "master",
           "source": "connector"
@@ -138,4 +138,4 @@ Here you see that the result is failed.
 
 *congratulations!* You have completed the prancer Hello-World!
 
-I highly recommend you to read on the reference documentation at [Prancer docs] (https://docs.prancer.io) .
+You can find out more information about prancer cloud validation framework at [Prancer docs](https://docs.prancer.io) .
