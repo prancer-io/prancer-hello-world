@@ -1,5 +1,5 @@
 # Getting started
-This getting started guide provides a set of quick start guidelines for running *Prancer cloud validation framework* on your system. You can follow them easily and get a grasp of how prancer cloud validation framework works.
+This getting started guide provides a set of quick start guidelines for running [Prancer cloud validation framework](https://github.com/prancer-io/cloud-validation-framework) on your system. You can follow them easily and get a grasp of how prancer cloud validation framework works.
 The scenario cases ran in this quick start guide are extremely simple and are only figured here as a means to quickly grasp the features of Prancer. 
 
 ## Introduction
