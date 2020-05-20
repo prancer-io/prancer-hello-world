@@ -1,42 +1,53 @@
 # Getting started
-This section provides a set of quick start guidelines for running Prancer cloud validation framework on your system. You can follow them easily and get a grasp of how prancer cloud validation framework works.
-The test cases ran in this quick start scenario are extremely simple and are only figured here as a means to quickly grasp the features of Prancer. If you want more detailed explanations, read on the reference documentation at https://docs.prancer.io .
+This getting started guide provides a set of quick start guidelines for running *Prancer cloud validation framework* on your system. You can follow them easily and get a grasp of how prancer cloud validation framework works.
+The scenario cases ran in this quick start guide are extremely simple and are only figured here as a means to quickly grasp the features of Prancer. 
+
+## Introduction
+To simulate a real world scenario, we have some configuration files here. We have two json resources available. In one of them `data/resource-pass.json`, the web server is configured to service at the port 80. In the other resource `data/resource-fail.json`, the web server is supposed to service at the port 443. We will run the test to see if the webserver is running on port 80.
 
 ## Overview 
 Here are the steps we will go through:
+- Prerequisites
 - Prancer installation
 - Clone the sample repository
 - Run the tests
-- Analyze the outputs
+- Review the outputs
 
 ## Prerequisites
-You can run these procedure on any linux based system. But for the simplicity, this tutorial is based on the Ubuntu distribution 18.04
+You can run these procedures on any linux based system. But for the simplicity, this tutorial is based on the Ubuntu distribution 18.04
+
+These are the prerequisites:
+- OS: any linux based system
+- `python` 3.6 -[Python website](https://www.python.org/downloads/)
+- `pip` 3 - [The Python Package Installer](https://pip.pypa.io/en/stable/)
 
 ## Prancer Installation
-You can install prancer on your system with `pip` - [The Python Package Installer](https://pip.pypa.io/en/stable/)
+You can install prancer on your system with
+`# pip3 install prancer-basic`
 
-`pip3 prancer-basic`
+it will install all the prerequisites on your system and then install prancer-basic executables.
 
-it will install all the prerequisites on your system and then install prancer-basic.
-
-you can make sure the installation is completed successfully by running the following:
-`prancer --version`
-2020-05-18 21:57:16,269(cli_validator: 131) FRAMEWORDIR environment variable NOT SET, searching in current directory.
-
-## Clone the Hello-World repository
-For simplicity, we have put all the base files in a hello world repository on [github](https://github.com/prancer-io/prancer-hello-world). 
-`git clone https://github.com/prancer-io/prancer-hello-world.git`
-
-
-## Run sample tests
-change directory to the cloned directory in the previous step:
-`cd prancer-hello-world`
-
-We have two sets of tests to run based on the git connector. One test will "pass" and the other test will "fail"
+you can make sure the installation is completed successfully by running the following command:
 
 ```
-prancer git
-prancer git-fails
+# prancer --version
+Prancer 1.0.3
+```
+
+## Clone the Hello-World repository
+For simplicity, we have put all the base files in a hello world repository on [github](https://github.com/prancer-io/prancer-hello-world). Clone the repo:
+
+`# git clone https://github.com/prancer-io/prancer-hello-world.git`
+
+## Run sample tests
+change the directory to the cloned directory in the previous step:
+`# cd prancer-hello-world`
+
+We have two sets of tests to run based on the filesystem connector. One test will "pass" and the other test will "fail"
+
+```
+# prancer scenario-pass
+# prancer scenario-fail
 ```
 
 after each run, you see a summary like this:
@@ -56,21 +67,18 @@ Run Stats: {
 }
 ```
 
-## Analyze the outputs
-The outputs will be saved in the `validation/git/` and `validation/git-fails`
-
-`cat validation/git/output-test.json`
-
-we have this output:
+## Review the outputs
+The outputs will be saved in the `validation/scenario-pass/` and `validation/scenario-fail`
 
 ```
+# cat validation/scenario-pass/output-test.json 
 {
   "$schema": "",
   "contentVersion": "1.0.0.0",
   "fileType": "output",
-  "timestamp": 1589904176221,
+  "timestamp": 1589949798340,
   "snapshot": "snapshot",
-  "container": "git",
+  "container": "scenario-pass",
   "log": "",
   "test": "test.json",
   "results": [
@@ -80,9 +88,9 @@ we have this output:
         {
           "id": "1",
           "path": "data/resource.json",
-          "structure": "git",
+          "structure": "filesystem",
           "reference": "master",
-          "source": "gitConnector"
+          "source": "connector"
         }
       ],
       "testId": "1",
@@ -92,21 +100,19 @@ we have this output:
 }
 ```
 
-you see many details here. The header information contains filetype, timestamps and othter useful information. in the `results` section I can see the result of the test is `passed`
+you see many details here. The header information contains filetype, timestamps and other useful information. in the `results` section, you can see the result of the test is `passed`
 
-Now, I want to check the result of the other test.
-`cat validation/git-fails/output-test.json`
-
-and the output is:
+Now, let's check the result of the other test.
 
 ```
+# cat validation/scenario-fail/output-test.json 
 {
   "$schema": "",
   "contentVersion": "1.0.0.0",
   "fileType": "output",
-  "timestamp": 1589904534523,
+  "timestamp": 1589949831467,
   "snapshot": "snapshot",
-  "container": "git-fails",
+  "container": "scenario-fail",
   "log": "",
   "test": "test.json",
   "results": [
@@ -116,9 +122,9 @@ and the output is:
         {
           "id": "1",
           "path": "data/resource-fails.json",
-          "structure": "git",
+          "structure": "filesystem",
           "reference": "master",
-          "source": "gitConnector"
+          "source": "connector"
         }
       ],
       "testId": "1",
@@ -130,6 +136,6 @@ and the output is:
 
 Here you see that the result is failed.
 
-You have completed the Hello-World!
+*congratulations!* You have completed the prancer Hello-World!
 
-# Hello World explanation
+I highly recommend you to read on the reference documentation at [Prancer docs] (https://docs.prancer.io) .
