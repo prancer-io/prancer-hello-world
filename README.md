@@ -76,7 +76,7 @@ The outputs will be saved in the `validation/scenario-pass/` and `validation/sce
   "$schema": "",
   "contentVersion": "1.0.0.0",
   "fileType": "output",
-  "timestamp": 1589949798340,
+  "timestamp": 1612284070247,
   "snapshot": "snapshot",
   "container": "scenario-pass",
   "log": "",
@@ -87,14 +87,21 @@ The outputs will be saved in the `validation/scenario-pass/` and `validation/sce
       "snapshots": [
         {
           "id": "1",
-          "path": "data/resource-pass.json",
           "structure": "filesystem",
           "reference": "master",
-          "source": "connector"
+          "source": "connector",
+          "collection": "webserver",
+          "type": "json",
+          "region": "",
+          "paths": [
+            "data/resource-pass.json"
+          ]
         }
       ],
+      "autoRemediate": false,
       "testId": "1",
-      "rule": "{1}.webserver.port=80"
+      "rule": "{1}.webserver.port=80",
+      "status": "enable"
     }
   ]
 }
@@ -110,7 +117,7 @@ Now, let's check the result of the other test.
   "$schema": "",
   "contentVersion": "1.0.0.0",
   "fileType": "output",
-  "timestamp": 1589949831467,
+  "timestamp": 1612284084137,
   "snapshot": "snapshot",
   "container": "scenario-fail",
   "log": "",
@@ -121,14 +128,21 @@ Now, let's check the result of the other test.
       "snapshots": [
         {
           "id": "1",
-          "path": "data/resource-fail.json",
           "structure": "filesystem",
           "reference": "master",
-          "source": "connector"
+          "source": "connector",
+          "collection": "webserver",
+          "type": "json",
+          "region": "",
+          "paths": [
+            "data/resource-fail.json"
+          ]
         }
       ],
+      "autoRemediate": false,
       "testId": "1",
-      "rule": "{1}.webserver.port=80"
+      "rule": "{1}.webserver.port=80",
+      "status": "enable"
     }
   ]
 }
