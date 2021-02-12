@@ -1,0 +1,32 @@
+{
+    "fileType":"mastertest",
+    "masterSnapshot":"master-snapshot",
+    "testSet": [
+        {
+            "masterTestName": "AWS_TEST",
+            "version": "0.1",
+            "cases": [
+                {
+                    "masterTestId": "TEST_Boot",
+                    "masterSnapshotId": [
+                        "boot_"
+                    ],
+                    "type":"rego",
+                    "rule": "file(samp.rego)",
+                    "evals": [
+                        {
+                            "id": "1",
+                            "eval": "data.rule.check_boot",
+                            "message": "data.rule.check_boot_err",
+                            "remediationDescription": "",
+                            "remediationFunction": ""
+                        }
+                    ]
+                },{                   
+                    "masterTestId": "TEST_Type",
+                    "rule": "{type_}.resources.properties.disks.type='compute'"
+                }
+            ]
+        }
+    ]
+}
