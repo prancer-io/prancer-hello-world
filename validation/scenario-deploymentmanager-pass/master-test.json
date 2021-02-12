@@ -7,21 +7,24 @@
             "version": "0.1",
             "cases": [
                 {
-                    "masterTestId": "TEST_Ref",
+                    "masterTestId": "TEST_Boot",
                     "masterSnapshotId": [
-                        "ref_"
+                        "boot_"
                     ],
                     "type":"rego",
                     "rule": "file(samp.rego)",
                     "evals": [
                         {
                             "id": "1",
-                            "eval": "data.rule.check_ref"
+                            "eval": "data.rule.check_boot",
+                            "message": "data.rule.check_boot_err",
+                            "remediationDescription": "",
+                            "remediationFunction": ""
                         }
                     ]
                 },{                   
                     "masterTestId": "TEST_Type",
-                    "rule": "{type_}.Parameters.KeyPair.Type='integer'"
+                    "rule": "{type_}.resources.properties.disks.type='PERSISTENT'"
                 }
             ]
         }
