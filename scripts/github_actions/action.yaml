@@ -1,0 +1,27 @@
+name: Prancerent Test
+on: push
+jobs:
+build:
+    name: Test prancerent
+    runs-on: ubuntu-latest
+    steps:
+    - name: Set up QEMU
+        uses: docker/setup-qemu-action@v1                
+    - name: Set up Docker Build
+        uses: docker/setup-buildx-action@v1
+    - name: Set up Python 3.8
+        uses: actions/setup-python@v2
+        with:
+        python-version: "3.8"
+    - name: install prancer-cli
+        run: pip install prancer-cli==1.0.6
+    # You can add here a step to download your source code
+    - name: prancer_test
+        run: |
+            prutil -h
+            prutil -a create
+            prutil -t default_container
+        env:
+            ENTCLI_KEY: ${{ secrets.ENTCLI_KEY }}
+            ENTCLI_SECRET: ${{ secrets.ENTCLI_SECRET }} 
+            SERVER: ${{ secrets.SERVER }}
