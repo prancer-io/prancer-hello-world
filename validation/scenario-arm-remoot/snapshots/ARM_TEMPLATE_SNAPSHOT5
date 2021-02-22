@@ -1,0 +1,161 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "source": "gitConnectorArmRemootStructure",
+  "paths": [
+    "/NSG/NSG.azuredeploy.json",
+    "/NSG/NSG.azuredeploy.parameters.json"
+  ],
+  "timestamp": 1613766280704,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/NSG/NSG.azuredeploy.json",
+      "/NSG/NSG.azuredeploy.parameters.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT5",
+    "status": "active",
+    "validate": true
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT5",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "NSGName": {
+        "defaultValue": "prancer-nsg",
+        "type": "string",
+        "metadata": {
+          "description": "Financial owner and thus Accountable for resource"
+        }
+      },
+      "Environment": {
+        "defaultValue": "Production",
+        "allowedValues": [
+          "Production"
+        ],
+        "type": "string",
+        "metadata": {
+          "description": "Identify the environment in which the application is running "
+        },
+        "value": "Production"
+      },
+      "Project": {
+        "type": "string",
+        "defaultValue": "Prancer",
+        "metadata": {
+          "description": "Name of the Project"
+        },
+        "value": "Prancer"
+      },
+      "NSGProperties": {
+        "type": "object",
+        "value": {
+          "SecurityRules": [
+            {
+              "name": "block-port-range-20-22",
+              "properties": {
+                "protocol": "Tcp",
+                "access": "Deny",
+                "priority": 100,
+                "direction": "Inbound",
+                "sourcePortRange": "*",
+                "destinationPortRange": "",
+                "destinationAddressPrefix": "*",
+                "sourcePortRanges": [],
+                "destinationPortRanges": [
+                  "20",
+                  "21",
+                  "22"
+                ],
+                "sourceAddressPrefixes": [],
+                "destinationAddressPrefixes": [],
+                "sourceAddressPrefix": "*"
+              }
+            },
+            {
+              "name": "block-port-3306",
+              "properties": {
+                "description": "allow inbound traffic",
+                "protocol": "Tcp",
+                "access": "Deny",
+                "priority": 101,
+                "direction": "Inbound",
+                "sourcePortRange": "*",
+                "destinationPortRange": "3306",
+                "destinationAddressPrefix": "*",
+                "sourcePortRanges": [],
+                "destinationPortRanges": [],
+                "sourceAddressPrefixes": [],
+                "destinationAddressPrefixes": [],
+                "sourceAddressPrefix": "*"
+              }
+            }
+          ]
+        }
+      }
+    },
+    "variables": {},
+    "resources": [
+      {
+        "name": "prancer-nsg",
+        "type": "Microsoft.Network/networkSecurityGroups",
+        "apiVersion": "2020-05-01",
+        "location": "[resourceGroup().location]",
+        "tags": {
+          "Environment": "Production",
+          "Project": "Prancer"
+        },
+        "properties": {
+          "SecurityRules": [
+            {
+              "name": "block-port-range-20-22",
+              "properties": {
+                "protocol": "Tcp",
+                "access": "Deny",
+                "priority": 100,
+                "direction": "Inbound",
+                "sourcePortRange": "*",
+                "destinationPortRange": "",
+                "destinationAddressPrefix": "*",
+                "sourcePortRanges": [],
+                "destinationPortRanges": [
+                  "20",
+                  "21",
+                  "22"
+                ],
+                "sourceAddressPrefixes": [],
+                "destinationAddressPrefixes": [],
+                "sourceAddressPrefix": "*"
+              }
+            },
+            {
+              "name": "block-port-3306",
+              "properties": {
+                "description": "allow inbound traffic",
+                "protocol": "Tcp",
+                "access": "Deny",
+                "priority": 101,
+                "direction": "Inbound",
+                "sourcePortRange": "*",
+                "destinationPortRange": "3306",
+                "destinationAddressPrefix": "*",
+                "sourcePortRanges": [],
+                "destinationPortRanges": [],
+                "sourceAddressPrefixes": [],
+                "destinationAddressPrefixes": [],
+                "sourceAddressPrefix": "*"
+              }
+            }
+          ]
+        }
+      }
+    ],
+    "\uff04schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#"
+  }
+}

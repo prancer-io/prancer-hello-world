@@ -1,0 +1,54 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "source": "gitConnectorCloudformationRemootStructure",
+  "paths": [
+    "/ec2/deploy.json"
+  ],
+  "timestamp": 1614020119426,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "CFR_TEMPLATE_SNAPSHOT",
+    "type": "cloudformation",
+    "collection": "cloudformationtemplate",
+    "paths": [
+      "/ec2/deploy.json"
+    ],
+    "snapshotId": "CFR_TEMPLATE_SNAPSHOT1",
+    "status": "active",
+    "validate": true
+  },
+  "snapshotId": "CFR_TEMPLATE_SNAPSHOT1",
+  "collection": "cloudformationtemplate",
+  "json": {
+    "Description": "Create an EC2 instance running the Amazon Linux 32 bit AMI.",
+    "Parameters": {
+      "KeyPair": {
+        "Description": "The EC2 Key Pair to allow SSH access to the instance",
+        "Type": "String"
+      }
+    },
+    "Resources": [
+      {
+        "Type": "AWS::EC2::Instance",
+        "Properties": {
+          "KeyName": {
+            "Ref": "KeyPair"
+          },
+          "ImageId": "ami-3b355a52"
+        }
+      }
+    ],
+    "Outputs": {
+      "InstanceId": {
+        "Description": "The InstanceId of the newly created EC2 instance",
+        "Value": {
+          "Ref": "Ec2Instance"
+        }
+      }
+    },
+    "AWSTemplateFormatVersion": "2010-09-09"
+  }
+}

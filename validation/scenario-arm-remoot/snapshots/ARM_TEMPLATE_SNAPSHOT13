@@ -1,0 +1,135 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "source": "gitConnectorArmRemootStructure",
+  "paths": [
+    "/VNet-Peering/peering.azuredeploy.json"
+  ],
+  "timestamp": 1613766280788,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/VNet-Peering/peering.azuredeploy.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT13",
+    "status": "active",
+    "validate": true
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT13",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "VNET1": {
+        "type": "string",
+        "metadata": {
+          "description": "Set the local VNet name"
+        }
+      },
+      "VNET1RG": {
+        "type": "string",
+        "metadata": {
+          "description": "Sets the remote VNet Resource group"
+        }
+      },
+      "VNET2": {
+        "type": "string",
+        "metadata": {
+          "description": "Set the remote VNet name"
+        }
+      },
+      "VNET2RG": {
+        "type": "string",
+        "metadata": {
+          "description": "Sets the remote VNet Resource group"
+        }
+      },
+      "AllowVirtualNetworkAccess": {
+        "type": "string",
+        "defaultvalue": "true",
+        "allowedValues": [
+          "true",
+          "false"
+        ],
+        "metadata": {
+          "description": "Select this option if you wish to allow communication betweem two virtual network"
+        }
+      },
+      "AllowForwardedTraffic": {
+        "type": "string",
+        "defaultvalue": "true",
+        "allowedValues": [
+          "true",
+          "false"
+        ],
+        "metadata": {
+          "description": "allow traffic forwarded by a network virtual appliance in a virtual network to flow to this virtual network through a peering"
+        }
+      },
+      "AllowGatewayTransit": {
+        "type": "string",
+        "defaultvalue": "false",
+        "allowedValues": [
+          "true",
+          "false"
+        ],
+        "metadata": {
+          "description": "Allow if you have a virtual network gateway attached to this virtual network and want to allow traffic from the peered virtual network to flow through the gateway"
+        }
+      },
+      "UseRemoteGateways": {
+        "type": "string",
+        "defaultvalue": "false",
+        "allowedValues": [
+          "true",
+          "false"
+        ],
+        "metadata": {
+          "description": "Allow traffic from this virtual network to flow through a virtual network gateway attached to the virtual network you're peering with"
+        }
+      }
+    },
+    "variables": {
+      "PeeringName1": "VNET1-to-VNET2-vnetpeering",
+      "PeeringName2": "VNET2-to-VNET1-vnetpeering"
+    },
+    "resources": [
+      {
+        "apiVersion": "2020-05-01",
+        "type": "Microsoft.Network/virtualNetworks/virtualNetworkPeerings",
+        "name": "VNET1/VNET1-to-VNET2-vnetpeering",
+        "location": "[resourceGroup().location]",
+        "properties": {
+          "allowVirtualNetworkAccess": "AllowVirtualNetworkAccess",
+          "allowForwardedTraffic": "AllowForwardedTraffic",
+          "allowGatewayTransit": "AllowGatewayTransit",
+          "useRemoteGateways": "UseRemoteGateways",
+          "remoteVirtualNetwork": {
+            "id": "[resourceId(parameters('VNET2RG'), 'Microsoft.Network/virtualNetworks', parameters('VNET2'))]"
+          }
+        }
+      },
+      {
+        "apiVersion": "2020-05-01",
+        "type": "Microsoft.Network/virtualNetworks/virtualNetworkPeerings",
+        "name": "VNET2/VNET2-to-VNET1-vnetpeering",
+        "location": "[resourceGroup().location]",
+        "properties": {
+          "allowVirtualNetworkAccess": "AllowVirtualNetworkAccess",
+          "allowForwardedTraffic": "AllowForwardedTraffic",
+          "allowGatewayTransit": "AllowGatewayTransit",
+          "useRemoteGateways": "UseRemoteGateways",
+          "remoteVirtualNetwork": {
+            "id": "[resourceId(parameters('VNET1RG'), 'Microsoft.Network/virtualNetworks', parameters('VNET1'))]"
+          }
+        }
+      }
+    ],
+    "\uff04schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#"
+  }
+}

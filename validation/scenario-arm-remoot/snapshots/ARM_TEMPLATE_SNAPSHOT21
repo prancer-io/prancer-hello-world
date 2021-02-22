@@ -1,0 +1,121 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "source": "gitConnectorArmRemootStructure",
+  "paths": [
+    "/storage/storage.azuredeploy.json",
+    "/storage/blob.azuredeploy.parameters.json"
+  ],
+  "timestamp": 1613766280870,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/storage/storage.azuredeploy.json",
+      "/storage/blob.azuredeploy.parameters.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT21",
+    "status": "active",
+    "validate": true
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT21",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "location": {
+        "type": "string",
+        "metadata": {
+          "description": "Location of the storagr account"
+        },
+        "value": "eastus"
+      },
+      "storageAccountName": {
+        "type": "string",
+        "metadata": {
+          "description": "Name of the storage account"
+        },
+        "value": "prancerstorageaccount"
+      },
+      "accountType": {
+        "type": "string",
+        "metadata": {
+          "description": "Type of account i.e Standard/Premium LRS/GRS"
+        },
+        "value": "Standard_LRS"
+      },
+      "kind": {
+        "type": "string",
+        "metadata": {
+          "description": "Kind of storag account required for teh storage account"
+        },
+        "value": "BlobStorage"
+      },
+      "accessTier": {
+        "type": "string",
+        "metadata": {
+          "description": "Access Tier of the storage account default Hot, will chnage it to the Cold "
+        },
+        "value": "Hot"
+      },
+      "minimumTlsVersion": {
+        "type": "string",
+        "value": "TLS1_2"
+      },
+      "supportsHttpsTrafficOnly": {
+        "type": "bool",
+        "value": true
+      },
+      "allowBlobPublicAccess": {
+        "type": "bool",
+        "metadata": {
+          "description": "Allow Blob public access to Blob storage"
+        },
+        "value": true
+      },
+      "networkAclsBypass": {
+        "type": "string",
+        "value": "AzureServices"
+      },
+      "networkAclsDefaultAction": {
+        "type": "string",
+        "value": "Allow"
+      },
+      "containerName": {
+        "value": "prancerstoragecontainer"
+      }
+    },
+    "variables": {},
+    "resources": [
+      {
+        "name": "prancerstorageaccount",
+        "type": "Microsoft.Storage/storageAccounts",
+        "apiVersion": "2019-06-01",
+        "location": "eastus",
+        "properties": {
+          "accessTier": "Hot",
+          "minimumTlsVersion": "TLS1_2",
+          "supportsHttpsTrafficOnly": true,
+          "allowBlobPublicAccess": true,
+          "networkAcls": {
+            "bypass": "AzureServices",
+            "defaultAction": "Allow",
+            "ipRules": []
+          }
+        },
+        "dependsOn": [],
+        "sku": {
+          "name": "Standard_LRS"
+        },
+        "kind": "BlobStorage",
+        "tags": {}
+      }
+    ],
+    "outputs": {},
+    "\uff04schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#"
+  }
+}

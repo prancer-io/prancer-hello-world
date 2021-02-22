@@ -1,0 +1,275 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "source": "gitConnectorArmRemootStructure",
+  "paths": [
+    "/storage/deploy.json",
+    "/storage/storage.azuredeploy.parameters.json"
+  ],
+  "timestamp": 1613766280858,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/storage/deploy.json",
+      "/storage/storage.azuredeploy.parameters.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT20",
+    "status": "active",
+    "validate": true
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT20",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "existingVNETName": {
+        "type": "string",
+        "metadata": {
+          "description": "Name of the virtual network to use for cloud shell containers."
+        }
+      },
+      "existingStorageSubnetName": {
+        "type": "string",
+        "metadata": {
+          "description": "Name of the subnet to use for storage account."
+        }
+      },
+      "existingContainerSubnetName": {
+        "type": "string",
+        "metadata": {
+          "description": "Name of the subnet to use for cloud shell containers."
+        }
+      },
+      "storageAccountName1": {
+        "type": "string",
+        "metadata": {
+          "description": "Name of the storage account in subnet."
+        }
+      },
+      "storageAccountName2": {
+        "type": "string",
+        "metadata": {
+          "description": "Name of the storage account in subnet."
+        }
+      },
+      "storageAccountName3": {
+        "type": "string",
+        "metadata": {
+          "description": "Name of the storage account in subnet."
+        }
+      },
+      "fileShareName": {
+        "type": "string",
+        "defaultValue": "acsshare",
+        "metadata": {
+          "description": "Name of the fileshare in storage account."
+        }
+      },
+      "location": {
+        "type": "string",
+        "defaultValue": "[resourceGroup().location]",
+        "metadata": {
+          "description": "Location for all resources."
+        },
+        "value": "eastus"
+      },
+      "storageAccountName": {
+        "value": "prancerstorageaccount007"
+      },
+      "accountType": {
+        "value": "Standard_LRS"
+      },
+      "kind": {
+        "value": "StorageV2"
+      },
+      "accessTier": {
+        "value": "Hot"
+      },
+      "minimumTlsVersion": {
+        "value": "TLS1_2"
+      },
+      "supportsHttpsTrafficOnly": {
+        "value": true
+      },
+      "allowBlobPublicAccess": {
+        "value": true
+      },
+      "networkAclsBypass": {
+        "value": "AzureServices"
+      },
+      "networkAclsDefaultAction": {
+        "value": "Allow"
+      }
+    },
+    "variables": {
+      "containerSubnetRef": "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('existingVNETName'), parameters('existingContainerSubnetName'))]",
+      "storageSubnetRef": "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('existingVNETName'), parameters('existingStorageSubnetName'))]"
+    },
+    "resources": [
+      {
+        "type": "Microsoft.Storage/storageAccounts",
+        "apiVersion": "2019-06-01",
+        "name": "storageAccountName1",
+        "location": "eastus",
+        "sku": {
+          "name": "Standard_LRS",
+          "tier": "Standard"
+        },
+        "kind": "StorageV2",
+        "properties": {
+          "networkAcls": {
+            "bypass": "None",
+            "virtualNetworkRules": [
+              {
+                "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('existingVNETName'), parameters('existingContainerSubnetName'))]",
+                "action": "Allow"
+              },
+              {
+                "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('existingVNETName'), parameters('existingStorageSubnetName'))]",
+                "action": "Allow"
+              }
+            ],
+            "defaultAction": "Deny"
+          },
+          "supportsHttpsTrafficOnly": true,
+          "encryption": {
+            "services": {
+              "file": {
+                "keyType": "Account",
+                "enabled": true
+              },
+              "blob": {
+                "keyType": "Account",
+                "enabled": true
+              }
+            },
+            "keySource": "Microsoft.Storage"
+          },
+          "accessTier": "Cool"
+        }
+      },
+      {
+        "type": "Microsoft.Storage/storageAccounts/blobServices",
+        "apiVersion": "2019-06-01",
+        "name": "storageAccountName1/default",
+        "dependsOn": [
+          "[resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccountName1'))]"
+        ],
+        "sku": {
+          "name": "Standard_LRS",
+          "tier": "Standard"
+        },
+        "properties": {
+          "deleteRetentionPolicy": {
+            "enabled": false
+          }
+        }
+      },
+      {
+        "type": "Microsoft.Storage/storageAccounts/fileServices",
+        "apiVersion": "2019-06-01",
+        "name": "storageAccountName1/default",
+        "dependsOn": [
+          "[resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccountName1'))]"
+        ],
+        "sku": {
+          "name": "Standard_LRS",
+          "tier": "Standard"
+        }
+      },
+      {
+        "type": "Microsoft.Storage/storageAccounts/fileServices/shares",
+        "apiVersion": "2019-06-01",
+        "name": "storageAccountName1/default/acsshare",
+        "dependsOn": [
+          "[resourceId('Microsoft.Storage/storageAccounts/fileServices', parameters('storageAccountName1'), 'default')]",
+          "[resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccountName1'))]"
+        ],
+        "properties": {
+          "shareQuota": 6
+        }
+      },
+      {
+        "type": "Microsoft.Storage/storageAccounts",
+        "apiVersion": "2019-06-01",
+        "name": "storageAccountName2",
+        "location": "eastus",
+        "sku": {
+          "name": "Standard_LRS",
+          "tier": "Standard"
+        },
+        "kind": "StorageV2",
+        "properties": {
+          "networkAcls": {
+            "bypass": "None",
+            "virtualNetworkRules": [
+              {
+                "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('existingVNETName'), parameters('existingContainerSubnetName'))]",
+                "action": "Allow"
+              },
+              {
+                "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('existingVNETName'), parameters('existingStorageSubnetName'))]",
+                "action": "Allow"
+              }
+            ],
+            "defaultAction": "Deny"
+          },
+          "supportsHttpsTrafficOnly": true,
+          "encryption": {
+            "services": {
+              "file": {
+                "keyType": "Account",
+                "enabled": true
+              },
+              "blob": {
+                "keyType": "Account",
+                "enabled": true
+              }
+            },
+            "keySource": "Microsoft.Storage"
+          },
+          "accessTier": "Cool"
+        }
+      },
+      {
+        "type": "Microsoft.Storage/storageAccounts",
+        "apiVersion": "2019-06-01",
+        "name": "storageAccountName3",
+        "location": "eastus",
+        "sku": {
+          "name": "Standard_LRS",
+          "tier": "Standard"
+        },
+        "kind": "StorageV2",
+        "properties": {
+          "networkAcls": {
+            "bypass": "None",
+            "virtualNetworkRules": [],
+            "defaultAction": "Allow"
+          },
+          "supportsHttpsTrafficOnly": true,
+          "encryption": {
+            "services": {
+              "file": {
+                "keyType": "Account",
+                "enabled": true
+              },
+              "blob": {
+                "keyType": "Account",
+                "enabled": true
+              }
+            },
+            "keySource": "Microsoft.Storage"
+          },
+          "accessTier": "Hot"
+        }
+      }
+    ],
+    "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+  }
+}

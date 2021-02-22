@@ -1,0 +1,206 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "source": "gitConnectorArmRemootStructure",
+  "paths": [
+    "/APP_GW/appgw.azuredeploy.json",
+    "/APP_GW/appgw.azuredeploy.parameters.json"
+  ],
+  "timestamp": 1613766280673,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/APP_GW/appgw.azuredeploy.json",
+      "/APP_GW/appgw.azuredeploy.parameters.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT3",
+    "status": "active",
+    "validate": true
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT3",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "location": {
+        "type": "string",
+        "value": "eastus"
+      },
+      "applicationGatewayName": {
+        "type": "string",
+        "value": "Pancer"
+      },
+      "tier": {
+        "type": "string",
+        "value": "Standard_v2"
+      },
+      "skuSize": {
+        "type": "string",
+        "value": "Standard_v2"
+      },
+      "capacity": {
+        "type": "int",
+        "defaultValue": 2,
+        "value": 2
+      },
+      "subnetName": {
+        "type": "string",
+        "value": "prancer-frontend"
+      },
+      "zones": {
+        "type": "array"
+      },
+      "publicIpAddressName": {
+        "type": "string",
+        "value": "GW_IP"
+      },
+      "sku": {
+        "type": "string",
+        "value": "Standard"
+      },
+      "allocationMethod": {
+        "type": "string",
+        "value": "Static"
+      },
+      "publicIpZones": {
+        "type": "array"
+      }
+    },
+    "variables": {
+      "vnetId": "/subscriptions/b2dbb99e-1315-4654-8a72-15c0bd5f07da/resourceGroups/Prancer/providers/Microsoft.Network/virtualNetworks/prancer-vnet",
+      "publicIPRef": "[resourceId('Microsoft.Network/publicIPAddresses/', parameters('publicIpAddressName'))]",
+      "subnetRef": "/subscriptions/b2dbb99e-1315-4654-8a72-15c0bd5f07da/resourceGroups/Prancer/providers/Microsoft.Network/virtualNetworks/prancer-vnet/subnets/prancer-frontend",
+      "applicationGatewayId": "[resourceId('Microsoft.Network/applicationGateways', parameters('applicationGatewayName'))]"
+    },
+    "resources": [
+      {
+        "name": "Pancer",
+        "type": "Microsoft.Network/applicationGateways",
+        "apiVersion": "2019-09-01",
+        "location": "eastus",
+        "zones": "zones",
+        "dependsOn": [
+          "Microsoft.Network/publicIPAddresses/GW_IP"
+        ],
+        "tags": {},
+        "properties": {
+          "sku": {
+            "name": "Standard_v2",
+            "tier": "Standard_v2",
+            "capacity": 2
+          },
+          "gatewayIPConfigurations": [
+            {
+              "name": "appGatewayIpConfig",
+              "properties": {
+                "subnet": {
+                  "id": "/subscriptions/b2dbb99e-1315-4654-8a72-15c0bd5f07da/resourceGroups/Prancer/providers/Microsoft.Network/virtualNetworks/prancer-vnet/subnets/prancer-frontend"
+                }
+              }
+            }
+          ],
+          "frontendIPConfigurations": [
+            {
+              "name": "appGwPublicFrontendIp",
+              "properties": {
+                "PublicIPAddress": {
+                  "id": "[resourceId('Microsoft.Network/publicIPAddresses/', parameters('publicIpAddressName'))]"
+                }
+              }
+            }
+          ],
+          "frontendPorts": [
+            {
+              "name": "port_80",
+              "properties": {
+                "Port": 80
+              }
+            }
+          ],
+          "backendAddressPools": [
+            {
+              "name": "Pancer_BE",
+              "properties": {
+                "backendAddresses": [
+                  {
+                    "ipAddress": "10.254.0.11",
+                    "fqdn": null
+                  },
+                  {
+                    "ipAddress": "10.254.0.12",
+                    "fqdn": null
+                  }
+                ]
+              }
+            }
+          ],
+          "backendHttpSettingsCollection": [
+            {
+              "name": "Pancer_Http",
+              "properties": {
+                "Port": 80,
+                "Protocol": "Http",
+                "cookieBasedAffinity": "Disabled",
+                "requestTimeout": 20
+              }
+            }
+          ],
+          "httpListeners": [
+            {
+              "name": "Pancer_listener",
+              "properties": {
+                "frontendIPConfiguration": {
+                  "id": "[resourceId('Microsoft.Network/applicationGateways', parameters('applicationGatewayName'))]/frontendIPConfigurations/appGwPublicFrontendIp"
+                },
+                "frontendPort": {
+                  "id": "[resourceId('Microsoft.Network/applicationGateways', parameters('applicationGatewayName'))]/frontendPorts/port_80"
+                },
+                "protocol": "Http",
+                "sslCertificate": null
+              }
+            }
+          ],
+          "requestRoutingRules": [
+            {
+              "Name": "Pancer_rt",
+              "properties": {
+                "RuleType": "Basic",
+                "httpListener": {
+                  "id": "[resourceId('Microsoft.Network/applicationGateways', parameters('applicationGatewayName'))]/httpListeners/Pancer_listener"
+                },
+                "backendAddressPool": {
+                  "id": "[resourceId('Microsoft.Network/applicationGateways', parameters('applicationGatewayName'))]/backendAddressPools/Pancer_BE"
+                },
+                "backendHttpSettings": {
+                  "id": "[resourceId('Microsoft.Network/applicationGateways', parameters('applicationGatewayName'))]/backendHttpSettingsCollection/Pancer_Http"
+                }
+              }
+            }
+          ],
+          "enableHttp2": true,
+          "sslCertificates": [],
+          "probes": []
+        }
+      },
+      {
+        "apiVersion": "2019-02-01",
+        "type": "Microsoft.Network/publicIPAddresses",
+        "name": "GW_IP",
+        "location": "eastus",
+        "sku": {
+          "name": "Standard"
+        },
+        "zones": "publicIpZones",
+        "properties": {
+          "publicIPAllocationMethod": "Static"
+        }
+      }
+    ],
+    "\uff04schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#"
+  }
+}
