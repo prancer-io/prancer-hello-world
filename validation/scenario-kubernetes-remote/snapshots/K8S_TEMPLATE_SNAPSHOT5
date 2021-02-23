@@ -1,0 +1,61 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "main",
+  "source": "gitConnectorKubernetesRemoteStructure",
+  "paths": [
+    "/deployment/deployment-definition.yaml"
+  ],
+  "timestamp": 1614120998630,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "K8S_TEMPLATE_SNAPSHOT",
+    "type": "kubernetesObjectFiles",
+    "collection": "kubernetestemplate",
+    "paths": [
+      "/deployment/deployment-definition.yaml"
+    ],
+    "snapshotId": "K8S_TEMPLATE_SNAPSHOT5",
+    "status": "active",
+    "validate": true
+  },
+  "snapshotId": "K8S_TEMPLATE_SNAPSHOT5",
+  "collection": "kubernetestemplate",
+  "json": {
+    "apiVersion": "apps/v1",
+    "kind": "Deployment",
+    "metadata": {
+      "name": "myapp-deployment",
+      "labels": {
+        "app": "myapp",
+        "type": "front-end"
+      }
+    },
+    "spec": {
+      "template": {
+        "metadata": {
+          "name": "myapp-pod",
+          "labels": {
+            "app": "myapp",
+            "type": "front-end"
+          }
+        },
+        "spec": {
+          "containers": [
+            {
+              "name": "nginx-container",
+              "image": "nginx:1.12"
+            }
+          ]
+        }
+      },
+      "replicas": 1,
+      "selector": {
+        "matchLabels": {
+          "type": "front-end"
+        }
+      }
+    }
+  }
+}

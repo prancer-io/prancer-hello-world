@@ -1,0 +1,61 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "main",
+  "source": "gitConnectorKubernetesRemoteStructure",
+  "paths": [
+    "/replicaset/replicaSet.yaml"
+  ],
+  "timestamp": 1614120998698,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "K8S_TEMPLATE_SNAPSHOT",
+    "type": "kubernetesObjectFiles",
+    "collection": "kubernetestemplate",
+    "paths": [
+      "/replicaset/replicaSet.yaml"
+    ],
+    "snapshotId": "K8S_TEMPLATE_SNAPSHOT10",
+    "status": "active",
+    "validate": true
+  },
+  "snapshotId": "K8S_TEMPLATE_SNAPSHOT10",
+  "collection": "kubernetestemplate",
+  "json": {
+    "apiVersion": "apps/v1",
+    "kind": "ReplicaSet",
+    "metadata": {
+      "name": "myapp-replicaset",
+      "labels": {
+        "app": "myapp",
+        "type": "front-end"
+      }
+    },
+    "spec": {
+      "template": {
+        "metadata": {
+          "name": "myapp-pod",
+          "labels": {
+            "app": "myapp",
+            "type": "front-end"
+          }
+        },
+        "spec": {
+          "containers": [
+            {
+              "name": "nginx-container",
+              "image": "nginx"
+            }
+          ]
+        }
+      },
+      "replicas": 3,
+      "selector": {
+        "matchLabels": {
+          "type": "front-end"
+        }
+      }
+    }
+  }
+}
