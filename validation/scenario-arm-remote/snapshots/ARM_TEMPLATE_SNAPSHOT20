@@ -1,0 +1,126 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "source": "gitConnectorArmRemoteStructure",
+  "paths": [
+    "/storage/storage.azuredeploy.json",
+    "/storage/parameters.json"
+  ],
+  "timestamp": 1614578745547,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/storage/storage.azuredeploy.json",
+      "/storage/parameters.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT20",
+    "status": "active",
+    "validate": true
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT20",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "location": {
+        "type": "string",
+        "metadata": {
+          "description": "Location of the storagr account"
+        }
+      },
+      "storageAccountName": {
+        "type": "string",
+        "metadata": {
+          "description": "Name of the storage account"
+        }
+      },
+      "accountType": {
+        "type": "string",
+        "metadata": {
+          "description": "Type of account i.e Standard/Premium LRS/GRS"
+        }
+      },
+      "kind": {
+        "type": "string",
+        "metadata": {
+          "description": "Kind of storag account required for teh storage account"
+        }
+      },
+      "accessTier": {
+        "type": "string",
+        "metadata": {
+          "description": "Access Tier of the storage account default Hot, will chnage it to the Cold "
+        }
+      },
+      "minimumTlsVersion": {
+        "type": "string"
+      },
+      "supportsHttpsTrafficOnly": {
+        "type": "bool"
+      },
+      "allowBlobPublicAccess": {
+        "type": "bool",
+        "metadata": {
+          "description": "Allow Blob public access to Blob storage"
+        }
+      },
+      "networkAclsBypass": {
+        "type": "string"
+      },
+      "networkAclsDefaultAction": {
+        "type": "string"
+      },
+      "existingVNETName": {
+        "value": "vnet-001"
+      },
+      "existingStorageSubnetName": {
+        "value": "storagesubnet"
+      },
+      "existingContainerSubnetName": {
+        "value": "cloudshellsubnet"
+      },
+      "storageAccountName1": {
+        "value": "prancerdevstr01"
+      },
+      "storageAccountName2": {
+        "value": "prancerdevstr02"
+      },
+      "storageAccountName3": {
+        "value": "prancerdevstr03"
+      }
+    },
+    "variables": {},
+    "resources": [
+      {
+        "name": "storageAccountName",
+        "type": "Microsoft.Storage/storageAccounts",
+        "apiVersion": "2019-06-01",
+        "location": "location",
+        "properties": {
+          "accessTier": "accessTier",
+          "minimumTlsVersion": "minimumTlsVersion",
+          "supportsHttpsTrafficOnly": "supportsHttpsTrafficOnly",
+          "allowBlobPublicAccess": "allowBlobPublicAccess",
+          "networkAcls": {
+            "bypass": "networkAclsBypass",
+            "defaultAction": "networkAclsDefaultAction",
+            "ipRules": []
+          }
+        },
+        "dependsOn": [],
+        "sku": {
+          "name": "accountType"
+        },
+        "kind": "kind",
+        "tags": {}
+      }
+    ],
+    "outputs": {},
+    "\uff04schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#"
+  }
+}
