@@ -2,26 +2,28 @@
   "structure": "filesystem",
   "error": null,
   "reference": "master",
-  "source": "gitConnectorArm",
+  "source": "gitConnectorArmRemoteStructure",
   "paths": [
-    "/AKS/aks.azuredeploy.json"
+    "/AKS/aks.azuredeploy.json",
+    "/AKS/aks.azuredeploy.parameters.json"
   ],
-  "timestamp": 1613423672953,
+  "timestamp": 1614578745360,
   "queryuser": null,
   "checksum": "99914b932bd37a50b983c5e7c90ae93b",
   "node": {
-    "masterSnapshotId": "value_",
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
     "type": "arm",
-    "collection": "arm",
+    "collection": "armtemplate",
     "paths": [
-      "/AKS/aks.azuredeploy.json"
+      "/AKS/aks.azuredeploy.json",
+      "/AKS/aks.azuredeploy.parameters.json"
     ],
-    "snapshotId": "value_1",
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT2",
     "status": "active",
     "validate": true
   },
-  "snapshotId": "value_1",
-  "collection": "arm",
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT2",
+  "collection": "armtemplate",
   "json": {
     "contentVersion": "1.0.0.0",
     "parameters": {
@@ -29,19 +31,22 @@
         "type": "string",
         "metadata": {
           "description": "The name of the Managed Cluster resource."
-        }
+        },
+        "value": "prancer-aks-cluster"
       },
       "location": {
         "type": "string",
         "metadata": {
           "description": "The location of AKS resource."
-        }
+        },
+        "value": "eastus"
       },
       "dnsPrefix": {
         "type": "string",
         "metadata": {
           "description": "Optional DNS prefix to use with hosted Kubernetes API server FQDN."
-        }
+        },
+        "value": "prancer-aks"
       },
       "osDiskSizeGB": {
         "type": "int",
@@ -57,7 +62,8 @@
         "defaultValue": "1.7.7",
         "metadata": {
           "description": "The version of Kubernetes."
-        }
+        },
+        "value": "1.17.11"
       },
       "networkPlugin": {
         "type": "string",
@@ -67,21 +73,24 @@
         ],
         "metadata": {
           "description": "Network plugin used for building Kubernetes network."
-        }
+        },
+        "value": "azure"
       },
       "enableRBAC": {
         "type": "bool",
         "defaultValue": true,
         "metadata": {
           "description": "Boolean flag to turn on and off of RBAC."
-        }
+        },
+        "value": true
       },
       "vmssNodePool": {
         "type": "bool",
         "defaultValue": false,
         "metadata": {
           "description": "Boolean flag to turn on and off of virtual machine scale sets"
-        }
+        },
+        "value": true
       },
       "windowsProfile": {
         "type": "bool",
@@ -95,21 +104,24 @@
         "defaultValue": false,
         "metadata": {
           "description": "Enable private network access to the Kubernetes cluster."
-        }
+        },
+        "value": false
       },
       "enableHttpApplicationRouting": {
         "type": "bool",
         "defaultValue": true,
         "metadata": {
           "description": "Boolean flag to turn on and off http application routing."
-        }
+        },
+        "value": false
       },
       "enableAzurePolicy": {
         "type": "bool",
         "defaultValue": false,
         "metadata": {
           "description": "Boolean flag to turn on and off Azure Policy addon."
-        }
+        },
+        "value": false
       },
       "enableOmsAgent": {
         "type": "bool",
@@ -123,19 +135,22 @@
         "defaultValue": "East US",
         "metadata": {
           "description": "Specify the region for your OMS workspace."
-        }
+        },
+        "value": "eastus"
       },
       "workspaceName": {
         "type": "string",
         "metadata": {
           "description": "Specify the name of the OMS workspace."
-        }
+        },
+        "value": "DefaultWorkspace-b2dbb99e-1315-4654-8a72-15c0bd5f07da-EUS"
       },
       "omsWorkspaceId": {
         "type": "string",
         "metadata": {
           "description": "Specify the resource id of the OMS workspace."
-        }
+        },
+        "value": "/subscriptions/b2dbb99e-1315-4654-8a72-15c0bd5f07da/resourceGroups/DefaultResourceGroup-EUS/providers/Microsoft.OperationalInsights/workspaces/DefaultWorkspace-b2dbb99e-1315-4654-8a72-15c0bd5f07da-EUS"
       },
       "omsSku": {
         "type": "string",
@@ -153,13 +168,15 @@
         "type": "string",
         "metadata": {
           "description": "Specify the name of the Azure Container Registry."
-        }
+        },
+        "value": "asadsadasdas"
       },
       "acrResourceGroup": {
         "type": "string",
         "metadata": {
           "description": "The name of the resource group the container registry is associated with."
-        }
+        },
+        "value": "Prancer"
       },
       "guidValue": {
         "type": "string",
@@ -172,46 +189,54 @@
         "type": "string",
         "metadata": {
           "description": "Network policy used for building Kubernetes network."
-        }
+        },
+        "value": "azure"
       },
       "vnetSubnetID": {
         "type": "string",
         "metadata": {
           "description": "Resource ID of virtual network subnet used for nodes and/or pods IP assignment."
-        }
+        },
+        "value": "/subscriptions/b2dbb99e-1315-4654-8a72-15c0bd5f07da/resourceGroups/Prancer/providers/Microsoft.Network/virtualNetworks/prancer-vnet/subnets/AKS"
       },
       "serviceCidr": {
         "type": "string",
         "metadata": {
           "description": "A CIDR notation IP range from which to assign service cluster IPs."
-        }
+        },
+        "value": "10.0.0.0/16"
       },
       "dnsServiceIP": {
         "type": "string",
         "metadata": {
           "description": "Containers DNS server IP address."
-        }
+        },
+        "value": "10.0.0.10"
       },
       "dockerBridgeCidr": {
         "type": "string",
         "metadata": {
           "description": "A CIDR notation IP for Docker bridge."
-        }
+        },
+        "value": "172.17.0.1/16"
       },
       "VirtualNetworkRGName": {
         "type": "string",
         "metadata": {
           "description": "Virtual Network name"
-        }
+        },
+        "value": "Prancer"
       },
       "VirtualNetworkName": {
         "type": "string",
         "metadata": {
           "description": "Virtual Network Resource Group"
-        }
+        },
+        "value": "prancer-vnet"
       },
       "SubnetName": {
-        "type": "string"
+        "type": "string",
+        "value": "AKS"
       }
     },
     "variables": {
@@ -222,12 +247,12 @@
       {
         "apiVersion": "2020-03-01",
         "type": "Microsoft.ContainerService/managedClusters",
-        "location": "location",
-        "name": "resourceName",
+        "location": "eastus",
+        "name": "prancer-aks-cluster",
         "properties": {
-          "kubernetesVersion": "1.7.7",
+          "kubernetesVersion": "1.17.11",
           "enableRBAC": true,
-          "dnsPrefix": "dnsPrefix",
+          "dnsPrefix": "prancer-aks",
           "agentPoolProfiles": [
             {
               "name": "prancer",
@@ -240,23 +265,23 @@
               "mode": "System",
               "maxPods": 110,
               "availabilityZones": [],
-              "vnetSubnetID": "vnetSubnetID"
+              "vnetSubnetID": "/subscriptions/b2dbb99e-1315-4654-8a72-15c0bd5f07da/resourceGroups/Prancer/providers/Microsoft.Network/virtualNetworks/prancer-vnet/subnets/AKS"
             }
           ],
           "networkProfile": {
             "loadBalancerSku": "standard",
-            "networkPlugin": "networkPlugin",
-            "networkPolicy": "networkPolicy",
-            "serviceCidr": "serviceCidr",
-            "dnsServiceIP": "dnsServiceIP",
-            "dockerBridgeCidr": "dockerBridgeCidr"
+            "networkPlugin": "azure",
+            "networkPolicy": "azure",
+            "serviceCidr": "10.0.0.0/16",
+            "dnsServiceIP": "10.0.0.10",
+            "dockerBridgeCidr": "172.17.0.1/16"
           },
           "apiServerAccessProfile": {
             "enablePrivateCluster": false
           },
           "addonProfiles": {
             "httpApplicationRouting": {
-              "enabled": true
+              "enabled": false
             },
             "azurePolicy": {
               "enabled": false
@@ -264,7 +289,7 @@
             "omsagent": {
               "enabled": true,
               "config": {
-                "logAnalyticsWorkspaceResourceID": "omsWorkspaceId"
+                "logAnalyticsWorkspaceResourceID": "/subscriptions/b2dbb99e-1315-4654-8a72-15c0bd5f07da/resourceGroups/DefaultResourceGroup-EUS/providers/Microsoft.OperationalInsights/workspaces/DefaultWorkspace-b2dbb99e-1315-4654-8a72-15c0bd5f07da-EUS"
               }
             }
           }
