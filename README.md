@@ -1,28 +1,28 @@
 # Getting started
-This getting started guide provides a set of quick start guidelines for running [Prancer cloud validation framework](https://github.com/prancer-io/cloud-validation-framework) on your system. You can follow them easily and get a grasp of how prancer cloud validation framework works.
-The scenario cases ran in this quick start guide are extremely simple and are only figured here as a means to quickly grasp the features of Prancer. 
+This getting started guide provides a set of quick start guidelines for running [Prancer Basic](https://github.com/prancer-io/cloud-validation-framework) on your system. You can follow them quickly and get a grasp of how the Prancer platform works in Basic Edition.
+The scenario cases ran in this quick start guide are extremely simple and are only figured here as a means to grasp the features of Prancer quickly. 
 
 ## Introduction
-To simulate a real world scenario, we have some configuration files here. We have two json resources available. In one of them `data/resource-pass.json`, the web server is configured to service at the port 80. In the other resource `data/resource-fail.json`, the web server is supposed to service at the port 443. We will run the test to see if the webserver is running on port 80.
+To simulate a real-world scenario, we have some configuration files in our Hello World repository. We have two JSON resources available. In one of them, `data/resource-pass.json`, the webserver is configured to service at port 80. In the other resource, `data/resource-fail.json`, the webserver is supposed to service at port 443. We will run the test to see if the webserver is running on port 80.
 
 ## Overview 
 Here are the steps we will go through:
 - Prerequisites
 - Prancer installation
-- Clone the sample repository
+- Clone the `Hello World` repository
 - Run the tests
 - Review the outputs
 
 ## Prerequisites
-You can run these procedures on any linux based system. But for the simplicity, this tutorial is based on the Ubuntu distribution 18.04
+You can run these procedures on any Linux-based system. But for simplicity, this tutorial is based on the Ubuntu distribution 20.04
 
 These are the prerequisites:
-- OS: any linux based system
-- `python` 3.6 -[Python website](https://www.python.org/downloads/)
+- OS: any Linux-based system
+- `python` 3.6.8 / 3.8 or 3.9 -[Python website](https://www.python.org/downloads/)
 - `pip` 3 - [The Python Package Installer](https://pip.pypa.io/en/stable/)
 
 ## Prancer Installation
-You can install prancer on your system with
+You can install Prancer on your system with the following command:
 `# pip3 install prancer-basic`
 
 it will install all the prerequisites on your system and then install prancer-basic executables.
@@ -31,7 +31,7 @@ you can make sure the installation is completed successfully by running the foll
 
 ```
 # prancer --version
-Prancer 1.0.3
+Prancer 1.0.39
 ```
 
 ## Clone the Hello-World repository
@@ -152,4 +152,4 @@ Here you see that the result is failed.
 
 *congratulations!* You have completed the prancer Hello-World!
 
-You can find out more information about prancer cloud validation framework at [Prancer docs](https://docs.prancer.io) .
+You can find out more information about prancer platform at [Prancer docs](https://docs.prancer.io) .
