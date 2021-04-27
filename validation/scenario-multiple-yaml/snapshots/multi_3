@@ -1,0 +1,88 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "main",
+  "source": "gitConnectorKubernetes",
+  "paths": [
+    "multiple-yamls/multiple-helm-response_multiple_yaml_2.yaml"
+  ],
+  "timestamp": 1618360872325,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "multi_",
+    "type": "yaml",
+    "collection": "multiple",
+    "paths": [
+      "multiple-yamls/multiple-helm-response_multiple_yaml_2.yaml"
+    ],
+    "snapshotId": "multi_3",
+    "status": "active",
+    "validate": true
+  },
+  "snapshotId": "multi_3",
+  "collection": "multiple",
+  "json": {
+    "apiVersion": "apps/v1",
+    "kind": "Deployment",
+    "metadata": {
+      "labels": {
+        "app.kubernetes.io/instance": "RELEASE-NAME",
+        "app.kubernetes.io/managed-by": "Helm",
+        "app.kubernetes.io/name": "mychart",
+        "app.kubernetes.io/version": "1.16.0",
+        "helm.sh/chart": "mychart-0.1.0"
+      },
+      "name": "RELEASE-NAME-mychart"
+    },
+    "spec": {
+      "replicas": 1,
+      "selector": {
+        "matchLabels": {
+          "app.kubernetes.io/instance": "RELEASE-NAME",
+          "app.kubernetes.io/name": "mychart"
+        }
+      },
+      "template": {
+        "metadata": {
+          "labels": {
+            "app.kubernetes.io/instance": "RELEASE-NAME",
+            "app.kubernetes.io/name": "mychart"
+          }
+        },
+        "spec": {
+          "containers": [
+            {
+              "image": "nginx:1.16.0",
+              "imagePullPolicy": "IfNotPresent",
+              "livenessProbe": {
+                "httpGet": {
+                  "path": "/",
+                  "port": "http"
+                }
+              },
+              "name": "mychart",
+              "ports": [
+                {
+                  "containerPort": 80,
+                  "name": "http",
+                  "protocol": "TCP"
+                }
+              ],
+              "readinessProbe": {
+                "httpGet": {
+                  "path": "/",
+                  "port": "http"
+                }
+              },
+              "resources": {},
+              "securityContext": {}
+            }
+          ],
+          "securityContext": {},
+          "serviceAccountName": "RELEASE-NAME-mychart"
+        }
+      }
+    }
+  }
+}
