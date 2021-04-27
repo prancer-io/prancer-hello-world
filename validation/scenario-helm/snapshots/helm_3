@@ -1,0 +1,88 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "source": "gitConnectorHelm",
+  "paths": [
+    "/helm-test/helm-test_prancer_helm_template_multiple_yaml_2.yaml"
+  ],
+  "timestamp": 1619538780515,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "helm_",
+    "type": "helmChart",
+    "collection": "multiple",
+    "paths": [
+      "/helm-test/helm-test_prancer_helm_template_multiple_yaml_2.yaml"
+    ],
+    "snapshotId": "helm_3",
+    "status": "active",
+    "validate": true
+  },
+  "snapshotId": "helm_3",
+  "collection": "multiple",
+  "json": {
+    "apiVersion": "apps/v1",
+    "kind": "Deployment",
+    "metadata": {
+      "labels": {
+        "app.kubernetes.io/instance": "RELEASE-NAME",
+        "app.kubernetes.io/managed-by": "Helm",
+        "app.kubernetes.io/name": "helm-test",
+        "app.kubernetes.io/version": "1.16.0",
+        "helm.sh/chart": "helm-test-0.1.0"
+      },
+      "name": "RELEASE-NAME-helm-test"
+    },
+    "spec": {
+      "replicas": 1,
+      "selector": {
+        "matchLabels": {
+          "app.kubernetes.io/instance": "RELEASE-NAME",
+          "app.kubernetes.io/name": "helm-test"
+        }
+      },
+      "template": {
+        "metadata": {
+          "labels": {
+            "app.kubernetes.io/instance": "RELEASE-NAME",
+            "app.kubernetes.io/name": "helm-test"
+          }
+        },
+        "spec": {
+          "containers": [
+            {
+              "image": "nginx:1.16.0",
+              "imagePullPolicy": "IfNotPresent",
+              "livenessProbe": {
+                "httpGet": {
+                  "path": "/",
+                  "port": "http"
+                }
+              },
+              "name": "helm-test",
+              "ports": [
+                {
+                  "containerPort": 80,
+                  "name": "http",
+                  "protocol": "TCP"
+                }
+              ],
+              "readinessProbe": {
+                "httpGet": {
+                  "path": "/",
+                  "port": "http"
+                }
+              },
+              "resources": {},
+              "securityContext": {}
+            }
+          ],
+          "securityContext": {},
+          "serviceAccountName": "RELEASE-NAME-helm-test"
+        }
+      }
+    }
+  }
+}
