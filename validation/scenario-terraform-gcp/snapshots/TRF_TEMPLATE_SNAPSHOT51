@@ -1,0 +1,83 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "source": "gitConnectorTerraform",
+  "paths": [
+    "/azure/containerregistry/provider.tf",
+    "/azure/containerregistry/terraform.tfvars",
+    "/azure/containerregistry/vars.tf",
+    "/azure/containerregistry/main.tf"
+  ],
+  "timestamp": 1620824341120,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "TRF_TEMPLATE_SNAPSHOT",
+    "type": "terraform",
+    "collection": "terraformtemplate",
+    "paths": [
+      "/azure/containerregistry/provider.tf",
+      "/azure/containerregistry/terraform.tfvars",
+      "/azure/containerregistry/vars.tf",
+      "/azure/containerregistry/main.tf"
+    ],
+    "snapshotId": "TRF_TEMPLATE_SNAPSHOT51",
+    "status": "active",
+    "validate": true
+  },
+  "snapshotId": "TRF_TEMPLATE_SNAPSHOT51",
+  "collection": "terraformtemplate",
+  "json": {
+    "resources": [
+      {
+        "type": "azurerm_container_registry",
+        "name": "acr",
+        "properties": {
+          "name": "pranceracr",
+          "resource_group_name": "prancer-test-rg",
+          "location": "eastus2",
+          "sku": "Classic",
+          "admin_enabled": false,
+          "georeplication_locations": null,
+          "acr_name": "pranceracr",
+          "acr_rg": "prancer-test-rg",
+          "acr_sku": "Classic",
+          "acr_admin_enabled": false,
+          "acr_georeplication_locations": null
+        }
+      },
+      {
+        "type": "azurerm_container_registry_webhook",
+        "name": "acrwebhook",
+        "properties": {
+          "name": "pranceracrhook",
+          "resource_group_name": "prancer-test-rg",
+          "registry_name": "${module.acr.name}",
+          "location": "eastus2",
+          "service_uri": "http://mywebhookreceiver.example/mytag",
+          "status": "enabled",
+          "scope": "mytag:*",
+          "actions": [
+            "push"
+          ],
+          "custom_headers": {
+            "Content-Type": "application/json"
+          },
+          "acr_webhook_name": "pranceracrhook",
+          "acr_webhook_rg": "prancer-test-rg",
+          "acr_webhook_registry": "${module.acr.name}",
+          "acr_webhook_service_uri": "http://mywebhookreceiver.example/mytag",
+          "acr_webhook_status": "enabled",
+          "acr_webhook_scope": "mytag:*",
+          "acr_webhook_actions": [
+            "push"
+          ],
+          "acr_webhook_custom_headers": {
+            "Content-Type": "application/json"
+          }
+        }
+      }
+    ]
+  }
+}

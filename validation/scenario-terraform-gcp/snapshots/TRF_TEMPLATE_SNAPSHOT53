@@ -1,0 +1,126 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "source": "gitConnectorTerraform",
+  "paths": [
+    "/azure/keyvaultsecret/provider.tf",
+    "/azure/keyvaultsecret/terraform.tfvars",
+    "/azure/keyvaultsecret/vars.tf",
+    "/azure/keyvaultsecret/main.tf"
+  ],
+  "timestamp": 1620824341471,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "TRF_TEMPLATE_SNAPSHOT",
+    "type": "terraform",
+    "collection": "terraformtemplate",
+    "paths": [
+      "/azure/keyvaultsecret/provider.tf",
+      "/azure/keyvaultsecret/terraform.tfvars",
+      "/azure/keyvaultsecret/vars.tf",
+      "/azure/keyvaultsecret/main.tf"
+    ],
+    "snapshotId": "TRF_TEMPLATE_SNAPSHOT53",
+    "status": "active",
+    "validate": true
+  },
+  "snapshotId": "TRF_TEMPLATE_SNAPSHOT53",
+  "collection": "terraformtemplate",
+  "json": {
+    "resources": [
+      {
+        "type": "azurerm_storage_account",
+        "name": "storageAccount",
+        "properties": {
+          "name": "prancerstorageaccount007",
+          "resource_group_name": "prancer-test-rg",
+          "location": "eastus2",
+          "account_tier": "Standard",
+          "account_replication_type": "LRS",
+          "enable_https_traffic_only": false,
+          "allow_blob_public_access": "${var.allow_blob_public_access}",
+          "tags": {},
+          "storage_count": 1,
+          "storage_name": "prancerstorageaccount007",
+          "storage_rg_name": "prancer-test-rg",
+          "accountTier": "Standard",
+          "replicationType": "LRS",
+          "enableSecureTransfer": false
+        }
+      },
+      {
+        "type": "azurerm_key_vault",
+        "name": "keyvault",
+        "properties": {
+          "name": "prancer-key-vault-t3st",
+          "location": "eastus2",
+          "resource_group_name": "prancer-test-rg",
+          "sku_name": "standard",
+          "tenant_id": "${data.azurerm_client_config.current.tenant_id}",
+          "access_policy": {
+            "tenant_id": "${data.azurerm_client_config.current.tenant_id}",
+            "object_id": "${data.azurerm_client_config.current.object_id}",
+            "key_permissions": [
+              "get",
+              "List",
+              "Update",
+              "Create",
+              "Import",
+              "Delete",
+              "Recover",
+              "Backup",
+              "Restore"
+            ],
+            "secret_permissions": [
+              "get",
+              "List",
+              "Set",
+              "Delete",
+              "Recover",
+              "Backup",
+              "Restore"
+            ],
+            "certificate_permissions": [
+              "backup",
+              "create",
+              "delete",
+              "deleteissuers",
+              "get",
+              "getissuers",
+              "import",
+              "list",
+              "listissuers",
+              "managecontacts",
+              "manageissuers",
+              "purge",
+              "recover",
+              "restore",
+              "setissuers",
+              "update"
+            ]
+          },
+          "enabled_for_disk_encryption": false,
+          "enabled_for_deployment": false,
+          "enabled_for_template_deployment": false,
+          "tags": {},
+          "resourceGroup": "prancer-test-rg",
+          "skuname": "standard"
+        }
+      },
+      {
+        "type": "azurerm_key_vault_secret",
+        "name": "keysecret",
+        "properties": {
+          "name": "prancer-secret",
+          "value": "53cr3t",
+          "key_vault_id": "${module.keyVault.vault_Id}",
+          "expiration_date": null,
+          "tags": {},
+          "keyvault_id": "${module.keyVault.vault_Id}"
+        }
+      }
+    ]
+  }
+}

@@ -1,0 +1,65 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "source": "gitConnectorTerraform",
+  "paths": [
+    "/aws/modules/elb/output.tf",
+    "/aws/modules/elb/vars.tf",
+    "/aws/modules/elb/main.tf"
+  ],
+  "timestamp": 1620823813638,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "TRF_TEMPLATE_SNAPSHOT",
+    "type": "terraform",
+    "collection": "terraformtemplate",
+    "paths": [
+      "/aws/modules/elb/output.tf",
+      "/aws/modules/elb/vars.tf",
+      "/aws/modules/elb/main.tf"
+    ],
+    "snapshotId": "TRF_TEMPLATE_SNAPSHOT23",
+    "status": "active",
+    "validate": true
+  },
+  "snapshotId": "TRF_TEMPLATE_SNAPSHOT23",
+  "collection": "terraformtemplate",
+  "json": {
+    "resources": [
+      {
+        "type": "aws_elb",
+        "name": "elb",
+        "properties": {
+          "name": "${var.name}",
+          "availability_zones": "${var.availability_zones}",
+          "security_groups": "${var.security_groups}",
+          "access_logs": [
+            {
+              "bucket": "${var.bucket}",
+              "bucket_prefix": "${var.bucket_prefix}",
+              "interval": "${var.log_interval}"
+            }
+          ],
+          "listener": [],
+          "health_check": {
+            "healthy_threshold": "${var.healthy_threshold}",
+            "unhealthy_threshold": "${var.unhealthy_threshold}",
+            "timeout": "${var.timeout}",
+            "target": "${var.target}",
+            "interval": "${var.check_interval}"
+          },
+          "instances": "${var.instances}",
+          "cross_zone_load_balancing": "${var.cross_zone_load_balancing}",
+          "idle_timeout": "${var.idle_timeout}",
+          "connection_draining": "${var.connection_draining}",
+          "connection_draining_timeout": "${var.connection_draining_timeout}",
+          "tags": {
+            "Name": "foobar-terraform-elb"
+          }
+        }
+      }
+    ]
+  }
+}

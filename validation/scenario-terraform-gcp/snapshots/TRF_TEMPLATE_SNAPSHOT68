@@ -1,0 +1,63 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "source": "gitConnectorTerraform",
+  "paths": [
+    "/azure/modules/networkSecurityGroup/outputs.tf",
+    "/azure/modules/networkSecurityGroup/vars.tf",
+    "/azure/modules/networkSecurityGroup/main.tf"
+  ],
+  "timestamp": 1620824342142,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "TRF_TEMPLATE_SNAPSHOT",
+    "type": "terraform",
+    "collection": "terraformtemplate",
+    "paths": [
+      "/azure/modules/networkSecurityGroup/outputs.tf",
+      "/azure/modules/networkSecurityGroup/vars.tf",
+      "/azure/modules/networkSecurityGroup/main.tf"
+    ],
+    "snapshotId": "TRF_TEMPLATE_SNAPSHOT68",
+    "status": "active",
+    "validate": true
+  },
+  "snapshotId": "TRF_TEMPLATE_SNAPSHOT68",
+  "collection": "terraformtemplate",
+  "json": {
+    "resources": [
+      {
+        "type": "azurerm_network_security_group",
+        "name": "nsg",
+        "properties": {
+          "name": "${var.nsg_name}",
+          "location": "${var.location}",
+          "resource_group_name": "${var.resource_group_name}",
+          "tags": "${var.tags}"
+        }
+      },
+      {
+        "type": "azurerm_network_security_rule",
+        "name": "nsr",
+        "properties": {
+          "name": "test-netssec-rule-01",
+          "priority": 100,
+          "direction": "Inbound",
+          "access": "Allow",
+          "protocol": "Tcp",
+          "source_port_range": "*",
+          "destination_port_range": "80",
+          "source_address_prefix": "*",
+          "destination_address_prefix": "*",
+          "resource_group_name": "${var.resource_group_name}",
+          "network_security_group_name": "${var.nsg_name}",
+          "depends_on": [
+            null
+          ]
+        }
+      }
+    ]
+  }
+}
