@@ -1,0 +1,72 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "source": "gitConnectorTerraform",
+  "paths": [
+    "/aws/cloudtrail/provider.tf",
+    "/aws/cloudtrail/terraform.tfvars",
+    "/aws/cloudtrail/vars.tf",
+    "/aws/cloudtrail/main.tf"
+  ],
+  "timestamp": 1620823811222,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "TRF_TEMPLATE_SNAPSHOT",
+    "type": "terraform",
+    "collection": "terraformtemplate",
+    "paths": [
+      "/aws/cloudtrail/provider.tf",
+      "/aws/cloudtrail/terraform.tfvars",
+      "/aws/cloudtrail/vars.tf",
+      "/aws/cloudtrail/main.tf"
+    ],
+    "snapshotId": "TRF_TEMPLATE_SNAPSHOT3",
+    "status": "active",
+    "validate": true
+  },
+  "snapshotId": "TRF_TEMPLATE_SNAPSHOT3",
+  "collection": "terraformtemplate",
+  "json": {
+    "data": {
+      "aws_caller_identity": {
+        "current": {}
+      }
+    },
+    "resources": [
+      {
+        "type": "aws_cloudtrail",
+        "name": "cloudtrail",
+        "properties": {
+          "name": "prancer-ct",
+          "enable_logging": true,
+          "s3_bucket_name": "${aws_s3_bucket.s3.id}",
+          "s3_key_prefix": "prefix",
+          "enable_log_file_validation": false,
+          "is_multi_region_trail": false,
+          "include_global_service_events": true,
+          "cloud_watch_logs_role_arn": "",
+          "cloud_watch_logs_group_arn": "",
+          "tags": {
+            "Environment": "Production",
+            "Project": "Prancer"
+          },
+          "kms_key_id": "",
+          "is_organization_trail": false,
+          "event_selector": [],
+          "kms_key_arn": ""
+        }
+      },
+      {
+        "type": "aws_s3_bucket",
+        "name": "s3",
+        "properties": {
+          "bucket": "tf-s3-trail",
+          "force_destroy": true,
+          "policy": "{\n    \"Version\": \"2012-10-17\",\n    \"Statement\": [\n        {\n            \"Sid\": \"AWSCloudTrailAclCheck\",\n            \"Effect\": \"Allow\",\n            \"Principal\": {\n              \"Service\": \"cloudtrail.amazonaws.com\"\n            },\n            \"Action\": \"s3:GetBucketAcl\",\n            \"Resource\": \"arn:aws:s3:::tf-s3-trail\"\n        },\n        {\n            \"Sid\": \"AWSCloudTrailWrite\",\n            \"Effect\": \"Allow\",\n            \"Principal\": {\n              \"Service\": \"cloudtrail.amazonaws.com\"\n            },\n            \"Action\": \"s3:PutObject\",\n            \"Resource\": \"arn:aws:s3:::tf-s3-trail/prefix/AWSLogs/${data.aws_caller_identity.current.account_id}/*\",\n            \"Condition\": {\n                \"StringEquals\": {\n                    \"s3:x-amz-acl\": \"bucket-owner-full-control\"\n                }\n            }\n        }\n    ]\n}"
+        }
+      }
+    ]
+  }
+}

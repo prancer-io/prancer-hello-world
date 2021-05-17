@@ -1,0 +1,177 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "source": "gitConnectorTerraform",
+  "paths": [
+    "/aws/dynamodb/provider.tf",
+    "/aws/dynamodb/terraform.tfvars",
+    "/aws/dynamodb/vars.tf",
+    "/aws/dynamodb/main.tf"
+  ],
+  "timestamp": 1620823811402,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "TRF_TEMPLATE_SNAPSHOT",
+    "type": "terraform",
+    "collection": "terraformtemplate",
+    "paths": [
+      "/aws/dynamodb/provider.tf",
+      "/aws/dynamodb/terraform.tfvars",
+      "/aws/dynamodb/vars.tf",
+      "/aws/dynamodb/main.tf"
+    ],
+    "snapshotId": "TRF_TEMPLATE_SNAPSHOT4",
+    "status": "active",
+    "validate": true
+  },
+  "snapshotId": "TRF_TEMPLATE_SNAPSHOT4",
+  "collection": "terraformtemplate",
+  "json": {
+    "resources": [
+      {
+        "type": "aws_dynamodb_table",
+        "name": "dynamodb",
+        "properties": {
+          "name": "prancer-dynamodb",
+          "billing_mode": "PROVISIONED",
+          "read_capacity": 5,
+          "write_capacity": 5,
+          "hash_key": "HashKey",
+          "range_key": "RangeKey",
+          "stream_enabled": false,
+          "stream_view_type": "",
+          "server_side_encryption": {
+            "enabled": false
+          },
+          "point_in_time_recovery": {
+            "enabled": true
+          },
+          "lifecycle": {
+            "ignore_changes": [
+              "read_capacity",
+              "write_capacity"
+            ]
+          },
+          "attribute": [],
+          "global_secondary_index": [
+            {
+              "hash_key": "PersonalID",
+              "name": "personalid_index",
+              "non_key_attributes": [
+                "HashKey",
+                "RangeKey"
+              ],
+              "projection_type": "INCLUDE",
+              "range_key": "Age",
+              "read_capacity": 5,
+              "write_capacity": 5
+            }
+          ],
+          "local_secondary_index": [
+            {
+              "name": "age_index",
+              "non_key_attributes": [
+                "HashKey",
+                "RangeKey"
+              ],
+              "projection_type": "INCLUDE",
+              "range_key": "Age"
+            },
+            {
+              "name": "firstname_index",
+              "non_key_attributes": [
+                "HashKey",
+                "RangeKey"
+              ],
+              "projection_type": "INCLUDE",
+              "range_key": "FirstName"
+            },
+            {
+              "name": "lastname_index",
+              "non_key_attributes": [
+                "HashKey",
+                "RangeKey"
+              ],
+              "projection_type": "INCLUDE",
+              "range_key": "LastName"
+            }
+          ],
+          "ttl": {
+            "attribute_name": "Expires",
+            "enabled": true
+          },
+          "tags": {
+            "environmet": "Production",
+            "project": "Prancer"
+          },
+          "enabled": true,
+          "enable_streams": false,
+          "enable_encryption": false,
+          "dynamodb_attributes": [
+            {
+              "name": "PersonalID",
+              "type": "N"
+            },
+            {
+              "name": "Age",
+              "type": "N"
+            },
+            {
+              "name": "FirstName",
+              "type": "S"
+            },
+            {
+              "name": "LastName",
+              "type": "S"
+            }
+          ],
+          "local_secondary_index_map": [
+            {
+              "name": "age_index",
+              "range_key": "Age",
+              "projection_type": "INCLUDE",
+              "non_key_attributes": [
+                "HashKey",
+                "RangeKey"
+              ]
+            },
+            {
+              "name": "firstname_index",
+              "range_key": "FirstName",
+              "projection_type": "INCLUDE",
+              "non_key_attributes": [
+                "HashKey",
+                "RangeKey"
+              ]
+            },
+            {
+              "name": "lastname_index",
+              "range_key": "LastName",
+              "projection_type": "INCLUDE",
+              "non_key_attributes": [
+                "HashKey",
+                "RangeKey"
+              ]
+            }
+          ],
+          "global_secondary_index_map": [
+            {
+              "name": "personalid_index",
+              "hash_key": "PersonalID",
+              "range_key": "Age",
+              "write_capacity": 5,
+              "read_capacity": 5,
+              "projection_type": "INCLUDE",
+              "non_key_attributes": [
+                "HashKey",
+                "RangeKey"
+              ]
+            }
+          ]
+        }
+      }
+    ]
+  }
+}

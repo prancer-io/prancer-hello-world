@@ -1,0 +1,116 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "source": "gitConnectorTerraform",
+  "paths": [
+    "/aws/modules/cloudfront/output.tf",
+    "/aws/modules/cloudfront/vars.tf",
+    "/aws/modules/cloudfront/main.tf"
+  ],
+  "timestamp": 1620824337356,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "TRF_TEMPLATE_SNAPSHOT",
+    "type": "terraform",
+    "collection": "terraformtemplate",
+    "paths": [
+      "/aws/modules/cloudfront/output.tf",
+      "/aws/modules/cloudfront/vars.tf",
+      "/aws/modules/cloudfront/main.tf"
+    ],
+    "snapshotId": "TRF_TEMPLATE_SNAPSHOT13",
+    "status": "active",
+    "validate": true
+  },
+  "snapshotId": "TRF_TEMPLATE_SNAPSHOT13",
+  "collection": "terraformtemplate",
+  "json": {
+    "resources": [
+      {
+        "type": "aws_cloudfront_distribution",
+        "name": "cloudfront",
+        "properties": {
+          "enabled": true,
+          "is_ipv6_enabled": true,
+          "comment": "Managed by Terraform",
+          "default_root_object": "index.html",
+          "price_class": "PriceClass_100",
+          "logging_config": [
+            {
+              "include_cookies": false,
+              "bucket": "${var.bucket}",
+              "prefix": ""
+            }
+          ],
+          "aliases": [],
+          "origin": {
+            "domain_name": "",
+            "origin_id": "${var.origin_id}",
+            "origin_path": "",
+            "custom_origin_config": [
+              {
+                "http_port": "80",
+                "https_port": "443",
+                "origin_protocol_policy": "match-viewer",
+                "origin_ssl_protocols": [
+                  "TLSv1",
+                  "TLSv1.1",
+                  "TLSv1.2"
+                ],
+                "origin_keepalive_timeout": "60",
+                "origin_read_timeout": "60"
+              }
+            ],
+            "s3_origin_config": []
+          },
+          "viewer_certificate": {
+            "acm_certificate_arn": "",
+            "ssl_support_method": "sni-only",
+            "minimum_protocol_version": "TLSv1",
+            "cloudfront_default_certificate": true
+          },
+          "default_cache_behavior": {
+            "allowed_methods": [
+              "DELETE",
+              "GET",
+              "HEAD",
+              "OPTIONS",
+              "PATCH",
+              "POST",
+              "PUT"
+            ],
+            "cached_methods": [
+              "GET",
+              "HEAD"
+            ],
+            "target_origin_id": "${var.target_origin_id}",
+            "compress": false,
+            "field_level_encryption_id": "",
+            "forwarded_values": {
+              "headers": [],
+              "query_string": false,
+              "cookies": {
+                "forward": "none",
+                "whitelisted_names": []
+              }
+            },
+            "viewer_protocol_policy": "redirect-to-https",
+            "default_ttl": "60",
+            "min_ttl": "0",
+            "max_ttl": "31536000"
+          },
+          "web_acl_id": "",
+          "restrictions": {
+            "geo_restriction": {
+              "restriction_type": "none",
+              "locations": []
+            }
+          },
+          "tags": {}
+        }
+      }
+    ]
+  }
+}

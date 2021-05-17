@@ -1,0 +1,182 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "source": "gitConnectorTerraform",
+  "paths": [
+    "/azure/applicationgateways/provider.tf",
+    "/azure/applicationgateways/terraform.tfvars",
+    "/azure/applicationgateways/vars.tf",
+    "/azure/applicationgateways/main.tf"
+  ],
+  "timestamp": 1620823816254,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "TRF_TEMPLATE_SNAPSHOT",
+    "type": "terraform",
+    "collection": "terraformtemplate",
+    "paths": [
+      "/azure/applicationgateways/provider.tf",
+      "/azure/applicationgateways/terraform.tfvars",
+      "/azure/applicationgateways/vars.tf",
+      "/azure/applicationgateways/main.tf"
+    ],
+    "snapshotId": "TRF_TEMPLATE_SNAPSHOT50",
+    "status": "active",
+    "validate": true
+  },
+  "snapshotId": "TRF_TEMPLATE_SNAPSHOT50",
+  "collection": "terraformtemplate",
+  "json": {
+    "resources": [
+      {
+        "type": "azurerm_virtual_network",
+        "name": "vnet",
+        "properties": {
+          "name": "prancer-vnet",
+          "resource_group_name": "prancer-test-rg",
+          "address_space": [
+            "10.254.0.0/16"
+          ],
+          "location": "eastus2",
+          "tags": {
+            "environment": "Production",
+            "project": "Prancer"
+          },
+          "vnet_name": "prancer-vnet",
+          "vnet_rg": "prancer-test-rg",
+          "dns_server": "10.254.0.1"
+        }
+      },
+      {
+        "type": "azurerm_subnet",
+        "name": "sub",
+        "properties": {
+          "name": "prancer-frontend",
+          "resource_group_name": "prancer-test-rg",
+          "virtual_network_name": "prancer-vnet",
+          "address_prefixes": [
+            "10.254.0.0/24"
+          ],
+          "subnet_name": "prancer-frontend",
+          "subnet_rg": "prancer-test-rg",
+          "vnet_name": "prancer-vnet"
+        }
+      },
+      {
+        "type": "azurerm_subnet",
+        "name": "sub",
+        "properties": {
+          "name": "prancer-backend",
+          "resource_group_name": "prancer-test-rg",
+          "virtual_network_name": "prancer-vnet",
+          "address_prefixes": [
+            "10.254.2.0/24"
+          ],
+          "subnet_name": "prancer-backend",
+          "subnet_rg": "prancer-test-rg",
+          "vnet_name": "prancer-vnet"
+        }
+      },
+      {
+        "type": "azurerm_public_ip",
+        "name": "public",
+        "properties": {
+          "name": "prancer-pip",
+          "location": "eastus2",
+          "resource_group_name": "prancer-test-rg",
+          "allocation_method": "Dynamic",
+          "sku": "Basic",
+          "ip_version": "IPv4",
+          "resource_group": "prancer-test-rg",
+          "type": "Dynamic",
+          "tags": {
+            "environment": "Production",
+            "project": "Prancer"
+          }
+        }
+      },
+      {
+        "type": "azurerm_application_gateway",
+        "name": "appgw",
+        "properties": {
+          "name": "prancer-app-gw",
+          "resource_group_name": "prancer-test-rg",
+          "location": "eastus2",
+          "sku": {
+            "name": "WAF_Medium",
+            "tier": "WAF",
+            "capacity": 2
+          },
+          "gateway_ip_configuration": {
+            "name": "prancer-app-gw-ip-conf",
+            "subnet_id": "${module.subnet-frontend.subnet_id}"
+          },
+          "frontend_port": {
+            "name": "prancer-app-gw",
+            "port": 80
+          },
+          "frontend_ip_configuration": {
+            "name": "prancer-app-gw",
+            "public_ip_address_id": "${module.publicIP.pid}"
+          },
+          "backend_address_pool": {
+            "name": "prancer-app-gw"
+          },
+          "backend_http_settings": {
+            "name": "prancer-app-gw",
+            "cookie_based_affinity": "Disabled",
+            "path": "/login/",
+            "port": 80,
+            "protocol": "Http",
+            "request_timeout": 60
+          },
+          "http_listener": {
+            "name": "prancer-app-gw",
+            "frontend_ip_configuration_name": "prancer-app-gw",
+            "frontend_port_name": "prancer-app-gw",
+            "protocol": "Http"
+          },
+          "request_routing_rule": {
+            "name": "prancer-app-gw",
+            "rule_type": "Basic",
+            "http_listener_name": "prancer-app-gw",
+            "backend_address_pool_name": "prancer-app-gw",
+            "backend_http_settings_name": "prancer-app-gw"
+          },
+          "ssl_policy": {
+            "min_protocol_version": "TLSv1_0"
+          },
+          "waf_configuration": {
+            "enabled": false,
+            "firewall_mode": "Detection",
+            "rule_set_type": "OWASP",
+            "rule_set_version": "2.2.9"
+          },
+          "app_gw_rg": "prancer-test-rg",
+          "app_gw_name": "prancer-app-gw",
+          "app_gw_sku": "WAF_Medium",
+          "app_gw_tier": "WAF",
+          "app_gw_capacity": 2,
+          "app_gw_fe_pip": "${module.publicIP.pid}",
+          "app_gw_fe_port": 80,
+          "app_gw_fe_subnet": "${module.subnet-frontend.subnet_id}",
+          "app_gw_be_http_cookie": "Disabled",
+          "app_gw_be_http_path": "/login/",
+          "app_gw_be_http_port": 80,
+          "app_gw_be_http_proto": "Http",
+          "app_gw_be_http_timeout": 60,
+          "app_gw_ip": "prancer-app-gw-ip-conf",
+          "app_gw_listener_proto": "Http",
+          "app_gw_req_route_type": "Basic",
+          "min_protocol_version": "TLSv1_0",
+          "waf_enabled": false,
+          "waf_firewall_mode": "Detection",
+          "waf_rule_set_type": "OWASP",
+          "waf_rule_set_version": "2.2.9"
+        }
+      }
+    ]
+  }
+}

@@ -1,0 +1,99 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "source": "gitConnectorTerraform",
+  "paths": [
+    "/aws/modules/dynamodb/output.tf",
+    "/aws/modules/dynamodb/vars.tf",
+    "/aws/modules/dynamodb/main.tf"
+  ],
+  "timestamp": 1620823813160,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "TRF_TEMPLATE_SNAPSHOT",
+    "type": "terraform",
+    "collection": "terraformtemplate",
+    "paths": [
+      "/aws/modules/dynamodb/output.tf",
+      "/aws/modules/dynamodb/vars.tf",
+      "/aws/modules/dynamodb/main.tf"
+    ],
+    "snapshotId": "TRF_TEMPLATE_SNAPSHOT15",
+    "status": "active",
+    "validate": true
+  },
+  "snapshotId": "TRF_TEMPLATE_SNAPSHOT15",
+  "collection": "terraformtemplate",
+  "json": {
+    "locals": {
+      "attributes": "${concat([{'name': '${var.range_key}', 'type': '${var.range_key_type}'}, {'name': '${var.hash_key}', 'type': '${var.hash_key_type}'}],,var.dynamodb_attributes,)}",
+      "from_index": "${length(var.range_key) > 0 ? 0 : 1}",
+      "attributes_final": "${slice(local.attributes,local.from_index,length(local.attributes))}"
+    },
+    "resources": [
+      {
+        "type": "aws_dynamodb_table",
+        "name": "dynamodb",
+        "properties": {
+          "name": "",
+          "billing_mode": "PROVISIONED",
+          "read_capacity": 5,
+          "write_capacity": 5,
+          "hash_key": "${var.hash_key}",
+          "range_key": "",
+          "stream_enabled": false,
+          "stream_view_type": "",
+          "server_side_encryption": {
+            "enabled": true
+          },
+          "point_in_time_recovery": {
+            "enabled": true
+          },
+          "lifecycle": {
+            "ignore_changes": [
+              "read_capacity",
+              "write_capacity"
+            ]
+          },
+          "dynamic": {
+            "attribute": {
+              "for_each": "${local.attributes_final}",
+              "content": {
+                "name": "${attribute.value.name}",
+                "type": "${attribute.value.type}"
+              }
+            },
+            "global_secondary_index": {
+              "for_each": [],
+              "content": {
+                "hash_key": "${global_secondary_index.value.hash_key}",
+                "name": "${global_secondary_index.value.name}",
+                "non_key_attributes": "lookup(global_secondary_index.value,non_key_attributes,None)",
+                "projection_type": "${global_secondary_index.value.projection_type}",
+                "range_key": "lookup(global_secondary_index.value,range_key,None)",
+                "read_capacity": "lookup(global_secondary_index.value,read_capacity,None)",
+                "write_capacity": "lookup(global_secondary_index.value,write_capacity,None)"
+              }
+            },
+            "local_secondary_index": {
+              "for_each": [],
+              "content": {
+                "name": "${local_secondary_index.value.name}",
+                "non_key_attributes": "lookup(local_secondary_index.value,non_key_attributes,None)",
+                "projection_type": "${local_secondary_index.value.projection_type}",
+                "range_key": "${local_secondary_index.value.range_key}"
+              }
+            }
+          },
+          "ttl": {
+            "attribute_name": "Expires",
+            "enabled": true
+          },
+          "tags": {}
+        }
+      }
+    ]
+  }
+}

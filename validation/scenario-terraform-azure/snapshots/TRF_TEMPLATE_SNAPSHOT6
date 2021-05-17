@@ -1,0 +1,67 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "source": "gitConnectorTerraform",
+  "paths": [
+    "/aws/ecs/provider.tf",
+    "/aws/ecs/terraform.tfvars",
+    "/aws/ecs/vars.tf",
+    "/aws/ecs/main.tf"
+  ],
+  "timestamp": 1621252247474,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "TRF_TEMPLATE_SNAPSHOT",
+    "type": "terraform",
+    "collection": "terraformtemplate",
+    "paths": [
+      "/aws/ecs/provider.tf",
+      "/aws/ecs/terraform.tfvars",
+      "/aws/ecs/vars.tf",
+      "/aws/ecs/main.tf"
+    ],
+    "snapshotId": "TRF_TEMPLATE_SNAPSHOT6",
+    "status": "active",
+    "validate": true
+  },
+  "snapshotId": "TRF_TEMPLATE_SNAPSHOT6",
+  "collection": "terraformtemplate",
+  "json": {
+    "resources": [
+      {
+        "type": "aws_ecs_cluster",
+        "name": "ecs",
+        "properties": {
+          "name": "prancer-ecs",
+          "setting": {
+            "name": "containerInsights",
+            "value": "disabled"
+          },
+          "tags": {
+            "environment": "Production",
+            "project": "Prancer"
+          },
+          "enable_container_insights": false
+        }
+      },
+      {
+        "type": "aws_ecs_task_definition",
+        "name": "definition",
+        "properties": {
+          "family": "prancer-task",
+          "container_definitions": "${file(\"container_definition.json\")}",
+          "task_role_arn": null,
+          "execution_role_arn": "",
+          "network_mode": "awsvpc",
+          "cpu": 256,
+          "memory": 1024,
+          "requires_compatibilities": [
+            "FARGATE"
+          ]
+        }
+      }
+    ]
+  }
+}
