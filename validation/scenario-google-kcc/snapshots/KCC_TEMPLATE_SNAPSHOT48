@@ -1,0 +1,54 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "source": "gitConnectorGoogleKcc",
+  "paths": [
+    "/samples/resources/cloudschedulerjob/scheduler-job-http/cloudscheduler_v1beta1_cloudschedulerjob.yaml"
+  ],
+  "timestamp": 1622492376019,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "KCC_TEMPLATE_SNAPSHOT",
+    "type": "yaml",
+    "collection": "deploymentmanagertemplate",
+    "paths": [
+      "/samples/resources/cloudschedulerjob/scheduler-job-http/cloudscheduler_v1beta1_cloudschedulerjob.yaml"
+    ],
+    "snapshotId": "KCC_TEMPLATE_SNAPSHOT48",
+    "status": "active",
+    "validate": true
+  },
+  "snapshotId": "KCC_TEMPLATE_SNAPSHOT48",
+  "collection": "deploymentmanagertemplate",
+  "json": {
+    "apiVersion": "cloudscheduler.cnrm.cloud.google.com/v1beta1",
+    "kind": "CloudSchedulerJob",
+    "metadata": {
+      "name": "cloudscheduler-sample-http"
+    },
+    "spec": {
+      "description": "scheduler-http-target-job",
+      "schedule": "*/5 * * * *",
+      "location": "us-west2",
+      "timeZone": "EST",
+      "attemptDeadline": "600s",
+      "retryConfig": {
+        "retryCount": 3,
+        "maxRetryDuration": "60s",
+        "maxDoublings": 2
+      },
+      "httpTarget": {
+        "headers": {
+          "app": "test",
+          "Content-Type": "application/octet-stream",
+          "User-Agent": "Google-Cloud-Scheduler"
+        },
+        "httpMethod": "POST",
+        "uri": "https://example.com/ping",
+        "body": "eyJmb28iOiJiYXIifQo="
+      }
+    }
+  }
+}

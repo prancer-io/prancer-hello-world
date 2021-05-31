@@ -1,0 +1,46 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "source": "gitConnectorGoogleKcc",
+  "paths": [
+    "/samples/resources/iampolicymember/kms-policy-member-with-condition/iam_v1beta1_iampolicymember.yaml"
+  ],
+  "timestamp": 1622492387731,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "KCC_TEMPLATE_SNAPSHOT",
+    "type": "yaml",
+    "collection": "deploymentmanagertemplate",
+    "paths": [
+      "/samples/resources/iampolicymember/kms-policy-member-with-condition/iam_v1beta1_iampolicymember.yaml"
+    ],
+    "snapshotId": "KCC_TEMPLATE_SNAPSHOT350",
+    "status": "active",
+    "validate": true
+  },
+  "snapshotId": "KCC_TEMPLATE_SNAPSHOT350",
+  "collection": "deploymentmanagertemplate",
+  "json": {
+    "apiVersion": "iam.cnrm.cloud.google.com/v1beta1",
+    "kind": "IAMPolicyMember",
+    "metadata": {
+      "name": "iampolicymember-sample-condition"
+    },
+    "spec": {
+      "member": "serviceAccount:iampolicymember-dep-condition@${PROJECT_ID?}.iam.gserviceaccount.com",
+      "role": "roles/cloudkms.admin",
+      "condition": {
+        "title": "expires_after_2019_12_31",
+        "description": "Expires at midnight of 2019-12-31",
+        "expression": "request.time < timestamp(\"2020-01-01T00:00:00Z\")"
+      },
+      "resourceRef": {
+        "apiVersion": "kms.cnrm.cloud.google.com/v1beta1",
+        "kind": "KMSKeyRing",
+        "name": "iampolicymember-dep-condition"
+      }
+    }
+  }
+}
