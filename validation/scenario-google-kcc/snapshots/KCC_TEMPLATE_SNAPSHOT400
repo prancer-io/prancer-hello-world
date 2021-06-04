@@ -1,0 +1,201 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "source": "gitConnectorGoogleKcc",
+  "paths": [
+    "/samples/resources/osconfigguestpolicy/osconfig_v1beta1_osconfigguestpolicy.yaml"
+  ],
+  "timestamp": 1622492389357,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "KCC_TEMPLATE_SNAPSHOT",
+    "type": "yaml",
+    "collection": "deploymentmanagertemplate",
+    "paths": [
+      "/samples/resources/osconfigguestpolicy/osconfig_v1beta1_osconfigguestpolicy.yaml"
+    ],
+    "snapshotId": "KCC_TEMPLATE_SNAPSHOT400",
+    "status": "active",
+    "validate": true
+  },
+  "snapshotId": "KCC_TEMPLATE_SNAPSHOT400",
+  "collection": "deploymentmanagertemplate",
+  "json": {
+    "apiVersion": "osconfig.cnrm.cloud.google.com/v1beta1",
+    "kind": "OSConfigGuestPolicy",
+    "metadata": {
+      "name": "osconfigguestpolicy-sample"
+    },
+    "spec": {
+      "description": "An example OSConfigGuestPolicy for installing a web application on assigned instances.",
+      "assignment": {
+        "groupLabels": [
+          {
+            "labels": {
+              "env": "prod",
+              "app": "web"
+            }
+          },
+          {
+            "labels": {
+              "env": "staging",
+              "app": "web"
+            }
+          }
+        ],
+        "instanceNamePrefixes": [
+          "webappprod-",
+          "webappstaging-"
+        ],
+        "osTypes": [
+          {
+            "osArchitecture": "x86_64",
+            "osShortName": "debian",
+            "osVersion": "10"
+          },
+          {
+            "osArchitecture": "x86_64",
+            "osShortName": "windows",
+            "osVersion": "10.0.14393"
+          }
+        ]
+      },
+      "packageRepositories": [
+        {
+          "apt": {
+            "archiveType": "DEB",
+            "distribution": "aiy-debian-buster",
+            "components": [
+              "main"
+            ],
+            "uri": "https://packages.cloud.google.com/apt",
+            "gpgKey": "https://packages.cloud.google.com/apt/dists/aiy-debian-buster/Release.gpg"
+          }
+        },
+        {
+          "yum": {
+            "id": "liamtest",
+            "displayName": "Liam Test",
+            "baseUrl": "https://packages.cloud.google.com/yum/repos/liamtest",
+            "gpgKeys": [
+              "https://packages.cloud.google.com/yum/doc/yum-key.gpg",
+              "https://packages.cloud.google.com/yum/doc/rpm-pkg-key.gpg"
+            ]
+          }
+        }
+      ],
+      "packages": [
+        {
+          "desiredState": "INSTALLED",
+          "manager": "APT",
+          "name": "add-apt-key"
+        },
+        {
+          "desiredState": "REMOVED",
+          "manager": "YUM",
+          "name": "ssl"
+        },
+        {
+          "desiredState": "UPDATED",
+          "manager": "ANY",
+          "name": "ansible-doc"
+        }
+      ],
+      "recipes": [
+        {
+          "name": "latest-ansible",
+          "version": "1.0.0.1",
+          "artifacts": [
+            {
+              "id": "ansible",
+              "remote": {
+                "uri": "https://releases.ansible.com/ansible-tower/setup/ansible-tower-setup-latest.tar.gz"
+              },
+              "allowInsecure": true
+            }
+          ],
+          "desiredState": "INSTALLED",
+          "installSteps": [
+            {
+              "fileCopy": {
+                "artifactId": "ansible",
+                "destination": "/installbackups/ansible",
+                "overwrite": true,
+                "permissions": "555"
+              }
+            },
+            {
+              "archiveExtraction": {
+                "destination": "/var/ansible/",
+                "type": "TAR_GZIP",
+                "artifactId": "ansible"
+              }
+            }
+          ]
+        },
+        {
+          "name": "prod-web-app",
+          "version": "2.5.27",
+          "artifacts": [
+            {
+              "id": "web-app",
+              "allowInsecure": false,
+              "gcs": {
+                "generation": 1829485032948520,
+                "object": "latest/prod",
+                "bucketRef": {
+                  "external": "https://storage.googleapis.com/storage/v1/b/webapp"
+                }
+              }
+            }
+          ],
+          "desiredState": "UPDATED",
+          "installSteps": [
+            {
+              "fileCopy": {
+                "overwrite": false,
+                "permissions": "777",
+                "artifactId": "web-app",
+                "destination": "/installbackups/prod"
+              }
+            },
+            {
+              "fileExec": {
+                "localPath": "/installbackups/prod",
+                "allowedExitCodes": [
+                  0
+                ],
+                "args": [
+                  "prodcompile"
+                ]
+              }
+            }
+          ],
+          "updateSteps": [
+            {
+              "fileCopy": {
+                "permissions": "755",
+                "artifactId": "web-app",
+                "destination": "/installbackups/prod"
+              }
+            },
+            {
+              "fileExec": {
+                "localPath": "/installbackups/prod",
+                "allowedExitCodes": [
+                  0,
+                  4
+                ],
+                "args": [
+                  "updatecompile"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

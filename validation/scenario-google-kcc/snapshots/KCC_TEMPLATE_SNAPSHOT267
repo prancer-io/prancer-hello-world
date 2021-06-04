@@ -1,0 +1,117 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "source": "gitConnectorGoogleKcc",
+  "paths": [
+    "/samples/resources/containercluster/vpc-native-container-cluster/container_v1beta1_containercluster.yaml"
+  ],
+  "timestamp": 1622492384731,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "KCC_TEMPLATE_SNAPSHOT",
+    "type": "yaml",
+    "collection": "deploymentmanagertemplate",
+    "paths": [
+      "/samples/resources/containercluster/vpc-native-container-cluster/container_v1beta1_containercluster.yaml"
+    ],
+    "snapshotId": "KCC_TEMPLATE_SNAPSHOT267",
+    "status": "active",
+    "validate": true
+  },
+  "snapshotId": "KCC_TEMPLATE_SNAPSHOT267",
+  "collection": "deploymentmanagertemplate",
+  "json": {
+    "apiVersion": "container.cnrm.cloud.google.com/v1beta1",
+    "kind": "ContainerCluster",
+    "metadata": {
+      "labels": {
+        "availability": "high",
+        "target-audience": "production"
+      },
+      "name": "containercluster-sample-vpcnative"
+    },
+    "spec": {
+      "description": "A large regional VPC-native cluster set up with special networking considerations.",
+      "location": "us-central1",
+      "initialNodeCount": 1,
+      "defaultMaxPodsPerNode": 16,
+      "nodeLocations": [
+        "us-central1-a",
+        "us-central1-b",
+        "us-central1-c",
+        "us-central1-f"
+      ],
+      "workloadIdentityConfig": {
+        "identityNamespace": "${PROJECT_ID?}.svc.id.goog"
+      },
+      "networkingMode": "VPC_NATIVE",
+      "networkRef": {
+        "name": "containercluster-dep-vpcnative"
+      },
+      "subnetworkRef": {
+        "name": "containercluster-dep-vpcnative"
+      },
+      "ipAllocationPolicy": {
+        "servicesSecondaryRangeName": "servicesrange",
+        "clusterSecondaryRangeName": "clusterrange"
+      },
+      "clusterAutoscaling": {
+        "enabled": true,
+        "autoscalingProfile": "BALANCED",
+        "resourceLimits": [
+          {
+            "resourceType": "cpu",
+            "maximum": 100,
+            "minimum": 10
+          },
+          {
+            "resourceType": "memory",
+            "maximum": 1000,
+            "minimum": 100
+          }
+        ]
+      },
+      "maintenancePolicy": {
+        "dailyMaintenanceWindow": {
+          "startTime": "00:00"
+        }
+      },
+      "releaseChannel": {
+        "channel": "STABLE"
+      },
+      "notificationConfig": {
+        "pubsub": {
+          "enabled": true,
+          "topicRef": {
+            "name": "containercluster-dep-vpcnative"
+          }
+        }
+      },
+      "enableBinaryAuthorization": true,
+      "enableIntranodeVisibility": true,
+      "enableShieldedNodes": true,
+      "addonsConfig": {
+        "networkPolicyConfig": {
+          "disabled": false
+        },
+        "dnsCacheConfig": {
+          "enabled": true
+        },
+        "configConnectorConfig": {
+          "enabled": true
+        }
+      },
+      "networkPolicy": {
+        "enabled": true
+      },
+      "podSecurityPolicyConfig": {
+        "enabled": true
+      },
+      "verticalPodAutoscaling": {
+        "enabled": true
+      }
+    }
+  }
+}

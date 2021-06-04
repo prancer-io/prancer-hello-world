@@ -1,0 +1,55 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "source": "gitConnectorGoogleKcc",
+  "paths": [
+    "/samples/resources/iampolicy/kms-policy-with-condition/iam_v1beta1_iampolicy.yaml"
+  ],
+  "timestamp": 1622492387176,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "KCC_TEMPLATE_SNAPSHOT",
+    "type": "yaml",
+    "collection": "deploymentmanagertemplate",
+    "paths": [
+      "/samples/resources/iampolicy/kms-policy-with-condition/iam_v1beta1_iampolicy.yaml"
+    ],
+    "snapshotId": "KCC_TEMPLATE_SNAPSHOT334",
+    "status": "active",
+    "validate": true
+  },
+  "snapshotId": "KCC_TEMPLATE_SNAPSHOT334",
+  "collection": "deploymentmanagertemplate",
+  "json": {
+    "apiVersion": "iam.cnrm.cloud.google.com/v1beta1",
+    "kind": "IAMPolicy",
+    "metadata": {
+      "labels": {
+        "label-one": "value-one"
+      },
+      "name": "iampolicy-sample-condition"
+    },
+    "spec": {
+      "resourceRef": {
+        "apiVersion": "kms.cnrm.cloud.google.com/v1beta1",
+        "kind": "KMSKeyRing",
+        "name": "iampolicy-dep-condition"
+      },
+      "bindings": [
+        {
+          "role": "roles/cloudkms.admin",
+          "condition": {
+            "title": "expires_after_2019_12_31",
+            "description": "Expires at midnight of 2019-12-31",
+            "expression": "request.time < timestamp(\"2020-01-01T00:00:00Z\")"
+          },
+          "members": [
+            "serviceAccount:iampolicy-dep-condition@${PROJECT_ID?}.iam.gserviceaccount.com"
+          ]
+        }
+      ]
+    }
+  }
+}

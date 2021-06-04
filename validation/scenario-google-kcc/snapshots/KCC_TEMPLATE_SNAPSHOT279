@@ -1,0 +1,50 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "source": "gitConnectorGoogleKcc",
+  "paths": [
+    "/samples/resources/dataflowjob/batch-dataflow-job/dataflow_v1beta1_dataflowjob.yaml"
+  ],
+  "timestamp": 1622492385034,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "KCC_TEMPLATE_SNAPSHOT",
+    "type": "yaml",
+    "collection": "deploymentmanagertemplate",
+    "paths": [
+      "/samples/resources/dataflowjob/batch-dataflow-job/dataflow_v1beta1_dataflowjob.yaml"
+    ],
+    "snapshotId": "KCC_TEMPLATE_SNAPSHOT279",
+    "status": "active",
+    "validate": true
+  },
+  "snapshotId": "KCC_TEMPLATE_SNAPSHOT279",
+  "collection": "deploymentmanagertemplate",
+  "json": {
+    "apiVersion": "dataflow.cnrm.cloud.google.com/v1beta1",
+    "kind": "DataflowJob",
+    "metadata": {
+      "annotations": {
+        "cnrm.cloud.google.com/on-delete": "cancel"
+      },
+      "labels": {
+        "label-one": "value-one"
+      },
+      "name": "dataflowjob-sample-batch"
+    },
+    "spec": {
+      "tempGcsLocation": "gs://${PROJECT_ID?}-dataflowjob-dep-batch/tmp",
+      "templateGcsPath": "gs://dataflow-templates/2020-02-03-01_RC00/Word_Count",
+      "parameters": {
+        "inputFile": "gs://dataflow-samples/shakespeare/various.txt",
+        "output": "gs://${PROJECT_ID?}-dataflowjob-dep-batch/output"
+      },
+      "zone": "us-central1-a",
+      "machineType": "n1-standard-1",
+      "maxWorkers": 3,
+      "ipConfiguration": "WORKER_IP_PUBLIC"
+    }
+  }
+}

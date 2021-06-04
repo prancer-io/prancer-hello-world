@@ -1,0 +1,92 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "source": "gitConnectorGoogleKcc",
+  "paths": [
+    "/samples/resources/dataprocworkflowtemplate/dataproc_v1beta1_dataprocworkflowtemplate.yaml"
+  ],
+  "timestamp": 1622492385443,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "KCC_TEMPLATE_SNAPSHOT",
+    "type": "yaml",
+    "collection": "deploymentmanagertemplate",
+    "paths": [
+      "/samples/resources/dataprocworkflowtemplate/dataproc_v1beta1_dataprocworkflowtemplate.yaml"
+    ],
+    "snapshotId": "KCC_TEMPLATE_SNAPSHOT291",
+    "status": "active",
+    "validate": true
+  },
+  "snapshotId": "KCC_TEMPLATE_SNAPSHOT291",
+  "collection": "deploymentmanagertemplate",
+  "json": {
+    "apiVersion": "dataproc.cnrm.cloud.google.com/v1beta1",
+    "kind": "DataprocWorkflowTemplate",
+    "metadata": {
+      "labels": {
+        "label-one": "value-one"
+      },
+      "name": "dataprocworkflowtemplate-sample"
+    },
+    "spec": {
+      "location": "us-central1",
+      "placement": {
+        "managedCluster": {
+          "clusterName": "test-cluster",
+          "config": {
+            "autoscalingConfig": {
+              "policyRef": {
+                "name": "dataprocworkflowtemplate-dep"
+              }
+            },
+            "masterConfig": {
+              "diskConfig": {
+                "bootDiskSizeGb": 30,
+                "bootDiskType": "pd-standard"
+              },
+              "machineType": "n2-standard-8",
+              "numInstances": 1
+            },
+            "workerConfig": {
+              "numInstances": 2,
+              "machineType": "n2-standard-8",
+              "diskConfig": {
+                "bootDiskSizeGb": 30,
+                "numLocalSsds": 1
+              }
+            },
+            "softwareConfig": {
+              "imageVersion": "2.0.2-debian10"
+            },
+            "gceClusterConfig": {
+              "tags": [
+                "foo",
+                "bar"
+              ]
+            }
+          }
+        }
+      },
+      "jobs": [
+        {
+          "stepId": "someJob",
+          "sparkJob": {
+            "mainClass": "SomeClass"
+          }
+        },
+        {
+          "stepId": "otherJob",
+          "prerequisiteStepIds": [
+            "someJob"
+          ],
+          "prestoJob": {
+            "queryFileUri": "someUri"
+          }
+        }
+      ]
+    }
+  }
+}

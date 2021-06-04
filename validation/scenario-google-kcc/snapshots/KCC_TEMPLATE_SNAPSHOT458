@@ -1,0 +1,74 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "source": "gitConnectorGoogleKcc",
+  "paths": [
+    "/samples/resources/storagetransferjob/storagetransfer_v1beta1_storagetransferjob.yaml"
+  ],
+  "timestamp": 1622492390913,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "KCC_TEMPLATE_SNAPSHOT",
+    "type": "yaml",
+    "collection": "deploymentmanagertemplate",
+    "paths": [
+      "/samples/resources/storagetransferjob/storagetransfer_v1beta1_storagetransferjob.yaml"
+    ],
+    "snapshotId": "KCC_TEMPLATE_SNAPSHOT458",
+    "status": "active",
+    "validate": true
+  },
+  "snapshotId": "KCC_TEMPLATE_SNAPSHOT458",
+  "collection": "deploymentmanagertemplate",
+  "json": {
+    "apiVersion": "storagetransfer.cnrm.cloud.google.com/v1beta1",
+    "kind": "StorageTransferJob",
+    "metadata": {
+      "name": "storagetransferjob-sample"
+    },
+    "spec": {
+      "description": "Sample storage transfer job",
+      "schedule": {
+        "startTimeOfDay": {
+          "seconds": 0,
+          "hours": 0,
+          "minutes": 0,
+          "nanos": 0
+        },
+        "scheduleEndDate": {
+          "day": 31,
+          "month": 12,
+          "year": 9999
+        },
+        "scheduleStartDate": {
+          "day": 28,
+          "month": 1,
+          "year": 2020
+        }
+      },
+      "status": "ENABLED",
+      "transferSpec": {
+        "gcsDataSink": {
+          "bucketRef": {
+            "name": "${PROJECT_ID?}-storagetransferjob-dep1"
+          }
+        },
+        "gcsDataSource": {
+          "bucketRef": {
+            "name": "${PROJECT_ID?}-storagetransferjob-dep2"
+          }
+        },
+        "objectConditions": {
+          "maxTimeElapsedSinceLastModification": "5s",
+          "minTimeElapsedSinceLastModification": "2s"
+        },
+        "transferOptions": {
+          "deleteObjectsUniqueInSink": false,
+          "overwriteObjectsAlreadyExistingInSink": true
+        }
+      }
+    }
+  }
+}

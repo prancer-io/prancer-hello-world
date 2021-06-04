@@ -1,0 +1,91 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "source": "gitConnectorGoogleKcc",
+  "paths": [
+    "/samples/resources/computeinstance/network-worker-instance/compute_v1beta1_computeinstance.yaml"
+  ],
+  "timestamp": 1622492379050,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "KCC_TEMPLATE_SNAPSHOT",
+    "type": "yaml",
+    "collection": "deploymentmanagertemplate",
+    "paths": [
+      "/samples/resources/computeinstance/network-worker-instance/compute_v1beta1_computeinstance.yaml"
+    ],
+    "snapshotId": "KCC_TEMPLATE_SNAPSHOT126",
+    "status": "active",
+    "validate": true
+  },
+  "snapshotId": "KCC_TEMPLATE_SNAPSHOT126",
+  "collection": "deploymentmanagertemplate",
+  "json": {
+    "apiVersion": "compute.cnrm.cloud.google.com/v1beta1",
+    "kind": "ComputeInstance",
+    "metadata": {
+      "annotations": {
+        "cnrm.cloud.google.com/allow-stopping-for-update": "false"
+      },
+      "name": "computeinstance-sample-networkworker",
+      "labels": {
+        "created-from": "disk",
+        "network-type": "global"
+      }
+    },
+    "spec": {
+      "machineType": "n1-standard-1",
+      "zone": "us-west2-a",
+      "bootDisk": {
+        "sourceDiskRef": {
+          "name": "computeinstance-dep-networkworker"
+        },
+        "autoDelete": false,
+        "deviceName": "proxycontroldisk",
+        "mode": "READ_ONLY",
+        "diskEncryptionKeyRaw": {
+          "valueFrom": {
+            "secretKeyRef": {
+              "name": "computeinstance-dep-networkworker",
+              "key": "diskEncryptionKey"
+            }
+          }
+        }
+      },
+      "networkInterface": [
+        {
+          "networkRef": {
+            "name": "computeinstance-dep-networkworker"
+          },
+          "subnetworkRef": {
+            "name": "computeinstance-dep-networkworker"
+          },
+          "networkIp": "10.2.0.4",
+          "accessConfig": [
+            {
+              "natIpRef": {
+                "name": "computeinstance-dep-networkworker"
+              }
+            }
+          ]
+        }
+      ],
+      "scratchDisk": [
+        {
+          "interface": "SCSI"
+        },
+        {
+          "interface": "NVME"
+        }
+      ],
+      "scheduling": {
+        "preemptible": true,
+        "automaticRestart": false,
+        "onHostMaintenance": "TERMINATE"
+      },
+      "canIpForward": true
+    }
+  }
+}
