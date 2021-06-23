@@ -1,0 +1,80 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "source": "gitConnectorAzureAso",
+  "paths": [
+    "/config/samples/azure_v1alpha1_keyvault.yaml"
+  ],
+  "timestamp": 1624434683388,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ASO_TEMPLATE_SNAPSHOT",
+    "type": "aso",
+    "collection": "asotemplate",
+    "paths": [
+      "/config/samples/azure_v1alpha1_keyvault.yaml"
+    ],
+    "snapshotId": "ASO_TEMPLATE_SNAPSHOT28",
+    "status": "active",
+    "validate": true
+  },
+  "snapshotId": "ASO_TEMPLATE_SNAPSHOT28",
+  "collection": "asotemplate",
+  "json": {
+    "apiVersion": "azure.microsoft.com/v1alpha1",
+    "kind": "KeyVault",
+    "metadata": {
+      "name": "keyvaultsample123",
+      "labels": {
+        "tag1": "value1",
+        "tag2": "value2"
+      }
+    },
+    "spec": {
+      "resourceGroup": "resourcegroup-azure-operators",
+      "location": "westus",
+      "enableSoftDelete": false,
+      "sku": {
+        "name": "standard"
+      },
+      "networkPolicies": {
+        "bypass": "AzureServices",
+        "defaultAction": "Allow",
+        "ipRules": [
+          "172.16.0.0/24",
+          "172.16.1.0/24"
+        ],
+        "virtualNetworkRules": [
+          "/subscriptions/<subid>/resourceGroups/rg1/providers/Microsoft.Network/virtualNetworks/test-vnet/subnets/subnet1",
+          "/subscriptions/<subid>/resourceGroups/rg1/providers/Microsoft.Network/virtualNetworks/test-vnet/subnets/subnet2"
+        ]
+      },
+      "accessPolicies": [
+        {
+          "tenantID": "<tenantID>",
+          "objectID": "<objectID>",
+          "permissions": {
+            "keys": [
+              "list",
+              "get"
+            ],
+            "secrets": [
+              "list",
+              "get"
+            ],
+            "certificates": [
+              "list",
+              "get"
+            ],
+            "storage": [
+              "list",
+              "get"
+            ]
+          }
+        }
+      ]
+    }
+  }
+}
