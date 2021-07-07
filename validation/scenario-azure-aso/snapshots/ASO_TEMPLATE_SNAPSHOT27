@@ -1,0 +1,63 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "source": "gitConnectorAzureAso",
+  "paths": [
+    "/config/samples/azure_v1alpha1_eventhub_capture.yaml"
+  ],
+  "timestamp": 1624434683352,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ASO_TEMPLATE_SNAPSHOT",
+    "type": "aso",
+    "collection": "asotemplate",
+    "paths": [
+      "/config/samples/azure_v1alpha1_eventhub_capture.yaml"
+    ],
+    "snapshotId": "ASO_TEMPLATE_SNAPSHOT27",
+    "status": "active",
+    "validate": true
+  },
+  "snapshotId": "ASO_TEMPLATE_SNAPSHOT27",
+  "collection": "asotemplate",
+  "json": {
+    "apiVersion": "azure.microsoft.com/v1alpha1",
+    "kind": "Eventhub",
+    "metadata": {
+      "name": "eventhub-sample-2307-10-capture"
+    },
+    "spec": {
+      "location": "westus",
+      "resourceGroup": "resourcegroup-azure-operators",
+      "namespace": "eventhubnamespace-sample-1",
+      "properties": {
+        "messageRetentionInDays": 7,
+        "partitionCount": 2,
+        "captureDescription": {
+          "destination": {
+            "archiveNameFormat": "{Namespace}/{EventHub}/{PartitionId}/{Year}/{Month}/{Day}/{Hour}/{Minute}/{Second}",
+            "blobContainer": "capturecontainer",
+            "name": "EventHubArchive.AzureBlockBlob",
+            "storageAccount": {
+              "resourceGroup": "my-resource-group",
+              "accountName": "storageaccountauv1"
+            }
+          },
+          "enabled": true,
+          "sizeLimitInBytes": 524288000,
+          "intervalInSeconds": 120
+        }
+      },
+      "authorizationRule": {
+        "name": "RootManageSharedAccessKey",
+        "rights": [
+          "Listen",
+          "Manage",
+          "Send"
+        ]
+      }
+    }
+  }
+}
