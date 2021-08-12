@@ -2,69 +2,41 @@
   "structure": "filesystem",
   "error": null,
   "reference": "master",
+  "contentType": "yaml",
   "source": "gitConnectorGoogleKcc",
   "paths": [
-    "/samples/resources/storagebucket/storage_v1beta1_storagebucket.yaml"
+    "/samples/resources/logginglogexclusion/project-exclusion/resourcemanager_v1beta1_project.yaml"
   ],
-  "timestamp": 1622492390645,
+  "timestamp": 1628765148921,
   "queryuser": null,
   "checksum": "99914b932bd37a50b983c5e7c90ae93b",
   "node": {
     "masterSnapshotId": "KCC_TEMPLATE_SNAPSHOT",
-    "type": "yaml",
-    "collection": "deploymentmanagertemplate",
+    "type": "kcc",
+    "collection": "kcctemplate",
     "paths": [
-      "/samples/resources/storagebucket/storage_v1beta1_storagebucket.yaml"
+      "/samples/resources/logginglogexclusion/project-exclusion/resourcemanager_v1beta1_project.yaml"
     ],
     "snapshotId": "KCC_TEMPLATE_SNAPSHOT447",
     "status": "active",
     "validate": true
   },
   "snapshotId": "KCC_TEMPLATE_SNAPSHOT447",
-  "collection": "deploymentmanagertemplate",
+  "collection": "kcctemplate",
   "json": {
-    "apiVersion": "storage.cnrm.cloud.google.com/v1beta1",
-    "kind": "StorageBucket",
+    "apiVersion": "resourcemanager.cnrm.cloud.google.com/v1beta1",
+    "kind": "Project",
     "metadata": {
-      "annotations": {
-        "cnrm.cloud.google.com/force-destroy": "false"
-      },
-      "labels": {
-        "label-one": "value-one"
-      },
-      "name": "${PROJECT_ID?}-sample"
+      "name": "logginglogexclusion-dep-project"
     },
     "spec": {
-      "bucketPolicyOnly": true,
-      "lifecycleRule": [
-        {
-          "action": {
-            "type": "Delete"
-          },
-          "condition": {
-            "age": 7
-          }
-        }
-      ],
-      "versioning": {
-        "enabled": true
+      "name": "Project Exclusion Sample",
+      "organizationRef": {
+        "external": "${ORG_ID?}"
       },
-      "cors": [
-        {
-          "origin": [
-            "http://example.appspot.com"
-          ],
-          "responseHeader": [
-            "Content-Type"
-          ],
-          "method": [
-            "GET",
-            "HEAD",
-            "DELETE"
-          ],
-          "maxAgeSeconds": 3600
-        }
-      ]
+      "billingAccountRef": {
+        "external": "${BILLING_ACCOUNT_ID?}"
+      }
     }
   }
 }

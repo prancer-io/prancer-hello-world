@@ -2,13 +2,15 @@
   "structure": "filesystem",
   "error": null,
   "reference": "master",
+  "contentType": "terraform",
   "source": "gitConnectorTerraform",
   "paths": [
-    "/aws/modules/s3/output.tf",
-    "/aws/modules/s3/vars.tf",
-    "/aws/modules/s3/main.tf"
+    "/azure/vm/provider.tf",
+    "/azure/vm/terraform.tfvars",
+    "/azure/vm/vars.tf",
+    "/azure/vm/main.tf"
   ],
-  "timestamp": 1621252249875,
+  "timestamp": 1628768978795,
   "queryuser": null,
   "checksum": "99914b932bd37a50b983c5e7c90ae93b",
   "node": {
@@ -16,9 +18,10 @@
     "type": "terraform",
     "collection": "terraformtemplate",
     "paths": [
-      "/aws/modules/s3/output.tf",
-      "/aws/modules/s3/vars.tf",
-      "/aws/modules/s3/main.tf"
+      "/azure/vm/provider.tf",
+      "/azure/vm/terraform.tfvars",
+      "/azure/vm/vars.tf",
+      "/azure/vm/main.tf"
     ],
     "snapshotId": "TRF_TEMPLATE_SNAPSHOT33",
     "status": "active",
@@ -29,50 +32,194 @@
   "json": {
     "resources": [
       {
-        "type": "aws_s3_bucket",
-        "name": "s3_bucket",
+        "type": "azurerm_virtual_network",
+        "name": "vnet",
         "properties": {
-          "bucket": "${var.bucket_name}",
-          "acl": "private",
-          "acceleration_status": "Suspended",
-          "cors_rule": {
-            "allowed_headers": [
-              "Authorization"
-            ],
-            "allowed_methods": [
-              "GET"
-            ],
-            "allowed_origins": [
-              "*"
-            ],
-            "expose_headers": [],
-            "max_age_seconds": "3000"
+          "name": "prancer-vnet",
+          "resource_group_name": "prancer-test-rg",
+          "address_space": [
+            "10.254.0.0/16"
+          ],
+          "location": "eastus2",
+          "tags": {},
+          "vnet_name": "prancer-vnet",
+          "vnet_rg": "prancer-test-rg",
+          "dns_server": "10.254.0.1"
+        }
+      },
+      {
+        "type": "azurerm_subnet",
+        "name": "sub",
+        "properties": {
+          "name": "prancer-subnet",
+          "resource_group_name": "prancer-test-rg",
+          "virtual_network_name": "prancer-vnet",
+          "address_prefixes": [
+            "10.254.0.0/24"
+          ],
+          "subnet_name": "prancer-subnet",
+          "subnet_rg": "prancer-test-rg",
+          "vnet_name": "prancer-vnet"
+        }
+      },
+      {
+        "type": "random_id",
+        "name": "vm-sa",
+        "properties": {
+          "keepers": {
+            "vm_hostname": "myvm"
           },
-          "versioning": {
-            "enabled": false
+          "byte_length": 6,
+          "resource_group_name": "prancer-test-rg",
+          "location": "eastus2",
+          "vm_os_simple": "UbuntuServer",
+          "vm_size": "Standard_DS1_V2",
+          "public_ip_dns": [
+            "prancer-test-linux-vm"
+          ],
+          "vnet_subnet_id": "${module.subnet.subnet_id}"
+        }
+      },
+      {
+        "type": "random_id",
+        "name": "vm-sa",
+        "properties": {
+          "keepers": {
+            "vm_hostname": "prancerwinvm"
           },
-          "lifecycle_rule": {
-            "id": "expire-objects",
-            "enabled": false,
-            "prefix": "",
-            "tags": {},
-            "transition": {
-              "days": "180",
-              "storage_class": "GLACIER"
-            },
-            "noncurrent_version_expiration": [
-              {
-                "days": "365"
-              }
-            ],
-            "expiration": {
-              "days": "365"
+          "byte_length": 6,
+          "resource_group_name": "prancer-test-rg",
+          "location": "eastus2",
+          "vm_hostname": "prancerwinvm",
+          "admin_password": "nakfocsUfiss0or+",
+          "vm_os_simple": "WindowsServer",
+          "vm_size": "Standard_DS1_V2",
+          "public_ip_dns": [
+            "prancer-test-win-server"
+          ],
+          "vnet_subnet_id": "${module.subnet.subnet_id}"
+        }
+      },
+      {
+        "type": "azurerm_availability_set",
+        "name": "vm",
+        "properties": {
+          "name": "myvm",
+          "location": "eastus2",
+          "resource_group_name": "prancer-test-rg",
+          "platform_fault_domain_count": 2,
+          "platform_update_domain_count": 2,
+          "managed": true,
+          "vm_os_simple": "UbuntuServer",
+          "vm_size": "Standard_DS1_V2",
+          "public_ip_dns": [
+            "prancer-test-linux-vm"
+          ],
+          "vnet_subnet_id": "${module.subnet.subnet_id}"
+        }
+      },
+      {
+        "type": "azurerm_availability_set",
+        "name": "vm",
+        "properties": {
+          "name": "prancerwinvm",
+          "location": "eastus2",
+          "resource_group_name": "prancer-test-rg",
+          "platform_fault_domain_count": 2,
+          "platform_update_domain_count": 2,
+          "managed": true,
+          "vm_hostname": "prancerwinvm",
+          "admin_password": "nakfocsUfiss0or+",
+          "vm_os_simple": "WindowsServer",
+          "vm_size": "Standard_DS1_V2",
+          "public_ip_dns": [
+            "prancer-test-win-server"
+          ],
+          "vnet_subnet_id": "${module.subnet.subnet_id}"
+        }
+      },
+      {
+        "type": "azurerm_public_ip",
+        "name": "vm",
+        "properties": {
+          "name": "${var.vm_hostname}-${count.index}-publicIP",
+          "location": "eastus2",
+          "resource_group_name": "prancer-test-rg",
+          "allocation_method": "Dynamic",
+          "domain_name_label": "prancer-test-linux-vm",
+          "vm_os_simple": "UbuntuServer",
+          "vm_size": "Standard_DS1_V2",
+          "public_ip_dns": [
+            "prancer-test-linux-vm"
+          ],
+          "vnet_subnet_id": "${module.subnet.subnet_id}"
+        }
+      },
+      {
+        "type": "azurerm_public_ip",
+        "name": "vm",
+        "properties": {
+          "name": "${var.vm_hostname}-${count.index}-publicIP",
+          "location": "eastus2",
+          "resource_group_name": "prancer-test-rg",
+          "allocation_method": "Dynamic",
+          "domain_name_label": "prancer-test-win-server",
+          "vm_hostname": "prancerwinvm",
+          "admin_password": "nakfocsUfiss0or+",
+          "vm_os_simple": "WindowsServer",
+          "vm_size": "Standard_DS1_V2",
+          "public_ip_dns": [
+            "prancer-test-win-server"
+          ],
+          "vnet_subnet_id": "${module.subnet.subnet_id}"
+        }
+      },
+      {
+        "type": "azurerm_network_interface",
+        "name": "vm",
+        "properties": {
+          "name": "nic-${var.vm_hostname}-${count.index}",
+          "location": "eastus2",
+          "resource_group_name": "prancer-test-rg",
+          "ip_configuration": [
+            {
+              "name": 0,
+              "subnet_id": "${module.subnet.subnet_id}",
+              "private_ip_address_allocation": "Dynamic",
+              "public_ip_address_id": "length(azurerm_public_ip.vm.*.id) > 0 ? element(concat(azurerm_public_ip.vm.*.id,list(\"\")),count.index) : \"\""
             }
-          },
-          "server_side_encryption_configuration": [],
-          "logging": [],
-          "website": [],
-          "tags": {}
+          ],
+          "vm_os_simple": "UbuntuServer",
+          "vm_size": "Standard_DS1_V2",
+          "public_ip_dns": [
+            "prancer-test-linux-vm"
+          ],
+          "vnet_subnet_id": "${module.subnet.subnet_id}"
+        }
+      },
+      {
+        "type": "azurerm_network_interface",
+        "name": "vm",
+        "properties": {
+          "name": "nic-${var.vm_hostname}-${count.index}",
+          "location": "eastus2",
+          "resource_group_name": "prancer-test-rg",
+          "ip_configuration": [
+            {
+              "name": 0,
+              "subnet_id": "${module.subnet.subnet_id}",
+              "private_ip_address_allocation": "Dynamic",
+              "public_ip_address_id": "length(azurerm_public_ip.vm.*.id) > 0 ? element(concat(azurerm_public_ip.vm.*.id,list(\"\")),count.index) : \"\""
+            }
+          ],
+          "vm_hostname": "prancerwinvm",
+          "admin_password": "nakfocsUfiss0or+",
+          "vm_os_simple": "WindowsServer",
+          "vm_size": "Standard_DS1_V2",
+          "public_ip_dns": [
+            "prancer-test-win-server"
+          ],
+          "vnet_subnet_id": "${module.subnet.subnet_id}"
         }
       }
     ]

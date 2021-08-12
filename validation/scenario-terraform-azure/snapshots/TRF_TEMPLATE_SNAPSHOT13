@@ -2,13 +2,15 @@
   "structure": "filesystem",
   "error": null,
   "reference": "master",
+  "contentType": "terraform",
   "source": "gitConnectorTerraform",
   "paths": [
-    "/aws/modules/cloudfront/output.tf",
-    "/aws/modules/cloudfront/vars.tf",
-    "/aws/modules/cloudfront/main.tf"
+    "/aws/redshift/provider.tf",
+    "/aws/redshift/terraform.tfvars",
+    "/aws/redshift/vars.tf",
+    "/aws/redshift/main.tf"
   ],
-  "timestamp": 1621252248696,
+  "timestamp": 1628768956481,
   "queryuser": null,
   "checksum": "99914b932bd37a50b983c5e7c90ae93b",
   "node": {
@@ -16,9 +18,10 @@
     "type": "terraform",
     "collection": "terraformtemplate",
     "paths": [
-      "/aws/modules/cloudfront/output.tf",
-      "/aws/modules/cloudfront/vars.tf",
-      "/aws/modules/cloudfront/main.tf"
+      "/aws/redshift/provider.tf",
+      "/aws/redshift/terraform.tfvars",
+      "/aws/redshift/vars.tf",
+      "/aws/redshift/main.tf"
     ],
     "snapshotId": "TRF_TEMPLATE_SNAPSHOT13",
     "status": "active",
@@ -29,86 +32,84 @@
   "json": {
     "resources": [
       {
-        "type": "aws_cloudfront_distribution",
-        "name": "cloudfront",
+        "type": "aws_redshift_cluster",
+        "name": "redshift",
         "properties": {
-          "enabled": true,
-          "is_ipv6_enabled": true,
-          "comment": "Managed by Terraform",
-          "default_root_object": "index.html",
-          "price_class": "PriceClass_100",
-          "logging_config": [
+          "cluster_identifier": "prancerredshiftcluster",
+          "node_type": "dc1.large",
+          "number_of_nodes": 1,
+          "cluster_type": "single-node",
+          "database_name": "prancerredshiftdb",
+          "master_username": "dbadmin",
+          "master_password": "rez^SwuAmjanHokhornoivyifokvots7",
+          "port": 5439,
+          "vpc_security_group_ids": [],
+          "cluster_subnet_group_name": "",
+          "cluster_parameter_group_name": "",
+          "publicly_accessible": true,
+          "snapshot_identifier": null,
+          "snapshot_cluster_identifier": null,
+          "owner_account": null,
+          "final_snapshot_identifier": "",
+          "skip_final_snapshot": true,
+          "automated_snapshot_retention_period": 0,
+          "preferred_maintenance_window": "sun:03:00-sun:05:00",
+          "allow_version_upgrade": true,
+          "snapshot_copy": [],
+          "iam_roles": [],
+          "encrypted": false,
+          "kms_key_id": "",
+          "enhanced_vpc_routing": false,
+          "logging": [
             {
-              "include_cookies": false,
-              "bucket": "${var.bucket}",
-              "prefix": ""
+              "enable": false,
+              "bucket_name": null,
+              "s3_key_prefix": null
             }
           ],
-          "aliases": [],
-          "origin": {
-            "domain_name": "",
-            "origin_id": "${var.origin_id}",
-            "origin_path": "",
-            "custom_origin_config": [
-              {
-                "http_port": "80",
-                "https_port": "443",
-                "origin_protocol_policy": "match-viewer",
-                "origin_ssl_protocols": [
-                  "TLSv1",
-                  "TLSv1.1",
-                  "TLSv1.2"
-                ],
-                "origin_keepalive_timeout": "60",
-                "origin_read_timeout": "60"
-              }
-            ],
-            "s3_origin_config": []
+          "tags": {
+            "environment": "Production",
+            "project": "Prancer"
           },
-          "viewer_certificate": {
-            "acm_certificate_arn": "",
-            "ssl_support_method": "sni-only",
-            "minimum_protocol_version": "TLSv1",
-            "cloudfront_default_certificate": true
-          },
-          "default_cache_behavior": {
-            "allowed_methods": [
-              "DELETE",
-              "GET",
-              "HEAD",
-              "OPTIONS",
-              "PATCH",
-              "POST",
-              "PUT"
-            ],
-            "cached_methods": [
-              "GET",
-              "HEAD"
-            ],
-            "target_origin_id": "${var.target_origin_id}",
-            "compress": false,
-            "field_level_encryption_id": "",
-            "forwarded_values": {
-              "headers": [],
-              "query_string": false,
-              "cookies": {
-                "forward": "none",
-                "whitelisted_names": []
-              }
-            },
-            "viewer_protocol_policy": "redirect-to-https",
-            "default_ttl": "60",
-            "min_ttl": "0",
-            "max_ttl": "31536000"
-          },
-          "web_acl_id": "",
-          "restrictions": {
-            "geo_restriction": {
-              "restriction_type": "none",
-              "locations": []
+          "lifecycle": [
+            {
+              "ignore_changes": [
+                "master_password"
+              ]
             }
-          },
-          "tags": {}
+          ],
+          "cluster_node_type": "dc1.large",
+          "cluster_number_of_nodes": 1,
+          "cluster_database_name": "prancerredshiftdb",
+          "cluster_master_username": "dbadmin",
+          "cluster_master_password": "rez^SwuAmjanHokhornoivyifokvots7",
+          "cluster_port": 5439,
+          "redshift_subnet_group_name": "",
+          "parameter_group_name": "",
+          "snapshot_copy_destination_region": null,
+          "cluster_iam_roles": [],
+          "enable_logging": false,
+          "logging_bucket_name": null,
+          "logging_s3_key_prefix": null
+        }
+      },
+      {
+        "type": "aws_redshift_parameter_group",
+        "name": "rpg",
+        "properties": {
+          "name": "prancer-redshift-params",
+          "family": "redshift-1.0",
+          "parameter": [
+            {
+              "name": "require_ssl",
+              "value": false
+            }
+          ],
+          "parameter_name": "prancer-redshift-params",
+          "parameter_family": "redshift-1.0",
+          "parameter_map": {
+            "require_ssl": false
+          }
         }
       }
     ]

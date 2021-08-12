@@ -2,13 +2,15 @@
   "structure": "filesystem",
   "error": null,
   "reference": "master",
+  "contentType": "terraform",
   "source": "gitConnectorTerraform",
   "paths": [
-    "/aws/modules/elasticsearch/output.tf",
-    "/aws/modules/elasticsearch/vars.tf",
-    "/aws/modules/elasticsearch/main.tf"
+    "/azure/aks/provider.tf",
+    "/azure/aks/terraform.tfvars",
+    "/azure/aks/vars.tf",
+    "/azure/aks/main.tf"
   ],
-  "timestamp": 1620823813585,
+  "timestamp": 1628767416461,
   "queryuser": null,
   "checksum": "99914b932bd37a50b983c5e7c90ae93b",
   "node": {
@@ -16,9 +18,10 @@
     "type": "terraform",
     "collection": "terraformtemplate",
     "paths": [
-      "/aws/modules/elasticsearch/output.tf",
-      "/aws/modules/elasticsearch/vars.tf",
-      "/aws/modules/elasticsearch/main.tf"
+      "/azure/aks/provider.tf",
+      "/azure/aks/terraform.tfvars",
+      "/azure/aks/vars.tf",
+      "/azure/aks/main.tf"
     ],
     "snapshotId": "TRF_TEMPLATE_SNAPSHOT22",
     "status": "active",
@@ -29,68 +32,64 @@
   "json": {
     "resources": [
       {
-        "type": "aws_elasticsearch_domain",
-        "name": "esearch",
+        "type": "azurerm_kubernetes_cluster",
+        "name": "aks",
         "properties": {
-          "domain_name": "",
-          "elasticsearch_version": "7.4",
-          "advanced_options": {},
-          "advanced_security_options": {
-            "enabled": false,
-            "internal_user_database_enabled": false,
-            "master_user_options": {
-              "master_user_arn": "",
-              "master_user_name": "",
-              "master_user_password": ""
-            }
-          },
-          "ebs_options": {
-            "ebs_enabled": false,
-            "volume_size": 0,
-            "volume_type": "gp2",
-            "iops": 0
-          },
-          "encrypt_at_rest": {
-            "enabled": true,
-            "kms_key_id": ""
-          },
-          "domain_endpoint_options": {
-            "enforce_https": false,
-            "tls_security_policy": "Policy-Min-TLS-1-0-2019-07"
-          },
-          "cluster_config": {
-            "instance_count": 4,
-            "instance_type": "t2.small.elasticsearch",
-            "dedicated_master_enabled": false,
-            "dedicated_master_count": 0,
-            "dedicated_master_type": "t2.small.elasticsearch",
-            "zone_awareness_enabled": true,
-            "warm_enabled": false,
-            "warm_count": 2,
-            "warm_type": "ultrawarm1.medium.elasticsearch",
-            "zone_awareness_config": []
-          },
-          "node_to_node_encryption": {
-            "enabled": false
-          },
-          "vpc_options": [
+          "name": "prancer-aks-cluster",
+          "location": "eastus2",
+          "resource_group_name": "prancer-test-rg",
+          "dns_prefix": "prancer-aks",
+          "network_profile": [
             {
-              "security_group_ids": [
-                "join(,aws_security_group.default.*.id)"
-              ],
-              "subnet_ids": []
+              "network_plugin": "kubenet",
+              "network_policy": "calico"
             }
           ],
-          "cognito_options": [],
-          "snapshot_options": {
-            "automated_snapshot_start_hour": 0
-          },
-          "log_publishing_options": {
-            "enabled": false,
-            "log_type": "ES_APPLICATION_LOGS",
-            "cloudwatch_log_group_arn": ""
-          },
-          "tags": {}
+          "default_node_pool": [
+            {
+              "name": "prancer",
+              "node_count": 1,
+              "vm_size": "Standard_DS2_v2"
+            }
+          ],
+          "role_based_access_control": [
+            {
+              "enabled": false
+            }
+          ],
+          "addon_profile": [
+            {
+              "http_application_routing": [
+                {
+                  "enabled": true
+                }
+              ],
+              "oms_agent": [
+                {
+                  "enabled": false,
+                  "log_analytics_workspace_id": null
+                }
+              ]
+            }
+          ],
+          "identity": [
+            {
+              "type": "SystemAssigned"
+            }
+          ],
+          "tags": {},
+          "rg_name": "prancer-test-rg",
+          "aks_name": "prancer-aks-cluster",
+          "network_plugin": "kubenet",
+          "network_policy": "calico",
+          "aks_node_pool_name": "prancer",
+          "aks_node_pool_count": 1,
+          "aks_vm_size": "Standard_DS2_v2",
+          "rbac_enabled": false,
+          "http_application_routing": true,
+          "aks_identity_type": "SystemAssigned",
+          "oms_agent": false,
+          "log_analytics_workspace_id": null
         }
       }
     ]

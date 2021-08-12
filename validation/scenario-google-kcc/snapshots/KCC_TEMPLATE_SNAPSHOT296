@@ -2,34 +2,68 @@
   "structure": "filesystem",
   "error": null,
   "reference": "master",
+  "contentType": "yaml",
   "source": "gitConnectorGoogleKcc",
   "paths": [
-    "/samples/resources/dnsrecordset/dns-a-record-set/dns_v1beta1_dnsmanagedzone.yaml"
+    "/samples/resources/containercluster/routes-based-container-cluster/container_v1beta1_containercluster.yaml"
   ],
-  "timestamp": 1622492385630,
+  "timestamp": 1628765145050,
   "queryuser": null,
   "checksum": "99914b932bd37a50b983c5e7c90ae93b",
   "node": {
     "masterSnapshotId": "KCC_TEMPLATE_SNAPSHOT",
-    "type": "yaml",
-    "collection": "deploymentmanagertemplate",
+    "type": "kcc",
+    "collection": "kcctemplate",
     "paths": [
-      "/samples/resources/dnsrecordset/dns-a-record-set/dns_v1beta1_dnsmanagedzone.yaml"
+      "/samples/resources/containercluster/routes-based-container-cluster/container_v1beta1_containercluster.yaml"
     ],
     "snapshotId": "KCC_TEMPLATE_SNAPSHOT296",
     "status": "active",
     "validate": true
   },
   "snapshotId": "KCC_TEMPLATE_SNAPSHOT296",
-  "collection": "deploymentmanagertemplate",
+  "collection": "kcctemplate",
   "json": {
-    "apiVersion": "dns.cnrm.cloud.google.com/v1beta1",
-    "kind": "DNSManagedZone",
+    "apiVersion": "container.cnrm.cloud.google.com/v1beta1",
+    "kind": "ContainerCluster",
     "metadata": {
-      "name": "dnsrecordset-dep-a"
+      "labels": {
+        "availability": "dev",
+        "target-audience": "development"
+      },
+      "name": "containercluster-sample-routesbased"
     },
     "spec": {
-      "dnsName": "example.com."
+      "description": "A routes-based cluster confined to one zone configured for development.",
+      "location": "us-central1-a",
+      "initialNodeCount": 1,
+      "clusterTelemetry": {
+        "type": "SYSTEM_ONLY"
+      },
+      "networkingMode": "ROUTES",
+      "clusterIpv4Cidr": "10.96.0.0/14",
+      "masterAuthorizedNetworksConfig": {
+        "cidrBlocks": [
+          {
+            "displayName": "Trusted external network",
+            "cidrBlock": "10.2.0.0/16"
+          }
+        ]
+      },
+      "addonsConfig": {
+        "gcePersistentDiskCsiDriverConfig": {
+          "enabled": true
+        },
+        "kalmConfig": {
+          "enabled": true
+        },
+        "horizontalPodAutoscaling": {
+          "disabled": true
+        },
+        "httpLoadBalancing": {
+          "disabled": true
+        }
+      }
     }
   }
 }

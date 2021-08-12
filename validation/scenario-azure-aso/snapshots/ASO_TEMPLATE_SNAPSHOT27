@@ -2,11 +2,12 @@
   "structure": "filesystem",
   "error": null,
   "reference": "master",
+  "contentType": "yaml",
   "source": "gitConnectorAzureAso",
   "paths": [
-    "/config/samples/azure_v1alpha1_eventhub_capture.yaml"
+    "/config/samples/azure_v1alpha1_consumergroup.yaml"
   ],
-  "timestamp": 1624434683352,
+  "timestamp": 1628760796065,
   "queryuser": null,
   "checksum": "99914b932bd37a50b983c5e7c90ae93b",
   "node": {
@@ -14,7 +15,7 @@
     "type": "aso",
     "collection": "asotemplate",
     "paths": [
-      "/config/samples/azure_v1alpha1_eventhub_capture.yaml"
+      "/config/samples/azure_v1alpha1_consumergroup.yaml"
     ],
     "snapshotId": "ASO_TEMPLATE_SNAPSHOT27",
     "status": "active",
@@ -24,40 +25,14 @@
   "collection": "asotemplate",
   "json": {
     "apiVersion": "azure.microsoft.com/v1alpha1",
-    "kind": "Eventhub",
+    "kind": "ConsumerGroup",
     "metadata": {
-      "name": "eventhub-sample-2307-10-capture"
+      "name": "consumergroup-sample-1"
     },
     "spec": {
-      "location": "westus",
       "resourceGroup": "resourcegroup-azure-operators",
       "namespace": "eventhubnamespace-sample-1",
-      "properties": {
-        "messageRetentionInDays": 7,
-        "partitionCount": 2,
-        "captureDescription": {
-          "destination": {
-            "archiveNameFormat": "{Namespace}/{EventHub}/{PartitionId}/{Year}/{Month}/{Day}/{Hour}/{Minute}/{Second}",
-            "blobContainer": "capturecontainer",
-            "name": "EventHubArchive.AzureBlockBlob",
-            "storageAccount": {
-              "resourceGroup": "my-resource-group",
-              "accountName": "storageaccountauv1"
-            }
-          },
-          "enabled": true,
-          "sizeLimitInBytes": 524288000,
-          "intervalInSeconds": 120
-        }
-      },
-      "authorizationRule": {
-        "name": "RootManageSharedAccessKey",
-        "rights": [
-          "Listen",
-          "Manage",
-          "Send"
-        ]
-      }
+      "eventHub": "eventhub-sample-1"
     }
   }
 }

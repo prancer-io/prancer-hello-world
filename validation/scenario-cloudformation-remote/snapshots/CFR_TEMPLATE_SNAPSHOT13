@@ -1,0 +1,105 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "yaml",
+  "source": "gitConnectorCloudformation",
+  "paths": [
+    "/efs/efs.yaml"
+  ],
+  "timestamp": 1628763941020,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "CFR_TEMPLATE_SNAPSHOT",
+    "type": "cloudformation",
+    "collection": "cloudformationtemplate",
+    "paths": [
+      "/efs/efs.yaml"
+    ],
+    "snapshotId": "CFR_TEMPLATE_SNAPSHOT13",
+    "status": "active",
+    "validate": true
+  },
+  "snapshotId": "CFR_TEMPLATE_SNAPSHOT13",
+  "collection": "cloudformationtemplate",
+  "json": {
+    "AWSTemplateFormatVersion": "2010-09-09",
+    "Resources": [
+      {
+        "Type": "AWS::EFS::FileSystem",
+        "Properties": {
+          "BackupPolicy": {
+            "Status": "ENABLED"
+          },
+          "PerformanceMode": "maxIO",
+          "Encrypted": false,
+          "LifecyclePolicies": [
+            {
+              "TransitionToIA": "AFTER_30_DAYS"
+            }
+          ],
+          "FileSystemTags": [
+            {
+              "Key": "Name",
+              "Value": "TestFileSystem"
+            }
+          ],
+          "FileSystemPolicy": {
+            "Version": "2012-10-17",
+            "Statement": [
+              {
+                "Effect": "Allow",
+                "Action": "*",
+                "Principal": "*"
+              }
+            ]
+          },
+          "KmsKeyId": {
+            "Fn::GetAtt": [
+              "key",
+              "Arn"
+            ]
+          }
+        },
+        "Name": "FileSystemResource"
+      },
+      {
+        "Type": "AWS::KMS::Key",
+        "Properties": {
+          "KeyPolicy": {
+            "Version": "2012-10-17",
+            "Id": "key-default-1",
+            "Statement": [
+              {
+                "Sid": "Allow administration of the key",
+                "Effect": "Allow",
+                "Principal": {
+                  "AWS": {
+                    "Fn::Join": [
+                      "",
+                      [
+                        "arn:aws:iam::",
+                        {
+                          "Ref": "AWS::AccountId"
+                        },
+                        ":root"
+                      ]
+                    ]
+                  }
+                },
+                "Action": [
+                  "kms:*"
+                ],
+                "Resource": [
+                  "*"
+                ]
+              }
+            ]
+          }
+        },
+        "Name": "key"
+      }
+    ]
+  }
+}

@@ -2,13 +2,15 @@
   "structure": "filesystem",
   "error": null,
   "reference": "master",
+  "contentType": "terraform",
   "source": "gitConnectorTerraform",
   "paths": [
-    "/aws/modules/security_group/output.tf",
-    "/aws/modules/security_group/vars.tf",
-    "/aws/modules/security_group/main.tf"
+    "/azure/vnetsubnets/provider.tf",
+    "/azure/vnetsubnets/terraform.tfvars",
+    "/azure/vnetsubnets/vars.tf",
+    "/azure/vnetsubnets/main.tf"
   ],
-  "timestamp": 1620824338885,
+  "timestamp": 1628770710833,
   "queryuser": null,
   "checksum": "99914b932bd37a50b983c5e7c90ae93b",
   "node": {
@@ -16,9 +18,10 @@
     "type": "terraform",
     "collection": "terraformtemplate",
     "paths": [
-      "/aws/modules/security_group/output.tf",
-      "/aws/modules/security_group/vars.tf",
-      "/aws/modules/security_group/main.tf"
+      "/azure/vnetsubnets/provider.tf",
+      "/azure/vnetsubnets/terraform.tfvars",
+      "/azure/vnetsubnets/vars.tf",
+      "/azure/vnetsubnets/main.tf"
     ],
     "snapshotId": "TRF_TEMPLATE_SNAPSHOT35",
     "status": "active",
@@ -27,17 +30,71 @@
   "snapshotId": "TRF_TEMPLATE_SNAPSHOT35",
   "collection": "terraformtemplate",
   "json": {
+    "data": {
+      "azurerm_network_security_group": {
+        "nsg": []
+      }
+    },
     "resources": [
       {
-        "type": "aws_security_group",
-        "name": "sgroup",
+        "type": "azurerm_virtual_network",
+        "name": "vnet",
         "properties": {
-          "name": "${var.name}",
-          "description": "Security Group managed by Terraform",
-          "vpc_id": "${var.vpc_id}",
-          "revoke_rules_on_delete": false,
-          "ingress": [],
-          "tags": {}
+          "name": "prancer-vnet",
+          "resource_group_name": "prancer-test-rg",
+          "address_space": [
+            "10.254.0.0/16"
+          ],
+          "location": "eastus2",
+          "tags": {},
+          "vnet_name": "prancer-vnet",
+          "vnet_rg": "prancer-test-rg",
+          "dns_server": "10.254.0.1"
+        }
+      },
+      {
+        "type": "azurerm_subnet",
+        "name": "sub",
+        "properties": {
+          "name": "prancer-frontend",
+          "resource_group_name": "prancer-test-rg",
+          "virtual_network_name": "prancer-vnet",
+          "address_prefixes": [
+            "10.254.0.0/24"
+          ],
+          "subnet_name": "prancer-frontend",
+          "subnet_rg": "prancer-test-rg",
+          "vnet_name": "prancer-vnet"
+        }
+      },
+      {
+        "type": "azurerm_subnet",
+        "name": "sub",
+        "properties": {
+          "name": "prancer-backend",
+          "resource_group_name": "prancer-test-rg",
+          "virtual_network_name": "prancer-vnet",
+          "address_prefixes": [
+            "10.254.2.0/24"
+          ],
+          "subnet_name": "prancer-backend",
+          "subnet_rg": "prancer-test-rg",
+          "vnet_name": "prancer-vnet"
+        }
+      },
+      {
+        "type": "azurerm_subnet",
+        "name": "sub",
+        "properties": {
+          "name": "prancer-backup",
+          "resource_group_name": "prancer-test-rg",
+          "virtual_network_name": "prancer-vnet",
+          "address_prefixes": [
+            "10.254.222.0/24"
+          ],
+          "subnet_name": "prancer-backup",
+          "subnet_rg": "prancer-test-rg",
+          "vnet_name": "prancer-vnet"
         }
       }
     ]

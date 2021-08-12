@@ -1,0 +1,62 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "yaml",
+  "source": "gitConnectorCloudformation",
+  "paths": [
+    "/ecr/ecr.yaml"
+  ],
+  "timestamp": 1628763940994,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "CFR_TEMPLATE_SNAPSHOT",
+    "type": "cloudformation",
+    "collection": "cloudformationtemplate",
+    "paths": [
+      "/ecr/ecr.yaml"
+    ],
+    "snapshotId": "CFR_TEMPLATE_SNAPSHOT11",
+    "status": "active",
+    "validate": true
+  },
+  "snapshotId": "CFR_TEMPLATE_SNAPSHOT11",
+  "collection": "cloudformationtemplate",
+  "json": {
+    "AWSTemplateFormatVersion": "2010-09-09",
+    "Parameters": {
+      "lifecyclePolicyText": {
+        "Type": "String"
+      },
+      "repositoryName": {
+        "Type": "String"
+      },
+      "registryId": {
+        "Type": "String"
+      }
+    },
+    "Resources": [
+      {
+        "Type": "AWS::ECR::Repository",
+        "Properties": {
+          "ImageTagMutability": "MUTABLE",
+          "ImageScanningConfiguration": {
+            "ScanOnPush": true
+          }
+        },
+        "Name": "MyRepository"
+      }
+    ],
+    "Outputs": {
+      "Arn": {
+        "Value": {
+          "Fn::GetAtt": [
+            "MyRepository",
+            "Arn"
+          ]
+        }
+      }
+    }
+  }
+}

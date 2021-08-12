@@ -1,0 +1,448 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "yaml",
+  "source": "gitConnectorCloudformation",
+  "paths": [
+    "/elb/elb.yaml"
+  ],
+  "timestamp": 1628763941144,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "CFR_TEMPLATE_SNAPSHOT",
+    "type": "cloudformation",
+    "collection": "cloudformationtemplate",
+    "paths": [
+      "/elb/elb.yaml"
+    ],
+    "snapshotId": "CFR_TEMPLATE_SNAPSHOT19",
+    "status": "active",
+    "validate": true
+  },
+  "snapshotId": "CFR_TEMPLATE_SNAPSHOT19",
+  "collection": "cloudformationtemplate",
+  "json": {
+    "AWSTemplateFormatVersion": "2010-09-09",
+    "Description": "Elastic Load Balancer",
+    "Parameters": {
+      "VPC": {
+        "Type": "AWS::EC2::VPC::Id",
+        "Description": "Choose which VPC the Application Load Balancer should be deployed to"
+      },
+      "Subnets": {
+        "Description": "Choose which subnets the Application Load Balancer should be deployed to",
+        "Type": "List<AWS::EC2::Subnet::Id>"
+      }
+    },
+    "Resources": [
+      {
+        "Type": "AWS::S3::Bucket",
+        "DeletionPolicy": "Retain",
+        "Properties": {
+          "VersioningConfiguration": {
+            "Status": "Enabled"
+          }
+        },
+        "Name": "S3BUCKET"
+      },
+      {
+        "Type": "AWS::ElasticLoadBalancing::LoadBalancer",
+        "Properties": {
+          "AccessLoggingPolicy": {
+            "Enabled": false,
+            "S3BucketName": {
+              "Ref": "S3BUCKET"
+            }
+          },
+          "CrossZone": false,
+          "Subnets": {
+            "Ref": "Subnets"
+          },
+          "ConnectionDrainingPolicy": {
+            "Enabled": false
+          },
+          "Listeners": [
+            {
+              "InstancePort": "80",
+              "InstanceProtocol": "HTTP",
+              "LoadBalancerPort": "443",
+              "Protocol": "HTTPS",
+              "PolicyNames": [
+                "My-SSLNegotiation-Policy"
+              ],
+              "SSLCertificateId": "arn:aws:iam::123456789012:server-certificate/my-server-certificate"
+            }
+          ],
+          "Policies": [
+            {
+              "PolicyName": "My-SSLNegotiation-Policy",
+              "PolicyType": "SSLNegotiationPolicyType",
+              "Attributes": [
+                {
+                  "Name": "DHE-RSA-AES128-SHA",
+                  "Value": "true"
+                },
+                {
+                  "Name": "DHE-DSS-AES128-SHA",
+                  "Value": "true"
+                },
+                {
+                  "Name": "CAMELLIA128-SHA",
+                  "Value": "true"
+                },
+                {
+                  "Name": "EDH-RSA-DES-CBC3-SHA",
+                  "Value": "true"
+                },
+                {
+                  "Name": "DES-CBC3-SHA",
+                  "Value": "true"
+                },
+                {
+                  "Name": "ECDHE-RSA-RC4-SHA",
+                  "Value": "true"
+                },
+                {
+                  "Name": "RC4-SHA",
+                  "Value": "true"
+                },
+                {
+                  "Name": "ECDHE-ECDSA-RC4-SHA",
+                  "Value": "true"
+                },
+                {
+                  "Name": "DHE-DSS-AES256-GCM-SHA384",
+                  "Value": "true"
+                },
+                {
+                  "Name": "DHE-RSA-AES256-GCM-SHA384",
+                  "Value": "true"
+                },
+                {
+                  "Name": "DHE-RSA-AES256-SHA256",
+                  "Value": "true"
+                },
+                {
+                  "Name": "DHE-DSS-AES256-SHA256",
+                  "Value": "true"
+                },
+                {
+                  "Name": "DHE-RSA-AES256-SHA",
+                  "Value": "true"
+                },
+                {
+                  "Name": "DHE-DSS-AES256-SHA",
+                  "Value": "true"
+                },
+                {
+                  "Name": "DHE-RSA-CAMELLIA256-SHA",
+                  "Value": "true"
+                },
+                {
+                  "Name": "DHE-DSS-CAMELLIA256-SHA",
+                  "Value": "true"
+                },
+                {
+                  "Name": "CAMELLIA256-SHA",
+                  "Value": "true"
+                },
+                {
+                  "Name": "EDH-DSS-DES-CBC3-SHA",
+                  "Value": "true"
+                },
+                {
+                  "Name": "DHE-DSS-AES128-GCM-SHA256",
+                  "Value": "true"
+                },
+                {
+                  "Name": "DHE-RSA-AES128-GCM-SHA256",
+                  "Value": "true"
+                },
+                {
+                  "Name": "DHE-RSA-AES128-SHA256",
+                  "Value": "true"
+                },
+                {
+                  "Name": "DHE-DSS-AES128-SHA256",
+                  "Value": "true"
+                },
+                {
+                  "Name": "DHE-RSA-CAMELLIA128-SHA",
+                  "Value": "true"
+                },
+                {
+                  "Name": "DHE-DSS-CAMELLIA128-SHA",
+                  "Value": "true"
+                },
+                {
+                  "Name": "ADH-AES128-GCM-SHA256",
+                  "Value": "true"
+                },
+                {
+                  "Name": "ADH-AES128-SHA",
+                  "Value": "true"
+                },
+                {
+                  "Name": "ADH-AES128-SHA256",
+                  "Value": "true"
+                },
+                {
+                  "Name": "ADH-AES256-GCM-SHA384",
+                  "Value": "true"
+                },
+                {
+                  "Name": "ADH-AES256-SHA",
+                  "Value": "true"
+                },
+                {
+                  "Name": "ADH-AES256-SHA256",
+                  "Value": "true"
+                },
+                {
+                  "Name": "ADH-CAMELLIA128-SHA",
+                  "Value": "true"
+                },
+                {
+                  "Name": "ADH-CAMELLIA256-SHA",
+                  "Value": "true"
+                },
+                {
+                  "Name": "ADH-DES-CBC3-SHA",
+                  "Value": "true"
+                },
+                {
+                  "Name": "ADH-DES-CBC-SHA",
+                  "Value": "true"
+                },
+                {
+                  "Name": "ADH-RC4-MD5",
+                  "Value": "true"
+                },
+                {
+                  "Name": "ADH-SEED-SHA",
+                  "Value": "true"
+                },
+                {
+                  "Name": "DES-CBC-SHA",
+                  "Value": "true"
+                },
+                {
+                  "Name": "DHE-DSS-SEED-SHA",
+                  "Value": "true"
+                },
+                {
+                  "Name": "DHE-RSA-SEED-SHA",
+                  "Value": "true"
+                },
+                {
+                  "Name": "EDH-DSS-DES-CBC-SHA",
+                  "Value": "true"
+                },
+                {
+                  "Name": "EDH-RSA-DES-CBC-SHA",
+                  "Value": "true"
+                },
+                {
+                  "Name": "IDEA-CBC-SHA",
+                  "Value": "true"
+                },
+                {
+                  "Name": "RC4-MD5",
+                  "Value": "true"
+                },
+                {
+                  "Name": "SEED-SHA",
+                  "Value": "true"
+                },
+                {
+                  "Name": "DES-CBC3-MD5",
+                  "Value": "true"
+                },
+                {
+                  "Name": "DES-CBC-MD5",
+                  "Value": "true"
+                },
+                {
+                  "Name": "RC2-CBC-MD5",
+                  "Value": "true"
+                },
+                {
+                  "Name": "PSK-AES256-CBC-SHA",
+                  "Value": "true"
+                },
+                {
+                  "Name": "PSK-3DES-EDE-CBC-SHA",
+                  "Value": "true"
+                },
+                {
+                  "Name": "KRB5-DES-CBC3-SHA",
+                  "Value": "true"
+                },
+                {
+                  "Name": "KRB5-DES-CBC3-MD5",
+                  "Value": "true"
+                },
+                {
+                  "Name": "PSK-AES128-CBC-SHA",
+                  "Value": "true"
+                },
+                {
+                  "Name": "PSK-RC4-SHA",
+                  "Value": "true"
+                },
+                {
+                  "Name": "KRB5-RC4-SHA",
+                  "Value": "true"
+                },
+                {
+                  "Name": "KRB5-RC4-MD5",
+                  "Value": "true"
+                },
+                {
+                  "Name": "KRB5-DES-CBC-SHA",
+                  "Value": "true"
+                },
+                {
+                  "Name": "KRB5-DES-CBC-MD5",
+                  "Value": "true"
+                },
+                {
+                  "Name": "EXP-EDH-RSA-DES-CBC-SHA",
+                  "Value": "true"
+                },
+                {
+                  "Name": "EXP-EDH-DSS-DES-CBC-SHA",
+                  "Value": "true"
+                },
+                {
+                  "Name": "EXP-ADH-DES-CBC-SHA",
+                  "Value": "true"
+                },
+                {
+                  "Name": "EXP-DES-CBC-SHA",
+                  "Value": "true"
+                },
+                {
+                  "Name": "EXP-RC2-CBC-MD5",
+                  "Value": "true"
+                },
+                {
+                  "Name": "EXP-KRB5-RC2-CBC-SHA",
+                  "Value": "true"
+                },
+                {
+                  "Name": "EXP-KRB5-DES-CBC-SHA",
+                  "Value": "true"
+                },
+                {
+                  "Name": "EXP-KRB5-RC2-CBC-MD5",
+                  "Value": "true"
+                },
+                {
+                  "Name": "EXP-KRB5-DES-CBC-MD5",
+                  "Value": "true"
+                },
+                {
+                  "Name": "EXP-ADH-RC4-MD5",
+                  "Value": "true"
+                },
+                {
+                  "Name": "EXP-RC4-MD5",
+                  "Value": "true"
+                },
+                {
+                  "Name": "EXP-KRB5-RC4-SHA",
+                  "Value": "true"
+                },
+                {
+                  "Name": "EXP-KRB5-RC4-MD5",
+                  "Value": "true"
+                },
+                {
+                  "Name": "Protocol-SSLv3",
+                  "Value": "true"
+                },
+                {
+                  "Name": "Protocol-TLSv1",
+                  "Value": "true"
+                },
+                {
+                  "Name": "Protocol-TLSv1.1",
+                  "Value": "true"
+                }
+              ]
+            }
+          ]
+        },
+        "Name": "MyLoadBalancer"
+      },
+      {
+        "Type": "AWS::ElasticLoadBalancingV2::LoadBalancer",
+        "Properties": {
+          "LoadBalancerAttributes": [
+            {
+              "Key": "access_logs.s3.enabled",
+              "Value": false
+            }
+          ],
+          "Subnets": {
+            "Ref": "Subnets"
+          }
+        },
+        "Name": "MyLoadBalancerV2"
+      },
+      {
+        "Type": "AWS::ElasticLoadBalancingV2::TargetGroup",
+        "Properties": {
+          "HealthCheckIntervalSeconds": 6,
+          "HealthCheckPath": "/",
+          "HealthCheckProtocol": "HTTP",
+          "HealthCheckTimeoutSeconds": 5,
+          "HealthyThresholdCount": 2,
+          "Name": {
+            "Fn::Join": [
+              "-",
+              [
+                {
+                  "Ref": "AWS::StackName"
+                },
+                "drop-1"
+              ]
+            ]
+          },
+          "Port": 80,
+          "Protocol": "HTTP",
+          "UnhealthyThresholdCount": 2,
+          "VpcId": {
+            "Ref": "VPC"
+          }
+        },
+        "Name": "DummyTargetGroupPublic"
+      },
+      {
+        "Type": "AWS::ElasticLoadBalancingV2::Listener",
+        "DependsOn": [
+          "MyLoadBalancerV2"
+        ],
+        "Properties": {
+          "DefaultActions": [
+            {
+              "TargetGroupArn": {
+                "Ref": "DummyTargetGroupPublic"
+              },
+              "Type": "forward"
+            }
+          ],
+          "LoadBalancerArn": {
+            "Ref": "MyLoadBalancerV2"
+          },
+          "Port": 80,
+          "Protocol": "HTTP"
+        },
+        "Name": "PublicLoadBalancerListener"
+      }
+    ]
+  }
+}

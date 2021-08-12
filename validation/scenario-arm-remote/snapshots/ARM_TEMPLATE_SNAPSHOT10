@@ -2,12 +2,13 @@
   "structure": "filesystem",
   "error": null,
   "reference": "master",
-  "source": "gitConnectorArmRemoteStructure",
+  "contentType": "json",
+  "source": "gitConnectorArm",
   "paths": [
-    "/VM/vm.azuredeploy.json",
-    "/VM/Linux-vm.azuredeploy.parameters.json"
+    "/storage/StorageA/blob.azuredeploy.json",
+    "/storage/StorageA/blob.azuredeploy.parameters.json"
   ],
-  "timestamp": 1614578745448,
+  "timestamp": 1628758916722,
   "queryuser": null,
   "checksum": "99914b932bd37a50b983c5e7c90ae93b",
   "node": {
@@ -15,8 +16,8 @@
     "type": "arm",
     "collection": "armtemplate",
     "paths": [
-      "/VM/vm.azuredeploy.json",
-      "/VM/Linux-vm.azuredeploy.parameters.json"
+      "/storage/StorageA/blob.azuredeploy.json",
+      "/storage/StorageA/blob.azuredeploy.parameters.json"
     ],
     "snapshotId": "ARM_TEMPLATE_SNAPSHOT10",
     "status": "active",
@@ -29,250 +30,189 @@
     "parameters": {
       "location": {
         "type": "string",
-        "metadata": {
-          "description": "Location for all resources."
-        },
         "value": "eastus"
       },
-      "NSGName": {
+      "storageAccountName": {
         "type": "string",
-        "metadata": {
-          "description": "Name of the NSG"
-        },
-        "value": "prancer-nsg"
+        "value": "prancerstorageaccount"
       },
-      "NSGRGName": {
+      "accountType": {
         "type": "string",
-        "metadata": {
-          "description": "Resource Group of the NSG"
-        },
-        "value": "prancer"
+        "value": "Standard_LRS"
       },
-      "subnetName": {
+      "kind": {
         "type": "string",
-        "metadata": {
-          "description": "Name of the Subnet where we want to"
-        },
-        "value": "prancer-backend"
+        "value": "BlobStorage"
       },
-      "virtualMachineName": {
+      "accessTier": {
         "type": "string",
-        "metadata": {
-          "description": "Name of the virtual machine."
-        },
-        "value": "prancerlinvm"
+        "value": "Hot"
       },
-      "virtualMachineComputerName": {
+      "minimumTlsVersion": {
         "type": "string",
-        "value": "prancerlinvm"
+        "value": "TLS1_2"
       },
-      "virtualMachineRG": {
+      "supportsHttpsTrafficOnly": {
+        "type": "bool",
+        "value": true
+      },
+      "allowBlobPublicAccess": {
+        "type": "bool",
+        "value": true
+      },
+      "networkAclsBypass": {
         "type": "string",
-        "value": "Prancer"
+        "value": "AzureServices"
       },
-      "osDiskType": {
+      "networkAclsDefaultAction": {
         "type": "string",
-        "value": "Premium_LRS"
+        "value": "Allow"
       },
-      "dataDisks": {
-        "type": "array",
-        "value": [
-          {
-            "lun": 0,
-            "createOption": "attach",
-            "caching": "None",
-            "writeAcceleratorEnabled": false,
-            "id": null,
-            "name": "prancerlinvm_DataDisk_0",
-            "storageAccountType": null,
-            "diskSizeGB": null,
-            "diskEncryptionSet": null
-          }
-        ]
-      },
-      "dataDiskResources": {
-        "type": "array",
-        "value": [
-          {
-            "name": "prancerlinvm_DataDisk_0",
-            "sku": "Premium_LRS",
-            "properties": {
-              "diskSizeGB": 1024,
-              "creationData": {
-                "createOption": "empty"
-              }
-            }
-          }
-        ]
-      },
-      "virtualMachineSize": {
+      "containerName": {
         "type": "string",
-        "metadata": {
-          "description": "Size of the virtual machine."
-        },
-        "value": "Standard_DS1_v2"
+        "value": "prancerstoragecontainer"
       },
-      "adminUsername": {
+      "workspaceName": {
         "type": "string",
-        "metadata": {
-          "description": "Username for the Virtual Machine."
-        },
-        "value": "dcadmin"
+        "defaultValue": "GEN-UNIQUE"
       },
-      "adminPassword": {
-        "type": "secureString",
-        "metadata": {
-          "description": "Password for the Virtual Machine."
-        },
-        "value": null
-      },
-      "VirtualNetworkRGName": {
-        "type": "string",
-        "metadata": {
-          "description": "Virtual Network name"
-        },
-        "value": "Prancer"
-      },
-      "VirtualNetworkName": {
-        "type": "string",
-        "metadata": {
-          "description": "Virtual Network Resource Group"
-        },
-        "value": "prancer-vnet"
-      },
-      "publisher": {
-        "type": "string",
-        "value": "RedHat"
-      },
-      "offer": {
-        "type": "string",
-        "value": "RHEL"
-      },
-      "sku": {
-        "type": "string",
-        "value": "8.2"
-      },
-      "version": {
-        "type": "string",
-        "value": "latest"
-      },
-      "diagnosticsStorageAccountName": {
-        "type": "string",
-        "value": "prancerstorageaccount007"
+      "storageSinkName": {
+        "type": "String",
+        "defaultValue": "StorageSinkName"
       }
     },
-    "variables": {
-      "nsgId": "[resourceId(parameters('NSGRGName'), 'Microsoft.Network/networkSecurityGroups', parameters('NSGName'))]",
-      "vnetId": "virtualNetworkId",
-      "vnetID": "[resourceId(parameters('VirtualNetworkRGName'), 'Microsoft.Network/virtualNetworks', parameters('VirtualNetworkName'))]",
-      "subnetRef": "virtualNetworkId/subnets/prancer-backend",
-      "networkInterfaceName": "prancerlinvm-NIC"
-    },
+    "variables": {},
     "resources": [
       {
-        "name": "prancerlinvm-NIC",
-        "type": "Microsoft.Network/networkInterfaces",
-        "apiVersion": "2018-10-01",
+        "name": "prancerstorageaccount",
+        "type": "Microsoft.Storage/storageAccounts",
+        "apiVersion": "2019-06-01",
         "location": "eastus",
-        "dependsOn": [],
         "properties": {
-          "ipConfigurations": [
-            {
-              "name": "ipconfig1",
-              "properties": {
-                "subnet": {
-                  "id": "virtualNetworkId/subnets/prancer-backend"
-                },
-                "privateIPAllocationMethod": "Dynamic"
-              }
-            }
-          ],
-          "networkSecurityGroup": {
-            "id": "[resourceId(parameters('NSGRGName'), 'Microsoft.Network/networkSecurityGroups', parameters('NSGName'))]"
+          "accessTier": "Hot",
+          "minimumTlsVersion": "TLS1_2",
+          "supportsHttpsTrafficOnly": true,
+          "allowBlobPublicAccess": true,
+          "networkAcls": {
+            "bypass": "AzureServices",
+            "defaultAction": "Allow",
+            "ipRules": []
+          }
+        },
+        "dependsOn": [],
+        "sku": {
+          "name": "Standard_LRS"
+        },
+        "kind": "BlobStorage",
+        "tags": {}
+      },
+      {
+        "type": "Microsoft.Storage/storageAccounts/blobServices",
+        "apiVersion": "2019-06-01",
+        "name": "prancerstorageaccount/default",
+        "dependsOn": [
+          "[resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccountName'))]"
+        ],
+        "sku": {
+          "name": "Standard_LRS",
+          "tier": "Standard"
+        },
+        "properties": {
+          "cors": {
+            "corsRules": []
+          },
+          "deleteRetentionPolicy": {
+            "enabled": false
           }
         }
       },
       {
-        "name": "dataDiskResources)[copyIndex(",
-        "type": "Microsoft.Compute/disks",
-        "apiVersion": "2020-05-01",
-        "location": "eastus",
-        "properties": "dataDiskResources)[copyIndex(",
-        "sku": {
-          "name": "dataDiskResources)[copyIndex("
-        }
-      },
-      {
-        "name": "prancerlinvm",
-        "type": "Microsoft.Compute/virtualMachines",
-        "apiVersion": "2020-06-01",
-        "location": "eastus",
+        "type": "Microsoft.Storage/storageAccounts/blobServices/containers",
+        "apiVersion": "2019-06-01",
+        "name": "storageAccountname/default/prancerstoragecontainer",
         "dependsOn": [
-          "managedDiskResources",
-          "Microsoft.Network/networkInterfaces/prancerlinvm-NIC"
+          "[resourceId('Microsoft.Storage/storageAccounts/blobServices', parameters('storageAccountName'), 'default')]",
+          "[resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccountName'))]"
         ],
         "properties": {
-          "hardwareProfile": {
-            "vmSize": "Standard_DS1_v2"
-          },
-          "storageProfile": {
-            "osDisk": {
-              "createOption": "fromImage",
-              "managedDisk": {
-                "storageAccountType": "Premium_LRS"
-              }
+          "publicAccess": "Container"
+        }
+      },
+      {
+        "type": "Microsoft.Storage/storageAccounts/blobServices/providers/diagnosticsettings",
+        "name": "prancerstorageaccount/blobServices//microsoft.insights/prancerstorageaccountLogSettings",
+        "apiVersion": "2017-05-01-preview",
+        "properties": {
+          "workspaceId": "[resourceId('Microsoft.OperationalInsights/workspaces', parameters('workspaceName'))]",
+          "storageAccountId": "[resourceId('Microsoft.Storage/storageAccounts', parameters('storageSinkName'))]",
+          "logs": [
+            {
+              "category": "StorageRead",
+              "enabled": false
             },
-            "imageReference": {
-              "publisher": "RedHat",
-              "offer": "RHEL",
-              "sku": "8.2",
-              "version": "latest"
+            {
+              "category": "StorageWrite",
+              "enabled": true
             },
-            "copy": [
-              {
-                "name": "dataDisks",
-                "count": 23,
-                "input": {
-                  "lun": "dataDisks)[copyIndex(dataDisks",
-                  "createOption": "dataDisks)[copyIndex(dataDisks",
-                  "caching": "dataDisks)[copyIndex(dataDisks",
-                  "diskSizeGB": "dataDisks)[copyIndex(dataDisks",
-                  "managedDisk": {
-                    "id": "[coalesce(parameters('dataDisks')[copyIndex('dataDisks')].id, if(equals(parameters('dataDisks')[copyIndex('dataDisks')].name, json('null')), json('null'), resourceId('Microsoft.Compute/disks', parameters('dataDisks')[copyIndex('dataDisks')].name)))]",
-                    "storageAccountType": "dataDisks)[copyIndex(dataDisks"
-                  },
-                  "writeAcceleratorEnabled": "dataDisks)[copyIndex(dataDisks"
-                }
-              }
-            ]
-          },
-          "networkProfile": {
-            "networkInterfaces": [
-              {
-                "id": "[resourceId('Microsoft.Network/networkInterfaces', variables('networkInterfaceName'))]"
-              }
-            ]
-          },
-          "osProfile": {
-            "computerName": "prancerlinvm",
-            "adminUsername": "dcadmin",
-            "adminPassword": null
-          },
-          "diagnosticsProfile": {
-            "bootDiagnostics": {
-              "enabled": true,
-              "storageUri": "https://prancerstorageaccount007.blob.core.windows.net/"
+            {
+              "category": "StorageDelete",
+              "enabled": true
             }
-          }
+          ],
+          "metrics": [
+            {
+              "category": "Transaction",
+              "enabled": true
+            }
+          ]
+        }
+      },
+      {
+        "type": "Microsoft.Storage/storageAccounts/queueservices/providers/diagnosticsettings",
+        "apiVersion": "2017-05-01-preview",
+        "name": "prancerstorageaccount/queueservices//microsoft.insights/prancerstorageaccountLogSettings",
+        "properties": {
+          "workspaceId": "[resourceId('Microsoft.OperationalInsights/workspaces', parameters('workspaceName'))]",
+          "storageAccountId": "[resourceId('Microsoft.Storage/storageAccounts', parameters('storageSinkName'))]",
+          "logs": [
+            {
+              "category": "StorageRead",
+              "enabled": true
+            },
+            {
+              "category": "StorageWrite",
+              "enabled": false
+            },
+            {
+              "category": "StorageDelete",
+              "enabled": false
+            }
+          ],
+          "metrics": [
+            {
+              "category": "Transaction",
+              "enabled": true
+            }
+          ]
+        }
+      },
+      {
+        "type": "Microsoft.Storage/storageAccounts/tableservices/providers/diagnosticsettings",
+        "apiVersion": "2017-05-01-preview",
+        "name": "prancerstorageaccount/tableservices//microsoft.insights/prancerstorageaccountLogSettings",
+        "properties": {
+          "workspaceId": "[resourceId('Microsoft.OperationalInsights/workspaces', parameters('workspaceName'))]",
+          "storageAccountId": "[resourceId('Microsoft.Storage/storageAccounts', parameters('storageSinkName'))]",
+          "metrics": [
+            {
+              "category": "Transaction",
+              "enabled": true
+            }
+          ]
         }
       }
     ],
-    "outputs": {
-      "adminUsername": {
-        "type": "string",
-        "value": "[parameters('adminUsername')]"
-      }
-    },
+    "outputs": {},
     "\uff04schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#"
   }
 }

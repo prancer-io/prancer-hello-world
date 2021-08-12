@@ -2,42 +2,117 @@
   "structure": "filesystem",
   "error": null,
   "reference": "master",
+  "contentType": "yaml",
   "source": "gitConnectorGoogleKcc",
   "paths": [
-    "/samples/resources/dnsrecordset/dns-aaaa-record-set/dns_v1beta1_dnsrecordset.yaml"
+    "/samples/resources/containercluster/vpc-native-container-cluster/container_v1beta1_containercluster.yaml"
   ],
-  "timestamp": 1622492385721,
+  "timestamp": 1628765145138,
   "queryuser": null,
   "checksum": "99914b932bd37a50b983c5e7c90ae93b",
   "node": {
     "masterSnapshotId": "KCC_TEMPLATE_SNAPSHOT",
-    "type": "yaml",
-    "collection": "deploymentmanagertemplate",
+    "type": "kcc",
+    "collection": "kcctemplate",
     "paths": [
-      "/samples/resources/dnsrecordset/dns-aaaa-record-set/dns_v1beta1_dnsrecordset.yaml"
+      "/samples/resources/containercluster/vpc-native-container-cluster/container_v1beta1_containercluster.yaml"
     ],
     "snapshotId": "KCC_TEMPLATE_SNAPSHOT299",
     "status": "active",
     "validate": true
   },
   "snapshotId": "KCC_TEMPLATE_SNAPSHOT299",
-  "collection": "deploymentmanagertemplate",
+  "collection": "kcctemplate",
   "json": {
-    "apiVersion": "dns.cnrm.cloud.google.com/v1beta1",
-    "kind": "DNSRecordSet",
+    "apiVersion": "container.cnrm.cloud.google.com/v1beta1",
+    "kind": "ContainerCluster",
     "metadata": {
-      "name": "dnsrecordset-sample-aaaa"
+      "labels": {
+        "availability": "high",
+        "target-audience": "production"
+      },
+      "name": "containercluster-sample-vpcnative"
     },
     "spec": {
-      "name": "www.example.com.",
-      "type": "AAAA",
-      "ttl": 300,
-      "managedZoneRef": {
-        "name": "dnsrecordset-dep-aaaa"
+      "description": "A large regional VPC-native cluster set up with special networking considerations.",
+      "location": "us-central1",
+      "initialNodeCount": 1,
+      "defaultMaxPodsPerNode": 16,
+      "nodeLocations": [
+        "us-central1-a",
+        "us-central1-b",
+        "us-central1-c",
+        "us-central1-f"
+      ],
+      "workloadIdentityConfig": {
+        "identityNamespace": "${PROJECT_ID?}.svc.id.goog"
       },
-      "rrdatas": [
-        "8888:8888:8888:8888::"
-      ]
+      "networkingMode": "VPC_NATIVE",
+      "networkRef": {
+        "name": "containercluster-dep-vpcnative"
+      },
+      "subnetworkRef": {
+        "name": "containercluster-dep-vpcnative"
+      },
+      "ipAllocationPolicy": {
+        "servicesSecondaryRangeName": "servicesrange",
+        "clusterSecondaryRangeName": "clusterrange"
+      },
+      "clusterAutoscaling": {
+        "enabled": true,
+        "autoscalingProfile": "BALANCED",
+        "resourceLimits": [
+          {
+            "resourceType": "cpu",
+            "maximum": 100,
+            "minimum": 10
+          },
+          {
+            "resourceType": "memory",
+            "maximum": 1000,
+            "minimum": 100
+          }
+        ]
+      },
+      "maintenancePolicy": {
+        "dailyMaintenanceWindow": {
+          "startTime": "00:00"
+        }
+      },
+      "releaseChannel": {
+        "channel": "STABLE"
+      },
+      "notificationConfig": {
+        "pubsub": {
+          "enabled": true,
+          "topicRef": {
+            "name": "containercluster-dep-vpcnative"
+          }
+        }
+      },
+      "enableBinaryAuthorization": true,
+      "enableIntranodeVisibility": true,
+      "enableShieldedNodes": true,
+      "addonsConfig": {
+        "networkPolicyConfig": {
+          "disabled": false
+        },
+        "dnsCacheConfig": {
+          "enabled": true
+        },
+        "configConnectorConfig": {
+          "enabled": true
+        }
+      },
+      "networkPolicy": {
+        "enabled": true
+      },
+      "podSecurityPolicyConfig": {
+        "enabled": true
+      },
+      "verticalPodAutoscaling": {
+        "enabled": true
+      }
     }
   }
 }

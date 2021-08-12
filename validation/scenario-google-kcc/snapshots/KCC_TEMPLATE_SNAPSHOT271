@@ -2,45 +2,39 @@
   "structure": "filesystem",
   "error": null,
   "reference": "master",
+  "contentType": "yaml",
   "source": "gitConnectorGoogleKcc",
   "paths": [
-    "/samples/resources/dataflowflextemplatejob/batch-dataflow-flex-template-job/dataflow_v1beta1_dataflowflextemplatejob.yaml"
+    "/samples/resources/computetargettcpproxy/compute_v1beta1_computehealthcheck.yaml"
   ],
-  "timestamp": 1622492384824,
+  "timestamp": 1628765144341,
   "queryuser": null,
   "checksum": "99914b932bd37a50b983c5e7c90ae93b",
   "node": {
     "masterSnapshotId": "KCC_TEMPLATE_SNAPSHOT",
-    "type": "yaml",
-    "collection": "deploymentmanagertemplate",
+    "type": "kcc",
+    "collection": "kcctemplate",
     "paths": [
-      "/samples/resources/dataflowflextemplatejob/batch-dataflow-flex-template-job/dataflow_v1beta1_dataflowflextemplatejob.yaml"
+      "/samples/resources/computetargettcpproxy/compute_v1beta1_computehealthcheck.yaml"
     ],
     "snapshotId": "KCC_TEMPLATE_SNAPSHOT271",
     "status": "active",
     "validate": true
   },
   "snapshotId": "KCC_TEMPLATE_SNAPSHOT271",
-  "collection": "deploymentmanagertemplate",
+  "collection": "kcctemplate",
   "json": {
-    "apiVersion": "dataflow.cnrm.cloud.google.com/v1beta1",
-    "kind": "DataflowFlexTemplateJob",
+    "apiVersion": "compute.cnrm.cloud.google.com/v1beta1",
+    "kind": "ComputeHealthCheck",
     "metadata": {
-      "annotations": {
-        "cnrm.cloud.google.com/on-delete": "cancel"
-      },
-      "name": "dataflowflextemplatejob-sample-batch"
+      "name": "computetargettcpproxy-dep"
     },
     "spec": {
-      "region": "us-central1",
-      "containerSpecGcsPath": "gs://dataflow-templates/2020-08-31-00_RC00/flex/File_Format_Conversion",
-      "parameters": {
-        "inputFileFormat": "csv",
-        "outputFileFormat": "avro",
-        "inputFileSpec": "gs://config-connector-samples/dataflowflextemplate/numbertest.csv",
-        "outputBucket": "gs://${PROJECT_ID?}-dataflowflextemplatejob-dep-batch",
-        "schema": "gs://config-connector-samples/dataflowflextemplate/numbers.avsc"
-      }
+      "checkIntervalSec": 10,
+      "tcpHealthCheck": {
+        "port": 443
+      },
+      "location": "global"
     }
   }
 }

@@ -2,67 +2,53 @@
   "structure": "filesystem",
   "error": null,
   "reference": "master",
+  "contentType": "yaml",
   "source": "gitConnectorGoogleKcc",
   "paths": [
-    "/samples/resources/computeresourcepolicy/weekly-resource-policy-schedule/compute_v1alpha3_computeresourcepolicy.yaml"
+    "/samples/resources/computeinstancegroupmanager/zonal-compute-instance-group-manager/compute_v1beta1_computeinstancetemplate.yaml"
   ],
-  "timestamp": 1622492380410,
+  "timestamp": 1628765141636,
   "queryuser": null,
   "checksum": "99914b932bd37a50b983c5e7c90ae93b",
   "node": {
     "masterSnapshotId": "KCC_TEMPLATE_SNAPSHOT",
-    "type": "yaml",
-    "collection": "deploymentmanagertemplate",
+    "type": "kcc",
+    "collection": "kcctemplate",
     "paths": [
-      "/samples/resources/computeresourcepolicy/weekly-resource-policy-schedule/compute_v1alpha3_computeresourcepolicy.yaml"
+      "/samples/resources/computeinstancegroupmanager/zonal-compute-instance-group-manager/compute_v1beta1_computeinstancetemplate.yaml"
     ],
     "snapshotId": "KCC_TEMPLATE_SNAPSHOT162",
     "status": "active",
     "validate": true
   },
   "snapshotId": "KCC_TEMPLATE_SNAPSHOT162",
-  "collection": "deploymentmanagertemplate",
+  "collection": "kcctemplate",
   "json": {
     "apiVersion": "compute.cnrm.cloud.google.com/v1beta1",
-    "kind": "ComputeResourcePolicy",
+    "kind": "ComputeInstanceTemplate",
     "metadata": {
-      "name": "computeresourcepolicy-sample-weeklyschedule"
+      "name": "computeinstancegroupmanager-dep-zonal"
     },
     "spec": {
-      "region": "us-central1",
-      "snapshotSchedulePolicy": {
-        "schedule": {
-          "weeklySchedule": {
-            "dayOfWeeks": [
-              {
-                "startTime": "08:00",
-                "day": "MONDAY"
-              },
-              {
-                "startTime": "15:00",
-                "day": "WEDNESDAY"
-              },
-              {
-                "startTime": "23:00",
-                "day": "FRIDAY"
-              }
-            ]
-          }
-        },
-        "retentionPolicy": {
-          "maxRetentionDays": 12
-        },
-        "snapshotProperties": {
-          "storageLocations": [
-            "us"
-          ],
-          "guestFlush": false,
-          "labels": {
-            "autodeleted": "false",
-            "interval": "weekly"
+      "machineType": "n1-standard-1",
+      "disk": [
+        {
+          "sourceImageRef": {
+            "external": "debian-cloud/debian-9"
+          },
+          "boot": true
+        }
+      ],
+      "networkInterface": [
+        {
+          "networkRef": {
+            "name": "computeinstancegroupmanager-dep-zonal"
+          },
+          "subnetworkRef": {
+            "name": "computeinstancegroupmanager-dep-zonal"
           }
         }
-      }
+      ]
     }
   }
 }

@@ -2,11 +2,12 @@
   "structure": "filesystem",
   "error": null,
   "reference": "master",
-  "source": "gitConnectorCloudformationRemoteStructure",
+  "contentType": "yaml",
+  "source": "gitConnectorCloudformation",
   "paths": [
-    "/s3/deploy.yaml"
+    "/api_gateway/api_gateway.yaml"
   ],
-  "timestamp": 1614578524956,
+  "timestamp": 1628763940831,
   "queryuser": null,
   "checksum": "99914b932bd37a50b983c5e7c90ae93b",
   "node": {
@@ -14,7 +15,7 @@
     "type": "cloudformation",
     "collection": "cloudformationtemplate",
     "paths": [
-      "/s3/deploy.yaml"
+      "/api_gateway/api_gateway.yaml"
     ],
     "snapshotId": "CFR_TEMPLATE_SNAPSHOT2",
     "status": "active",
@@ -24,50 +25,35 @@
   "collection": "cloudformationtemplate",
   "json": {
     "AWSTemplateFormatVersion": "2010-09-09",
-    "Metadata": {
-      "License": "Apache-2.0"
-    },
-    "Description": "AWS CloudFormation Sample Template S3_Website_Bucket_With_Retain_On_Delete: Sample template showing how to create a publicly accessible S3 bucket configured for website access with a deletion policy of retain on delete. **WARNING** This template creates an S3 bucket that will NOT be deleted when the stack is deleted. You will be billed for the AWS resources used if you create a stack from this template.",
+    "Description": "An example of API Gateway caching confusion",
     "Resources": [
       {
-        "Type": "AWS::S3::Bucket",
+        "Type": "AWS::ApiGateway::RestApi",
         "Properties": {
-          "AccessControl": "PublicRead",
-          "WebsiteConfiguration": {
-            "IndexDocument": "index.html",
-            "ErrorDocument": "error.html"
+          "Name": "dev-aws-apig-cache",
+          "EndpointConfiguration": {
+            "Types": [
+              "EDGE"
+            ]
           }
         },
-        "DeletionPolicy": "Retain"
-      }
-    ],
-    "Outputs": {
-      "WebsiteURL": {
-        "Value": {
-          "Fn::GetAtt": [
-            "S3Bucket",
-            "WebsiteURL"
-          ]
-        },
-        "Description": "URL for website hosted on S3"
+        "Name": "ApiGatewayRestApi"
       },
-      "S3BucketSecureURL": {
-        "Value": {
-          "Fn::Join": [
-            "",
-            [
-              "https://",
-              {
-                "Fn::GetAtt": [
-                  "S3Bucket",
-                  "DomainName"
-                ]
-              }
-            ]
-          ]
+      {
+        "Type": "AWS::ApiGateway::RequestValidator",
+        "Properties": {
+          "Name": "ApiGatewayRequestValidator",
+          "RestApiId": {
+            "Ref": "ApiGatewayRestApi"
+          },
+          "ValidateRequestBody": false,
+          "ValidateRequestParameters": false
         },
-        "Description": "Name of S3 bucket to hold website content"
+        "DependsOn": [
+          "ApiGatewayRestApi"
+        ],
+        "Name": "ApiGatewayRequestValidator"
       }
-    }
+    ]
   }
 }

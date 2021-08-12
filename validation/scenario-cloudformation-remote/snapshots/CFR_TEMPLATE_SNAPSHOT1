@@ -2,11 +2,12 @@
   "structure": "filesystem",
   "error": null,
   "reference": "master",
-  "source": "gitConnectorCloudformationRemoteStructure",
+  "contentType": "yaml",
+  "source": "gitConnectorCloudformation",
   "paths": [
-    "/ec2/deploy.json"
+    "/acm/acm.yaml"
   ],
-  "timestamp": 1614578524943,
+  "timestamp": 1628763940816,
   "queryuser": null,
   "checksum": "99914b932bd37a50b983c5e7c90ae93b",
   "node": {
@@ -14,7 +15,7 @@
     "type": "cloudformation",
     "collection": "cloudformationtemplate",
     "paths": [
-      "/ec2/deploy.json"
+      "/acm/acm.yaml"
     ],
     "snapshotId": "CFR_TEMPLATE_SNAPSHOT1",
     "status": "active",
@@ -23,32 +24,30 @@
   "snapshotId": "CFR_TEMPLATE_SNAPSHOT1",
   "collection": "cloudformationtemplate",
   "json": {
-    "Description": "Create an EC2 instance running the Amazon Linux 32 bit AMI.",
+    "AWSTemplateFormatVersion": "2010-09-09",
     "Parameters": {
-      "KeyPair": {
-        "Description": "The EC2 Key Pair to allow SSH access to the instance",
-        "Type": "String"
+      "domain": {
+        "Type": "String",
+        "Description": "DNS domain to create a SES email for"
       }
     },
     "Resources": [
       {
-        "Type": "AWS::EC2::Instance",
+        "Type": "AWS::CertificateManager::Certificate",
         "Properties": {
-          "KeyName": {
-            "Ref": "KeyPair"
+          "DomainName": {
+            "Ref": "domain"
           },
-          "ImageId": "ami-3b355a52"
-        }
+          "SubjectAlternativeNames": [
+            {
+              "Fn::Sub": "www.${domain}"
+            }
+          ],
+          "ValidationMethod": "DNS",
+          "CertificateTransparencyLoggingPreference": "DISABLED"
+        },
+        "Name": "SslCertificate"
       }
-    ],
-    "Outputs": {
-      "InstanceId": {
-        "Description": "The InstanceId of the newly created EC2 instance",
-        "Value": {
-          "Ref": "Ec2Instance"
-        }
-      }
-    },
-    "AWSTemplateFormatVersion": "2010-09-09"
+    ]
   }
 }

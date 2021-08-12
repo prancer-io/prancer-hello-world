@@ -2,52 +2,59 @@
   "structure": "filesystem",
   "error": null,
   "reference": "master",
+  "contentType": "yaml",
   "source": "gitConnectorGoogleKcc",
   "paths": [
-    "/samples/resources/cloudschedulerjob/scheduler-job-oauth/cloudscheduler_v1beta1_cloudschedulerjob.yaml"
+    "/samples/resources/binaryauthorizationpolicy/default-policy/binaryauthorization_v1beta1_binaryauthorizationpolicy.yaml"
   ],
-  "timestamp": 1622492376057,
+  "timestamp": 1628765139280,
   "queryuser": null,
   "checksum": "99914b932bd37a50b983c5e7c90ae93b",
   "node": {
     "masterSnapshotId": "KCC_TEMPLATE_SNAPSHOT",
-    "type": "yaml",
-    "collection": "deploymentmanagertemplate",
+    "type": "kcc",
+    "collection": "kcctemplate",
     "paths": [
-      "/samples/resources/cloudschedulerjob/scheduler-job-oauth/cloudscheduler_v1beta1_cloudschedulerjob.yaml"
+      "/samples/resources/binaryauthorizationpolicy/default-policy/binaryauthorization_v1beta1_binaryauthorizationpolicy.yaml"
     ],
     "snapshotId": "KCC_TEMPLATE_SNAPSHOT49",
     "status": "active",
     "validate": true
   },
   "snapshotId": "KCC_TEMPLATE_SNAPSHOT49",
-  "collection": "deploymentmanagertemplate",
+  "collection": "kcctemplate",
   "json": {
-    "apiVersion": "cloudscheduler.cnrm.cloud.google.com/v1beta1",
-    "kind": "CloudSchedulerJob",
+    "apiVersion": "binaryauthorization.cnrm.cloud.google.com/v1beta1",
+    "kind": "BinaryAuthorizationPolicy",
     "metadata": {
-      "name": "cloudscheduler-sample-oauth"
+      "name": "binaryauthorizationpolicy-sample-default"
     },
     "spec": {
-      "description": "scheduler-http-target-job",
-      "schedule": "*/5 * * * *",
-      "location": "us-west2",
-      "timeZone": "America/New_York",
-      "attemptDeadline": "600s",
-      "retryConfig": {
-        "retryCount": 3,
-        "maxRetryDuration": "60s",
-        "maxDoublings": 2
+      "projectRef": {
+        "name": "binauthpolicy-dep-default"
       },
-      "httpTarget": {
-        "httpMethod": "GET",
-        "uri": "https://cloudscheduler.googleapis.com/v1/projects/my-project-name/locations/us-west1/jobs",
-        "oauthToken": {
-          "serviceAccountRef": {
-            "name": "cloudscheduler-oauth-dep"
-          }
+      "admissionWhitelistPatterns": [
+        {
+          "namePattern": "gcr.io/google_containers/*"
+        },
+        {
+          "namePattern": "gcr.io/google-containers/*"
+        },
+        {
+          "namePattern": "k8s.gcr.io/*"
+        },
+        {
+          "namePattern": "gke.gcr.io/*"
+        },
+        {
+          "namePattern": "gcr.io/stackdriver-agents/*"
         }
-      }
+      ],
+      "defaultAdmissionRule": {
+        "enforcementMode": "ENFORCED_BLOCK_AND_AUDIT_LOG",
+        "evaluationMode": "ALWAYS_ALLOW"
+      },
+      "globalPolicyEvaluationMode": "ENABLE"
     }
   }
 }

@@ -2,11 +2,12 @@
   "structure": "filesystem",
   "error": null,
   "reference": "master",
+  "contentType": "yaml",
   "source": "gitConnectorAzureAso",
   "paths": [
-    "/config/samples/azure_v1alpha1_eventhub.yaml"
+    "/config/samples/azure_v1alpha1_azurevmscaleset.yaml"
   ],
-  "timestamp": 1624434683293,
+  "timestamp": 1628760796035,
   "queryuser": null,
   "checksum": "99914b932bd37a50b983c5e7c90ae93b",
   "node": {
@@ -14,7 +15,7 @@
     "type": "aso",
     "collection": "asotemplate",
     "paths": [
-      "/config/samples/azure_v1alpha1_eventhub.yaml"
+      "/config/samples/azure_v1alpha1_azurevmscaleset.yaml"
     ],
     "snapshotId": "ASO_TEMPLATE_SNAPSHOT25",
     "status": "active",
@@ -24,26 +25,24 @@
   "collection": "asotemplate",
   "json": {
     "apiVersion": "azure.microsoft.com/v1alpha1",
-    "kind": "Eventhub",
+    "kind": "AzureVMScaleSet",
     "metadata": {
-      "name": "eventhub-sample-1"
+      "name": "vmss-sample-01"
     },
     "spec": {
-      "location": "westus",
+      "location": "SouthCentralUS",
       "resourceGroup": "resourcegroup-azure-operators",
-      "namespace": "eventhubnamespace-sample-1",
-      "properties": {
-        "messageRetentionInDays": 7,
-        "partitionCount": 2
-      },
-      "authorizationRule": {
-        "name": "RootManageSharedAccessKey",
-        "rights": [
-          "Listen",
-          "Manage",
-          "Send"
-        ]
-      }
+      "vmSize": "Standard_DS1_v2",
+      "capacity": 3,
+      "osType": "Linux",
+      "adminUserName": "azureuser7",
+      "sshPublicKeyData": "{ssh public key}",
+      "platformImageURN": "Canonical:UbuntuServer:16.04-LTS:latest",
+      "virtualNetworkName": "vnet-sample-01",
+      "subnetName": "test1",
+      "loadBalancerName": "lb-sample-01",
+      "backendAddressPoolName": "test",
+      "inboundNatPoolName": "test"
     }
   }
 }

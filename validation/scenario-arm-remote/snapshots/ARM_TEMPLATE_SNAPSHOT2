@@ -2,12 +2,13 @@
   "structure": "filesystem",
   "error": null,
   "reference": "master",
-  "source": "gitConnectorArmRemoteStructure",
+  "contentType": "json",
+  "source": "gitConnectorArm",
   "paths": [
     "/AKS/aks.azuredeploy.json",
     "/AKS/aks.azuredeploy.parameters.json"
   ],
-  "timestamp": 1614578745360,
+  "timestamp": 1628758914103,
   "queryuser": null,
   "checksum": "99914b932bd37a50b983c5e7c90ae93b",
   "node": {
@@ -74,7 +75,7 @@
         "metadata": {
           "description": "Network plugin used for building Kubernetes network."
         },
-        "value": "azure"
+        "value": "kubenet"
       },
       "enableRBAC": {
         "type": "bool",
@@ -82,7 +83,7 @@
         "metadata": {
           "description": "Boolean flag to turn on and off of RBAC."
         },
-        "value": true
+        "value": false
       },
       "vmssNodePool": {
         "type": "bool",
@@ -113,7 +114,7 @@
         "metadata": {
           "description": "Boolean flag to turn on and off http application routing."
         },
-        "value": false
+        "value": true
       },
       "enableAzurePolicy": {
         "type": "bool",
@@ -125,7 +126,7 @@
       },
       "enableOmsAgent": {
         "type": "bool",
-        "defaultValue": true,
+        "defaultValue": false,
         "metadata": {
           "description": "Boolean flag to turn on and off omsagent addon."
         }
@@ -190,7 +191,7 @@
         "metadata": {
           "description": "Network policy used for building Kubernetes network."
         },
-        "value": "azure"
+        "value": "calico"
       },
       "vnetSubnetID": {
         "type": "string",
@@ -237,6 +238,34 @@
       "SubnetName": {
         "type": "string",
         "value": "AKS"
+      },
+      "aadProfileManaged": {
+        "defaultValue": false,
+        "type": "bool",
+        "metadata": {
+          "description": "Specifies whether to enable managed AAD integration."
+        }
+      },
+      "aadProfileEnableAzureRBAC": {
+        "defaultValue": false,
+        "type": "bool",
+        "metadata": {
+          "description": "Specifies whether to  to enable Azure RBAC for Kubernetes authorization."
+        }
+      },
+      "aadProfileAdminGroupObjectIDs": {
+        "defaultValue": [],
+        "type": "array",
+        "metadata": {
+          "description": "Specifies the AAD group object IDs that will have admin role of the cluster."
+        }
+      },
+      "aadProfileTenantId": {
+        "defaultValue": "[subscription().tenantId]",
+        "type": "string",
+        "metadata": {
+          "description": "Specifies the tenant id of the Azure Active Directory used by the AKS cluster for authentication."
+        }
       }
     },
     "variables": {
@@ -251,13 +280,13 @@
         "name": "prancer-aks-cluster",
         "properties": {
           "kubernetesVersion": "1.17.11",
-          "enableRBAC": true,
+          "enableRBAC": false,
           "dnsPrefix": "prancer-aks",
           "agentPoolProfiles": [
             {
               "name": "prancer",
               "osDiskSizeGB": 0,
-              "count": 3,
+              "count": 1,
               "vmSize": "Standard_DS2_v2",
               "osType": "Linux",
               "storageProfile": "ManagedDisks",
@@ -270,24 +299,33 @@
           ],
           "networkProfile": {
             "loadBalancerSku": "standard",
-            "networkPlugin": "azure",
-            "networkPolicy": "azure",
+            "networkPlugin": "kubenet",
+            "networkPolicy": "calico",
             "serviceCidr": "10.0.0.0/16",
             "dnsServiceIP": "10.0.0.10",
             "dockerBridgeCidr": "172.17.0.1/16"
+          },
+          "aadProfile": {
+            "managed": false,
+            "enableAzureRBAC": false,
+            "adminGroupObjectIDs": [],
+            "clientAppID": "",
+            "serverAppID": "",
+            "serverAppSecret": "",
+            "tenantID": "[subscription().tenantId]"
           },
           "apiServerAccessProfile": {
             "enablePrivateCluster": false
           },
           "addonProfiles": {
             "httpApplicationRouting": {
-              "enabled": false
+              "enabled": true
             },
             "azurePolicy": {
               "enabled": false
             },
             "omsagent": {
-              "enabled": true,
+              "enabled": false,
               "config": {
                 "logAnalyticsWorkspaceResourceID": "/subscriptions/b2dbb99e-1315-4654-8a72-15c0bd5f07da/resourceGroups/DefaultResourceGroup-EUS/providers/Microsoft.OperationalInsights/workspaces/DefaultWorkspace-b2dbb99e-1315-4654-8a72-15c0bd5f07da-EUS"
               }

@@ -2,12 +2,13 @@
   "structure": "filesystem",
   "error": null,
   "reference": "master",
-  "source": "gitConnectorArmRemoteStructure",
+  "contentType": "json",
+  "source": "gitConnectorArm",
   "paths": [
-    "/storage/blob.azuredeploy.json",
-    "/storage/blob.azuredeploy.parameters.json"
+    "/VM/log_analytic_agent/vm.azuredeploy.json",
+    "/VM/log_analytic_agent/vm.azuredeploy.parameters.json"
   ],
-  "timestamp": 1614578745477,
+  "timestamp": 1628758917232,
   "queryuser": null,
   "checksum": "99914b932bd37a50b983c5e7c90ae93b",
   "node": {
@@ -15,8 +16,8 @@
     "type": "arm",
     "collection": "armtemplate",
     "paths": [
-      "/storage/blob.azuredeploy.json",
-      "/storage/blob.azuredeploy.parameters.json"
+      "/VM/log_analytic_agent/vm.azuredeploy.json",
+      "/VM/log_analytic_agent/vm.azuredeploy.parameters.json"
     ],
     "snapshotId": "ARM_TEMPLATE_SNAPSHOT13",
     "status": "active",
@@ -27,110 +28,67 @@
   "json": {
     "contentVersion": "1.0.0.0",
     "parameters": {
+      "vmName": {
+        "type": "string",
+        "metadata": {
+          "description": "Name of the virtual machine."
+        },
+        "value": "my-windows-vm"
+      },
       "location": {
         "type": "string",
-        "value": "eastus"
+        "defaultValue": "[resourceGroup().location]",
+        "metadata": {
+          "description": "Location of the virtual machine"
+        },
+        "value": "westus"
       },
-      "storageAccountName": {
+      "workspaceId": {
         "type": "string",
-        "value": "prancerstorageaccount"
+        "metadata": {
+          "description": "Id of the workspace."
+        },
+        "value": ""
       },
-      "accountType": {
+      "workspaceKey": {
         "type": "string",
-        "value": "Standard_LRS"
-      },
-      "kind": {
-        "type": "string",
-        "value": "BlobStorage"
-      },
-      "accessTier": {
-        "type": "string",
-        "value": "Hot"
-      },
-      "minimumTlsVersion": {
-        "type": "string",
-        "value": "TLS1_2"
-      },
-      "supportsHttpsTrafficOnly": {
-        "type": "bool",
-        "value": true
-      },
-      "allowBlobPublicAccess": {
-        "type": "bool",
-        "value": true
-      },
-      "networkAclsBypass": {
-        "type": "string",
-        "value": "AzureServices"
-      },
-      "networkAclsDefaultAction": {
-        "type": "string",
-        "value": "Allow"
-      },
-      "containerName": {
-        "type": "string",
-        "value": "prancerstoragecontainer"
+        "metadata": {
+          "description": "Primary or secondary workspace key."
+        },
+        "value": "Tse-gj9CemT6A80urYa2hwtjvA5axv1xobXgKR17kbVdtacU6cEf+SNo2TdHGVKTsZHZd1W9QKRXfh+$fVY9dA=="
       }
     },
-    "variables": {},
     "resources": [
       {
-        "name": "prancerstorageaccount",
-        "type": "Microsoft.Storage/storageAccounts",
-        "apiVersion": "2019-06-01",
-        "location": "eastus",
-        "properties": {
-          "accessTier": "Hot",
-          "minimumTlsVersion": "TLS1_2",
-          "supportsHttpsTrafficOnly": true,
-          "allowBlobPublicAccess": true,
-          "networkAcls": {
-            "bypass": "AzureServices",
-            "defaultAction": "Allow",
-            "ipRules": []
+        "type": "Microsoft.Compute/virtualMachines",
+        "apiVersion": "2018-10-01",
+        "name": "my-windows-vm",
+        "location": "westus",
+        "resources": [
+          {
+            "type": "extensions",
+            "name": "my-windows-vm/Microsoft.Insights.LogAnalyticsAgent",
+            "apiVersion": "2015-06-15",
+            "location": "westus",
+            "dependsOn": [
+              "Microsoft.Compute/virtualMachines/my-windows-vm"
+            ],
+            "properties": {
+              "publisher": "Microsoft.EnterpriseCloud.Monitoring",
+              "type": "MicrosoftMonitoringAgent",
+              "typeHandlerVersion": "1.0",
+              "autoUpgradeMinorVersion": true,
+              "settings": {
+                "workspaceId": ""
+              },
+              "protectedSettings": {
+                "workspaceKey": "Tse-gj9CemT6A80urYa2hwtjvA5axv1xobXgKR17kbVdtacU6cEf+SNo2TdHGVKTsZHZd1W9QKRXfh+$fVY9dA=="
+              }
+            }
           }
-        },
-        "dependsOn": [],
-        "sku": {
-          "name": "Standard_LRS"
-        },
-        "kind": "BlobStorage",
-        "tags": {}
-      },
-      {
-        "type": "Microsoft.Storage/storageAccounts/blobServices",
-        "apiVersion": "2019-06-01",
-        "name": "prancerstorageaccount/default",
-        "dependsOn": [
-          "[resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccountName'))]"
-        ],
-        "sku": {
-          "name": "Standard_LRS",
-          "tier": "Standard"
-        },
-        "properties": {
-          "cors": {
-            "corsRules": []
-          },
-          "deleteRetentionPolicy": {
-            "enabled": false
-          }
-        }
-      },
-      {
-        "type": "Microsoft.Storage/storageAccounts/blobServices/containers",
-        "apiVersion": "2019-06-01",
-        "name": "storageAccounts_pancerstorage_name/default/prancerstoragecontainer",
-        "dependsOn": [
-          "[resourceId('Microsoft.Storage/storageAccounts/blobServices', parameters('storageAccountName'), 'default')]",
-          "[resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccountName'))]"
-        ],
-        "properties": {
-          "publicAccess": "None"
-        }
+        ]
       }
     ],
-    "outputs": {},
-    "\uff04schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#"
+    "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
   }
 }

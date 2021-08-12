@@ -2,12 +2,15 @@
   "structure": "filesystem",
   "error": null,
   "reference": "master",
+  "contentType": "terraform",
   "source": "gitConnectorTerraform",
   "paths": [
-    "/aws/modules/sns_subscription/vars.tf",
-    "/aws/modules/sns_subscription/main.tf"
+    "/gcp/compute_instance/provider.tf",
+    "/gcp/compute_instance/terraform.tfvars",
+    "/gcp/compute_instance/vars.tf",
+    "/gcp/compute_instance/main.tf"
   ],
-  "timestamp": 1620824339045,
+  "timestamp": 1628770712941,
   "queryuser": null,
   "checksum": "99914b932bd37a50b983c5e7c90ae93b",
   "node": {
@@ -15,8 +18,10 @@
     "type": "terraform",
     "collection": "terraformtemplate",
     "paths": [
-      "/aws/modules/sns_subscription/vars.tf",
-      "/aws/modules/sns_subscription/main.tf"
+      "/gcp/compute_instance/provider.tf",
+      "/gcp/compute_instance/terraform.tfvars",
+      "/gcp/compute_instance/vars.tf",
+      "/gcp/compute_instance/main.tf"
     ],
     "snapshotId": "TRF_TEMPLATE_SNAPSHOT38",
     "status": "active",
@@ -27,13 +32,59 @@
   "json": {
     "resources": [
       {
-        "type": "aws_sns_topic_subscription",
-        "name": "subscription1",
+        "type": "google_compute_instance",
+        "name": "vm",
         "properties": {
-          "endpoint": "",
-          "endpoint_auto_confirms": false,
-          "protocol": "",
-          "topic_arn": "${var.topic_arn}"
+          "name": "prancer-vm1",
+          "machine_type": "f1-micro",
+          "zone": "us-central1-a",
+          "tags": [
+            "vm",
+            "test"
+          ],
+          "boot_disk": [
+            {
+              "initialize_params": [
+                {
+                  "image": "debian-cloud/debian-9"
+                }
+              ]
+            }
+          ],
+          "scheduling": [
+            {
+              "preemptible": true,
+              "on_host_maintenance": null,
+              "automatic_restart": false
+            }
+          ],
+          "network_interface": [
+            {
+              "network": "default",
+              "subnetwork": null
+            }
+          ],
+          "can_ip_forward": true,
+          "metadata": {
+            "serial-port-enable": true
+          },
+          "metadata_startup_script": "",
+          "labels": {},
+          "vm_name": "prancer-vm1",
+          "vm_tags": [
+            "vm",
+            "test"
+          ],
+          "vm_image": "debian-cloud/debian-9",
+          "scheduling_enabled": true,
+          "scheduling_preemptible": true,
+          "scheduling_on_host_maintenance": null,
+          "scheduling_automatic_restart": false,
+          "network": "default",
+          "subnetwork": null,
+          "vm_metadata": {
+            "serial-port-enable": true
+          }
         }
       }
     ]

@@ -1,0 +1,94 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "yaml",
+  "source": "gitConnectorCloudformation",
+  "paths": [
+    "/kms/kms.yaml"
+  ],
+  "timestamp": 1628763941229,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "CFR_TEMPLATE_SNAPSHOT",
+    "type": "cloudformation",
+    "collection": "cloudformationtemplate",
+    "paths": [
+      "/kms/kms.yaml"
+    ],
+    "snapshotId": "CFR_TEMPLATE_SNAPSHOT23",
+    "status": "active",
+    "validate": true
+  },
+  "snapshotId": "CFR_TEMPLATE_SNAPSHOT23",
+  "collection": "cloudformationtemplate",
+  "json": {
+    "AWSTemplateFormatVersion": "2010-09-09",
+    "Resources": [
+      {
+        "Type": "AWS::KMS::Key",
+        "Properties": {
+          "Enabled": false,
+          "Description": "An example symmetric CMK",
+          "EnableKeyRotation": false,
+          "PendingWindowInDays": 20,
+          "KeyPolicy": {
+            "Version": "2012-10-17",
+            "Id": "key-default-1",
+            "Statement": [
+              {
+                "Sid": "Enable IAM User Permissions",
+                "Effect": "Allow",
+                "Principal": {
+                  "AWS": "*"
+                },
+                "Action": "kms:*",
+                "Resource": "*"
+              },
+              {
+                "Sid": "Allow administration of the key",
+                "Effect": "Allow",
+                "Principal": {
+                  "AWS": "*"
+                },
+                "Action": [
+                  "kms:Create*",
+                  "kms:Describe*",
+                  "kms:Enable*",
+                  "kms:List*",
+                  "kms:Put*",
+                  "kms:Update*",
+                  "kms:Revoke*",
+                  "kms:Disable*",
+                  "kms:Get*",
+                  "kms:Delete*",
+                  "kms:ScheduleKeyDeletion",
+                  "kms:CancelKeyDeletion"
+                ],
+                "Resource": "*"
+              },
+              {
+                "Sid": "Allow use of the key",
+                "Effect": "Allow",
+                "Principal": {
+                  "AWS": "*"
+                },
+                "Action": [
+                  "kms:DescribeKey",
+                  "kms:Encrypt",
+                  "kms:Decrypt",
+                  "kms:ReEncrypt*",
+                  "kms:GenerateDataKey",
+                  "kms:GenerateDataKeyWithoutPlaintext"
+                ],
+                "Resource": "*"
+              }
+            ]
+          }
+        },
+        "Name": "myKey"
+      }
+    ]
+  }
+}

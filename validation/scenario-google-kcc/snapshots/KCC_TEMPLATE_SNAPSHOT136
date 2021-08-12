@@ -2,38 +2,45 @@
   "structure": "filesystem",
   "error": null,
   "reference": "master",
+  "contentType": "yaml",
   "source": "gitConnectorGoogleKcc",
   "paths": [
-    "/samples/resources/computeinstancetemplate/compute_v1beta1_computedisk.yaml"
+    "/samples/resources/computeinstance/cloud-machine-instance/compute_v1beta1_computesubnetwork.yaml"
   ],
-  "timestamp": 1622492379390,
+  "timestamp": 1628765141092,
   "queryuser": null,
   "checksum": "99914b932bd37a50b983c5e7c90ae93b",
   "node": {
     "masterSnapshotId": "KCC_TEMPLATE_SNAPSHOT",
-    "type": "yaml",
-    "collection": "deploymentmanagertemplate",
+    "type": "kcc",
+    "collection": "kcctemplate",
     "paths": [
-      "/samples/resources/computeinstancetemplate/compute_v1beta1_computedisk.yaml"
+      "/samples/resources/computeinstance/cloud-machine-instance/compute_v1beta1_computesubnetwork.yaml"
     ],
     "snapshotId": "KCC_TEMPLATE_SNAPSHOT136",
     "status": "active",
     "validate": true
   },
   "snapshotId": "KCC_TEMPLATE_SNAPSHOT136",
-  "collection": "deploymentmanagertemplate",
+  "collection": "kcctemplate",
   "json": {
     "apiVersion": "compute.cnrm.cloud.google.com/v1beta1",
-    "kind": "ComputeDisk",
+    "kind": "ComputeSubnetwork",
     "metadata": {
-      "name": "instancetemplate-dep"
+      "name": "computeinstance-dep-cloudmachine"
     },
     "spec": {
-      "description": "a sample encrypted, blank disk",
-      "physicalBlockSizeBytes": 4096,
-      "size": 1,
-      "type": "pd-ssd",
-      "location": "us-west1-c"
+      "networkRef": {
+        "name": "computeinstance-dep-cloudmachine"
+      },
+      "ipCidrRange": "10.2.0.0/16",
+      "region": "us-west1",
+      "secondaryIpRange": [
+        {
+          "rangeName": "cloudrange",
+          "ipCidrRange": "10.3.16.0/20"
+        }
+      ]
     }
   }
 }

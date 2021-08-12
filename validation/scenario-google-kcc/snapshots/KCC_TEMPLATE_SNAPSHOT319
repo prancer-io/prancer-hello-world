@@ -2,39 +2,52 @@
   "structure": "filesystem",
   "error": null,
   "reference": "master",
+  "contentType": "yaml",
   "source": "gitConnectorGoogleKcc",
   "paths": [
-    "/samples/resources/folder/folder-in-folder/resourcemanager_v1beta1_folder.yaml"
+    "/samples/resources/datafusioninstance/datafusion_v1beta1_datafusioninstance.yaml"
   ],
-  "timestamp": 1622492386316,
+  "timestamp": 1628765145613,
   "queryuser": null,
   "checksum": "99914b932bd37a50b983c5e7c90ae93b",
   "node": {
     "masterSnapshotId": "KCC_TEMPLATE_SNAPSHOT",
-    "type": "yaml",
-    "collection": "deploymentmanagertemplate",
+    "type": "kcc",
+    "collection": "kcctemplate",
     "paths": [
-      "/samples/resources/folder/folder-in-folder/resourcemanager_v1beta1_folder.yaml"
+      "/samples/resources/datafusioninstance/datafusion_v1beta1_datafusioninstance.yaml"
     ],
     "snapshotId": "KCC_TEMPLATE_SNAPSHOT319",
     "status": "active",
     "validate": true
   },
   "snapshotId": "KCC_TEMPLATE_SNAPSHOT319",
-  "collection": "deploymentmanagertemplate",
+  "collection": "kcctemplate",
   "json": {
-    "apiVersion": "resourcemanager.cnrm.cloud.google.com/v1beta1",
-    "kind": "Folder",
+    "apiVersion": "datafusion.cnrm.cloud.google.com/v1beta1",
+    "kind": "DataFusionInstance",
     "metadata": {
       "labels": {
         "label-one": "value-one"
       },
-      "name": "folder-sample-in-folder"
+      "name": "datafusioninstance-sample"
     },
     "spec": {
-      "displayName": "Config Connector Sample",
-      "folderRef": {
-        "external": "${FOLDER_ID?}"
+      "description": "A sample DataFusion instance.",
+      "displayName": "Sample DataFusion Instance",
+      "location": "us-central1",
+      "type": "BASIC",
+      "enableStackdriverMonitoring": true,
+      "enableStackdriverLogging": true,
+      "privateInstance": true,
+      "networkConfig": {
+        "networkRef": {
+          "name": "datafusioninstance-dep"
+        },
+        "ipAllocation": "10.89.48.0/22"
+      },
+      "dataprocServiceAccountRef": {
+        "name": "datafusioninstance-dep"
       }
     }
   }

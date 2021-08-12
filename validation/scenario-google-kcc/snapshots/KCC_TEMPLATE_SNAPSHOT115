@@ -2,98 +2,42 @@
   "structure": "filesystem",
   "error": null,
   "reference": "master",
+  "contentType": "yaml",
   "source": "gitConnectorGoogleKcc",
   "paths": [
-    "/samples/resources/computeinstance/cloud-machine-instance/compute_v1beta1_computeinstance.yaml"
+    "/samples/resources/computeforwardingrule/global-forwarding-rule-with-target-ssl-proxy/compute_v1beta1_computetargetsslproxy.yaml"
   ],
-  "timestamp": 1622492378664,
+  "timestamp": 1628765140640,
   "queryuser": null,
   "checksum": "99914b932bd37a50b983c5e7c90ae93b",
   "node": {
     "masterSnapshotId": "KCC_TEMPLATE_SNAPSHOT",
-    "type": "yaml",
-    "collection": "deploymentmanagertemplate",
+    "type": "kcc",
+    "collection": "kcctemplate",
     "paths": [
-      "/samples/resources/computeinstance/cloud-machine-instance/compute_v1beta1_computeinstance.yaml"
+      "/samples/resources/computeforwardingrule/global-forwarding-rule-with-target-ssl-proxy/compute_v1beta1_computetargetsslproxy.yaml"
     ],
     "snapshotId": "KCC_TEMPLATE_SNAPSHOT115",
     "status": "active",
     "validate": true
   },
   "snapshotId": "KCC_TEMPLATE_SNAPSHOT115",
-  "collection": "deploymentmanagertemplate",
+  "collection": "kcctemplate",
   "json": {
     "apiVersion": "compute.cnrm.cloud.google.com/v1beta1",
-    "kind": "ComputeInstance",
+    "kind": "ComputeTargetSSLProxy",
     "metadata": {
-      "annotations": {
-        "cnrm.cloud.google.com/allow-stopping-for-update": "true"
-      },
-      "name": "computeinstance-sample-cloudmachine",
-      "labels": {
-        "created-from": "image",
-        "network-type": "subnetwork"
-      }
+      "name": "computeforwardingrule-dep-global-with-target-ssl-proxy"
     },
     "spec": {
-      "machineType": "n1-standard-1",
-      "zone": "us-west1-a",
-      "bootDisk": {
-        "initializeParams": {
-          "size": 24,
-          "type": "pd-ssd",
-          "sourceImageRef": {
-            "external": "debian-cloud/debian-9"
-          }
-        }
+      "backendServiceRef": {
+        "name": "computeforwardingrule-dep-global-with-target-ssl-proxy"
       },
-      "networkInterface": [
+      "sslCertificates": [
         {
-          "subnetworkRef": {
-            "name": "computeinstance-dep-cloudmachine"
-          },
-          "aliasIpRange": [
-            {
-              "ipCidrRange": "/24",
-              "subnetworkRangeName": "cloudrange"
-            }
-          ]
+          "name": "computeforwardingrule-dep-global-with-target-ssl-proxy"
         }
-      ],
-      "attachedDisk": [
-        {
-          "sourceDiskRef": {
-            "name": "computeinstance-dep1-cloudmachine"
-          },
-          "mode": "READ_ONLY",
-          "deviceName": "proxycontroldisk",
-          "diskEncryptionKeyRaw": {
-            "valueFrom": {
-              "secretKeyRef": {
-                "name": "computeinstance-dep-cloudmachine",
-                "key": "diskEncryptionKey"
-              }
-            }
-          }
-        },
-        {
-          "sourceDiskRef": {
-            "name": "computeinstance-dep2-cloudmachine"
-          },
-          "mode": "READ_WRITE",
-          "deviceName": "persistentdisk"
-        }
-      ],
-      "minCpuPlatform": "Intel Skylake",
-      "serviceAccount": {
-        "serviceAccountRef": {
-          "name": "inst-dep-cloudmachine"
-        },
-        "scopes": [
-          "compute-rw",
-          "logging-write"
-        ]
-      }
+      ]
     }
   }
 }

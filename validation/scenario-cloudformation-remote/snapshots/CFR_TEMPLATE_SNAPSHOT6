@@ -1,0 +1,220 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "yaml",
+  "source": "gitConnectorCloudformation",
+  "paths": [
+    "/codepipeline/codepipeline.yaml"
+  ],
+  "timestamp": 1628763940898,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "CFR_TEMPLATE_SNAPSHOT",
+    "type": "cloudformation",
+    "collection": "cloudformationtemplate",
+    "paths": [
+      "/codepipeline/codepipeline.yaml"
+    ],
+    "snapshotId": "CFR_TEMPLATE_SNAPSHOT6",
+    "status": "active",
+    "validate": true
+  },
+  "snapshotId": "CFR_TEMPLATE_SNAPSHOT6",
+  "collection": "cloudformationtemplate",
+  "json": {
+    "AWSTemplateFormatVersion": "2010-09-09",
+    "Description": "github-codepipeline",
+    "Parameters": {
+      "GitHubOAuthToken": {
+        "Type": "String",
+        "NoEcho": true,
+        "AllowedPattern": "[a-z0-9A-Z_]*"
+      },
+      "GitHubOwner": {
+        "Type": "String",
+        "Default": "symphoniacloud",
+        "AllowedPattern": "[A-Za-z0-9-]+"
+      },
+      "GitHubRepo": {
+        "Type": "String",
+        "Default": "github-codepipeline",
+        "AllowedPattern": "[A-Za-z0-9-]+"
+      },
+      "GitHubBranch": {
+        "Type": "String",
+        "Default": "master",
+        "AllowedPattern": "[A-Za-z0-9-]+"
+      },
+      "ApplicationStackName": {
+        "Type": "String",
+        "Default": "github-codepipeline-app",
+        "AllowedPattern": "[A-Za-z0-9-]+"
+      }
+    },
+    "Resources": [
+      {
+        "Type": "AWS::S3::Bucket",
+        "Properties": {
+          "VersioningConfiguration": {
+            "Status": "Enabled"
+          }
+        },
+        "Name": "PipelineArtifactsBucket"
+      },
+      {
+        "Type": "AWS::CodePipeline::Pipeline",
+        "Properties": {
+          "ArtifactStore": {
+            "Type": "S3",
+            "Location": {
+              "Ref": "PipelineArtifactsBucket"
+            }
+          },
+          "RestartExecutionOnUpdate": true,
+          "RoleArn": {
+            "Fn::GetAtt": [
+              "CodePipelineRole",
+              "Arn"
+            ]
+          },
+          "Stages": [
+            {
+              "Name": "Source",
+              "Actions": [
+                {
+                  "Name": "Source",
+                  "InputArtifacts": [],
+                  "ActionTypeId": {
+                    "Category": "Source",
+                    "Owner": "ThirdParty",
+                    "Version": 1,
+                    "Provider": "GitHub"
+                  },
+                  "OutputArtifacts": [
+                    {
+                      "Name": "SourceCode"
+                    }
+                  ],
+                  "Configuration": {
+                    "Owner": "symphoniacloud",
+                    "Repo": "github-codepipeline",
+                    "Branch": "master",
+                    "PollForSourceChanges": false,
+                    "OAuthToken": {
+                      "Ref": "GitHubOAuthToken"
+                    }
+                  },
+                  "RunOrder": 1
+                }
+              ]
+            },
+            {
+              "Name": "Deploy",
+              "Actions": [
+                {
+                  "Name": "CloudFormationDeploy",
+                  "ActionTypeId": {
+                    "Category": "Deploy",
+                    "Owner": "AWS",
+                    "Provider": "CloudFormation",
+                    "Version": "1"
+                  },
+                  "InputArtifacts": [
+                    {
+                      "Name": "SourceCode"
+                    }
+                  ],
+                  "Configuration": {
+                    "ActionMode": "CREATE_UPDATE",
+                    "Capabilities": "CAPABILITY_IAM",
+                    "RoleArn": {
+                      "Fn::GetAtt": [
+                        "CloudformationRole",
+                        "Arn"
+                      ]
+                    },
+                    "StackName": "github-codepipeline-app",
+                    "TemplatePath": {
+                      "Fn::Sub": "SourceCode::application.yaml"
+                    }
+                  },
+                  "RunOrder": 1
+                }
+              ]
+            }
+          ]
+        },
+        "Name": "CodePipeline"
+      },
+      {
+        "Type": "AWS::CodePipeline::Webhook",
+        "Properties": {
+          "Authentication": "GITHUB_HMAC",
+          "AuthenticationConfiguration": {
+            "SecretToken": {
+              "Ref": "GitHubOAuthToken"
+            }
+          },
+          "RegisterWithThirdParty": "true",
+          "Filters": [
+            {
+              "JsonPath": "$.ref",
+              "MatchEquals": "refs/heads/{Branch}"
+            }
+          ],
+          "TargetPipeline": {
+            "Ref": "CodePipeline"
+          },
+          "TargetAction": "Source",
+          "TargetPipelineVersion": {
+            "Fn::GetAtt": [
+              "CodePipeline",
+              "Version"
+            ]
+          }
+        },
+        "Name": "GithubWebhook"
+      },
+      {
+        "Type": "AWS::IAM::Role",
+        "Properties": {
+          "AssumeRolePolicyDocument": {
+            "Version": "2012-10-17",
+            "Statement": {
+              "Effect": "Allow",
+              "Principal": {
+                "Service": "codepipeline.amazonaws.com"
+              },
+              "Action": "sts:AssumeRole"
+            }
+          },
+          "ManagedPolicyArns": [
+            "arn:aws:iam::aws:policy/AdministratorAccess"
+          ]
+        },
+        "Name": "CodePipelineRole"
+      },
+      {
+        "Type": "AWS::IAM::Role",
+        "Properties": {
+          "AssumeRolePolicyDocument": {
+            "Version": "2012-10-17",
+            "Statement": {
+              "Effect": "Allow",
+              "Principal": {
+                "Service": "cloudformation.amazonaws.com"
+              },
+              "Action": "sts:AssumeRole"
+            }
+          },
+          "ManagedPolicyArns": [
+            "arn:aws:iam::aws:policy/AdministratorAccess"
+          ]
+        },
+        "Name": "CloudformationRole"
+      }
+    ]
+  }
+}

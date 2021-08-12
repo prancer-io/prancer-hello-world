@@ -2,38 +2,49 @@
   "structure": "filesystem",
   "error": null,
   "reference": "master",
+  "contentType": "yaml",
   "source": "gitConnectorGoogleKcc",
   "paths": [
-    "/samples/resources/computeinterconnectattachment/compute_v1beta1_computerouter.yaml"
+    "/samples/resources/computeinstance/network-worker-instance/compute_v1beta1_computedisk.yaml"
   ],
-  "timestamp": 1622492379749,
+  "timestamp": 1628765141234,
   "queryuser": null,
   "checksum": "99914b932bd37a50b983c5e7c90ae93b",
   "node": {
     "masterSnapshotId": "KCC_TEMPLATE_SNAPSHOT",
-    "type": "yaml",
-    "collection": "deploymentmanagertemplate",
+    "type": "kcc",
+    "collection": "kcctemplate",
     "paths": [
-      "/samples/resources/computeinterconnectattachment/compute_v1beta1_computerouter.yaml"
+      "/samples/resources/computeinstance/network-worker-instance/compute_v1beta1_computedisk.yaml"
     ],
     "snapshotId": "KCC_TEMPLATE_SNAPSHOT144",
     "status": "active",
     "validate": true
   },
   "snapshotId": "KCC_TEMPLATE_SNAPSHOT144",
-  "collection": "deploymentmanagertemplate",
+  "collection": "kcctemplate",
   "json": {
     "apiVersion": "compute.cnrm.cloud.google.com/v1beta1",
-    "kind": "ComputeRouter",
+    "kind": "ComputeDisk",
     "metadata": {
-      "name": "computeinterconnectattachment-dep"
+      "name": "computeinstance-dep-networkworker"
     },
     "spec": {
-      "networkRef": {
-        "name": "computeinterconnectattachment-dep"
-      },
-      "description": "example router description",
-      "region": "us-west1"
+      "description": "a sample encrypted, blank disk",
+      "physicalBlockSizeBytes": 4096,
+      "size": 1,
+      "type": "pd-ssd",
+      "location": "us-west2-a",
+      "diskEncryptionKey": {
+        "rawKey": {
+          "valueFrom": {
+            "secretKeyRef": {
+              "name": "computeinstance-dep-networkworker",
+              "key": "diskEncryptionKey"
+            }
+          }
+        }
+      }
     }
   }
 }

@@ -2,11 +2,12 @@
   "structure": "filesystem",
   "error": null,
   "reference": "master",
+  "contentType": "yaml",
   "source": "gitConnectorAzureAso",
   "paths": [
-    "/config/samples/azure_v1alpha2_blobcontainer.yaml"
+    "/config/samples/azure_v1alpha1_postgresqlserver_replica.yaml"
   ],
-  "timestamp": 1624434683895,
+  "timestamp": 1628760796484,
   "queryuser": null,
   "checksum": "99914b932bd37a50b983c5e7c90ae93b",
   "node": {
@@ -14,7 +15,7 @@
     "type": "aso",
     "collection": "asotemplate",
     "paths": [
-      "/config/samples/azure_v1alpha2_blobcontainer.yaml"
+      "/config/samples/azure_v1alpha1_postgresqlserver_replica.yaml"
     ],
     "snapshotId": "ASO_TEMPLATE_SNAPSHOT51",
     "status": "active",
@@ -23,16 +24,18 @@
   "snapshotId": "ASO_TEMPLATE_SNAPSHOT51",
   "collection": "asotemplate",
   "json": {
-    "apiVersion": "azure.microsoft.com/v1alpha2",
-    "kind": "BlobContainer",
+    "apiVersion": "azure.microsoft.com/v1alpha1",
+    "kind": "PostgreSQLServer",
     "metadata": {
-      "name": "blobcontainer-sample"
+      "name": "postgresqlserver-replica3"
     },
     "spec": {
-      "location": "westus",
+      "location": "eastus",
       "resourceGroup": "resourcegroup-azure-operators",
-      "accountName": "storageaccountsample777",
-      "accessLevel": "Container"
+      "createMode": "Replica",
+      "replicaProperties": {
+        "sourceServerId": "/subscriptions/{subscription ID}/resourceGroups/resourcegroup-azure-operators/providers/Microsoft.DBforPostgreSQL/servers/postgresqlserver-sample"
+      }
     }
   }
 }

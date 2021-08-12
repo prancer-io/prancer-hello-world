@@ -2,13 +2,15 @@
   "structure": "filesystem",
   "error": null,
   "reference": "master",
+  "contentType": "terraform",
   "source": "gitConnectorTerraform",
   "paths": [
-    "/aws/modules/lb/output.tf",
-    "/aws/modules/lb/vars.tf",
-    "/aws/modules/lb/main.tf"
+    "/azure/nsg/provider.tf",
+    "/azure/nsg/terraform.tfvars",
+    "/azure/nsg/vars.tf",
+    "/azure/nsg/main.tf"
   ],
-  "timestamp": 1620824338349,
+  "timestamp": 1628770703248,
   "queryuser": null,
   "checksum": "99914b932bd37a50b983c5e7c90ae93b",
   "node": {
@@ -16,9 +18,10 @@
     "type": "terraform",
     "collection": "terraformtemplate",
     "paths": [
-      "/aws/modules/lb/output.tf",
-      "/aws/modules/lb/vars.tf",
-      "/aws/modules/lb/main.tf"
+      "/azure/nsg/provider.tf",
+      "/azure/nsg/terraform.tfvars",
+      "/azure/nsg/vars.tf",
+      "/azure/nsg/main.tf"
     ],
     "snapshotId": "TRF_TEMPLATE_SNAPSHOT28",
     "status": "active",
@@ -29,29 +32,96 @@
   "json": {
     "resources": [
       {
-        "type": "aws_lb",
-        "name": "lb",
+        "type": "azurerm_network_security_group",
+        "name": "nsg",
         "properties": {
-          "name": null,
-          "name_prefix": null,
-          "load_balancer_type": "application",
-          "internal": false,
-          "security_groups": [],
-          "subnets": null,
-          "idle_timeout": 60,
-          "enable_cross_zone_load_balancing": false,
-          "enable_deletion_protection": false,
-          "enable_http2": true,
-          "ip_address_type": "ipv4",
-          "drop_invalid_header_fields": false,
-          "access_logs": [],
-          "subnet_mapping": [],
+          "name": "prancer-nsg",
+          "location": "eastus2",
+          "resource_group_name": "prancer-test-rg",
           "tags": {},
-          "timeouts": {
-            "create": "10m",
-            "update": "10m",
-            "delete": "10m"
-          }
+          "nsg_name": "prancer-nsg",
+          "nsr_names": [
+            "test-netssec-rule-01"
+          ],
+          "nsr_priorities": [
+            100
+          ],
+          "nsr_directions": [
+            "Inbound"
+          ],
+          "nsr_accesses": [
+            "Allow"
+          ],
+          "nsr_protocols": [
+            "Tcp"
+          ],
+          "nsr_src_ports": [
+            "*"
+          ],
+          "nsr_dst_ports": [
+            80
+          ],
+          "nsr_src_addresses": [
+            "*"
+          ],
+          "nsr_dst_addresses": [
+            "*"
+          ]
+        }
+      },
+      {
+        "type": "azurerm_network_security_rule",
+        "name": "nsr",
+        "properties": {
+          "name": "test-netssec-rule-01",
+          "priority": 100,
+          "direction": "Inbound",
+          "access": "Allow",
+          "protocol": "Tcp",
+          "source_port_range": "*",
+          "destination_port_range": 80,
+          "source_address_prefix": "*",
+          "destination_address_prefix": "*",
+          "resource_group_name": "prancer-test-rg",
+          "network_security_group_name": "prancer-nsg",
+          "depends_on": [
+            {
+              "name": "prancer-nsg",
+              "location": "eastus2",
+              "resource_group_name": "prancer-test-rg",
+              "tags": {}
+            }
+          ],
+          "location": "eastus2",
+          "nsg_name": "prancer-nsg",
+          "nsr_names": [
+            "test-netssec-rule-01"
+          ],
+          "nsr_priorities": [
+            100
+          ],
+          "nsr_directions": [
+            "Inbound"
+          ],
+          "nsr_accesses": [
+            "Allow"
+          ],
+          "nsr_protocols": [
+            "Tcp"
+          ],
+          "nsr_src_ports": [
+            "*"
+          ],
+          "nsr_dst_ports": [
+            80
+          ],
+          "nsr_src_addresses": [
+            "*"
+          ],
+          "nsr_dst_addresses": [
+            "*"
+          ],
+          "tags": {}
         }
       }
     ]

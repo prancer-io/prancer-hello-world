@@ -2,26 +2,27 @@
   "structure": "filesystem",
   "error": null,
   "reference": "master",
+  "contentType": "yaml",
   "source": "gitConnectorGoogleKcc",
   "paths": [
-    "/samples/resources/computeforwardingrule/regional-forwarding-rule/compute_v1beta1_computeforwardingrule.yaml"
+    "/samples/resources/computeforwardingrule/global-forwarding-rule-with-target-grpc-proxy/compute_v1beta1_computeforwardingrule.yaml"
   ],
-  "timestamp": 1622492378147,
+  "timestamp": 1628765140389,
   "queryuser": null,
   "checksum": "99914b932bd37a50b983c5e7c90ae93b",
   "node": {
     "masterSnapshotId": "KCC_TEMPLATE_SNAPSHOT",
-    "type": "yaml",
-    "collection": "deploymentmanagertemplate",
+    "type": "kcc",
+    "collection": "kcctemplate",
     "paths": [
-      "/samples/resources/computeforwardingrule/regional-forwarding-rule/compute_v1beta1_computeforwardingrule.yaml"
+      "/samples/resources/computeforwardingrule/global-forwarding-rule-with-target-grpc-proxy/compute_v1beta1_computeforwardingrule.yaml"
     ],
     "snapshotId": "KCC_TEMPLATE_SNAPSHOT103",
     "status": "active",
     "validate": true
   },
   "snapshotId": "KCC_TEMPLATE_SNAPSHOT103",
-  "collection": "deploymentmanagertemplate",
+  "collection": "kcctemplate",
   "json": {
     "apiVersion": "compute.cnrm.cloud.google.com/v1beta1",
     "kind": "ComputeForwardingRule",
@@ -29,22 +30,22 @@
       "labels": {
         "label-one": "value-one"
       },
-      "name": "computeforwardingrule-sample-regional"
+      "name": "computeforwardingrule-sample-global-with-grpc-proxy"
     },
     "spec": {
-      "description": "A regional forwarding rule",
+      "description": "A global forwarding rule",
       "target": {
-        "targetVPNGatewayRef": {
-          "name": "computeforwardingrule-dep-regional"
+        "targetGRPCProxyRef": {
+          "name": "computeforwardingrule-dep-global-with-grpc-proxy"
         }
       },
-      "ipProtocol": "ESP",
-      "location": "us-central1",
+      "loadBalancingScheme": "INTERNAL_SELF_MANAGED",
       "ipAddress": {
-        "addressRef": {
-          "name": "computeforwardingrule-dep-regional"
-        }
-      }
+        "ip": "0.0.0.0"
+      },
+      "portRange": "80",
+      "ipProtocol": "TCP",
+      "location": "global"
     }
   }
 }

@@ -2,13 +2,15 @@
   "structure": "filesystem",
   "error": null,
   "reference": "master",
+  "contentType": "terraform",
   "source": "gitConnectorTerraform",
   "paths": [
-    "/aws/modules/sns/output.tf",
-    "/aws/modules/sns/vars.tf",
-    "/aws/modules/sns/main.tf"
+    "/gcp/compute_firewall/provider.tf",
+    "/gcp/compute_firewall/terraform.tfvars",
+    "/gcp/compute_firewall/vars.tf",
+    "/gcp/compute_firewall/main.tf"
   ],
-  "timestamp": 1620823814555,
+  "timestamp": 1628767436944,
   "queryuser": null,
   "checksum": "99914b932bd37a50b983c5e7c90ae93b",
   "node": {
@@ -16,9 +18,10 @@
     "type": "terraform",
     "collection": "terraformtemplate",
     "paths": [
-      "/aws/modules/sns/output.tf",
-      "/aws/modules/sns/vars.tf",
-      "/aws/modules/sns/main.tf"
+      "/gcp/compute_firewall/provider.tf",
+      "/gcp/compute_firewall/terraform.tfvars",
+      "/gcp/compute_firewall/vars.tf",
+      "/gcp/compute_firewall/main.tf"
     ],
     "snapshotId": "TRF_TEMPLATE_SNAPSHOT37",
     "status": "active",
@@ -29,28 +32,64 @@
   "json": {
     "resources": [
       {
-        "type": "aws_sns_topic",
-        "name": "sns",
+        "type": "google_compute_network",
+        "name": "vpc_network",
         "properties": {
-          "name": null,
-          "name_prefix": null,
-          "display_name": null,
-          "policy": null,
-          "delivery_policy": null,
-          "application_success_feedback_role_arn": null,
-          "application_success_feedback_sample_rate": null,
-          "application_failure_feedback_role_arn": null,
-          "http_success_feedback_role_arn": null,
-          "http_success_feedback_sample_rate": null,
-          "http_failure_feedback_role_arn": null,
-          "lambda_success_feedback_role_arn": null,
-          "lambda_success_feedback_sample_rate": null,
-          "lambda_failure_feedback_role_arn": null,
-          "sqs_success_feedback_role_arn": null,
-          "sqs_success_feedback_sample_rate": null,
-          "sqs_failure_feedback_role_arn": null,
-          "kms_master_key_id": null,
-          "tags": {}
+          "name": "prancer-network",
+          "description": "",
+          "auto_create_subnetworks": null,
+          "routing_mode": null,
+          "project": "learning-269422",
+          "delete_default_routes_on_create": false,
+          "net_name": "prancer-network",
+          "net_description": ""
+        }
+      },
+      {
+        "type": "google_compute_firewall",
+        "name": "firewall",
+        "properties": {
+          "name": "prancer-firewall",
+          "network": "${module.network.id}",
+          "direction": "INGRESS",
+          "allow": [
+            {
+              "protocol": "tcp",
+              "ports": [
+                443
+              ]
+            },
+            {
+              "protocol": "tcp",
+              "ports": [
+                "20-28000"
+              ]
+            }
+          ],
+          "source_ranges": [
+            "0.0.0.0/0"
+          ],
+          "source_tags": [],
+          "fw_name": "prancer-firewall",
+          "fw_network_id": "${module.network.id}",
+          "fw_allows": [
+            {
+              "protocol": "tcp",
+              "ports": [
+                443
+              ]
+            },
+            {
+              "protocol": "tcp",
+              "ports": [
+                "20-28000"
+              ]
+            }
+          ],
+          "fw_source_ranges": [
+            "0.0.0.0/0"
+          ],
+          "fw_source_tags": []
         }
       }
     ]

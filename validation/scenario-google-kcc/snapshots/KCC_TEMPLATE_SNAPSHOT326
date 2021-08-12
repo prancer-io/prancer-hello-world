@@ -2,43 +2,92 @@
   "structure": "filesystem",
   "error": null,
   "reference": "master",
+  "contentType": "yaml",
   "source": "gitConnectorGoogleKcc",
   "paths": [
-    "/samples/resources/iamcustomrole/organization-role/iam_v1beta1_iamcustomrole.yaml"
+    "/samples/resources/dataprocworkflowtemplate/dataproc_v1beta1_dataprocworkflowtemplate.yaml"
   ],
-  "timestamp": 1622492386876,
+  "timestamp": 1628765145822,
   "queryuser": null,
   "checksum": "99914b932bd37a50b983c5e7c90ae93b",
   "node": {
     "masterSnapshotId": "KCC_TEMPLATE_SNAPSHOT",
-    "type": "yaml",
-    "collection": "deploymentmanagertemplate",
+    "type": "kcc",
+    "collection": "kcctemplate",
     "paths": [
-      "/samples/resources/iamcustomrole/organization-role/iam_v1beta1_iamcustomrole.yaml"
+      "/samples/resources/dataprocworkflowtemplate/dataproc_v1beta1_dataprocworkflowtemplate.yaml"
     ],
     "snapshotId": "KCC_TEMPLATE_SNAPSHOT326",
     "status": "active",
     "validate": true
   },
   "snapshotId": "KCC_TEMPLATE_SNAPSHOT326",
-  "collection": "deploymentmanagertemplate",
+  "collection": "kcctemplate",
   "json": {
-    "apiVersion": "iam.cnrm.cloud.google.com/v1beta1",
-    "kind": "IAMCustomRole",
+    "apiVersion": "dataproc.cnrm.cloud.google.com/v1beta1",
+    "kind": "DataprocWorkflowTemplate",
     "metadata": {
-      "annotations": {
-        "cnrm.cloud.google.com/organization-id": "${ORG_ID?}"
+      "labels": {
+        "label-one": "value-one"
       },
-      "name": "iamcustomrolesampleorganization"
+      "name": "dataprocworkflowtemplate-sample"
     },
     "spec": {
-      "title": "Example Organization-Level Custom Role Created by Config Connector",
-      "description": "This role only contains two permissions - publish and update",
-      "permissions": [
-        "pubsub.topics.publish",
-        "pubsub.topics.update"
-      ],
-      "stage": "GA"
+      "location": "us-central1",
+      "placement": {
+        "managedCluster": {
+          "clusterName": "test-cluster",
+          "config": {
+            "autoscalingConfig": {
+              "policyRef": {
+                "name": "dataprocworkflowtemplate-dep"
+              }
+            },
+            "masterConfig": {
+              "diskConfig": {
+                "bootDiskSizeGb": 30,
+                "bootDiskType": "pd-standard"
+              },
+              "machineType": "n2-standard-8",
+              "numInstances": 1
+            },
+            "workerConfig": {
+              "numInstances": 2,
+              "machineType": "n2-standard-8",
+              "diskConfig": {
+                "bootDiskSizeGb": 30,
+                "numLocalSsds": 1
+              }
+            },
+            "softwareConfig": {
+              "imageVersion": "2.0.2-debian10"
+            },
+            "gceClusterConfig": {
+              "tags": [
+                "foo",
+                "bar"
+              ]
+            }
+          }
+        }
+      },
+      "jobs": [
+        {
+          "stepId": "someJob",
+          "sparkJob": {
+            "mainClass": "SomeClass"
+          }
+        },
+        {
+          "stepId": "otherJob",
+          "prerequisiteStepIds": [
+            "someJob"
+          ],
+          "prestoJob": {
+            "queryFileUri": "someUri"
+          }
+        }
+      ]
     }
   }
 }

@@ -2,13 +2,15 @@
   "structure": "filesystem",
   "error": null,
   "reference": "master",
+  "contentType": "terraform",
   "source": "gitConnectorTerraform",
   "paths": [
-    "/aws/modules/eks/output.tf",
-    "/aws/modules/eks/vars.tf",
-    "/aws/modules/eks/main.tf"
+    "/aws/vpc/provider.tf",
+    "/aws/vpc/terraform.tfvars",
+    "/aws/vpc/vars.tf",
+    "/aws/vpc/main.tf"
   ],
-  "timestamp": 1620824337879,
+  "timestamp": 1628770693206,
   "queryuser": null,
   "checksum": "99914b932bd37a50b983c5e7c90ae93b",
   "node": {
@@ -16,9 +18,10 @@
     "type": "terraform",
     "collection": "terraformtemplate",
     "paths": [
-      "/aws/modules/eks/output.tf",
-      "/aws/modules/eks/vars.tf",
-      "/aws/modules/eks/main.tf"
+      "/aws/vpc/provider.tf",
+      "/aws/vpc/terraform.tfvars",
+      "/aws/vpc/vars.tf",
+      "/aws/vpc/main.tf"
     ],
     "snapshotId": "TRF_TEMPLATE_SNAPSHOT21",
     "status": "active",
@@ -29,22 +32,39 @@
   "json": {
     "resources": [
       {
-        "type": "aws_eks_cluster",
-        "name": "eks",
+        "type": "aws_vpc",
+        "name": "vpc",
         "properties": {
-          "name": "",
-          "tags": {},
-          "role_arn": "",
-          "version": null,
-          "enabled_cluster_log_types": false,
-          "encryption_config": [],
-          "vpc_config": {
-            "security_group_ids": "${var.security_group_ids}",
-            "subnet_ids": "${var.subnet_ids}",
-            "endpoint_private_access": false,
-            "endpoint_public_access": true,
-            "public_access_cidrs": "${var.public_access_cidrs}"
-          }
+          "cidr_block": "10.10.0.0/16",
+          "instance_tenancy": "default",
+          "enable_dns_hostnames": false,
+          "enable_dns_support": true,
+          "enable_classiclink": null,
+          "enable_classiclink_dns_support": null,
+          "assign_generated_ipv6_cidr_block": false,
+          "tags": {
+            "environment": "Production",
+            "project": "Prancer"
+          },
+          "enable_ipv6": false
+        }
+      },
+      {
+        "type": "aws_subnet",
+        "name": "subnet",
+        "properties": {
+          "vpc_id": "${module.vpc.vpc_id}",
+          "cidr_block": "10.10.1.0/24",
+          "availability_zone": null,
+          "availability_zone_id": null,
+          "map_public_ip_on_launch": true,
+          "assign_ipv6_address_on_creation": false,
+          "ipv6_cidr_block": null,
+          "tags": {
+            "environment": "Production",
+            "project": "Prancer"
+          },
+          "subnet_cidr_block": "10.10.1.0/24"
         }
       }
     ]

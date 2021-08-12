@@ -1,0 +1,97 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "yaml",
+  "source": "gitConnectorCloudformation",
+  "paths": [
+    "/cloudtrail/cloudtrail.yaml"
+  ],
+  "timestamp": 1628763940859,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "CFR_TEMPLATE_SNAPSHOT",
+    "type": "cloudformation",
+    "collection": "cloudformationtemplate",
+    "paths": [
+      "/cloudtrail/cloudtrail.yaml"
+    ],
+    "snapshotId": "CFR_TEMPLATE_SNAPSHOT4",
+    "status": "active",
+    "validate": true
+  },
+  "snapshotId": "CFR_TEMPLATE_SNAPSHOT4",
+  "collection": "cloudformationtemplate",
+  "json": {
+    "AWSTemplateFormatVersion": "2010-09-09",
+    "Resources": [
+      {
+        "Type": "AWS::SNS::Topic",
+        "Properties": {},
+        "Name": "Topic"
+      },
+      {
+        "Type": "AWS::CloudTrail::Trail",
+        "Properties": {
+          "IsLogging": true,
+          "IsMultiRegionTrail": false,
+          "EnableLogFileValidation": false,
+          "IncludeGlobalServiceEvents": true,
+          "S3BucketName": {
+            "Ref": "S3Bucket"
+          }
+        },
+        "DependsOn": [
+          "Topic",
+          "S3BucketPolicy"
+        ],
+        "Name": "CT"
+      },
+      {
+        "Type": "AWS::S3::Bucket",
+        "Properties": {},
+        "Name": "S3Bucket"
+      },
+      {
+        "Type": "AWS::S3::BucketPolicy",
+        "Properties": {
+          "Bucket": {
+            "Ref": "S3Bucket"
+          },
+          "PolicyDocument": {
+            "Id": "CrossAccessPolicy",
+            "Version": "2012-10-17",
+            "Statement": [
+              {
+                "Sid": "AllowEveryoneReadOnlyAccess",
+                "Effect": "Allow",
+                "Principal": "*",
+                "Action": [
+                  "s3:*"
+                ],
+                "Resource": [
+                  {
+                    "Fn::GetAtt": [
+                      "S3Bucket",
+                      "Arn"
+                    ]
+                  },
+                  {
+                    "Fn::Sub": "${S3Bucket.Arn}/*"
+                  }
+                ],
+                "Condition": {
+                  "Bool": {
+                    "aws:SecureTransport": true
+                  }
+                }
+              }
+            ]
+          }
+        },
+        "Name": "S3BucketPolicy"
+      }
+    ]
+  }
+}

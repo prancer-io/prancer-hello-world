@@ -1,0 +1,55 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "yaml",
+  "source": "gitConnectorGoogleKcc",
+  "paths": [
+    "/samples/resources/monitoringnotificationchannel/basicauth-webhook-monitoring-notification-channel/monitoring_v1beta1_monitoringnotificationchannel.yaml"
+  ],
+  "timestamp": 1628765149534,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "KCC_TEMPLATE_SNAPSHOT",
+    "type": "kcc",
+    "collection": "kcctemplate",
+    "paths": [
+      "/samples/resources/monitoringnotificationchannel/basicauth-webhook-monitoring-notification-channel/monitoring_v1beta1_monitoringnotificationchannel.yaml"
+    ],
+    "snapshotId": "KCC_TEMPLATE_SNAPSHOT469",
+    "status": "active",
+    "validate": true
+  },
+  "snapshotId": "KCC_TEMPLATE_SNAPSHOT469",
+  "collection": "kcctemplate",
+  "json": {
+    "apiVersion": "monitoring.cnrm.cloud.google.com/v1beta1",
+    "kind": "MonitoringNotificationChannel",
+    "metadata": {
+      "labels": {
+        "response-priority": "all",
+        "target-user": "automation"
+      },
+      "name": "monitoringnotificationchannel-sample-basicauth-webhook"
+    },
+    "spec": {
+      "type": "webhook_basicauth",
+      "labels": {
+        "url": "http://hooks.example.com/notifications",
+        "username": "admin"
+      },
+      "description": "Sends notifications to indicated webhook URL using HTTP-standard basic authentication. Should be used in conjunction with SSL/TLS to reduce the risk of attackers snooping the credentials.",
+      "sensitiveLabels": {
+        "password": {
+          "valueFrom": {
+            "secretKeyRef": {
+              "key": "password",
+              "name": "monitoringnotificationchannel-dep-basicauthwebhook"
+            }
+          }
+        }
+      }
+    }
+  }
+}

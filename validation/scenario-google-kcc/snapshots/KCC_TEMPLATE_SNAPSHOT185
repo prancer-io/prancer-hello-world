@@ -2,38 +2,41 @@
   "structure": "filesystem",
   "error": null,
   "reference": "master",
+  "contentType": "yaml",
   "source": "gitConnectorGoogleKcc",
   "paths": [
-    "/samples/resources/computerouternat/router-nat-with-manual-nat-ips/compute_v1beta1_computenetwork.yaml"
+    "/samples/resources/computenodetemplate/typed-node-template/compute_v1beta1_computenodetemplate.yaml"
   ],
-  "timestamp": 1622492381304,
+  "timestamp": 1628765142159,
   "queryuser": null,
   "checksum": "99914b932bd37a50b983c5e7c90ae93b",
   "node": {
     "masterSnapshotId": "KCC_TEMPLATE_SNAPSHOT",
-    "type": "yaml",
-    "collection": "deploymentmanagertemplate",
+    "type": "kcc",
+    "collection": "kcctemplate",
     "paths": [
-      "/samples/resources/computerouternat/router-nat-with-manual-nat-ips/compute_v1beta1_computenetwork.yaml"
+      "/samples/resources/computenodetemplate/typed-node-template/compute_v1beta1_computenodetemplate.yaml"
     ],
     "snapshotId": "KCC_TEMPLATE_SNAPSHOT185",
     "status": "active",
     "validate": true
   },
   "snapshotId": "KCC_TEMPLATE_SNAPSHOT185",
-  "collection": "deploymentmanagertemplate",
+  "collection": "kcctemplate",
   "json": {
     "apiVersion": "compute.cnrm.cloud.google.com/v1beta1",
-    "kind": "ComputeNetwork",
+    "kind": "ComputeNodeTemplate",
     "metadata": {
+      "name": "computenodetemplate-sample-template",
       "labels": {
-        "label-one": "value-one"
-      },
-      "name": "computerouternat-dep-withmanualnatips"
+        "memory_guarantee": "true",
+        "desired_workload": "sustained"
+      }
     },
     "spec": {
-      "routingMode": "REGIONAL",
-      "autoCreateSubnetworks": false
+      "description": "Node template for sole tenant nodes running in us-central1, with 96vCPUs and 624GB of memory, on n1 machines.",
+      "region": "us-central1",
+      "nodeType": "n1-node-96-624"
     }
   }
 }

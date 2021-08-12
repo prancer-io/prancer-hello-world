@@ -2,6 +2,7 @@
   "structure": "filesystem",
   "error": null,
   "reference": "master",
+  "contentType": "terraform",
   "source": "gitConnectorTerraform",
   "paths": [
     "/aws/lambda/provider.tf",
@@ -9,7 +10,7 @@
     "/aws/lambda/vars.tf",
     "/aws/lambda/main.tf"
   ],
-  "timestamp": 1620823812830,
+  "timestamp": 1628767406655,
   "queryuser": null,
   "checksum": "99914b932bd37a50b983c5e7c90ae93b",
   "node": {
@@ -127,8 +128,12 @@
           ],
           "vpc_config": [
             {
-              "security_group_ids": "${module.security_group.id}",
-              "subnet_ids": "${module.subnet.id}"
+              "security_group_ids": [
+                "${module.security_group.id}"
+              ],
+              "subnet_ids": [
+                "${module.subnet.id}"
+              ]
             }
           ],
           "kms_key_arn": null,
@@ -149,9 +154,11 @@
             "project": "Prancer"
           },
           "timeout": 5,
-          "tracing_config": {
-            "mode": "PassThrough"
-          },
+          "tracing_config": [
+            {
+              "mode": "PassThrough"
+            }
+          ],
           "iam_role": "${module.iam_role.arn}",
           "tracing_mode": "PassThrough"
         }
