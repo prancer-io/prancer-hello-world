@@ -2,35 +2,46 @@
   "structure": "filesystem",
   "error": null,
   "reference": "master",
+  "contentType": "yaml",
   "source": "gitConnectorGoogleKcc",
   "paths": [
-    "/samples/resources/computebackendservice/internal-managed-load-balancing-backend-service/compute_v1beta1_computenetwork.yaml"
+    "/samples/resources/computeaddress/global-compute-address/compute_v1beta1_computeaddress.yaml"
   ],
-  "timestamp": 1622492376963,
+  "timestamp": 1628765139773,
   "queryuser": null,
   "checksum": "99914b932bd37a50b983c5e7c90ae93b",
   "node": {
     "masterSnapshotId": "KCC_TEMPLATE_SNAPSHOT",
-    "type": "yaml",
-    "collection": "deploymentmanagertemplate",
+    "type": "kcc",
+    "collection": "kcctemplate",
     "paths": [
-      "/samples/resources/computebackendservice/internal-managed-load-balancing-backend-service/compute_v1beta1_computenetwork.yaml"
+      "/samples/resources/computeaddress/global-compute-address/compute_v1beta1_computeaddress.yaml"
     ],
     "snapshotId": "KCC_TEMPLATE_SNAPSHOT72",
     "status": "active",
     "validate": true
   },
   "snapshotId": "KCC_TEMPLATE_SNAPSHOT72",
-  "collection": "deploymentmanagertemplate",
+  "collection": "kcctemplate",
   "json": {
     "apiVersion": "compute.cnrm.cloud.google.com/v1beta1",
-    "kind": "ComputeNetwork",
+    "kind": "ComputeAddress",
     "metadata": {
-      "name": "computebackendservice-dep-internalmanagedloadbalancing"
+      "name": "computeaddress-sample-global",
+      "labels": {
+        "label-one": "value-one"
+      }
     },
     "spec": {
-      "routingMode": "REGIONAL",
-      "autoCreateSubnetworks": false
+      "addressType": "INTERNAL",
+      "description": "a test global address",
+      "location": "global",
+      "ipVersion": "IPV4",
+      "purpose": "VPC_PEERING",
+      "prefixLength": 16,
+      "networkRef": {
+        "name": "computeaddress-dep-global"
+      }
     }
   }
 }

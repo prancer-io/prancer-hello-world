@@ -1,0 +1,93 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "yaml",
+  "source": "gitConnectorCloudformation",
+  "paths": [
+    "/elasticache/elasticache.yaml"
+  ],
+  "timestamp": 1628763941072,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "CFR_TEMPLATE_SNAPSHOT",
+    "type": "cloudformation",
+    "collection": "cloudformationtemplate",
+    "paths": [
+      "/elasticache/elasticache.yaml"
+    ],
+    "snapshotId": "CFR_TEMPLATE_SNAPSHOT17",
+    "status": "active",
+    "validate": true
+  },
+  "snapshotId": "CFR_TEMPLATE_SNAPSHOT17",
+  "collection": "cloudformationtemplate",
+  "json": {
+    "AWSTemplateFormatVersion": "2010-09-09",
+    "Transform": "AWS::Serverless-2016-10-31",
+    "Description": "AWS ElatiCache for Redis - Cluster Mode Demonstration",
+    "Parameters": {
+      "EnvironmentName": {
+        "Description": "An environment name that will be prefixed to resource names",
+        "Type": "String"
+      },
+      "Subnets": {
+        "Description": "Choose which subnets this ECS cluster should be deployed to",
+        "Type": "List<AWS::EC2::Subnet::Id>"
+      },
+      "InstanceType": {
+        "Description": "Which instance type should we use to build the ECS cluster?",
+        "Type": "String",
+        "Default": "cache.t3.medium"
+      },
+      "SecurityGroup": {
+        "Description": "Select the Security Group to use for the ECS cluster hosts",
+        "Type": "AWS::EC2::SecurityGroup::Id"
+      }
+    },
+    "Resources": [
+      {
+        "Type": "AWS::ElastiCache::SubnetGroup",
+        "Properties": {
+          "CacheSubnetGroupName": {
+            "Fn::Sub": "${EnvironmentName}-Subnet-${AWS::Region}"
+          },
+          "Description": "The subnet group for the reactive application architecture",
+          "SubnetIds": {
+            "Ref": "Subnets"
+          }
+        },
+        "Name": "CacheSubnetGroup"
+      },
+      {
+        "Type": "AWS::ElastiCache::ReplicationGroup",
+        "Properties": {
+          "KmsKeyId": "",
+          "CacheNodeType": "cache.t3.medium",
+          "CacheSubnetGroupName": {
+            "Ref": "CacheSubnetGroup"
+          },
+          "Engine": "redis",
+          "EngineVersion": "6.x",
+          "NumCacheClusters": 2,
+          "Port": 6379,
+          "ReplicationGroupDescription": {
+            "Fn::Sub": "${EnvironmentName}-ReplicationGroup-${AWS::Region}"
+          },
+          "SecurityGroupIds": [
+            {
+              "Ref": "SecurityGroup"
+            }
+          ],
+          "AutomaticFailoverEnabled": false,
+          "TransitEncryptionEnabled": false,
+          "AtRestEncryptionEnabled": false,
+          "AutoMinorVersionUpgrade": true,
+          "CacheSecurityGroupNames": []
+        },
+        "Name": "ReplicationGroup"
+      }
+    ]
+  }
+}

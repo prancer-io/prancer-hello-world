@@ -2,34 +2,66 @@
   "structure": "filesystem",
   "error": null,
   "reference": "master",
+  "contentType": "yaml",
   "source": "gitConnectorGoogleKcc",
   "paths": [
-    "/samples/resources/bigquerytable/bigquery_v1beta1_bigquerydataset.yaml"
+    "/samples/resources/bigqueryjob/query-bigquery-job/bigquery_v1beta1_bigqueryjob.yaml"
   ],
-  "timestamp": 1622492375385,
+  "timestamp": 1628765138886,
   "queryuser": null,
   "checksum": "99914b932bd37a50b983c5e7c90ae93b",
   "node": {
     "masterSnapshotId": "KCC_TEMPLATE_SNAPSHOT",
-    "type": "yaml",
-    "collection": "deploymentmanagertemplate",
+    "type": "kcc",
+    "collection": "kcctemplate",
     "paths": [
-      "/samples/resources/bigquerytable/bigquery_v1beta1_bigquerydataset.yaml"
+      "/samples/resources/bigqueryjob/query-bigquery-job/bigquery_v1beta1_bigqueryjob.yaml"
     ],
     "snapshotId": "KCC_TEMPLATE_SNAPSHOT30",
     "status": "active",
     "validate": true
   },
   "snapshotId": "KCC_TEMPLATE_SNAPSHOT30",
-  "collection": "deploymentmanagertemplate",
+  "collection": "kcctemplate",
   "json": {
     "apiVersion": "bigquery.cnrm.cloud.google.com/v1beta1",
-    "kind": "BigQueryDataset",
+    "kind": "BigQueryJob",
     "metadata": {
-      "name": "bigquerytabledep"
+      "labels": {
+        "label-one": "value-one"
+      },
+      "name": "bigqueryjob-sample-query"
     },
     "spec": {
-      "friendlyName": "bigquerytable-dep"
+      "location": "US",
+      "jobTimeoutMs": "600000",
+      "query": {
+        "query": "SELECT state FROM [lookerdata:cdc.project_tycho_reports]",
+        "useLegacySql": true,
+        "defaultDataset": {
+          "datasetRef": {
+            "name": "bigqueryjobdep1query"
+          }
+        },
+        "destinationTable": {
+          "tableRef": {
+            "name": "bigqueryjobdepquery"
+          }
+        },
+        "allowLargeResults": true,
+        "flattenResults": true,
+        "useQueryCache": true,
+        "priority": "INTERACTIVE",
+        "writeDisposition": "WRITE_APPEND",
+        "schemaUpdateOptions": [
+          "ALLOW_FIELD_ADDITION",
+          "ALLOW_FIELD_RELAXATION"
+        ],
+        "scriptOptions": {
+          "statementTimeoutMs": "300000",
+          "keyResultStatement": "LAST"
+        }
+      }
     }
   }
 }

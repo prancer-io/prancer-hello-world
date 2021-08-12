@@ -2,40 +2,43 @@
   "structure": "filesystem",
   "error": null,
   "reference": "master",
+  "contentType": "yaml",
   "source": "gitConnectorGoogleKcc",
   "paths": [
-    "/samples/resources/iampolicymember/external-organization-level-policy-member/iam_v1beta1_iampolicymember.yaml"
+    "/samples/resources/dnsrecordset/dnssec-dnskey-record-set/dns_v1beta1_dnsrecordset.yaml"
   ],
-  "timestamp": 1622492387613,
+  "timestamp": 1628765146334,
   "queryuser": null,
   "checksum": "99914b932bd37a50b983c5e7c90ae93b",
   "node": {
     "masterSnapshotId": "KCC_TEMPLATE_SNAPSHOT",
-    "type": "yaml",
-    "collection": "deploymentmanagertemplate",
+    "type": "kcc",
+    "collection": "kcctemplate",
     "paths": [
-      "/samples/resources/iampolicymember/external-organization-level-policy-member/iam_v1beta1_iampolicymember.yaml"
+      "/samples/resources/dnsrecordset/dnssec-dnskey-record-set/dns_v1beta1_dnsrecordset.yaml"
     ],
     "snapshotId": "KCC_TEMPLATE_SNAPSHOT346",
     "status": "active",
     "validate": true
   },
   "snapshotId": "KCC_TEMPLATE_SNAPSHOT346",
-  "collection": "deploymentmanagertemplate",
+  "collection": "kcctemplate",
   "json": {
-    "apiVersion": "iam.cnrm.cloud.google.com/v1beta1",
-    "kind": "IAMPolicyMember",
+    "apiVersion": "dns.cnrm.cloud.google.com/v1beta1",
+    "kind": "DNSRecordSet",
     "metadata": {
-      "name": "iampolicymember-sample-orglevel"
+      "name": "dnsrecordset-sample-dnssecdnskey"
     },
     "spec": {
-      "member": "serviceAccount:iampolicymember-dep-orglevel@${PROJECT_ID?}.iam.gserviceaccount.com",
-      "role": "roles/storage.admin",
-      "resourceRef": {
-        "apiVersion": "resourcemanager.cnrm.cloud.google.com/v1beta1",
-        "kind": "Organization",
-        "external": "${ORG_ID?}"
-      }
+      "name": "secure.example.com.",
+      "type": "DNSKEY",
+      "ttl": 300,
+      "managedZoneRef": {
+        "name": "dnsrecordset-dep-dnssecdnskey"
+      },
+      "rrdatas": [
+        "256 3 8 AwEAAcAPhPM4CQHqg6hZ49y2P3IdKZuF44QNCc50vjATD7W+je4va6djY5JpnNP0pIohKNYiCFap/b4Y9jjJGSOkOfkfBR8neI7X5LisMEGUjwRcrG8J9UYP1S1unTNqRcWyDYFH2q3KnIO08zImh5DiFt8yfCdKoqZUN1dup5hy0UWz"
+      ]
     }
   }
 }

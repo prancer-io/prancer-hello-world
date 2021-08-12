@@ -2,13 +2,15 @@
   "structure": "filesystem",
   "error": null,
   "reference": "master",
+  "contentType": "terraform",
   "source": "gitConnectorTerraform",
   "paths": [
-    "/aws/modules/acm/output.tf",
-    "/aws/modules/acm/vars.tf",
-    "/aws/modules/acm/main.tf"
+    "/aws/rds/provider.tf",
+    "/aws/rds/terraform.tfvars",
+    "/aws/rds/vars.tf",
+    "/aws/rds/main.tf"
   ],
-  "timestamp": 1620824337248,
+  "timestamp": 1628770683800,
   "queryuser": null,
   "checksum": "99914b932bd37a50b983c5e7c90ae93b",
   "node": {
@@ -16,9 +18,10 @@
     "type": "terraform",
     "collection": "terraformtemplate",
     "paths": [
-      "/aws/modules/acm/output.tf",
-      "/aws/modules/acm/vars.tf",
-      "/aws/modules/acm/main.tf"
+      "/aws/rds/provider.tf",
+      "/aws/rds/terraform.tfvars",
+      "/aws/rds/vars.tf",
+      "/aws/rds/main.tf"
     ],
     "snapshotId": "TRF_TEMPLATE_SNAPSHOT12",
     "status": "active",
@@ -29,19 +32,82 @@
   "json": {
     "resources": [
       {
-        "type": "aws_acm_certificate",
-        "name": "acm",
+        "type": "aws_rds_cluster",
+        "name": "rdscluster",
         "properties": {
-          "domain_name": "${var.domain_name}",
-          "validation_method": "DNS",
-          "subject_alternative_names": [],
-          "tags": {},
-          "options": {
-            "certificate_transparency_logging_preference": "DISABLED"
+          "cluster_identifier": "prancer-rds-cluster",
+          "engine_mode": "multimaster",
+          "master_password": "c9209030ffc53a3fa5663955f65a85de",
+          "master_username": "dbadm",
+          "skip_final_snapshot": true,
+          "kms_key_id": null,
+          "storage_encrypted": false,
+          "cluster_engine_mode": "multimaster",
+          "cluster_master_password": "c9209030ffc53a3fa5663955f65a85de",
+          "cluster_master_username": "dbadm",
+          "cluster_skip_final_snapshot": true,
+          "cluster_kms_key_id": null,
+          "cluster_storage_encrypted": false
+        }
+      },
+      {
+        "type": "aws_db_instance",
+        "name": "rds",
+        "properties": {
+          "identifier": "prancer-rds",
+          "engine": "mysql",
+          "engine_version": 5.7,
+          "instance_class": "db.t2.micro",
+          "allocated_storage": 5,
+          "storage_type": "gp2",
+          "storage_encrypted": false,
+          "kms_key_id": "",
+          "license_model": "",
+          "name": "prancerrdsdb",
+          "username": "prancerdbadmin",
+          "password": "otObicedfobgurEydHef9ofEfjalvib=",
+          "port": 3306,
+          "domain": "",
+          "domain_iam_role_name": "",
+          "iam_database_authentication_enabled": false,
+          "replicate_source_db": "",
+          "snapshot_identifier": "",
+          "vpc_security_group_ids": [],
+          "db_subnet_group_name": "",
+          "parameter_group_name": "",
+          "option_group_name": "",
+          "availability_zone": "",
+          "multi_az": false,
+          "iops": 0,
+          "publicly_accessible": true,
+          "monitoring_interval": 0,
+          "monitoring_role_arn": "",
+          "allow_major_version_upgrade": false,
+          "auto_minor_version_upgrade": false,
+          "apply_immediately": false,
+          "maintenance_window": "sun:03:00-sun:05:00",
+          "skip_final_snapshot": true,
+          "copy_tags_to_snapshot": false,
+          "final_snapshot_identifier": null,
+          "max_allocated_storage": 0,
+          "performance_insights_enabled": false,
+          "performance_insights_retention_period": 7,
+          "backup_retention_period": 0,
+          "backup_window": "05:05-07:05",
+          "timezone": "",
+          "enabled_cloudwatch_logs_exports": [],
+          "deletion_protection": false,
+          "tags": {
+            "environment": "Production",
+            "project": "Prancer"
           },
-          "lifecycle": {
-            "create_before_destroy": true
-          }
+          "timeouts": [
+            {
+              "create": "40m",
+              "delete": "40m",
+              "update": "80m"
+            }
+          ]
         }
       }
     ]

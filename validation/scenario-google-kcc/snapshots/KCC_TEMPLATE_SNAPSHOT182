@@ -2,49 +2,40 @@
   "structure": "filesystem",
   "error": null,
   "reference": "master",
+  "contentType": "yaml",
   "source": "gitConnectorGoogleKcc",
   "paths": [
-    "/samples/resources/computerouternat/router-nat-for-list-of-subnets/compute_v1beta1_computerouternat.yaml"
+    "/samples/resources/computenodegroup/compute_v1beta1_computenodegroup.yaml"
   ],
-  "timestamp": 1622492381208,
+  "timestamp": 1628765142077,
   "queryuser": null,
   "checksum": "99914b932bd37a50b983c5e7c90ae93b",
   "node": {
     "masterSnapshotId": "KCC_TEMPLATE_SNAPSHOT",
-    "type": "yaml",
-    "collection": "deploymentmanagertemplate",
+    "type": "kcc",
+    "collection": "kcctemplate",
     "paths": [
-      "/samples/resources/computerouternat/router-nat-for-list-of-subnets/compute_v1beta1_computerouternat.yaml"
+      "/samples/resources/computenodegroup/compute_v1beta1_computenodegroup.yaml"
     ],
     "snapshotId": "KCC_TEMPLATE_SNAPSHOT182",
     "status": "active",
     "validate": true
   },
   "snapshotId": "KCC_TEMPLATE_SNAPSHOT182",
-  "collection": "deploymentmanagertemplate",
+  "collection": "kcctemplate",
   "json": {
     "apiVersion": "compute.cnrm.cloud.google.com/v1beta1",
-    "kind": "ComputeRouterNAT",
+    "kind": "ComputeNodeGroup",
     "metadata": {
-      "name": "computerouternat-sample-forlistofsubnets"
+      "name": "computenodegroup-sample"
     },
     "spec": {
-      "region": "us-west1",
-      "natIpAllocateOption": "AUTO_ONLY",
-      "routerRef": {
-        "name": "computerouternat-dep-forlistofsubnets"
+      "description": "A single sole-tenant node in the us-central1-b zone.",
+      "size": 1,
+      "nodeTemplateRef": {
+        "name": "computenodegroup-dep"
       },
-      "sourceSubnetworkIpRangesToNat": "LIST_OF_SUBNETWORKS",
-      "subnetwork": [
-        {
-          "subnetworkRef": {
-            "name": "computerouternat-dep-forlistofsubnets"
-          },
-          "sourceIpRangesToNat": [
-            "ALL_IP_RANGES"
-          ]
-        }
-      ]
+      "zone": "us-central1-b"
     }
   }
 }

@@ -2,11 +2,12 @@
   "structure": "filesystem",
   "error": null,
   "reference": "master",
+  "contentType": "yaml",
   "source": "gitConnectorAzureAso",
   "paths": [
-    "/config/samples/azure_v1alpha2_mysqlserver.yaml"
+    "/config/samples/azure_v1alpha1_postgresqlvnetrule.yaml"
   ],
-  "timestamp": 1624434683958,
+  "timestamp": 1628760796514,
   "queryuser": null,
   "checksum": "99914b932bd37a50b983c5e7c90ae93b",
   "node": {
@@ -14,7 +15,7 @@
     "type": "aso",
     "collection": "asotemplate",
     "paths": [
-      "/config/samples/azure_v1alpha2_mysqlserver.yaml"
+      "/config/samples/azure_v1alpha1_postgresqlvnetrule.yaml"
     ],
     "snapshotId": "ASO_TEMPLATE_SNAPSHOT53",
     "status": "active",
@@ -23,27 +24,20 @@
   "snapshotId": "ASO_TEMPLATE_SNAPSHOT53",
   "collection": "asotemplate",
   "json": {
-    "apiVersion": "azure.microsoft.com/v1alpha2",
-    "kind": "MySQLServer",
+    "apiVersion": "azure.microsoft.com/v1alpha1",
+    "kind": "PostgreSQLVNetRule",
     "metadata": {
-      "name": "mysqlserver-sample",
-      "labels": {
-        "tag1": "value1",
-        "tag2": "value2"
-      }
+      "name": "postgresqlvnetrule-sample1"
     },
     "spec": {
-      "location": "eastus2",
       "resourceGroup": "resourcegroup-azure-operators",
-      "serverVersion": "8.0",
-      "sslEnforcement": "Enabled",
-      "createMode": "Default",
-      "sku": {
-        "name": "GP_Gen5_4",
-        "tier": "GeneralPurpose",
-        "family": "Gen5",
-        "size": "51200",
-        "capacity": 4
+      "server": "postgresqlserver-sample",
+      "vNetResourceGroup": "resourcegroup-azure-operators",
+      "vNetName": "virtualnetwork-sample",
+      "subnetName": "test1",
+      "ignoreMissingServiceEndpoint": true,
+      "vNetSubscriptionID": {
+        "vnet_subscription_id": null
       }
     }
   }

@@ -1,0 +1,81 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "yaml",
+  "source": "gitConnectorCloudformation",
+  "paths": [
+    "/cloudfront/cloudfront.yaml"
+  ],
+  "timestamp": 1628763940845,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "CFR_TEMPLATE_SNAPSHOT",
+    "type": "cloudformation",
+    "collection": "cloudformationtemplate",
+    "paths": [
+      "/cloudfront/cloudfront.yaml"
+    ],
+    "snapshotId": "CFR_TEMPLATE_SNAPSHOT3",
+    "status": "active",
+    "validate": true
+  },
+  "snapshotId": "CFR_TEMPLATE_SNAPSHOT3",
+  "collection": "cloudformationtemplate",
+  "json": {
+    "AWSTemplateFormatVersion": "2010-09-09",
+    "Resources": [
+      {
+        "Type": "AWS::CloudFront::Distribution",
+        "Properties": {
+          "DistributionConfig": {
+            "Origins": [
+              {
+                "DomainName": "mybucket.s3.amazonaws.com",
+                "Id": "myS3Origin",
+                "CustomOriginConfig": {
+                  "HTTPPort": "80",
+                  "HTTPSPort": "443",
+                  "OriginProtocolPolicy": "http-only",
+                  "OriginSSLProtocols": [
+                    "TLSv1",
+                    "TLSv1.1",
+                    "TLSv1.2",
+                    "SSLv3"
+                  ]
+                }
+              }
+            ],
+            "Enabled": "true",
+            "Comment": "Some comment",
+            "DefaultCacheBehavior": {
+              "AllowedMethods": [
+                "DELETE",
+                "GET",
+                "HEAD",
+                "OPTIONS",
+                "PATCH",
+                "POST",
+                "PUT"
+              ],
+              "TargetOriginId": "myS3Origin",
+              "ViewerProtocolPolicy": "allow-all",
+              "ForwardedValues": {
+                "QueryString": "false",
+                "Cookies": {
+                  "Forward": "none"
+                }
+              }
+            },
+            "ViewerCertificate": {
+              "MinimumProtocolVersion": "tlsv1",
+              "CloudFrontDefaultCertificate": "true"
+            }
+          }
+        },
+        "Name": "myDistribution"
+      }
+    ]
+  }
+}

@@ -2,11 +2,12 @@
   "structure": "filesystem",
   "error": null,
   "reference": "master",
+  "contentType": "yaml",
   "source": "gitConnectorAzureAso",
   "paths": [
-    "/config/samples/azure_v1alpha2_mysqlaaduser.yaml"
+    "/config/samples/azure_v1alpha1_postgresqluser.yaml"
   ],
-  "timestamp": 1624434683930,
+  "timestamp": 1628760796499,
   "queryuser": null,
   "checksum": "99914b932bd37a50b983c5e7c90ae93b",
   "node": {
@@ -14,7 +15,7 @@
     "type": "aso",
     "collection": "asotemplate",
     "paths": [
-      "/config/samples/azure_v1alpha2_mysqlaaduser.yaml"
+      "/config/samples/azure_v1alpha1_postgresqluser.yaml"
     ],
     "snapshotId": "ASO_TEMPLATE_SNAPSHOT52",
     "status": "active",
@@ -23,20 +24,18 @@
   "snapshotId": "ASO_TEMPLATE_SNAPSHOT52",
   "collection": "asotemplate",
   "json": {
-    "apiVersion": "azure.microsoft.com/v1alpha2",
-    "kind": "MySQLAADUser",
+    "apiVersion": "azure.microsoft.com/v1alpha1",
+    "kind": "PostgreSQLUser",
     "metadata": {
-      "name": "mysqlaaduser-sample"
+      "name": "psqluser-sample"
     },
     "spec": {
+      "server": "postgresqlserver-sample",
+      "dbName": "postgresqldatabase-sample",
       "resourceGroup": "resourcegroup-azure-operators",
-      "server": "mysqlserver-sample",
-      "aadId": "00000000-0000-0000-0000-000000000000",
-      "databaseRoles": {
-        "mysqldatabase-sample": [
-          "SELECT"
-        ]
-      }
+      "roles": [
+        "azure_pg_admin"
+      ]
     }
   }
 }

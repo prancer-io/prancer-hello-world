@@ -2,6 +2,7 @@
   "structure": "filesystem",
   "error": null,
   "reference": "master",
+  "contentType": "terraform",
   "source": "gitConnectorTerraform",
   "paths": [
     "/aws/cloudfront/provider.tf",
@@ -9,7 +10,7 @@
     "/aws/cloudfront/vars.tf",
     "/aws/cloudfront/main.tf"
   ],
-  "timestamp": 1621252246930,
+  "timestamp": 1628768943259,
   "queryuser": null,
   "checksum": "99914b932bd37a50b983c5e7c90ae93b",
   "node": {
@@ -41,70 +42,84 @@
           "price_class": "PriceClass_100",
           "logging_config": [],
           "aliases": [],
-          "origin": {
-            "domain_name": "${aws_s3_bucket.s3bucket.website_endpoint}",
-            "origin_id": "S3-${aws_s3_bucket.s3bucket.bucket}",
-            "origin_path": "",
-            "custom_origin_config": [
-              {
-                "http_port": 80,
-                "https_port": 443,
-                "origin_protocol_policy": "match-viewer",
-                "origin_ssl_protocols": [
-                  "SSLv3",
-                  "TLSv1",
-                  "TLSv1.1",
-                  "TLSv1.2"
-                ],
-                "origin_keepalive_timeout": 60,
-                "origin_read_timeout": 60
-              }
-            ],
-            "s3_origin_config": []
-          },
-          "viewer_certificate": {
-            "acm_certificate_arn": "",
-            "ssl_support_method": "sni-only",
-            "minimum_protocol_version": "TLSv1",
-            "cloudfront_default_certificate": true
-          },
-          "default_cache_behavior": {
-            "allowed_methods": [
-              "DELETE",
-              "GET",
-              "HEAD",
-              "OPTIONS",
-              "PATCH",
-              "POST",
-              "PUT"
-            ],
-            "cached_methods": [
-              "GET",
-              "HEAD"
-            ],
-            "target_origin_id": "S3-${aws_s3_bucket.s3bucket.bucket}",
-            "compress": false,
-            "field_level_encryption_id": "",
-            "forwarded_values": {
-              "headers": [],
-              "query_string": false,
-              "cookies": {
-                "forward": "none",
-                "whitelisted_names": []
-              }
-            },
-            "viewer_protocol_policy": "allow-all",
-            "default_ttl": 60,
-            "min_ttl": 0,
-            "max_ttl": 31536000
-          },
-          "web_acl_id": "",
-          "restrictions": {
-            "geo_restriction": {
-              "restriction_type": "none",
-              "locations": []
+          "origin": [
+            {
+              "domain_name": "${aws_s3_bucket.s3bucket.website_endpoint}",
+              "origin_id": "S3-${aws_s3_bucket.s3bucket.bucket}",
+              "origin_path": "",
+              "custom_origin_config": [
+                {
+                  "http_port": 80,
+                  "https_port": 443,
+                  "origin_protocol_policy": "match-viewer",
+                  "origin_ssl_protocols": [
+                    "SSLv3",
+                    "TLSv1",
+                    "TLSv1.1",
+                    "TLSv1.2"
+                  ],
+                  "origin_keepalive_timeout": 60,
+                  "origin_read_timeout": 60
+                }
+              ],
+              "s3_origin_config": []
             }
-          },
+          ],
+          "viewer_certificate": [
+            {
+              "acm_certificate_arn": "",
+              "ssl_support_method": "sni-only",
+              "minimum_protocol_version": "TLSv1",
+              "cloudfront_default_certificate": true
+            }
+          ],
+          "default_cache_behavior": [
+            {
+              "allowed_methods": [
+                "DELETE",
+                "GET",
+                "HEAD",
+                "OPTIONS",
+                "PATCH",
+                "POST",
+                "PUT"
+              ],
+              "cached_methods": [
+                "GET",
+                "HEAD"
+              ],
+              "target_origin_id": "S3-${aws_s3_bucket.s3bucket.bucket}",
+              "compress": false,
+              "field_level_encryption_id": "",
+              "forwarded_values": [
+                {
+                  "headers": [],
+                  "query_string": false,
+                  "cookies": [
+                    {
+                      "forward": "none",
+                      "whitelisted_names": []
+                    }
+                  ]
+                }
+              ],
+              "viewer_protocol_policy": "allow-all",
+              "default_ttl": 60,
+              "min_ttl": 0,
+              "max_ttl": 31536000
+            }
+          ],
+          "web_acl_id": "",
+          "restrictions": [
+            {
+              "geo_restriction": [
+                {
+                  "restriction_type": "none",
+                  "locations": []
+                }
+              ]
+            }
+          ],
           "tags": {
             "Environment": "Production",
             "Project": "Prancer"
@@ -167,25 +182,29 @@
         "properties": {
           "bucket": "prancer-cf-bucket",
           "acl": "public-read",
-          "website": {
-            "redirect_all_requests_to": "index.html"
-          },
-          "cors_rule": {
-            "allowed_headers": [
-              "*"
-            ],
-            "allowed_methods": [
-              "PUT",
-              "POST"
-            ],
-            "allowed_origins": [
-              "*"
-            ],
-            "expose_headers": [
-              "ETag"
-            ],
-            "max_age_seconds": 3000
-          },
+          "website": [
+            {
+              "redirect_all_requests_to": "index.html"
+            }
+          ],
+          "cors_rule": [
+            {
+              "allowed_headers": [
+                "*"
+              ],
+              "allowed_methods": [
+                "PUT",
+                "POST"
+              ],
+              "allowed_origins": [
+                "*"
+              ],
+              "expose_headers": [
+                "ETag"
+              ],
+              "max_age_seconds": 3000
+            }
+          ],
           "policy": "prancer-cf-bucket"
         }
       }

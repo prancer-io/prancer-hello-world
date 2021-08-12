@@ -2,13 +2,15 @@
   "structure": "filesystem",
   "error": null,
   "reference": "master",
+  "contentType": "terraform",
   "source": "gitConnectorTerraform",
   "paths": [
-    "/aws/modules/redshift/output.tf",
-    "/aws/modules/redshift/vars.tf",
-    "/aws/modules/redshift/main.tf"
+    "/azure/sql_servers/provider.tf",
+    "/azure/sql_servers/terraform.tfvars",
+    "/azure/sql_servers/vars.tf",
+    "/azure/sql_servers/main.tf"
   ],
-  "timestamp": 1620824338637,
+  "timestamp": 1628770705550,
   "queryuser": null,
   "checksum": "99914b932bd37a50b983c5e7c90ae93b",
   "node": {
@@ -16,9 +18,10 @@
     "type": "terraform",
     "collection": "terraformtemplate",
     "paths": [
-      "/aws/modules/redshift/output.tf",
-      "/aws/modules/redshift/vars.tf",
-      "/aws/modules/redshift/main.tf"
+      "/azure/sql_servers/provider.tf",
+      "/azure/sql_servers/terraform.tfvars",
+      "/azure/sql_servers/vars.tf",
+      "/azure/sql_servers/main.tf"
     ],
     "snapshotId": "TRF_TEMPLATE_SNAPSHOT31",
     "status": "active",
@@ -27,47 +30,62 @@
   "snapshotId": "TRF_TEMPLATE_SNAPSHOT31",
   "collection": "terraformtemplate",
   "json": {
+    "data": {
+      "azurerm_client_config": {
+        "current": {}
+      }
+    },
     "resources": [
       {
-        "type": "aws_redshift_cluster",
-        "name": "redshift",
+        "type": "azurerm_sql_server",
+        "name": "sqlserver",
         "properties": {
-          "cluster_identifier": "${var.cluster_identifier}",
-          "node_type": "${var.cluster_node_type}",
-          "number_of_nodes": 3,
-          "cluster_type": "3 > 1 ? \"\"multi\" - \"node\"\" : \"\"single\" - \"node\"\"",
-          "database_name": "${var.cluster_database_name}",
-          "master_username": "${var.cluster_master_username}",
-          "master_password": "${var.cluster_master_password}",
-          "port": 5439,
-          "vpc_security_group_ids": "${var.vpc_security_group_ids}",
-          "cluster_subnet_group_name": "",
-          "cluster_parameter_group_name": "",
-          "publicly_accessible": false,
-          "snapshot_identifier": null,
-          "snapshot_cluster_identifier": null,
-          "owner_account": null,
-          "final_snapshot_identifier": "",
-          "skip_final_snapshot": true,
-          "automated_snapshot_retention_period": 0,
-          "preferred_maintenance_window": "sat:10:00-sat:10:30",
-          "allow_version_upgrade": true,
-          "snapshot_copy": [],
-          "iam_roles": [],
-          "encrypted": false,
-          "kms_key_id": "",
-          "enhanced_vpc_routing": false,
-          "logging": {
-            "enable": false,
-            "bucket_name": null,
-            "s3_key_prefix": null
-          },
+          "name": "prancer-sql-server2",
+          "resource_group_name": "prancer-test-rg",
+          "location": "eastus2",
+          "version": 12.0,
+          "administrator_login": "prancer_admin",
+          "administrator_login_password": "vijcykDaHarj+Oz5",
           "tags": {},
-          "lifecycle": {
-            "ignore_changes": [
-              "master_password"
-            ]
-          }
+          "server_name": "prancer-sql-server2",
+          "server_rg": "prancer-test-rg",
+          "server_version": 12.0,
+          "admin_user": "prancer_admin",
+          "admin_password": "vijcykDaHarj+Oz5"
+        }
+      },
+      {
+        "type": "azurerm_sql_active_directory_administrator",
+        "name": "sqladadmin",
+        "properties": {
+          "server_name": "${module.sqlServers.sqlserver_name}",
+          "resource_group_name": "prancer-test-rg",
+          "login": "sqladmin",
+          "tenant_id": "${data.azurerm_client_config.current.tenant_id}",
+          "object_id": "${data.azurerm_client_config.current.object_id}",
+          "count": 0,
+          "sql_server_name": "${module.sqlServers.sqlserver_name}",
+          "sql_server_rg": "prancer-test-rg",
+          "sql_server_login": "sqladmin",
+          "azure_tenant_id": "${data.azurerm_client_config.current.tenant_id}",
+          "ad_object_id": "${data.azurerm_client_config.current.object_id}"
+        }
+      },
+      {
+        "type": "azurerm_sql_firewall_rule",
+        "name": "sqlserverfw",
+        "properties": {
+          "name": "prancer-sql-fw-block-200-net",
+          "resource_group_name": "prancer-test-rg",
+          "server_name": "${module.sqlServers.sqlserver_name}",
+          "start_ip_address": "10.254.200.0",
+          "end_ip_address": "10.254.200.255",
+          "count": 0,
+          "sql_fw_name": "prancer-sql-fw-block-200-net",
+          "sql_fw_rg": "prancer-test-rg",
+          "sql_server_name": "${module.sqlServers.sqlserver_name}",
+          "sql_fw_start_ip": "10.254.200.0",
+          "sql_fw_end_ip": "10.254.200.255"
         }
       }
     ]

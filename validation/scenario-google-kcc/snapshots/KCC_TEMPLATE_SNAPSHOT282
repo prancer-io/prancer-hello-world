@@ -2,36 +2,45 @@
   "structure": "filesystem",
   "error": null,
   "reference": "master",
+  "contentType": "yaml",
   "source": "gitConnectorGoogleKcc",
   "paths": [
-    "/samples/resources/dataflowjob/streaming-dataflow-job/bigquery_v1beta1_bigquerytable.yaml"
+    "/samples/resources/computeurlmap/regional-compute-url-map-l7-ilb-path/compute_v1beta1_computebackendservice.yaml"
   ],
-  "timestamp": 1622492385134,
+  "timestamp": 1628765144630,
   "queryuser": null,
   "checksum": "99914b932bd37a50b983c5e7c90ae93b",
   "node": {
     "masterSnapshotId": "KCC_TEMPLATE_SNAPSHOT",
-    "type": "yaml",
-    "collection": "deploymentmanagertemplate",
+    "type": "kcc",
+    "collection": "kcctemplate",
     "paths": [
-      "/samples/resources/dataflowjob/streaming-dataflow-job/bigquery_v1beta1_bigquerytable.yaml"
+      "/samples/resources/computeurlmap/regional-compute-url-map-l7-ilb-path/compute_v1beta1_computebackendservice.yaml"
     ],
     "snapshotId": "KCC_TEMPLATE_SNAPSHOT282",
     "status": "active",
     "validate": true
   },
   "snapshotId": "KCC_TEMPLATE_SNAPSHOT282",
-  "collection": "deploymentmanagertemplate",
+  "collection": "kcctemplate",
   "json": {
-    "apiVersion": "bigquery.cnrm.cloud.google.com/v1beta1",
-    "kind": "BigQueryTable",
+    "apiVersion": "compute.cnrm.cloud.google.com/v1beta1",
+    "kind": "ComputeBackendService",
     "metadata": {
-      "name": "dataflowjobdepstreaming"
+      "name": "computeurlmap-dep"
     },
     "spec": {
-      "datasetRef": {
-        "name": "dataflowjobdepstreaming"
-      }
+      "location": "us-central1",
+      "healthChecks": [
+        {
+          "healthCheckRef": {
+            "name": "computeurlmap-dep"
+          }
+        }
+      ],
+      "protocol": "HTTP",
+      "timeoutSec": 10,
+      "loadBalancingScheme": "INTERNAL_MANAGED"
     }
   }
 }

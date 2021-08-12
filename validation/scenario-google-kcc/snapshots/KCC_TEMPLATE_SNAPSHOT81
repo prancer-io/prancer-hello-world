@@ -2,44 +2,73 @@
   "structure": "filesystem",
   "error": null,
   "reference": "master",
+  "contentType": "yaml",
   "source": "gitConnectorGoogleKcc",
   "paths": [
-    "/samples/resources/computefirewall/deny-rule-firewall/compute_v1beta1_computefirewall.yaml"
+    "/samples/resources/computebackendservice/external-load-balancing-backend-service/compute_v1beta1_computebackendservice.yaml"
   ],
-  "timestamp": 1622492377304,
+  "timestamp": 1628765139953,
   "queryuser": null,
   "checksum": "99914b932bd37a50b983c5e7c90ae93b",
   "node": {
     "masterSnapshotId": "KCC_TEMPLATE_SNAPSHOT",
-    "type": "yaml",
-    "collection": "deploymentmanagertemplate",
+    "type": "kcc",
+    "collection": "kcctemplate",
     "paths": [
-      "/samples/resources/computefirewall/deny-rule-firewall/compute_v1beta1_computefirewall.yaml"
+      "/samples/resources/computebackendservice/external-load-balancing-backend-service/compute_v1beta1_computebackendservice.yaml"
     ],
     "snapshotId": "KCC_TEMPLATE_SNAPSHOT81",
     "status": "active",
     "validate": true
   },
   "snapshotId": "KCC_TEMPLATE_SNAPSHOT81",
-  "collection": "deploymentmanagertemplate",
+  "collection": "kcctemplate",
   "json": {
     "apiVersion": "compute.cnrm.cloud.google.com/v1beta1",
-    "kind": "ComputeFirewall",
+    "kind": "ComputeBackendService",
     "metadata": {
-      "labels": {
-        "label-one": "value-one"
-      },
-      "name": "computefirewall-sample-deny"
+      "name": "computebackendservice-sample-externalloadbalancing"
     },
     "spec": {
-      "deny": [
+      "description": "External backend service with cookie-based session affinity.",
+      "portName": "cookie-cloud",
+      "timeoutSec": 30,
+      "healthChecks": [
         {
-          "protocol": "icmp"
+          "healthCheckRef": {
+            "name": "computebackendservice-dep-externalloadbalancing"
+          }
         }
       ],
-      "networkRef": {
-        "name": "computefirewall-dep-deny"
-      }
+      "loadBalancingScheme": "EXTERNAL",
+      "location": "global",
+      "protocol": "HTTPS",
+      "affinityCookieTtlSec": 360,
+      "connectionDrainingTimeoutSec": 60,
+      "securityPolicyRef": {
+        "name": "computebackendservice-dep-externalloadbalancing"
+      },
+      "sessionAffinity": "GENERATED_COOKIE",
+      "customRequestHeaders": [
+        "Trailer: custom-trailer"
+      ],
+      "logConfig": {
+        "enable": true,
+        "sampleRate": 0.5
+      },
+      "backend": [
+        {
+          "balancingMode": "RATE",
+          "capacityScaler": 1,
+          "description": "A network endpoint group serving this backend with all its available capacity, as calculated by number of simultaneous connections.",
+          "maxRatePerEndpoint": 10,
+          "group": {
+            "networkEndpointGroupRef": {
+              "name": "computebackendservice-dep-externalloadbalancing"
+            }
+          }
+        }
+      ]
     }
   }
 }

@@ -2,41 +2,43 @@
   "structure": "filesystem",
   "error": null,
   "reference": "master",
+  "contentType": "yaml",
   "source": "gitConnectorGoogleKcc",
   "paths": [
-    "/samples/resources/storagedefaultobjectaccesscontrol/storage_v1beta1_storagedefaultobjectaccesscontrol.yaml"
+    "/samples/resources/logginglogsink/organization-sink/logging_v1beta1_logginglogsink.yaml"
   ],
-  "timestamp": 1622492390746,
+  "timestamp": 1628765149000,
   "queryuser": null,
   "checksum": "99914b932bd37a50b983c5e7c90ae93b",
   "node": {
     "masterSnapshotId": "KCC_TEMPLATE_SNAPSHOT",
-    "type": "yaml",
-    "collection": "deploymentmanagertemplate",
+    "type": "kcc",
+    "collection": "kcctemplate",
     "paths": [
-      "/samples/resources/storagedefaultobjectaccesscontrol/storage_v1beta1_storagedefaultobjectaccesscontrol.yaml"
+      "/samples/resources/logginglogsink/organization-sink/logging_v1beta1_logginglogsink.yaml"
     ],
     "snapshotId": "KCC_TEMPLATE_SNAPSHOT451",
     "status": "active",
     "validate": true
   },
   "snapshotId": "KCC_TEMPLATE_SNAPSHOT451",
-  "collection": "deploymentmanagertemplate",
+  "collection": "kcctemplate",
   "json": {
-    "apiVersion": "storage.cnrm.cloud.google.com/v1beta1",
-    "kind": "StorageDefaultObjectAccessControl",
+    "apiVersion": "logging.cnrm.cloud.google.com/v1beta1",
+    "kind": "LoggingLogSink",
     "metadata": {
-      "labels": {
-        "label-one": "value-one"
-      },
-      "name": "storagedefaultobjectaccesscontrol-sample"
+      "name": "logginglogsink-sample-org"
     },
     "spec": {
-      "bucketRef": {
-        "name": "${PROJECT_ID?}-objectaccesscontrol-dep"
+      "organizationRef": {
+        "external": "${ORG_ID?}"
       },
-      "entity": "allAuthenticatedUsers",
-      "role": "READER"
+      "destination": {
+        "storageBucketRef": {
+          "name": "${PROJECT_ID?}-logginglogsink-dep-org"
+        }
+      },
+      "filter": "resource.type=\"bigquery_project\" AND logName:\"cloudaudit.googleapis.com\""
     }
   }
 }

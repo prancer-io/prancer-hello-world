@@ -1,0 +1,433 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "yaml",
+  "source": "gitConnectorCloudformation",
+  "paths": [
+    "/emr/emr.yaml"
+  ],
+  "timestamp": 1628763941193,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "CFR_TEMPLATE_SNAPSHOT",
+    "type": "cloudformation",
+    "collection": "cloudformationtemplate",
+    "paths": [
+      "/emr/emr.yaml"
+    ],
+    "snapshotId": "CFR_TEMPLATE_SNAPSHOT20",
+    "status": "active",
+    "validate": true
+  },
+  "snapshotId": "CFR_TEMPLATE_SNAPSHOT20",
+  "collection": "cloudformationtemplate",
+  "json": {
+    "AWSTemplateFormatVersion": "2010-09-09",
+    "Conditions": {
+      "WithSpotPrice": {
+        "Fn::Not": [
+          {
+            "Fn::Equals": [
+              {
+                "Ref": "SpotPrice"
+              },
+              "0"
+            ]
+          }
+        ]
+      }
+    },
+    "Description": "Sample CloudFormation template for creating an EMR cluster",
+    "Parameters": {
+      "GcTimeRatioValue": {
+        "Default": "19",
+        "Description": "Hadoop name node garbage collector time ratio",
+        "Type": "Number"
+      },
+      "SpotPrice": {
+        "Default": "0.1",
+        "Description": "Spot price (or use 0 for 'on demand' instance)",
+        "Type": "Number"
+      },
+      "Subnet": {
+        "Description": "Subnet ID for creating the EMR cluster",
+        "Type": "AWS::EC2::Subnet::Id"
+      }
+    },
+    "Resources": [
+      {
+        "Properties": {
+          "Roles": [
+            {
+              "Ref": "EMRJobFlowRole"
+            }
+          ]
+        },
+        "Type": "AWS::IAM::InstanceProfile",
+        "Metadata": {
+          "AWS::CloudFormation::Designer": {
+            "id": "4ce96dbe-d564-4f30-a44e-a0e7f6e46690"
+          }
+        },
+        "Name": "EMRInstanceProfile"
+      },
+      {
+        "Properties": {
+          "AssumeRolePolicyDocument": {
+            "Statement": [
+              {
+                "Action": [
+                  "sts:AssumeRole"
+                ],
+                "Effect": "Allow",
+                "Principal": {
+                  "Service": [
+                    "ec2.amazonaws.com"
+                  ]
+                }
+              }
+            ]
+          },
+          "ManagedPolicyArns": [
+            "arn:aws:iam::aws:policy/service-role/AmazonElasticMapReduceforEC2Role"
+          ]
+        },
+        "Type": "AWS::IAM::Role",
+        "Metadata": {
+          "AWS::CloudFormation::Designer": {
+            "id": "7935bef0-f0ed-4ee1-826b-75b2baadba34"
+          }
+        },
+        "Name": "EMRJobFlowRole"
+      },
+      {
+        "Properties": {
+          "Applications": [
+            {
+              "Name": "Hadoop"
+            },
+            {
+              "Name": "Hive"
+            },
+            {
+              "Name": "Mahout"
+            },
+            {
+              "Name": "Pig"
+            },
+            {
+              "Name": "Spark"
+            }
+          ],
+          "BootstrapActions": [
+            {
+              "Name": "Dummy bootstrap action",
+              "ScriptBootstrapAction": {
+                "Args": [
+                  "dummy",
+                  "parameter"
+                ],
+                "Path": "file:/usr/share/aws/emr/scripts/install-hue"
+              }
+            }
+          ],
+          "Configurations": [
+            {
+              "Classification": "core-site",
+              "ConfigurationProperties": {
+                "hadoop.security.groups.cache.secs": "250"
+              }
+            },
+            {
+              "Classification": "mapred-site",
+              "ConfigurationProperties": {
+                "mapred.tasktracker.map.tasks.maximum": "2",
+                "mapreduce.map.sort.spill.percent": "90",
+                "mapreduce.tasktracker.reduce.tasks.maximum": "5"
+              }
+            },
+            {
+              "Classification": "hadoop-env",
+              "Configurations": [
+                {
+                  "Classification": "export",
+                  "ConfigurationProperties": {
+                    "HADOOP_DATANODE_HEAPSIZE": "2048",
+                    "HADOOP_NAMENODE_OPTS": "-XX:GCTimeRatio=19"
+                  }
+                }
+              ]
+            }
+          ],
+          "Instances": {
+            "CoreInstanceGroup": {
+              "AutoScalingPolicy": {
+                "Constraints": {
+                  "MaxCapacity": "3",
+                  "MinCapacity": "1"
+                },
+                "Rules": [
+                  {
+                    "Action": {
+                      "Market": "ON_DEMAND",
+                      "SimpleScalingPolicyConfiguration": {
+                        "AdjustmentType": "EXACT_CAPACITY",
+                        "CoolDown": "300",
+                        "ScalingAdjustment": "1"
+                      }
+                    },
+                    "Description": "CoreAutoScalingPolicy rules",
+                    "Name": "CoreAutoScalingPolicy",
+                    "Trigger": {
+                      "CloudWatchAlarmDefinition": {
+                        "ComparisonOperator": "GREATER_THAN",
+                        "Dimensions": [
+                          {
+                            "Key": "my.custom.master.property",
+                            "Value": "my.custom.master.value"
+                          }
+                        ],
+                        "EvaluationPeriods": "120",
+                        "MetricName": "TestMetric",
+                        "Namespace": "AWS/ElasticMapReduce",
+                        "Period": "300",
+                        "Statistic": "AVERAGE",
+                        "Threshold": "50",
+                        "Unit": "PERCENT"
+                      }
+                    }
+                  }
+                ]
+              },
+              "BidPrice": {
+                "Ref": "SpotPrice"
+              },
+              "EbsConfiguration": {
+                "EbsBlockDeviceConfigs": [
+                  {
+                    "VolumeSpecification": {
+                      "SizeInGB": "10",
+                      "VolumeType": "gp2"
+                    },
+                    "VolumesPerInstance": "1"
+                  }
+                ],
+                "EbsOptimized": true
+              },
+              "InstanceCount": "1",
+              "InstanceType": "m4.large",
+              "Market": "SPOT",
+              "Name": "Core Instance"
+            },
+            "Ec2SubnetId": {
+              "Ref": "Subnet"
+            }
+          },
+          "JobFlowRole": {
+            "Ref": "EMRInstanceProfile"
+          },
+          "Name": "EMR Sample Cluster",
+          "ReleaseLabel": "emr-6.3.0",
+          "SecurityConfiguration": {
+            "Ref": "EMRSecurityConfiguration"
+          },
+          "ServiceRole": {
+            "Ref": "EMRServiceRole"
+          },
+          "Tags": [
+            {
+              "Key": "Name",
+              "Value": "EMR Sample Cluster"
+            }
+          ],
+          "VisibleToAllUsers": true,
+          "AutoScalingRole": "EMR_AutoScaling_DefaultRole"
+        },
+        "Type": "AWS::EMR::Cluster",
+        "Metadata": {
+          "AWS::CloudFormation::Designer": {
+            "id": "e94a5475-45f5-44f6-80e8-0d3fb38f6bfd"
+          }
+        },
+        "Name": "EMRSampleCluster"
+      },
+      {
+        "Properties": {
+          "Name": "EMRSampleClusterSecurityConfiguration",
+          "SecurityConfiguration": {
+            "EncryptionConfiguration": {
+              "AtRestEncryptionConfiguration": {
+                "LocalDiskEncryptionConfiguration": {
+                  "AwsKmsKey": "arn:aws:kms:us-east-1:123456789012:key/1234-1234-1234-1234-1234",
+                  "EncryptionKeyProviderType": "AwsKms"
+                },
+                "S3EncryptionConfiguration": {
+                  "AwsKmsKey": "arn:aws:kms:us-east-1:123456789012:key/1234-1234-1234-1234-1234",
+                  "EncryptionMode": "SSE-KMS"
+                }
+              },
+              "EnableAtRestEncryption": true,
+              "EnableInTransitEncryption": true,
+              "InTransitEncryptionConfiguration": {
+                "TLSCertificateConfiguration": {
+                  "CertificateProviderType": "PEM",
+                  "S3Object": "s3://MyConfigStore/artifacts/MyCerts.zip"
+                }
+              }
+            }
+          }
+        },
+        "Type": "AWS::EMR::SecurityConfiguration",
+        "Metadata": {
+          "AWS::CloudFormation::Designer": {
+            "id": "400d803c-fd1e-4a9e-92e9-4bb90f23831b"
+          }
+        },
+        "Name": "EMRSecurityConfiguration"
+      },
+      {
+        "Properties": {
+          "AssumeRolePolicyDocument": {
+            "Statement": [
+              {
+                "Action": [
+                  "sts:AssumeRole"
+                ],
+                "Effect": "Allow",
+                "Principal": {
+                  "Service": [
+                    "elasticmapreduce.amazonaws.com"
+                  ]
+                }
+              }
+            ]
+          },
+          "ManagedPolicyArns": [
+            "arn:aws:iam::aws:policy/service-role/AmazonElasticMapReduceRole"
+          ]
+        },
+        "Type": "AWS::IAM::Role",
+        "Metadata": {
+          "AWS::CloudFormation::Designer": {
+            "id": "487939b2-57e4-4bfd-bb48-b361400d29ae"
+          }
+        },
+        "Name": "EMRServiceRole"
+      },
+      {
+        "Properties": {
+          "ActionOnFailure": "CONTINUE",
+          "HadoopJarStep": {
+            "Args": [
+              "5",
+              "10"
+            ],
+            "Jar": "s3://emr-cfn-test/hadoop-mapreduce-examples-2.6.0.jar",
+            "MainClass": "pi",
+            "StepProperties": [
+              {
+                "Key": "my.custom.property",
+                "Value": "my.custom.value"
+              }
+            ]
+          },
+          "Name": "TestStep",
+          "VpcId": {
+            "Ref": "EMRSampleCluster"
+          }
+        },
+        "Type": "AWS::EMR::Step",
+        "Metadata": {
+          "AWS::CloudFormation::Designer": {
+            "id": "3cea84fe-dd19-4f81-a096-11f383b7a893"
+          }
+        },
+        "Name": "TestStep"
+      }
+    ],
+    "Metadata": {
+      "AWS::CloudFormation::Designer": {
+        "487939b2-57e4-4bfd-bb48-b361400d29ae": {
+          "size": {
+            "width": 60,
+            "height": 60
+          },
+          "position": {
+            "x": 190,
+            "y": 120
+          },
+          "z": 1,
+          "embeds": []
+        },
+        "400d803c-fd1e-4a9e-92e9-4bb90f23831b": {
+          "size": {
+            "width": 60,
+            "height": 60
+          },
+          "position": {
+            "x": 430,
+            "y": 120
+          },
+          "z": 1,
+          "embeds": []
+        },
+        "7935bef0-f0ed-4ee1-826b-75b2baadba34": {
+          "size": {
+            "width": 60,
+            "height": 60
+          },
+          "position": {
+            "x": 60,
+            "y": 230
+          },
+          "z": 1,
+          "embeds": []
+        },
+        "4ce96dbe-d564-4f30-a44e-a0e7f6e46690": {
+          "size": {
+            "width": 60,
+            "height": 60
+          },
+          "position": {
+            "x": 320,
+            "y": 230
+          },
+          "z": 1,
+          "embeds": [],
+          "isassociatedwith": [
+            "7935bef0-f0ed-4ee1-826b-75b2baadba34"
+          ]
+        },
+        "e94a5475-45f5-44f6-80e8-0d3fb38f6bfd": {
+          "size": {
+            "width": 60,
+            "height": 60
+          },
+          "position": {
+            "x": 320,
+            "y": 120
+          },
+          "z": 1,
+          "embeds": []
+        },
+        "3cea84fe-dd19-4f81-a096-11f383b7a893": {
+          "size": {
+            "width": 60,
+            "height": 60
+          },
+          "position": {
+            "x": 320,
+            "y": 0
+          },
+          "z": 0,
+          "embeds": [],
+          "iscontainedinside": [
+            "e94a5475-45f5-44f6-80e8-0d3fb38f6bfd"
+          ]
+        }
+      }
+    }
+  }
+}

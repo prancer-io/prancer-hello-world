@@ -2,34 +2,75 @@
   "structure": "filesystem",
   "error": null,
   "reference": "master",
+  "contentType": "yaml",
   "source": "gitConnectorGoogleKcc",
   "paths": [
-    "/samples/resources/kmscryptokey/kms_v1beta1_kmskeyring.yaml"
+    "/samples/resources/gkehubfeaturemembership/gkehub_v1beta1_gkehubfeaturemembership.yaml"
   ],
-  "timestamp": 1622492388449,
+  "timestamp": 1628765147073,
   "queryuser": null,
   "checksum": "99914b932bd37a50b983c5e7c90ae93b",
   "node": {
     "masterSnapshotId": "KCC_TEMPLATE_SNAPSHOT",
-    "type": "yaml",
-    "collection": "deploymentmanagertemplate",
+    "type": "kcc",
+    "collection": "kcctemplate",
     "paths": [
-      "/samples/resources/kmscryptokey/kms_v1beta1_kmskeyring.yaml"
+      "/samples/resources/gkehubfeaturemembership/gkehub_v1beta1_gkehubfeaturemembership.yaml"
     ],
     "snapshotId": "KCC_TEMPLATE_SNAPSHOT375",
     "status": "active",
     "validate": true
   },
   "snapshotId": "KCC_TEMPLATE_SNAPSHOT375",
-  "collection": "deploymentmanagertemplate",
+  "collection": "kcctemplate",
   "json": {
-    "apiVersion": "kms.cnrm.cloud.google.com/v1beta1",
-    "kind": "KMSKeyRing",
+    "apiVersion": "gkehub.cnrm.cloud.google.com/v1beta1",
+    "kind": "GKEHubFeatureMembership",
     "metadata": {
-      "name": "kmscryptokey-dep"
+      "name": "gkehubfeaturemembership-sample"
     },
     "spec": {
-      "location": "us-central1"
+      "projectRef": {
+        "name": "gkehubfeaturemembership-dep"
+      },
+      "location": "global",
+      "membershipRef": {
+        "name": "gkehubfeaturemembership-dep"
+      },
+      "featureRef": {
+        "name": "gkehubfeaturemembership-dep"
+      },
+      "configmanagement": {
+        "version": "1.6.2",
+        "configSync": {
+          "sourceFormat": "unstructured",
+          "git": {
+            "syncRepo": "https://github.com/GoogleCloudPlatform/cloud-foundation-toolkit",
+            "syncBranch": "master",
+            "policyDir": "config-connector",
+            "syncWaitSecs": "20",
+            "syncRev": "HEAD"
+          }
+        },
+        "policyController": {
+          "enabled": true,
+          "exemtableNamespaces": [
+            "test-namespace"
+          ],
+          "referentialRulesEnabled": true,
+          "logDeniesEnabled": true,
+          "templateLibraryInstalled": true,
+          "auditIntervalSeconds": "20"
+        },
+        "binauthz": {
+          "enabled": true
+        },
+        "hierarchicalController": {
+          "enabled": true,
+          "enablePodTreeLabels": true,
+          "enableHierarchicalResourceQuota": true
+        }
+      }
     }
   }
 }

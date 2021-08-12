@@ -2,80 +2,49 @@
   "structure": "filesystem",
   "error": null,
   "reference": "master",
+  "contentType": "yaml",
   "source": "gitConnectorGoogleKcc",
   "paths": [
-    "/samples/resources/dataproccluster/dataproc_v1beta1_dataproccluster.yaml"
+    "/samples/resources/computevpntunnel/compute_v1beta1_computeforwardingrule_multiple_yaml_0.yaml"
   ],
-  "timestamp": 1622492385345,
+  "timestamp": 1628765144855,
   "queryuser": null,
   "checksum": "99914b932bd37a50b983c5e7c90ae93b",
   "node": {
     "masterSnapshotId": "KCC_TEMPLATE_SNAPSHOT",
-    "type": "yaml",
-    "collection": "deploymentmanagertemplate",
+    "type": "kcc",
+    "collection": "kcctemplate",
     "paths": [
-      "/samples/resources/dataproccluster/dataproc_v1beta1_dataproccluster.yaml"
+      "/samples/resources/computevpntunnel/compute_v1beta1_computeforwardingrule_multiple_yaml_0.yaml"
     ],
     "snapshotId": "KCC_TEMPLATE_SNAPSHOT288",
     "status": "active",
     "validate": true
   },
   "snapshotId": "KCC_TEMPLATE_SNAPSHOT288",
-  "collection": "deploymentmanagertemplate",
+  "collection": "kcctemplate",
   "json": {
-    "apiVersion": "dataproc.cnrm.cloud.google.com/v1beta1",
-    "kind": "DataprocCluster",
+    "apiVersion": "compute.cnrm.cloud.google.com/v1beta1",
+    "kind": "ComputeForwardingRule",
     "metadata": {
-      "annotations": {
-        "cnrm.cloud.google.com/management-conflict-prevention-policy": "none"
-      },
-      "name": "dataproccluster-sample",
       "labels": {
         "label-one": "value-one"
-      }
+      },
+      "name": "computevpntunnel-dep1"
     },
     "spec": {
+      "description": "A regional forwarding rule",
+      "ipAddress": {
+        "addressRef": {
+          "name": "computevpntunnel-dep"
+        }
+      },
+      "ipProtocol": "ESP",
       "location": "us-central1",
-      "config": {
-        "autoscalingConfig": {
-          "policyRef": {
-            "name": "dataproccluster-dep"
-          }
-        },
-        "stagingBucketRef": {
-          "name": "dataproccluster-dep-staging"
-        },
-        "masterConfig": {
-          "diskConfig": {
-            "bootDiskSizeGb": 30,
-            "bootDiskType": "pd-standard"
-          },
-          "machineType": "n2-standard-2",
-          "numInstances": 1
-        },
-        "workerConfig": {
-          "numInstances": 2,
-          "machineType": "n2-standard-2",
-          "diskConfig": {
-            "bootDiskSizeGb": 30,
-            "numLocalSsds": 1
-          }
-        },
-        "softwareConfig": {
-          "imageVersion": "2.0.2-debian10"
-        },
-        "gceClusterConfig": {
-          "tags": [
-            "foo",
-            "bar"
-          ]
-        },
-        "initializationActions": [
-          {
-            "executableFile": "gs://dataproc-initialization-actions/stackdriver/stackdriver.sh",
-            "executionTimeout": "500s"
-          }
-        ]
+      "target": {
+        "targetVPNGatewayRef": {
+          "name": "computevpntunnel-dep"
+        }
       }
     }
   }

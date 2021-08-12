@@ -1,0 +1,117 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "yaml",
+  "source": "gitConnectorCloudformation",
+  "paths": [
+    "/iam/iam.yaml"
+  ],
+  "timestamp": 1628763941208,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "CFR_TEMPLATE_SNAPSHOT",
+    "type": "cloudformation",
+    "collection": "cloudformationtemplate",
+    "paths": [
+      "/iam/iam.yaml"
+    ],
+    "snapshotId": "CFR_TEMPLATE_SNAPSHOT21",
+    "status": "active",
+    "validate": true
+  },
+  "snapshotId": "CFR_TEMPLATE_SNAPSHOT21",
+  "collection": "cloudformationtemplate",
+  "json": {
+    "AWSTemplateFormatVersion": "2010-09-09",
+    "Description": "AWS CloudFormation template IAM Roles for Systems Manager | Automation Service",
+    "Resources": [
+      {
+        "Type": "AWS::IAM::Role",
+        "Properties": {
+          "AssumeRolePolicyDocument": {
+            "Version": "2012-10-17",
+            "Statement": [
+              {
+                "Effect": "Allow",
+                "Principal": {
+                  "Service": [
+                    "ec2.amazonaws.com"
+                  ]
+                },
+                "Action": [
+                  "sts:AssumeRole"
+                ]
+              }
+            ]
+          },
+          "Path": "/",
+          "Policies": [
+            {
+              "PolicyName": "root",
+              "PolicyDocument": {
+                "Version": "2012-10-17",
+                "Statement": [
+                  {
+                    "Effect": "Allow",
+                    "Action": "*",
+                    "Resource": "*"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        "Name": "ManagedInstanceRole"
+      },
+      {
+        "Type": "AWS::IAM::ManagedPolicy",
+        "Properties": {
+          "PolicyDocument": {
+            "Version": "2012-10-17",
+            "Statement": [
+              {
+                "Sid": "AllowAllUsersToListAccounts",
+                "Effect": "Allow",
+                "Action": "*",
+                "Resource": "*"
+              }
+            ]
+          }
+        },
+        "Name": "AssumeDeveloperRolePolicy"
+      },
+      {
+        "Type": "AWS::IAM::User",
+        "Properties": {
+          "LoginProfile": {
+            "Password": "Test@1234"
+          }
+        },
+        "Name": "CFNUser"
+      },
+      {
+        "Type": "AWS::IAM::Group",
+        "Properties": {
+          "Policies": [
+            {
+              "PolicyName": "myapppolicy",
+              "PolicyDocument": {
+                "Version": "2012-10-17",
+                "Statement": [
+                  {
+                    "Effect": "Allow",
+                    "Action": "*",
+                    "Resource": "*"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        "Name": "CFNAdminGroup"
+      }
+    ]
+  }
+}

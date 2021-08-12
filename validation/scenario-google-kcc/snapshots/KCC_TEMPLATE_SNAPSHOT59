@@ -2,31 +2,61 @@
   "structure": "filesystem",
   "error": null,
   "reference": "master",
+  "contentType": "yaml",
   "source": "gitConnectorGoogleKcc",
   "paths": [
-    "/samples/resources/computebackendbucket/basic-backend-bucket/storage_v1beta1_storagebucket.yaml"
+    "/samples/resources/binaryauthorizationpolicy/service-identity-policy/binaryauthorization_v1beta1_binaryauthorizationpolicy.yaml"
   ],
-  "timestamp": 1622492376363,
+  "timestamp": 1628765139477,
   "queryuser": null,
   "checksum": "99914b932bd37a50b983c5e7c90ae93b",
   "node": {
     "masterSnapshotId": "KCC_TEMPLATE_SNAPSHOT",
-    "type": "yaml",
-    "collection": "deploymentmanagertemplate",
+    "type": "kcc",
+    "collection": "kcctemplate",
     "paths": [
-      "/samples/resources/computebackendbucket/basic-backend-bucket/storage_v1beta1_storagebucket.yaml"
+      "/samples/resources/binaryauthorizationpolicy/service-identity-policy/binaryauthorization_v1beta1_binaryauthorizationpolicy.yaml"
     ],
     "snapshotId": "KCC_TEMPLATE_SNAPSHOT59",
     "status": "active",
     "validate": true
   },
   "snapshotId": "KCC_TEMPLATE_SNAPSHOT59",
-  "collection": "deploymentmanagertemplate",
+  "collection": "kcctemplate",
   "json": {
-    "apiVersion": "storage.cnrm.cloud.google.com/v1beta1",
-    "kind": "StorageBucket",
+    "apiVersion": "binaryauthorization.cnrm.cloud.google.com/v1beta1",
+    "kind": "BinaryAuthorizationPolicy",
     "metadata": {
-      "name": "${PROJECT_ID?}-backendbucket-dep-basic"
+      "name": "binaryauthorizationpolicy-sample-serviceidentity"
+    },
+    "spec": {
+      "admissionWhitelistPatterns": [
+        {
+          "namePattern": "gcr.io/*"
+        }
+      ],
+      "istioServiceIdentityAdmissionRules": {
+        "spiffe://example.com/ns/test-ns/sa/default": {
+          "evaluationMode": "REQUIRE_ATTESTATION",
+          "requireAttestationsBy": [
+            {
+              "name": "binaryauthorizationpolicy-dep-serviceidentity"
+            }
+          ],
+          "enforcementMode": "ENFORCED_BLOCK_AND_AUDIT_LOG"
+        }
+      },
+      "defaultAdmissionRule": {
+        "evaluationMode": "REQUIRE_ATTESTATION",
+        "requireAttestationsBy": [
+          {
+            "name": "binaryauthorizationpolicy-dep-serviceidentity"
+          }
+        ],
+        "enforcementMode": "ENFORCED_BLOCK_AND_AUDIT_LOG"
+      },
+      "description": "A sample Binary Authorization policy",
+      "globalPolicyEvaluationMode": "DISABLE"
     }
   }
 }

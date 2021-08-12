@@ -2,11 +2,12 @@
   "structure": "filesystem",
   "error": null,
   "reference": "master",
+  "contentType": "yaml",
   "source": "gitConnectorAzureAso",
   "paths": [
-    "/config/samples/azure_v1alpha1_blobcontainer.yaml"
+    "/config/samples/azure_v1alpha1_azurestaticipnicvnetvirtualmachine_multiple_yaml_1.yaml"
   ],
-  "timestamp": 1624434683161,
+  "timestamp": 1628760795890,
   "queryuser": null,
   "checksum": "99914b932bd37a50b983c5e7c90ae93b",
   "node": {
@@ -14,7 +15,7 @@
     "type": "aso",
     "collection": "asotemplate",
     "paths": [
-      "/config/samples/azure_v1alpha1_blobcontainer.yaml"
+      "/config/samples/azure_v1alpha1_azurestaticipnicvnetvirtualmachine_multiple_yaml_1.yaml"
     ],
     "snapshotId": "ASO_TEMPLATE_SNAPSHOT20",
     "status": "active",
@@ -24,15 +25,24 @@
   "collection": "asotemplate",
   "json": {
     "apiVersion": "azure.microsoft.com/v1alpha1",
-    "kind": "BlobContainer",
+    "kind": "VirtualNetwork",
     "metadata": {
-      "name": "blobcontainer-sample"
+      "name": "vnet-sample-02"
     },
     "spec": {
-      "location": "westus",
-      "resourcegroup": "resourcegroup-azure-operators",
-      "accountname": "storageaccountsample777",
-      "accesslevel": "Container"
+      "addressSpace": "10.0.0.0/8",
+      "location": "SouthCentralUS",
+      "resourceGroup": "resourcegroup-azure-operators",
+      "subnets": [
+        {
+          "subnetAddressPrefix": "10.1.0.0/16",
+          "subnetName": "test1"
+        },
+        {
+          "subnetAddressPrefix": "10.2.0.0/16",
+          "subnetName": "test2"
+        }
+      ]
     }
   }
 }

@@ -2,11 +2,12 @@
   "structure": "filesystem",
   "error": null,
   "reference": "master",
+  "contentType": "yaml",
   "source": "gitConnectorAzureAso",
   "paths": [
-    "/config/samples/azure_v1alpha1_cosmosdb_prod.yaml"
+    "/config/samples/azure_v1alpha1_azurevirtualmachineextension.yaml"
   ],
-  "timestamp": 1624434683274,
+  "timestamp": 1628760796018,
   "queryuser": null,
   "checksum": "99914b932bd37a50b983c5e7c90ae93b",
   "node": {
@@ -14,7 +15,7 @@
     "type": "aso",
     "collection": "asotemplate",
     "paths": [
-      "/config/samples/azure_v1alpha1_cosmosdb_prod.yaml"
+      "/config/samples/azure_v1alpha1_azurevirtualmachineextension.yaml"
     ],
     "snapshotId": "ASO_TEMPLATE_SNAPSHOT24",
     "status": "active",
@@ -24,35 +25,21 @@
   "collection": "asotemplate",
   "json": {
     "apiVersion": "azure.microsoft.com/v1alpha1",
-    "kind": "CosmosDB",
+    "kind": "AzureVirtualMachineExtension",
     "metadata": {
-      "name": "cosmosdb-sample-2",
-      "labels": {
-        "CosmosAccountType": "Production"
-      }
+      "name": "vmext20a"
     },
     "spec": {
-      "kind": "GlobalDocumentDB",
-      "location": "eastus",
+      "location": "SouthCentralUS",
       "resourceGroup": "resourcegroup-azure-operators",
-      "properties": {
-        "databaseAccountOfferType": "Standard",
-        "enableMultipleWriteLocations": true
-      },
-      "ipRules": [
-        "104.42.195.92,40.76.54.131,52.176.6.30,52.169.50.45,52.187.184.26"
-      ],
-      "locations": [
-        {
-          "locationName": "eastus",
-          "failoverPriority": 0,
-          "isZoneRedundant": true
-        },
-        {
-          "locationName": "westus",
-          "failoverPriority": 1
-        }
-      ]
+      "vmName": "vm20",
+      "autoUpgradeMinorVersion": true,
+      "forceUpdateTag": "Test2",
+      "publisher": "Microsoft.Azure.Extensions",
+      "typeName": "CustomScript",
+      "typeHandlerVersion": "2.1",
+      "settings": "{\"commandToExecute\":\"echo 'hello, world'\"}",
+      "protectedSettings": "{}"
     }
   }
 }

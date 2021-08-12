@@ -2,13 +2,15 @@
   "structure": "filesystem",
   "error": null,
   "reference": "master",
+  "contentType": "terraform",
   "source": "gitConnectorTerraform",
   "paths": [
-    "/aws/modules/rds/output.tf",
-    "/aws/modules/rds/vars.tf",
-    "/aws/modules/rds/main.tf"
+    "/azure/securitycentercontact/provider.tf",
+    "/azure/securitycentercontact/terraform.tfvars",
+    "/azure/securitycentercontact/vars.tf",
+    "/azure/securitycentercontact/main.tf"
   ],
-  "timestamp": 1621252249599,
+  "timestamp": 1628768973498,
   "queryuser": null,
   "checksum": "99914b932bd37a50b983c5e7c90ae93b",
   "node": {
@@ -16,9 +18,10 @@
     "type": "terraform",
     "collection": "terraformtemplate",
     "paths": [
-      "/aws/modules/rds/output.tf",
-      "/aws/modules/rds/vars.tf",
-      "/aws/modules/rds/main.tf"
+      "/azure/securitycentercontact/provider.tf",
+      "/azure/securitycentercontact/terraform.tfvars",
+      "/azure/securitycentercontact/vars.tf",
+      "/azure/securitycentercontact/main.tf"
     ],
     "snapshotId": "TRF_TEMPLATE_SNAPSHOT29",
     "status": "active",
@@ -29,58 +32,17 @@
   "json": {
     "resources": [
       {
-        "type": "aws_db_instance",
-        "name": "rds",
+        "type": "azurerm_security_center_contact",
+        "name": "contacts",
         "properties": {
-          "identifier": "${var.identifier}",
-          "engine": "${var.engine}",
-          "engine_version": "${var.engine_version}",
-          "instance_class": "${var.instance_class}",
-          "allocated_storage": "${var.allocated_storage}",
-          "storage_type": "gp2",
-          "storage_encrypted": false,
-          "kms_key_id": "",
-          "license_model": "",
-          "name": "",
-          "username": "${var.username}",
-          "password": "${var.password}",
-          "port": "${var.port}",
-          "domain": "",
-          "domain_iam_role_name": "",
-          "iam_database_authentication_enabled": false,
-          "replicate_source_db": "",
-          "snapshot_identifier": "",
-          "vpc_security_group_ids": [],
-          "db_subnet_group_name": "",
-          "parameter_group_name": "",
-          "option_group_name": "",
-          "availability_zone": "",
-          "multi_az": false,
-          "iops": 0,
-          "publicly_accessible": false,
-          "monitoring_interval": 0,
-          "monitoring_role_arn": "",
-          "allow_major_version_upgrade": false,
-          "auto_minor_version_upgrade": true,
-          "apply_immediately": false,
-          "maintenance_window": "${var.maintenance_window}",
-          "skip_final_snapshot": true,
-          "copy_tags_to_snapshot": false,
-          "final_snapshot_identifier": null,
-          "max_allocated_storage": 0,
-          "performance_insights_enabled": false,
-          "performance_insights_retention_period": 7,
-          "backup_retention_period": 1,
-          "backup_window": "${var.backup_window}",
-          "timezone": "",
-          "enabled_cloudwatch_logs_exports": [],
-          "deletion_protection": false,
-          "tags": {},
-          "timeouts": {
-            "create": "40m",
-            "delete": "40m",
-            "update": "80m"
-          }
+          "email": "none",
+          "phone": "+1-555-555-5555",
+          "alert_notifications": true,
+          "alerts_to_admins": true,
+          "sec_center_email": "none",
+          "sec_center_phone": "+1-555-555-5555",
+          "sec_center_alert_notification": true,
+          "sec_center_alerts_to_admin": true
         }
       }
     ]

@@ -1,0 +1,135 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "yaml",
+  "source": "gitConnectorCloudformation",
+  "paths": [
+    "/config/config.yaml"
+  ],
+  "timestamp": 1628763940915,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "CFR_TEMPLATE_SNAPSHOT",
+    "type": "cloudformation",
+    "collection": "cloudformationtemplate",
+    "paths": [
+      "/config/config.yaml"
+    ],
+    "snapshotId": "CFR_TEMPLATE_SNAPSHOT7",
+    "status": "active",
+    "validate": true
+  },
+  "snapshotId": "CFR_TEMPLATE_SNAPSHOT7",
+  "collection": "cloudformationtemplate",
+  "json": {
+    "AWSTemplateFormatVersion": "2010-09-09",
+    "Metadata": {
+      "License": "Apache-2.0"
+    },
+    "Description": "AWS CloudFormation Sample Template Config: This template demonstrates the usage of AWS Config resources. **WARNING** You will be billed for the AWS resources used if you create a stack from this template.",
+    "Resources": [
+      {
+        "Type": "AWS::Config::ConfigurationRecorder",
+        "Properties": {
+          "Name": "MyConfigRecorder",
+          "RecordingGroup": {
+            "ResourceTypes": []
+          },
+          "RoleARN": {
+            "Fn::GetAtt": [
+              "ConfigRole",
+              "Arn"
+            ]
+          }
+        },
+        "Name": "ConfigRecorder"
+      },
+      {
+        "Type": "AWS::S3::Bucket",
+        "Name": "ConfigBucket"
+      },
+      {
+        "Type": "AWS::IAM::Role",
+        "Properties": {
+          "AssumeRolePolicyDocument": {
+            "Version": "2012-10-17",
+            "Statement": [
+              {
+                "Effect": "Allow",
+                "Principal": {
+                  "Service": [
+                    "config.amazonaws.com"
+                  ]
+                },
+                "Action": [
+                  "sts:AssumeRole"
+                ]
+              }
+            ]
+          },
+          "ManagedPolicyArns": [
+            "arn:aws:iam::aws:policy/service-role/AWSConfigRole"
+          ],
+          "Policies": [
+            {
+              "PolicyName": "root",
+              "PolicyDocument": {
+                "Version": "2012-10-17",
+                "Statement": [
+                  {
+                    "Effect": "Allow",
+                    "Action": "s3:GetBucketAcl",
+                    "Resource": {
+                      "Fn::Join": [
+                        "",
+                        [
+                          "arn:aws:s3:::",
+                          {
+                            "Ref": "ConfigBucket"
+                          }
+                        ]
+                      ]
+                    }
+                  },
+                  {
+                    "Effect": "Allow",
+                    "Action": "s3:PutObject",
+                    "Resource": {
+                      "Fn::Join": [
+                        "",
+                        [
+                          "arn:aws:s3:::",
+                          {
+                            "Ref": "ConfigBucket"
+                          },
+                          "/AWSLogs/",
+                          {
+                            "Ref": "AWS::AccountId"
+                          },
+                          "/*"
+                        ]
+                      ]
+                    },
+                    "Condition": {
+                      "StringEquals": {
+                        "s3:x-amz-acl": "bucket-owner-full-control"
+                      }
+                    }
+                  },
+                  {
+                    "Effect": "Allow",
+                    "Action": "config:Put*",
+                    "Resource": "*"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        "Name": "ConfigRole"
+      }
+    ]
+  }
+}

@@ -1,0 +1,58 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "yaml",
+  "source": "gitConnectorCloudformation",
+  "paths": [
+    "/vpc/vpc.yaml"
+  ],
+  "timestamp": 1628763941465,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "CFR_TEMPLATE_SNAPSHOT",
+    "type": "cloudformation",
+    "collection": "cloudformationtemplate",
+    "paths": [
+      "/vpc/vpc.yaml"
+    ],
+    "snapshotId": "CFR_TEMPLATE_SNAPSHOT33",
+    "status": "active",
+    "validate": true
+  },
+  "snapshotId": "CFR_TEMPLATE_SNAPSHOT33",
+  "collection": "cloudformationtemplate",
+  "json": {
+    "AWSTemplateFormatVersion": "2010-09-09",
+    "Parameters": {
+      "MyVPC": {
+        "Type": "AWS::EC2::VPC::Id",
+        "Description": "Choose which VPC the Application Load Balancer should be deployed to"
+      }
+    },
+    "Resources": [
+      {
+        "Type": "AWS::EC2::Subnet",
+        "Properties": {
+          "MapPublicIpOnLaunch": true,
+          "VpcId": {
+            "Ref": "MyVPC"
+          },
+          "CidrBlock": "172.31.48.0/20",
+          "AvailabilityZone": {
+            "Fn::Select": [
+              "0",
+              {
+                "Fn::GetAZs": {
+                  "Ref": "AWS::Region"
+                }
+              }
+            ]
+          }
+        },
+        "Name": "mySubnet"
+      }
+    ]
+  }
+}

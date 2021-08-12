@@ -2,31 +2,162 @@
   "structure": "filesystem",
   "error": null,
   "reference": "master",
+  "contentType": "yaml",
   "source": "gitConnectorGoogleKcc",
   "paths": [
-    "/samples/resources/dataflowjob/streaming-dataflow-job/pubsub_v1beta1_pubsubtopic.yaml"
+    "/samples/resources/computeurlmap/regional-compute-url-map-l7-ilb-path/compute_v1beta1_computeurlmap.yaml"
   ],
-  "timestamp": 1622492385178,
+  "timestamp": 1628765144722,
   "queryuser": null,
   "checksum": "99914b932bd37a50b983c5e7c90ae93b",
   "node": {
     "masterSnapshotId": "KCC_TEMPLATE_SNAPSHOT",
-    "type": "yaml",
-    "collection": "deploymentmanagertemplate",
+    "type": "kcc",
+    "collection": "kcctemplate",
     "paths": [
-      "/samples/resources/dataflowjob/streaming-dataflow-job/pubsub_v1beta1_pubsubtopic.yaml"
+      "/samples/resources/computeurlmap/regional-compute-url-map-l7-ilb-path/compute_v1beta1_computeurlmap.yaml"
     ],
     "snapshotId": "KCC_TEMPLATE_SNAPSHOT284",
     "status": "active",
     "validate": true
   },
   "snapshotId": "KCC_TEMPLATE_SNAPSHOT284",
-  "collection": "deploymentmanagertemplate",
+  "collection": "kcctemplate",
   "json": {
-    "apiVersion": "pubsub.cnrm.cloud.google.com/v1beta1",
-    "kind": "PubSubTopic",
+    "apiVersion": "compute.cnrm.cloud.google.com/v1beta1",
+    "kind": "ComputeURLMap",
     "metadata": {
-      "name": "dataflowjob-dep-streaming"
+      "name": "computeurlmap-sample"
+    },
+    "spec": {
+      "description": "Regional ComputeURLMap L7 Ilb Path",
+      "location": "us-central1",
+      "defaultService": {
+        "backendServiceRef": {
+          "name": "computeurlmap-dep"
+        }
+      },
+      "hostRule": [
+        {
+          "hosts": [
+            "mysite.com"
+          ],
+          "pathMatcher": "allpaths"
+        }
+      ],
+      "pathMatcher": [
+        {
+          "name": "allpaths",
+          "defaultService": {
+            "backendServiceRef": {
+              "name": "computeurlmap-dep"
+            }
+          },
+          "pathRule": [
+            {
+              "paths": [
+                "/home"
+              ],
+              "routeAction": {
+                "corsPolicy": {
+                  "allowCredentials": true,
+                  "allowHeaders": [
+                    "Allowed content"
+                  ],
+                  "allowMethods": [
+                    "GET"
+                  ],
+                  "allowOrigins": [
+                    "Allowed origin"
+                  ],
+                  "exposeHeaders": [
+                    "Exposed header"
+                  ],
+                  "maxAge": 30,
+                  "disabled": false
+                },
+                "faultInjectionPolicy": {
+                  "abort": {
+                    "httpStatus": 234,
+                    "percentage": 5.6
+                  },
+                  "delay": {
+                    "fixedDelay": {
+                      "seconds": "0",
+                      "nanos": 50000
+                    },
+                    "percentage": 7.8
+                  }
+                },
+                "requestMirrorPolicy": {
+                  "backendServiceRef": {
+                    "name": "computeurlmap-dep"
+                  }
+                },
+                "retryPolicy": {
+                  "numRetries": 4,
+                  "retryTimeout": {
+                    "seconds": "30"
+                  },
+                  "retryConditions": [
+                    "5xx",
+                    "deadline-exceeded"
+                  ]
+                },
+                "timeout": {
+                  "seconds": "20",
+                  "nanos": 750000000
+                },
+                "urlRewrite": {
+                  "hostRewrite": "A replacement header",
+                  "pathPrefixRewrite": "A replacement path"
+                },
+                "weightedBackendServices": [
+                  {
+                    "backendServiceRef": {
+                      "name": "computeurlmap-dep"
+                    },
+                    "weight": 400,
+                    "headerAction": {
+                      "requestHeadersToRemove": [
+                        "RemoveMe"
+                      ],
+                      "requestHeadersToAdd": [
+                        {
+                          "headerName": "AddMe",
+                          "headerValue": "MyValue",
+                          "replace": true
+                        }
+                      ],
+                      "responseHeadersToRemove": [
+                        "RemoveMe"
+                      ],
+                      "responseHeadersToAdd": [
+                        {
+                          "headerName": "AddMe",
+                          "headerValue": "MyValue",
+                          "replace": false
+                        }
+                      ]
+                    }
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      ],
+      "test": [
+        {
+          "service": {
+            "backendServiceRef": {
+              "name": "computeurlmap-dep"
+            }
+          },
+          "host": "hi.com",
+          "path": "/home"
+        }
+      ]
     }
   }
 }

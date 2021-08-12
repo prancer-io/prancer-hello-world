@@ -2,6 +2,7 @@
   "structure": "filesystem",
   "error": null,
   "reference": "master",
+  "contentType": "terraform",
   "source": "gitConnectorTerraform",
   "paths": [
     "/aws/elb/provider.tf",
@@ -9,7 +10,7 @@
     "/aws/elb/vars.tf",
     "/aws/elb/main.tf"
   ],
-  "timestamp": 1620823812546,
+  "timestamp": 1628767404314,
   "queryuser": null,
   "checksum": "99914b932bd37a50b983c5e7c90ae93b",
   "node": {
@@ -122,11 +123,13 @@
           "access_logs": [],
           "subnet_mapping": [],
           "tags": {},
-          "timeouts": {
-            "create": "10m",
-            "update": "10m",
-            "delete": "10m"
-          }
+          "timeouts": [
+            {
+              "create": "10m",
+              "update": "10m",
+              "delete": "10m"
+            }
+          ]
         }
       },
       {
@@ -149,13 +152,15 @@
               "ssl_certificate_id": null
             }
           ],
-          "health_check": {
-            "healthy_threshold": 2,
-            "unhealthy_threshold": 2,
-            "timeout": 3,
-            "target": "HTTP:8000/",
-            "interval": 30
-          },
+          "health_check": [
+            {
+              "healthy_threshold": 2,
+              "unhealthy_threshold": 2,
+              "timeout": 3,
+              "target": "HTTP:8000/",
+              "interval": 30
+            }
+          ],
           "instances": [],
           "cross_zone_load_balancing": false,
           "idle_timeout": 400,

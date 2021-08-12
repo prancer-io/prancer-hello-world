@@ -2,38 +2,40 @@
   "structure": "filesystem",
   "error": null,
   "reference": "master",
+  "contentType": "yaml",
   "source": "gitConnectorGoogleKcc",
   "paths": [
-    "/samples/resources/computetargetgrpcproxy/compute_v1beta1_computetargetgrpcproxy.yaml"
+    "/samples/resources/computerouternat/router-nat-for-all-subnets/compute_v1beta1_computerouternat.yaml"
   ],
-  "timestamp": 1622492382165,
+  "timestamp": 1628765142663,
   "queryuser": null,
   "checksum": "99914b932bd37a50b983c5e7c90ae93b",
   "node": {
     "masterSnapshotId": "KCC_TEMPLATE_SNAPSHOT",
-    "type": "yaml",
-    "collection": "deploymentmanagertemplate",
+    "type": "kcc",
+    "collection": "kcctemplate",
     "paths": [
-      "/samples/resources/computetargetgrpcproxy/compute_v1beta1_computetargetgrpcproxy.yaml"
+      "/samples/resources/computerouternat/router-nat-for-all-subnets/compute_v1beta1_computerouternat.yaml"
     ],
     "snapshotId": "KCC_TEMPLATE_SNAPSHOT208",
     "status": "active",
     "validate": true
   },
   "snapshotId": "KCC_TEMPLATE_SNAPSHOT208",
-  "collection": "deploymentmanagertemplate",
+  "collection": "kcctemplate",
   "json": {
     "apiVersion": "compute.cnrm.cloud.google.com/v1beta1",
-    "kind": "ComputeTargetGRPCProxy",
+    "kind": "ComputeRouterNAT",
     "metadata": {
-      "name": "computetargetgrpcproxy-sample"
+      "name": "computerouternat-sample-forallsubnets"
     },
     "spec": {
-      "description": "A target gRPC proxy intended for load balancing gRPC traffic, referenced by global forwarding rules. References a URL map which specifies how traffic routes to gRPC backend services.",
-      "urlMapRef": {
-        "name": "computetargetgrpcproxy-dep"
+      "region": "us-west1",
+      "routerRef": {
+        "name": "computerouternat-dep-forallsubnets"
       },
-      "validateForProxyless": true
+      "natIpAllocateOption": "AUTO_ONLY",
+      "sourceSubnetworkIpRangesToNat": "ALL_SUBNETWORKS_ALL_IP_RANGES"
     }
   }
 }

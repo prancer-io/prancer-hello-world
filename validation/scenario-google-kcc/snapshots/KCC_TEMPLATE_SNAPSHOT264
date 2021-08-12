@@ -2,67 +2,43 @@
   "structure": "filesystem",
   "error": null,
   "reference": "master",
+  "contentType": "yaml",
   "source": "gitConnectorGoogleKcc",
   "paths": [
-    "/samples/resources/containercluster/routes-based-container-cluster/container_v1beta1_containercluster.yaml"
+    "/samples/resources/computetargetsslproxy/compute_v1beta1_computebackendservice.yaml"
   ],
-  "timestamp": 1622492384527,
+  "timestamp": 1628765144171,
   "queryuser": null,
   "checksum": "99914b932bd37a50b983c5e7c90ae93b",
   "node": {
     "masterSnapshotId": "KCC_TEMPLATE_SNAPSHOT",
-    "type": "yaml",
-    "collection": "deploymentmanagertemplate",
+    "type": "kcc",
+    "collection": "kcctemplate",
     "paths": [
-      "/samples/resources/containercluster/routes-based-container-cluster/container_v1beta1_containercluster.yaml"
+      "/samples/resources/computetargetsslproxy/compute_v1beta1_computebackendservice.yaml"
     ],
     "snapshotId": "KCC_TEMPLATE_SNAPSHOT264",
     "status": "active",
     "validate": true
   },
   "snapshotId": "KCC_TEMPLATE_SNAPSHOT264",
-  "collection": "deploymentmanagertemplate",
+  "collection": "kcctemplate",
   "json": {
-    "apiVersion": "container.cnrm.cloud.google.com/v1beta1",
-    "kind": "ContainerCluster",
+    "apiVersion": "compute.cnrm.cloud.google.com/v1beta1",
+    "kind": "ComputeBackendService",
     "metadata": {
-      "labels": {
-        "availability": "dev",
-        "target-audience": "development"
-      },
-      "name": "containercluster-sample-routesbased"
+      "name": "computetargetsslproxy-dep"
     },
     "spec": {
-      "description": "A routes-based cluster confined to one zone configured for development.",
-      "location": "us-central1-a",
-      "initialNodeCount": 1,
-      "clusterTelemetry": {
-        "type": "SYSTEM_ONLY"
-      },
-      "networkingMode": "ROUTES",
-      "clusterIpv4Cidr": "10.96.0.0/14",
-      "masterAuthorizedNetworksConfig": {
-        "cidrBlocks": [
-          {
-            "displayName": "Trusted external network",
-            "cidrBlock": "10.2.0.0/16"
+      "healthChecks": [
+        {
+          "healthCheckRef": {
+            "name": "computetargetsslproxy-dep"
           }
-        ]
-      },
-      "addonsConfig": {
-        "gcePersistentDiskCsiDriverConfig": {
-          "enabled": true
-        },
-        "kalmConfig": {
-          "enabled": true
-        },
-        "horizontalPodAutoscaling": {
-          "disabled": true
-        },
-        "httpLoadBalancing": {
-          "disabled": true
         }
-      }
+      ],
+      "location": "global",
+      "protocol": "SSL"
     }
   }
 }

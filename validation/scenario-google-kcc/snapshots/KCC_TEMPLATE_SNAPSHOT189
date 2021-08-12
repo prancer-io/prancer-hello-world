@@ -2,49 +2,56 @@
   "structure": "filesystem",
   "error": null,
   "reference": "master",
+  "contentType": "yaml",
   "source": "gitConnectorGoogleKcc",
   "paths": [
-    "/samples/resources/computerouterpeer/compute_v1beta1_computerouter.yaml"
+    "/samples/resources/computeresourcepolicy/daily-resource-policy-schedule/compute_v1alpha3_computeresourcepolicy.yaml"
   ],
-  "timestamp": 1622492381465,
+  "timestamp": 1628765142245,
   "queryuser": null,
   "checksum": "99914b932bd37a50b983c5e7c90ae93b",
   "node": {
     "masterSnapshotId": "KCC_TEMPLATE_SNAPSHOT",
-    "type": "yaml",
-    "collection": "deploymentmanagertemplate",
+    "type": "kcc",
+    "collection": "kcctemplate",
     "paths": [
-      "/samples/resources/computerouterpeer/compute_v1beta1_computerouter.yaml"
+      "/samples/resources/computeresourcepolicy/daily-resource-policy-schedule/compute_v1alpha3_computeresourcepolicy.yaml"
     ],
     "snapshotId": "KCC_TEMPLATE_SNAPSHOT189",
     "status": "active",
     "validate": true
   },
   "snapshotId": "KCC_TEMPLATE_SNAPSHOT189",
-  "collection": "deploymentmanagertemplate",
+  "collection": "kcctemplate",
   "json": {
     "apiVersion": "compute.cnrm.cloud.google.com/v1beta1",
-    "kind": "ComputeRouter",
+    "kind": "ComputeResourcePolicy",
     "metadata": {
-      "name": "computerouterpeer-dep"
+      "name": "computeresourcepolicy-sample-dailyschedule"
     },
     "spec": {
-      "networkRef": {
-        "name": "computerouterpeer-dep"
-      },
-      "description": "example router description",
       "region": "us-central1",
-      "bgp": {
-        "asn": 64514,
-        "advertiseMode": "CUSTOM",
-        "advertisedGroups": [
-          "ALL_SUBNETS"
-        ],
-        "advertisedIpRanges": [
-          {
-            "range": "1.2.3.4"
+      "snapshotSchedulePolicy": {
+        "schedule": {
+          "dailySchedule": {
+            "daysInCycle": 1,
+            "startTime": "00:00"
           }
-        ]
+        },
+        "retentionPolicy": {
+          "maxRetentionDays": 8,
+          "onSourceDiskDelete": "KEEP_AUTO_SNAPSHOTS"
+        },
+        "snapshotProperties": {
+          "storageLocations": [
+            "us-central1"
+          ],
+          "guestFlush": true,
+          "labels": {
+            "autodeleted": "false",
+            "interval": "daily"
+          }
+        }
       }
     }
   }

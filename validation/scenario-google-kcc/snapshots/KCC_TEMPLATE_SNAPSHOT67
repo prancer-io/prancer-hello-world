@@ -2,47 +2,54 @@
   "structure": "filesystem",
   "error": null,
   "reference": "master",
+  "contentType": "yaml",
   "source": "gitConnectorGoogleKcc",
   "paths": [
-    "/samples/resources/computebackendservice/external-load-balancing-backend-service/compute_v1beta1_computesecuritypolicy.yaml"
+    "/samples/resources/cloudschedulerjob/scheduler-job-http/cloudscheduler_v1beta1_cloudschedulerjob.yaml"
   ],
-  "timestamp": 1622492376725,
+  "timestamp": 1628765139670,
   "queryuser": null,
   "checksum": "99914b932bd37a50b983c5e7c90ae93b",
   "node": {
     "masterSnapshotId": "KCC_TEMPLATE_SNAPSHOT",
-    "type": "yaml",
-    "collection": "deploymentmanagertemplate",
+    "type": "kcc",
+    "collection": "kcctemplate",
     "paths": [
-      "/samples/resources/computebackendservice/external-load-balancing-backend-service/compute_v1beta1_computesecuritypolicy.yaml"
+      "/samples/resources/cloudschedulerjob/scheduler-job-http/cloudscheduler_v1beta1_cloudschedulerjob.yaml"
     ],
     "snapshotId": "KCC_TEMPLATE_SNAPSHOT67",
     "status": "active",
     "validate": true
   },
   "snapshotId": "KCC_TEMPLATE_SNAPSHOT67",
-  "collection": "deploymentmanagertemplate",
+  "collection": "kcctemplate",
   "json": {
-    "apiVersion": "compute.cnrm.cloud.google.com/v1beta1",
-    "kind": "ComputeSecurityPolicy",
+    "apiVersion": "cloudscheduler.cnrm.cloud.google.com/v1beta1",
+    "kind": "CloudSchedulerJob",
     "metadata": {
-      "name": "computebackendservice-dep-externalloadbalancing"
+      "name": "cloudscheduler-sample-http"
     },
     "spec": {
-      "rule": [
-        {
-          "action": "deny(403)",
-          "priority": 2147483647,
-          "match": {
-            "versionedExpr": "SRC_IPS_V1",
-            "config": {
-              "srcIpRanges": [
-                "*"
-              ]
-            }
-          }
-        }
-      ]
+      "description": "scheduler-http-target-job",
+      "schedule": "*/5 * * * *",
+      "location": "us-west2",
+      "timeZone": "EST",
+      "attemptDeadline": "600s",
+      "retryConfig": {
+        "retryCount": 3,
+        "maxRetryDuration": "60s",
+        "maxDoublings": 2
+      },
+      "httpTarget": {
+        "headers": {
+          "app": "test",
+          "Content-Type": "application/octet-stream",
+          "User-Agent": "Google-Cloud-Scheduler"
+        },
+        "httpMethod": "POST",
+        "uri": "https://example.com/ping",
+        "body": "eyJmb28iOiJiYXIifQo="
+      }
     }
   }
 }

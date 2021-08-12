@@ -2,44 +2,43 @@
   "structure": "filesystem",
   "error": null,
   "reference": "master",
+  "contentType": "yaml",
   "source": "gitConnectorGoogleKcc",
   "paths": [
-    "/samples/resources/computerouternat/router-nat-with-manual-nat-ips/compute_v1beta1_computerouternat.yaml"
+    "/samples/resources/computereservation/bulk-compute-reservation/compute_v1beta1_computereservation.yaml"
   ],
-  "timestamp": 1622492381372,
+  "timestamp": 1628765142209,
   "queryuser": null,
   "checksum": "99914b932bd37a50b983c5e7c90ae93b",
   "node": {
     "masterSnapshotId": "KCC_TEMPLATE_SNAPSHOT",
-    "type": "yaml",
-    "collection": "deploymentmanagertemplate",
+    "type": "kcc",
+    "collection": "kcctemplate",
     "paths": [
-      "/samples/resources/computerouternat/router-nat-with-manual-nat-ips/compute_v1beta1_computerouternat.yaml"
+      "/samples/resources/computereservation/bulk-compute-reservation/compute_v1beta1_computereservation.yaml"
     ],
     "snapshotId": "KCC_TEMPLATE_SNAPSHOT187",
     "status": "active",
     "validate": true
   },
   "snapshotId": "KCC_TEMPLATE_SNAPSHOT187",
-  "collection": "deploymentmanagertemplate",
+  "collection": "kcctemplate",
   "json": {
     "apiVersion": "compute.cnrm.cloud.google.com/v1beta1",
-    "kind": "ComputeRouterNAT",
+    "kind": "ComputeReservation",
     "metadata": {
-      "name": "computerouternat-sample-withmanualnatips"
+      "name": "computereservation-sample-bulk"
     },
     "spec": {
-      "region": "us-west1",
-      "routerRef": {
-        "name": "computerouternat-dep-withmanualnatips"
-      },
-      "natIpAllocateOption": "MANUAL_ONLY",
-      "natIps": [
-        {
-          "name": "computerouternat-dep-withmanualnatips"
+      "description": "Reservation for 2 basic machines which will become generally available for VM instances to consume.",
+      "zone": "us-central1-a",
+      "specificReservation": {
+        "count": 2,
+        "instanceProperties": {
+          "machineType": "n1-standard-1",
+          "minCpuPlatform": "Intel Sandy Bridge"
         }
-      ],
-      "sourceSubnetworkIpRangesToNat": "ALL_SUBNETWORKS_ALL_IP_RANGES"
+      }
     }
   }
 }

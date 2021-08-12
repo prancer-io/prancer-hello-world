@@ -2,38 +2,45 @@
   "structure": "filesystem",
   "error": null,
   "reference": "master",
+  "contentType": "yaml",
   "source": "gitConnectorGoogleKcc",
   "paths": [
-    "/samples/resources/computeforwardingrule/global-forwarding-rule-with-target-tcp-proxy/compute_v1beta1_computehealthcheck.yaml"
+    "/samples/resources/computefirewall/deny-rule-firewall/compute_v1beta1_computefirewall.yaml"
   ],
-  "timestamp": 1622492378009,
+  "timestamp": 1628765140331,
   "queryuser": null,
   "checksum": "99914b932bd37a50b983c5e7c90ae93b",
   "node": {
     "masterSnapshotId": "KCC_TEMPLATE_SNAPSHOT",
-    "type": "yaml",
-    "collection": "deploymentmanagertemplate",
+    "type": "kcc",
+    "collection": "kcctemplate",
     "paths": [
-      "/samples/resources/computeforwardingrule/global-forwarding-rule-with-target-tcp-proxy/compute_v1beta1_computehealthcheck.yaml"
+      "/samples/resources/computefirewall/deny-rule-firewall/compute_v1beta1_computefirewall.yaml"
     ],
     "snapshotId": "KCC_TEMPLATE_SNAPSHOT100",
     "status": "active",
     "validate": true
   },
   "snapshotId": "KCC_TEMPLATE_SNAPSHOT100",
-  "collection": "deploymentmanagertemplate",
+  "collection": "kcctemplate",
   "json": {
     "apiVersion": "compute.cnrm.cloud.google.com/v1beta1",
-    "kind": "ComputeHealthCheck",
+    "kind": "ComputeFirewall",
     "metadata": {
-      "name": "computeforwardingrule-dep-global-with-target-tcp-proxy"
+      "labels": {
+        "label-one": "value-one"
+      },
+      "name": "computefirewall-sample-deny"
     },
     "spec": {
-      "checkIntervalSec": 10,
-      "tcpHealthCheck": {
-        "port": 110
-      },
-      "location": "global"
+      "deny": [
+        {
+          "protocol": "icmp"
+        }
+      ],
+      "networkRef": {
+        "name": "computefirewall-dep-deny"
+      }
     }
   }
 }

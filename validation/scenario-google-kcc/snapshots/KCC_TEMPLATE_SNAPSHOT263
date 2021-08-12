@@ -2,50 +2,56 @@
   "structure": "filesystem",
   "error": null,
   "reference": "master",
+  "contentType": "yaml",
   "source": "gitConnectorGoogleKcc",
   "paths": [
-    "/samples/resources/containeranalysisnote/containeranalysis_v1beta1_containeranalysisnote.yaml"
+    "/samples/resources/computetargetpool/compute_v1beta1_computetargetpool_multiple_yaml_1.yaml"
   ],
-  "timestamp": 1622492384433,
+  "timestamp": 1628765144147,
   "queryuser": null,
   "checksum": "99914b932bd37a50b983c5e7c90ae93b",
   "node": {
     "masterSnapshotId": "KCC_TEMPLATE_SNAPSHOT",
-    "type": "yaml",
-    "collection": "deploymentmanagertemplate",
+    "type": "kcc",
+    "collection": "kcctemplate",
     "paths": [
-      "/samples/resources/containeranalysisnote/containeranalysis_v1beta1_containeranalysisnote.yaml"
+      "/samples/resources/computetargetpool/compute_v1beta1_computetargetpool_multiple_yaml_1.yaml"
     ],
     "snapshotId": "KCC_TEMPLATE_SNAPSHOT263",
     "status": "active",
     "validate": true
   },
   "snapshotId": "KCC_TEMPLATE_SNAPSHOT263",
-  "collection": "deploymentmanagertemplate",
+  "collection": "kcctemplate",
   "json": {
-    "apiVersion": "containeranalysis.cnrm.cloud.google.com/v1beta1",
-    "kind": "ContainerAnalysisNote",
+    "apiVersion": "compute.cnrm.cloud.google.com/v1beta1",
+    "kind": "ComputeTargetPool",
     "metadata": {
-      "name": "containeranalysisnote-sample"
+      "name": "computetargetpool-sample"
     },
     "spec": {
-      "shortDescription": "short description",
-      "longDescription": "long description",
-      "relatedUrl": [
+      "backupTargetPoolRef": {
+        "name": "computetargetpool-dep"
+      },
+      "description": "A pool of compute instances to use as a backend to a load balancer, with health check and backup pool. A hash of requester's IP is used to determine session affinity to instances.",
+      "failoverRatio": 0.5,
+      "healthChecks": [
         {
-          "url": "some.url",
-          "label": "test"
-        },
-        {
-          "url": "google.com",
-          "label": "google"
+          "httpHealthCheckRef": {
+            "name": "computetargetpool-dep"
+          }
         }
       ],
-      "attestation": {
-        "hint": {
-          "humanReadableName": "Attestor Note"
+      "instances": [
+        {
+          "name": "computetargetpool-dep1"
+        },
+        {
+          "name": "computetargetpool-dep2"
         }
-      }
+      ],
+      "region": "us-central1",
+      "sessionAffinity": "CLIENT_IP"
     }
   }
 }

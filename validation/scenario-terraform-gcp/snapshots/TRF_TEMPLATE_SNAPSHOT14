@@ -2,13 +2,15 @@
   "structure": "filesystem",
   "error": null,
   "reference": "master",
+  "contentType": "terraform",
   "source": "gitConnectorTerraform",
   "paths": [
-    "/aws/modules/cloudtrail/output.tf",
-    "/aws/modules/cloudtrail/vars.tf",
-    "/aws/modules/cloudtrail/main.tf"
+    "/aws/s3/provider.tf",
+    "/aws/s3/terraform.tfvars",
+    "/aws/s3/vars.tf",
+    "/aws/s3/main.tf"
   ],
-  "timestamp": 1620824337421,
+  "timestamp": 1628770687738,
   "queryuser": null,
   "checksum": "99914b932bd37a50b983c5e7c90ae93b",
   "node": {
@@ -16,9 +18,10 @@
     "type": "terraform",
     "collection": "terraformtemplate",
     "paths": [
-      "/aws/modules/cloudtrail/output.tf",
-      "/aws/modules/cloudtrail/vars.tf",
-      "/aws/modules/cloudtrail/main.tf"
+      "/aws/s3/provider.tf",
+      "/aws/s3/terraform.tfvars",
+      "/aws/s3/vars.tf",
+      "/aws/s3/main.tf"
     ],
     "snapshotId": "TRF_TEMPLATE_SNAPSHOT14",
     "status": "active",
@@ -29,22 +32,339 @@
   "json": {
     "resources": [
       {
-        "type": "aws_cloudtrail",
-        "name": "cloudtrail",
+        "type": "aws_s3_bucket",
+        "name": "s3_bucket",
         "properties": {
-          "name": "",
-          "enable_logging": true,
-          "s3_bucket_name": "${var.s3_bucket_name}",
-          "s3_key_prefix": "",
-          "enable_log_file_validation": true,
-          "is_multi_region_trail": false,
-          "include_global_service_events": false,
-          "cloud_watch_logs_role_arn": "",
-          "cloud_watch_logs_group_arn": "",
-          "tags": {},
-          "kms_key_id": "",
-          "is_organization_trail": false,
-          "event_selector": []
+          "bucket": "prancer-s3-bucket",
+          "acl": "private",
+          "acceleration_status": "Suspended",
+          "cors_rule": [
+            {
+              "allowed_headers": [
+                "Authorization"
+              ],
+              "allowed_methods": [
+                "GET"
+              ],
+              "allowed_origins": [
+                "*"
+              ],
+              "expose_headers": [],
+              "max_age_seconds": 3000
+            }
+          ],
+          "versioning": [
+            {
+              "enabled": false
+            }
+          ],
+          "lifecycle_rule": [
+            {
+              "id": "transition-to-infrequent-access-storage",
+              "enabled": false,
+              "prefix": "",
+              "tags": {},
+              "transition": [
+                {
+                  "days": 60,
+                  "storage_class": "STANDARD_IA"
+                }
+              ],
+              "noncurrent_version_transition": [
+                {
+                  "days": 60,
+                  "storage_class": "STANDARD_IA"
+                }
+              ]
+            },
+            {
+              "id": "transition-to-glacier",
+              "enabled": false,
+              "prefix": "",
+              "tags": {},
+              "transition": [
+                {
+                  "days": 180,
+                  "storage_class": "GLACIER"
+                }
+              ],
+              "noncurrent_version_transition": [
+                {
+                  "days": 180,
+                  "storage_class": "GLACIER"
+                }
+              ]
+            },
+            {
+              "id": "expire-objects",
+              "enabled": false,
+              "prefix": "",
+              "tags": {},
+              "expiration": [
+                {
+                  "days": 365
+                }
+              ],
+              "noncurrent_version_expiration": [
+                {
+                  "days": 365
+                }
+              ]
+            }
+          ],
+          "server_side_encryption_configuration": [],
+          "logging": [],
+          "website": [
+            {
+              "redirect_all_requests_to": "https://example.com"
+            }
+          ],
+          "tags": {
+            "environment": "Production",
+            "project": "Prancer"
+          },
+          "bucket_name": "prancer-s3-bucket",
+          "bucket_acl": "private",
+          "versioning_enabled": false,
+          "cors_allowed_headers": [
+            "Authorization"
+          ],
+          "cors_allowed_methods": [
+            "GET"
+          ],
+          "cors_allowed_origins": [
+            "*"
+          ],
+          "cors_expose_headers": [],
+          "cors_max_age_seconds": 3000,
+          "lifecycle_infrequent_storage_transition_enabled": false,
+          "lifecycle_infrequent_storage_object_prefix": "",
+          "lifecycle_infrequent_storage_object_tags": {},
+          "lifecycle_days_to_infrequent_storage_transition": 60,
+          "lifecycle_glacier_transition_enabled": false,
+          "lifecycle_glacier_object_prefix": "",
+          "lifecycle_glacier_object_tags": {},
+          "lifecycle_days_to_glacier_transition": 180,
+          "transition_noncurrent_versions": true,
+          "lifecycle_expiration_enabled": false,
+          "lifecycle_expiration_object_prefix": "",
+          "lifecycle_expiration_object_tags": {},
+          "expire_noncurrent_versions": true,
+          "lifecycle_days_to_expiration": 365,
+          "enable_logging": false,
+          "target_bucket": null,
+          "target_prefix": "log/",
+          "enable_website": true,
+          "redirect_all_requests_to": "https://www.example.com"
+        }
+      },
+      {
+        "type": "aws_s3_bucket",
+        "name": "s3_bucket",
+        "properties": {
+          "bucket": "prancer-s3-bucket-2",
+          "acl": "private",
+          "acceleration_status": "Suspended",
+          "cors_rule": [
+            {
+              "allowed_headers": [
+                "Authorization"
+              ],
+              "allowed_methods": [
+                "GET"
+              ],
+              "allowed_origins": [
+                "*"
+              ],
+              "expose_headers": [],
+              "max_age_seconds": 3000
+            }
+          ],
+          "versioning": [
+            {
+              "enabled": false
+            }
+          ],
+          "lifecycle_rule": [
+            {
+              "id": "transition-to-infrequent-access-storage",
+              "enabled": false,
+              "prefix": "",
+              "tags": {},
+              "transition": [
+                {
+                  "days": 60,
+                  "storage_class": "STANDARD_IA"
+                }
+              ],
+              "noncurrent_version_transition": [
+                {
+                  "days": 60,
+                  "storage_class": "STANDARD_IA"
+                }
+              ]
+            },
+            {
+              "id": "transition-to-glacier",
+              "enabled": false,
+              "prefix": "",
+              "tags": {},
+              "transition": [
+                {
+                  "days": 180,
+                  "storage_class": "GLACIER"
+                }
+              ],
+              "noncurrent_version_transition": [
+                {
+                  "days": 180,
+                  "storage_class": "GLACIER"
+                }
+              ]
+            },
+            {
+              "id": "expire-objects",
+              "enabled": false,
+              "prefix": "",
+              "tags": {},
+              "expiration": [
+                {
+                  "days": 365
+                }
+              ],
+              "noncurrent_version_expiration": [
+                {
+                  "days": 365
+                }
+              ]
+            }
+          ],
+          "server_side_encryption_configuration": [],
+          "logging": [],
+          "website": [
+            {
+              "redirect_all_requests_to": "https://example.com"
+            }
+          ],
+          "tags": {
+            "environment": "Production",
+            "project": "Prancer"
+          },
+          "bucket_name": "prancer-s3-bucket-2",
+          "bucket_acl": "private",
+          "versioning_enabled": false,
+          "cors_allowed_headers": [
+            "Authorization"
+          ],
+          "cors_allowed_methods": [
+            "GET"
+          ],
+          "cors_allowed_origins": [
+            "*"
+          ],
+          "cors_expose_headers": [],
+          "cors_max_age_seconds": 3000,
+          "lifecycle_infrequent_storage_transition_enabled": false,
+          "lifecycle_infrequent_storage_object_prefix": "",
+          "lifecycle_infrequent_storage_object_tags": {},
+          "lifecycle_days_to_infrequent_storage_transition": 60,
+          "lifecycle_glacier_transition_enabled": false,
+          "lifecycle_glacier_object_prefix": "",
+          "lifecycle_glacier_object_tags": {},
+          "lifecycle_days_to_glacier_transition": 180,
+          "transition_noncurrent_versions": true,
+          "lifecycle_expiration_enabled": false,
+          "lifecycle_expiration_object_prefix": "",
+          "lifecycle_expiration_object_tags": {},
+          "expire_noncurrent_versions": true,
+          "lifecycle_days_to_expiration": 365,
+          "enable_logging": false,
+          "target_bucket": null,
+          "target_prefix": "log/",
+          "enable_website": true,
+          "redirect_all_requests_to": "https://www.example.com"
+        }
+      },
+      {
+        "type": "aws_s3_bucket_policy",
+        "name": "s3policy",
+        "properties": {
+          "bucket": "${module.s3_bucket.s3_bucket_id}",
+          "policy": {
+            "Id": "PRANCERBUCKETPOLICY",
+            "Version": "2012-10-17",
+            "Statement": [
+              {
+                "Sid": "IPAllow",
+                "Effect": "Allow",
+                "Principal": "*",
+                "Action": "s3:*",
+                "Resource": "arn:aws:s3:::prancer-s3-bucket/*"
+              }
+            ]
+          },
+          "s3_bucket_id": "${module.s3_bucket.s3_bucket_id}",
+          "s3_policy": {
+            "Id": "PRANCERBUCKETPOLICY",
+            "Version": "2012-10-17",
+            "Statement": [
+              {
+                "Sid": "IPAllow",
+                "Effect": "Allow",
+                "Principal": "*",
+                "Action": "s3:*",
+                "Resource": "arn:aws:s3:::prancer-s3-bucket/*"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "type": "aws_s3_bucket_policy",
+        "name": "s3policy",
+        "properties": {
+          "bucket": "${module.s3_bucket.s3_bucket_id}",
+          "policy": {
+            "Id": "sslonly",
+            "Version": "2012-10-17",
+            "Statement": [
+              {
+                "Sid": "s3-bucket-ssl-requests-only",
+                "Action": "s3:GetObject",
+                "Effect": "Allow",
+                "Resource": [
+                  "arn:aws:s3:::prancer-s3-bucket/*"
+                ],
+                "Condition": {
+                  "Bool": {
+                    "aws:SecureTransport": false
+                  }
+                },
+                "Principal": "*"
+              }
+            ]
+          },
+          "s3_bucket_id": "${module.s3_bucket.s3_bucket_id}",
+          "s3_policy": {
+            "Id": "sslonly",
+            "Version": "2012-10-17",
+            "Statement": [
+              {
+                "Sid": "s3-bucket-ssl-requests-only",
+                "Action": "s3:GetObject",
+                "Effect": "Allow",
+                "Resource": [
+                  "arn:aws:s3:::prancer-s3-bucket/*"
+                ],
+                "Condition": {
+                  "Bool": {
+                    "aws:SecureTransport": false
+                  }
+                },
+                "Principal": "*"
+              }
+            ]
+          }
         }
       }
     ]

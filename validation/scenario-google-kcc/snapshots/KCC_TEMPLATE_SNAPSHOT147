@@ -2,42 +2,46 @@
   "structure": "filesystem",
   "error": null,
   "reference": "master",
+  "contentType": "yaml",
   "source": "gitConnectorGoogleKcc",
   "paths": [
-    "/samples/resources/computenetworkendpointgroup/compute_v1beta1_computenetworkendpointgroup.yaml"
+    "/samples/resources/computeinstance/network-worker-instance/compute_v1beta1_computesubnetwork.yaml"
   ],
-  "timestamp": 1622492379891,
+  "timestamp": 1628765141306,
   "queryuser": null,
   "checksum": "99914b932bd37a50b983c5e7c90ae93b",
   "node": {
     "masterSnapshotId": "KCC_TEMPLATE_SNAPSHOT",
-    "type": "yaml",
-    "collection": "deploymentmanagertemplate",
+    "type": "kcc",
+    "collection": "kcctemplate",
     "paths": [
-      "/samples/resources/computenetworkendpointgroup/compute_v1beta1_computenetworkendpointgroup.yaml"
+      "/samples/resources/computeinstance/network-worker-instance/compute_v1beta1_computesubnetwork.yaml"
     ],
     "snapshotId": "KCC_TEMPLATE_SNAPSHOT147",
     "status": "active",
     "validate": true
   },
   "snapshotId": "KCC_TEMPLATE_SNAPSHOT147",
-  "collection": "deploymentmanagertemplate",
+  "collection": "kcctemplate",
   "json": {
     "apiVersion": "compute.cnrm.cloud.google.com/v1beta1",
-    "kind": "ComputeNetworkEndpointGroup",
+    "kind": "ComputeSubnetwork",
     "metadata": {
-      "name": "computenetworkendpointgroup-sample"
+      "name": "computeinstance-dep-networkworker"
     },
     "spec": {
+      "ipCidrRange": "10.2.0.0/16",
+      "region": "us-west2",
+      "description": "a sample subnetwork",
+      "privateIpGoogleAccess": false,
       "networkRef": {
-        "name": "computenetworkendpointgroup-dep"
+        "name": "computeinstance-dep-networkworker"
       },
-      "subnetworkRef": {
-        "name": "computenetworkendpointgroup-dep"
-      },
-      "location": "us-west1-a",
-      "defaultPort": 90,
-      "description": "A network endpoint group living in a specific us-west1 subnetwork, whose member endpoints will serve on port number 90 by default."
+      "logConfig": {
+        "aggregationInterval": "INTERVAL_10_MIN",
+        "flowSampling": 0.5,
+        "metadata": "INCLUDE_ALL_METADATA"
+      }
     }
   }
 }

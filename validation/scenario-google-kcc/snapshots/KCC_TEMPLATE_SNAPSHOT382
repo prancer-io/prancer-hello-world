@@ -2,43 +2,49 @@
   "structure": "filesystem",
   "error": null,
   "reference": "master",
+  "contentType": "yaml",
   "source": "gitConnectorGoogleKcc",
   "paths": [
-    "/samples/resources/logginglogsink/project-sink/logging_v1beta1_logginglogsink.yaml"
+    "/samples/resources/gkehubmembership/gkehub_v1beta1_gkehubmembership.yaml"
   ],
-  "timestamp": 1622492388658,
+  "timestamp": 1628765147298,
   "queryuser": null,
   "checksum": "99914b932bd37a50b983c5e7c90ae93b",
   "node": {
     "masterSnapshotId": "KCC_TEMPLATE_SNAPSHOT",
-    "type": "yaml",
-    "collection": "deploymentmanagertemplate",
+    "type": "kcc",
+    "collection": "kcctemplate",
     "paths": [
-      "/samples/resources/logginglogsink/project-sink/logging_v1beta1_logginglogsink.yaml"
+      "/samples/resources/gkehubmembership/gkehub_v1beta1_gkehubmembership.yaml"
     ],
     "snapshotId": "KCC_TEMPLATE_SNAPSHOT382",
     "status": "active",
     "validate": true
   },
   "snapshotId": "KCC_TEMPLATE_SNAPSHOT382",
-  "collection": "deploymentmanagertemplate",
+  "collection": "kcctemplate",
   "json": {
-    "apiVersion": "logging.cnrm.cloud.google.com/v1beta1",
-    "kind": "LoggingLogSink",
+    "apiVersion": "gkehub.cnrm.cloud.google.com/v1beta1",
+    "kind": "GKEHubMembership",
     "metadata": {
-      "name": "logginglogsink-sample-project"
+      "labels": {
+        "label-one": "value-one"
+      },
+      "name": "gkehubmembership-sample"
     },
     "spec": {
-      "projectRef": {
-        "name": "logginglogsink-dep-project"
+      "location": "global",
+      "authority": {
+        "issuer": "https://container.googleapis.com/v1/projects/${PROJECT_ID?}/locations/us-central1-a/clusters/gkehubmembership-dep"
       },
-      "uniqueWriterIdentity": true,
-      "destination": {
-        "pubSubTopicRef": {
-          "name": "logginglogsink-dep-project"
+      "description": "A sample GKE Hub membership",
+      "endpoint": {
+        "gkeCluster": {
+          "resourceRef": {
+            "name": "gkehubmembership-dep"
+          }
         }
-      },
-      "filter": "resource.type=\"bigquery_project\" AND logName:\"cloudaudit.googleapis.com\""
+      }
     }
   }
 }

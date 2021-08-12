@@ -1,0 +1,62 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "yaml",
+  "source": "gitConnectorCloudformation",
+  "paths": [
+    "/eks/eks.template"
+  ],
+  "timestamp": 1628763941032,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "CFR_TEMPLATE_SNAPSHOT",
+    "type": "cloudformation",
+    "collection": "cloudformationtemplate",
+    "paths": [
+      "/eks/eks.template"
+    ],
+    "snapshotId": "CFR_TEMPLATE_SNAPSHOT14",
+    "status": "active",
+    "validate": true
+  },
+  "snapshotId": "CFR_TEMPLATE_SNAPSHOT14",
+  "collection": "cloudformationtemplate",
+  "json": {
+    "AWSTemplateFormatVersion": "2010-09-09",
+    "Parameters": {
+      "Subnets": {
+        "Description": "Choose which subnets the Application Load Balancer should be deployed to",
+        "Type": "List<AWS::EC2::Subnet::Id>"
+      },
+      "SecurityGroups": {
+        "Description": "Choose which security group you want to apply",
+        "Type": "List<AWS::EC2::SecurityGroup::Id>"
+      },
+      "RoleArn": {
+        "Type": "String",
+        "Default": "arn:aws:iam::155603667260:role/eks-cluster"
+      }
+    },
+    "Resources": [
+      {
+        "Type": "AWS::EKS::Cluster",
+        "Properties": {
+          "Name": "prod",
+          "RoleArn": "arn:aws:iam::155603667260:role/eks-cluster",
+          "ResourcesVpcConfig": {
+            "EndpointPublicAccess": true,
+            "SecurityGroupIds": {
+              "Ref": "SecurityGroups"
+            },
+            "SubnetIds": {
+              "Ref": "Subnets"
+            }
+          }
+        },
+        "Name": "myCluster"
+      }
+    ]
+  }
+}
