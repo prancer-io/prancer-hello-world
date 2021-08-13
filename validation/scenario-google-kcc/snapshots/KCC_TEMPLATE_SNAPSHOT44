@@ -2,100 +2,46 @@
   "structure": "filesystem",
   "error": null,
   "reference": "master",
+  "contentType": "yaml",
   "source": "gitConnectorGoogleKcc",
   "paths": [
-    "/samples/resources/cloudbuildtrigger/build-trigger-for-github-repo/cloudbuild_v1beta1_cloudbuildtrigger.yaml"
+    "/samples/resources/binaryauthorizationattestor/binaryauthorization_v1beta1_binaryauthorizationattestor.yaml"
   ],
-  "timestamp": 1622492375905,
+  "timestamp": 1628765139182,
   "queryuser": null,
   "checksum": "99914b932bd37a50b983c5e7c90ae93b",
   "node": {
     "masterSnapshotId": "KCC_TEMPLATE_SNAPSHOT",
-    "type": "yaml",
-    "collection": "deploymentmanagertemplate",
+    "type": "kcc",
+    "collection": "kcctemplate",
     "paths": [
-      "/samples/resources/cloudbuildtrigger/build-trigger-for-github-repo/cloudbuild_v1beta1_cloudbuildtrigger.yaml"
+      "/samples/resources/binaryauthorizationattestor/binaryauthorization_v1beta1_binaryauthorizationattestor.yaml"
     ],
     "snapshotId": "KCC_TEMPLATE_SNAPSHOT44",
     "status": "active",
     "validate": true
   },
   "snapshotId": "KCC_TEMPLATE_SNAPSHOT44",
-  "collection": "deploymentmanagertemplate",
+  "collection": "kcctemplate",
   "json": {
-    "apiVersion": "cloudbuild.cnrm.cloud.google.com/v1beta1",
-    "kind": "CloudBuildTrigger",
+    "apiVersion": "binaryauthorization.cnrm.cloud.google.com/v1beta1",
+    "kind": "BinaryAuthorizationAttestor",
     "metadata": {
-      "name": "cloudbuildtrigger-sample-github"
+      "name": "binaryauthorizationattestor-sample"
     },
     "spec": {
-      "description": "Cloud Build Trigger for building the master branch of the GitHub repository at github.com/owner_name/repo_name",
-      "disabled": false,
-      "github": {
-        "owner": "owner_name",
-        "name": "repo_name",
-        "push": {
-          "branch": "master"
-        }
-      },
-      "ignoredFiles": [
-        "**/*.md"
-      ],
-      "includedFiles": [
-        "src/**"
-      ],
-      "substitutions": {
-        "_SERVICE_NAME": "service-name"
-      },
-      "build": {
-        "images": [
-          "gcr.io/$PROJECT_ID/${_SERVICE_NAME}:$COMMIT_SHA"
-        ],
-        "tags": [
-          "team-a",
-          "service-b"
-        ],
-        "timeout": "1800s",
-        "step": [
+      "description": "A sample binary authorization attestor.",
+      "userOwnedDrydockNote": {
+        "noteRef": {
+          "name": "binaryauthorizationattestor-dep"
+        },
+        "publicKeys": [
           {
-            "id": "download_zip",
-            "name": "gcr.io/cloud-builders/gsutil",
-            "args": [
-              "cp",
-              "gs://mybucket/remotefile.zip",
-              "localfile.zip"
-            ],
-            "timeout": "300s"
-          },
-          {
-            "id": "build_package",
-            "name": "gcr.io/cloud-builders/go",
-            "args": [
-              "build",
-              "my_package"
-            ],
-            "dir": "directory",
-            "env": [
-              "ENV1=one",
-              "ENV2=two"
-            ],
-            "secretEnv": [
-              "SECRET_ENV1"
-            ],
-            "timeout": "300s"
-          },
-          {
-            "id": "build_docker_image",
-            "name": "gcr.io/cloud-builders/docker",
-            "args": [
-              "build",
-              "-t",
-              "gcr.io/$PROJECT_ID/${_SERVICE_NAME}:$COMMIT_SHA",
-              "-f",
-              "Dockerfile",
-              "."
-            ],
-            "timeout": "300s"
+            "comment": "A sample key",
+            "pkixPublicKey": {
+              "publicKeyPem": "-----BEGIN PUBLIC KEY-----\nMFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAE8qErzp1izKNonCWqj5KSqdz6g2Tf\nZWvtX3I6huRWGD0pIMieOOUdFD/hbMH6xYx0ml2vVkUqFJzeSmQt8pbtnw==\n-----END PUBLIC KEY-----\n",
+              "signatureAlgorithm": "ECDSA_P256_SHA256"
+            }
           }
         ]
       }

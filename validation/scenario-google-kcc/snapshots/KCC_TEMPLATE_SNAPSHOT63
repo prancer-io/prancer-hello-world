@@ -2,37 +2,104 @@
   "structure": "filesystem",
   "error": null,
   "reference": "master",
+  "contentType": "yaml",
   "source": "gitConnectorGoogleKcc",
   "paths": [
-    "/samples/resources/computebackendservice/external-load-balancing-backend-service/compute_v1beta1_computehealthcheck.yaml"
+    "/samples/resources/cloudbuildtrigger/build-trigger-for-github-repo/cloudbuild_v1beta1_cloudbuildtrigger.yaml"
   ],
-  "timestamp": 1622492376535,
+  "timestamp": 1628765139590,
   "queryuser": null,
   "checksum": "99914b932bd37a50b983c5e7c90ae93b",
   "node": {
     "masterSnapshotId": "KCC_TEMPLATE_SNAPSHOT",
-    "type": "yaml",
-    "collection": "deploymentmanagertemplate",
+    "type": "kcc",
+    "collection": "kcctemplate",
     "paths": [
-      "/samples/resources/computebackendservice/external-load-balancing-backend-service/compute_v1beta1_computehealthcheck.yaml"
+      "/samples/resources/cloudbuildtrigger/build-trigger-for-github-repo/cloudbuild_v1beta1_cloudbuildtrigger.yaml"
     ],
     "snapshotId": "KCC_TEMPLATE_SNAPSHOT63",
     "status": "active",
     "validate": true
   },
   "snapshotId": "KCC_TEMPLATE_SNAPSHOT63",
-  "collection": "deploymentmanagertemplate",
+  "collection": "kcctemplate",
   "json": {
-    "apiVersion": "compute.cnrm.cloud.google.com/v1beta1",
-    "kind": "ComputeHealthCheck",
+    "apiVersion": "cloudbuild.cnrm.cloud.google.com/v1beta1",
+    "kind": "CloudBuildTrigger",
     "metadata": {
-      "name": "computebackendservice-dep-externalloadbalancing"
+      "name": "cloudbuildtrigger-sample-github"
     },
     "spec": {
-      "httpsHealthCheck": {
-        "port": 443
+      "description": "Cloud Build Trigger for building the master branch of the GitHub repository at github.com/owner_name/repo_name",
+      "disabled": false,
+      "github": {
+        "owner": "owner_name",
+        "name": "repo_name",
+        "push": {
+          "branch": "master"
+        }
       },
-      "location": "global"
+      "ignoredFiles": [
+        "**/*.md"
+      ],
+      "includedFiles": [
+        "src/**"
+      ],
+      "substitutions": {
+        "_SERVICE_NAME": "service-name"
+      },
+      "build": {
+        "images": [
+          "gcr.io/$PROJECT_ID/${_SERVICE_NAME}:$COMMIT_SHA"
+        ],
+        "tags": [
+          "team-a",
+          "service-b"
+        ],
+        "timeout": "1800s",
+        "step": [
+          {
+            "id": "download_zip",
+            "name": "gcr.io/cloud-builders/gsutil",
+            "args": [
+              "cp",
+              "gs://mybucket/remotefile.zip",
+              "localfile.zip"
+            ],
+            "timeout": "300s"
+          },
+          {
+            "id": "build_package",
+            "name": "gcr.io/cloud-builders/go",
+            "args": [
+              "build",
+              "my_package"
+            ],
+            "dir": "directory",
+            "env": [
+              "ENV1=one",
+              "ENV2=two"
+            ],
+            "secretEnv": [
+              "SECRET_ENV1"
+            ],
+            "timeout": "300s"
+          },
+          {
+            "id": "build_docker_image",
+            "name": "gcr.io/cloud-builders/docker",
+            "args": [
+              "build",
+              "-t",
+              "gcr.io/$PROJECT_ID/${_SERVICE_NAME}:$COMMIT_SHA",
+              "-f",
+              "Dockerfile",
+              "."
+            ],
+            "timeout": "300s"
+          }
+        ]
+      }
     }
   }
 }

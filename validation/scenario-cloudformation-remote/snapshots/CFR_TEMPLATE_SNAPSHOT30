@@ -1,0 +1,128 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "yaml",
+  "source": "gitConnectorCloudformation",
+  "paths": [
+    "/s3/deploy.yaml"
+  ],
+  "timestamp": 1628763941349,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "CFR_TEMPLATE_SNAPSHOT",
+    "type": "cloudformation",
+    "collection": "cloudformationtemplate",
+    "paths": [
+      "/s3/deploy.yaml"
+    ],
+    "snapshotId": "CFR_TEMPLATE_SNAPSHOT30",
+    "status": "active",
+    "validate": true
+  },
+  "snapshotId": "CFR_TEMPLATE_SNAPSHOT30",
+  "collection": "cloudformationtemplate",
+  "json": {
+    "AWSTemplateFormatVersion": "2010-09-09",
+    "Metadata": {
+      "License": "Apache-2.0"
+    },
+    "Description": "AWS CloudFormation Sample Template S3_Website_Bucket_With_Retain_On_Delete: Sample template showing how to create a publicly accessible S3 bucket configured for website access with a deletion policy of retain on delete. **WARNING** This template creates an S3 bucket that will NOT be deleted when the stack is deleted. You will be billed for the AWS resources used if you create a stack from this template.",
+    "Resources": [
+      {
+        "Type": "AWS::S3::Bucket",
+        "Properties": {
+          "AccessControl": "PublicRead",
+          "WebsiteConfiguration": {
+            "IndexDocument": "index.html",
+            "ErrorDocument": "error.html"
+          }
+        },
+        "DeletionPolicy": "Retain",
+        "Name": "S3Bucket"
+      },
+      {
+        "Type": "AWS::S3::BucketPolicy",
+        "Properties": {
+          "Bucket": {
+            "Ref": "S3BUCKET"
+          },
+          "PolicyDocument": {
+            "Id": "CrossAccessPolicy",
+            "Version": "2012-10-17",
+            "Statement": [
+              {
+                "Sid": "CrossAccPolicyDoc",
+                "Action": [
+                  "s3:GetObject"
+                ],
+                "Effect": "Allow",
+                "Resource": {
+                  "Fn::Sub": "arn:aws:s3:::${S3BUCKET}/*"
+                },
+                "Principal": "*"
+              },
+              {
+                "Sid": "HttpsOnly",
+                "Action": [
+                  "s3:DeleteObject"
+                ],
+                "Effect": "Allow",
+                "Resource": {
+                  "Fn::Sub": "arn:aws:s3:::${BucketName}/*"
+                },
+                "Principal": "*",
+                "Condition": {
+                  "StringLike": {
+                    "aws:SecureTransport": false
+                  }
+                }
+              },
+              {
+                "Sid": "IPAllow",
+                "Action": [
+                  "s3:PutObject"
+                ],
+                "Effect": "Allow",
+                "Resource": {
+                  "Fn::Sub": "arn:aws:s3:::${BucketName}/*"
+                },
+                "Principal": "*"
+              }
+            ]
+          }
+        },
+        "Name": "S3BUCKETPOL"
+      }
+    ],
+    "Outputs": {
+      "WebsiteURL": {
+        "Value": {
+          "Fn::GetAtt": [
+            "S3Bucket",
+            "WebsiteURL"
+          ]
+        },
+        "Description": "URL for website hosted on S3"
+      },
+      "S3BucketSecureURL": {
+        "Value": {
+          "Fn::Join": [
+            "",
+            [
+              "https://",
+              {
+                "Fn::GetAtt": [
+                  "S3Bucket",
+                  "DomainName"
+                ]
+              }
+            ]
+          ]
+        },
+        "Description": "Name of S3 bucket to hold website content"
+      }
+    }
+  }
+}

@@ -1,0 +1,78 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "yaml",
+  "source": "gitConnectorCloudformation",
+  "paths": [
+    "/msk/msk.yaml"
+  ],
+  "timestamp": 1628763941267,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "CFR_TEMPLATE_SNAPSHOT",
+    "type": "cloudformation",
+    "collection": "cloudformationtemplate",
+    "paths": [
+      "/msk/msk.yaml"
+    ],
+    "snapshotId": "CFR_TEMPLATE_SNAPSHOT26",
+    "status": "active",
+    "validate": true
+  },
+  "snapshotId": "CFR_TEMPLATE_SNAPSHOT26",
+  "collection": "cloudformationtemplate",
+  "json": {
+    "AWSTemplateFormatVersion": "2010-09-09",
+    "Description": "MSK Cluster with all properties",
+    "Parameters": {
+      "SubnetIds": {
+        "Type": "List<AWS::EC2::Subnet::Id>"
+      },
+      "SecurityGroups": {
+        "Type": "List<AWS::EC2::SecurityGroup::Id>"
+      }
+    },
+    "Resources": [
+      {
+        "Type": "AWS::MSK::Cluster",
+        "Properties": {
+          "ClusterName": "ClusterWithAllProperties",
+          "KafkaVersion": "2.2.1",
+          "NumberOfBrokerNodes": 3,
+          "EnhancedMonitoring": "PER_BROKER",
+          "EncryptionInfo": {
+            "EncryptionAtRest": {
+              "DataVolumeKMSKeyId": ""
+            },
+            "EncryptionInTransit": {
+              "ClientBroker": "TLS",
+              "InCluster": true
+            }
+          },
+          "Tags": {
+            "Environment": "Test",
+            "Owner": "QATeam"
+          },
+          "BrokerNodeGroupInfo": {
+            "BrokerAZDistribution": "DEFAULT",
+            "InstanceType": "kafka.m5.large",
+            "SecurityGroups": {
+              "Ref": "SecurityGroups"
+            },
+            "StorageInfo": {
+              "EBSStorageInfo": {
+                "VolumeSize": 100
+              }
+            },
+            "ClientSubnets": {
+              "Ref": "SubnetIds"
+            }
+          }
+        },
+        "Name": "TestCluster"
+      }
+    ]
+  }
+}

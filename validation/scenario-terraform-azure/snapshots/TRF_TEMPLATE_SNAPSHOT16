@@ -2,12 +2,15 @@
   "structure": "filesystem",
   "error": null,
   "reference": "master",
+  "contentType": "terraform",
   "source": "gitConnectorTerraform",
   "paths": [
-    "/aws/modules/ebs_volume/vars.tf",
-    "/aws/modules/ebs_volume/main.tf"
+    "/aws/security_group/provider.tf",
+    "/aws/security_group/terraform.tfvars",
+    "/aws/security_group/vars.tf",
+    "/aws/security_group/main.tf"
   ],
-  "timestamp": 1621252248853,
+  "timestamp": 1628768960193,
   "queryuser": null,
   "checksum": "99914b932bd37a50b983c5e7c90ae93b",
   "node": {
@@ -15,8 +18,10 @@
     "type": "terraform",
     "collection": "terraformtemplate",
     "paths": [
-      "/aws/modules/ebs_volume/vars.tf",
-      "/aws/modules/ebs_volume/main.tf"
+      "/aws/security_group/provider.tf",
+      "/aws/security_group/terraform.tfvars",
+      "/aws/security_group/vars.tf",
+      "/aws/security_group/main.tf"
     ],
     "snapshotId": "TRF_TEMPLATE_SNAPSHOT16",
     "status": "active",
@@ -27,16 +32,70 @@
   "json": {
     "resources": [
       {
-        "type": "aws_ebs_volume",
-        "name": "volume",
+        "type": "aws_vpc",
+        "name": "vpc",
         "properties": {
-          "availability_zone": "${var.availability_zone}",
-          "encrypted": true,
-          "size": "${var.size}",
-          "tags": "${var.tags}",
-          "lifecycle": {
-            "prevent_destroy": false
+          "cidr_block": "10.10.0.0/16",
+          "instance_tenancy": "default",
+          "enable_dns_hostnames": false,
+          "enable_dns_support": true,
+          "enable_classiclink": null,
+          "enable_classiclink_dns_support": null,
+          "assign_generated_ipv6_cidr_block": false,
+          "tags": {
+            "environment": "Production",
+            "project": "Prancer"
+          },
+          "enable_ipv6": false
+        }
+      },
+      {
+        "type": "aws_subnet",
+        "name": "subnet",
+        "properties": {
+          "vpc_id": "${module.vpc.vpc_id}",
+          "cidr_block": "10.10.1.0/24",
+          "availability_zone": null,
+          "availability_zone_id": null,
+          "map_public_ip_on_launch": false,
+          "assign_ipv6_address_on_creation": false,
+          "ipv6_cidr_block": null,
+          "tags": {
+            "environment": "Production",
+            "project": "Prancer"
+          },
+          "subnet_cidr_block": "10.10.1.0/24"
+        }
+      },
+      {
+        "type": "aws_security_group",
+        "name": "sgroup",
+        "properties": {
+          "name": "prancer-security-group",
+          "description": "Prancer Security Group",
+          "vpc_id": "${module.vpc.vpc_id}",
+          "revoke_rules_on_delete": false,
+          "ingress": [],
+          "tags": {
+            "environment": "Production",
+            "project": "Prancer"
           }
+        }
+      },
+      {
+        "type": "aws_security_group_rule",
+        "name": "sgroup_rule",
+        "properties": {
+          "description": "SSH rule",
+          "type": "ingress",
+          "from_port": 20,
+          "to_port": 5900,
+          "protocol": "all",
+          "cidr_blocks": [
+            "0.0.0.0/0"
+          ],
+          "self": false,
+          "security_group_id": "${module.security_group.id}"
         }
       }
     ]

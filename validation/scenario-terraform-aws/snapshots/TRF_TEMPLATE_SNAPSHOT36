@@ -2,12 +2,15 @@
   "structure": "filesystem",
   "error": null,
   "reference": "master",
+  "contentType": "terraform",
   "source": "gitConnectorTerraform",
   "paths": [
-    "/aws/modules/security_group_rule/vars.tf",
-    "/aws/modules/security_group_rule/main.tf"
+    "/gcp/compute_disk/provider.tf",
+    "/gcp/compute_disk/terraform.tfvars",
+    "/gcp/compute_disk/vars.tf",
+    "/gcp/compute_disk/main.tf"
   ],
-  "timestamp": 1620823814461,
+  "timestamp": 1628767435929,
   "queryuser": null,
   "checksum": "99914b932bd37a50b983c5e7c90ae93b",
   "node": {
@@ -15,8 +18,10 @@
     "type": "terraform",
     "collection": "terraformtemplate",
     "paths": [
-      "/aws/modules/security_group_rule/vars.tf",
-      "/aws/modules/security_group_rule/main.tf"
+      "/gcp/compute_disk/provider.tf",
+      "/gcp/compute_disk/terraform.tfvars",
+      "/gcp/compute_disk/vars.tf",
+      "/gcp/compute_disk/main.tf"
     ],
     "snapshotId": "TRF_TEMPLATE_SNAPSHOT36",
     "status": "active",
@@ -27,17 +32,29 @@
   "json": {
     "resources": [
       {
-        "type": "aws_security_group_rule",
-        "name": "sgroup_rule",
+        "type": "google_compute_disk",
+        "name": "disk",
         "properties": {
-          "description": "",
-          "type": "ingress",
-          "from_port": 0,
-          "to_port": 65535,
-          "protocol": "tcp",
-          "cidr_blocks": [],
-          "self": null,
-          "security_group_id": "sg-123456"
+          "name": "prancer-disk",
+          "type": "pd-ssd",
+          "zone": "us-central1-a",
+          "image": "debian-9-stretch-v20200805",
+          "labels": {
+            "environment": "prod"
+          },
+          "physical_block_size_bytes": 4096,
+          "disk_encryption_key": [],
+          "disk_name": "prancer-disk",
+          "disk_type": "pd-ssd",
+          "disk_image": "debian-9-stretch-v20200805",
+          "disk_labels": {
+            "environment": "prod"
+          },
+          "disk_encrypted": false,
+          "raw_key": null,
+          "sha256": null,
+          "kms_key_self_link": null,
+          "kms_key_service_account": null
         }
       }
     ]

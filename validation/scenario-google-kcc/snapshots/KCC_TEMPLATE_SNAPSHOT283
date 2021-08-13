@@ -2,49 +2,39 @@
   "structure": "filesystem",
   "error": null,
   "reference": "master",
+  "contentType": "yaml",
   "source": "gitConnectorGoogleKcc",
   "paths": [
-    "/samples/resources/dataflowjob/streaming-dataflow-job/dataflow_v1beta1_dataflowjob.yaml"
+    "/samples/resources/computeurlmap/regional-compute-url-map-l7-ilb-path/compute_v1beta1_computehealthcheck.yaml"
   ],
-  "timestamp": 1622492385164,
+  "timestamp": 1628765144660,
   "queryuser": null,
   "checksum": "99914b932bd37a50b983c5e7c90ae93b",
   "node": {
     "masterSnapshotId": "KCC_TEMPLATE_SNAPSHOT",
-    "type": "yaml",
-    "collection": "deploymentmanagertemplate",
+    "type": "kcc",
+    "collection": "kcctemplate",
     "paths": [
-      "/samples/resources/dataflowjob/streaming-dataflow-job/dataflow_v1beta1_dataflowjob.yaml"
+      "/samples/resources/computeurlmap/regional-compute-url-map-l7-ilb-path/compute_v1beta1_computehealthcheck.yaml"
     ],
     "snapshotId": "KCC_TEMPLATE_SNAPSHOT283",
     "status": "active",
     "validate": true
   },
   "snapshotId": "KCC_TEMPLATE_SNAPSHOT283",
-  "collection": "deploymentmanagertemplate",
+  "collection": "kcctemplate",
   "json": {
-    "apiVersion": "dataflow.cnrm.cloud.google.com/v1beta1",
-    "kind": "DataflowJob",
+    "apiVersion": "compute.cnrm.cloud.google.com/v1beta1",
+    "kind": "ComputeHealthCheck",
     "metadata": {
-      "annotations": {
-        "cnrm.cloud.google.com/on-delete": "cancel"
-      },
-      "labels": {
-        "label-one": "value-one"
-      },
-      "name": "dataflowjob-sample-streaming"
+      "name": "computeurlmap-dep"
     },
     "spec": {
-      "tempGcsLocation": "gs://${PROJECT_ID?}-dataflowjob-dep-streaming/tmp",
-      "templateGcsPath": "gs://dataflow-templates/2020-02-03-01_RC00/PubSub_to_BigQuery",
-      "parameters": {
-        "inputTopic": "projects/${PROJECT_ID?}/topics/dataflowjob-dep-streaming",
-        "outputTableSpec": "${PROJECT_ID?}:dataflowjobdepstreaming.dataflowjobdepstreaming"
+      "checkIntervalSec": 10,
+      "httpHealthCheck": {
+        "port": 80
       },
-      "zone": "us-central1-a",
-      "machineType": "n1-standard-1",
-      "maxWorkers": 3,
-      "ipConfiguration": "WORKER_IP_PUBLIC"
+      "location": "us-central1"
     }
   }
 }

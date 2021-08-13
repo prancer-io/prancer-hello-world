@@ -2,12 +2,13 @@
   "structure": "filesystem",
   "error": null,
   "reference": "master",
-  "source": "gitConnectorArmRemoteStructure",
+  "contentType": "json",
+  "source": "gitConnectorArm",
   "paths": [
     "/NSG/NSG.azuredeploy.json",
     "/NSG/NSG.azuredeploy.parameters.json"
   ],
-  "timestamp": 1614578745394,
+  "timestamp": 1628758915546,
   "queryuser": null,
   "checksum": "99914b932bd37a50b983c5e7c90ae93b",
   "node": {
@@ -56,12 +57,12 @@
       "NSGProperties": {
         "type": "object",
         "value": {
-          "SecurityRules": [
+          "securityRules": [
             {
               "name": "block-port-range-20-22",
               "properties": {
-                "protocol": "Tcp",
-                "access": "Deny",
+                "protocol": "TCP",
+                "access": "Allow",
                 "priority": 100,
                 "direction": "Inbound",
                 "sourcePortRange": "*",
@@ -79,15 +80,485 @@
               }
             },
             {
-              "name": "block-port-3306",
+              "name": "block-port-3389",
               "properties": {
                 "description": "allow inbound traffic",
-                "protocol": "Tcp",
-                "access": "Deny",
+                "protocol": "TCP",
+                "access": "Allow",
                 "priority": 101,
                 "direction": "Inbound",
                 "sourcePortRange": "*",
+                "destinationPortRange": "3389",
+                "destinationAddressPrefix": "*",
+                "sourcePortRanges": [],
+                "destinationPortRanges": [],
+                "sourceAddressPrefixes": [],
+                "destinationAddressPrefixes": [],
+                "sourceAddressPrefix": "*"
+              }
+            },
+            {
+              "name": "block-port-445",
+              "properties": {
+                "description": "allow inbound traffic",
+                "protocol": "UDP",
+                "access": "Allow",
+                "priority": 102,
+                "direction": "Inbound",
+                "sourcePortRange": "*",
+                "destinationPortRange": "445",
+                "destinationAddressPrefix": "*",
+                "sourcePortRanges": [],
+                "destinationPortRanges": [],
+                "sourceAddressPrefixes": [],
+                "destinationAddressPrefixes": [],
+                "sourceAddressPrefix": "*"
+              }
+            },
+            {
+              "name": "block-port-53",
+              "properties": {
+                "description": "allow inbound traffic",
+                "protocol": "TCP",
+                "access": "Allow",
+                "priority": 103,
+                "direction": "Inbound",
+                "sourcePortRange": "*",
+                "destinationPortRange": "53",
+                "destinationAddressPrefix": "*",
+                "sourcePortRanges": [],
+                "destinationPortRanges": [],
+                "sourceAddressPrefixes": [],
+                "destinationAddressPrefixes": [],
+                "sourceAddressPrefix": "*"
+              }
+            },
+            {
+              "name": "block-port-53",
+              "properties": {
+                "description": "allow inbound traffic",
+                "protocol": "UDP",
+                "access": "Allow",
+                "priority": 104,
+                "direction": "Inbound",
+                "sourcePortRange": "*",
+                "destinationPortRange": "53",
+                "destinationAddressPrefix": "*",
+                "sourcePortRanges": [],
+                "destinationPortRanges": [],
+                "sourceAddressPrefixes": [],
+                "destinationAddressPrefixes": [],
+                "sourceAddressPrefix": "*"
+              }
+            },
+            {
+              "name": "block-port-21",
+              "properties": {
+                "description": "allow inbound traffic",
+                "protocol": "TCP",
+                "access": "Allow",
+                "priority": 105,
+                "direction": "Inbound",
+                "sourcePortRange": "*",
+                "destinationPortRange": "21",
+                "destinationAddressPrefix": "*",
+                "sourcePortRanges": [],
+                "destinationPortRanges": [],
+                "sourceAddressPrefixes": [],
+                "destinationAddressPrefixes": [],
+                "sourceAddressPrefix": "*"
+              }
+            },
+            {
+              "name": "block-port-20",
+              "properties": {
+                "description": "allow inbound traffic",
+                "protocol": "TCP",
+                "access": "Allow",
+                "priority": 106,
+                "direction": "Inbound",
+                "sourcePortRange": "*",
+                "destinationPortRange": "20",
+                "destinationAddressPrefix": "*",
+                "sourcePortRanges": [],
+                "destinationPortRanges": [],
+                "sourceAddressPrefixes": [],
+                "destinationAddressPrefixes": [],
+                "sourceAddressPrefix": "*"
+              }
+            },
+            {
+              "name": "block-port-4333",
+              "properties": {
+                "description": "allow inbound traffic",
+                "protocol": "TCP",
+                "access": "Allow",
+                "priority": 107,
+                "direction": "Inbound",
+                "sourcePortRange": "*",
+                "destinationPortRange": "4333",
+                "destinationAddressPrefix": "*",
+                "sourcePortRanges": [],
+                "destinationPortRanges": [],
+                "sourceAddressPrefixes": [],
+                "destinationAddressPrefixes": [],
+                "sourceAddressPrefix": "*"
+              }
+            },
+            {
+              "name": "block-port-3306",
+              "properties": {
+                "description": "allow inbound traffic",
+                "protocol": "TCP",
+                "access": "Allow",
+                "priority": 108,
+                "direction": "Inbound",
+                "sourcePortRange": "*",
                 "destinationPortRange": "3306",
+                "destinationAddressPrefix": "*",
+                "sourcePortRanges": [],
+                "destinationPortRanges": [],
+                "sourceAddressPrefixes": [],
+                "destinationAddressPrefixes": [],
+                "sourceAddressPrefix": "*"
+              }
+            },
+            {
+              "name": "block-port-137",
+              "properties": {
+                "description": "allow inbound traffic",
+                "protocol": "UDP",
+                "access": "Allow",
+                "priority": 109,
+                "direction": "Inbound",
+                "sourcePortRange": "*",
+                "destinationPortRange": "137",
+                "destinationAddressPrefix": "*",
+                "sourcePortRanges": [],
+                "destinationPortRanges": [],
+                "sourceAddressPrefixes": [],
+                "destinationAddressPrefixes": [],
+                "sourceAddressPrefix": "*"
+              }
+            },
+            {
+              "name": "block-port-138",
+              "properties": {
+                "description": "allow inbound traffic",
+                "protocol": "UDP",
+                "access": "Allow",
+                "priority": 110,
+                "direction": "Inbound",
+                "sourcePortRange": "*",
+                "destinationPortRange": "138",
+                "destinationAddressPrefix": "*",
+                "sourcePortRanges": [],
+                "destinationPortRanges": [],
+                "sourceAddressPrefixes": [],
+                "destinationAddressPrefixes": [],
+                "sourceAddressPrefix": "*"
+              }
+            },
+            {
+              "name": "block-port-5432",
+              "properties": {
+                "description": "allow inbound traffic",
+                "protocol": "TCP",
+                "access": "Allow",
+                "priority": 111,
+                "direction": "Inbound",
+                "sourcePortRange": "*",
+                "destinationPortRange": "5432",
+                "destinationAddressPrefix": "*",
+                "sourcePortRanges": [],
+                "destinationPortRanges": [],
+                "sourceAddressPrefixes": [],
+                "destinationAddressPrefixes": [],
+                "sourceAddressPrefix": "*"
+              }
+            },
+            {
+              "name": "block-port-25",
+              "properties": {
+                "description": "allow inbound traffic",
+                "protocol": "TCP",
+                "access": "Allow",
+                "priority": 112,
+                "direction": "Inbound",
+                "sourcePortRange": "*",
+                "destinationPortRange": "25",
+                "destinationAddressPrefix": "*",
+                "sourcePortRanges": [],
+                "destinationPortRanges": [],
+                "sourceAddressPrefixes": [],
+                "destinationAddressPrefixes": [],
+                "sourceAddressPrefix": "*"
+              }
+            },
+            {
+              "name": "block-port-1434",
+              "properties": {
+                "description": "allow inbound traffic",
+                "protocol": "UDP",
+                "access": "Allow",
+                "priority": 113,
+                "direction": "Inbound",
+                "sourcePortRange": "*",
+                "destinationPortRange": "1434",
+                "destinationAddressPrefix": "*",
+                "sourcePortRanges": [],
+                "destinationPortRanges": [],
+                "sourceAddressPrefixes": [],
+                "destinationAddressPrefixes": [],
+                "sourceAddressPrefix": "*"
+              }
+            },
+            {
+              "name": "block-port-1433",
+              "properties": {
+                "description": "allow inbound traffic",
+                "protocol": "TCP",
+                "access": "Allow",
+                "priority": 114,
+                "direction": "Inbound",
+                "sourcePortRange": "*",
+                "destinationPortRange": "1430-1435",
+                "destinationAddressPrefix": "*",
+                "sourcePortRanges": [],
+                "destinationPortRanges": [],
+                "sourceAddressPrefixes": [],
+                "destinationAddressPrefixes": [],
+                "sourceAddressPrefix": "*"
+              }
+            },
+            {
+              "name": "block-port-23",
+              "properties": {
+                "description": "allow inbound traffic",
+                "protocol": "TCP",
+                "access": "Allow",
+                "priority": 115,
+                "direction": "Inbound",
+                "sourcePortRange": "*",
+                "destinationPortRange": "23",
+                "destinationAddressPrefix": "*",
+                "sourcePortRanges": [],
+                "destinationPortRanges": [],
+                "sourceAddressPrefixes": [],
+                "destinationAddressPrefixes": [],
+                "sourceAddressPrefix": "*"
+              }
+            },
+            {
+              "name": "block-port-5500",
+              "properties": {
+                "description": "allow inbound traffic",
+                "protocol": "TCP",
+                "access": "Allow",
+                "priority": 116,
+                "direction": "Inbound",
+                "sourcePortRange": "*",
+                "destinationPortRange": "5500",
+                "destinationAddressPrefix": "*",
+                "sourcePortRanges": [],
+                "destinationPortRanges": [],
+                "sourceAddressPrefixes": [],
+                "destinationAddressPrefixes": [],
+                "sourceAddressPrefix": "*"
+              }
+            },
+            {
+              "name": "block-port-5900",
+              "properties": {
+                "description": "allow inbound traffic",
+                "protocol": "TCP",
+                "access": "Allow",
+                "priority": 117,
+                "direction": "Inbound",
+                "sourcePortRange": "*",
+                "destinationPortRange": "5900",
+                "destinationAddressPrefix": "*",
+                "sourcePortRanges": [],
+                "destinationPortRanges": [],
+                "sourceAddressPrefixes": [],
+                "destinationAddressPrefixes": [],
+                "sourceAddressPrefix": "*"
+              }
+            },
+            {
+              "name": "block-port-135",
+              "properties": {
+                "description": "allow inbound traffic",
+                "protocol": "TCP",
+                "access": "Allow",
+                "priority": 118,
+                "direction": "Inbound",
+                "sourcePortRange": "*",
+                "destinationPortRange": "135",
+                "destinationAddressPrefix": "*",
+                "sourcePortRanges": [],
+                "destinationPortRanges": [],
+                "sourceAddressPrefixes": [],
+                "destinationAddressPrefixes": [],
+                "sourceAddressPrefix": "*"
+              }
+            },
+            {
+              "name": "block-port-445",
+              "properties": {
+                "description": "allow inbound traffic",
+                "protocol": "TCP",
+                "access": "Allow",
+                "priority": 119,
+                "direction": "Inbound",
+                "sourcePortRange": "*",
+                "destinationPortRange": "",
+                "destinationAddressPrefix": "*",
+                "sourcePortRanges": [],
+                "destinationPortRanges": [
+                  "445"
+                ],
+                "sourceAddressPrefixes": [],
+                "destinationAddressPrefixes": [],
+                "sourceAddressPrefix": "*"
+              }
+            },
+            {
+              "name": "block-port-tcp",
+              "properties": {
+                "description": "allow inbound traffic",
+                "protocol": "TCP",
+                "access": "Allow",
+                "priority": 120,
+                "direction": "Inbound",
+                "sourcePortRange": "*",
+                "destinationPortRange": "*",
+                "destinationAddressPrefix": "*",
+                "sourcePortRanges": [],
+                "destinationPortRanges": [],
+                "sourceAddressPrefixes": [],
+                "destinationAddressPrefixes": [],
+                "sourceAddressPrefix": "*"
+              }
+            },
+            {
+              "name": "block-port-udp",
+              "properties": {
+                "description": "allow inbound traffic",
+                "protocol": "UDP",
+                "access": "Allow",
+                "priority": 121,
+                "direction": "Inbound",
+                "sourcePortRange": "*",
+                "destinationPortRange": "*",
+                "destinationAddressPrefix": "*",
+                "sourcePortRanges": [],
+                "destinationPortRanges": [],
+                "sourceAddressPrefixes": [],
+                "destinationAddressPrefixes": [],
+                "sourceAddressPrefix": "*"
+              }
+            },
+            {
+              "name": "block-internet-source",
+              "properties": {
+                "description": "allow inbound traffic on TCP protocol",
+                "protocol": "TCP",
+                "access": "Allow",
+                "priority": 122,
+                "direction": "Inbound",
+                "sourcePortRange": "*",
+                "destinationPortRange": "*",
+                "destinationAddressPrefix": "*",
+                "sourcePortRanges": [],
+                "destinationPortRanges": [],
+                "sourceAddressPrefixes": [],
+                "destinationAddressPrefixes": [],
+                "sourceAddressPrefix": "Internet"
+              }
+            },
+            {
+              "name": "block-internet-source",
+              "properties": {
+                "description": "allow inbound traffic on UDP protocol",
+                "protocol": "UDP",
+                "access": "Allow",
+                "priority": 123,
+                "direction": "Inbound",
+                "sourcePortRange": "*",
+                "destinationPortRange": "*",
+                "destinationAddressPrefix": "*",
+                "sourcePortRanges": [],
+                "destinationPortRanges": [],
+                "sourceAddressPrefixes": [],
+                "destinationAddressPrefixes": [],
+                "sourceAddressPrefix": "Internet"
+              }
+            },
+            {
+              "name": "block-internet-source",
+              "properties": {
+                "description": "allow inbound traffic on any protocol",
+                "protocol": "*",
+                "access": "Allow",
+                "priority": 124,
+                "direction": "Inbound",
+                "sourcePortRange": "*",
+                "destinationPortRange": "*",
+                "destinationAddressPrefix": "*",
+                "sourcePortRanges": [],
+                "destinationPortRanges": [],
+                "sourceAddressPrefixes": [],
+                "destinationAddressPrefixes": [],
+                "sourceAddressPrefix": "Internet"
+              }
+            },
+            {
+              "name": "block-any-source",
+              "properties": {
+                "description": "allow inbound traffic on any protocol",
+                "protocol": "*",
+                "access": "Allow",
+                "priority": 125,
+                "direction": "Inbound",
+                "sourcePortRange": "*",
+                "destinationPortRange": "*",
+                "destinationAddressPrefix": "*",
+                "sourcePortRanges": [],
+                "destinationPortRanges": [],
+                "sourceAddressPrefixes": [],
+                "destinationAddressPrefixes": [],
+                "sourceAddressPrefix": "*"
+              }
+            },
+            {
+              "name": "block-protocol-ICMP",
+              "properties": {
+                "description": "allow inbound traffic on ICMP protocol",
+                "protocol": "ICMP",
+                "access": "Allow",
+                "priority": 127,
+                "direction": "Inbound",
+                "sourcePortRange": "*",
+                "destinationPortRange": "20",
+                "destinationAddressPrefix": "*",
+                "sourcePortRanges": [],
+                "destinationPortRanges": [],
+                "sourceAddressPrefixes": [],
+                "destinationAddressPrefixes": [],
+                "sourceAddressPrefix": "*"
+              }
+            },
+            {
+              "name": "block-outbound-traffic",
+              "properties": {
+                "description": "allow outbound traffic on any source",
+                "protocol": "TCP",
+                "access": "Allow",
+                "priority": 128,
+                "direction": "Outbound",
+                "sourcePortRange": "*",
+                "destinationPortRange": "*",
                 "destinationAddressPrefix": "*",
                 "sourcePortRanges": [],
                 "destinationPortRanges": [],
@@ -112,12 +583,12 @@
           "Project": "Prancer"
         },
         "properties": {
-          "SecurityRules": [
+          "securityRules": [
             {
               "name": "block-port-range-20-22",
               "properties": {
-                "protocol": "Tcp",
-                "access": "Deny",
+                "protocol": "TCP",
+                "access": "Allow",
                 "priority": 100,
                 "direction": "Inbound",
                 "sourcePortRange": "*",
@@ -135,15 +606,485 @@
               }
             },
             {
-              "name": "block-port-3306",
+              "name": "block-port-3389",
               "properties": {
                 "description": "allow inbound traffic",
-                "protocol": "Tcp",
-                "access": "Deny",
+                "protocol": "TCP",
+                "access": "Allow",
                 "priority": 101,
                 "direction": "Inbound",
                 "sourcePortRange": "*",
+                "destinationPortRange": "3389",
+                "destinationAddressPrefix": "*",
+                "sourcePortRanges": [],
+                "destinationPortRanges": [],
+                "sourceAddressPrefixes": [],
+                "destinationAddressPrefixes": [],
+                "sourceAddressPrefix": "*"
+              }
+            },
+            {
+              "name": "block-port-445",
+              "properties": {
+                "description": "allow inbound traffic",
+                "protocol": "UDP",
+                "access": "Allow",
+                "priority": 102,
+                "direction": "Inbound",
+                "sourcePortRange": "*",
+                "destinationPortRange": "445",
+                "destinationAddressPrefix": "*",
+                "sourcePortRanges": [],
+                "destinationPortRanges": [],
+                "sourceAddressPrefixes": [],
+                "destinationAddressPrefixes": [],
+                "sourceAddressPrefix": "*"
+              }
+            },
+            {
+              "name": "block-port-53",
+              "properties": {
+                "description": "allow inbound traffic",
+                "protocol": "TCP",
+                "access": "Allow",
+                "priority": 103,
+                "direction": "Inbound",
+                "sourcePortRange": "*",
+                "destinationPortRange": "53",
+                "destinationAddressPrefix": "*",
+                "sourcePortRanges": [],
+                "destinationPortRanges": [],
+                "sourceAddressPrefixes": [],
+                "destinationAddressPrefixes": [],
+                "sourceAddressPrefix": "*"
+              }
+            },
+            {
+              "name": "block-port-53",
+              "properties": {
+                "description": "allow inbound traffic",
+                "protocol": "UDP",
+                "access": "Allow",
+                "priority": 104,
+                "direction": "Inbound",
+                "sourcePortRange": "*",
+                "destinationPortRange": "53",
+                "destinationAddressPrefix": "*",
+                "sourcePortRanges": [],
+                "destinationPortRanges": [],
+                "sourceAddressPrefixes": [],
+                "destinationAddressPrefixes": [],
+                "sourceAddressPrefix": "*"
+              }
+            },
+            {
+              "name": "block-port-21",
+              "properties": {
+                "description": "allow inbound traffic",
+                "protocol": "TCP",
+                "access": "Allow",
+                "priority": 105,
+                "direction": "Inbound",
+                "sourcePortRange": "*",
+                "destinationPortRange": "21",
+                "destinationAddressPrefix": "*",
+                "sourcePortRanges": [],
+                "destinationPortRanges": [],
+                "sourceAddressPrefixes": [],
+                "destinationAddressPrefixes": [],
+                "sourceAddressPrefix": "*"
+              }
+            },
+            {
+              "name": "block-port-20",
+              "properties": {
+                "description": "allow inbound traffic",
+                "protocol": "TCP",
+                "access": "Allow",
+                "priority": 106,
+                "direction": "Inbound",
+                "sourcePortRange": "*",
+                "destinationPortRange": "20",
+                "destinationAddressPrefix": "*",
+                "sourcePortRanges": [],
+                "destinationPortRanges": [],
+                "sourceAddressPrefixes": [],
+                "destinationAddressPrefixes": [],
+                "sourceAddressPrefix": "*"
+              }
+            },
+            {
+              "name": "block-port-4333",
+              "properties": {
+                "description": "allow inbound traffic",
+                "protocol": "TCP",
+                "access": "Allow",
+                "priority": 107,
+                "direction": "Inbound",
+                "sourcePortRange": "*",
+                "destinationPortRange": "4333",
+                "destinationAddressPrefix": "*",
+                "sourcePortRanges": [],
+                "destinationPortRanges": [],
+                "sourceAddressPrefixes": [],
+                "destinationAddressPrefixes": [],
+                "sourceAddressPrefix": "*"
+              }
+            },
+            {
+              "name": "block-port-3306",
+              "properties": {
+                "description": "allow inbound traffic",
+                "protocol": "TCP",
+                "access": "Allow",
+                "priority": 108,
+                "direction": "Inbound",
+                "sourcePortRange": "*",
                 "destinationPortRange": "3306",
+                "destinationAddressPrefix": "*",
+                "sourcePortRanges": [],
+                "destinationPortRanges": [],
+                "sourceAddressPrefixes": [],
+                "destinationAddressPrefixes": [],
+                "sourceAddressPrefix": "*"
+              }
+            },
+            {
+              "name": "block-port-137",
+              "properties": {
+                "description": "allow inbound traffic",
+                "protocol": "UDP",
+                "access": "Allow",
+                "priority": 109,
+                "direction": "Inbound",
+                "sourcePortRange": "*",
+                "destinationPortRange": "137",
+                "destinationAddressPrefix": "*",
+                "sourcePortRanges": [],
+                "destinationPortRanges": [],
+                "sourceAddressPrefixes": [],
+                "destinationAddressPrefixes": [],
+                "sourceAddressPrefix": "*"
+              }
+            },
+            {
+              "name": "block-port-138",
+              "properties": {
+                "description": "allow inbound traffic",
+                "protocol": "UDP",
+                "access": "Allow",
+                "priority": 110,
+                "direction": "Inbound",
+                "sourcePortRange": "*",
+                "destinationPortRange": "138",
+                "destinationAddressPrefix": "*",
+                "sourcePortRanges": [],
+                "destinationPortRanges": [],
+                "sourceAddressPrefixes": [],
+                "destinationAddressPrefixes": [],
+                "sourceAddressPrefix": "*"
+              }
+            },
+            {
+              "name": "block-port-5432",
+              "properties": {
+                "description": "allow inbound traffic",
+                "protocol": "TCP",
+                "access": "Allow",
+                "priority": 111,
+                "direction": "Inbound",
+                "sourcePortRange": "*",
+                "destinationPortRange": "5432",
+                "destinationAddressPrefix": "*",
+                "sourcePortRanges": [],
+                "destinationPortRanges": [],
+                "sourceAddressPrefixes": [],
+                "destinationAddressPrefixes": [],
+                "sourceAddressPrefix": "*"
+              }
+            },
+            {
+              "name": "block-port-25",
+              "properties": {
+                "description": "allow inbound traffic",
+                "protocol": "TCP",
+                "access": "Allow",
+                "priority": 112,
+                "direction": "Inbound",
+                "sourcePortRange": "*",
+                "destinationPortRange": "25",
+                "destinationAddressPrefix": "*",
+                "sourcePortRanges": [],
+                "destinationPortRanges": [],
+                "sourceAddressPrefixes": [],
+                "destinationAddressPrefixes": [],
+                "sourceAddressPrefix": "*"
+              }
+            },
+            {
+              "name": "block-port-1434",
+              "properties": {
+                "description": "allow inbound traffic",
+                "protocol": "UDP",
+                "access": "Allow",
+                "priority": 113,
+                "direction": "Inbound",
+                "sourcePortRange": "*",
+                "destinationPortRange": "1434",
+                "destinationAddressPrefix": "*",
+                "sourcePortRanges": [],
+                "destinationPortRanges": [],
+                "sourceAddressPrefixes": [],
+                "destinationAddressPrefixes": [],
+                "sourceAddressPrefix": "*"
+              }
+            },
+            {
+              "name": "block-port-1433",
+              "properties": {
+                "description": "allow inbound traffic",
+                "protocol": "TCP",
+                "access": "Allow",
+                "priority": 114,
+                "direction": "Inbound",
+                "sourcePortRange": "*",
+                "destinationPortRange": "1430-1435",
+                "destinationAddressPrefix": "*",
+                "sourcePortRanges": [],
+                "destinationPortRanges": [],
+                "sourceAddressPrefixes": [],
+                "destinationAddressPrefixes": [],
+                "sourceAddressPrefix": "*"
+              }
+            },
+            {
+              "name": "block-port-23",
+              "properties": {
+                "description": "allow inbound traffic",
+                "protocol": "TCP",
+                "access": "Allow",
+                "priority": 115,
+                "direction": "Inbound",
+                "sourcePortRange": "*",
+                "destinationPortRange": "23",
+                "destinationAddressPrefix": "*",
+                "sourcePortRanges": [],
+                "destinationPortRanges": [],
+                "sourceAddressPrefixes": [],
+                "destinationAddressPrefixes": [],
+                "sourceAddressPrefix": "*"
+              }
+            },
+            {
+              "name": "block-port-5500",
+              "properties": {
+                "description": "allow inbound traffic",
+                "protocol": "TCP",
+                "access": "Allow",
+                "priority": 116,
+                "direction": "Inbound",
+                "sourcePortRange": "*",
+                "destinationPortRange": "5500",
+                "destinationAddressPrefix": "*",
+                "sourcePortRanges": [],
+                "destinationPortRanges": [],
+                "sourceAddressPrefixes": [],
+                "destinationAddressPrefixes": [],
+                "sourceAddressPrefix": "*"
+              }
+            },
+            {
+              "name": "block-port-5900",
+              "properties": {
+                "description": "allow inbound traffic",
+                "protocol": "TCP",
+                "access": "Allow",
+                "priority": 117,
+                "direction": "Inbound",
+                "sourcePortRange": "*",
+                "destinationPortRange": "5900",
+                "destinationAddressPrefix": "*",
+                "sourcePortRanges": [],
+                "destinationPortRanges": [],
+                "sourceAddressPrefixes": [],
+                "destinationAddressPrefixes": [],
+                "sourceAddressPrefix": "*"
+              }
+            },
+            {
+              "name": "block-port-135",
+              "properties": {
+                "description": "allow inbound traffic",
+                "protocol": "TCP",
+                "access": "Allow",
+                "priority": 118,
+                "direction": "Inbound",
+                "sourcePortRange": "*",
+                "destinationPortRange": "135",
+                "destinationAddressPrefix": "*",
+                "sourcePortRanges": [],
+                "destinationPortRanges": [],
+                "sourceAddressPrefixes": [],
+                "destinationAddressPrefixes": [],
+                "sourceAddressPrefix": "*"
+              }
+            },
+            {
+              "name": "block-port-445",
+              "properties": {
+                "description": "allow inbound traffic",
+                "protocol": "TCP",
+                "access": "Allow",
+                "priority": 119,
+                "direction": "Inbound",
+                "sourcePortRange": "*",
+                "destinationPortRange": "",
+                "destinationAddressPrefix": "*",
+                "sourcePortRanges": [],
+                "destinationPortRanges": [
+                  "445"
+                ],
+                "sourceAddressPrefixes": [],
+                "destinationAddressPrefixes": [],
+                "sourceAddressPrefix": "*"
+              }
+            },
+            {
+              "name": "block-port-tcp",
+              "properties": {
+                "description": "allow inbound traffic",
+                "protocol": "TCP",
+                "access": "Allow",
+                "priority": 120,
+                "direction": "Inbound",
+                "sourcePortRange": "*",
+                "destinationPortRange": "*",
+                "destinationAddressPrefix": "*",
+                "sourcePortRanges": [],
+                "destinationPortRanges": [],
+                "sourceAddressPrefixes": [],
+                "destinationAddressPrefixes": [],
+                "sourceAddressPrefix": "*"
+              }
+            },
+            {
+              "name": "block-port-udp",
+              "properties": {
+                "description": "allow inbound traffic",
+                "protocol": "UDP",
+                "access": "Allow",
+                "priority": 121,
+                "direction": "Inbound",
+                "sourcePortRange": "*",
+                "destinationPortRange": "*",
+                "destinationAddressPrefix": "*",
+                "sourcePortRanges": [],
+                "destinationPortRanges": [],
+                "sourceAddressPrefixes": [],
+                "destinationAddressPrefixes": [],
+                "sourceAddressPrefix": "*"
+              }
+            },
+            {
+              "name": "block-internet-source",
+              "properties": {
+                "description": "allow inbound traffic on TCP protocol",
+                "protocol": "TCP",
+                "access": "Allow",
+                "priority": 122,
+                "direction": "Inbound",
+                "sourcePortRange": "*",
+                "destinationPortRange": "*",
+                "destinationAddressPrefix": "*",
+                "sourcePortRanges": [],
+                "destinationPortRanges": [],
+                "sourceAddressPrefixes": [],
+                "destinationAddressPrefixes": [],
+                "sourceAddressPrefix": "Internet"
+              }
+            },
+            {
+              "name": "block-internet-source",
+              "properties": {
+                "description": "allow inbound traffic on UDP protocol",
+                "protocol": "UDP",
+                "access": "Allow",
+                "priority": 123,
+                "direction": "Inbound",
+                "sourcePortRange": "*",
+                "destinationPortRange": "*",
+                "destinationAddressPrefix": "*",
+                "sourcePortRanges": [],
+                "destinationPortRanges": [],
+                "sourceAddressPrefixes": [],
+                "destinationAddressPrefixes": [],
+                "sourceAddressPrefix": "Internet"
+              }
+            },
+            {
+              "name": "block-internet-source",
+              "properties": {
+                "description": "allow inbound traffic on any protocol",
+                "protocol": "*",
+                "access": "Allow",
+                "priority": 124,
+                "direction": "Inbound",
+                "sourcePortRange": "*",
+                "destinationPortRange": "*",
+                "destinationAddressPrefix": "*",
+                "sourcePortRanges": [],
+                "destinationPortRanges": [],
+                "sourceAddressPrefixes": [],
+                "destinationAddressPrefixes": [],
+                "sourceAddressPrefix": "Internet"
+              }
+            },
+            {
+              "name": "block-any-source",
+              "properties": {
+                "description": "allow inbound traffic on any protocol",
+                "protocol": "*",
+                "access": "Allow",
+                "priority": 125,
+                "direction": "Inbound",
+                "sourcePortRange": "*",
+                "destinationPortRange": "*",
+                "destinationAddressPrefix": "*",
+                "sourcePortRanges": [],
+                "destinationPortRanges": [],
+                "sourceAddressPrefixes": [],
+                "destinationAddressPrefixes": [],
+                "sourceAddressPrefix": "*"
+              }
+            },
+            {
+              "name": "block-protocol-ICMP",
+              "properties": {
+                "description": "allow inbound traffic on ICMP protocol",
+                "protocol": "ICMP",
+                "access": "Allow",
+                "priority": 127,
+                "direction": "Inbound",
+                "sourcePortRange": "*",
+                "destinationPortRange": "20",
+                "destinationAddressPrefix": "*",
+                "sourcePortRanges": [],
+                "destinationPortRanges": [],
+                "sourceAddressPrefixes": [],
+                "destinationAddressPrefixes": [],
+                "sourceAddressPrefix": "*"
+              }
+            },
+            {
+              "name": "block-outbound-traffic",
+              "properties": {
+                "description": "allow outbound traffic on any source",
+                "protocol": "TCP",
+                "access": "Allow",
+                "priority": 128,
+                "direction": "Outbound",
+                "sourcePortRange": "*",
+                "destinationPortRange": "*",
                 "destinationAddressPrefix": "*",
                 "sourcePortRanges": [],
                 "destinationPortRanges": [],

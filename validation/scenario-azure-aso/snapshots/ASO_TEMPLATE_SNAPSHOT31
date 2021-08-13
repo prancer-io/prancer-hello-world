@@ -2,11 +2,12 @@
   "structure": "filesystem",
   "error": null,
   "reference": "master",
+  "contentType": "yaml",
   "source": "gitConnectorAzureAso",
   "paths": [
-    "/config/samples/azure_v1alpha1_mysqlaaduser.yaml"
+    "/config/samples/azure_v1alpha1_eventhub.yaml"
   ],
-  "timestamp": 1624434683453,
+  "timestamp": 1628760796133,
   "queryuser": null,
   "checksum": "99914b932bd37a50b983c5e7c90ae93b",
   "node": {
@@ -14,7 +15,7 @@
     "type": "aso",
     "collection": "asotemplate",
     "paths": [
-      "/config/samples/azure_v1alpha1_mysqlaaduser.yaml"
+      "/config/samples/azure_v1alpha1_eventhub.yaml"
     ],
     "snapshotId": "ASO_TEMPLATE_SNAPSHOT31",
     "status": "active",
@@ -24,18 +25,26 @@
   "collection": "asotemplate",
   "json": {
     "apiVersion": "azure.microsoft.com/v1alpha1",
-    "kind": "MySQLAADUser",
+    "kind": "Eventhub",
     "metadata": {
-      "name": "mysqlaaduser-sample"
+      "name": "eventhub-sample-1"
     },
     "spec": {
-      "server": "mysqlserver-sample",
-      "dbName": "mysqldatabase-sample",
+      "location": "westus",
       "resourceGroup": "resourcegroup-azure-operators",
-      "aadId": "00000000-0000-0000-0000-000000000000",
-      "roles": [
-        "SELECT"
-      ]
+      "namespace": "eventhubnamespace-sample-1",
+      "properties": {
+        "messageRetentionInDays": 7,
+        "partitionCount": 2
+      },
+      "authorizationRule": {
+        "name": "RootManageSharedAccessKey",
+        "rights": [
+          "Listen",
+          "Manage",
+          "Send"
+        ]
+      }
     }
   }
 }

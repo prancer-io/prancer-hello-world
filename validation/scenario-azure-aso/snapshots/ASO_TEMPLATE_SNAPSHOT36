@@ -2,11 +2,12 @@
   "structure": "filesystem",
   "error": null,
   "reference": "master",
+  "contentType": "yaml",
   "source": "gitConnectorAzureAso",
   "paths": [
-    "/config/samples/azure_v1alpha1_mysqlserver_replica.yaml"
+    "/config/samples/azure_v1alpha1_keyvault_simple.yaml"
   ],
-  "timestamp": 1624434683549,
+  "timestamp": 1628760796227,
   "queryuser": null,
   "checksum": "99914b932bd37a50b983c5e7c90ae93b",
   "node": {
@@ -14,7 +15,7 @@
     "type": "aso",
     "collection": "asotemplate",
     "paths": [
-      "/config/samples/azure_v1alpha1_mysqlserver_replica.yaml"
+      "/config/samples/azure_v1alpha1_keyvault_simple.yaml"
     ],
     "snapshotId": "ASO_TEMPLATE_SNAPSHOT36",
     "status": "active",
@@ -24,17 +25,18 @@
   "collection": "asotemplate",
   "json": {
     "apiVersion": "azure.microsoft.com/v1alpha1",
-    "kind": "MySQLServer",
+    "kind": "KeyVault",
     "metadata": {
-      "name": "mysqlserver-replica"
+      "name": "keyvaultsample123-simple",
+      "labels": {
+        "tag1": "value1",
+        "tag2": "value2"
+      }
     },
     "spec": {
-      "location": "eastus2",
       "resourceGroup": "resourcegroup-azure-operators",
-      "createMode": "Replica",
-      "replicaProperties": {
-        "sourceServerId": "/subscriptions/{SUBID}/resourceGroups/resourcegroup-azure-operators/providers/Microsoft.DBforMySQL/servers/mysqlserver-sample"
-      }
+      "location": "westus",
+      "enableSoftDelete": false
     }
   }
 }

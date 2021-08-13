@@ -2,13 +2,15 @@
   "structure": "filesystem",
   "error": null,
   "reference": "master",
+  "contentType": "terraform",
   "source": "gitConnectorTerraform",
   "paths": [
-    "/aws/modules/lambda/output.tf",
-    "/aws/modules/lambda/vars.tf",
-    "/aws/modules/lambda/main.tf"
+    "/azure/mssql_servers/provider.tf",
+    "/azure/mssql_servers/terraform.tfvars",
+    "/azure/mssql_servers/vars.tf",
+    "/azure/mssql_servers/main.tf"
   ],
-  "timestamp": 1621252249381,
+  "timestamp": 1628768972107,
   "queryuser": null,
   "checksum": "99914b932bd37a50b983c5e7c90ae93b",
   "node": {
@@ -16,9 +18,10 @@
     "type": "terraform",
     "collection": "terraformtemplate",
     "paths": [
-      "/aws/modules/lambda/output.tf",
-      "/aws/modules/lambda/vars.tf",
-      "/aws/modules/lambda/main.tf"
+      "/azure/mssql_servers/provider.tf",
+      "/azure/mssql_servers/terraform.tfvars",
+      "/azure/mssql_servers/vars.tf",
+      "/azure/mssql_servers/main.tf"
     ],
     "snapshotId": "TRF_TEMPLATE_SNAPSHOT27",
     "status": "active",
@@ -27,32 +30,202 @@
   "snapshotId": "TRF_TEMPLATE_SNAPSHOT27",
   "collection": "terraformtemplate",
   "json": {
+    "data": {
+      "azurerm_client_config": {
+        "current": {}
+      }
+    },
     "resources": [
       {
-        "type": "aws_lambda_function",
-        "name": "lambda",
+        "type": "azurerm_storage_account",
+        "name": "storageAccount",
         "properties": {
-          "description": "",
-          "environment": [],
-          "vpc_config": [],
-          "kms_key_arn": null,
-          "filename": "${var.filename}",
-          "function_name": "${var.function_name}",
-          "handler": "${var.handler}",
-          "memory_size": 128,
-          "publish": false,
-          "reserved_concurrent_executions": "-1",
-          "role": "${var.iam_role}",
-          "runtime": "${var.runtime}",
-          "s3_bucket": null,
-          "s3_key": null,
-          "s3_object_version": null,
-          "source_code_hash": "",
+          "name": "prancerstorageaccount007",
+          "resource_group_name": "prancer-test-rg",
+          "location": "eastus2",
+          "account_tier": "Standard",
+          "account_replication_type": "LRS",
+          "enable_https_traffic_only": false,
+          "allow_blob_public_access": "${var.allow_blob_public_access}",
           "tags": {},
-          "timeout": 3,
-          "tracing_config": {
-            "mode": "PassThrough"
-          }
+          "storage_count": 1,
+          "storage_name": "prancerstorageaccount007",
+          "storage_rg_name": "prancer-test-rg",
+          "accountTier": "Standard",
+          "replicationType": "LRS",
+          "enableSecureTransfer": false
+        }
+      },
+      {
+        "type": "azurerm_storage_container",
+        "name": "storageContainer",
+        "properties": {
+          "name": "prancer-storage-container",
+          "storage_account_name": "${module.storageAccount.name[0]}",
+          "container_access_type": "private",
+          "storage_container_name": "prancer-storage-container",
+          "storage_container_access_type": "private"
+        }
+      },
+      {
+        "type": "azurerm_mssql_server",
+        "name": "mssqlserver",
+        "properties": {
+          "name": "prancer-sql-server",
+          "resource_group_name": "prancer-test-rg",
+          "location": "eastus2",
+          "version": 12.0,
+          "administrator_login": "prancer_admin",
+          "administrator_login_password": "vijcykDaHarj+Oz5",
+          "azuread_administrator": [
+            {
+              "login_username": "adadmin",
+              "object_id": "${data.azurerm_client_config.current.object_id}"
+            }
+          ],
+          "tags": {},
+          "server_name": "prancer-sql-server",
+          "server_rg": "prancer-test-rg",
+          "server_version": 12.0,
+          "admin_user": "prancer_admin",
+          "admin_password": "vijcykDaHarj+Oz5",
+          "sql_ad_username": "adadmin",
+          "sql_ad_object_id": "${data.azurerm_client_config.current.object_id}"
+        }
+      },
+      {
+        "type": "azurerm_mssql_server_security_alert_policy",
+        "name": "mssqlsecuritypolicy",
+        "properties": {
+          "resource_group_name": "prancer-test-rg",
+          "server_name": "${module.sqlServer.sqlserver_name}",
+          "state": "Enabled",
+          "storage_endpoint": "${module.storageAccount.primaryblob_uri[0]}",
+          "storage_account_access_key": "${module.storageAccount.storage_primary_access_key[0]}",
+          "disabled_alerts": [
+            "Unsafe_Action"
+          ],
+          "retention_days": 30,
+          "email_account_admins": false,
+          "email_addresses": [],
+          "count": 0,
+          "sql_server_rg": "prancer-test-rg",
+          "sql_server_name": "${module.sqlServer.sqlserver_name}",
+          "sql_sec_policy_state": "Enabled",
+          "sql_sec_policy_endpoint": "${module.storageAccount.primaryblob_uri[0]}",
+          "sql_sec_policy_access_key": "${module.storageAccount.storage_primary_access_key[0]}",
+          "sql_sec_policy_disabled_alerts": [
+            "Unsafe_Action"
+          ],
+          "sql_sec_policy_retention": 30,
+          "sql_sec_email_account_admins": false,
+          "sql_sec_email_addresses": []
+        }
+      },
+      {
+        "type": "azurerm_mssql_server_vulnerability_assessment",
+        "name": "mssqlvulnassessment",
+        "properties": {
+          "server_security_alert_policy_id": "${module.sqlServerSecurityPolicy[0].pid}",
+          "storage_container_path": "${module.storageAccount.primaryblob_uri[0]}${module.storageContainer.name}/",
+          "storage_account_access_key": "${module.storageAccount.storage_primary_access_key[0]}",
+          "recurring_scans": [
+            {
+              "enabled": false,
+              "email_subscription_admins": false,
+              "emails": []
+            }
+          ],
+          "count": 0,
+          "sql_vuln_alert_policy_id": "${module.sqlServerSecurityPolicy[0].pid}",
+          "sql_vuln_container_path": "${module.storageAccount.primaryblob_uri[0]}${module.storageContainer.name}/",
+          "sql_vuln_access_key": "${module.storageAccount.storage_primary_access_key[0]}",
+          "sql_vuln_scan_enabled": false,
+          "sql_vuln_scan_admin_email": false,
+          "sql_vuln_scan_emails": []
+        }
+      },
+      {
+        "type": "azurerm_sql_firewall_rule",
+        "name": "sqlserverfw",
+        "properties": {
+          "name": "prancer-sql-fw-block-10-net",
+          "resource_group_name": "prancer-test-rg",
+          "server_name": "${module.sqlServer.sqlserver_name}",
+          "start_ip_address": "0.0.0.0",
+          "end_ip_address": "0.0.0.0",
+          "count": 0,
+          "sql_fw_name": "prancer-sql-fw-block-10-net",
+          "sql_fw_rg": "prancer-test-rg",
+          "sql_server_name": "${module.sqlServer.sqlserver_name}",
+          "sql_fw_start_ip": "0.0.0.0",
+          "sql_fw_end_ip": "0.0.0.0"
+        }
+      },
+      {
+        "type": "azurerm_mssql_server_extended_auditing_policy",
+        "name": "mssqlaudit",
+        "properties": {
+          "server_id": "${module.sqlServer.sqlserver_id}",
+          "storage_endpoint": "${module.storageAccount.primaryblob_uri[0]}",
+          "storage_account_access_key": "${module.storageAccount.storage_primary_access_key[0]}",
+          "storage_account_access_key_is_secondary": true,
+          "retention_in_days": 30,
+          "sql_server_id": "${module.sqlServer.sqlserver_id}",
+          "sql_audit_endpoint": "${module.storageAccount.primaryblob_uri[0]}",
+          "sql_audit_access_key": "${module.storageAccount.storage_primary_access_key[0]}",
+          "sql_audit_access_key_is_2nd": true,
+          "sql_audit_retention": 30
+        }
+      },
+      {
+        "type": "azurerm_mssql_database",
+        "name": "mssqldb",
+        "properties": {
+          "name": "prancer-sql-db",
+          "server_id": "${module.sqlServer.sqlserver_id}",
+          "collation": "SQL_Latin1_General_CP1_CI_AS",
+          "license_type": "LicenseIncluded",
+          "max_size_gb": 2,
+          "read_scale": false,
+          "sku_name": "Basic",
+          "zone_redundant": false,
+          "tags": {},
+          "threat_detection_policy": [
+            {
+              "state": "Disabled",
+              "email_account_admins": "Disabled",
+              "retention_days": 0,
+              "storage_account_access_key": null,
+              "storage_endpoint": null,
+              "use_server_default": "Disabled"
+            }
+          ],
+          "sql_db_name": "prancer-sql-db",
+          "sql_server_id": "${module.sqlServer.sqlserver_id}",
+          "sql_db_collation": "SQL_Latin1_General_CP1_CI_AS",
+          "sql_db_license_type": "LicenseIncluded",
+          "sql_db_max_size_gb": 2,
+          "sql_db_read_scale": false,
+          "sql_db_sku_name": "Basic",
+          "sql_db_zone_redundant": false
+        }
+      },
+      {
+        "type": "azurerm_mssql_database_extended_auditing_policy",
+        "name": "mssqldbaudit",
+        "properties": {
+          "database_id": "${module.sqlDB.id}",
+          "storage_endpoint": "${module.storageAccount.primaryblob_uri[0]}",
+          "storage_account_access_key": "${module.storageAccount.storage_primary_access_key[0]}",
+          "storage_account_access_key_is_secondary": true,
+          "retention_in_days": 30,
+          "count": 0,
+          "sqldb_database_id": "${module.sqlDB.id}",
+          "sqldb_audit_endpoint": "${module.storageAccount.primaryblob_uri[0]}",
+          "sqldb_audit_access_key": "${module.storageAccount.storage_primary_access_key[0]}",
+          "sqldb_audit_access_key_is_2nd": true,
+          "sqldb_audit_retention": 30
         }
       }
     ]

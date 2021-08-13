@@ -2,11 +2,12 @@
   "structure": "filesystem",
   "error": null,
   "reference": "master",
+  "contentType": "yaml",
   "source": "gitConnectorAzureAso",
   "paths": [
-    "/config/samples/azure_v1alpha1_keyvault_simple.yaml"
+    "/config/samples/azure_v1alpha1_cosmosdb_prod.yaml"
   ],
-  "timestamp": 1624434683430,
+  "timestamp": 1628760796119,
   "queryuser": null,
   "checksum": "99914b932bd37a50b983c5e7c90ae93b",
   "node": {
@@ -14,7 +15,7 @@
     "type": "aso",
     "collection": "asotemplate",
     "paths": [
-      "/config/samples/azure_v1alpha1_keyvault_simple.yaml"
+      "/config/samples/azure_v1alpha1_cosmosdb_prod.yaml"
     ],
     "snapshotId": "ASO_TEMPLATE_SNAPSHOT30",
     "status": "active",
@@ -24,18 +25,35 @@
   "collection": "asotemplate",
   "json": {
     "apiVersion": "azure.microsoft.com/v1alpha1",
-    "kind": "KeyVault",
+    "kind": "CosmosDB",
     "metadata": {
-      "name": "keyvaultsample123-simple",
+      "name": "cosmosdb-sample-2",
       "labels": {
-        "tag1": "value1",
-        "tag2": "value2"
+        "CosmosAccountType": "Production"
       }
     },
     "spec": {
+      "kind": "GlobalDocumentDB",
+      "location": "eastus",
       "resourceGroup": "resourcegroup-azure-operators",
-      "location": "westus",
-      "enableSoftDelete": false
+      "properties": {
+        "databaseAccountOfferType": "Standard",
+        "enableMultipleWriteLocations": true
+      },
+      "ipRules": [
+        "104.42.195.92,40.76.54.131,52.176.6.30,52.169.50.45,52.187.184.26"
+      ],
+      "locations": [
+        {
+          "locationName": "eastus",
+          "failoverPriority": 0,
+          "isZoneRedundant": true
+        },
+        {
+          "locationName": "westus",
+          "failoverPriority": 1
+        }
+      ]
     }
   }
 }

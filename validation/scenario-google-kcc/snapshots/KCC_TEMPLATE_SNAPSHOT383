@@ -2,31 +2,51 @@
   "structure": "filesystem",
   "error": null,
   "reference": "master",
+  "contentType": "yaml",
   "source": "gitConnectorGoogleKcc",
   "paths": [
-    "/samples/resources/logginglogsink/project-sink/pubsub_v1beta1_pubsubtopic.yaml"
+    "/samples/resources/iamauditconfig/iam_v1beta1_iamauditconfig.yaml"
   ],
-  "timestamp": 1622492388675,
+  "timestamp": 1628765147325,
   "queryuser": null,
   "checksum": "99914b932bd37a50b983c5e7c90ae93b",
   "node": {
     "masterSnapshotId": "KCC_TEMPLATE_SNAPSHOT",
-    "type": "yaml",
-    "collection": "deploymentmanagertemplate",
+    "type": "kcc",
+    "collection": "kcctemplate",
     "paths": [
-      "/samples/resources/logginglogsink/project-sink/pubsub_v1beta1_pubsubtopic.yaml"
+      "/samples/resources/iamauditconfig/iam_v1beta1_iamauditconfig.yaml"
     ],
     "snapshotId": "KCC_TEMPLATE_SNAPSHOT383",
     "status": "active",
     "validate": true
   },
   "snapshotId": "KCC_TEMPLATE_SNAPSHOT383",
-  "collection": "deploymentmanagertemplate",
+  "collection": "kcctemplate",
   "json": {
-    "apiVersion": "pubsub.cnrm.cloud.google.com/v1beta1",
-    "kind": "PubSubTopic",
+    "apiVersion": "iam.cnrm.cloud.google.com/v1beta1",
+    "kind": "IAMAuditConfig",
     "metadata": {
-      "name": "logginglogsink-dep-project"
+      "name": "iamauditconfig-sample"
+    },
+    "spec": {
+      "service": "allServices",
+      "auditLogConfigs": [
+        {
+          "logType": "DATA_WRITE"
+        },
+        {
+          "logType": "DATA_READ",
+          "exemptedMembers": [
+            "serviceAccount:iamauditconfig-dep@${PROJECT_ID?}.iam.gserviceaccount.com"
+          ]
+        }
+      ],
+      "resourceRef": {
+        "apiVersion": "resourcemanager.cnrm.cloud.google.com/v1beta1",
+        "kind": "Project",
+        "external": "projects/${PROJECT_ID?}"
+      }
     }
   }
 }

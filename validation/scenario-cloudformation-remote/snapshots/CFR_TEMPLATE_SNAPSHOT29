@@ -1,0 +1,58 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "yaml",
+  "source": "gitConnectorCloudformation",
+  "paths": [
+    "/redshift/redshift.yaml"
+  ],
+  "timestamp": 1628763941333,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "CFR_TEMPLATE_SNAPSHOT",
+    "type": "cloudformation",
+    "collection": "cloudformationtemplate",
+    "paths": [
+      "/redshift/redshift.yaml"
+    ],
+    "snapshotId": "CFR_TEMPLATE_SNAPSHOT29",
+    "status": "active",
+    "validate": true
+  },
+  "snapshotId": "CFR_TEMPLATE_SNAPSHOT29",
+  "collection": "cloudformationtemplate",
+  "json": {
+    "AWSTemplateFormatVersion": "2010-09-09",
+    "Resources": [
+      {
+        "Type": "AWS::Redshift::Cluster",
+        "Properties": {
+          "Encrypted": false,
+          "PubliclyAccessible": true,
+          "DBName": "mydb",
+          "MasterUsername": "master",
+          "MasterUserPassword": "Root12345",
+          "NodeType": "ds2.xlarge",
+          "ClusterType": "single-node"
+        },
+        "Name": "RedshiftCluster"
+      },
+      {
+        "Type": "AWS::Redshift::ClusterParameterGroup",
+        "Properties": {
+          "Description": "Cluster parameter group",
+          "ParameterGroupFamily": "redshift-1.0",
+          "Parameters": [
+            {
+              "ParameterName": "enable_user_activity_logging",
+              "ParameterValue": true
+            }
+          ]
+        },
+        "Name": "RedshiftClusterParameterGroup"
+      }
+    ]
+  }
+}

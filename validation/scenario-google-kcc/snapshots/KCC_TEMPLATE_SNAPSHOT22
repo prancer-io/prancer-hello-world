@@ -2,34 +2,53 @@
   "structure": "filesystem",
   "error": null,
   "reference": "master",
+  "contentType": "yaml",
   "source": "gitConnectorGoogleKcc",
   "paths": [
-    "/samples/resources/bigqueryjob/extract-bigquery-job/storage_v1beta1_storagebucket.yaml"
+    "/samples/resources/bigqueryjob/extract-bigquery-job/bigquery_v1beta1_bigqueryjob.yaml"
   ],
-  "timestamp": 1622492375221,
+  "timestamp": 1628765138701,
   "queryuser": null,
   "checksum": "99914b932bd37a50b983c5e7c90ae93b",
   "node": {
     "masterSnapshotId": "KCC_TEMPLATE_SNAPSHOT",
-    "type": "yaml",
-    "collection": "deploymentmanagertemplate",
+    "type": "kcc",
+    "collection": "kcctemplate",
     "paths": [
-      "/samples/resources/bigqueryjob/extract-bigquery-job/storage_v1beta1_storagebucket.yaml"
+      "/samples/resources/bigqueryjob/extract-bigquery-job/bigquery_v1beta1_bigqueryjob.yaml"
     ],
     "snapshotId": "KCC_TEMPLATE_SNAPSHOT22",
     "status": "active",
     "validate": true
   },
   "snapshotId": "KCC_TEMPLATE_SNAPSHOT22",
-  "collection": "deploymentmanagertemplate",
+  "collection": "kcctemplate",
   "json": {
-    "apiVersion": "storage.cnrm.cloud.google.com/v1beta1",
-    "kind": "StorageBucket",
+    "apiVersion": "bigquery.cnrm.cloud.google.com/v1beta1",
+    "kind": "BigQueryJob",
     "metadata": {
-      "annotations": {
-        "cnrm.cloud.google.com/force-destroy": "true"
+      "labels": {
+        "label-one": "value-one"
       },
-      "name": "${PROJECT_ID?}-bigqueryjob-dep-extract"
+      "name": "bigqueryjob-sample-extract"
+    },
+    "spec": {
+      "location": "US",
+      "jobTimeoutMs": "600000",
+      "extract": {
+        "sourceTable": {
+          "tableRef": {
+            "name": "bigqueryjobdepextract"
+          }
+        },
+        "destinationUris": [
+          "gs://${PROJECT_ID?}-bigqueryjob-dep-extract/extract"
+        ],
+        "destinationFormat": "CSV",
+        "compression": "GZIP",
+        "printHeader": true,
+        "fieldDelimiter": ","
+      }
     }
   }
 }

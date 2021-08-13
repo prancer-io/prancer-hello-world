@@ -2,12 +2,13 @@
   "structure": "filesystem",
   "error": null,
   "reference": "master",
-  "source": "gitConnectorArmRemoteStructure",
+  "contentType": "json",
+  "source": "gitConnectorArm",
   "paths": [
-    "/storage/storage.azuredeploy.json",
-    "/storage/blob.azuredeploy.parameters.json"
+    "/VNet-Peering/peering.azuredeploy.json",
+    "/VNet-Peering/peering.azuredeploy.parameters.json"
   ],
-  "timestamp": 1614578745542,
+  "timestamp": 1628758918543,
   "queryuser": null,
   "checksum": "99914b932bd37a50b983c5e7c90ae93b",
   "node": {
@@ -15,8 +16,8 @@
     "type": "arm",
     "collection": "armtemplate",
     "paths": [
-      "/storage/storage.azuredeploy.json",
-      "/storage/blob.azuredeploy.parameters.json"
+      "/VNet-Peering/peering.azuredeploy.json",
+      "/VNet-Peering/peering.azuredeploy.parameters.json"
     ],
     "snapshotId": "ARM_TEMPLATE_SNAPSHOT19",
     "status": "active",
@@ -27,95 +28,120 @@
   "json": {
     "contentVersion": "1.0.0.0",
     "parameters": {
-      "location": {
+      "VNET1": {
         "type": "string",
         "metadata": {
-          "description": "Location of the storagr account"
+          "description": "Set the local VNet name"
         },
-        "value": "eastus"
+        "value": "prancer-vnet"
       },
-      "storageAccountName": {
+      "VNET1RG": {
         "type": "string",
         "metadata": {
-          "description": "Name of the storage account"
+          "description": "Sets the remote VNet Resource group"
         },
-        "value": "prancerstorageaccount"
+        "value": "Prancer"
       },
-      "accountType": {
+      "VNET2": {
         "type": "string",
         "metadata": {
-          "description": "Type of account i.e Standard/Premium LRS/GRS"
+          "description": "Set the remote VNet name"
         },
-        "value": "Standard_LRS"
+        "value": "prancer-vnet2"
       },
-      "kind": {
+      "VNET2RG": {
         "type": "string",
         "metadata": {
-          "description": "Kind of storag account required for teh storage account"
+          "description": "Sets the remote VNet Resource group"
         },
-        "value": "BlobStorage"
+        "value": "Prancer"
       },
-      "accessTier": {
+      "AllowVirtualNetworkAccess": {
         "type": "string",
+        "defaultvalue": "true",
+        "allowedValues": [
+          "true",
+          "false"
+        ],
         "metadata": {
-          "description": "Access Tier of the storage account default Hot, will chnage it to the Cold "
+          "description": "Select this option if you wish to allow communication betweem two virtual network"
         },
-        "value": "Hot"
+        "value": "true"
       },
-      "minimumTlsVersion": {
+      "AllowForwardedTraffic": {
         "type": "string",
-        "value": "TLS1_2"
-      },
-      "supportsHttpsTrafficOnly": {
-        "type": "bool",
-        "value": true
-      },
-      "allowBlobPublicAccess": {
-        "type": "bool",
+        "defaultvalue": "true",
+        "allowedValues": [
+          "true",
+          "false"
+        ],
         "metadata": {
-          "description": "Allow Blob public access to Blob storage"
+          "description": "allow traffic forwarded by a network virtual appliance in a virtual network to flow to this virtual network through a peering"
         },
-        "value": true
+        "value": "true"
       },
-      "networkAclsBypass": {
+      "AllowGatewayTransit": {
         "type": "string",
-        "value": "AzureServices"
+        "defaultvalue": "false",
+        "allowedValues": [
+          "true",
+          "false"
+        ],
+        "metadata": {
+          "description": "Allow if you have a virtual network gateway attached to this virtual network and want to allow traffic from the peered virtual network to flow through the gateway"
+        },
+        "value": "false"
       },
-      "networkAclsDefaultAction": {
+      "UseRemoteGateways": {
         "type": "string",
-        "value": "Allow"
-      },
-      "containerName": {
-        "value": "prancerstoragecontainer"
+        "defaultvalue": "false",
+        "allowedValues": [
+          "true",
+          "false"
+        ],
+        "metadata": {
+          "description": "Allow traffic from this virtual network to flow through a virtual network gateway attached to the virtual network you're peering with"
+        },
+        "value": "false"
       }
     },
-    "variables": {},
+    "variables": {
+      "PeeringName1": "prancer-vnet-to-prancer-vnet2-vnetpeering",
+      "PeeringName2": "prancer-vnet2-to-prancer-vnet-vnetpeering"
+    },
     "resources": [
       {
-        "name": "prancerstorageaccount",
-        "type": "Microsoft.Storage/storageAccounts",
-        "apiVersion": "2019-06-01",
-        "location": "eastus",
+        "apiVersion": "2020-05-01",
+        "type": "Microsoft.Network/virtualNetworks/virtualNetworkPeerings",
+        "name": "prancer-vnet/prancer-vnet-to-prancer-vnet2-vnetpeering",
+        "location": "[resourceGroup().location]",
         "properties": {
-          "accessTier": "Hot",
-          "minimumTlsVersion": "TLS1_2",
-          "supportsHttpsTrafficOnly": true,
-          "allowBlobPublicAccess": true,
-          "networkAcls": {
-            "bypass": "AzureServices",
-            "defaultAction": "Allow",
-            "ipRules": []
+          "allowVirtualNetworkAccess": "true",
+          "allowForwardedTraffic": "true",
+          "allowGatewayTransit": "false",
+          "useRemoteGateways": "false",
+          "remoteVirtualNetwork": {
+            "id": "[resourceId(parameters('VNET2RG'), 'Microsoft.Network/virtualNetworks', parameters('VNET2'))]"
           }
-        },
-        "dependsOn": [],
-        "sku": {
-          "name": "Standard_LRS"
-        },
-        "kind": "BlobStorage",
-        "tags": {}
+        }
+      },
+      {
+        "apiVersion": "2020-05-01",
+        "type": "Microsoft.Network/virtualNetworks/virtualNetworkPeerings",
+        "name": "prancer-vnet2/prancer-vnet2-to-prancer-vnet-vnetpeering",
+        "location": "[resourceGroup().location]",
+        "properties": {
+          "allowVirtualNetworkAccess": "true",
+          "allowForwardedTraffic": "true",
+          "allowGatewayTransit": "false",
+          "useRemoteGateways": "false",
+          "remoteVirtualNetwork": {
+            "id": "[resourceId(parameters('VNET1RG'), 'Microsoft.Network/virtualNetworks', parameters('VNET1'))]"
+          },
+          "peeringState": "Disconnected"
+        }
       }
     ],
-    "outputs": {},
-    "\uff04schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#"
+    "\uff04schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#"
   }
 }

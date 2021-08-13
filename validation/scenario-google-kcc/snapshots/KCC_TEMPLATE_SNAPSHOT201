@@ -2,50 +2,50 @@
   "structure": "filesystem",
   "error": null,
   "reference": "master",
+  "contentType": "yaml",
   "source": "gitConnectorGoogleKcc",
   "paths": [
-    "/samples/resources/computesslcertificate/compute_v1beta1_computesslcertificate.yaml"
+    "/samples/resources/computerouterinterface/compute_v1beta1_computerouter.yaml"
   ],
-  "timestamp": 1622492381907,
+  "timestamp": 1628765142511,
   "queryuser": null,
   "checksum": "99914b932bd37a50b983c5e7c90ae93b",
   "node": {
     "masterSnapshotId": "KCC_TEMPLATE_SNAPSHOT",
-    "type": "yaml",
-    "collection": "deploymentmanagertemplate",
+    "type": "kcc",
+    "collection": "kcctemplate",
     "paths": [
-      "/samples/resources/computesslcertificate/compute_v1beta1_computesslcertificate.yaml"
+      "/samples/resources/computerouterinterface/compute_v1beta1_computerouter.yaml"
     ],
     "snapshotId": "KCC_TEMPLATE_SNAPSHOT201",
     "status": "active",
     "validate": true
   },
   "snapshotId": "KCC_TEMPLATE_SNAPSHOT201",
-  "collection": "deploymentmanagertemplate",
+  "collection": "kcctemplate",
   "json": {
     "apiVersion": "compute.cnrm.cloud.google.com/v1beta1",
-    "kind": "ComputeSSLCertificate",
+    "kind": "ComputeRouter",
     "metadata": {
-      "name": "computesslcertificate-sample"
+      "name": "computerouterinterface-dep"
     },
     "spec": {
-      "location": "global",
-      "description": "example compute SSL certificate",
-      "certificate": {
-        "valueFrom": {
-          "secretKeyRef": {
-            "name": "computesslcertificate-dep",
-            "key": "certificate"
-          }
-        }
+      "networkRef": {
+        "name": "computerouterinterface-dep"
       },
-      "privateKey": {
-        "valueFrom": {
-          "secretKeyRef": {
-            "name": "computesslcertificate-dep",
-            "key": "privateKey"
+      "description": "example router description",
+      "region": "us-central1",
+      "bgp": {
+        "asn": 64514,
+        "advertiseMode": "CUSTOM",
+        "advertisedGroups": [
+          "ALL_SUBNETS"
+        ],
+        "advertisedIpRanges": [
+          {
+            "range": "1.2.3.4"
           }
-        }
+        ]
       }
     }
   }

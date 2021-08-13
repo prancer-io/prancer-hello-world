@@ -2,6 +2,7 @@
   "structure": "filesystem",
   "error": null,
   "reference": "master",
+  "contentType": "terraform",
   "source": "gitConnectorTerraform",
   "paths": [
     "/aws/ec2/provider.tf",
@@ -9,7 +10,7 @@
     "/aws/ec2/vars.tf",
     "/aws/ec2/main.tf"
   ],
-  "timestamp": 1620823811607,
+  "timestamp": 1628767396288,
   "queryuser": null,
   "checksum": "99914b932bd37a50b983c5e7c90ae93b",
   "node": {
@@ -33,12 +34,20 @@
       "aws_ami": {
         "ubuntu": {
           "most_recent": true,
-          "filter": {
-            "name": "virtualization-type",
-            "values": [
-              "hvm"
-            ]
-          },
+          "filter": [
+            {
+              "name": "name",
+              "values": [
+                "ubuntu/images/hvm-ssd/ubuntu-focal-20.04-amd64-server-*"
+              ]
+            },
+            {
+              "name": "virtualization-type",
+              "values": [
+                "hvm"
+              ]
+            }
+          ],
           "owners": [
             99720109477
           ]
@@ -61,10 +70,7 @@
           "vpc_security_group_ids": null,
           "iam_instance_profile": "",
           "associate_public_ip_address": null,
-          "private_ip": [
-            "${element(var.private_ips}",
-            null
-          ],
+          "private_ip": null,
           "ipv6_address_count": null,
           "ipv6_addresses": null,
           "ebs_optimized": false,
@@ -83,9 +89,11 @@
             "Project": "Prancer"
           },
           "volume_tags": {},
-          "credit_specification": {
-            "cpu_credits": "standard"
-          },
+          "credit_specification": [
+            {
+              "cpu_credits": "local.is_t_instance_type ? var.cpu_credits : None"
+            }
+          ],
           "instance_count": 1,
           "name": "ec2"
         }
@@ -102,9 +110,11 @@
             "Environment": "Production",
             "Project": "Prancer"
           },
-          "lifecycle": {
-            "prevent_destroy": false
-          }
+          "lifecycle": [
+            {
+              "prevent_destroy": false
+            }
+          ]
         }
       }
     ]

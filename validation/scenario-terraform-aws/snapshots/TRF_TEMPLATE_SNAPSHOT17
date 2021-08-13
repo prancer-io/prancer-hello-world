@@ -2,13 +2,12 @@
   "structure": "filesystem",
   "error": null,
   "reference": "master",
+  "contentType": "terraform",
   "source": "gitConnectorTerraform",
   "paths": [
-    "/aws/modules/ec2/output.tf",
-    "/aws/modules/ec2/vars.tf",
-    "/aws/modules/ec2/main.tf"
+    "/aws/sg/extrasg.tf"
   ],
-  "timestamp": 1620823813305,
+  "timestamp": 1628767413324,
   "queryuser": null,
   "checksum": "99914b932bd37a50b983c5e7c90ae93b",
   "node": {
@@ -16,9 +15,7 @@
     "type": "terraform",
     "collection": "terraformtemplate",
     "paths": [
-      "/aws/modules/ec2/output.tf",
-      "/aws/modules/ec2/vars.tf",
-      "/aws/modules/ec2/main.tf"
+      "/aws/sg/extrasg.tf"
     ],
     "snapshotId": "TRF_TEMPLATE_SNAPSHOT17",
     "status": "active",
@@ -27,83 +24,206 @@
   "snapshotId": "TRF_TEMPLATE_SNAPSHOT17",
   "collection": "terraformtemplate",
   "json": {
-    "locals": {
-      "is_t_instance_type": "${replace(var.instance_type,\"/^t(2|3|3a){1}\\\\..*$/\",\"1\") == \"1\" ? True : False}"
-    },
+    "terraform": [
+      {
+        "required_version": ">= 0.12"
+      }
+    ],
+    "provider": [
+      {
+        "aws": {
+          "region": "${var.aws_region}"
+        }
+      }
+    ],
     "resources": [
       {
-        "type": "aws_instance",
-        "name": "ec2",
+        "type": "aws_vpc",
+        "name": "default",
         "properties": {
-          "ami": "${var.ami}",
-          "instance_type": "${var.instance_type}",
-          "user_data": null,
-          "user_data_base64": null,
-          "subnet_id": "",
-          "key_name": "",
-          "monitoring": false,
-          "get_password_data": false,
-          "vpc_security_group_ids": null,
-          "iam_instance_profile": "",
-          "associate_public_ip_address": null,
-          "private_ip": [
-            "${element(var.private_ips}",
+          "cidr_block": "10.0.0.0/16",
+          "enable_dns_hostnames": true,
+          "tags": {
+            "Name": "tf_test"
+          }
+        }
+      },
+      {
+        "type": "aws_subnet",
+        "name": "tf_test_subnet",
+        "properties": {
+          "vpc_id": null,
+          "cidr_block": "10.0.0.0/24",
+          "map_public_ip_on_launch": true,
+          "tags": {
+            "Name": "tf_test_subnet"
+          }
+        }
+      },
+      {
+        "type": "aws_internet_gateway",
+        "name": "gw",
+        "properties": {
+          "vpc_id": null,
+          "tags": {
+            "Name": "tf_test_ig"
+          }
+        }
+      },
+      {
+        "type": "aws_route_table",
+        "name": "r",
+        "properties": {
+          "vpc_id": null,
+          "route": [
+            {
+              "cidr_block": "0.0.0.0/0",
+              "gateway_id": null
+            }
+          ],
+          "tags": {
+            "Name": "aws_route_table"
+          }
+        }
+      },
+      {
+        "type": "aws_route_table_association",
+        "name": "a",
+        "properties": {
+          "subnet_id": null,
+          "route_table_id": null
+        }
+      },
+      {
+        "type": "aws_security_group",
+        "name": "default",
+        "properties": {
+          "name": "instance_sg",
+          "description": "Used in the terraform",
+          "vpc_id": null,
+          "ingress": [
+            {
+              "from_port": 22,
+              "to_port": 22,
+              "protocol": "tcp",
+              "cidr_blocks": [
+                "0.0.0.0/0"
+              ]
+            },
+            {
+              "from_port": 80,
+              "to_port": 80,
+              "protocol": "tcp",
+              "cidr_blocks": [
+                "0.0.0.0/0"
+              ]
+            }
+          ],
+          "egress": [
+            {
+              "from_port": 0,
+              "to_port": 0,
+              "protocol": -1,
+              "cidr_blocks": [
+                "0.0.0.0/0"
+              ]
+            }
+          ]
+        }
+      },
+      {
+        "type": "aws_security_group",
+        "name": "elb",
+        "properties": {
+          "name": "elb_sg",
+          "description": "Used in the terraform",
+          "vpc_id": null,
+          "ingress": [
+            {
+              "from_port": 80,
+              "to_port": 80,
+              "protocol": "tcp",
+              "cidr_blocks": [
+                "0.0.0.0/0"
+              ]
+            }
+          ],
+          "egress": [
+            {
+              "from_port": 0,
+              "to_port": 0,
+              "protocol": -1,
+              "cidr_blocks": [
+                "0.0.0.0/0"
+              ]
+            }
+          ],
+          "depends_on": [
+            null
+          ]
+        }
+      },
+      {
+        "type": "aws_elb",
+        "name": "web",
+        "properties": {
+          "name": "example-elb",
+          "subnets": [
             null
           ],
-          "ipv6_address_count": null,
-          "ipv6_addresses": null,
-          "ebs_optimized": false,
-          "dynamic": {
-            "root_block_device": {
-              "for_each": [],
-              "content": {
-                "delete_on_termination": "lookup(root_block_device.value,delete_on_termination,None)",
-                "encrypted": "lookup(root_block_device.value,encrypted,None)",
-                "iops": "lookup(root_block_device.value,iops,None)",
-                "kms_key_id": "lookup(root_block_device.value,kms_key_id,None)",
-                "volume_size": "lookup(root_block_device.value,volume_size,None)",
-                "volume_type": "lookup(root_block_device.value,volume_type,None)"
-              }
-            },
-            "ebs_block_device": {
-              "for_each": [],
-              "content": {
-                "delete_on_termination": "lookup(ebs_block_device.value,delete_on_termination,None)",
-                "device_name": "${ebs_block_device.value.device_name}",
-                "encrypted": "lookup(ebs_block_device.value,encrypted,None)",
-                "iops": "lookup(ebs_block_device.value,iops,None)",
-                "kms_key_id": "lookup(ebs_block_device.value,kms_key_id,None)",
-                "snapshot_id": "lookup(ebs_block_device.value,snapshot_id,None)",
-                "volume_size": "lookup(ebs_block_device.value,volume_size,None)",
-                "volume_type": "lookup(ebs_block_device.value,volume_type,None)"
-              }
-            },
-            "ephemeral_block_device": {
-              "for_each": [],
-              "content": {
-                "device_name": "${ephemeral_block_device.value.device_name}",
-                "no_device": "lookup(ephemeral_block_device.value,no_device,None)",
-                "virtual_name": "lookup(ephemeral_block_device.value,virtual_name,None)"
-              }
-            },
-            "network_interface": {
-              "for_each": [],
-              "content": {
-                "device_index": "${network_interface.value.device_index}",
-                "network_interface_id": "lookup(network_interface.value,network_interface_id,None)",
-                "delete_on_termination": "lookup(network_interface.value,delete_on_termination,False)"
-              }
+          "security_groups": [
+            null
+          ],
+          "listener": [
+            {
+              "instance_port": 80,
+              "instance_protocol": "http",
+              "lb_port": 80,
+              "lb_protocol": "http"
             }
-          },
-          "source_dest_check": true,
-          "disable_api_termination": false,
-          "instance_initiated_shutdown_behavior": "",
-          "placement_group": "",
-          "tenancy": "default",
-          "tags": {},
-          "volume_tags": {},
-          "credit_specification": {
-            "cpu_credits": "standard"
+          ],
+          "health_check": [
+            {
+              "healthy_threshold": 2,
+              "unhealthy_threshold": 2,
+              "timeout": 3,
+              "target": "HTTP:80/",
+              "interval": 30
+            }
+          ],
+          "instances": [
+            "${aws_instance.web.id}"
+          ],
+          "cross_zone_load_balancing": true,
+          "idle_timeout": 400,
+          "connection_draining": true,
+          "connection_draining_timeout": 400
+        }
+      },
+      {
+        "type": "aws_lb_cookie_stickiness_policy",
+        "name": "default",
+        "properties": {
+          "name": "lbpolicy",
+          "load_balancer": null,
+          "lb_port": 80,
+          "cookie_expiration_period": 600
+        }
+      },
+      {
+        "type": "aws_instance",
+        "name": "web",
+        "properties": {
+          "instance_type": "t2.micro",
+          "ami": "${var.aws_amis[var.aws_region]}",
+          "key_name": "${var.key_name}",
+          "vpc_security_group_ids": [
+            null
+          ],
+          "subnet_id": null,
+          "user_data": "${file(\"userdata.sh\")}",
+          "tags": {
+            "Name": "elb-example"
           }
         }
       }

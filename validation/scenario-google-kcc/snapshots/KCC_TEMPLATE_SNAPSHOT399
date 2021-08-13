@@ -2,43 +2,55 @@
   "structure": "filesystem",
   "error": null,
   "reference": "master",
+  "contentType": "yaml",
   "source": "gitConnectorGoogleKcc",
   "paths": [
-    "/samples/resources/monitoringnotificationchannel/sms-monitoring-notification-channel/monitoring_v1beta1_monitoringnotificationchannel.yaml"
+    "/samples/resources/iampolicy/kms-policy-with-condition/iam_v1beta1_iampolicy.yaml"
   ],
-  "timestamp": 1622492389263,
+  "timestamp": 1628765147726,
   "queryuser": null,
   "checksum": "99914b932bd37a50b983c5e7c90ae93b",
   "node": {
     "masterSnapshotId": "KCC_TEMPLATE_SNAPSHOT",
-    "type": "yaml",
-    "collection": "deploymentmanagertemplate",
+    "type": "kcc",
+    "collection": "kcctemplate",
     "paths": [
-      "/samples/resources/monitoringnotificationchannel/sms-monitoring-notification-channel/monitoring_v1beta1_monitoringnotificationchannel.yaml"
+      "/samples/resources/iampolicy/kms-policy-with-condition/iam_v1beta1_iampolicy.yaml"
     ],
     "snapshotId": "KCC_TEMPLATE_SNAPSHOT399",
     "status": "active",
     "validate": true
   },
   "snapshotId": "KCC_TEMPLATE_SNAPSHOT399",
-  "collection": "deploymentmanagertemplate",
+  "collection": "kcctemplate",
   "json": {
-    "apiVersion": "monitoring.cnrm.cloud.google.com/v1beta1",
-    "kind": "MonitoringNotificationChannel",
+    "apiVersion": "iam.cnrm.cloud.google.com/v1beta1",
+    "kind": "IAMPolicy",
     "metadata": {
       "labels": {
-        "response-priority": "intervention",
-        "target-user": "on-call"
+        "label-one": "value-one"
       },
-      "name": "monitoringnotificationchannel-sample-sms"
+      "name": "iampolicy-sample-condition"
     },
     "spec": {
-      "type": "sms",
-      "labels": {
-        "number": "12025550196"
+      "resourceRef": {
+        "apiVersion": "kms.cnrm.cloud.google.com/v1beta1",
+        "kind": "KMSKeyRing",
+        "name": "iampolicy-dep-condition"
       },
-      "description": "A channel that sends notifications via Short Message Service (SMS).",
-      "enabled": true
+      "bindings": [
+        {
+          "role": "roles/cloudkms.admin",
+          "condition": {
+            "title": "expires_after_2019_12_31",
+            "description": "Expires at midnight of 2019-12-31",
+            "expression": "request.time < timestamp(\"2020-01-01T00:00:00Z\")"
+          },
+          "members": [
+            "serviceAccount:iampolicy-dep-condition@${PROJECT_ID?}.iam.gserviceaccount.com"
+          ]
+        }
+      ]
     }
   }
 }

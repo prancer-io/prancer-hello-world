@@ -2,45 +2,41 @@
   "structure": "filesystem",
   "error": null,
   "reference": "master",
+  "contentType": "yaml",
   "source": "gitConnectorGoogleKcc",
   "paths": [
-    "/samples/resources/servicenetworkingconnection/servicenetworking_v1beta1_servicenetworkingconnection.yaml"
+    "/samples/resources/iampolicymember/pubsub-admin-policy-member/iam_v1beta1_iampolicymember.yaml"
   ],
-  "timestamp": 1622492389997,
+  "timestamp": 1628765148284,
   "queryuser": null,
   "checksum": "99914b932bd37a50b983c5e7c90ae93b",
   "node": {
     "masterSnapshotId": "KCC_TEMPLATE_SNAPSHOT",
-    "type": "yaml",
-    "collection": "deploymentmanagertemplate",
+    "type": "kcc",
+    "collection": "kcctemplate",
     "paths": [
-      "/samples/resources/servicenetworkingconnection/servicenetworking_v1beta1_servicenetworkingconnection.yaml"
+      "/samples/resources/iampolicymember/pubsub-admin-policy-member/iam_v1beta1_iampolicymember.yaml"
     ],
     "snapshotId": "KCC_TEMPLATE_SNAPSHOT424",
     "status": "active",
     "validate": true
   },
   "snapshotId": "KCC_TEMPLATE_SNAPSHOT424",
-  "collection": "deploymentmanagertemplate",
+  "collection": "kcctemplate",
   "json": {
-    "apiVersion": "servicenetworking.cnrm.cloud.google.com/v1beta1",
-    "kind": "ServiceNetworkingConnection",
+    "apiVersion": "iam.cnrm.cloud.google.com/v1beta1",
+    "kind": "IAMPolicyMember",
     "metadata": {
-      "name": "servicenetworkingconnection-sample"
+      "name": "iampolicymember-sample-pubsubadmin"
     },
     "spec": {
-      "networkRef": {
-        "name": "servicenetworkingconnection-dep"
-      },
-      "reservedPeeringRanges": [
-        {
-          "name": "servicenetworkingconnection-dep1"
-        },
-        {
-          "name": "servicenetworkingconnection-dep2"
-        }
-      ],
-      "service": "servicenetworking.googleapis.com"
+      "member": "serviceAccount:iampolicymember-dep-pubsub@${PROJECT_ID?}.iam.gserviceaccount.com",
+      "role": "roles/editor",
+      "resourceRef": {
+        "apiVersion": "pubsub.cnrm.cloud.google.com/v1beta1",
+        "kind": "PubSubTopic",
+        "name": "iampolicymember-dep-pubsubadmin"
+      }
     }
   }
 }

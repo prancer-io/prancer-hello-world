@@ -2,36 +2,53 @@
   "structure": "filesystem",
   "error": null,
   "reference": "master",
+  "contentType": "yaml",
   "source": "gitConnectorGoogleKcc",
   "paths": [
-    "/samples/resources/computesslpolicy/modern-tls-1-1-ssl-policy/compute_v1beta1_computesslpolicy.yaml"
+    "/samples/resources/computerouterinterface/compute_v1beta1_computevpntunnel.yaml"
   ],
-  "timestamp": 1622492382017,
+  "timestamp": 1628765142589,
   "queryuser": null,
   "checksum": "99914b932bd37a50b983c5e7c90ae93b",
   "node": {
     "masterSnapshotId": "KCC_TEMPLATE_SNAPSHOT",
-    "type": "yaml",
-    "collection": "deploymentmanagertemplate",
+    "type": "kcc",
+    "collection": "kcctemplate",
     "paths": [
-      "/samples/resources/computesslpolicy/modern-tls-1-1-ssl-policy/compute_v1beta1_computesslpolicy.yaml"
+      "/samples/resources/computerouterinterface/compute_v1beta1_computevpntunnel.yaml"
     ],
     "snapshotId": "KCC_TEMPLATE_SNAPSHOT204",
     "status": "active",
     "validate": true
   },
   "snapshotId": "KCC_TEMPLATE_SNAPSHOT204",
-  "collection": "deploymentmanagertemplate",
+  "collection": "kcctemplate",
   "json": {
     "apiVersion": "compute.cnrm.cloud.google.com/v1beta1",
-    "kind": "ComputeSSLPolicy",
+    "kind": "ComputeVPNTunnel",
     "metadata": {
-      "name": "computesslpolicy-sample-moderntls11"
+      "name": "computerouterinterface-dep",
+      "labels": {
+        "foo": "bar"
+      }
     },
     "spec": {
-      "description": "An SSL Policy with a MODERN encryption profile, supporting several modern methods of encryption for TLS 1.1 and up.",
-      "minTlsVersion": "TLS_1_1",
-      "profile": "MODERN"
+      "peerIp": "15.0.0.120",
+      "region": "us-central1",
+      "sharedSecret": {
+        "valueFrom": {
+          "secretKeyRef": {
+            "name": "computerouterinterface-dep",
+            "key": "sharedSecret"
+          }
+        }
+      },
+      "targetVPNGatewayRef": {
+        "name": "computerouterinterface-dep"
+      },
+      "localTrafficSelector": [
+        "192.168.0.0/16"
+      ]
     }
   }
 }

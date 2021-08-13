@@ -2,12 +2,13 @@
   "structure": "filesystem",
   "error": null,
   "reference": "master",
-  "source": "gitConnectorArmRemoteStructure",
+  "contentType": "json",
+  "source": "gitConnectorArm",
   "paths": [
-    "/SQL/sqldb.azuredeploy.json",
-    "/SQL/sqldb.azuredeploy.parameters.json"
+    "/SQL/SQL-Server/sql.azuredeploy.json",
+    "/SQL/SQL-Server/sql.azuredeploy.parameters.json"
   ],
-  "timestamp": 1614578745439,
+  "timestamp": 1628758916449,
   "queryuser": null,
   "checksum": "99914b932bd37a50b983c5e7c90ae93b",
   "node": {
@@ -15,8 +16,8 @@
     "type": "arm",
     "collection": "armtemplate",
     "paths": [
-      "/SQL/sqldb.azuredeploy.json",
-      "/SQL/sqldb.azuredeploy.parameters.json"
+      "/SQL/SQL-Server/sql.azuredeploy.json",
+      "/SQL/SQL-Server/sql.azuredeploy.parameters.json"
     ],
     "snapshotId": "ARM_TEMPLATE_SNAPSHOT9",
     "status": "active",
@@ -27,104 +28,260 @@
   "json": {
     "contentVersion": "1.0.0.0",
     "parameters": {
-      "collation": {
+      "administratorLogin": {
         "type": "string",
-        "value": "SQL_Latin1_General_CP1_CI_AS"
+        "value": "Prancer"
       },
-      "databaseName": {
-        "type": "string",
-        "value": "sqldb-pancer"
+      "administratorLoginPassword": {
+        "type": "securestring",
+        "value": null
       },
-      "tier": {
-        "type": "string",
-        "value": "Basic"
-      },
-      "skuName": {
-        "type": "string",
-        "value": "Basic"
-      },
-      "maxSizeBytes": {
-        "type": "int",
-        "value": 2147483648
-      },
-      "serverName": {
-        "type": "string",
-        "value": "pancersqlserver"
-      },
-      "serverLocation": {
+      "location": {
         "type": "string",
         "value": "eastus"
       },
-      "sampleName": {
+      "serverName": {
         "type": "string",
-        "defaultValue": "",
-        "value": null
+        "value": "prancersqlserver"
       },
-      "zoneRedundant": {
+      "enableADS": {
         "type": "bool",
         "defaultValue": false,
-        "value": null
+        "value": false
       },
-      "licenseType": {
-        "type": "string",
-        "defaultValue": "",
-        "value": null
+      "useVAManagedIdentity": {
+        "type": "bool",
+        "defaultValue": false,
+        "metadata": {
+          "description": "To enable vulnerability assessments, the user deploying this template must have an administrator or owner permissions."
+        },
+        "value": false
       },
-      "readScaleOut": {
-        "type": "string",
-        "defaultValue": "Disabled",
-        "value": "Disabled"
+      "allowAzureIps": {
+        "type": "bool",
+        "defaultValue": true,
+        "value": false
       },
-      "numberOfReplicas": {
-        "type": "int",
-        "defaultValue": 0,
-        "value": null
+      "enableVA": {
+        "type": "bool",
+        "defaultValue": false,
+        "value": false
       },
-      "minCapacity": {
-        "type": "string",
-        "defaultValue": "",
-        "value": null
-      },
-      "autoPauseDelay": {
-        "type": "string",
-        "defaultValue": "",
-        "value": null
-      },
-      "databaseTags": {
+      "serverTags": {
         "type": "object",
         "defaultValue": {},
-        "value": {}
+        "value": {
+          "Project": "Prancer",
+          "Envirnment": "Production"
+        }
       },
-      "storageAccountType": {
+      "databaseName": {
         "type": "string",
-        "defaultValue": "",
-        "value": null
+        "defaultValue": "my-database"
+      },
+      "aadTenantId": {
+        "type": "securestring"
+      },
+      "storageAccountName": {
+        "type": "string",
+        "defaultValue": "storage-account"
+      },
+      "firewallRuleName": {
+        "type": "string",
+        "defaultValue": "IPRange1"
+      },
+      "allowPublicAccess": {
+        "type": "string",
+        "defaultValue": "0.0.0.0"
       }
     },
-    "variables": {},
+    "variables": {
+      "subscriptionId": "[subscription().subscriptionId]",
+      "resourceGroupName": "[resourceGroup().name]",
+      "uniqueStorage": "[uniqueString(variables('subscriptionId'), variables('resourceGroupName'), parameters('location'))]",
+      "storageName": "[tolower(concat('sqlva', variables('uniqueStorage')))]",
+      "uniqueRoleGuid": "[guid(resourceId('Microsoft.Storage/storageAccounts', variables('storageName')), variables('storageBlobContributor'), resourceId('Microsoft.Sql/servers', parameters('serverName')))]",
+      "StorageBlobContributor": "[subscriptionResourceId('Microsoft.Authorization/roleDefinitions', 'ba92f5b4-2d11-453d-a403-e96b0029c9fe')]"
+    },
     "resources": [
       {
-        "type": "Microsoft.Sql/servers/databases",
-        "apiVersion": "2018-06-01-preview",
+        "condition": false,
+        "type": "Microsoft.Storage/storageAccounts",
+        "apiVersion": "2019-04-01",
+        "name": "[tolower(concat('sqlva', variables('uniqueStorage')))]",
         "location": "eastus",
-        "tags": {},
-        "name": "pancersqlserver/sqldb-pancer",
-        "properties": {
-          "collation": "SQL_Latin1_General_CP1_CI_AS",
-          "maxSizeBytes": 2147483648,
-          "zoneRedundant": null,
-          "licenseType": null,
-          "readScale": "Disabled",
-          "readReplicaCount": null,
-          "minCapacity": null,
-          "autoPauseDelay": null
-        },
         "sku": {
-          "name": "Basic",
-          "tier": "Basic"
+          "name": "Standard_LRS"
+        },
+        "kind": "StorageV2",
+        "resources": [
+          {
+            "condition": false,
+            "type": "Microsoft.Storage/storageAccounts/providers/roleAssignments",
+            "apiVersion": "2018-09-01-preview",
+            "name": "[tolower(concat('sqlva', variables('uniqueStorage')))]/Microsoft.Authorization/[guid(resourceId('Microsoft.Storage/storageAccounts', variables('storageName')), variables('storageBlobContributor'), resourceId('Microsoft.Sql/servers', parameters('serverName')))]",
+            "dependsOn": [
+              "[resourceId('Microsoft.Sql/servers', parameters('serverName'))]",
+              "[resourceId('Microsoft.Storage/storageAccounts', variables('storageName'))]"
+            ],
+            "properties": {
+              "roleDefinitionId": "[subscriptionResourceId('Microsoft.Authorization/roleDefinitions', 'ba92f5b4-2d11-453d-a403-e96b0029c9fe')]",
+              "principalId": "[reference(resourceId('Microsoft.Sql/servers', parameters('serverName')), '2018-06-01-preview', 'Full').identity.principalId]",
+              "scope": "[resourceId('Microsoft.Storage/storageAccounts', variables('storageName'))]",
+              "principalType": "ServicePrincipal"
+            }
+          }
+        ]
+      },
+      {
+        "type": "Microsoft.Sql/servers",
+        "apiVersion": "2015-05-01-preview",
+        "name": "prancersqlserver",
+        "location": "eastus",
+        "properties": {
+          "administratorLogin": "Prancer",
+          "administratorLoginPassword": null,
+          "version": "12.0"
+        },
+        "identity": "[if(and(parameters('enableVA'),parameters('useVAManagedIdentity')), json('{\"type\":\"SystemAssigned\"}'), json('null'))]",
+        "tags": {
+          "Project": "Prancer",
+          "Envirnment": "Production"
+        },
+        "resources": [
+          {
+            "condition": "allowAzureIPs",
+            "type": "firewallRules",
+            "apiVersion": "2014-04-01-preview",
+            "name": "AllowAllWindowsAzureIps",
+            "location": "eastus",
+            "dependsOn": [
+              "[resourceId('Microsoft.Sql/servers', parameters('serverName'))]"
+            ],
+            "properties": {
+              "endIpAddress": "0.0.0.0",
+              "startIpAddress": "0.0.0.0"
+            }
+          },
+          {
+            "condition": false,
+            "type": "vulnerabilityAssessments",
+            "apiVersion": "2018-06-01-preview",
+            "name": "Default",
+            "dependsOn": [
+              "Microsoft.Sql/servers/prancersqlserver",
+              "Microsoft.Storage/storageAccounts/[tolower(concat('sqlva', variables('uniqueStorage')))]",
+              "Microsoft.Sql/servers/prancersqlserver/securityAlertPolicies/Default"
+            ],
+            "properties": {
+              "storageContainerPath": "[if(parameters('enableVA'), concat(reference(resourceId('Microsoft.Storage/storageAccounts', variables('storageName'))).primaryEndpoints.blob, 'vulnerability-assessment'), '')]",
+              "storageAccountAccessKey": "[if(and(parameters('enableVA'),not(parameters('useVAManagedIdentity'))), listKeys(variables('storageName'), '2018-02-01').keys[0].value, '')]",
+              "recurringScans": {
+                "isEnabled": true,
+                "emailSubscriptionAdmins": true
+              }
+            }
+          },
+          {
+            "name": "ActiveDirectory",
+            "type": "administrators",
+            "apiVersion": "2014-04-01-Preview",
+            "dependsOn": [
+              "Microsoft.Sql/servers/prancersqlserver",
+              "Microsoft.Sql/servers/prancersqlserver/databases/my-database"
+            ],
+            "location": "eastus",
+            "properties": {
+              "administratorType": "",
+              "login": "Prancer",
+              "sid": null,
+              "tenantId": "aadTenantId"
+            }
+          }
+        ]
+      },
+      {
+        "type": "Microsoft.Sql/servers/securityAlertPolicies",
+        "apiVersion": "2020-02-02-preview",
+        "name": "prancersqlserver/Default",
+        "dependsOn": [
+          "[resourceId('Microsoft.Sql/servers', parameters('serverName'))]"
+        ],
+        "properties": {
+          "state": "Disabled"
+        }
+      },
+      {
+        "type": "Microsoft.Sql/servers/databases/securityAlertPolicies",
+        "apiVersion": "2020-08-01-preview",
+        "name": "prancersqlserver/master/Default",
+        "dependsOn": [
+          "[resourceId('Microsoft.Sql/servers', parameters('serverName'))]"
+        ],
+        "properties": {
+          "state": "Disabled",
+          "disabledAlerts": [
+            "Sql_Injection",
+            "Sql_Injection_Vulnerability"
+          ]
+        }
+      },
+      {
+        "type": "Microsoft.Sql/servers/databases/auditingSettings",
+        "apiVersion": "2020-08-01-preview",
+        "name": "prancersqlserver/master/Default",
+        "dependsOn": [
+          "[resourceId('Microsoft.Sql/servers', parameters('serverName'))]"
+        ],
+        "properties": {
+          "retentionDays": 30,
+          "isAzureMonitorTargetEnabled": true,
+          "state": "Disabled",
+          "storageAccountSubscriptionId": "00000000-0000-0000-0000-000000000000"
+        }
+      },
+      {
+        "type": "Microsoft.Sql/servers/auditingSettings",
+        "apiVersion": "2020-08-01-preview",
+        "name": "prancersqlserver/Default",
+        "dependsOn": [
+          "[resourceId('Microsoft.Sql/servers', parameters('serverName'))]"
+        ],
+        "properties": {
+          "state": "Enabled",
+          "storageEndpoint": "[reference(resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccountName')), '2018-03-01-preview').PrimaryEndpoints.Blob]",
+          "storageAccountAccessKey": "[listKeys(resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccountName')), '2018-03-01-preview').keys[0].value]",
+          "retentionDays": 30,
+          "auditActionsAndGroups": null,
+          "storageAccountSubscriptionId": "[subscription().subscriptionId]",
+          "isStorageSecondaryKeyInUse": false
+        }
+      },
+      {
+        "type": "Microsoft.Sql/servers/databases/vulnerabilityAssessments",
+        "apiVersion": "2020-08-01-preview",
+        "name": "prancersqlserver/master/Default",
+        "dependsOn": [
+          "[resourceId('Microsoft.Sql/servers', parameters('serverName'))]"
+        ],
+        "properties": {
+          "recurringScans": {
+            "isEnabled": false,
+            "emailSubscriptionAdmins": false
+          }
+        }
+      },
+      {
+        "type": "Microsoft.Sql/servers/firewallrules",
+        "name": "prancersqlserver/IPRange1",
+        "apiVersion": "2014-04-01-preview",
+        "location": "eastus",
+        "properties": {
+          "startIpAddress": "0.0.0.0",
+          "endIpAddress": "0.0.0.0"
         }
       }
     ],
-    "\uff04schema": "http://schema.management.azure.com/schemas/2014-04-01-preview/deploymentTemplate.json#"
+    "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
   }
 }

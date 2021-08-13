@@ -2,50 +2,45 @@
   "structure": "filesystem",
   "error": null,
   "reference": "master",
+  "contentType": "yaml",
   "source": "gitConnectorGoogleKcc",
   "paths": [
-    "/samples/resources/computetargethttpsproxy/compute_v1beta1_computesslcertificate.yaml"
+    "/samples/resources/computerouternat/router-nat-with-manual-nat-ips/compute_v1beta1_computerouternat.yaml"
   ],
-  "timestamp": 1622492382513,
+  "timestamp": 1628765142819,
   "queryuser": null,
   "checksum": "99914b932bd37a50b983c5e7c90ae93b",
   "node": {
     "masterSnapshotId": "KCC_TEMPLATE_SNAPSHOT",
-    "type": "yaml",
-    "collection": "deploymentmanagertemplate",
+    "type": "kcc",
+    "collection": "kcctemplate",
     "paths": [
-      "/samples/resources/computetargethttpsproxy/compute_v1beta1_computesslcertificate.yaml"
+      "/samples/resources/computerouternat/router-nat-with-manual-nat-ips/compute_v1beta1_computerouternat.yaml"
     ],
     "snapshotId": "KCC_TEMPLATE_SNAPSHOT216",
     "status": "active",
     "validate": true
   },
   "snapshotId": "KCC_TEMPLATE_SNAPSHOT216",
-  "collection": "deploymentmanagertemplate",
+  "collection": "kcctemplate",
   "json": {
     "apiVersion": "compute.cnrm.cloud.google.com/v1beta1",
-    "kind": "ComputeSSLCertificate",
+    "kind": "ComputeRouterNAT",
     "metadata": {
-      "name": "computetargethttpsproxy-dep"
+      "name": "computerouternat-sample-withmanualnatips"
     },
     "spec": {
-      "location": "global",
-      "certificate": {
-        "valueFrom": {
-          "secretKeyRef": {
-            "name": "computetargethttpsproxy-dep",
-            "key": "certificate"
-          }
-        }
+      "region": "us-west1",
+      "routerRef": {
+        "name": "computerouternat-dep-withmanualnatips"
       },
-      "privateKey": {
-        "valueFrom": {
-          "secretKeyRef": {
-            "name": "computetargethttpsproxy-dep",
-            "key": "privateKey"
-          }
+      "natIpAllocateOption": "MANUAL_ONLY",
+      "natIps": [
+        {
+          "name": "computerouternat-dep-withmanualnatips"
         }
-      }
+      ],
+      "sourceSubnetworkIpRangesToNat": "ALL_SUBNETWORKS_ALL_IP_RANGES"
     }
   }
 }
