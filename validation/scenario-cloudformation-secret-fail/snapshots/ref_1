@@ -1,0 +1,80 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "yaml",
+  "source": "gitConnectorCloudformation",
+  "paths": [
+    "/leaked_secret/secret.yaml"
+  ],
+  "timestamp": 1631619532149,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ref_",
+    "type": "cloudformation",
+    "collection": "cloudFormation",
+    "paths": [
+      "/leaked_secret/secret.yaml"
+    ],
+    "snapshotId": "ref_1",
+    "status": "active",
+    "validate": true
+  },
+  "snapshotId": "ref_1",
+  "collection": "cloudformation",
+  "json": {
+    "AWSTemplateFormatVersion": "2010-09-09",
+    "Resources": [
+      {
+        "Type": "AWS::Lambda::Function",
+        "Properties": {
+          "Environment": {
+            "Variables": {
+              "AWS_SECRET_ACCESS_KEY": "wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY",
+              "AWS_ACCESS_KEY_ID": "ASIAIOSFODNN7EXAMPLE",
+              "AWS_ACCOUNT_ID": "123456789012"
+            }
+          },
+          "Runtime": "nodejs12.x",
+          "Role": {
+            "Fn::GetAtt": [
+              "FunctionExecutionRole",
+              "Arn"
+            ]
+          },
+          "Handler": "index.handler",
+          "Code": {
+            "ZipFile": "exports.handler = async (event) => {\n    const response = {\n        statusCode: 200,\n        body: JSON.stringify('Hello from Lambda!'),\n    };\n    return response;\n};\n"
+          }
+        },
+        "Name": "MyProxyFunction"
+      },
+      {
+        "Type": "AWS::IAM::Role",
+        "Properties": {
+          "AssumeRolePolicyDocument": {
+            "Version": "2012-10-17",
+            "Statement": [
+              {
+                "Effect": "Allow",
+                "Principal": {
+                  "Service": [
+                    "lambda.amazonaws.com"
+                  ]
+                },
+                "Action": [
+                  "sts:AssumeRole"
+                ]
+              }
+            ]
+          },
+          "ManagedPolicyArns": [
+            "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+          ]
+        },
+        "Name": "FunctionExecutionRole"
+      }
+    ]
+  }
+}
