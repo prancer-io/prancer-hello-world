@@ -1,0 +1,53 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "main",
+  "contentType": "json",
+  "source": "gitConnectorAwsAck",
+  "paths": [
+    "/rds-instance.yaml"
+  ],
+  "timestamp": 1633940890730,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ACK_TEMPLATE_SNAPSHOT",
+    "type": "ack",
+    "collection": "acktemplate",
+    "paths": [
+      "/rds-instance.yaml"
+    ],
+    "snapshotId": "ACK_TEMPLATE_SNAPSHOT5",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "dbinstance"
+    ]
+  },
+  "snapshotId": "ACK_TEMPLATE_SNAPSHOT5",
+  "collection": "acktemplate",
+  "json": {
+    "apiVersion": "rds.services.k8s.aws/v1alpha1",
+    "kind": "DBInstance",
+    "metadata": {
+      "name": "$DB_INSTANCE_ID"
+    },
+    "spec": {
+      "allocatedStorage": 20,
+      "copyTagsToSnapshot": "$COPY_TAGS_TO_SNAPSHOT",
+      "dbInstanceClass": "db.t3.micro",
+      "dbInstanceIdentifier": "$DB_INSTANCE_ID",
+      "engine": "postgres",
+      "engineVersion": "13.2",
+      "masterUsername": "root",
+      "masterUserPassword": {
+        "namespace": "$MASTER_USER_PASS_SECRET_NAMESPACE",
+        "name": "$MASTER_USER_PASS_SECRET_NAME",
+        "key": "$MASTER_USER_PASS_SECRET_KEY"
+      }
+    }
+  },
+  "resourceTypes": [
+    "dbinstance"
+  ]
+}

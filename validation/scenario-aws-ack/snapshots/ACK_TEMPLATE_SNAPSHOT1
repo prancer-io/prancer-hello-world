@@ -1,0 +1,92 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "main",
+  "contentType": "json",
+  "source": "gitConnectorAwsAck",
+  "paths": [
+    "/dynamodb.yaml"
+  ],
+  "timestamp": 1633940890715,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ACK_TEMPLATE_SNAPSHOT",
+    "type": "ack",
+    "collection": "acktemplate",
+    "paths": [
+      "/dynamodb.yaml"
+    ],
+    "snapshotId": "ACK_TEMPLATE_SNAPSHOT1",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "table"
+    ]
+  },
+  "snapshotId": "ACK_TEMPLATE_SNAPSHOT1",
+  "collection": "acktemplate",
+  "json": {
+    "apiVersion": "dynamodb.services.k8s.aws/v1alpha1",
+    "kind": "Table",
+    "metadata": {
+      "name": "$TABLE_NAME"
+    },
+    "spec": {
+      "tableName": "$TABLE_NAME",
+      "attributeDefinitions": [
+        {
+          "attributeName": "ForumName",
+          "attributeType": "S"
+        },
+        {
+          "attributeName": "Subject",
+          "attributeType": "S"
+        },
+        {
+          "attributeName": "LastPostDateTime",
+          "attributeType": "S"
+        }
+      ],
+      "keySchema": [
+        {
+          "attributeName": "ForumName",
+          "keyType": "HASH"
+        },
+        {
+          "attributeName": "Subject",
+          "keyType": "RANGE"
+        }
+      ],
+      "localSecondaryIndexes": [
+        {
+          "indexName": "LastPostIndex",
+          "keySchema": [
+            {
+              "attributeName": "ForumName",
+              "keyType": "HASH"
+            },
+            {
+              "attributeName": "LastPostDateTime",
+              "keyType": "RANGE"
+            }
+          ],
+          "projection": {
+            "projectionType": "KEYS_ONLY"
+          }
+        }
+      ],
+      "provisionedThroughput": {
+        "readCapacityUnits": 5,
+        "writeCapacityUnits": 5
+      },
+      "streamSpecification": {
+        "streamEnabled": true,
+        "streamViewType": "NEW_AND_OLD_IMAGES"
+      }
+    }
+  },
+  "resourceTypes": [
+    "table"
+  ]
+}
