@@ -1,0 +1,101 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAzureQuickStart",
+  "paths": [
+    "/quickstarts/microsoft.web/webapp-linux-node/azuredeploy.json",
+    "/quickstarts/microsoft.web/webapp-linux-node/azuredeploy.parameters.json"
+  ],
+  "timestamp": 1642962911498,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/quickstarts/microsoft.web/webapp-linux-node/azuredeploy.json",
+      "/quickstarts/microsoft.web/webapp-linux-node/azuredeploy.parameters.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT1808",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "microsoft.web/sites",
+      "microsoft.web/serverfarms"
+    ]
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT1808",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "webAppName": {
+        "type": "string",
+        "defaultValue": "[concat('Node-', uniqueString(resourceGroup().name, utcNow('F')))]",
+        "metadata": {
+          "description": "That name is the name of our application. It has to be unique.Type a name followed by your resource group name. (<name>-<resourceGroupName>)"
+        },
+        "value": "GEN-UNIQUE"
+      },
+      "location": {
+        "type": "string",
+        "defaultValue": "[resourceGroup().location]",
+        "metadata": {
+          "description": "Location for all resources."
+        }
+      }
+    },
+    "variables": {
+      "alwaysOn": false,
+      "sku": "Free",
+      "skuCode": "F1",
+      "workerSize": "0",
+      "workerSizeId": "0",
+      "numberOfWorkers": "1",
+      "linuxFxVersion": "NODE|lts",
+      "hostingPlanName": "[concat('hpn-', resourceGroup().name)]"
+    },
+    "resources": [
+      {
+        "apiVersion": "2020-06-01",
+        "name": "GEN-UNIQUE",
+        "type": "Microsoft.Web/sites",
+        "location": "[resourceGroup().location]",
+        "dependsOn": [
+          "[resourceId('Microsoft.Web/serverfarms/', variables('hostingPlanName'))]"
+        ],
+        "properties": {
+          "name": "GEN-UNIQUE",
+          "siteConfig": {
+            "linuxFxVersion": "NODE|lts",
+            "alwaysOn": false
+          },
+          "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', variables('hostingPlanName'))]",
+          "clientAffinityEnabled": false
+        }
+      },
+      {
+        "apiVersion": "2020-06-01",
+        "name": "[variables('hostingPlanName')]",
+        "type": "Microsoft.Web/serverfarms",
+        "location": "[resourceGroup().location]",
+        "kind": "linux",
+        "sku": {
+          "Tier": "Free",
+          "Name": "F1"
+        },
+        "properties": {
+          "name": "[variables('hostingPlanName')]",
+          "workerSize": "0",
+          "workerSizeId": "0",
+          "numberOfWorkers": "1",
+          "reserved": true
+        }
+      }
+    ],
+    "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+  }
+}

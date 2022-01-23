@@ -2,12 +2,12 @@
   "structure": "filesystem",
   "error": null,
   "reference": "master",
-  "contentType": "yaml",
+  "contentType": "json",
   "source": "gitConnectorGoogleKcc",
   "paths": [
-    "/samples/resources/resourcemanagerpolicy/organization-policy-for-organization/resourcemanager_v1beta1_resourcemanagerpolicy.yaml"
+    "/samples/resources/identityplatformoauthidpconfig/identityplatform_v1beta1_identityplatformoauthidpconfig.yaml"
   ],
-  "timestamp": 1628765150370,
+  "timestamp": 1642973304446,
   "queryuser": null,
   "checksum": "99914b932bd37a50b983c5e7c90ae93b",
   "node": {
@@ -15,27 +15,36 @@
     "type": "kcc",
     "collection": "kcctemplate",
     "paths": [
-      "/samples/resources/resourcemanagerpolicy/organization-policy-for-organization/resourcemanager_v1beta1_resourcemanagerpolicy.yaml"
+      "/samples/resources/identityplatformoauthidpconfig/identityplatform_v1beta1_identityplatformoauthidpconfig.yaml"
     ],
     "snapshotId": "KCC_TEMPLATE_SNAPSHOT492",
     "status": "active",
-    "validate": true
+    "validate": true,
+    "resourceTypes": [
+      "identityplatformoauthidpconfig"
+    ]
   },
   "snapshotId": "KCC_TEMPLATE_SNAPSHOT492",
   "collection": "kcctemplate",
   "json": {
-    "apiVersion": "resourcemanager.cnrm.cloud.google.com/v1beta1",
-    "kind": "ResourceManagerPolicy",
+    "apiVersion": "identityplatform.cnrm.cloud.google.com/v1beta1",
+    "kind": "IdentityPlatformOAuthIDPConfig",
     "metadata": {
-      "name": "resourcemanagerpolicy-sample-org"
+      "name": "identityplatformoauthidpconfig-sample"
     },
     "spec": {
-      "organizationRef": {
-        "external": "${ORG_ID?}"
-      },
-      "constraint": "constraints/compute.disableSerialPortAccess",
-      "booleanPolicy": {
-        "enforced": true
+      "resourceID": "oidc.project-oauth-idp-config-sample",
+      "displayName": "sample oauth idp config",
+      "clientId": "client-id",
+      "issuer": "issuer",
+      "enabled": true,
+      "clientSecret": {
+        "valueFrom": {
+          "secretKeyRef": {
+            "key": "clientSecret",
+            "name": "identityplatformoauthidpconfig-dep"
+          }
+        }
       }
     }
   }

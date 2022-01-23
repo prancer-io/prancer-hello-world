@@ -1,0 +1,104 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAzureQuickStart",
+  "paths": [
+    "/quickstarts/microsoft.recoveryservices/recovery-services-backup-file-share/prereqs/prereq.azuredeploy.json",
+    "/quickstarts/microsoft.recoveryservices/recovery-services-backup-file-share/prereqs/prereq.azuredeploy.parameters.json"
+  ],
+  "timestamp": 1642962909814,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/quickstarts/microsoft.recoveryservices/recovery-services-backup-file-share/prereqs/prereq.azuredeploy.json",
+      "/quickstarts/microsoft.recoveryservices/recovery-services-backup-file-share/prereqs/prereq.azuredeploy.parameters.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT1624",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "microsoft.storage/storageaccounts/fileservices/shares",
+      "microsoft.storage/storageaccounts"
+    ]
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT1624",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "storageAccountName": {
+        "type": "string",
+        "defaultValue": "[concat('storage', uniqueString(resourceGroup().id))]",
+        "metadata": {
+          "description": "Specifies the name of the Azure Storage account."
+        },
+        "value": "GEN-UNIQUE"
+      },
+      "fileShareName": {
+        "type": "string",
+        "minLength": 3,
+        "maxLength": 63,
+        "metadata": {
+          "description": "Specifies the name of the File Share. File share names must be between 3 and 63 characters in length and use numbers, lower-case letters and dash (-) only."
+        },
+        "value": "GEN-UNIQUE"
+      },
+      "location": {
+        "type": "string",
+        "defaultValue": "[resourceGroup().location]",
+        "metadata": {
+          "description": "Specifies the location in which the Azure Storage resources should be deployed."
+        }
+      }
+    },
+    "resources": [
+      {
+        "type": "Microsoft.Storage/storageAccounts",
+        "apiVersion": "2019-06-01",
+        "name": "GEN-UNIQUE",
+        "location": "[resourceGroup().location]",
+        "sku": {
+          "name": "Standard_LRS",
+          "tier": "Standard"
+        },
+        "kind": "StorageV2",
+        "properties": {
+          "accessTier": "Hot"
+        }
+      },
+      {
+        "type": "Microsoft.Storage/storageAccounts/fileServices/shares",
+        "apiVersion": "2019-06-01",
+        "name": "GEN-UNIQUE/default/GEN-UNIQUE",
+        "dependsOn": [
+          "Microsoft.Storage/storageAccounts/GEN-UNIQUE"
+        ]
+      }
+    ],
+    "outputs": {
+      "resourceGroupName": {
+        "type": "string",
+        "value": "[resourceGroup().name]"
+      },
+      "storageAccountName": {
+        "type": "string",
+        "value": "[parameters('storageAccountName')]"
+      },
+      "fileShareName": {
+        "type": "string",
+        "value": "[parameters('fileShareName')]"
+      },
+      "storageAccountLocation": {
+        "type": "string",
+        "value": "[parameters('location')]"
+      }
+    },
+    "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+  }
+}

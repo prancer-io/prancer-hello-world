@@ -1,0 +1,91 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "main",
+  "contentType": "json",
+  "source": "gitConnectorAzureTerraHashicorp",
+  "paths": [
+    "/examples/eventhub/dedicated-eventhubs-cluster/variables.tf",
+    "/examples/eventhub/dedicated-eventhubs-cluster/main.tf"
+  ],
+  "timestamp": 1642943279717,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "TRF_TEMPLATE_SNAPSHOT",
+    "type": "terraform",
+    "collection": "terraformtemplate",
+    "paths": [
+      "/examples/eventhub/dedicated-eventhubs-cluster/variables.tf",
+      "/examples/eventhub/dedicated-eventhubs-cluster/main.tf"
+    ],
+    "snapshotId": "TRF_TEMPLATE_SNAPSHOT46",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "azurerm_eventhub_namespace",
+      "azurerm_eventhub",
+      "azurerm_resource_group",
+      "azurerm_eventhub_cluster"
+    ]
+  },
+  "snapshotId": "TRF_TEMPLATE_SNAPSHOT46",
+  "collection": "terraformtemplate",
+  "json": {
+    "provider": [
+      {
+        "azurerm": {
+          "features": [
+            {}
+          ]
+        }
+      }
+    ],
+    "resources": [
+      {
+        "type": "azurerm_resource_group",
+        "name": "example",
+        "properties": {
+          "name": "${var.prefix}-resources",
+          "location": "${var.location}",
+          "compiletime_identity": "azurerm_resource_group.example"
+        }
+      },
+      {
+        "type": "azurerm_eventhub_cluster",
+        "name": "example",
+        "properties": {
+          "name": "${var.prefix}-ehcluster",
+          "resource_group_name": "${azurerm_resource_group.example.name}",
+          "location": "${azurerm_resource_group.example.location}",
+          "sku_name": "Dedicated_1",
+          "compiletime_identity": "azurerm_eventhub_cluster.example"
+        }
+      },
+      {
+        "type": "azurerm_eventhub_namespace",
+        "name": "example",
+        "properties": {
+          "name": "${var.prefix}-ehnamespace",
+          "location": "${azurerm_resource_group.example.location}",
+          "resource_group_name": "${azurerm_resource_group.example.name}",
+          "sku": "Standard",
+          "dedicated_cluster_id": "${azurerm_eventhub_cluster.example.id}",
+          "compiletime_identity": "azurerm_eventhub_namespace.example"
+        }
+      },
+      {
+        "type": "azurerm_eventhub",
+        "name": "example",
+        "properties": {
+          "name": "${var.prefix}-eventhub",
+          "resource_group_name": "${azurerm_resource_group.example.name}",
+          "namespace_name": "${azurerm_eventhub_namespace.example.name}",
+          "partition_count": 40,
+          "message_retention": 1,
+          "compiletime_identity": "azurerm_eventhub.example"
+        }
+      }
+    ]
+  }
+}

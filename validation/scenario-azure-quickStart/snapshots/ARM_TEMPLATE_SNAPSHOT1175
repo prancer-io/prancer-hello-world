@@ -1,0 +1,340 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAzureQuickStart",
+  "paths": [
+    "/quickstarts/microsoft.compute/vmss-windows-customimage/azuredeploy.json",
+    "/quickstarts/microsoft.compute/vmss-windows-customimage/azuredeploy.parameters.json"
+  ],
+  "timestamp": 1642962905254,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/quickstarts/microsoft.compute/vmss-windows-customimage/azuredeploy.json",
+      "/quickstarts/microsoft.compute/vmss-windows-customimage/azuredeploy.parameters.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT1175",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "microsoft.network/publicipaddresses",
+      "microsoft.network/virtualnetworks",
+      "microsoft.network/loadbalancers",
+      "microsoft.compute/virtualmachinescalesets",
+      "microsoft.compute/images"
+    ]
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT1175",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "vmSSName": {
+        "type": "string",
+        "metadata": {
+          "description": "The Name of the VM Scale Set"
+        },
+        "value": "changeme"
+      },
+      "instanceCount": {
+        "type": "int",
+        "metadata": {
+          "description": "Number of VM instances to create in the scale set"
+        },
+        "value": 2
+      },
+      "vmSize": {
+        "type": "string",
+        "allowedValues": [
+          "Standard_D2_v3",
+          "Standard_D2s_v3",
+          "Standard_D2_v3",
+          "Standard_D2s_v3",
+          "Standard_D4_v3",
+          "Standard_D4s_v3",
+          "Standard_D8_v3",
+          "Standard_D8s_v3",
+          "Standard_D4_v3",
+          "Standard_D4s_v3",
+          "Standard_D4_v3",
+          "Standard_D4s_v3",
+          "Standard_D8_v3",
+          "Standard_D8s_v3",
+          "Standard_D16_v3",
+          "Standard_D16s_v3"
+        ],
+        "metadata": {
+          "description": "The size of the VM instances Created"
+        },
+        "value": "Standard_D2_v3"
+      },
+      "dnsNamePrefix": {
+        "type": "string",
+        "metadata": {
+          "description": "The Prefix for the DNS name of the new IP Address created"
+        },
+        "value": "changeme"
+      },
+      "adminUsername": {
+        "type": "string",
+        "metadata": {
+          "description": "The Username of the administrative user for each VM instance created"
+        },
+        "value": "changeme"
+      },
+      "adminPassword": {
+        "type": "securestring",
+        "metadata": {
+          "description": "The Password of the administrative user for each VM instance created"
+        },
+        "value": "changeme"
+      },
+      "sourceImageVhdUri": {
+        "type": "string",
+        "metadata": {
+          "description": "The source of the blob containing the custom image"
+        },
+        "value": "changeme"
+      },
+      "frontEndLBPort": {
+        "type": "int",
+        "metadata": {
+          "description": "The front end port to load balance"
+        },
+        "defaultValue": 80,
+        "value": 80
+      },
+      "backEndLBPort": {
+        "type": "int",
+        "metadata": {
+          "description": "The back end port to load balance"
+        },
+        "defaultValue": 80,
+        "value": 80
+      },
+      "probeIntervalInSeconds": {
+        "type": "int",
+        "metadata": {
+          "description": "The interval between load balancer health probes"
+        },
+        "defaultValue": 15,
+        "value": 15
+      },
+      "numberOfProbes": {
+        "type": "int",
+        "metadata": {
+          "description": "The number of probes that need to fail before a VM instance is deemed unhealthy"
+        },
+        "defaultValue": 5,
+        "value": 5
+      },
+      "probeRequestPath": {
+        "type": "string",
+        "metadata": {
+          "description": "The path used for the load balancer health probe"
+        },
+        "defaultValue": "/iisstart.htm",
+        "value": "/iisstart.htm"
+      }
+    },
+    "variables": {
+      "addressPrefix": "10.0.0.0/16",
+      "subnetName": "Subnet",
+      "subnetPrefix": "10.0.0.0/24",
+      "virtualNetworkName": "vmssvnet",
+      "subnetRef": "Microsoft.Network/virtualNetworks/subnets/vmssvnet/Subnet",
+      "publicIPAddressName": "publicip1",
+      "publicIPAddressID": "Microsoft.Network/publicIPAddresses/publicip1",
+      "lbName": "loadBalancer1",
+      "lbID": "Microsoft.Network/loadBalancers/loadBalancer1",
+      "lbFEName": "loadBalancerFrontEnd",
+      "lbWebProbeName": "loadBalancerWebProbe",
+      "lbBEAddressPool": "loadBalancerBEAddressPool",
+      "lbFEIPConfigID": "Microsoft.Network/loadBalancers/loadBalancer1/frontendIPConfigurations/loadBalancerFrontEnd",
+      "lbBEAddressPoolID": "Microsoft.Network/loadBalancers/loadBalancer1/backendAddressPools/loadBalancerBEAddressPool",
+      "lbWebProbeID": "Microsoft.Network/loadBalancers/loadBalancer1/probes/loadBalancerWebProbe",
+      "imageName": "myCustomImage"
+    },
+    "resources": [
+      {
+        "type": "Microsoft.Compute/images",
+        "apiVersion": "2017-03-30",
+        "name": "myCustomImage",
+        "location": "[resourceGroup().location]",
+        "properties": {
+          "storageProfile": {
+            "osDisk": {
+              "osType": "Windows",
+              "osState": "Generalized",
+              "blobUri": "changeme",
+              "storageAccountType": "Standard_LRS"
+            }
+          }
+        }
+      },
+      {
+        "apiVersion": "2017-04-01",
+        "type": "Microsoft.Network/virtualNetworks",
+        "name": "vmssvnet",
+        "location": "[resourceGroup().location]",
+        "properties": {
+          "addressSpace": {
+            "addressPrefixes": [
+              "10.0.0.0/16"
+            ]
+          },
+          "subnets": [
+            {
+              "name": "Subnet",
+              "properties": {
+                "addressPrefix": "10.0.0.0/24"
+              }
+            }
+          ]
+        }
+      },
+      {
+        "apiVersion": "2017-04-01",
+        "type": "Microsoft.Network/publicIPAddresses",
+        "name": "publicip1",
+        "location": "[resourceGroup().location]",
+        "properties": {
+          "publicIPAllocationMethod": "Dynamic",
+          "dnsSettings": {
+            "domainNameLabel": "changeme"
+          }
+        }
+      },
+      {
+        "apiVersion": "2017-04-01",
+        "name": "loadBalancer1",
+        "type": "Microsoft.Network/loadBalancers",
+        "location": "[resourceGroup().location]",
+        "dependsOn": [
+          "Microsoft.Network/publicIPAddresses/publicip1"
+        ],
+        "properties": {
+          "frontendIPConfigurations": [
+            {
+              "name": "loadBalancerFrontEnd",
+              "properties": {
+                "publicIPAddress": {
+                  "id": "Microsoft.Network/publicIPAddresses/publicip1"
+                }
+              }
+            }
+          ],
+          "backendAddressPools": [
+            {
+              "name": "loadBalancerBEAddressPool"
+            }
+          ],
+          "loadBalancingRules": [
+            {
+              "name": "weblb",
+              "properties": {
+                "frontendIPConfiguration": {
+                  "id": "Microsoft.Network/loadBalancers/loadBalancer1/frontendIPConfigurations/loadBalancerFrontEnd"
+                },
+                "backendAddressPool": {
+                  "id": "Microsoft.Network/loadBalancers/loadBalancer1/backendAddressPools/loadBalancerBEAddressPool"
+                },
+                "probe": {
+                  "id": "Microsoft.Network/loadBalancers/loadBalancer1/probes/loadBalancerWebProbe"
+                },
+                "protocol": "Tcp",
+                "frontendPort": 80,
+                "backendPort": 80,
+                "enableFloatingIP": false
+              }
+            }
+          ],
+          "probes": [
+            {
+              "name": "loadBalancerWebProbe",
+              "properties": {
+                "protocol": "Http",
+                "port": 80,
+                "intervalInSeconds": 15,
+                "numberOfProbes": 5,
+                "requestPath": "/iisstart.htm"
+              }
+            }
+          ]
+        }
+      },
+      {
+        "type": "Microsoft.Compute/virtualMachineScaleSets",
+        "apiVersion": "2017-03-30",
+        "name": "changeme",
+        "location": "[resourceGroup().location]",
+        "dependsOn": [
+          "Microsoft.Network/loadBalancers/loadBalancer1",
+          "Microsoft.Network/virtualNetworks/vmssvnet",
+          "Microsoft.Compute/images/myCustomImage"
+        ],
+        "sku": {
+          "name": "Standard_D2_v3",
+          "tier": "Standard",
+          "capacity": 2
+        },
+        "properties": {
+          "overprovision": "true",
+          "upgradePolicy": {
+            "mode": "Manual"
+          },
+          "virtualMachineProfile": {
+            "storageProfile": {
+              "imageReference": {
+                "id": "Microsoft.Compute/images/myCustomImage"
+              }
+            },
+            "osProfile": {
+              "computerNamePrefix": "changeme",
+              "adminUsername": "changeme",
+              "adminPassword": "changeme"
+            },
+            "networkProfile": {
+              "networkInterfaceConfigurations": [
+                {
+                  "name": "nic1",
+                  "properties": {
+                    "primary": true,
+                    "ipConfigurations": [
+                      {
+                        "name": "ip1",
+                        "properties": {
+                          "subnet": {
+                            "id": "Microsoft.Network/virtualNetworks/subnets/vmssvnet/Subnet"
+                          },
+                          "loadBalancerBackendAddressPools": [
+                            {
+                              "id": "Microsoft.Network/loadBalancers/loadBalancer1/backendAddressPools/loadBalancerBEAddressPool"
+                            }
+                          ]
+                        }
+                      }
+                    ]
+                  }
+                }
+              ]
+            }
+          }
+        }
+      }
+    ],
+    "outputs": {
+      "fqdn": {
+        "value": "[reference(variables('publicIPAddressID'),'2017-04-01').dnsSettings.fqdn]",
+        "type": "string"
+      }
+    },
+    "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+  }
+}

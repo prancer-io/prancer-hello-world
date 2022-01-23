@@ -2,12 +2,12 @@
   "structure": "filesystem",
   "error": null,
   "reference": "master",
-  "contentType": "yaml",
+  "contentType": "json",
   "source": "gitConnectorGoogleKcc",
   "paths": [
-    "/samples/resources/kmskeyring/kms_v1beta1_kmskeyring.yaml"
+    "/samples/resources/iamcustomrole/project-role/iam_v1beta1_iampolicymember.yaml"
   ],
-  "timestamp": 1628765148784,
+  "timestamp": 1642973304223,
   "queryuser": null,
   "checksum": "99914b932bd37a50b983c5e7c90ae93b",
   "node": {
@@ -15,22 +15,31 @@
     "type": "kcc",
     "collection": "kcctemplate",
     "paths": [
-      "/samples/resources/kmskeyring/kms_v1beta1_kmskeyring.yaml"
+      "/samples/resources/iamcustomrole/project-role/iam_v1beta1_iampolicymember.yaml"
     ],
     "snapshotId": "KCC_TEMPLATE_SNAPSHOT441",
     "status": "active",
-    "validate": true
+    "validate": true,
+    "resourceTypes": [
+      "iampolicymember"
+    ]
   },
   "snapshotId": "KCC_TEMPLATE_SNAPSHOT441",
   "collection": "kcctemplate",
   "json": {
-    "apiVersion": "kms.cnrm.cloud.google.com/v1beta1",
-    "kind": "KMSKeyRing",
+    "apiVersion": "iam.cnrm.cloud.google.com/v1beta1",
+    "kind": "IAMPolicyMember",
     "metadata": {
-      "name": "kmskeyring-sample"
+      "name": "iampolicymember-sample-projectrole"
     },
     "spec": {
-      "location": "us-central1"
+      "member": "serviceAccount:iamcustomrole-dep-project@${PROJECT_ID?}.iam.gserviceaccount.com",
+      "role": "projects/${PROJECT_ID?}/roles/iamcustomrolesampleproject",
+      "resourceRef": {
+        "apiVersion": "pubsub.cnrm.cloud.google.com/v1beta1",
+        "kind": "PubSubTopic",
+        "name": "iamcustomrole-dep-project"
+      }
     }
   }
 }

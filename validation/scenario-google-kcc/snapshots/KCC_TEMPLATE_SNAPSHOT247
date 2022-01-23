@@ -2,12 +2,12 @@
   "structure": "filesystem",
   "error": null,
   "reference": "master",
-  "contentType": "yaml",
+  "contentType": "json",
   "source": "gitConnectorGoogleKcc",
   "paths": [
-    "/samples/resources/computetargethttpsproxy/compute_v1beta1_computetargethttpsproxy.yaml"
+    "/samples/resources/computerouternat/router-nat-with-manual-nat-ips/compute_v1beta1_computerouternat.yaml"
   ],
-  "timestamp": 1628765143749,
+  "timestamp": 1642973303130,
   "queryuser": null,
   "checksum": "99914b932bd37a50b983c5e7c90ae93b",
   "node": {
@@ -15,35 +15,35 @@
     "type": "kcc",
     "collection": "kcctemplate",
     "paths": [
-      "/samples/resources/computetargethttpsproxy/compute_v1beta1_computetargethttpsproxy.yaml"
+      "/samples/resources/computerouternat/router-nat-with-manual-nat-ips/compute_v1beta1_computerouternat.yaml"
     ],
     "snapshotId": "KCC_TEMPLATE_SNAPSHOT247",
     "status": "active",
-    "validate": true
+    "validate": true,
+    "resourceTypes": [
+      "computerouternat"
+    ]
   },
   "snapshotId": "KCC_TEMPLATE_SNAPSHOT247",
   "collection": "kcctemplate",
   "json": {
     "apiVersion": "compute.cnrm.cloud.google.com/v1beta1",
-    "kind": "ComputeTargetHTTPSProxy",
+    "kind": "ComputeRouterNAT",
     "metadata": {
-      "name": "computetargethttpsproxy-sample"
+      "name": "computerouternat-sample-withmanualnatips"
     },
     "spec": {
-      "description": "A sample proxy",
-      "urlMapRef": {
-        "name": "computetargethttpsproxy-dep"
+      "region": "us-west1",
+      "routerRef": {
+        "name": "computerouternat-dep-withmanualnatips"
       },
-      "sslCertificates": [
+      "natIpAllocateOption": "MANUAL_ONLY",
+      "natIps": [
         {
-          "name": "computetargethttpsproxy-dep"
+          "name": "computerouternat-dep-withmanualnatips"
         }
       ],
-      "sslPolicyRef": {
-        "name": "computetargethttpsproxy-dep"
-      },
-      "quicOverride": "ENABLE",
-      "location": "global"
+      "sourceSubnetworkIpRangesToNat": "ALL_SUBNETWORKS_ALL_IP_RANGES"
     }
   }
 }

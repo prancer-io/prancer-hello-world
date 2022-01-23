@@ -1,0 +1,132 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAwsLabs",
+  "paths": [
+    "/aws/services/S3/s3-bucket-policy-for-caa-secure-transport-v1.yaml"
+  ],
+  "timestamp": 1642972590457,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "CFR_TEMPLATE_SNAPSHOT",
+    "type": "cloudformation",
+    "collection": "cloudformationtemplate",
+    "paths": [
+      "/aws/services/S3/s3-bucket-policy-for-caa-secure-transport-v1.yaml"
+    ],
+    "snapshotId": "CFR_TEMPLATE_SNAPSHOT45",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "aws::s3::bucketpolicy"
+    ]
+  },
+  "snapshotId": "CFR_TEMPLATE_SNAPSHOT45",
+  "collection": "cloudformationtemplate",
+  "json": {
+    "AWSTemplateFormatVersion": "2010-09-09",
+    "Description": "AWS CloudFormation Sample Template: Sample template which will create a bucket policy to enable cross account acccess. The template requires you to provide an AWS account ID to provide cross account access to, and the name of the target bucket.",
+    "Parameters": {
+      "BucketName": {
+        "Type": "String",
+        "Description": "The existing S3 Bucket to create the policy for"
+      },
+      "PublisherAccountID": {
+        "Type": "String",
+        "Description": "The AWS account ID with whom you are sharing access"
+      }
+    },
+    "Resources": [
+      {
+        "Type": "AWS::S3::BucketPolicy",
+        "Properties": {
+          "Bucket": {
+            "Ref": "BucketName"
+          },
+          "PolicyDocument": {
+            "Id": "CrossAccessPolicy",
+            "Version": "2012-10-17",
+            "Statement": [
+              {
+                "Sid": "CrossAccPolicyDoc",
+                "Action": "s3:ListBucket",
+                "Effect": "Allow",
+                "Resource": {
+                  "Fn::Sub": "arn:aws:s3:::${BucketName}"
+                },
+                "Principal": {
+                  "AWS": {
+                    "Fn::Join": [
+                      "",
+                      [
+                        "arn:aws:iam::",
+                        {
+                          "Ref": "PublisherAccountID"
+                        },
+                        ":root"
+                      ]
+                    ]
+                  }
+                }
+              },
+              {
+                "Sid": "CrossAccPolicyDoc",
+                "Action": "s3:GetObject",
+                "Effect": "Allow",
+                "Resource": {
+                  "Fn::Sub": "arn:aws:s3:::${BucketName}/*"
+                },
+                "Principal": {
+                  "AWS": {
+                    "Fn::Join": [
+                      "",
+                      [
+                        "arn:aws:iam::",
+                        {
+                          "Ref": "PublisherAccountID"
+                        },
+                        ":root"
+                      ]
+                    ]
+                  }
+                }
+              },
+              {
+                "Sid": "HttpsOnly",
+                "Action": "*",
+                "Effect": "Deny",
+                "Resource": {
+                  "Fn::Sub": "arn:aws:s3:::${BucketName}/*"
+                },
+                "Principal": "*",
+                "Condition": {
+                  "Bool": {
+                    "aws:SecureTransport": "false"
+                  }
+                }
+              }
+            ]
+          }
+        },
+        "Name": "S3BUCKETPOL"
+      }
+    ],
+    "Outputs": {
+      "Bucket": {
+        "Description": "S3 Bucket Name",
+        "Value": {
+          "Ref": "BucketName"
+        }
+      },
+      "BucketPolicy": {
+        "Description": "S3 Bucket Policy Name",
+        "Value": {
+          "Ref": "S3BUCKETPOL"
+        }
+      }
+    }
+  }
+}

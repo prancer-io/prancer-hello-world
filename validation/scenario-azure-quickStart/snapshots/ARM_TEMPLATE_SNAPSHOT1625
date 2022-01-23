@@ -1,0 +1,308 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAzureQuickStart",
+  "paths": [
+    "/quickstarts/microsoft.recoveryservices/recovery-services-backup-file-share/azuredeploy.json",
+    "/quickstarts/microsoft.recoveryservices/recovery-services-backup-file-share/azuredeploy.parameters.json"
+  ],
+  "timestamp": 1642962909828,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/quickstarts/microsoft.recoveryservices/recovery-services-backup-file-share/azuredeploy.json",
+      "/quickstarts/microsoft.recoveryservices/recovery-services-backup-file-share/azuredeploy.parameters.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT1625",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "microsoft.recoveryservices/vaults",
+      "microsoft.recoveryservices/vaults/backupfabrics/protectioncontainers",
+      "microsoft.recoveryservices/vaults/backupfabrics/protectioncontainers/protecteditems",
+      "microsoft.recoveryservices/vaults/backuppolicies"
+    ]
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT1625",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "existingResourceGroupName": {
+        "type": "string",
+        "defaultValue": "[resourceGroup().name]",
+        "metadata": {
+          "description": "Name of the existing Resource Group in which the existing Storage Account is present."
+        },
+        "value": "GET-PREREQ-resourceGroupName"
+      },
+      "existingStorageAccountName": {
+        "type": "string",
+        "metadata": {
+          "description": "Name of the existing Storage Account in which the existing File Share to be protected is present."
+        },
+        "value": "GET-PREREQ-storageAccountName"
+      },
+      "existingFileShareName": {
+        "type": "string",
+        "metadata": {
+          "description": "Name of the existing File Share to be protected."
+        },
+        "value": "GET-PREREQ-fileShareName"
+      },
+      "location": {
+        "type": "string",
+        "defaultValue": "[resourceGroup().location]",
+        "metadata": {
+          "description": "Location of the existing Storage Account containing the existing File Share to be protected. New Recovery Services Vault will be created in this location. (Ignore if using existing Recovery Services Vault)."
+        },
+        "value": "GET-PREREQ-storageAccountLocation"
+      },
+      "isNewVault": {
+        "type": "bool",
+        "defaultValue": true,
+        "metadata": {
+          "description": "Set to true if a new Recovery Services Vault is to be created; set to false otherwise."
+        }
+      },
+      "isNewPolicy": {
+        "type": "bool",
+        "defaultValue": true,
+        "metadata": {
+          "description": "Set to true if a new Backup Policy is to be created for the Recovery Services Vault; set to false otherwise."
+        }
+      },
+      "registerStorageAccount": {
+        "type": "bool",
+        "defaultValue": true,
+        "metadata": {
+          "description": "Set to true if the existing Storage Account has to be registered to the Recovery Services Vault; set to false otherwise."
+        }
+      },
+      "vaultName": {
+        "type": "string",
+        "defaultValue": "RSVault1",
+        "metadata": {
+          "description": "Name of the Recovery Services Vault. (Should have the same location as the Storage Account containing the File Share to be protected in case of an existing Recovery Services Vault)."
+        }
+      },
+      "policyName": {
+        "type": "string",
+        "defaultValue": "DailyBackupPolicy1",
+        "metadata": {
+          "description": "Name of the Backup Policy."
+        }
+      },
+      "scheduleRunTime": {
+        "type": "string",
+        "defaultValue": "05:30",
+        "metadata": {
+          "description": "Time of day when backup should be triggered in 24 hour HH:MM format, where MM must be 00 or 30. (Ignore if using existing Backup Policy)."
+        }
+      },
+      "timeZone": {
+        "type": "string",
+        "defaultValue": "UTC",
+        "metadata": {
+          "description": "Any valid timezone, for example: UTC, Pacific Standard Time. Refer: https://msdn.microsoft.com/en-us/library/gg154758.aspx (Ignore if using existing Backup Policy)."
+        }
+      },
+      "dailyRetentionDurationCount": {
+        "type": "int",
+        "defaultValue": 30,
+        "metadata": {
+          "description": "Number of days for which the daily backup is to be retained. (Ignore if using existing Backup Policy)."
+        }
+      },
+      "daysOfTheWeek": {
+        "type": "array",
+        "defaultValue": [
+          "Sunday",
+          "Tuesday",
+          "Thursday"
+        ],
+        "metadata": {
+          "description": "Array of days on which backup is to be performed for Weekly Retention. (Ignore if using existing Backup Policy)."
+        }
+      },
+      "weeklyRetentionDurationCount": {
+        "type": "int",
+        "defaultValue": 12,
+        "metadata": {
+          "description": "Number of weeks for which the weekly backup is to be retained. (Ignore if using existing Backup Policy)."
+        }
+      },
+      "monthlyRetentionDurationCount": {
+        "type": "int",
+        "defaultValue": 60,
+        "metadata": {
+          "description": "Number of months for which the monthly backup is to be retained. Backup will be performed on the 1st day of every month. (Ignore if using existing Backup Policy)."
+        }
+      },
+      "monthsOfYear": {
+        "type": "array",
+        "defaultValue": [
+          "January",
+          "May",
+          "September"
+        ],
+        "metadata": {
+          "description": "Array of months on which backup is to be performed for Yearly Retention. Backup will be performed on the 1st day of each month of year provided. (Ignore if using existing Backup Policy)."
+        }
+      },
+      "yearlyRetentionDurationCount": {
+        "type": "int",
+        "defaultValue": 10,
+        "metadata": {
+          "description": "Number of years for which the yearly backup is to be retained. (Ignore if using existing Backup Policy)."
+        }
+      }
+    },
+    "variables": {
+      "backupFabric": "Azure",
+      "backupManagementType": "AzureStorage",
+      "scheduleRunTimes": [
+        "2020-01-01T05:30:00Z"
+      ]
+    },
+    "resources": [
+      {
+        "condition": true,
+        "type": "Microsoft.RecoveryServices/vaults",
+        "apiVersion": "2020-02-02",
+        "name": "RSVault1",
+        "location": "GET-PREREQ-storageAccountLocation",
+        "sku": {
+          "name": "RS0",
+          "tier": "Standard"
+        },
+        "properties": {}
+      },
+      {
+        "condition": true,
+        "type": "Microsoft.RecoveryServices/vaults/backupPolicies",
+        "apiVersion": "2020-02-02",
+        "name": "RSVault1/DailyBackupPolicy1",
+        "dependsOn": [
+          "Microsoft.RecoveryServices/vaults/RSVault1"
+        ],
+        "properties": {
+          "backupManagementType": "AzureStorage",
+          "schedulePolicy": {
+            "scheduleRunFrequency": "Daily",
+            "scheduleRunTimes": [
+              "2020-01-01T05:30:00Z"
+            ],
+            "schedulePolicyType": "SimpleSchedulePolicy"
+          },
+          "retentionPolicy": {
+            "dailySchedule": {
+              "retentionTimes": [
+                "2020-01-01T05:30:00Z"
+              ],
+              "retentionDuration": {
+                "count": 30,
+                "durationType": "Days"
+              }
+            },
+            "weeklySchedule": {
+              "daysOfTheWeek": [
+                "Sunday",
+                "Tuesday",
+                "Thursday"
+              ],
+              "retentionTimes": [
+                "2020-01-01T05:30:00Z"
+              ],
+              "retentionDuration": {
+                "count": 12,
+                "durationType": "Weeks"
+              }
+            },
+            "monthlySchedule": {
+              "retentionScheduleFormatType": "Daily",
+              "retentionScheduleDaily": {
+                "daysOfTheMonth": [
+                  {
+                    "date": 1,
+                    "isLast": false
+                  }
+                ]
+              },
+              "retentionTimes": [
+                "2020-01-01T05:30:00Z"
+              ],
+              "retentionDuration": {
+                "count": 60,
+                "durationType": "Months"
+              }
+            },
+            "yearlySchedule": {
+              "retentionScheduleFormatType": "Daily",
+              "monthsOfYear": [
+                "January",
+                "May",
+                "September"
+              ],
+              "retentionScheduleDaily": {
+                "daysOfTheMonth": [
+                  {
+                    "date": 1,
+                    "isLast": false
+                  }
+                ]
+              },
+              "retentionTimes": [
+                "2020-01-01T05:30:00Z"
+              ],
+              "retentionDuration": {
+                "count": 10,
+                "durationType": "Years"
+              }
+            },
+            "retentionPolicyType": "LongTermRetentionPolicy"
+          },
+          "timeZone": "UTC",
+          "workLoadType": "AzureFileShare"
+        }
+      },
+      {
+        "condition": true,
+        "type": "Microsoft.RecoveryServices/vaults/backupFabrics/protectionContainers",
+        "apiVersion": "2020-02-02",
+        "name": "RSVault1/Azure/storagecontainer;Storage;GET-PREREQ-resourceGroupName;GET-PREREQ-storageAccountName",
+        "dependsOn": [
+          "Microsoft.RecoveryServices/vaults/RSVault1"
+        ],
+        "properties": {
+          "backupManagementType": "AzureStorage",
+          "containerType": "StorageContainer",
+          "sourceResourceId": "GET-PREREQ-resourceGroupName/Microsoft.Storage/storageAccounts/GET-PREREQ-storageAccountName"
+        }
+      },
+      {
+        "type": "Microsoft.RecoveryServices/vaults/backupFabrics/protectionContainers/protectedItems",
+        "apiVersion": "2020-02-02",
+        "name": "RSVault1/Azure/storagecontainer;Storage;GET-PREREQ-resourceGroupName;GET-PREREQ-storageAccountName/AzureFileShare;GET-PREREQ-fileShareName",
+        "dependsOn": [
+          "Microsoft.RecoveryServices/vaults/backupFabrics/protectionContainers/RSVault1/Azure/storagecontainer;Storage;GET-PREREQ-resourceGroupName;GET-PREREQ-storageAccountName",
+          "Microsoft.RecoveryServices/vaults/backupPolicies/RSVault1/DailyBackupPolicy1",
+          "Microsoft.RecoveryServices/vaults/RSVault1"
+        ],
+        "properties": {
+          "protectedItemType": "AzureFileShareProtectedItem",
+          "sourceResourceId": "GET-PREREQ-resourceGroupName/Microsoft.Storage/storageAccounts/GET-PREREQ-storageAccountName",
+          "policyId": "Microsoft.RecoveryServices/vaults/backupPolicies/RSVault1/DailyBackupPolicy1",
+          "isInlineInquiry": true
+        }
+      }
+    ],
+    "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+  }
+}

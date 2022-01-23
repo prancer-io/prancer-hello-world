@@ -2,12 +2,12 @@
   "structure": "filesystem",
   "error": null,
   "reference": "master",
-  "contentType": "yaml",
+  "contentType": "json",
   "source": "gitConnectorGoogleKcc",
   "paths": [
-    "/samples/resources/memcacheinstance/servicenetworking_v1beta1_servicenetworkingconnection.yaml"
+    "/samples/resources/iampolicy/pubsub-admin-policy/iam_v1beta1_iampolicy.yaml"
   ],
-  "timestamp": 1628765149173,
+  "timestamp": 1642973304296,
   "queryuser": null,
   "checksum": "99914b932bd37a50b983c5e7c90ae93b",
   "node": {
@@ -15,30 +15,40 @@
     "type": "kcc",
     "collection": "kcctemplate",
     "paths": [
-      "/samples/resources/memcacheinstance/servicenetworking_v1beta1_servicenetworkingconnection.yaml"
+      "/samples/resources/iampolicy/pubsub-admin-policy/iam_v1beta1_iampolicy.yaml"
     ],
     "snapshotId": "KCC_TEMPLATE_SNAPSHOT459",
     "status": "active",
-    "validate": true
+    "validate": true,
+    "resourceTypes": [
+      "iampolicy"
+    ]
   },
   "snapshotId": "KCC_TEMPLATE_SNAPSHOT459",
   "collection": "kcctemplate",
   "json": {
-    "apiVersion": "servicenetworking.cnrm.cloud.google.com/v1beta1",
-    "kind": "ServiceNetworkingConnection",
+    "apiVersion": "iam.cnrm.cloud.google.com/v1beta1",
+    "kind": "IAMPolicy",
     "metadata": {
-      "name": "memcacheinstance-dep"
+      "labels": {
+        "label-one": "value-one"
+      },
+      "name": "iampolicy-sample-pubsubadmin"
     },
     "spec": {
-      "networkRef": {
-        "name": "memcacheinstance-dep"
+      "resourceRef": {
+        "apiVersion": "pubsub.cnrm.cloud.google.com/v1beta1",
+        "kind": "PubSubTopic",
+        "name": "iampolicy-dep-pubsubadmin"
       },
-      "reservedPeeringRanges": [
+      "bindings": [
         {
-          "name": "memcacheinstance-dep"
+          "role": "roles/editor",
+          "members": [
+            "serviceAccount:iampolicy-dep-pubsubadmin@${PROJECT_ID?}.iam.gserviceaccount.com"
+          ]
         }
-      ],
-      "service": "servicenetworking.googleapis.com"
+      ]
     }
   }
 }

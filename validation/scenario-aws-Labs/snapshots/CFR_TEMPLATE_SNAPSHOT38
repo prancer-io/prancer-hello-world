@@ -1,0 +1,78 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAwsLabs",
+  "paths": [
+    "/aws/services/RDS/RDS_Snapshot_On_Delete.yaml"
+  ],
+  "timestamp": 1642972590432,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "CFR_TEMPLATE_SNAPSHOT",
+    "type": "cloudformation",
+    "collection": "cloudformationtemplate",
+    "paths": [
+      "/aws/services/RDS/RDS_Snapshot_On_Delete.yaml"
+    ],
+    "snapshotId": "CFR_TEMPLATE_SNAPSHOT38",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "aws::rds::dbinstance"
+    ]
+  },
+  "snapshotId": "CFR_TEMPLATE_SNAPSHOT38",
+  "collection": "cloudformationtemplate",
+  "json": {
+    "AWSTemplateFormatVersion": "2010-09-09",
+    "Metadata": {
+      "License": "Apache-2.0"
+    },
+    "Description": "AWS CloudFormation Sample Template RDS_Snapshot_On_Delete: Sample template showing how to create an RDS DBInstance that is snapshotted on stack deletion. **WARNING** This template creates an Amazon RDS database instance. When the stack is deleted a database snapshot will be left in your account. You will be billed for the AWS resources used if you create a stack from this template.",
+    "Resources": [
+      {
+        "Type": "AWS::RDS::DBInstance",
+        "Properties": {
+          "DBName": "MyDatabase",
+          "AllocatedStorage": "5",
+          "DBInstanceClass": "db.t2.small",
+          "Engine": "MySQL",
+          "MasterUsername": "myName",
+          "MasterUserPassword": "myPassword"
+        },
+        "DeletionPolicy": "Snapshot",
+        "Name": "MyDB"
+      }
+    ],
+    "Outputs": {
+      "JDBCConnectionString": {
+        "Description": "JDBC connection string for the database",
+        "Value": {
+          "Fn::Join": [
+            "",
+            [
+              "jdbc:mysql://",
+              {
+                "Fn::GetAtt": [
+                  "MyDB",
+                  "Endpoint.Address"
+                ]
+              },
+              ":",
+              {
+                "Fn::GetAtt": [
+                  "MyDB",
+                  "Endpoint.Port"
+                ]
+              },
+              "/MyDatabase"
+            ]
+          ]
+        }
+      }
+    }
+  }
+}

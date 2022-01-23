@@ -1,0 +1,402 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAzureQuickStart",
+  "paths": [
+    "/quickstarts/microsoft.machinelearningservices/machine-learning-dependencies-role-assignment/azuredeploy.json",
+    "/quickstarts/microsoft.machinelearningservices/machine-learning-dependencies-role-assignment/azuredeploy.parameters.json"
+  ],
+  "timestamp": 1642962907835,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/quickstarts/microsoft.machinelearningservices/machine-learning-dependencies-role-assignment/azuredeploy.json",
+      "/quickstarts/microsoft.machinelearningservices/machine-learning-dependencies-role-assignment/azuredeploy.parameters.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT1445",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "microsoft.resources/deployments"
+    ]
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT1445",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "primaryUserAssignedIdentityResourceGroup": {
+        "type": "String",
+        "defaultValue": "[resourceGroup().name]",
+        "metadata": {
+          "description": "Resource group of User Assigned Identity passed in workspace.properties.primaryUserAssignedIdentity."
+        },
+        "value": "GET-PREREQ-resourceGroup"
+      },
+      "primaryUserAssignedIdentityName": {
+        "type": "String",
+        "metadata": {
+          "description": "Resource name of User Assigned Identity passed in workspace.properties.primaryUserAssignedIdentity."
+        },
+        "value": "GET-PREREQ-identityName"
+      },
+      "assignWorkspaceResourceGroup": {
+        "defaultValue": false,
+        "type": "Bool",
+        "metadata": {
+          "description": "If assign AML workspace resource group permissions."
+        },
+        "value": true
+      },
+      "workspaceResourceGroup": {
+        "defaultValue": "[resourceGroup().name]",
+        "type": "String",
+        "metadata": {
+          "description": "Resource group of AML workspace resource group."
+        }
+      },
+      "assignWorkspaceKeyVault": {
+        "defaultValue": false,
+        "type": "Bool",
+        "metadata": {
+          "description": "If assign AML workspace keyvault permissions."
+        },
+        "value": true
+      },
+      "workspaceKeyVaultResourceGroup": {
+        "defaultValue": "[resourceGroup().name]",
+        "type": "String",
+        "metadata": {
+          "description": "Resource group of AML workspace key vault."
+        },
+        "value": "GET-PREREQ-resourceGroup"
+      },
+      "workspaceKeyVaultName": {
+        "type": "String",
+        "metadata": {
+          "description": "Resource name of AML workspace key vault."
+        },
+        "value": "GET-PREREQ-keyVaultName"
+      },
+      "assignWorkspaceStorageAccount": {
+        "defaultValue": false,
+        "type": "Bool",
+        "metadata": {
+          "description": "If assign AML workspace storage account permissions."
+        },
+        "value": true
+      },
+      "workspaceStorageAccountResourceGroup": {
+        "defaultValue": "[resourceGroup().name]",
+        "type": "String",
+        "metadata": {
+          "description": "Resource group of AML workspace storage account."
+        },
+        "value": "GET-PREREQ-resourceGroup"
+      },
+      "workspaceStorageAccountName": {
+        "defaultValue": "",
+        "type": "String",
+        "metadata": {
+          "description": "Resource name of AML workspace storage account."
+        },
+        "value": "GET-PREREQ-storageAccountName"
+      },
+      "assignWorkspaceContainerRegistry": {
+        "defaultValue": false,
+        "type": "Bool",
+        "metadata": {
+          "description": "If assign AML workspace container registry permissions."
+        },
+        "value": true
+      },
+      "workspaceContainerRegistryResourceGroup": {
+        "defaultValue": "[resourceGroup().name]",
+        "type": "String",
+        "metadata": {
+          "description": "Resource group of AML workspace container registry."
+        },
+        "value": "GET-PREREQ-resourceGroup"
+      },
+      "workspaceContainerRegistryName": {
+        "defaultValue": "",
+        "type": "String",
+        "metadata": {
+          "description": "Resource name of AML workspace container registry."
+        },
+        "value": "GET-PREREQ-containerRegistryName"
+      },
+      "assignWorkspaceDataBrick": {
+        "defaultValue": false,
+        "type": "Bool",
+        "metadata": {
+          "description": "If assign AML workspace linked Azure DataBrick permissions."
+        }
+      },
+      "workspaceDataBrickResourceGroup": {
+        "defaultValue": "[resourceGroup().name]",
+        "type": "String",
+        "metadata": {
+          "description": "Resource group of AML workspace linked Azure DataBrick."
+        }
+      },
+      "workspaceDataBrickName": {
+        "defaultValue": "",
+        "type": "String",
+        "metadata": {
+          "description": "Resource name of AML workspace linked Azure DataBrick."
+        }
+      },
+      "assignWorkspaceCMKKeyVault": {
+        "defaultValue": false,
+        "type": "Bool",
+        "metadata": {
+          "description": "If assign keyvault that hosts data encryption key of cmk workspace permissions."
+        },
+        "value": true
+      },
+      "workspaceCMKKeyVaultResourceGroup": {
+        "defaultValue": "[resourceGroup().name]",
+        "type": "String",
+        "metadata": {
+          "description": "Resource group of keyvault that hosts data encryption key of cmk workspace."
+        },
+        "value": "GET-PREREQ-resourceGroup"
+      },
+      "workspaceCMKKeyVaultName": {
+        "defaultValue": "",
+        "type": "String",
+        "metadata": {
+          "description": "Resource name of keyvault that hosts data encryption key of cmk workspace."
+        },
+        "value": "GET-PREREQ-keyVaultName"
+      }
+    },
+    "variables": {
+      "primaryUserAssignedIdentity": "GET-PREREQ-resourceGroup/microsoft.managedidentity/userassignedidentities/GET-PREREQ-identityName",
+      "workspaceResourceGroup": "[subscriptionResourceId('Microsoft.Resources/resourceGroups', parameters('workspaceResourceGroup'))]",
+      "workspaceKeyVault": "GET-PREREQ-resourceGroup/microsoft.keyvault/vaults/GET-PREREQ-keyVaultName",
+      "workspaceStorageAccount": "GET-PREREQ-resourceGroup/microsoft.storage/storageaccounts/GET-PREREQ-storageAccountName",
+      "workspaceContainerRegistry": "GET-PREREQ-resourceGroup/Microsoft.ContainerRegistry/registries/GET-PREREQ-containerRegistryName",
+      "workspaceDataBrick": "[resourceGroup().name]/Microsoft.Databricks/workspaces/ parameters('workspaceDataBrickName')",
+      "workspaceCMKKeyVault": "GET-PREREQ-resourceGroup/microsoft.keyvault/vaults/GET-PREREQ-keyVaultName",
+      "contributorRoleDefinition": "b24988ac-6180-42a0-ab88-20f7382dd24c",
+      "storageBlobDataContributorRoleDefinition": "ba92f5b4-2d11-453d-a403-e96b0029c9fe",
+      "keyVaultAdministratorRoleDefinition": "00482a5a-887f-4fb3-b363-3b7fe8e74483",
+      "workspaceResourceGroupContributorRoleName": "[guid(variables('workspaceResourceGroup'), variables('primaryUserAssignedIdentity'), variables('contributorRoleDefinition'))]",
+      "workspaceStorageAccountContributorRoleName": "[guid(variables('workspaceStorageAccount'), variables('primaryUserAssignedIdentity'), variables('contributorRoleDefinition'))]",
+      "workspaceStorageAccountBlobDataContributorRoleName": "[guid(variables('workspaceStorageAccount'), variables('primaryUserAssignedIdentity'), variables('storageBlobDataContributorRoleDefinition'))]",
+      "workspaceKeyVaultAdministratorRoleName": "[guid(variables('workspaceKeyVault'), variables('primaryUserAssignedIdentity'), variables('keyVaultAdministratorRoleDefinition'))]",
+      "workspaceContainerRegistryContributorRoleName": "[guid(variables('workspaceContainerRegistry'), variables('primaryUserAssignedIdentity'), variables('contributorRoleDefinition'))]",
+      "workspaceDataBrickContributorRoleName": "[guid(variables('workspaceDataBrick'), variables('primaryUserAssignedIdentity'), variables('contributorRoleDefinition'))]",
+      "workspaceCMKKeyVaultContributorRoleName": "[guid(variables('workspaceCMKKeyVault'), variables('primaryUserAssignedIdentity'), variables('contributorRoleDefinition'))]"
+    },
+    "resources": [
+      {
+        "apiVersion": "2020-06-01",
+        "name": "keyvaultTemplate",
+        "type": "Microsoft.Resources/deployments",
+        "resourceGroup": "GET-PREREQ-resourceGroup",
+        "properties": {
+          "mode": "Incremental",
+          "template": {
+            "contentVersion": "1.0.0.0",
+            "resources": [
+              {
+                "condition": true,
+                "type": "Microsoft.KeyVault/vaults/accessPolicies",
+                "apiVersion": "2019-09-01",
+                "name": "GET-PREREQ-keyVaultName/add",
+                "properties": {
+                  "accessPolicies": [
+                    {
+                      "tenantId": "[reference(variables('primaryUserAssignedIdentity'), '2018-11-30').tenantId]",
+                      "objectId": "[reference(variables('primaryUserAssignedIdentity'), '2018-11-30').principalId]",
+                      "permissions": {
+                        "secrets": [
+                          "get",
+                          "list",
+                          "set",
+                          "delete",
+                          "recover",
+                          "backup",
+                          "restore"
+                        ]
+                      }
+                    }
+                  ]
+                }
+              },
+              {
+                "condition": true,
+                "scope": "Microsoft.KeyVault/vaults/GET-PREREQ-keyVaultName",
+                "type": "Microsoft.Authorization/roleAssignments",
+                "apiVersion": "2020-04-01-preview",
+                "name": "[guid(variables('workspaceKeyVault'), variables('primaryUserAssignedIdentity'), variables('keyVaultAdministratorRoleDefinition'))]",
+                "properties": {
+                  "roleDefinitionId": "[extensionResourceId(variables('workspaceKeyVault'), 'Microsoft.Authorization/roleDefinitions', variables('keyVaultAdministratorRoleDefinition'))]",
+                  "principalId": "[reference(variables('primaryUserAssignedIdentity'), '2018-11-30').principalId]",
+                  "principalType": "ServicePrincipal"
+                }
+              }
+            ],
+            "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+          }
+        }
+      },
+      {
+        "apiVersion": "2020-06-01",
+        "name": "storageAccountTemplate",
+        "type": "Microsoft.Resources/deployments",
+        "resourceGroup": "GET-PREREQ-resourceGroup",
+        "properties": {
+          "mode": "Incremental",
+          "template": {
+            "contentVersion": "1.0.0.0",
+            "resources": [
+              {
+                "condition": true,
+                "scope": "Microsoft.Storage/storageAccounts/GET-PREREQ-storageAccountName",
+                "type": "Microsoft.Authorization/roleAssignments",
+                "apiVersion": "2020-04-01-preview",
+                "name": "[guid(variables('workspaceStorageAccount'), variables('primaryUserAssignedIdentity'), variables('contributorRoleDefinition'))]",
+                "properties": {
+                  "roleDefinitionId": "[extensionResourceId(variables('workspaceStorageAccount'), 'Microsoft.Authorization/roleDefinitions', variables('contributorRoleDefinition'))]",
+                  "principalId": "[reference(variables('primaryUserAssignedIdentity'), '2018-11-30').principalId]",
+                  "principalType": "ServicePrincipal"
+                }
+              },
+              {
+                "condition": true,
+                "scope": "Microsoft.Storage/storageAccounts/GET-PREREQ-storageAccountName",
+                "type": "Microsoft.Authorization/roleAssignments",
+                "apiVersion": "2020-04-01-preview",
+                "name": "[guid(variables('workspaceStorageAccount'), variables('primaryUserAssignedIdentity'), variables('storageBlobDataContributorRoleDefinition'))]",
+                "properties": {
+                  "roleDefinitionId": "[extensionResourceId(variables('workspaceStorageAccount'), 'Microsoft.Authorization/roleDefinitions', variables('storageBlobDataContributorRoleDefinition'))]",
+                  "principalId": "[reference(variables('primaryUserAssignedIdentity'), '2018-11-30').principalId]",
+                  "principalType": "ServicePrincipal"
+                }
+              }
+            ],
+            "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+          }
+        }
+      },
+      {
+        "apiVersion": "2020-06-01",
+        "name": "databrickTemplate",
+        "type": "Microsoft.Resources/deployments",
+        "resourceGroup": "[resourceGroup().name]",
+        "properties": {
+          "mode": "Incremental",
+          "template": {
+            "contentVersion": "1.0.0.0",
+            "resources": [
+              {
+                "condition": false,
+                "scope": "Microsoft.Databricks/workspaces/ parameters('workspaceDataBrickName')",
+                "type": "Microsoft.Authorization/roleAssignments",
+                "apiVersion": "2020-04-01-preview",
+                "name": "[guid(variables('workspaceDataBrick'), variables('primaryUserAssignedIdentity'), variables('contributorRoleDefinition'))]",
+                "properties": {
+                  "roleDefinitionId": "[extensionResourceId(variables('workspaceDataBrick'), 'Microsoft.Authorization/roleDefinitions', variables('contributorRoleDefinition'))]",
+                  "principalId": "[reference(variables('primaryUserAssignedIdentity'), '2018-11-30').principalId]",
+                  "principalType": "ServicePrincipal"
+                }
+              }
+            ],
+            "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+          }
+        }
+      },
+      {
+        "apiVersion": "2020-06-01",
+        "name": "containerRegistryTemplate",
+        "type": "Microsoft.Resources/deployments",
+        "resourceGroup": "GET-PREREQ-resourceGroup",
+        "properties": {
+          "mode": "Incremental",
+          "template": {
+            "contentVersion": "1.0.0.0",
+            "resources": [
+              {
+                "condition": true,
+                "scope": "Microsoft.ContainerRegistry/registries/GET-PREREQ-containerRegistryName",
+                "type": "Microsoft.Authorization/roleAssignments",
+                "apiVersion": "2020-04-01-preview",
+                "name": "[guid(variables('workspaceContainerRegistry'), variables('primaryUserAssignedIdentity'), variables('contributorRoleDefinition'))]",
+                "properties": {
+                  "roleDefinitionId": "[extensionResourceId(variables('workspaceContainerRegistry'), 'Microsoft.Authorization/roleDefinitions', variables('contributorRoleDefinition'))]",
+                  "principalId": "[reference(variables('primaryUserAssignedIdentity'), '2018-11-30').principalId]",
+                  "principalType": "ServicePrincipal"
+                }
+              }
+            ],
+            "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+          }
+        }
+      },
+      {
+        "apiVersion": "2020-06-01",
+        "name": "cmkKeyvaultTemplate",
+        "type": "Microsoft.Resources/deployments",
+        "resourceGroup": "GET-PREREQ-resourceGroup",
+        "properties": {
+          "mode": "Incremental",
+          "template": {
+            "contentVersion": "1.0.0.0",
+            "resources": [
+              {
+                "condition": true,
+                "scope": "Microsoft.KeyVault/vaults/GET-PREREQ-keyVaultName",
+                "type": "Microsoft.Authorization/roleAssignments",
+                "apiVersion": "2020-04-01-preview",
+                "name": "[guid(variables('workspaceCMKKeyVault'), variables('primaryUserAssignedIdentity'), variables('contributorRoleDefinition'))]",
+                "properties": {
+                  "roleDefinitionId": "[extensionResourceId(variables('workspaceCMKKeyVault'), 'Microsoft.Authorization/roleDefinitions', variables('contributorRoleDefinition'))]",
+                  "principalId": "[reference(variables('primaryUserAssignedIdentity'), '2018-11-30').principalId]",
+                  "principalType": "ServicePrincipal"
+                }
+              }
+            ],
+            "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+          }
+        }
+      },
+      {
+        "apiVersion": "2020-06-01",
+        "name": "workspaceResourceGroupTemplate",
+        "type": "Microsoft.Resources/deployments",
+        "resourceGroup": "[resourceGroup().name]",
+        "properties": {
+          "mode": "Incremental",
+          "template": {
+            "contentVersion": "1.0.0.0",
+            "resources": [
+              {
+                "condition": true,
+                "type": "Microsoft.Authorization/roleAssignments",
+                "apiVersion": "2020-04-01-preview",
+                "name": "[guid(variables('workspaceResourceGroup'), variables('primaryUserAssignedIdentity'), variables('contributorRoleDefinition'))]",
+                "properties": {
+                  "roleDefinitionId": "[extensionResourceId(variables('workspaceResourceGroup'), 'Microsoft.Authorization/roleDefinitions', variables('contributorRoleDefinition'))]",
+                  "principalId": "[reference(variables('primaryUserAssignedIdentity'), '2018-11-30').principalId]",
+                  "principalType": "ServicePrincipal"
+                }
+              }
+            ],
+            "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+          }
+        }
+      }
+    ],
+    "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+  }
+}

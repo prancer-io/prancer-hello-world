@@ -1,0 +1,121 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAzureQuickStart",
+  "paths": [
+    "/quickstarts/microsoft.containerregistry/container-registry-geo-replication/azuredeploy.json",
+    "/quickstarts/microsoft.containerregistry/container-registry-geo-replication/azuredeploy.parameters.json"
+  ],
+  "timestamp": 1642962905499,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/quickstarts/microsoft.containerregistry/container-registry-geo-replication/azuredeploy.json",
+      "/quickstarts/microsoft.containerregistry/container-registry-geo-replication/azuredeploy.parameters.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT1198",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "microsoft.containerregistry/registries/replications",
+      "microsoft.containerregistry/registries"
+    ]
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT1198",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.0.0.0",
+    "metadata": {
+      "_generator": {
+        "name": "bicep",
+        "version": "0.4.1008.15138",
+        "templateHash": "4211689371383977719"
+      }
+    },
+    "parameters": {
+      "acrName": {
+        "type": "string",
+        "defaultValue": "[format('acr{0}', uniqueString(resourceGroup().id))]",
+        "maxLength": 50,
+        "minLength": 5,
+        "metadata": {
+          "description": "Globally unique name of your Azure Container Registry"
+        },
+        "value": "GEN-UNIQUE"
+      },
+      "acrAdminUserEnabled": {
+        "type": "bool",
+        "defaultValue": false,
+        "metadata": {
+          "description": "Enable admin user that has push / pull permission to the registry."
+        }
+      },
+      "location": {
+        "type": "string",
+        "defaultValue": "[resourceGroup().location]",
+        "metadata": {
+          "description": "Location for registry home replica."
+        }
+      },
+      "acrSku": {
+        "type": "string",
+        "defaultValue": "Premium",
+        "allowedValues": [
+          "Premium"
+        ],
+        "metadata": {
+          "description": "Tier of your Azure Container Registry. Geo-replication requires Premium SKU."
+        }
+      },
+      "acrReplicaLocation": {
+        "type": "string",
+        "metadata": {
+          "description": "Short name for registry replica location."
+        },
+        "value": "eastus2"
+      }
+    },
+    "functions": [],
+    "resources": [
+      {
+        "type": "Microsoft.ContainerRegistry/registries",
+        "apiVersion": "2019-12-01-preview",
+        "name": "GEN-UNIQUE",
+        "location": "[resourceGroup().location]",
+        "sku": {
+          "name": "Premium"
+        },
+        "tags": {
+          "displayName": "Container Registry",
+          "container.registry": "GEN-UNIQUE"
+        },
+        "properties": {
+          "adminUserEnabled": false
+        }
+      },
+      {
+        "type": "Microsoft.ContainerRegistry/registries/replications",
+        "apiVersion": "2019-12-01-preview",
+        "name": "[format('{0}/{1}', parameters('acrName'), parameters('acrReplicaLocation'))]",
+        "location": "eastus2",
+        "properties": {},
+        "dependsOn": [
+          "Microsoft.ContainerRegistry/registries/GEN-UNIQUE"
+        ]
+      }
+    ],
+    "outputs": {
+      "acrLoginServer": {
+        "type": "string",
+        "value": "[reference(resourceId('Microsoft.ContainerRegistry/registries', parameters('acrName'))).loginServer]"
+      }
+    },
+    "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+  }
+}

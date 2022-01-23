@@ -1,0 +1,145 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAzureQuickStart",
+  "paths": [
+    "/quickstarts/microsoft.network/nsg-flow-logs-with-traffic-analytics/prereqs/prereq.azuredeploy.json",
+    "/quickstarts/microsoft.network/nsg-flow-logs-with-traffic-analytics/prereqs/prereq.azuredeploy.parameters.json"
+  ],
+  "timestamp": 1642962909334,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/quickstarts/microsoft.network/nsg-flow-logs-with-traffic-analytics/prereqs/prereq.azuredeploy.json",
+      "/quickstarts/microsoft.network/nsg-flow-logs-with-traffic-analytics/prereqs/prereq.azuredeploy.parameters.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT1578",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "microsoft.network/virtualnetworks",
+      "microsoft.storage/storageaccounts",
+      "microsoft.network/networksecuritygroups"
+    ]
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT1578",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "addressPrefix": {
+        "type": "string",
+        "defaultValue": "10.0.0.0/16",
+        "metadata": {
+          "description": "Address prefix"
+        }
+      },
+      "subnetPrefix": {
+        "type": "string",
+        "defaultValue": "10.0.0.0/24",
+        "metadata": {
+          "description": "Subnet-1 Prefix"
+        }
+      },
+      "location": {
+        "type": "string",
+        "defaultValue": "[resourceGroup().location]",
+        "metadata": {
+          "description": "Location for all resources."
+        }
+      },
+      "flowLogStorageAccountName": {
+        "type": "string",
+        "defaultValue": "[concat('flowlog', uniquestring(resourceGroup().id))]",
+        "metadata": {
+          "description": "Flow logs Storage Account Name."
+        }
+      }
+    },
+    "variables": {
+      "networkSecurityGroupName": "networkSecurityGroup01",
+      "virtualNetworkName": "virtualNetwork01",
+      "subnetName": "subnet1"
+    },
+    "resources": [
+      {
+        "apiVersion": "2021-04-01",
+        "type": "Microsoft.Storage/storageAccounts",
+        "name": "[concat('flowlog', uniquestring(resourceGroup().id))]",
+        "location": "[resourceGroup().location]",
+        "sku": {
+          "name": "Standard_RAGRS"
+        },
+        "kind": "StorageV2"
+      },
+      {
+        "type": "Microsoft.Network/networkSecurityGroups",
+        "apiVersion": "2020-06-01",
+        "name": "networkSecurityGroup01",
+        "location": "[resourceGroup().location]",
+        "properties": {
+          "securityRules": [
+            {
+              "name": "first_rule",
+              "properties": {
+                "description": "This is the first rule",
+                "protocol": "Tcp",
+                "sourcePortRange": "23-45",
+                "destinationPortRange": "46-56",
+                "sourceAddressPrefix": "*",
+                "destinationAddressPrefix": "*",
+                "access": "Allow",
+                "priority": 123,
+                "direction": "Inbound"
+              }
+            }
+          ]
+        }
+      },
+      {
+        "type": "Microsoft.Network/virtualNetworks",
+        "apiVersion": "2020-06-01",
+        "name": "virtualNetwork01",
+        "location": "[resourceGroup().location]",
+        "dependsOn": [
+          "Microsoft.Network/networkSecurityGroups//networkSecurityGroup01"
+        ],
+        "properties": {
+          "addressSpace": {
+            "addressPrefixes": [
+              "10.0.0.0/16"
+            ]
+          },
+          "subnets": [
+            {
+              "name": "subnet1",
+              "properties": {
+                "addressPrefix": "10.0.0.0/24",
+                "networkSecurityGroup": {
+                  "id": "Microsoft.Network/networkSecurityGroups/networkSecurityGroup01"
+                }
+              }
+            }
+          ]
+        }
+      }
+    ],
+    "outputs": {
+      "existingNsgId": {
+        "type": "string",
+        "value": "[resourceId('Microsoft.Network/networkSecurityGroups', variables('networkSecurityGroupName'))]"
+      },
+      "existingFlowLogStorageAccountId": {
+        "type": "string",
+        "value": "[resourceId('Microsoft.Storage/storageAccounts', parameters('flowLogStorageAccountName'))]"
+      }
+    },
+    "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+  }
+}

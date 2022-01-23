@@ -2,12 +2,12 @@
   "structure": "filesystem",
   "error": null,
   "reference": "master",
-  "contentType": "yaml",
+  "contentType": "json",
   "source": "gitConnectorGoogleKcc",
   "paths": [
-    "/samples/resources/iampolicy/project-level-policy/resourcemanager_v1beta1_project.yaml"
+    "/samples/resources/filestorebackup/filestore_v1beta1_filestoreinstance.yaml"
   ],
-  "timestamp": 1628765147824,
+  "timestamp": 1642973304078,
   "queryuser": null,
   "checksum": "99914b932bd37a50b983c5e7c90ae93b",
   "node": {
@@ -15,29 +15,47 @@
     "type": "kcc",
     "collection": "kcctemplate",
     "paths": [
-      "/samples/resources/iampolicy/project-level-policy/resourcemanager_v1beta1_project.yaml"
+      "/samples/resources/filestorebackup/filestore_v1beta1_filestoreinstance.yaml"
     ],
     "snapshotId": "KCC_TEMPLATE_SNAPSHOT404",
     "status": "active",
-    "validate": true
+    "validate": true,
+    "resourceTypes": [
+      "filestoreinstance"
+    ]
   },
   "snapshotId": "KCC_TEMPLATE_SNAPSHOT404",
   "collection": "kcctemplate",
   "json": {
-    "apiVersion": "resourcemanager.cnrm.cloud.google.com/v1beta1",
-    "kind": "Project",
+    "apiVersion": "filestore.cnrm.cloud.google.com/v1beta1",
+    "kind": "FilestoreInstance",
     "metadata": {
-      "annotations": {
-        "cnrm.cloud.google.com/organization-id": "${ORG_ID?}",
-        "cnrm.cloud.google.com/auto-create-network": "false"
-      },
-      "name": "iampolicy-dep-project"
+      "name": "filestorebackup-dep"
     },
     "spec": {
-      "name": "Config Connector Sample",
-      "billingAccountRef": {
-        "external": "${BILLING_ACCOUNT_ID?}"
-      }
+      "projectRef": {
+        "external": "projects/${PROJECT_ID?}"
+      },
+      "description": "Sample FilestoreInstance dependency for FilestoreBackup",
+      "fileShares": [
+        {
+          "capacityGb": 4800,
+          "name": "my_share"
+        }
+      ],
+      "location": "us-central1-c",
+      "networks": [
+        {
+          "modes": [
+            "MODE_IPV4"
+          ],
+          "networkRef": {
+            "name": "filestorebackup-dep"
+          },
+          "reservedIPRange": "10.0.0.0/29"
+        }
+      ],
+      "tier": "PREMIUM"
     }
   }
 }

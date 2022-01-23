@@ -1,0 +1,215 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAzureQuickStart",
+  "paths": [
+    "/quickstarts/microsoft.maps/maps-use-sas/azuredeploy.json",
+    "/quickstarts/microsoft.maps/maps-use-sas/azuredeploy.parameters.us.json"
+  ],
+  "timestamp": 1642962908078,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/quickstarts/microsoft.maps/maps-use-sas/azuredeploy.json",
+      "/quickstarts/microsoft.maps/maps-use-sas/azuredeploy.parameters.us.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT1470",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "microsoft.keyvault/vaults/secrets",
+      "microsoft.maps/accounts",
+      "microsoft.maps/accounts/providers/roleassignments"
+    ]
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT1470",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "location": {
+        "type": "string",
+        "allowedValues": [
+          "westeurope",
+          "eastus",
+          "westus2",
+          "northeurope",
+          "westcentralus",
+          "usgovvirginia",
+          "usgovarizona"
+        ],
+        "metadata": {
+          "description": "Specifies the location for all the resources."
+        },
+        "value": "GET-PREREQ-location"
+      },
+      "keyVaultName": {
+        "type": "string",
+        "metadata": {
+          "description": "Specifies the resourceId of the key vault."
+        },
+        "value": "GET-PREREQ-keyVaultName"
+      },
+      "accountName": {
+        "type": "string",
+        "defaultValue": "[concat('map', uniqueString(resourceGroup().id))]",
+        "metadata": {
+          "description": "The name for the Azure Maps account."
+        }
+      },
+      "userAssignedIdentityResourceId": {
+        "type": "string",
+        "metadata": {
+          "description": "Specifies the resourceId for the user assigned managed identity resource."
+        },
+        "value": "GET-PREREQ-userIdentityResourceId"
+      },
+      "userAssignedIdentityPrincipalId": {
+        "type": "string",
+        "metadata": {
+          "description": "Specifies the resourceId for the user assigned managed identity resource."
+        },
+        "value": "GET-PREREQ-userAssignedIdentityPrincipalId"
+      },
+      "pricingTier": {
+        "type": "string",
+        "allowedValues": [
+          "S0",
+          "S1",
+          "G2"
+        ],
+        "defaultValue": "G2",
+        "metadata": {
+          "description": "The pricing tier for the account. Use S0 for small-scale development. Use S1 or G2 for large-scale applications."
+        }
+      },
+      "kind": {
+        "type": "string",
+        "allowedValues": [
+          "Gen1",
+          "Gen2"
+        ],
+        "defaultValue": "Gen2",
+        "metadata": {
+          "description": "The pricing tier for the account. Use Gen1 for small-scale development. Use Gen2 for large-scale applications."
+        }
+      },
+      "startDateTime": {
+        "type": "string",
+        "defaultValue": "[utcNow('u')]",
+        "metadata": {
+          "description": "Current Universal DateTime in ISO 8601 'u' format to be used as start of the SAS Token."
+        }
+      },
+      "duration": {
+        "type": "string",
+        "defaultValue": "P1Y",
+        "metadata": {
+          "description": "The duration of the SAS Token, P1Y is maximum, ISO 8601 format is expected."
+        }
+      },
+      "maxRatePerSecond": {
+        "type": "int",
+        "defaultValue": 500,
+        "minValue": 1,
+        "maxValue": 500,
+        "metadata": {
+          "description": "The approximate maximum rate per second the SAS token can be used."
+        }
+      },
+      "signingKey": {
+        "type": "string",
+        "defaultValue": "primaryKey",
+        "allowedValues": [
+          "primaryKey",
+          "seconaryKey"
+        ],
+        "metadata": {
+          "description": "The specified signing key which will be used to create the SAS Token."
+        }
+      },
+      "allowedOrigins": {
+        "type": "array",
+        "defaultValue": [],
+        "maxLength": 10,
+        "metadata": {
+          "description": "The specified application's web host header origins (example: https://www.azure.com) which the Maps account allows for Cross Origin Resource Sharing (CORS)."
+        }
+      }
+    },
+    "variables": {
+      "accountId": "Microsoft.Maps/accounts/[concat('map', uniqueString(resourceGroup().id))]",
+      "AzureMapsDataReader": "[subscriptionResourceId('Microsoft.Authorization/roleDefinitions', '423170ca-a8f6-4b0f-8487-9e4eb8f49bfa')]",
+      "sasParameters": {
+        "signingKey": "primaryKey",
+        "principalId": "GET-PREREQ-userAssignedIdentityPrincipalId",
+        "maxRatePerSecond": 500,
+        "start": "[utcNow('u')]",
+        "expiry": "[dateTimeAdd(parameters('startDateTime'), parameters('duration'))]"
+      }
+    },
+    "resources": [
+      {
+        "type": "Microsoft.Maps/accounts",
+        "apiVersion": "2021-12-01-preview",
+        "name": "[concat('map', uniqueString(resourceGroup().id))]",
+        "location": "GET-PREREQ-location",
+        "sku": {
+          "name": "G2"
+        },
+        "kind": "Gen2",
+        "identity": {
+          "type": "UserAssigned",
+          "userAssignedIdentities": {
+            "[parameters('userAssignedIdentityResourceId')]": {}
+          }
+        },
+        "properties": {
+          "cors": {
+            "corsRules": [
+              {
+                "allowedOrigins": []
+              }
+            ]
+          }
+        }
+      },
+      {
+        "type": "Microsoft.Maps/accounts/providers/roleAssignments",
+        "apiVersion": "2020-04-01-preview",
+        "name": "[concat(parameters('accountName'), '/Microsoft.Authorization/', guid(parameters('userAssignedIdentityPrincipalId'), variables('AzureMapsDataReader'), resourceId('Microsoft.Maps/accounts', parameters('accountName'))))]",
+        "dependsOn": [
+          "[concat('map', uniqueString(resourceGroup().id))]"
+        ],
+        "properties": {
+          "roleDefinitionId": "[subscriptionResourceId('Microsoft.Authorization/roleDefinitions', '423170ca-a8f6-4b0f-8487-9e4eb8f49bfa')]",
+          "principalId": "GET-PREREQ-userAssignedIdentityPrincipalId",
+          "principalType": "ServicePrincipal"
+        }
+      },
+      {
+        "type": "Microsoft.KeyVault/vaults/secrets",
+        "apiVersion": "2021-04-01-preview",
+        "name": "GET-PREREQ-keyVaultName/[concat('map', uniqueString(resourceGroup().id))]",
+        "dependsOn": [
+          "Microsoft.Maps/accounts/[concat('map', uniqueString(resourceGroup().id))]"
+        ],
+        "tags": {
+          "signingKey": "(sasParameters).signingKey",
+          "start": "(sasParameters).start",
+          "expiry": "(sasParameters).expiry"
+        },
+        "properties": {
+          "value": "[listSas(variables('accountId'), '2021-12-01-preview', variables('sasParameters')).accountSasToken]"
+        }
+      }
+    ],
+    "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+  }
+}

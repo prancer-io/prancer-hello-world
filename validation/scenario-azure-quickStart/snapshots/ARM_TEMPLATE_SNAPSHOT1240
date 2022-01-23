@@ -1,0 +1,180 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAzureQuickStart",
+  "paths": [
+    "/quickstarts/microsoft.datafactory/mutiple-vms-with-data-management-gateway/nested/VMtemplate.json"
+  ],
+  "timestamp": 1642962905874,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/quickstarts/microsoft.datafactory/mutiple-vms-with-data-management-gateway/nested/VMtemplate.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT1240",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "microsoft.network/publicipaddresses",
+      "microsoft.network/networkinterfaces",
+      "microsoft.compute/virtualmachines"
+    ]
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT1240",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "gatewayId": {
+        "type": "string"
+      },
+      "virtualMachineName": {
+        "type": "string"
+      },
+      "adminUserName": {
+        "type": "string"
+      },
+      "adminPassword": {
+        "type": "securestring"
+      },
+      "existingVnetLocation": {
+        "type": "string"
+      },
+      "subnetId": {
+        "type": "string"
+      },
+      "nsgId": {
+        "type": "string"
+      },
+      "storageAccountName": {
+        "type": "string"
+      },
+      "scriptUrl": {
+        "type": "string"
+      }
+    },
+    "variables": {
+      "nicName": "virtualMachineNameNic",
+      "publicIPAddressName": "virtualMachineName-ip"
+    },
+    "resources": [
+      {
+        "apiVersion": "2016-03-30",
+        "type": "Microsoft.Network/publicIPAddresses",
+        "name": "virtualMachineName-ip",
+        "location": "existingVnetLocation",
+        "properties": {
+          "publicIPAllocationMethod": "Dynamic"
+        }
+      },
+      {
+        "apiVersion": "2016-03-30",
+        "type": "Microsoft.Network/networkInterfaces",
+        "name": "virtualMachineNameNic",
+        "location": "existingVnetLocation",
+        "dependsOn": [
+          "Microsoft.Network/publicIPAddresses/virtualMachineName-ip"
+        ],
+        "properties": {
+          "ipConfigurations": [
+            {
+              "name": "ipconfig1",
+              "properties": {
+                "privateIPAllocationMethod": "Dynamic",
+                "publicIPAddress": {
+                  "id": "Microsoft.Network/publicIPAddresses/virtualMachineName-ip"
+                },
+                "subnet": {
+                  "id": "subnetId"
+                }
+              }
+            }
+          ],
+          "networkSecurityGroup": {
+            "id": "nsgId"
+          }
+        }
+      },
+      {
+        "apiVersion": "2017-03-30",
+        "type": "Microsoft.Compute/virtualMachines",
+        "name": "virtualMachineName",
+        "location": "existingVnetLocation",
+        "dependsOn": [
+          "Microsoft.Network/networkInterfaces//virtualMachineNameNic"
+        ],
+        "properties": {
+          "hardwareProfile": {
+            "vmSize": "Standard_A3"
+          },
+          "osProfile": {
+            "computerName": "virtualMachineName",
+            "adminUsername": "adminUserName",
+            "adminPassword": "adminPassword"
+          },
+          "storageProfile": {
+            "imageReference": {
+              "publisher": "MicrosoftWindowsServer",
+              "offer": "WindowsServer",
+              "sku": "2016-Datacenter",
+              "version": "latest"
+            },
+            "osDisk": {
+              "name": "virtualMachineName_OSDisk",
+              "caching": "ReadWrite",
+              "createOption": "FromImage"
+            }
+          },
+          "networkProfile": {
+            "networkInterfaces": [
+              {
+                "id": "Microsoft.Network/networkInterfaces/virtualMachineNameNic"
+              }
+            ]
+          },
+          "diagnosticsProfile": {
+            "bootDiagnostics": {
+              "enabled": true,
+              "storageUri": "https://storageAccountName.blob.core.windows.net/"
+            }
+          }
+        },
+        "resources": [
+          {
+            "type": "extensions",
+            "name": "virtualMachineNameinstallGW",
+            "apiVersion": "2015-06-15",
+            "location": "existingVnetLocation",
+            "tags": {
+              "vmname": "virtualMachineName"
+            },
+            "dependsOn": [
+              "Microsoft.Compute/virtualMachines//virtualMachineName"
+            ],
+            "properties": {
+              "publisher": "Microsoft.Compute",
+              "type": "CustomScriptExtension",
+              "typeHandlerVersion": "1.7",
+              "autoUpgradeMinorVersion": true,
+              "settings": {
+                "fileUris": [
+                  "scriptURL"
+                ]
+              },
+              "protectedSettings": {
+                "commandToExecute": "[concat('powershell.exe -ExecutionPolicy Unrestricted -File gatewayInstall.ps1 ', listAuthKeys(parameters('gatewayId'), '2015-10-01').key1)]"
+              }
+            }
+          }
+        ]
+      }
+    ],
+    "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+  }
+}

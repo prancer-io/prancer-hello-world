@@ -1,0 +1,74 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAzureQuickStart",
+  "paths": [
+    "/quickstarts/microsoft.compute/vms-with-selfhost-integration-runtime/nested/IRtemplate.json"
+  ],
+  "timestamp": 1642962904768,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/quickstarts/microsoft.compute/vms-with-selfhost-integration-runtime/nested/IRtemplate.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT1142",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "microsoft.datafactory/datafactories/gateways",
+      "microsoft.datafactory/factories/integrationruntimes"
+    ]
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT1142",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "existingDataFactoryName": {
+        "type": "string"
+      },
+      "existingDataFactoryVersion": {
+        "type": "string"
+      },
+      "IntegrationRuntimeName": {
+        "type": "string"
+      }
+    },
+    "variables": {},
+    "resources": [
+      {
+        "condition": false,
+        "type": "Microsoft.DataFactory/dataFactories/gateways",
+        "apiVersion": "2015-10-01",
+        "name": "existingDataFactoryName/IntegrationRuntimeName",
+        "properties": {
+          "multiNodeSupportEnabled": true,
+          "description": "my integration runtime"
+        }
+      },
+      {
+        "condition": false,
+        "type": "Microsoft.DataFactory/factories/integrationruntimes",
+        "apiVersion": "2018-06-01",
+        "name": "existingDataFactoryName/IntegrationRuntimeName",
+        "properties": {
+          "type": "SelfHosted",
+          "description": "Self-hosted Integration runtime created using ARM template"
+        }
+      }
+    ],
+    "outputs": {
+      "irId": {
+        "type": "string",
+        "value": "[resourceId(if(equals(parameters('existingDataFactoryVersion'), 'V2'), 'Microsoft.DataFactory/factories/integrationruntimes', 'Microsoft.DataFactory/dataFactories/gateways'), parameters('existingDataFactoryName'), parameters('IntegrationRuntimeName'))]"
+      }
+    },
+    "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+  }
+}

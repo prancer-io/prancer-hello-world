@@ -1,0 +1,81 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "main",
+  "contentType": "json",
+  "source": "gitConnectorAwsTerraHashicorp",
+  "paths": [
+    "/examples/networking/region/outputs.tf",
+    "/examples/networking/region/terraform.template.tfvars",
+    "/examples/networking/region/variables.tf",
+    "/examples/networking/region/versions.tf",
+    "/examples/networking/region/security_group.tf"
+  ],
+  "timestamp": 1642967657699,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "TRF_TEMPLATE_SNAPSHOT",
+    "type": "terraform",
+    "collection": "terraformtemplate",
+    "paths": [
+      "/examples/networking/region/outputs.tf",
+      "/examples/networking/region/terraform.template.tfvars",
+      "/examples/networking/region/variables.tf",
+      "/examples/networking/region/versions.tf",
+      "/examples/networking/region/security_group.tf"
+    ],
+    "snapshotId": "TRF_TEMPLATE_SNAPSHOT23",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "aws_security_group"
+    ]
+  },
+  "snapshotId": "TRF_TEMPLATE_SNAPSHOT23",
+  "collection": "terraformtemplate",
+  "json": {
+    "resources": [
+      {
+        "type": "aws_security_group",
+        "name": "region",
+        "properties": {
+          "name": "region",
+          "description": "Open access within this region",
+          "vpc_id": "${aws_vpc.main.id}",
+          "ingress": [
+            {
+              "from_port": 0,
+              "to_port": 0,
+              "protocol": -1,
+              "cidr_blocks": [
+                "${aws_vpc.main.cidr_block}"
+              ]
+            }
+          ],
+          "compiletime_identity": "aws_security_group.region"
+        }
+      },
+      {
+        "type": "aws_security_group",
+        "name": "internal-all",
+        "properties": {
+          "name": "internal-all",
+          "description": "Open access within the full internal network",
+          "vpc_id": "${aws_vpc.main.id}",
+          "ingress": [
+            {
+              "from_port": 0,
+              "to_port": 0,
+              "protocol": -1,
+              "cidr_blocks": [
+                "10.0.0.0/16"
+              ]
+            }
+          ],
+          "compiletime_identity": "aws_security_group.internal-all"
+        }
+      }
+    ]
+  }
+}

@@ -1,0 +1,1021 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "main",
+  "contentType": "json",
+  "source": "gitConnectorAzureTerraHashicorp",
+  "paths": [
+    "/examples/virtual-machines/virtual_machine/openshift-origin/outputs.tf",
+    "/examples/virtual-machines/virtual_machine/openshift-origin/variables.tf",
+    "/examples/virtual-machines/virtual_machine/openshift-origin/main.tf"
+  ],
+  "timestamp": 1642943280105,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "TRF_TEMPLATE_SNAPSHOT",
+    "type": "terraform",
+    "collection": "terraformtemplate",
+    "paths": [
+      "/examples/virtual-machines/virtual_machine/openshift-origin/outputs.tf",
+      "/examples/virtual-machines/virtual_machine/openshift-origin/variables.tf",
+      "/examples/virtual-machines/virtual_machine/openshift-origin/main.tf"
+    ],
+    "snapshotId": "TRF_TEMPLATE_SNAPSHOT144",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "azurerm_lb_backend_address_pool",
+      "azurerm_lb_rule",
+      "azurerm_subnet",
+      "azurerm_virtual_network",
+      "azurerm_resource_group",
+      "azurerm_availability_set",
+      "azurerm_network_interface",
+      "azurerm_network_security_group",
+      "azurerm_virtual_machine",
+      "azurerm_lb",
+      "azurerm_public_ip",
+      "azurerm_storage_account",
+      "azurerm_lb_probe",
+      "azurerm_lb_nat_rule"
+    ]
+  },
+  "snapshotId": "TRF_TEMPLATE_SNAPSHOT144",
+  "collection": "terraformtemplate",
+  "json": {
+    "provider": [
+      {
+        "azurerm": {
+          "features": [
+            {}
+          ],
+          "subscription_id": "${var.subscription_id}",
+          "client_id": "${var.aad_client_id}",
+          "client_secret": "${var.aad_client_secret}",
+          "tenant_id": "${var.tenant_id}"
+        }
+      }
+    ],
+    "resources": [
+      {
+        "type": "azurerm_resource_group",
+        "name": "rg",
+        "properties": {
+          "name": "${var.resource_group_name}",
+          "location": "southcentralus",
+          "compiletime_identity": "azurerm_resource_group.rg"
+        }
+      },
+      {
+        "type": "azurerm_network_security_group",
+        "name": "primary_nsg",
+        "properties": {
+          "name": "${var.openshift_cluster_prefix}-primary-nsg",
+          "location": "${azurerm_resource_group.rg.location}",
+          "resource_group_name": "${azurerm_resource_group.rg.name}",
+          "security_rule": [
+            {
+              "name": "allow_SSH_in_all",
+              "description": "Allow SSH in from all locations",
+              "priority": 100,
+              "direction": "Inbound",
+              "access": "Allow",
+              "protocol": "Tcp",
+              "source_port_range": "*",
+              "destination_port_range": 22,
+              "source_address_prefix": "*",
+              "destination_address_prefix": "*"
+            },
+            {
+              "name": "allow_HTTPS_all",
+              "description": "Allow HTTPS connections from all locations",
+              "priority": 200,
+              "direction": "Inbound",
+              "access": "Allow",
+              "protocol": "Tcp",
+              "source_port_range": "*",
+              "destination_port_range": 443,
+              "source_address_prefix": "*",
+              "destination_address_prefix": "*"
+            },
+            {
+              "name": "allow_OpenShift_console_in_all",
+              "description": "Allow OpenShift Console connections from all locations",
+              "priority": 300,
+              "direction": "Inbound",
+              "access": "Allow",
+              "protocol": "Tcp",
+              "source_port_range": "*",
+              "destination_port_range": 8443,
+              "source_address_prefix": "*",
+              "destination_address_prefix": "*"
+            }
+          ],
+          "compiletime_identity": "azurerm_network_security_group.primary_nsg"
+        }
+      },
+      {
+        "type": "azurerm_network_security_group",
+        "name": "infra_nsg",
+        "properties": {
+          "name": "${var.openshift_cluster_prefix}-infra-nsg",
+          "location": "${azurerm_resource_group.rg.location}",
+          "resource_group_name": "${azurerm_resource_group.rg.name}",
+          "security_rule": [
+            {
+              "name": "allow_SSH_in_all",
+              "description": "Allow SSH in from all locations",
+              "priority": 100,
+              "direction": "Inbound",
+              "access": "Allow",
+              "protocol": "Tcp",
+              "source_port_range": "*",
+              "destination_port_range": 22,
+              "source_address_prefix": "*",
+              "destination_address_prefix": "*"
+            },
+            {
+              "name": "allow_HTTPS_all",
+              "description": "Allow HTTPS connections from all locations",
+              "priority": 200,
+              "direction": "Inbound",
+              "access": "Allow",
+              "protocol": "Tcp",
+              "source_port_range": "*",
+              "destination_port_range": 443,
+              "source_address_prefix": "*",
+              "destination_address_prefix": "*"
+            },
+            {
+              "name": "allow_HTTP_in_all",
+              "description": "Allow HTTP connections from all locations",
+              "priority": 300,
+              "direction": "Inbound",
+              "access": "Allow",
+              "protocol": "Tcp",
+              "source_port_range": "*",
+              "destination_port_range": 80,
+              "source_address_prefix": "*",
+              "destination_address_prefix": "*"
+            }
+          ],
+          "compiletime_identity": "azurerm_network_security_group.infra_nsg"
+        }
+      },
+      {
+        "type": "azurerm_network_security_group",
+        "name": "node_nsg",
+        "properties": {
+          "name": "${var.openshift_cluster_prefix}-node-nsg",
+          "location": "${azurerm_resource_group.rg.location}",
+          "resource_group_name": "${azurerm_resource_group.rg.name}",
+          "security_rule": [
+            {
+              "name": "allow_SSH_in_all",
+              "description": "Allow SSH in from all locations",
+              "priority": 100,
+              "direction": "Inbound",
+              "access": "Allow",
+              "protocol": "Tcp",
+              "source_port_range": "*",
+              "destination_port_range": 22,
+              "source_address_prefix": "*",
+              "destination_address_prefix": "*"
+            },
+            {
+              "name": "allow_HTTPS_all",
+              "description": "Allow HTTPS connections from all locations",
+              "priority": 200,
+              "direction": "Inbound",
+              "access": "Allow",
+              "protocol": "Tcp",
+              "source_port_range": "*",
+              "destination_port_range": 443,
+              "source_address_prefix": "*",
+              "destination_address_prefix": "*"
+            },
+            {
+              "name": "allow_HTTP_in_all",
+              "description": "Allow HTTP connections from all locations",
+              "priority": 300,
+              "direction": "Inbound",
+              "access": "Allow",
+              "protocol": "Tcp",
+              "source_port_range": "*",
+              "destination_port_range": 80,
+              "source_address_prefix": "*",
+              "destination_address_prefix": "*"
+            }
+          ],
+          "compiletime_identity": "azurerm_network_security_group.node_nsg"
+        }
+      },
+      {
+        "type": "azurerm_storage_account",
+        "name": "bastion_storage_account",
+        "properties": {
+          "name": "${var.openshift_cluster_prefix}bsa",
+          "resource_group_name": "${azurerm_resource_group.rg.name}",
+          "location": "${azurerm_resource_group.rg.location}",
+          "account_tier": "Standard",
+          "account_replication_type": "LRS",
+          "compiletime_identity": "azurerm_storage_account.bastion_storage_account"
+        }
+      },
+      {
+        "type": "azurerm_storage_account",
+        "name": "primary_storage_account",
+        "properties": {
+          "name": "${var.openshift_cluster_prefix}msa",
+          "resource_group_name": "${azurerm_resource_group.rg.name}",
+          "location": "${azurerm_resource_group.rg.location}",
+          "account_tier": "Standard",
+          "account_replication_type": "LRS",
+          "compiletime_identity": "azurerm_storage_account.primary_storage_account"
+        }
+      },
+      {
+        "type": "azurerm_storage_account",
+        "name": "infra_storage_account",
+        "properties": {
+          "name": "${var.openshift_cluster_prefix}infrasa",
+          "resource_group_name": "${azurerm_resource_group.rg.name}",
+          "location": "${azurerm_resource_group.rg.location}",
+          "account_tier": "Standard",
+          "account_replication_type": "LRS",
+          "compiletime_identity": "azurerm_storage_account.infra_storage_account"
+        }
+      },
+      {
+        "type": "azurerm_storage_account",
+        "name": "nodeos_storage_account",
+        "properties": {
+          "name": "${var.openshift_cluster_prefix}nodeossa",
+          "resource_group_name": "${azurerm_resource_group.rg.name}",
+          "location": "${azurerm_resource_group.rg.location}",
+          "account_tier": "Standard",
+          "account_replication_type": "LRS",
+          "compiletime_identity": "azurerm_storage_account.nodeos_storage_account"
+        }
+      },
+      {
+        "type": "azurerm_storage_account",
+        "name": "nodedata_storage_account",
+        "properties": {
+          "name": "${var.openshift_cluster_prefix}nodedatasa",
+          "resource_group_name": "${azurerm_resource_group.rg.name}",
+          "location": "${azurerm_resource_group.rg.location}",
+          "account_tier": "Standard",
+          "account_replication_type": "LRS",
+          "compiletime_identity": "azurerm_storage_account.nodedata_storage_account"
+        }
+      },
+      {
+        "type": "azurerm_storage_account",
+        "name": "registry_storage_account",
+        "properties": {
+          "name": "${var.openshift_cluster_prefix}regsa",
+          "resource_group_name": "${azurerm_resource_group.rg.name}",
+          "location": "${azurerm_resource_group.rg.location}",
+          "account_tier": "Standard",
+          "account_replication_type": "LRS",
+          "compiletime_identity": "azurerm_storage_account.registry_storage_account"
+        }
+      },
+      {
+        "type": "azurerm_storage_account",
+        "name": "persistent_volume_storage_account",
+        "properties": {
+          "name": "${var.openshift_cluster_prefix}pvsa",
+          "resource_group_name": "${azurerm_resource_group.rg.name}",
+          "location": "${azurerm_resource_group.rg.location}",
+          "account_tier": "Standard",
+          "account_replication_type": "LRS",
+          "compiletime_identity": "azurerm_storage_account.persistent_volume_storage_account"
+        }
+      },
+      {
+        "type": "azurerm_availability_set",
+        "name": "primary",
+        "properties": {
+          "name": "primaryavailabilityset",
+          "resource_group_name": "${azurerm_resource_group.rg.name}",
+          "location": "${azurerm_resource_group.rg.location}",
+          "compiletime_identity": "azurerm_availability_set.primary"
+        }
+      },
+      {
+        "type": "azurerm_availability_set",
+        "name": "infra",
+        "properties": {
+          "name": "infraavailabilityset",
+          "resource_group_name": "${azurerm_resource_group.rg.name}",
+          "location": "${azurerm_resource_group.rg.location}",
+          "compiletime_identity": "azurerm_availability_set.infra"
+        }
+      },
+      {
+        "type": "azurerm_availability_set",
+        "name": "node",
+        "properties": {
+          "name": "nodeavailabilityset",
+          "resource_group_name": "${azurerm_resource_group.rg.name}",
+          "location": "${azurerm_resource_group.rg.location}",
+          "compiletime_identity": "azurerm_availability_set.node"
+        }
+      },
+      {
+        "type": "azurerm_public_ip",
+        "name": "bastion_pip",
+        "properties": {
+          "name": "bastionpip",
+          "resource_group_name": "${azurerm_resource_group.rg.name}",
+          "location": "${azurerm_resource_group.rg.location}",
+          "allocation_method": "Static",
+          "domain_name_label": "${var.openshift_cluster_prefix}-bastion",
+          "compiletime_identity": "azurerm_public_ip.bastion_pip"
+        }
+      },
+      {
+        "type": "azurerm_public_ip",
+        "name": "openshift_primary_pip",
+        "properties": {
+          "name": "primarypip",
+          "resource_group_name": "${azurerm_resource_group.rg.name}",
+          "location": "${azurerm_resource_group.rg.location}",
+          "allocation_method": "Static",
+          "domain_name_label": "${var.openshift_cluster_prefix}",
+          "compiletime_identity": "azurerm_public_ip.openshift_primary_pip"
+        }
+      },
+      {
+        "type": "azurerm_public_ip",
+        "name": "infra_lb_pip",
+        "properties": {
+          "name": "infraip",
+          "resource_group_name": "${azurerm_resource_group.rg.name}",
+          "location": "${azurerm_resource_group.rg.location}",
+          "allocation_method": "Static",
+          "domain_name_label": "${var.openshift_cluster_prefix}infrapip",
+          "compiletime_identity": "azurerm_public_ip.infra_lb_pip"
+        }
+      },
+      {
+        "type": "azurerm_virtual_network",
+        "name": "vnet",
+        "properties": {
+          "name": "openshiftvnet",
+          "location": "${azurerm_resource_group.rg.location}",
+          "resource_group_name": "${azurerm_resource_group.rg.name}",
+          "address_space": [
+            "10.0.0.0/8"
+          ],
+          "depends_on": [
+            "azurerm_virtual_network.vnet"
+          ],
+          "compiletime_identity": "azurerm_virtual_network.vnet"
+        }
+      },
+      {
+        "type": "azurerm_subnet",
+        "name": "primary_subnet",
+        "properties": {
+          "name": "primarysubnet",
+          "virtual_network_name": "${azurerm_virtual_network.vnet.name}",
+          "resource_group_name": "${azurerm_resource_group.rg.name}",
+          "address_prefixes": [
+            "10.1.0.0/16"
+          ],
+          "depends_on": [
+            "azurerm_virtual_network.vnet"
+          ],
+          "compiletime_identity": "azurerm_subnet.primary_subnet"
+        }
+      },
+      {
+        "type": "azurerm_subnet",
+        "name": "node_subnet",
+        "properties": {
+          "name": "nodesubnet",
+          "virtual_network_name": "${azurerm_virtual_network.vnet.name}",
+          "resource_group_name": "${azurerm_resource_group.rg.name}",
+          "address_prefixes": [
+            "10.2.0.0/16"
+          ],
+          "compiletime_identity": "azurerm_subnet.node_subnet"
+        }
+      },
+      {
+        "type": "azurerm_lb",
+        "name": "primary_lb",
+        "properties": {
+          "name": "primaryloadbalancer",
+          "resource_group_name": "${azurerm_resource_group.rg.name}",
+          "location": "${azurerm_resource_group.rg.location}",
+          "depends_on": [
+            "azurerm_public_ip.openshift_primary_pip"
+          ],
+          "frontend_ip_configuration": [
+            {
+              "name": "LoadBalancerFrontEnd",
+              "public_ip_address_id": "${azurerm_public_ip.openshift_primary_pip.id}"
+            }
+          ],
+          "compiletime_identity": "azurerm_lb.primary_lb"
+        }
+      },
+      {
+        "type": "azurerm_lb",
+        "name": "infra_lb",
+        "properties": {
+          "name": "infraloadbalancer",
+          "resource_group_name": "${azurerm_resource_group.rg.name}",
+          "location": "${azurerm_resource_group.rg.location}",
+          "depends_on": [
+            "azurerm_public_ip.infra_lb_pip"
+          ],
+          "frontend_ip_configuration": [
+            {
+              "name": "LoadBalancerFrontEnd",
+              "public_ip_address_id": "${azurerm_public_ip.infra_lb_pip.id}"
+            }
+          ],
+          "compiletime_identity": "azurerm_lb.infra_lb"
+        }
+      },
+      {
+        "type": "azurerm_lb_backend_address_pool",
+        "name": "primary_lb",
+        "properties": {
+          "resource_group_name": "${azurerm_resource_group.rg.name}",
+          "name": "loadBalancerBackEnd",
+          "loadbalancer_id": "${azurerm_lb.primary_lb.id}",
+          "depends_on": [
+            "azurerm_lb.primary_lb"
+          ],
+          "compiletime_identity": "azurerm_lb_backend_address_pool.primary_lb"
+        }
+      },
+      {
+        "type": "azurerm_lb_backend_address_pool",
+        "name": "infra_lb",
+        "properties": {
+          "resource_group_name": "${azurerm_resource_group.rg.name}",
+          "name": "loadBalancerBackEnd",
+          "loadbalancer_id": "${azurerm_lb.infra_lb.id}",
+          "depends_on": [
+            "azurerm_lb.infra_lb"
+          ],
+          "compiletime_identity": "azurerm_lb_backend_address_pool.infra_lb"
+        }
+      },
+      {
+        "type": "azurerm_lb_probe",
+        "name": "primary_lb",
+        "properties": {
+          "resource_group_name": "${azurerm_resource_group.rg.name}",
+          "loadbalancer_id": "${azurerm_lb.primary_lb.id}",
+          "name": "8443Probe",
+          "port": 8443,
+          "interval_in_seconds": 5,
+          "number_of_probes": 2,
+          "protocol": "Tcp",
+          "depends_on": [
+            "azurerm_lb.primary_lb"
+          ],
+          "compiletime_identity": "azurerm_lb_probe.primary_lb"
+        }
+      },
+      {
+        "type": "azurerm_lb_probe",
+        "name": "infra_lb_http_probe",
+        "properties": {
+          "resource_group_name": "${azurerm_resource_group.rg.name}",
+          "loadbalancer_id": "${azurerm_lb.infra_lb.id}",
+          "name": "httpProbe",
+          "port": 80,
+          "interval_in_seconds": 5,
+          "number_of_probes": 2,
+          "protocol": "Tcp",
+          "depends_on": [
+            "azurerm_lb.infra_lb"
+          ],
+          "compiletime_identity": "azurerm_lb_probe.infra_lb_http_probe"
+        }
+      },
+      {
+        "type": "azurerm_lb_probe",
+        "name": "infra_lb_https_probe",
+        "properties": {
+          "resource_group_name": "${azurerm_resource_group.rg.name}",
+          "loadbalancer_id": "${azurerm_lb.infra_lb.id}",
+          "name": "httpsProbe",
+          "port": 443,
+          "interval_in_seconds": 5,
+          "number_of_probes": 2,
+          "protocol": "Tcp",
+          "compiletime_identity": "azurerm_lb_probe.infra_lb_https_probe"
+        }
+      },
+      {
+        "type": "azurerm_lb_rule",
+        "name": "primary_lb",
+        "properties": {
+          "resource_group_name": "${azurerm_resource_group.rg.name}",
+          "loadbalancer_id": "${azurerm_lb.primary_lb.id}",
+          "name": "OpenShiftAdminConsole",
+          "protocol": "Tcp",
+          "frontend_port": 8443,
+          "backend_port": 8443,
+          "frontend_ip_configuration_name": "LoadBalancerFrontEnd",
+          "backend_address_pool_id": "${azurerm_lb_backend_address_pool.primary_lb.id}",
+          "load_distribution": "SourceIP",
+          "idle_timeout_in_minutes": 30,
+          "probe_id": "${azurerm_lb_probe.primary_lb.id}",
+          "enable_floating_ip": false,
+          "depends_on": [
+            "azurerm_lb_probe.primary_lb",
+            "azurerm_lb.primary_lb",
+            "azurerm_lb_backend_address_pool.primary_lb"
+          ],
+          "compiletime_identity": "azurerm_lb_rule.primary_lb"
+        }
+      },
+      {
+        "type": "azurerm_lb_rule",
+        "name": "infra_lb_http",
+        "properties": {
+          "resource_group_name": "${azurerm_resource_group.rg.name}",
+          "loadbalancer_id": "${azurerm_lb.infra_lb.id}",
+          "name": "OpenShiftRouterHTTP",
+          "protocol": "Tcp",
+          "frontend_port": 80,
+          "backend_port": 80,
+          "frontend_ip_configuration_name": "LoadBalancerFrontEnd",
+          "backend_address_pool_id": "${azurerm_lb_backend_address_pool.infra_lb.id}",
+          "probe_id": "${azurerm_lb_probe.infra_lb_http_probe.id}",
+          "depends_on": [
+            "azurerm_lb_probe.infra_lb_http_probe",
+            "azurerm_lb.infra_lb",
+            "azurerm_lb_backend_address_pool.infra_lb"
+          ],
+          "compiletime_identity": "azurerm_lb_rule.infra_lb_http"
+        }
+      },
+      {
+        "type": "azurerm_lb_rule",
+        "name": "infra_lb_https",
+        "properties": {
+          "resource_group_name": "${azurerm_resource_group.rg.name}",
+          "loadbalancer_id": "${azurerm_lb.infra_lb.id}",
+          "name": "OpenShiftRouterHTTPS",
+          "protocol": "Tcp",
+          "frontend_port": 443,
+          "backend_port": 443,
+          "frontend_ip_configuration_name": "LoadBalancerFrontEnd",
+          "backend_address_pool_id": "${azurerm_lb_backend_address_pool.infra_lb.id}",
+          "probe_id": "${azurerm_lb_probe.infra_lb_https_probe.id}",
+          "depends_on": [
+            "azurerm_lb_probe.infra_lb_https_probe",
+            "azurerm_lb_backend_address_pool.infra_lb"
+          ],
+          "compiletime_identity": "azurerm_lb_rule.infra_lb_https"
+        }
+      },
+      {
+        "type": "azurerm_lb_nat_rule",
+        "name": "primary_lb",
+        "properties": {
+          "resource_group_name": "${azurerm_resource_group.rg.name}",
+          "loadbalancer_id": "${azurerm_lb.primary_lb.id}",
+          "name": "${azurerm_lb.primary_lb.name}-SSH-0",
+          "protocol": "Tcp",
+          "frontend_port": "${count.index + 2200}",
+          "backend_port": 22,
+          "frontend_ip_configuration_name": "LoadBalancerFrontEnd",
+          "depends_on": [
+            "azurerm_lb.primary_lb"
+          ],
+          "compiletime_identity": "azurerm_lb_nat_rule.primary_lb"
+        }
+      },
+      {
+        "type": "azurerm_network_interface",
+        "name": "bastion_nic",
+        "properties": {
+          "name": "bastionnic${count.index}",
+          "location": "${azurerm_resource_group.rg.location}",
+          "resource_group_name": "${azurerm_resource_group.rg.name}",
+          "network_security_group_id": "${azurerm_network_security_group.primary_nsg.id}",
+          "ip_configuration": [
+            {
+              "name": "bastionip${count.index}",
+              "subnet_id": "${azurerm_subnet.primary_subnet.id}",
+              "private_ip_address_allocation": "Dynamic",
+              "public_ip_address_id": "${azurerm_public_ip.bastion_pip.id}"
+            }
+          ],
+          "compiletime_identity": "azurerm_network_interface.bastion_nic"
+        }
+      },
+      {
+        "type": "azurerm_network_interface",
+        "name": "primary_nic",
+        "properties": {
+          "name": "primarynic0",
+          "location": "${azurerm_resource_group.rg.location}",
+          "resource_group_name": "${azurerm_resource_group.rg.name}",
+          "network_security_group_id": "${azurerm_network_security_group.primary_nsg.id}",
+          "ip_configuration": [
+            {
+              "name": "primaryip0",
+              "subnet_id": "${azurerm_subnet.primary_subnet.id}",
+              "private_ip_address_allocation": "Dynamic",
+              "load_balancer_backend_address_pools_ids": [
+                "${azurerm_lb_backend_address_pool.primary_lb.id}"
+              ],
+              "load_balancer_inbound_nat_rules_ids": [
+                "element(azurerm_lb_nat_rule.primary_lb.*.id,0)"
+              ]
+            }
+          ],
+          "compiletime_identity": "azurerm_network_interface.primary_nic"
+        }
+      },
+      {
+        "type": "azurerm_network_interface",
+        "name": "infra_nic",
+        "properties": {
+          "name": "infra_nic0",
+          "location": "${azurerm_resource_group.rg.location}",
+          "resource_group_name": "${azurerm_resource_group.rg.name}",
+          "network_security_group_id": "${azurerm_network_security_group.infra_nsg.id}",
+          "ip_configuration": [
+            {
+              "name": "infraip0",
+              "subnet_id": "${azurerm_subnet.primary_subnet.id}",
+              "private_ip_address_allocation": "Dynamic",
+              "load_balancer_backend_address_pools_ids": [
+                "${azurerm_lb_backend_address_pool.infra_lb.id}"
+              ]
+            }
+          ],
+          "compiletime_identity": "azurerm_network_interface.infra_nic"
+        }
+      },
+      {
+        "type": "azurerm_network_interface",
+        "name": "node_nic",
+        "properties": {
+          "name": "node_nic0",
+          "location": "${azurerm_resource_group.rg.location}",
+          "resource_group_name": "${azurerm_resource_group.rg.name}",
+          "network_security_group_id": "${azurerm_network_security_group.node_nsg.id}",
+          "ip_configuration": [
+            {
+              "name": "nodeip0",
+              "subnet_id": "${azurerm_subnet.node_subnet.id}",
+              "private_ip_address_allocation": "Dynamic"
+            }
+          ],
+          "compiletime_identity": "azurerm_network_interface.node_nic"
+        }
+      },
+      {
+        "type": "azurerm_virtual_machine",
+        "name": "bastion",
+        "properties": {
+          "name": "${var.openshift_cluster_prefix}-bastion-1",
+          "location": "${azurerm_resource_group.rg.location}",
+          "resource_group_name": "${azurerm_resource_group.rg.name}",
+          "network_interface_ids": [
+            "${azurerm_network_interface.bastion_nic.id}"
+          ],
+          "vm_size": "Standard_D2_v2",
+          "delete_os_disk_on_termination": true,
+          "delete_data_disks_on_termination": true,
+          "tags": {
+            "displayName": "${var.openshift_cluster_prefix}-bastion VM Creation"
+          },
+          "os_profile": [
+            {
+              "computer_name": "${var.openshift_cluster_prefix}-bastion-${count.index}",
+              "admin_username": "ocpadmin",
+              "admin_password": "${var.openshift_password}"
+            }
+          ],
+          "os_profile_linux_config": [
+            {
+              "disable_password_authentication": true,
+              "ssh_keys": [
+                {
+                  "path": "/home/ocpadmin/.ssh/authorized_keys",
+                  "key_data": "${var.ssh_public_key}"
+                }
+              ]
+            }
+          ],
+          "storage_image_reference": [
+            {
+              "publisher": "Openlogic",
+              "offer": "CentOS",
+              "sku": "7.3",
+              "version": "latest"
+            }
+          ],
+          "storage_os_disk": [
+            {
+              "name": "${var.openshift_cluster_prefix}-primary-osdisk${count.index}",
+              "vhd_uri": "${azurerm_storage_account.bastion_storage_account.primary_blob_endpoint}vhds/${var.openshift_cluster_prefix}-bastion-osdisk.vhd",
+              "caching": "ReadWrite",
+              "create_option": "FromImage",
+              "disk_size_gb": 60
+            }
+          ],
+          "compiletime_identity": "azurerm_virtual_machine.bastion"
+        }
+      },
+      {
+        "type": "azurerm_virtual_machine",
+        "name": "primary",
+        "properties": {
+          "name": "${var.openshift_cluster_prefix}-primary-0",
+          "location": "${azurerm_resource_group.rg.location}",
+          "resource_group_name": "${azurerm_resource_group.rg.name}",
+          "availability_set_id": "${azurerm_availability_set.primary.id}",
+          "network_interface_ids": [
+            "element(azurerm_network_interface.primary_nic.*.id,0)"
+          ],
+          "vm_size": "Standard_DS4_v2",
+          "delete_os_disk_on_termination": true,
+          "delete_data_disks_on_termination": true,
+          "depends_on": [
+            "azurerm_virtual_machine.infra",
+            "azurerm_virtual_machine.node"
+          ],
+          "tags": {
+            "displayName": "${var.openshift_cluster_prefix}-primary VM Creation"
+          },
+          "connection": [
+            {
+              "host": "${azurerm_public_ip.openshift_primary_pip.fqdn}",
+              "user": "ocpadmin",
+              "port": 2200,
+              "private_key": "${file(var.connection_private_ssh_key_path)}"
+            }
+          ],
+          "provisioner": [
+            {
+              "file": {
+                "source": "${var.openshift_script_path}/primaryPrep.sh",
+                "destination": "primaryPrep.sh"
+              }
+            },
+            {
+              "file": {
+                "source": "${var.openshift_script_path}/deployOpenShift.sh",
+                "destination": "deployOpenShift.sh"
+              }
+            },
+            {
+              "remote-exec": {
+                "inline": [
+                  "set -x",
+                  "chmod +x primaryPrep.sh",
+                  "chmod +x deployOpenShift.sh",
+                  "sudo bash primaryPrep.sh \\\"${azurerm_storage_account.persistent_volume_storage_account.name}\\\" \\\"southcentralus\\\" \\\"ocpadmin\\\" && sudo bash deployOpenShift.sh \\\"ocpadmin\\\" \\\"${var.openshift_password}\\\" \\\"${var.key_vault_secret}\\\" \\\"${var.openshift_cluster_prefix}-primary\\\" \\\"${azurerm_public_ip.openshift_primary_pip.fqdn}\\\" \\\"${azurerm_public_ip.openshift_primary_pip.ip_address}\\\" \\\"${var.openshift_cluster_prefix}-infra\\\" \\\"${var.openshift_cluster_prefix}-node\\\" \\\"1\\\" \\\"1\\\" \\\"1\\\" \\\"xipio\\\" \\\"${azurerm_storage_account.registry_storage_account.name}\\\" \\\"${azurerm_storage_account.registry_storage_account.primary_access_key}\\\" \\\"${var.tenant_id}\\\" \\\"${var.subscription_id}\\\" \\\"${var.aad_client_id}\\\" \\\"${var.aad_client_secret}\\\" \\\"${azurerm_resource_group.rg.name}\\\" \\\"${azurerm_resource_group.rg.location}\\\" \\\"${var.key_vault_name}\\\""
+                ]
+              }
+            }
+          ],
+          "os_profile": [
+            {
+              "computer_name": "${var.openshift_cluster_prefix}-primary-0",
+              "admin_username": "ocpadmin",
+              "admin_password": "${var.openshift_password}"
+            }
+          ],
+          "os_profile_linux_config": [
+            {
+              "disable_password_authentication": true,
+              "ssh_keys": [
+                {
+                  "path": "/home/ocpadmin/.ssh/authorized_keys",
+                  "key_data": "${var.ssh_public_key}"
+                }
+              ]
+            }
+          ],
+          "storage_image_reference": [
+            {
+              "publisher": "Openlogic",
+              "offer": "CentOS",
+              "sku": "7.3",
+              "version": "latest"
+            }
+          ],
+          "storage_os_disk": [
+            {
+              "name": "${var.openshift_cluster_prefix}-primary-osdisk0",
+              "vhd_uri": "${azurerm_storage_account.primary_storage_account.primary_blob_endpoint}vhds/${var.openshift_cluster_prefix}-primary-osdisk0.vhd",
+              "caching": "ReadWrite",
+              "create_option": "FromImage",
+              "disk_size_gb": 60
+            }
+          ],
+          "storage_data_disk": [
+            {
+              "name": "${var.openshift_cluster_prefix}-primary-docker-pool0",
+              "vhd_uri": "${azurerm_storage_account.primary_storage_account.primary_blob_endpoint}vhds/${var.openshift_cluster_prefix}-primary-docker-pool0.vhd",
+              "disk_size_gb": 128,
+              "create_option": "Empty",
+              "lun": 0
+            }
+          ],
+          "compiletime_identity": "azurerm_virtual_machine.primary"
+        }
+      },
+      {
+        "type": "azurerm_virtual_machine",
+        "name": "infra",
+        "properties": {
+          "name": "${var.openshift_cluster_prefix}-infra-0",
+          "location": "${azurerm_resource_group.rg.location}",
+          "resource_group_name": "${azurerm_resource_group.rg.name}",
+          "availability_set_id": "${azurerm_availability_set.infra.id}",
+          "network_interface_ids": [
+            "element(azurerm_network_interface.infra_nic.*.id,0)"
+          ],
+          "vm_size": "Standard_DS3_v2",
+          "delete_os_disk_on_termination": true,
+          "delete_data_disks_on_termination": true,
+          "tags": {
+            "displayName": "${var.openshift_cluster_prefix}-infra VM Creation"
+          },
+          "connection": [
+            {
+              "type": "ssh",
+              "bastion_host": "${azurerm_public_ip.bastion_pip.fqdn}",
+              "bastion_user": "ocpadmin",
+              "bastion_private_key": "${file(var.connection_private_ssh_key_path)}",
+              "host": "element(azurerm_network_interface.infra_nic.*.private_ip_address,0)",
+              "user": "ocpadmin",
+              "private_key": "${file(var.connection_private_ssh_key_path)}"
+            }
+          ],
+          "provisioner": [
+            {
+              "file": {
+                "source": "${var.openshift_script_path}/nodePrep.sh",
+                "destination": "nodePrep.sh"
+              }
+            },
+            {
+              "remote-exec": {
+                "inline": [
+                  "chmod +x nodePrep.sh",
+                  "sudo bash nodePrep.sh"
+                ]
+              }
+            }
+          ],
+          "os_profile": [
+            {
+              "computer_name": "${var.openshift_cluster_prefix}-infra-0",
+              "admin_username": "ocpadmin",
+              "admin_password": "${var.openshift_password}"
+            }
+          ],
+          "os_profile_linux_config": [
+            {
+              "disable_password_authentication": true,
+              "ssh_keys": [
+                {
+                  "path": "/home/ocpadmin/.ssh/authorized_keys",
+                  "key_data": "${var.ssh_public_key}"
+                }
+              ]
+            }
+          ],
+          "storage_image_reference": [
+            {
+              "publisher": "Openlogic",
+              "offer": "CentOS",
+              "sku": "7.3",
+              "version": "latest"
+            }
+          ],
+          "storage_os_disk": [
+            {
+              "name": "${var.openshift_cluster_prefix}-infra-osdisk0",
+              "vhd_uri": "${azurerm_storage_account.infra_storage_account.primary_blob_endpoint}vhds/${var.openshift_cluster_prefix}-infra-osdisk0.vhd",
+              "caching": "ReadWrite",
+              "create_option": "FromImage"
+            }
+          ],
+          "storage_data_disk": [
+            {
+              "name": "${var.openshift_cluster_prefix}-infra-docker-pool",
+              "vhd_uri": "${azurerm_storage_account.infra_storage_account.primary_blob_endpoint}vhds/${var.openshift_cluster_prefix}-infra-docker-pool0.vhd",
+              "disk_size_gb": 128,
+              "create_option": "Empty",
+              "lun": 0
+            }
+          ],
+          "compiletime_identity": "azurerm_virtual_machine.infra"
+        }
+      },
+      {
+        "type": "azurerm_virtual_machine",
+        "name": "node",
+        "properties": {
+          "name": "${var.openshift_cluster_prefix}-node-0",
+          "location": "${azurerm_resource_group.rg.location}",
+          "resource_group_name": "${azurerm_resource_group.rg.name}",
+          "availability_set_id": "${azurerm_availability_set.node.id}",
+          "network_interface_ids": [
+            "element(azurerm_network_interface.node_nic.*.id,0)"
+          ],
+          "vm_size": "Standard_DS3_v2",
+          "delete_os_disk_on_termination": true,
+          "delete_data_disks_on_termination": true,
+          "tags": {
+            "displayName": "${var.openshift_cluster_prefix}-node VM Creation"
+          },
+          "connection": [
+            {
+              "type": "ssh",
+              "bastion_host": "${azurerm_public_ip.bastion_pip.fqdn}",
+              "bastion_user": "ocpadmin",
+              "bastion_private_key": "${file(var.connection_private_ssh_key_path)}",
+              "host": "element(azurerm_network_interface.node_nic.*.private_ip_address,0)",
+              "user": "ocpadmin",
+              "private_key": "${file(var.connection_private_ssh_key_path)}"
+            }
+          ],
+          "provisioner": [
+            {
+              "file": {
+                "source": "${var.openshift_script_path}/nodePrep.sh",
+                "destination": "nodePrep.sh"
+              }
+            },
+            {
+              "remote-exec": {
+                "inline": [
+                  "chmod +x nodePrep.sh",
+                  "sudo bash nodePrep.sh"
+                ]
+              }
+            }
+          ],
+          "os_profile": [
+            {
+              "computer_name": "${var.openshift_cluster_prefix}-node-0",
+              "admin_username": "ocpadmin",
+              "admin_password": "${var.openshift_password}"
+            }
+          ],
+          "os_profile_linux_config": [
+            {
+              "disable_password_authentication": true,
+              "ssh_keys": [
+                {
+                  "path": "/home/ocpadmin/.ssh/authorized_keys",
+                  "key_data": "${var.ssh_public_key}"
+                }
+              ]
+            }
+          ],
+          "storage_image_reference": [
+            {
+              "publisher": "Openlogic",
+              "offer": "CentOS",
+              "sku": "7.3",
+              "version": "latest"
+            }
+          ],
+          "storage_os_disk": [
+            {
+              "name": "${var.openshift_cluster_prefix}-node-osdisk",
+              "vhd_uri": "${azurerm_storage_account.nodeos_storage_account.primary_blob_endpoint}vhds/${var.openshift_cluster_prefix}-node-osdisk0.vhd",
+              "caching": "ReadWrite",
+              "create_option": "FromImage"
+            }
+          ],
+          "storage_data_disk": [
+            {
+              "name": "${var.openshift_cluster_prefix}-node-docker-pool0",
+              "vhd_uri": "${azurerm_storage_account.nodeos_storage_account.primary_blob_endpoint}vhds/${var.openshift_cluster_prefix}-node-docker-pool0.vhd",
+              "disk_size_gb": 128,
+              "create_option": "Empty",
+              "lun": 0
+            }
+          ],
+          "compiletime_identity": "azurerm_virtual_machine.node"
+        }
+      }
+    ]
+  }
+}

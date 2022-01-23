@@ -1,0 +1,192 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAzureQuickStart",
+  "paths": [
+    "/quickstarts/microsoft.network/vpn-custom-ipsec-policy/prereqs/prereq.azuredeploy.json",
+    "/quickstarts/microsoft.network/vpn-custom-ipsec-policy/prereqs/prereq.azuredeploy.parameters.json"
+  ],
+  "timestamp": 1642962909708,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/quickstarts/microsoft.network/vpn-custom-ipsec-policy/prereqs/prereq.azuredeploy.json",
+      "/quickstarts/microsoft.network/vpn-custom-ipsec-policy/prereqs/prereq.azuredeploy.parameters.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT1614",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "microsoft.network/publicipaddresses",
+      "microsoft.network/virtualnetworks",
+      "microsoft.network/localnetworkgateways",
+      "microsoft.network/virtualnetworkgateways",
+      "microsoft.network/virtualnetworks/subnets"
+    ]
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT1614",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "location": {
+        "defaultValue": "[resourceGroup().location]",
+        "type": "string"
+      },
+      "vnet_name": {
+        "defaultValue": "vnet",
+        "type": "String"
+      },
+      "vnet_addressSpace": {
+        "defaultValue": "10.1.0.0/16",
+        "type": "String"
+      },
+      "vnet_gatewaySubnet_addressSpace": {
+        "defaultValue": "10.1.0.0/27",
+        "type": "String"
+      },
+      "vpnGateway_name": {
+        "defaultValue": "vpnGateway",
+        "type": "String"
+      },
+      "vpnGateway_publicIp_name": {
+        "defaultValue": "vpnGateway-ip",
+        "type": "String"
+      },
+      "localGateway_name": {
+        "defaultValue": "localGateway",
+        "type": "String"
+      },
+      "localGateway_addressPrefix": {
+        "defaultValue": "192.168.1.0/24",
+        "type": "string"
+      },
+      "localGateway_gatewayIpAddress": {
+        "type": "string",
+        "value": "1.1.1.1"
+      }
+    },
+    "variables": {},
+    "resources": [
+      {
+        "type": "Microsoft.Network/localNetworkGateways",
+        "apiVersion": "2020-05-01",
+        "name": "localGateway",
+        "location": "[resourceGroup().location]",
+        "properties": {
+          "localNetworkAddressSpace": {
+            "addressPrefixes": [
+              "192.168.1.0/24"
+            ]
+          },
+          "gatewayIpAddress": "1.1.1.1"
+        }
+      },
+      {
+        "type": "Microsoft.Network/publicIPAddresses",
+        "apiVersion": "2020-05-01",
+        "name": "vpnGateway-ip",
+        "location": "[resourceGroup().location]",
+        "sku": {
+          "name": "Basic"
+        },
+        "properties": {
+          "publicIPAddressVersion": "IPv4",
+          "publicIPAllocationMethod": "Dynamic",
+          "idleTimeoutInMinutes": 4
+        }
+      },
+      {
+        "type": "Microsoft.Network/virtualNetworks",
+        "apiVersion": "2020-05-01",
+        "name": "vnet",
+        "location": "[resourceGroup().location]",
+        "properties": {
+          "addressSpace": {
+            "addressPrefixes": [
+              "10.1.0.0/16"
+            ]
+          },
+          "subnets": [
+            {
+              "name": "GatewaySubnet",
+              "properties": {
+                "addressPrefix": "10.1.0.0/27",
+                "privateEndpointNetworkPolicies": "Enabled",
+                "privateLinkServiceNetworkPolicies": "Enabled"
+              }
+            }
+          ],
+          "enableDdosProtection": false,
+          "enableVmProtection": false
+        }
+      },
+      {
+        "type": "Microsoft.Network/virtualNetworks/subnets",
+        "apiVersion": "2020-05-01",
+        "name": "vnet/GatewaySubnet",
+        "dependsOn": [
+          "Microsoft.Network/virtualNetworks/vnet"
+        ],
+        "properties": {
+          "addressPrefix": "10.1.0.0/27",
+          "privateEndpointNetworkPolicies": "Enabled",
+          "privateLinkServiceNetworkPolicies": "Enabled"
+        }
+      },
+      {
+        "type": "Microsoft.Network/virtualNetworkGateways",
+        "apiVersion": "2020-05-01",
+        "name": "vpnGateway",
+        "location": "[resourceGroup().location]",
+        "dependsOn": [
+          "Microsoft.Network/publicIPAddresses/vpnGateway-ip",
+          "Microsoft.Network/virtualNetworks/subnets/vnet/GatewaySubnet"
+        ],
+        "properties": {
+          "enablePrivateIpAddress": false,
+          "ipConfigurations": [
+            {
+              "name": "default",
+              "properties": {
+                "privateIPAllocationMethod": "Dynamic",
+                "publicIPAddress": {
+                  "id": "Microsoft.Network/publicIPAddresses/vpnGateway-ip"
+                },
+                "subnet": {
+                  "id": "Microsoft.Network/virtualNetworks/subnets/vnet/GatewaySubnet"
+                }
+              }
+            }
+          ],
+          "sku": {
+            "name": "VpnGw1",
+            "tier": "VpnGw1"
+          },
+          "gatewayType": "Vpn",
+          "vpnType": "RouteBased",
+          "enableBgp": false,
+          "activeActive": false,
+          "vpnGatewayGeneration": "Generation1"
+        }
+      }
+    ],
+    "outputs": {
+      "vpnGateway": {
+        "type": "string",
+        "value": "[parameters('vpnGateway_name')]"
+      },
+      "localGateway": {
+        "type": "string",
+        "value": "[parameters('localGateway_name')]"
+      }
+    },
+    "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+  }
+}

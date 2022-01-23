@@ -1,0 +1,76 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAzureQuickStart",
+  "paths": [
+    "/quickstarts/microsoft.insights/datacollectionrule-create-syslog/prereqs/prereq.azuredeploy.json",
+    "/quickstarts/microsoft.insights/datacollectionrule-create-syslog/prereqs/prereq.azuredeploy.parameters.json"
+  ],
+  "timestamp": 1642962907207,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/quickstarts/microsoft.insights/datacollectionrule-create-syslog/prereqs/prereq.azuredeploy.json",
+      "/quickstarts/microsoft.insights/datacollectionrule-create-syslog/prereqs/prereq.azuredeploy.parameters.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT1367",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "microsoft.operationalinsights/workspaces"
+    ]
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT1367",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "location": {
+        "type": "string",
+        "defaultValue": "[resourceGroup().location]",
+        "metadata": {
+          "description": "Location for the log analitycs workspace."
+        }
+      },
+      "workspaceName": {
+        "type": "string",
+        "metadata": {
+          "description": "Name of the log analitycs workspace."
+        },
+        "value": "ws-data"
+      }
+    },
+    "resources": [
+      {
+        "type": "microsoft.operationalinsights/workspaces",
+        "apiVersion": "2020-10-01",
+        "name": "ws-data",
+        "location": "[resourceGroup().location]",
+        "properties": {
+          "sku": {
+            "name": "pergb2018"
+          },
+          "retentionInDays": 30,
+          "workspaceCapping": {
+            "dailyQuotaGb": -1
+          },
+          "publicNetworkAccessForIngestion": "Enabled",
+          "publicNetworkAccessForQuery": "Enabled"
+        }
+      }
+    ],
+    "outputs": {
+      "workspaceResourceId": {
+        "type": "string",
+        "value": "[resourceId('microsoft.operationalinsights/workspaces', parameters('workspaceName'))]"
+      }
+    },
+    "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+  }
+}

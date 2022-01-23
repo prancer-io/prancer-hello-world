@@ -2,12 +2,12 @@
   "structure": "filesystem",
   "error": null,
   "reference": "master",
-  "contentType": "yaml",
+  "contentType": "json",
   "source": "gitConnectorGoogleKcc",
   "paths": [
-    "/samples/resources/iampolicymember/kms-policy-member-with-condition/iam_v1beta1_iamserviceaccount.yaml"
+    "/samples/resources/gkehubfeature/multi-cluster-ingress-feature/gkehub_v1beta1_gkehubfeature.yaml"
   ],
-  "timestamp": 1628765148085,
+  "timestamp": 1642973304125,
   "queryuser": null,
   "checksum": "99914b932bd37a50b983c5e7c90ae93b",
   "node": {
@@ -15,19 +15,39 @@
     "type": "kcc",
     "collection": "kcctemplate",
     "paths": [
-      "/samples/resources/iampolicymember/kms-policy-member-with-condition/iam_v1beta1_iamserviceaccount.yaml"
+      "/samples/resources/gkehubfeature/multi-cluster-ingress-feature/gkehub_v1beta1_gkehubfeature.yaml"
     ],
     "snapshotId": "KCC_TEMPLATE_SNAPSHOT416",
     "status": "active",
-    "validate": true
+    "validate": true,
+    "resourceTypes": [
+      "gkehubfeature"
+    ]
   },
   "snapshotId": "KCC_TEMPLATE_SNAPSHOT416",
   "collection": "kcctemplate",
   "json": {
-    "apiVersion": "iam.cnrm.cloud.google.com/v1beta1",
-    "kind": "IAMServiceAccount",
+    "apiVersion": "gkehub.cnrm.cloud.google.com/v1beta1",
+    "kind": "GKEHubFeature",
     "metadata": {
-      "name": "iampolicymember-dep-condition"
+      "name": "gkehubfeature-sample-mcifeature",
+      "labels": {
+        "label-one": "value-one"
+      }
+    },
+    "spec": {
+      "projectRef": {
+        "name": "gkehubfeature-dep-mcifeature"
+      },
+      "location": "global",
+      "resourceID": "multiclusteringress",
+      "spec": {
+        "multiclusteringress": {
+          "configMembershipRef": {
+            "name": "gkehubfeature-dep-mcifeature"
+          }
+        }
+      }
     }
   }
 }

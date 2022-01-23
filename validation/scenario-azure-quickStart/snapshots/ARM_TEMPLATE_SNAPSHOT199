@@ -1,0 +1,640 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAzureQuickStart",
+  "paths": [
+    "/application-workloads/jenkins/jenkins-cluster-2-linux-1-win/azuredeploy.json",
+    "/application-workloads/jenkins/jenkins-cluster-2-linux-1-win/azuredeploy.parameters.json"
+  ],
+  "timestamp": 1642962890414,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/application-workloads/jenkins/jenkins-cluster-2-linux-1-win/azuredeploy.json",
+      "/application-workloads/jenkins/jenkins-cluster-2-linux-1-win/azuredeploy.parameters.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT199",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "microsoft.network/publicipaddresses",
+      "microsoft.network/virtualnetworks",
+      "microsoft.network/networkinterfaces",
+      "microsoft.compute/virtualmachines/extensions",
+      "microsoft.compute/virtualmachines",
+      "microsoft.network/networksecuritygroups",
+      "microsoft.storage/storageaccounts"
+    ]
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT199",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "location": {
+        "type": "string",
+        "defaultValue": "[resourceGroup().location]",
+        "metadata": {
+          "description": "Location for cluster"
+        }
+      },
+      "master-vmSize": {
+        "type": "string",
+        "defaultValue": "Standard_A2_v2",
+        "metadata": {
+          "description": "Master VM Size"
+        }
+      },
+      "linux-worker-vmSize": {
+        "type": "string",
+        "defaultValue": "Standard_A2_v2",
+        "metadata": {
+          "description": "Linux worker VM Size"
+        }
+      },
+      "win-worker-vmSize": {
+        "type": "string",
+        "defaultValue": "Standard_D2s_v3",
+        "metadata": {
+          "description": "Windows Worker VM Size"
+        }
+      },
+      "master-username": {
+        "type": "string",
+        "metadata": {
+          "description": "Admin Username for Jenkins Master"
+        },
+        "value": "GEN-UNIQUE"
+      },
+      "node-username": {
+        "type": "string",
+        "metadata": {
+          "description": "Admin username for Slave Instances"
+        },
+        "value": "GEN-UNIQUE"
+      },
+      "master-password": {
+        "type": "securestring",
+        "metadata": {
+          "description": "Admin Password for Jenkins Master VM"
+        },
+        "value": "GEN-PASSWORD"
+      },
+      "node-password": {
+        "type": "securestring",
+        "metadata": {
+          "description": "Password for slave instances"
+        },
+        "value": "GEN-PASSWORD"
+      },
+      "jenkins-dns": {
+        "type": "string",
+        "defaultValue": "[concat('jenkins-', uniqueString(resourceGroup().id))]",
+        "metadata": {
+          "description": "DNS Prefix for Jenkins Master"
+        }
+      },
+      "storageName": {
+        "type": "string",
+        "defaultValue": "[concat('jenkins', uniqueString(resourceGroup().id))]",
+        "metadata": {
+          "description": "storage account prefix"
+        },
+        "minLength": 3,
+        "maxLength": 24
+      },
+      "_artifactsLocation": {
+        "type": "string",
+        "metadata": {
+          "description": "The base URI where artifacts required by this template are located including a trailing '/'"
+        },
+        "defaultValue": "[deployment().properties.templatelink.uri]"
+      },
+      "_artifactsLocationSasToken": {
+        "type": "securestring",
+        "metadata": {
+          "description": "The sasToken required to access _artifactsLocation.  When the template is deployed using the accompanying scripts, a sasToken will be automatically generated. Use the defaultValue if the staging location is not secured."
+        },
+        "defaultValue": ""
+      }
+    },
+    "variables": {
+      "NetIpRange": "10.0.0.0/16",
+      "SubnetRange": "10.0.1.0/24",
+      "scriptUrlMaster": "[uri(parameters('_artifactsLocation'),concat('scripts/install-jenkins.sh',parameters('_artifactsLocationSasToken')))]",
+      "scriptUrlNode1": "[uri(parameters('_artifactsLocation'),concat('scripts/install-slave.sh',parameters('_artifactsLocationSasToken')))]",
+      "scriptUrlNode2": "[uri(parameters('_artifactsLocation'),concat('win-slave.ps1',parameters('_artifactsLocationSasToken')))]"
+    },
+    "resources": [
+      {
+        "name": "[toLower(parameters('storageName'))]",
+        "type": "Microsoft.Storage/storageAccounts",
+        "apiVersion": "2019-06-01",
+        "location": "[resourceGroup().location]",
+        "tags": {
+          "displayName": "Cluster VM Storage Account"
+        },
+        "sku": {
+          "name": "Standard_LRS"
+        },
+        "kind": "Storage"
+      },
+      {
+        "name": "Master-PublicIP",
+        "type": "Microsoft.Network/publicIPAddresses",
+        "apiVersion": "2019-11-01",
+        "location": "[resourceGroup().location]",
+        "tags": {
+          "displayName": "PublicIPAddress"
+        },
+        "properties": {
+          "publicIPAllocationMethod": "Dynamic",
+          "dnsSettings": {
+            "domainNameLabel": "[concat('jenkins-', uniqueString(resourceGroup().id))]"
+          }
+        }
+      },
+      {
+        "name": "master-nsg",
+        "type": "Microsoft.Network/networkSecurityGroups",
+        "apiVersion": "2019-11-01",
+        "location": "[resourceGroup().location]",
+        "properties": {
+          "securityRules": [
+            {
+              "name": "nsgRule1",
+              "properties": {
+                "description": "SSH Access to Master",
+                "protocol": "Tcp",
+                "sourcePortRange": "*",
+                "destinationPortRange": "22",
+                "sourceAddressPrefix": "*",
+                "destinationAddressPrefix": "*",
+                "access": "Allow",
+                "priority": 100,
+                "direction": "Inbound"
+              }
+            },
+            {
+              "name": "nsgRule2",
+              "properties": {
+                "description": "HTTP Access to Master",
+                "protocol": "Tcp",
+                "sourcePortRange": "*",
+                "destinationPortRange": "8080",
+                "sourceAddressPrefix": "*",
+                "destinationAddressPrefix": "*",
+                "access": "Allow",
+                "priority": 200,
+                "direction": "Inbound"
+              }
+            }
+          ]
+        }
+      },
+      {
+        "name": "jenkins-cluster-VirtualNetwork",
+        "type": "Microsoft.Network/virtualNetworks",
+        "apiVersion": "2019-11-01",
+        "location": "[resourceGroup().location]",
+        "dependsOn": [
+          "Microsoft.Network/networkSecurityGroups/master-nsg"
+        ],
+        "tags": {
+          "displayName": "Jenkins-VirtualNetwork"
+        },
+        "properties": {
+          "addressSpace": {
+            "addressPrefixes": [
+              "10.0.0.0/16"
+            ]
+          },
+          "subnets": [
+            {
+              "name": "Jenkins-VirtualNetwork-Subnet",
+              "properties": {
+                "addressPrefix": "10.0.1.0/24"
+              }
+            }
+          ]
+        }
+      },
+      {
+        "name": "Master-NetworkInterface",
+        "type": "Microsoft.Network/networkInterfaces",
+        "apiVersion": "2019-11-01",
+        "location": "[resourceGroup().location]",
+        "dependsOn": [
+          "Microsoft.Network/publicIPAddresses/Master-PublicIP",
+          "Microsoft.Network/virtualNetworks/jenkins-cluster-VirtualNetwork",
+          "Microsoft.Network/networkSecurityGroups/master-nsg"
+        ],
+        "tags": {
+          "displayName": "Jenkins-Master-NetworkInterface"
+        },
+        "properties": {
+          "networkSecurityGroup": {
+            "id": "Microsoft.Network/networkSecurityGroups/master-nsg"
+          },
+          "ipConfigurations": [
+            {
+              "name": "ipConfig1",
+              "properties": {
+                "privateIPAllocationMethod": "Static",
+                "privateIPAddress": "10.0.1.10",
+                "publicIPAddress": {
+                  "id": "Microsoft.Network/publicIPAddresses/Master-PublicIP"
+                },
+                "subnet": {
+                  "id": "Microsoft.Network/virtualNetworks/subnets/jenkins-cluster-VirtualNetwork/Jenkins-VirtualNetwork-Subnet"
+                }
+              }
+            }
+          ]
+        }
+      },
+      {
+        "name": "Jenkins-Master",
+        "type": "Microsoft.Compute/virtualMachines",
+        "apiVersion": "2019-07-01",
+        "location": "[resourceGroup().location]",
+        "dependsOn": [
+          "Microsoft.Network/networkInterfaces/Master-NetworkInterface"
+        ],
+        "tags": {
+          "displayName": "Jenkins master"
+        },
+        "properties": {
+          "hardwareProfile": {
+            "vmSize": "Standard_A2_v2"
+          },
+          "osProfile": {
+            "computerName": "Jenkins-master",
+            "adminUsername": "GEN-UNIQUE",
+            "adminPassword": "GEN-PASSWORD"
+          },
+          "storageProfile": {
+            "imageReference": {
+              "publisher": "Canonical",
+              "offer": "UbuntuServer",
+              "sku": "18.04-LTS",
+              "version": "latest"
+            },
+            "osDisk": {
+              "name": "master-OSDisk",
+              "caching": "ReadWrite",
+              "createOption": "FromImage"
+            }
+          },
+          "networkProfile": {
+            "networkInterfaces": [
+              {
+                "id": "Microsoft.Network/networkInterfaces/Master-NetworkInterface"
+              }
+            ]
+          },
+          "diagnosticsProfile": {
+            "bootDiagnostics": {
+              "enabled": true,
+              "storageUri": "[reference(resourceId('Microsoft.Storage/storageAccounts', toLower(parameters('storageName')))).primaryEndpoints.blob]"
+            }
+          }
+        }
+      },
+      {
+        "name": "node-1-PublicIP",
+        "type": "Microsoft.Network/publicIPAddresses",
+        "apiVersion": "2019-11-01",
+        "location": "[resourceGroup().location]",
+        "tags": {
+          "displayName": "PublicIPAddress"
+        },
+        "properties": {
+          "publicIPAllocationMethod": "Dynamic",
+          "dnsSettings": {
+            "domainNameLabel": "node-1-[concat('jenkins-', uniqueString(resourceGroup().id))]"
+          }
+        }
+      },
+      {
+        "name": "node-1-nsg",
+        "type": "Microsoft.Network/networkSecurityGroups",
+        "apiVersion": "2019-11-01",
+        "location": "[resourceGroup().location]",
+        "properties": {
+          "securityRules": [
+            {
+              "name": "nsgRule1",
+              "properties": {
+                "description": "SSH Allow",
+                "protocol": "Tcp",
+                "sourcePortRange": "*",
+                "destinationPortRange": "22",
+                "sourceAddressPrefix": "*",
+                "destinationAddressPrefix": "*",
+                "access": "Allow",
+                "priority": 100,
+                "direction": "Inbound"
+              }
+            }
+          ]
+        }
+      },
+      {
+        "name": "node-1-NetworkInterface",
+        "type": "Microsoft.Network/networkInterfaces",
+        "apiVersion": "2019-11-01",
+        "location": "[resourceGroup().location]",
+        "dependsOn": [
+          "Microsoft.Network/publicIPAddresses/node-1-PublicIP",
+          "Microsoft.Network/virtualNetworks/jenkins-cluster-VirtualNetwork",
+          "Microsoft.Network/networkSecurityGroups/node-1-nsg"
+        ],
+        "tags": {
+          "displayName": "node-1-NetworkInterface"
+        },
+        "properties": {
+          "networkSecurityGroup": {
+            "id": "Microsoft.Network/networkSecurityGroups/node-1-nsg"
+          },
+          "ipConfigurations": [
+            {
+              "name": "ipConfig1",
+              "properties": {
+                "privateIPAllocationMethod": "Static",
+                "privateIPAddress": "10.0.1.11",
+                "publicIPAddress": {
+                  "id": "Microsoft.Network/publicIPAddresses/node-1-PublicIP"
+                },
+                "subnet": {
+                  "id": "Microsoft.Network/virtualNetworks/subnets/jenkins-cluster-VirtualNetwork/Jenkins-VirtualNetwork-Subnet"
+                }
+              }
+            }
+          ]
+        }
+      },
+      {
+        "name": "node-1",
+        "type": "Microsoft.Compute/virtualMachines",
+        "apiVersion": "2019-07-01",
+        "location": "[resourceGroup().location]",
+        "dependsOn": [
+          "Microsoft.Network/networkInterfaces/node-1-NetworkInterface"
+        ],
+        "tags": {
+          "displayName": "node-1"
+        },
+        "properties": {
+          "hardwareProfile": {
+            "vmSize": "Standard_A2_v2"
+          },
+          "osProfile": {
+            "computerName": "node-1",
+            "adminUsername": "GEN-UNIQUE",
+            "adminPassword": "GEN-PASSWORD"
+          },
+          "storageProfile": {
+            "imageReference": {
+              "publisher": "Canonical",
+              "offer": "UbuntuServer",
+              "sku": "18.04-LTS",
+              "version": "latest"
+            },
+            "osDisk": {
+              "name": "node-1-OSDisk",
+              "caching": "ReadWrite",
+              "createOption": "FromImage"
+            }
+          },
+          "networkProfile": {
+            "networkInterfaces": [
+              {
+                "id": "Microsoft.Network/networkInterfaces/node-1-NetworkInterface"
+              }
+            ]
+          },
+          "diagnosticsProfile": {
+            "bootDiagnostics": {
+              "enabled": true,
+              "storageUri": "[reference(resourceId('Microsoft.Storage/storageAccounts', toLower(parameters('storageName')))).primaryEndpoints.blob]"
+            }
+          }
+        }
+      },
+      {
+        "name": "node-2-PublicIP",
+        "type": "Microsoft.Network/publicIPAddresses",
+        "apiVersion": "2019-11-01",
+        "location": "[resourceGroup().location]",
+        "tags": {
+          "displayName": "PublicIPAddress"
+        },
+        "properties": {
+          "publicIPAllocationMethod": "Dynamic",
+          "dnsSettings": {
+            "domainNameLabel": "node-2-[concat('jenkins-', uniqueString(resourceGroup().id))]"
+          }
+        }
+      },
+      {
+        "name": "node-2-nsg",
+        "type": "Microsoft.Network/networkSecurityGroups",
+        "apiVersion": "2019-11-01",
+        "location": "[resourceGroup().location]",
+        "properties": {
+          "securityRules": [
+            {
+              "name": "nsgRule1",
+              "properties": {
+                "description": "description",
+                "protocol": "Tcp",
+                "sourcePortRange": "*",
+                "destinationPortRange": "3389",
+                "sourceAddressPrefix": "*",
+                "destinationAddressPrefix": "*",
+                "access": "Allow",
+                "priority": 100,
+                "direction": "Inbound"
+              }
+            }
+          ]
+        }
+      },
+      {
+        "name": "node-2-NetworkInterface",
+        "type": "Microsoft.Network/networkInterfaces",
+        "apiVersion": "2019-11-01",
+        "location": "[resourceGroup().location]",
+        "dependsOn": [
+          "Microsoft.Network/publicIPAddresses/node-2-PublicIP",
+          "Microsoft.Network/virtualNetworks/jenkins-cluster-VirtualNetwork",
+          "Microsoft.Network/networkSecurityGroups/node-2-nsg"
+        ],
+        "tags": {
+          "displayName": "node-2 Network Interface"
+        },
+        "properties": {
+          "networkSecurityGroup": {
+            "id": "Microsoft.Network/networkSecurityGroups/node-2-nsg"
+          },
+          "ipConfigurations": [
+            {
+              "name": "ipConfig1",
+              "properties": {
+                "privateIPAllocationMethod": "Static",
+                "privateIPAddress": "10.0.1.12",
+                "publicIPAddress": {
+                  "id": "Microsoft.Network/publicIPAddresses/node-2-PublicIP"
+                },
+                "subnet": {
+                  "id": "Microsoft.Network/virtualNetworks/subnets/jenkins-cluster-VirtualNetwork/Jenkins-VirtualNetwork-Subnet"
+                }
+              }
+            }
+          ]
+        }
+      },
+      {
+        "name": "node-2",
+        "type": "Microsoft.Compute/virtualMachines",
+        "apiVersion": "2019-07-01",
+        "location": "[resourceGroup().location]",
+        "dependsOn": [
+          "[resourceId('Microsoft.Storage/storageAccounts', toLower(parameters('storageName')))]",
+          "[resourceId('Microsoft.Network/networkInterfaces', 'node-2-NetworkInterface')]"
+        ],
+        "tags": {
+          "displayName": "node-2"
+        },
+        "properties": {
+          "hardwareProfile": {
+            "vmSize": "Standard_D2s_v3"
+          },
+          "osProfile": {
+            "computerName": "node-2",
+            "adminUsername": "GEN-UNIQUE",
+            "adminPassword": "GEN-PASSWORD"
+          },
+          "storageProfile": {
+            "imageReference": {
+              "publisher": "MicrosoftWindowsServer",
+              "offer": "WindowsServer",
+              "sku": "2019-Datacenter-with-Containers",
+              "version": "latest"
+            },
+            "osDisk": {
+              "name": "node-2OSDisk",
+              "caching": "ReadWrite",
+              "createOption": "FromImage"
+            }
+          },
+          "networkProfile": {
+            "networkInterfaces": [
+              {
+                "id": "Microsoft.Network/networkInterfaces/node-2-NetworkInterface"
+              }
+            ]
+          },
+          "diagnosticsProfile": {
+            "bootDiagnostics": {
+              "enabled": true,
+              "storageUri": "[reference(resourceId('Microsoft.Storage/storageAccounts', toLower(parameters('storageName')))).primaryEndpoints.blob]"
+            }
+          }
+        }
+      },
+      {
+        "name": "Jenkins-Master/installJenkins",
+        "type": "Microsoft.Compute/virtualMachines/extensions",
+        "apiVersion": "2019-03-01",
+        "location": "[resourceGroup().location]",
+        "tags": {
+          "displayName": "jenkins-master-script"
+        },
+        "dependsOn": [
+          "Microsoft.Compute/virtualMachines/Jenkins-Master"
+        ],
+        "properties": {
+          "publisher": "Microsoft.Azure.Extensions",
+          "type": "CustomScript",
+          "typeHandlerVersion": "2.0",
+          "autoUpgradeMinorVersion": true,
+          "settings": {
+            "fileUris": [
+              "[uri(parameters('_artifactsLocation'),concat('scripts/install-jenkins.sh',parameters('_artifactsLocationSasToken')))]"
+            ]
+          },
+          "protectedSettings": {
+            "commandToExecute": "sh install-jenkins.sh"
+          }
+        }
+      },
+      {
+        "name": "node-2/customScript1",
+        "type": "Microsoft.Compute/virtualMachines/extensions",
+        "apiVersion": "2019-07-01",
+        "location": "[resourceGroup().location]",
+        "tags": {
+          "displayName": "Jenkins slave for Windows VM"
+        },
+        "dependsOn": [
+          "Microsoft.Compute/virtualMachines/node-2"
+        ],
+        "properties": {
+          "publisher": "Microsoft.Compute",
+          "type": "CustomScriptExtension",
+          "typeHandlerVersion": "1.10",
+          "autoUpgradeMinorVersion": true,
+          "settings": {
+            "fileUris": [
+              "[uri(parameters('_artifactsLocation'),concat('win-slave.ps1',parameters('_artifactsLocationSasToken')))]"
+            ]
+          },
+          "protectedSettings": {
+            "commandToExecute": "powershell -file win-slave.ps1"
+          }
+        }
+      },
+      {
+        "name": "node-1/installSlave",
+        "type": "Microsoft.Compute/virtualMachines/extensions",
+        "apiVersion": "2019-07-01",
+        "location": "[resourceGroup().location]",
+        "tags": {
+          "displayName": "Jenkins slave for Linux VM"
+        },
+        "dependsOn": [
+          "Microsoft.Compute/virtualMachines/node-1"
+        ],
+        "properties": {
+          "publisher": "Microsoft.Azure.Extensions",
+          "type": "CustomScript",
+          "typeHandlerVersion": "2.0",
+          "autoUpgradeMinorVersion": true,
+          "settings": {
+            "fileUris": [
+              "[uri(parameters('_artifactsLocation'),concat('scripts/install-slave.sh',parameters('_artifactsLocationSasToken')))]"
+            ]
+          },
+          "protectedSettings": {
+            "commandToExecute": "sh install-slave.sh"
+          }
+        }
+      }
+    ],
+    "outputs": {
+      "jenkins-dns": {
+        "type": "string",
+        "value": "[concat('http://', reference('Master-PublicIP').dnsSettings.fqdn)]"
+      }
+    },
+    "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+  }
+}

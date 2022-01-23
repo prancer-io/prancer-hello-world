@@ -1,0 +1,488 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAzureQuickStart",
+  "paths": [
+    "/quickstarts/microsoft.logic/logic-app-b2b-disaster-recovery-replication/azuredeploy.json",
+    "/quickstarts/microsoft.logic/logic-app-b2b-disaster-recovery-replication/azuredeploy.parameters.json"
+  ],
+  "timestamp": 1642962907429,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/quickstarts/microsoft.logic/logic-app-b2b-disaster-recovery-replication/azuredeploy.json",
+      "/quickstarts/microsoft.logic/logic-app-b2b-disaster-recovery-replication/azuredeploy.parameters.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT1395",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "microsoft.web/connections",
+      "microsoft.logic/integrationaccounts",
+      "microsoft.logic/workflows"
+    ]
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT1395",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "AS2_DR_LogicApp_Name": {
+        "type": "string",
+        "defaultValue": "as2-dr",
+        "value": "GEN-UNIQUE-10"
+      },
+      "Edifact_DR_LogicApp_Name": {
+        "type": "string",
+        "defaultValue": "edifact-dr",
+        "value": "GEN-UNIQUE-10"
+      },
+      "X12_DR_LogicApp_Name": {
+        "type": "string",
+        "defaultValue": "x12-dr",
+        "value": "GEN-UNIQUE-10"
+      },
+      "location": {
+        "type": "string",
+        "defaultValue": "[resourceGroup().location]",
+        "metadata": {
+          "description": "Location of the Logic App."
+        }
+      },
+      "Primary_IntegrationAccountResourceGroup": {
+        "type": "string",
+        "defaultValue": "[resourcegroup().name]"
+      },
+      "Primary_IntegrationAccountName": {
+        "type": "string",
+        "metadata": {
+          "description": "Integration Account Name"
+        },
+        "value": "GEN-UNIQUE-10"
+      },
+      "Secondary_IntegrationAccountName": {
+        "type": "string",
+        "metadata": {
+          "description": "Integration Account Name"
+        },
+        "value": "GEN-UNIQUE-10"
+      },
+      "AS2_Primary_Connection_Name": {
+        "type": "string",
+        "defaultValue": "as2-primary",
+        "value": "GEN-UNIQUE-10"
+      },
+      "AS2_Primary_Connection_DisplayName": {
+        "type": "string",
+        "defaultValue": "as2-primary",
+        "value": "GEN-UNIQUE-10"
+      },
+      "AS2_Secondary_Connection_Name": {
+        "type": "string",
+        "defaultValue": "as2-secondary",
+        "value": "GEN-UNIQUE-10"
+      },
+      "AS2_Secondary_Connection_DisplayName": {
+        "type": "string",
+        "defaultValue": "as2-secondary",
+        "value": "GEN-UNIQUE-10"
+      },
+      "Edifact_Primary_Connection_Name": {
+        "type": "string",
+        "defaultValue": "edifact-primary",
+        "value": "GEN-UNIQUE-10"
+      },
+      "Edifact_Primary_Connection_DisplayName": {
+        "type": "string",
+        "defaultValue": "edifact-primary",
+        "value": "GEN-UNIQUE-10"
+      },
+      "Edifact_Secondary_Connection_Name": {
+        "type": "string",
+        "defaultValue": "edifact-secondary",
+        "value": "GEN-UNIQUE-10"
+      },
+      "Edifact_Secondary_Connection_DisplayName": {
+        "type": "string",
+        "defaultValue": "edifact-secondary",
+        "value": "GEN-UNIQUE-10"
+      },
+      "X12_Primary_Connection_Name": {
+        "type": "string",
+        "defaultValue": "x12-primary",
+        "value": "GEN-UNIQUE-10"
+      },
+      "X12_Primary_Connection_DisplayName": {
+        "type": "string",
+        "defaultValue": "x12-primary",
+        "value": "GEN-UNIQUE-10"
+      },
+      "X12_Secondary_Connection_Name": {
+        "type": "string",
+        "defaultValue": "x12-secondary",
+        "value": "GEN-UNIQUE-10"
+      },
+      "X12_Secondary_Connection_DisplayName": {
+        "type": "string",
+        "defaultValue": "x12-secondary",
+        "value": "GEN-UNIQUE-10"
+      }
+    },
+    "variables": {
+      "as2id": "[subscriptionResourceId('Microsoft.Web/locations/managedApis', parameters('location'), 'as2')]",
+      "edifactid": "[subscriptionResourceId('Microsoft.Web/locations/managedApis', parameters('location'), 'edifact')]",
+      "x12id": "[subscriptionResourceId('Microsoft.Web/locations/managedApis', parameters('location'), 'x12')]"
+    },
+    "resources": [
+      {
+        "properties": {
+          "state": "Enabled",
+          "definition": {
+            "actions": {
+              "Add_or_update_MIC_contents": {
+                "type": "ApiConnection",
+                "inputs": {
+                  "body": "@triggerBody()",
+                  "host": {
+                    "connection": {
+                      "name": "@parameters('$connections')['as2-secondary']['connectionId']"
+                    }
+                  },
+                  "method": "put",
+                  "path": "/createOrUpdateMicValues"
+                }
+              }
+            },
+            "parameters": {
+              "$connections": {
+                "defaultValue": {},
+                "type": "Object"
+              }
+            },
+            "triggers": {
+              "When_a_MIC_value_is_created": {
+                "recurrence": {
+                  "frequency": "Minute",
+                  "interval": 1
+                },
+                "type": "ApiConnection",
+                "inputs": {
+                  "host": {
+                    "connection": {
+                      "name": "@parameters('$connections')['as2-primary']['connectionId']"
+                    }
+                  },
+                  "method": "get",
+                  "path": "/triggers/onCreatedMicValues"
+                }
+              }
+            },
+            "contentVersion": "1.0.0.0",
+            "outputs": {},
+            "\uff04schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#"
+          },
+          "parameters": {
+            "$connections": {
+              "value": {
+                "as2-primary": {
+                  "id": "[subscriptionResourceId('Microsoft.Web/locations/managedApis', parameters('location'), 'as2')]",
+                  "connectionId": "Microsoft.Web/connections/GEN-UNIQUE-10",
+                  "connectionName": "GEN-UNIQUE-10"
+                },
+                "as2-secondary": {
+                  "id": "[subscriptionResourceId('Microsoft.Web/locations/managedApis', parameters('location'), 'as2')]",
+                  "connectionId": "Microsoft.Web/connections/GEN-UNIQUE-10",
+                  "connectionName": "GEN-UNIQUE-10"
+                }
+              }
+            }
+          }
+        },
+        "name": "GEN-UNIQUE-10",
+        "type": "Microsoft.Logic/workflows",
+        "location": "[resourceGroup().location]",
+        "apiVersion": "2019-05-01",
+        "dependsOn": [
+          "Microsoft.Web/connections/GEN-UNIQUE-10",
+          "Microsoft.Web/connections/GEN-UNIQUE-10"
+        ]
+      },
+      {
+        "properties": {
+          "state": "Enabled",
+          "definition": {
+            "actions": {
+              "Add_or_update_control_numbers": {
+                "type": "ApiConnection",
+                "inputs": {
+                  "body": "@triggerBody()",
+                  "host": {
+                    "connection": {
+                      "name": "@parameters('$connections')['edifact-secondary']['connectionId']"
+                    }
+                  },
+                  "method": "put",
+                  "path": "/controlnumbers"
+                }
+              }
+            },
+            "parameters": {
+              "$connections": {
+                "defaultValue": {},
+                "type": "Object"
+              }
+            },
+            "triggers": {
+              "When_a_control_number_is_modified": {
+                "recurrence": {
+                  "frequency": "Minute",
+                  "interval": 1
+                },
+                "type": "ApiConnection",
+                "inputs": {
+                  "host": {
+                    "connection": {
+                      "name": "@parameters('$connections')['edifact-primary']['connectionId']"
+                    }
+                  },
+                  "method": "get",
+                  "path": "/triggers/onmodifiedcontrolnumber"
+                }
+              }
+            },
+            "contentVersion": "1.0.0.0",
+            "outputs": {},
+            "\uff04schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#"
+          },
+          "parameters": {
+            "$connections": {
+              "value": {
+                "edifact-primary": {
+                  "id": "[subscriptionResourceId('Microsoft.Web/locations/managedApis', parameters('location'), 'edifact')]",
+                  "connectionId": "Microsoft.Web/connections/GEN-UNIQUE-10",
+                  "connectionName": "GEN-UNIQUE-10"
+                },
+                "edifact-secondary": {
+                  "id": "[subscriptionResourceId('Microsoft.Web/locations/managedApis', parameters('location'), 'edifact')]",
+                  "connectionId": "Microsoft.Web/connections/GEN-UNIQUE-10",
+                  "connectionName": "GEN-UNIQUE-10"
+                }
+              }
+            }
+          }
+        },
+        "name": "GEN-UNIQUE-10",
+        "type": "Microsoft.Logic/workflows",
+        "location": "[resourceGroup().location]",
+        "apiVersion": "2019-05-01",
+        "dependsOn": [
+          "Microsoft.Web/connections/GEN-UNIQUE-10",
+          "Microsoft.Web/connections/GEN-UNIQUE-10"
+        ]
+      },
+      {
+        "name": "GEN-UNIQUE-10",
+        "type": "Microsoft.Logic/integrationAccounts",
+        "apiVersion": "2016-06-01",
+        "location": "[resourceGroup().location]",
+        "properties": {},
+        "sku": {
+          "name": "Standard"
+        }
+      },
+      {
+        "name": "GEN-UNIQUE-10",
+        "type": "Microsoft.Logic/integrationAccounts",
+        "apiVersion": "2016-06-01",
+        "location": "[resourceGroup().location]",
+        "properties": {},
+        "sku": {
+          "name": "Standard"
+        }
+      },
+      {
+        "properties": {
+          "state": "Enabled",
+          "definition": {
+            "actions": {
+              "Add_or_update_control_numbers": {
+                "type": "ApiConnection",
+                "inputs": {
+                  "body": "@triggerBody()",
+                  "host": {
+                    "connection": {
+                      "name": "@parameters('$connections')['x12-secondary']['connectionId']"
+                    }
+                  },
+                  "method": "put",
+                  "path": "/controlNumbers"
+                }
+              }
+            },
+            "parameters": {
+              "$connections": {
+                "defaultValue": {},
+                "type": "Object"
+              }
+            },
+            "triggers": {
+              "When_a_control_number_is_modified": {
+                "recurrence": {
+                  "frequency": "Minute",
+                  "interval": 1
+                },
+                "type": "ApiConnection",
+                "inputs": {
+                  "host": {
+                    "connection": {
+                      "name": "@parameters('$connections')['x12-primary']['connectionId']"
+                    }
+                  },
+                  "method": "get",
+                  "path": "/triggers/onModifiedControlNumber"
+                }
+              }
+            },
+            "contentVersion": "1.0.0.0",
+            "outputs": {},
+            "\uff04schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#"
+          },
+          "parameters": {
+            "$connections": {
+              "value": {
+                "x12-secondary": {
+                  "id": "[subscriptionResourceId('Microsoft.Web/locations/managedApis', parameters('location'), 'x12')]",
+                  "connectionId": "Microsoft.Web/connections/GEN-UNIQUE-10",
+                  "connectionName": "GEN-UNIQUE-10"
+                },
+                "x12-primary": {
+                  "id": "[subscriptionResourceId('Microsoft.Web/locations/managedApis', parameters('location'), 'x12')]",
+                  "connectionId": "Microsoft.Web/connections/GEN-UNIQUE-10",
+                  "connectionName": "GEN-UNIQUE-10"
+                }
+              }
+            }
+          }
+        },
+        "name": "GEN-UNIQUE-10",
+        "type": "Microsoft.Logic/workflows",
+        "location": "[resourceGroup().location]",
+        "apiVersion": "2019-05-01",
+        "dependsOn": [
+          "Microsoft.Web/connections/GEN-UNIQUE-10",
+          "Microsoft.Web/connections/GEN-UNIQUE-10"
+        ]
+      },
+      {
+        "type": "MICROSOFT.WEB/CONNECTIONS",
+        "apiVersion": "2016-06-01",
+        "name": "GEN-UNIQUE-10",
+        "location": "[resourceGroup().location]",
+        "dependsOn": [
+          "Microsoft.Logic/integrationaccounts/GEN-UNIQUE-10"
+        ],
+        "properties": {
+          "api": {
+            "id": "[subscriptionResourceId('Microsoft.Web/locations/managedApis', parameters('location'), 'as2')]"
+          },
+          "displayName": "GEN-UNIQUE-10",
+          "parameterValues": {
+            "integrationAccountId": "[resourcegroup().name]/Microsoft.Logic/integrationaccounts/GEN-UNIQUE-10",
+            "integrationAccountUrl": "[listCallbackURL(resourceId(parameters('Primary_IntegrationAccountResourceGroup'), 'Microsoft.Logic/integrationaccounts', parameters('Primary_IntegrationAccountName')), '2019-05-01').value]"
+          }
+        }
+      },
+      {
+        "type": "MICROSOFT.WEB/CONNECTIONS",
+        "apiVersion": "2016-06-01",
+        "name": "GEN-UNIQUE-10",
+        "location": "[resourceGroup().location]",
+        "dependsOn": [
+          "Microsoft.Logic/integrationaccounts/GEN-UNIQUE-10"
+        ],
+        "properties": {
+          "api": {
+            "id": "[subscriptionResourceId('Microsoft.Web/locations/managedApis', parameters('location'), 'as2')]"
+          },
+          "displayName": "GEN-UNIQUE-10",
+          "parameterValues": {
+            "integrationAccountId": "Microsoft.Logic/integrationaccounts/GEN-UNIQUE-10",
+            "integrationAccountUrl": "[listCallbackURL(resourceId('Microsoft.Logic/integrationaccounts', parameters('Secondary_IntegrationAccountName')), '2019-05-01').value]"
+          }
+        }
+      },
+      {
+        "type": "MICROSOFT.WEB/CONNECTIONS",
+        "apiVersion": "2016-06-01",
+        "name": "GEN-UNIQUE-10",
+        "location": "[resourceGroup().location]",
+        "properties": {
+          "api": {
+            "id": "[subscriptionResourceId('Microsoft.Web/locations/managedApis', parameters('location'), 'edifact')]"
+          },
+          "displayName": "GEN-UNIQUE-10",
+          "parameterValues": {
+            "integrationAccountId": "[resourcegroup().name]/Microsoft.Logic/integrationaccounts/GEN-UNIQUE-10",
+            "integrationAccountUrl": "[listCallbackURL(resourceId(parameters('Primary_IntegrationAccountResourceGroup'), 'Microsoft.Logic/integrationaccounts', parameters('Primary_IntegrationAccountName')), '2019-05-01').value]"
+          }
+        }
+      },
+      {
+        "type": "MICROSOFT.WEB/CONNECTIONS",
+        "apiVersion": "2016-06-01",
+        "name": "GEN-UNIQUE-10",
+        "location": "[resourceGroup().location]",
+        "properties": {
+          "api": {
+            "id": "[subscriptionResourceId('Microsoft.Web/locations/managedApis', parameters('location'), 'edifact')]"
+          },
+          "displayName": "GEN-UNIQUE-10",
+          "parameterValues": {
+            "integrationAccountId": "Microsoft.Logic/integrationaccounts/GEN-UNIQUE-10",
+            "integrationAccountUrl": "[listCallbackURL(resourceId('Microsoft.Logic/integrationaccounts', parameters('Secondary_IntegrationAccountName')), '2019-05-01').value]"
+          }
+        }
+      },
+      {
+        "type": "MICROSOFT.WEB/CONNECTIONS",
+        "apiVersion": "2016-06-01",
+        "name": "GEN-UNIQUE-10",
+        "location": "[resourceGroup().location]",
+        "properties": {
+          "api": {
+            "id": "[subscriptionResourceId('Microsoft.Web/locations/managedApis', parameters('location'), 'x12')]"
+          },
+          "displayName": "GEN-UNIQUE-10",
+          "parameterValues": {
+            "integrationAccountId": "[resourcegroup().name]/Microsoft.Logic/integrationaccounts/GEN-UNIQUE-10",
+            "integrationAccountUrl": "[listCallbackURL(resourceId(parameters('Primary_IntegrationAccountResourceGroup'), 'Microsoft.Logic/integrationaccounts', parameters('Primary_IntegrationAccountName')), '2019-05-01').value]"
+          }
+        }
+      },
+      {
+        "type": "MICROSOFT.WEB/CONNECTIONS",
+        "apiVersion": "2016-06-01",
+        "name": "GEN-UNIQUE-10",
+        "location": "[resourceGroup().location]",
+        "properties": {
+          "api": {
+            "id": "[subscriptionResourceId('Microsoft.Web/locations/managedApis', parameters('location'), 'x12')]"
+          },
+          "displayName": "GEN-UNIQUE-10",
+          "parameterValues": {
+            "integrationAccountId": "Microsoft.Logic/integrationaccounts/GEN-UNIQUE-10",
+            "integrationAccountUrl": "[listCallbackURL(resourceId('Microsoft.Logic/integrationaccounts', parameters('Secondary_IntegrationAccountName')), '2019-05-01').value]"
+          }
+        }
+      }
+    ],
+    "outputs": {},
+    "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+  }
+}

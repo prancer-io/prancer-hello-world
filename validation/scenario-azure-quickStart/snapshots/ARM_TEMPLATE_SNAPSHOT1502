@@ -1,0 +1,86 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAzureQuickStart",
+  "paths": [
+    "/quickstarts/microsoft.network/azure-dns-new-zone/azuredeploy.json",
+    "/quickstarts/microsoft.network/azure-dns-new-zone/azuredeploy.parameters.json"
+  ],
+  "timestamp": 1642962908501,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/quickstarts/microsoft.network/azure-dns-new-zone/azuredeploy.json",
+      "/quickstarts/microsoft.network/azure-dns-new-zone/azuredeploy.parameters.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT1502",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "microsoft.network/dnszones",
+      "microsoft.network/dnszones/a"
+    ]
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT1502",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "newZoneName": {
+        "type": "string",
+        "defaultValue": "[concat(uniqueString(resourceGroup().id), '.azurequickstart.org')]",
+        "metadata": {
+          "description": "The name of the DNS zone to be created.  Must have at least 2 segements, e.g. hostname.org"
+        }
+      },
+      "newRecordName": {
+        "type": "string",
+        "defaultValue": "www",
+        "metadata": {
+          "description": "The name of the DNS record to be created.  The name is relative to the zone, not the FQDN."
+        }
+      }
+    },
+    "resources": [
+      {
+        "type": "Microsoft.Network/dnsZones",
+        "apiVersion": "2018-05-01",
+        "name": "[concat(uniqueString(resourceGroup().id), '.azurequickstart.org')]",
+        "location": "global"
+      },
+      {
+        "type": "Microsoft.Network/dnsZones/A",
+        "apiVersion": "2018-05-01",
+        "name": "[concat(uniqueString(resourceGroup().id), '.azurequickstart.org')]/www",
+        "location": "global",
+        "dependsOn": [
+          "[concat(uniqueString(resourceGroup().id), '.azurequickstart.org')]"
+        ],
+        "properties": {
+          "TTL": 3600,
+          "ARecords": [
+            {
+              "ipv4Address": "1.2.3.4"
+            },
+            {
+              "ipv4Address": "1.2.3.5"
+            }
+          ]
+        }
+      }
+    ],
+    "outputs": {
+      "nameServers": {
+        "type": "array",
+        "value": "[reference(parameters('newZoneName')).nameServers]"
+      }
+    },
+    "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+  }
+}

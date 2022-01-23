@@ -1,0 +1,301 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAzureQuickStart",
+  "paths": [
+    "/quickstarts/microsoft.compute/vms-with-selfhost-integration-runtime/azuredeploy.json",
+    "/quickstarts/microsoft.compute/vms-with-selfhost-integration-runtime/azuredeploy.parameters.json"
+  ],
+  "timestamp": 1642962904791,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/quickstarts/microsoft.compute/vms-with-selfhost-integration-runtime/azuredeploy.json",
+      "/quickstarts/microsoft.compute/vms-with-selfhost-integration-runtime/azuredeploy.parameters.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT1145",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "microsoft.resources/deployments",
+      "microsoft.storage/storageaccounts",
+      "microsoft.network/networksecuritygroups"
+    ]
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT1145",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "existingDataFactoryName": {
+        "type": "string",
+        "metadata": {
+          "description": "your existing data factory name"
+        },
+        "value": "GET-PREREQ-dataFactoryName"
+      },
+      "existingDataFactoryResourceGroup": {
+        "type": "string",
+        "metadata": {
+          "description": "your existing data factory resource group"
+        },
+        "value": "GET-PREREQ-resourceGroupName"
+      },
+      "existingDataFactoryVersion": {
+        "type": "string",
+        "metadata": {
+          "description": "your existing data factory version"
+        },
+        "allowedValues": [
+          "V1",
+          "V2"
+        ],
+        "value": "V1"
+      },
+      "IntegrationRuntimeName": {
+        "type": "string",
+        "metadata": {
+          "description": "IR name must be unique in subscription"
+        },
+        "value": "GEN-UNIQUE"
+      },
+      "NodeCount": {
+        "type": "int",
+        "maxValue": 4,
+        "minValue": 1,
+        "metadata": {
+          "description": "the node count is between 1 and 4."
+        },
+        "value": 1
+      },
+      "vmSize": {
+        "type": "string",
+        "defaultValue": "Standard_A4_v2"
+      },
+      "adminUserName": {
+        "type": "string",
+        "metadata": {
+          "description": "User name for the virtual machine"
+        },
+        "value": "GEN-UNIQUE"
+      },
+      "adminPassword": {
+        "type": "securestring",
+        "metadata": {
+          "description": "Password for the virtual machine"
+        },
+        "value": "GEN-PASSWORD"
+      },
+      "existingVirtualNetworkName": {
+        "type": "string",
+        "metadata": {
+          "description": "your existing vnet name"
+        },
+        "value": "GET-PREREQ-vnetName"
+      },
+      "existingVnetLocation": {
+        "type": "string",
+        "metadata": {
+          "description": "your virtual machine will be create in the same datacenter with VNET"
+        },
+        "value": "GET-PREREQ-vnetLocation"
+      },
+      "existingVnetResourceGroupName": {
+        "type": "string",
+        "metadata": {
+          "description": "Name of the existing VNET resource group"
+        },
+        "value": "GET-PREREQ-resourceGroupName"
+      },
+      "existingSubnetInYourVnet": {
+        "type": "string",
+        "metadata": {
+          "description": "Name of the subnet in the virtual network you want to use"
+        },
+        "value": "GET-PREREQ-subnetName"
+      },
+      "_artifactsLocation": {
+        "type": "string",
+        "metadata": {
+          "description": "The base URI where artifacts required by this template are located."
+        },
+        "defaultValue": "[deployment().properties.templateLink.uri]"
+      },
+      "_artifactsLocationSasToken": {
+        "type": "securestring",
+        "metadata": {
+          "description": "The sasToken required to access _artifactsLocation.  When the template is deployed using the accompanying scripts, a sasToken will be automatically generated."
+        },
+        "defaultValue": ""
+      }
+    },
+    "variables": {
+      "delimiters": [
+        "-",
+        "_"
+      ],
+      "prefix": "[split(parameters('IntegrationRuntimeName'), variables('delimiters'))[0]]",
+      "storageAccountName": "[take(concat(toLower(variables('prefix')), uniquestring(resourceGroup().id, parameters('IntegrationRuntimeName'))), 24)]",
+      "networkSecurityGroupName": "GEN-UNIQUEnsg",
+      "vmTemplateLink": "[uri(parameters('_artifactsLocation'), concat('nested/VMtemplate.json', parameters('_artifactsLocationSasToken')))]",
+      "irInstallTemplateLink": "[uri(parameters('_artifactsLocation'), concat('nested/IRInstall.json', parameters('_artifactsLocationSasToken')))]",
+      "IRtemplateLink": "[uri(parameters('_artifactsLocation'), concat('nested/IRtemplate.json', parameters('_artifactsLocationSasToken')))]",
+      "subnetId": "GET-PREREQ-resourceGroupName/Microsoft.Network/virtualNetworks/subnets/GET-PREREQ-vnetName/GET-PREREQ-subnetName",
+      "scriptURL": "[uri(parameters('_artifactsLocation'), concat('gatewayInstall.ps1', parameters('_artifactsLocationSasToken')))]"
+    },
+    "resources": [
+      {
+        "type": "Microsoft.Resources/deployments",
+        "apiVersion": "2019-09-01",
+        "name": "nestedTemplate",
+        "resourceGroup": "GET-PREREQ-resourceGroupName",
+        "properties": {
+          "mode": "Incremental",
+          "templateLink": {
+            "uri": "[uri(parameters('_artifactsLocation'), concat('nested/IRtemplate.json', parameters('_artifactsLocationSasToken')))]",
+            "contentVersion": "1.0.0.0"
+          },
+          "parameters": {
+            "existingDataFactoryName": {
+              "value": "GET-PREREQ-dataFactoryName"
+            },
+            "existingDataFactoryVersion": {
+              "value": "V1"
+            },
+            "IntegrationRuntimeName": {
+              "value": "GEN-UNIQUE"
+            }
+          }
+        }
+      },
+      {
+        "name": "GEN-UNIQUEnsg",
+        "type": "Microsoft.Network/networkSecurityGroups",
+        "apiVersion": "2019-09-01",
+        "location": "GET-PREREQ-vnetLocation",
+        "properties": {
+          "securityRules": [
+            {
+              "name": "default-allow-rdp",
+              "properties": {
+                "priority": 1000,
+                "sourceAddressPrefix": "*",
+                "protocol": "Tcp",
+                "destinationPortRange": "3389",
+                "access": "Allow",
+                "direction": "Inbound",
+                "sourcePortRange": "*",
+                "destinationAddressPrefix": "*"
+              }
+            }
+          ]
+        }
+      },
+      {
+        "type": "Microsoft.Storage/storageAccounts",
+        "apiVersion": "2019-06-01",
+        "name": "[take(concat(toLower(variables('prefix')), uniquestring(resourceGroup().id, parameters('IntegrationRuntimeName'))), 24)]",
+        "location": "GET-PREREQ-vnetLocation",
+        "dependsOn": [
+          "GET-PREREQ-resourceGroupName/Microsoft.Resources/deployments/nestedTemplate"
+        ],
+        "sku": {
+          "name": "Standard_LRS"
+        },
+        "kind": "Storage",
+        "properties": {}
+      },
+      {
+        "type": "Microsoft.Resources/deployments",
+        "apiVersion": "2019-09-01",
+        "name": "VMtemplate-copyIndex()",
+        "dependsOn": [
+          "GET-PREREQ-resourceGroupName/Microsoft.Resources/deployments/nestedTemplate",
+          "Microsoft.Network/networkSecurityGroups/GEN-UNIQUEnsg",
+          "Microsoft.Storage/storageAccounts/[take(concat(toLower(variables('prefix')), uniquestring(resourceGroup().id, parameters('IntegrationRuntimeName'))), 24)]"
+        ],
+        "copy": {
+          "name": "vmcopy",
+          "count": 1
+        },
+        "properties": {
+          "mode": "Incremental",
+          "templateLink": {
+            "uri": "[uri(parameters('_artifactsLocation'), concat('nested/VMtemplate.json', parameters('_artifactsLocationSasToken')))]",
+            "contentVersion": "1.0.0.0"
+          },
+          "parameters": {
+            "virtualMachineName": {
+              "value": "[take(concat('vm',copyIndex(),'-', variables('prefix')), 15)]"
+            },
+            "vmSize": {
+              "value": "Standard_A4_v2"
+            },
+            "adminUserName": {
+              "value": "GEN-UNIQUE"
+            },
+            "adminPassword": {
+              "value": "GEN-PASSWORD"
+            },
+            "existingVnetLocation": {
+              "value": "GET-PREREQ-vnetLocation"
+            },
+            "subnetId": {
+              "value": "GET-PREREQ-resourceGroupName/Microsoft.Network/virtualNetworks/subnets/GET-PREREQ-vnetName/GET-PREREQ-subnetName"
+            },
+            "nsgId": {
+              "value": "Microsoft.Network/networkSecurityGroups/GEN-UNIQUEnsg"
+            },
+            "storageAccountName": {
+              "value": "[take(concat(toLower(variables('prefix')), uniquestring(resourceGroup().id, parameters('IntegrationRuntimeName'))), 24)]"
+            }
+          }
+        }
+      },
+      {
+        "apiVersion": "2019-09-01",
+        "type": "Microsoft.Resources/deployments",
+        "name": "IRInstalltemplate-copyIndex()",
+        "dependsOn": [
+          "vmcopy"
+        ],
+        "copy": {
+          "name": "irinstallcopy",
+          "count": 1,
+          "mode": "serial"
+        },
+        "properties": {
+          "mode": "Incremental",
+          "templateLink": {
+            "uri": "[uri(parameters('_artifactsLocation'), concat('nested/IRInstall.json', parameters('_artifactsLocationSasToken')))]",
+            "contentVersion": "1.0.0.0"
+          },
+          "parameters": {
+            "existingDataFactoryVersion": {
+              "value": "V1"
+            },
+            "datafactoryId": {
+              "value": "[reference(resourceId(parameters('existingDataFactoryResourceGroup'), 'Microsoft.Resources/deployments', 'nestedTemplate')).outputs.irId.value]"
+            },
+            "virtualMachineName": {
+              "value": "[take(concat('vm',copyIndex(),'-', variables('prefix')), 15)]"
+            },
+            "existingVnetLocation": {
+              "value": "GET-PREREQ-vnetLocation"
+            },
+            "scriptUrl": {
+              "value": "[uri(parameters('_artifactsLocation'), concat('gatewayInstall.ps1', parameters('_artifactsLocationSasToken')))]"
+            }
+          }
+        }
+      }
+    ],
+    "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+  }
+}

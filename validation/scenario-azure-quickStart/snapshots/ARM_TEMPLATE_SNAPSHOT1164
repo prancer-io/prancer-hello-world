@@ -1,0 +1,286 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAzureQuickStart",
+  "paths": [
+    "/quickstarts/microsoft.compute/vmss-public-ip-linux/azuredeploy.json",
+    "/quickstarts/microsoft.compute/vmss-public-ip-linux/azuredeploy.parameters.json"
+  ],
+  "timestamp": 1642962905136,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/quickstarts/microsoft.compute/vmss-public-ip-linux/azuredeploy.json",
+      "/quickstarts/microsoft.compute/vmss-public-ip-linux/azuredeploy.parameters.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT1164",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "microsoft.network/publicipaddresses",
+      "microsoft.network/virtualnetworks",
+      "microsoft.network/loadbalancers",
+      "microsoft.compute/virtualmachinescalesets"
+    ]
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT1164",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "vmSku": {
+        "type": "string",
+        "defaultValue": "Standard_D2_v3",
+        "metadata": {
+          "description": "Size of VMs in the VM Scale Set."
+        },
+        "value": "Standard_D2_v3"
+      },
+      "vmssName": {
+        "type": "string",
+        "metadata": {
+          "description": "String used as a base for naming resources (9 characters or less). A hash is prepended to this string for some resources, and resource-specific information is appended."
+        },
+        "value": "GEN-UNIQUE-9"
+      },
+      "instanceCount": {
+        "type": "int",
+        "metadata": {
+          "description": "Number of VM instances (100 or less)."
+        },
+        "minValue": 3,
+        "maxValue": 100,
+        "value": 3
+      },
+      "adminUsername": {
+        "type": "string",
+        "metadata": {
+          "description": "Admin username on all VMs."
+        },
+        "value": "GEN-UNIQUE"
+      },
+      "location": {
+        "type": "string",
+        "defaultValue": "[resourceGroup().location]",
+        "metadata": {
+          "description": "Default location"
+        }
+      },
+      "authenticationType": {
+        "type": "string",
+        "defaultValue": "sshPublicKey",
+        "allowedValues": [
+          "sshPublicKey",
+          "password"
+        ],
+        "metadata": {
+          "description": "Type of authentication to use on the Virtual Machine. SSH key is recommended."
+        }
+      },
+      "adminPasswordOrKey": {
+        "type": "securestring",
+        "metadata": {
+          "description": "SSH Key or password for the Virtual Machine. SSH key is recommended."
+        },
+        "value": "GEN-SSH-PUB-KEY"
+      }
+    },
+    "variables": {
+      "addressPrefix": "10.0.0.0/16",
+      "subnetPrefix": "10.0.0.0/24",
+      "virtualNetworkName": "GEN-UNIQUE-9vnet",
+      "publicIPAddressName": "GEN-UNIQUE-9pip",
+      "subnetName": "GEN-UNIQUE-9subnet",
+      "loadBalancerName": "GEN-UNIQUE-9lb",
+      "natPoolName": "GEN-UNIQUE-9natpool",
+      "bePoolName": "GEN-UNIQUE-9bepool",
+      "natStartPort": 50000,
+      "natEndPort": 50120,
+      "natBackendPort": 22,
+      "nicName": "GEN-UNIQUE-9nic",
+      "ipConfigName": "GEN-UNIQUE-9ipconfig",
+      "osType": {
+        "publisher": "Canonical",
+        "offer": "UbuntuServer",
+        "sku": "16.04-LTS",
+        "version": "latest"
+      },
+      "imageReference": {
+        "publisher": "Canonical",
+        "offer": "UbuntuServer",
+        "sku": "16.04-LTS",
+        "version": "latest"
+      },
+      "linuxConfiguration": {
+        "disablePasswordAuthentication": true,
+        "ssh": {
+          "publicKeys": [
+            {
+              "path": "/home/GEN-UNIQUE/.ssh/authorized_keys",
+              "keyData": "GEN-SSH-PUB-KEY"
+            }
+          ]
+        }
+      }
+    },
+    "resources": [
+      {
+        "type": "Microsoft.Network/virtualNetworks",
+        "name": "GEN-UNIQUE-9vnet",
+        "location": "[resourceGroup().location]",
+        "apiVersion": "2020-08-01",
+        "properties": {
+          "addressSpace": {
+            "addressPrefixes": [
+              "10.0.0.0/16"
+            ]
+          },
+          "subnets": [
+            {
+              "name": "GEN-UNIQUE-9subnet",
+              "properties": {
+                "addressPrefix": "10.0.0.0/24"
+              }
+            }
+          ]
+        }
+      },
+      {
+        "type": "Microsoft.Network/publicIPAddresses",
+        "name": "GEN-UNIQUE-9pip",
+        "location": "[resourceGroup().location]",
+        "apiVersion": "2020-11-01",
+        "properties": {
+          "publicIPAllocationMethod": "Dynamic",
+          "dnsSettings": {
+            "domainNameLabel": "GEN-UNIQUE-9"
+          }
+        }
+      },
+      {
+        "type": "Microsoft.Network/loadBalancers",
+        "name": "GEN-UNIQUE-9lb",
+        "location": "[resourceGroup().location]",
+        "apiVersion": "2020-11-01",
+        "dependsOn": [
+          "Microsoft.Network/publicIPAddresses//GEN-UNIQUE-9pip"
+        ],
+        "properties": {
+          "frontendIPConfigurations": [
+            {
+              "name": "LoadBalancerFrontEnd",
+              "properties": {
+                "publicIPAddress": {
+                  "id": "Microsoft.Network/publicIPAddresses/GEN-UNIQUE-9pip"
+                }
+              }
+            }
+          ],
+          "backendAddressPools": [
+            {
+              "name": "GEN-UNIQUE-9bepool"
+            }
+          ],
+          "inboundNatPools": [
+            {
+              "name": "GEN-UNIQUE-9natpool",
+              "properties": {
+                "frontendIPConfiguration": {
+                  "id": "Microsoft.Network/loadBalancers/frontendIPConfigurations/GEN-UNIQUE-9lb/loadBalancerFrontEnd"
+                },
+                "protocol": "Tcp",
+                "frontendPortRangeStart": 50000,
+                "frontendPortRangeEnd": 50120,
+                "backendPort": 22
+              }
+            }
+          ]
+        }
+      },
+      {
+        "type": "Microsoft.Compute/virtualMachineScaleSets",
+        "name": "GEN-UNIQUE-9",
+        "location": "[resourceGroup().location]",
+        "apiVersion": "2017-03-30",
+        "dependsOn": [
+          "Microsoft.Network/loadBalancers//GEN-UNIQUE-9lb",
+          "Microsoft.Network/virtualNetworks//GEN-UNIQUE-9vnet"
+        ],
+        "sku": {
+          "name": "Standard_D2_v3",
+          "tier": "Standard",
+          "capacity": 3
+        },
+        "properties": {
+          "overprovision": "false",
+          "upgradePolicy": {
+            "mode": "Manual"
+          },
+          "virtualMachineProfile": {
+            "storageProfile": {
+              "osDisk": {
+                "caching": "ReadOnly",
+                "createOption": "FromImage"
+              },
+              "imageReference": {
+                "publisher": "Canonical",
+                "offer": "UbuntuServer",
+                "sku": "16.04-LTS",
+                "version": "latest"
+              }
+            },
+            "osProfile": {
+              "computerNamePrefix": "GEN-UNIQUE-9",
+              "adminUsername": "GEN-UNIQUE",
+              "adminPassword": "GEN-SSH-PUB-KEY",
+              "linuxConfiguration": "[if(equals(parameters('authenticationType'), 'password'), json('null'), variables('linuxConfiguration'))]"
+            },
+            "networkProfile": {
+              "networkInterfaceConfigurations": [
+                {
+                  "name": "GEN-UNIQUE-9nic",
+                  "properties": {
+                    "primary": true,
+                    "ipConfigurations": [
+                      {
+                        "name": "GEN-UNIQUE-9ipconfig",
+                        "properties": {
+                          "subnet": {
+                            "id": "Microsoft.Network/virtualNetworks/subnets//GEN-UNIQUE-9vnet/GEN-UNIQUE-9subnet"
+                          },
+                          "publicipaddressconfiguration": {
+                            "name": "pub1",
+                            "properties": {
+                              "idleTimeoutInMinutes": 15
+                            }
+                          },
+                          "loadBalancerBackendAddressPools": [
+                            {
+                              "id": "Microsoft.Network/loadBalancers/backendAddressPools//GEN-UNIQUE-9lb/GEN-UNIQUE-9bepool"
+                            }
+                          ],
+                          "loadBalancerInboundNatPools": [
+                            {
+                              "id": "Microsoft.Network/loadBalancers/inboundNatPools//GEN-UNIQUE-9lb/GEN-UNIQUE-9natpool"
+                            }
+                          ]
+                        }
+                      }
+                    ]
+                  }
+                }
+              ]
+            }
+          }
+        }
+      }
+    ],
+    "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+  }
+}

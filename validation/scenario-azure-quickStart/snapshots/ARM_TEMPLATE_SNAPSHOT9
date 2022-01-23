@@ -1,0 +1,668 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAzureQuickStart",
+  "paths": [
+    "/application-workloads/active-directory/active-directory-new-domain-ha-2-dc/azuredeploy.json",
+    "/application-workloads/active-directory/active-directory-new-domain-ha-2-dc/azuredeploy.parameters.json"
+  ],
+  "timestamp": 1642962883362,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/application-workloads/active-directory/active-directory-new-domain-ha-2-dc/azuredeploy.json",
+      "/application-workloads/active-directory/active-directory-new-domain-ha-2-dc/azuredeploy.parameters.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT9",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "microsoft.network/publicipaddresses",
+      "microsoft.resources/deployments",
+      "microsoft.network/loadbalancers",
+      "microsoft.network/networkinterfaces",
+      "microsoft.compute/virtualmachines/extensions",
+      "microsoft.compute/virtualmachines",
+      "microsoft.compute/availabilitysets"
+    ]
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT9",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "adminUsername": {
+        "type": "string",
+        "metadata": {
+          "description": "The name of the Administrator of the new VM and Domain"
+        },
+        "value": "GEN-UNIQUE"
+      },
+      "adminPassword": {
+        "type": "securestring",
+        "metadata": {
+          "description": "The password for the Administrator account of the new VM and Domain"
+        },
+        "value": "GEN-PASSWORD"
+      },
+      "domainName": {
+        "type": "string",
+        "metadata": {
+          "description": "The FQDN of the AD Domain created "
+        },
+        "value": "mydomain.local"
+      },
+      "dnsPrefix": {
+        "type": "string",
+        "metadata": {
+          "description": "The DNS prefix for the public IP address used by the Load Balancer"
+        },
+        "value": "GEN-UNIQUE"
+      },
+      "pdcRDPPort": {
+        "type": "int",
+        "metadata": {
+          "description": "The public RDP port for the PDC VM"
+        },
+        "defaultValue": 3389
+      },
+      "bdcRDPPort": {
+        "type": "int",
+        "metadata": {
+          "description": "The public RDP port for the BDC VM"
+        },
+        "defaultValue": 13389
+      },
+      "_artifactsLocation": {
+        "type": "string",
+        "metadata": {
+          "description": "The location of resources, such as templates and DSC modules, that the template depends on"
+        },
+        "defaultValue": "[deployment().properties.templateLink.uri]"
+      },
+      "_artifactsLocationSasToken": {
+        "type": "securestring",
+        "metadata": {
+          "description": "Auto-generated token to access _artifactsLocation"
+        },
+        "defaultValue": ""
+      },
+      "location": {
+        "type": "string",
+        "defaultValue": "[resourceGroup().location]",
+        "metadata": {
+          "description": "Location for all resources."
+        }
+      },
+      "adVMSize": {
+        "type": "string",
+        "defaultValue": "Standard_D2s_v3",
+        "metadata": {
+          "description": "Size for the VM.  This sample uses premium disk and requires an 'S' sku."
+        }
+      }
+    },
+    "variables": {
+      "storageAccountType": "Premium_LRS",
+      "adPDCVMName": "adPDC",
+      "adBDCVMName": "adBDC",
+      "imagePublisher": "MicrosoftWindowsServer",
+      "imageOffer": "WindowsServer",
+      "imageSKU": "2016-Datacenter",
+      "adAvailabilitySetName": "adAvailabiltySet",
+      "publicIPAddressName": "ad-lb-pip",
+      "adLBFE": "LBFE",
+      "adLBBE": "LBBE",
+      "adPDCRDPNAT": "adPDCRDP",
+      "adBDCRDPNAT": "adBDCRDP",
+      "virtualNetworkName": "adVNET",
+      "virtualNetworkAddressRange": "10.0.0.0/16",
+      "adSubnetName": "adSubnet",
+      "adSubnet": "10.0.0.0/24",
+      "adPDCNicName": "adPDCNic",
+      "adPDCNicIPAddress": "10.0.0.4",
+      "adBDCNicName": "adBDCNic",
+      "adBDCNicIPAddress": "10.0.0.5",
+      "adSubnetRef": "Microsoft.Network/virtualNetworks/subnets/adVNET/adSubnet",
+      "adLBName": "adLoadBalancer",
+      "adlbFEConfigID": "Microsoft.Network/loadBalancers/frontendIPConfigurations/adLoadBalancer/LBFE",
+      "adPDCRDPNATRuleID": "Microsoft.Network/loadBalancers/inboundNatRules/adLoadBalancer/adPDCRDP",
+      "adBDCRDPNATRuleID": "Microsoft.Network/loadBalancers/inboundNatRules/adLoadBalancer/adBDCRDP",
+      "adBEAddressPoolID": "Microsoft.Network/loadBalancers/backendAddressPools/adLoadBalancer/LBBE",
+      "adDataDiskSize": 1000,
+      "vnetTemplateUri": "[uri(parameters('_artifactsLocation'), concat('nestedtemplates/vnet.json', parameters('_artifactsLocationSasToken')))]",
+      "nicTemplateUri": "[uri(parameters('_artifactsLocation'), concat('nestedtemplates/nic.json', parameters('_artifactsLocationSasToken')))]",
+      "vnetwithDNSTemplateUri": "[uri(parameters('_artifactsLocation'), concat('nestedtemplates/vnet-with-dns-server.json', parameters('_artifactsLocationSasToken')))]",
+      "configureADBDCTemplateUri": "[uri(parameters('_artifactsLocation'), concat('nestedtemplates/configureADBDC.json', parameters('_artifactsLocationSasToken')))]",
+      "adPDCModulesURL": "[uri(parameters('_artifactsLocation'), concat('DSC/CreateADPDC.zip', parameters('_artifactsLocationSasToken')))]",
+      "adPDCConfigurationFunction": "CreateADPDC.ps1\\CreateADPDC",
+      "adBDCPreparationModulesURL": "[uri(parameters('_artifactsLocation'), concat('DSC/PrepareADBDC.zip', parameters('_artifactsLocationSasToken')))]",
+      "adBDCPreparationFunction": "PrepareADBDC.ps1\\PrepareADBDC",
+      "adBDCConfigurationModulesURL": "[uri(parameters('_artifactsLocation'), concat('DSC/ConfigureADBDC.zip', parameters('_artifactsLocationSasToken')))]",
+      "adBDCConfigurationFunction": "ConfigureADBDC.ps1\\ConfigureADBDC"
+    },
+    "resources": [
+      {
+        "name": "ad-lb-pip",
+        "type": "Microsoft.Network/publicIPAddresses",
+        "apiVersion": "2020-03-01",
+        "location": "[resourceGroup().location]",
+        "properties": {
+          "publicIPAllocationMethod": "Dynamic",
+          "dnsSettings": {
+            "domainNameLabel": "GEN-UNIQUE"
+          }
+        }
+      },
+      {
+        "apiVersion": "2019-12-01",
+        "type": "Microsoft.Compute/availabilitySets",
+        "location": "[resourceGroup().location]",
+        "name": "adAvailabiltySet",
+        "properties": {
+          "PlatformUpdateDomainCount": 20,
+          "PlatformFaultDomainCount": 2
+        },
+        "sku": {
+          "name": "Aligned"
+        }
+      },
+      {
+        "name": "VNet",
+        "type": "Microsoft.Resources/deployments",
+        "apiVersion": "2019-09-01",
+        "properties": {
+          "mode": "Incremental",
+          "templateLink": {
+            "uri": "[uri(parameters('_artifactsLocation'), concat('nestedtemplates/vnet.json', parameters('_artifactsLocationSasToken')))]",
+            "contentVersion": "1.0.0.0"
+          },
+          "parameters": {
+            "location": {
+              "value": "[resourceGroup().location]"
+            },
+            "virtualNetworkName": {
+              "value": "adVNET"
+            },
+            "virtualNetworkAddressRange": {
+              "value": "10.0.0.0/16"
+            },
+            "subnetName": {
+              "value": "adSubnet"
+            },
+            "subnetRange": {
+              "value": "10.0.0.0/24"
+            }
+          }
+        }
+      },
+      {
+        "name": "adLoadBalancer",
+        "type": "Microsoft.Network/loadBalancers",
+        "apiVersion": "2020-03-01",
+        "location": "[resourceGroup().location]",
+        "dependsOn": [
+          "Microsoft.Network/publicIPAddresses/ad-lb-pip"
+        ],
+        "properties": {
+          "frontendIPConfigurations": [
+            {
+              "name": "LBFE",
+              "properties": {
+                "publicIPAddress": {
+                  "id": "Microsoft.Network/publicIPAddresses/ad-lb-pip"
+                }
+              }
+            }
+          ],
+          "backendAddressPools": [
+            {
+              "name": "LBBE"
+            }
+          ],
+          "inboundNatRules": [
+            {
+              "name": "adPDCRDP",
+              "properties": {
+                "frontendIPConfiguration": {
+                  "id": "Microsoft.Network/loadBalancers/frontendIPConfigurations/adLoadBalancer/LBFE"
+                },
+                "protocol": "Tcp",
+                "frontendPort": 3389,
+                "backendPort": 3389,
+                "enableFloatingIP": false
+              }
+            },
+            {
+              "name": "adBDCRDP",
+              "properties": {
+                "frontendIPConfiguration": {
+                  "id": "Microsoft.Network/loadBalancers/frontendIPConfigurations/adLoadBalancer/LBFE"
+                },
+                "protocol": "Tcp",
+                "frontendPort": 13389,
+                "backendPort": 3389,
+                "enableFloatingIP": false
+              }
+            }
+          ]
+        }
+      },
+      {
+        "name": "adPDCNic",
+        "type": "Microsoft.Network/networkInterfaces",
+        "apiVersion": "2020-03-01",
+        "location": "[resourceGroup().location]",
+        "dependsOn": [
+          "Microsoft.Resources/deployments/VNet",
+          "Microsoft.Network/loadbalancers/adLoadBalancer"
+        ],
+        "properties": {
+          "ipConfigurations": [
+            {
+              "name": "ipconfig1",
+              "properties": {
+                "privateIPAllocationMethod": "Static",
+                "privateIPAddress": "10.0.0.4",
+                "subnet": {
+                  "id": "Microsoft.Network/virtualNetworks/subnets/adVNET/adSubnet"
+                },
+                "loadBalancerBackendAddressPools": [
+                  {
+                    "id": "Microsoft.Network/loadBalancers/backendAddressPools/adLoadBalancer/LBBE"
+                  }
+                ],
+                "loadBalancerInboundNatRules": [
+                  {
+                    "id": "Microsoft.Network/loadBalancers/inboundNatRules/adLoadBalancer/adPDCRDP"
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      },
+      {
+        "name": "adBDCNic",
+        "type": "Microsoft.Network/networkInterfaces",
+        "apiVersion": "2020-03-01",
+        "location": "[resourceGroup().location]",
+        "dependsOn": [
+          "Microsoft.Resources/deployments/VNet",
+          "Microsoft.Network/loadBalancers/adLoadBalancer"
+        ],
+        "properties": {
+          "ipConfigurations": [
+            {
+              "name": "ipconfig1",
+              "properties": {
+                "privateIPAllocationMethod": "Static",
+                "privateIPAddress": "10.0.0.5",
+                "subnet": {
+                  "id": "Microsoft.Network/virtualNetworks/subnets/adVNET/adSubnet"
+                },
+                "loadBalancerBackendAddressPools": [
+                  {
+                    "id": "Microsoft.Network/loadBalancers/backendAddressPools/adLoadBalancer/LBBE"
+                  }
+                ],
+                "loadBalancerInboundNatRules": [
+                  {
+                    "id": "Microsoft.Network/loadBalancers/inboundNatRules/adLoadBalancer/adBDCRDP"
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      },
+      {
+        "name": "adPDC",
+        "type": "Microsoft.Compute/virtualMachines",
+        "apiVersion": "2019-12-01",
+        "location": "[resourceGroup().location]",
+        "dependsOn": [
+          "Microsoft.Network/networkInterfaces/adPDCNic",
+          "Microsoft.Compute/availabilitySets/adAvailabiltySet",
+          "Microsoft.Network/loadBalancers/adLoadBalancer"
+        ],
+        "properties": {
+          "hardwareProfile": {
+            "vmSize": "Standard_D2s_v3"
+          },
+          "availabilitySet": {
+            "id": "Microsoft.Compute/availabilitySets/adAvailabiltySet"
+          },
+          "osProfile": {
+            "computerName": "adPDC",
+            "adminUsername": "GEN-UNIQUE",
+            "adminPassword": "GEN-PASSWORD"
+          },
+          "storageProfile": {
+            "imageReference": {
+              "publisher": "MicrosoftWindowsServer",
+              "offer": "WindowsServer",
+              "sku": "2016-Datacenter",
+              "version": "latest"
+            },
+            "osDisk": {
+              "name": "adPDC_OSDisk",
+              "caching": "ReadWrite",
+              "createOption": "FromImage",
+              "managedDisk": {
+                "storageAccountType": "Premium_LRS"
+              }
+            },
+            "dataDisks": [
+              {
+                "name": "adPDC_data-disk1",
+                "caching": "None",
+                "diskSizeGB": 1000,
+                "lun": 0,
+                "createOption": "Empty",
+                "managedDisk": {
+                  "storageAccountType": "Premium_LRS"
+                }
+              }
+            ]
+          },
+          "networkProfile": {
+            "networkInterfaces": [
+              {
+                "id": "Microsoft.Network/networkInterfaces/adPDCNic"
+              }
+            ]
+          }
+        },
+        "resources": [
+          {
+            "name": "CreateADForest",
+            "type": "extensions",
+            "apiVersion": "2019-12-01",
+            "location": "[resourceGroup().location]",
+            "dependsOn": [
+              "Microsoft.Compute/virtualMachines/adPDC"
+            ],
+            "properties": {
+              "publisher": "Microsoft.Powershell",
+              "type": "DSC",
+              "typeHandlerVersion": "2.19",
+              "autoUpgradeMinorVersion": true,
+              "settings": {
+                "ModulesUrl": "[uri(parameters('_artifactsLocation'), concat('DSC/CreateADPDC.zip', parameters('_artifactsLocationSasToken')))]",
+                "ConfigurationFunction": "CreateADPDC.ps1\\CreateADPDC",
+                "Properties": {
+                  "DomainName": "mydomain.local",
+                  "AdminCreds": {
+                    "UserName": "GEN-UNIQUE",
+                    "Password": "PrivateSettingsRef:AdminPassword"
+                  }
+                }
+              },
+              "protectedSettings": {
+                "Items": {
+                  "AdminPassword": "GEN-PASSWORD"
+                }
+              }
+            }
+          }
+        ]
+      },
+      {
+        "name": "UpdateVNetDNS1",
+        "type": "Microsoft.Resources/deployments",
+        "apiVersion": "2019-09-01",
+        "dependsOn": [
+          "CreateADForest"
+        ],
+        "properties": {
+          "mode": "Incremental",
+          "templateLink": {
+            "uri": "[uri(parameters('_artifactsLocation'), concat('nestedtemplates/vnet-with-dns-server.json', parameters('_artifactsLocationSasToken')))]",
+            "contentVersion": "1.0.0.0"
+          },
+          "parameters": {
+            "location": {
+              "value": "[resourceGroup().location]"
+            },
+            "virtualNetworkName": {
+              "value": "adVNET"
+            },
+            "virtualNetworkAddressRange": {
+              "value": "10.0.0.0/16"
+            },
+            "subnetName": {
+              "value": "adSubnet"
+            },
+            "subnetRange": {
+              "value": "10.0.0.0/24"
+            },
+            "DNSServerAddress": {
+              "value": [
+                "10.0.0.4"
+              ]
+            }
+          }
+        }
+      },
+      {
+        "name": "UpdateBDCNIC",
+        "type": "Microsoft.Resources/deployments",
+        "apiVersion": "2019-09-01",
+        "dependsOn": [
+          "adBDCNic",
+          "UpdateVNetDNS1"
+        ],
+        "properties": {
+          "mode": "Incremental",
+          "templateLink": {
+            "uri": "[uri(parameters('_artifactsLocation'), concat('nestedtemplates/nic.json', parameters('_artifactsLocationSasToken')))]",
+            "contentVersion": "1.0.0.0"
+          },
+          "parameters": {
+            "location": {
+              "value": "[resourceGroup().location]"
+            },
+            "nicName": {
+              "value": "adBDCNic"
+            },
+            "ipConfigurations": {
+              "value": [
+                {
+                  "name": "ipconfig1",
+                  "properties": {
+                    "privateIPAllocationMethod": "Static",
+                    "privateIPAddress": "10.0.0.5",
+                    "subnet": {
+                      "id": "Microsoft.Network/virtualNetworks/subnets/adVNET/adSubnet"
+                    },
+                    "loadBalancerBackendAddressPools": [
+                      {
+                        "id": "Microsoft.Network/loadBalancers/backendAddressPools/adLoadBalancer/LBBE"
+                      }
+                    ],
+                    "loadBalancerInboundNatRules": [
+                      {
+                        "id": "Microsoft.Network/loadBalancers/inboundNatRules/adLoadBalancer/adBDCRDP"
+                      }
+                    ]
+                  }
+                }
+              ]
+            },
+            "dnsServers": {
+              "value": [
+                "10.0.0.4"
+              ]
+            }
+          }
+        }
+      },
+      {
+        "name": "adBDC",
+        "type": "Microsoft.Compute/virtualMachines",
+        "apiVersion": "2019-12-01",
+        "location": "[resourceGroup().location]",
+        "dependsOn": [
+          "Microsoft.Network/networkInterfaces/adBDCNic",
+          "Microsoft.Compute/availabilitySets/adAvailabiltySet",
+          "Microsoft.Network/loadBalancers/adLoadBalancer"
+        ],
+        "properties": {
+          "hardwareProfile": {
+            "vmSize": "Standard_D2s_v3"
+          },
+          "availabilitySet": {
+            "id": "Microsoft.Compute/availabilitySets/adAvailabiltySet"
+          },
+          "osProfile": {
+            "computerName": "adBDC",
+            "adminUsername": "GEN-UNIQUE",
+            "adminPassword": "GEN-PASSWORD"
+          },
+          "storageProfile": {
+            "imageReference": {
+              "publisher": "MicrosoftWindowsServer",
+              "offer": "WindowsServer",
+              "sku": "2016-Datacenter",
+              "version": "latest"
+            },
+            "osDisk": {
+              "name": "adBDC_osdisk",
+              "caching": "ReadWrite",
+              "createOption": "FromImage",
+              "managedDisk": {
+                "storageAccountType": "Premium_LRS"
+              }
+            },
+            "dataDisks": [
+              {
+                "name": "adBDC_data-disk1",
+                "caching": "None",
+                "diskSizeGB": 1000,
+                "lun": 0,
+                "createOption": "Empty",
+                "managedDisk": {
+                  "storageAccountType": "Premium_LRS"
+                }
+              }
+            ]
+          },
+          "networkProfile": {
+            "networkInterfaces": [
+              {
+                "id": "Microsoft.Network/networkInterfaces/adBDCNic"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "type": "Microsoft.Compute/virtualMachines/extensions",
+        "name": "adBDC/PrepareBDC",
+        "apiVersion": "2019-12-01",
+        "location": "[resourceGroup().location]",
+        "dependsOn": [
+          "Microsoft.Compute/virtualMachines/adBDC"
+        ],
+        "properties": {
+          "publisher": "Microsoft.Powershell",
+          "type": "DSC",
+          "typeHandlerVersion": "2.19",
+          "autoUpgradeMinorVersion": true,
+          "settings": {
+            "ModulesUrl": "[uri(parameters('_artifactsLocation'), concat('DSC/PrepareADBDC.zip', parameters('_artifactsLocationSasToken')))]",
+            "ConfigurationFunction": "PrepareADBDC.ps1\\PrepareADBDC",
+            "Properties": {
+              "DNSServer": "10.0.0.4"
+            }
+          }
+        }
+      },
+      {
+        "name": "ConfiguringBackupADDomainController",
+        "type": "Microsoft.Resources/deployments",
+        "apiVersion": "2019-09-01",
+        "dependsOn": [
+          "Microsoft.Compute/virtualMachines/extensions/adBDC/PrepareBDC",
+          "Microsoft.Resources/deployments/UpdateBDCNIC"
+        ],
+        "properties": {
+          "mode": "Incremental",
+          "templateLink": {
+            "uri": "[uri(parameters('_artifactsLocation'), concat('nestedtemplates/configureADBDC.json', parameters('_artifactsLocationSasToken')))]",
+            "contentVersion": "1.0.0.0"
+          },
+          "parameters": {
+            "adBDCVMName": {
+              "value": "adBDC"
+            },
+            "location": {
+              "value": "[resourceGroup().location]"
+            },
+            "adminUsername": {
+              "value": "GEN-UNIQUE"
+            },
+            "adminPassword": {
+              "value": "GEN-PASSWORD"
+            },
+            "domainName": {
+              "value": "mydomain.local"
+            },
+            "adBDCConfigurationFunction": {
+              "value": "ConfigureADBDC.ps1\\ConfigureADBDC"
+            },
+            "adBDCConfigurationModulesURL": {
+              "value": "[uri(parameters('_artifactsLocation'), concat('DSC/ConfigureADBDC.zip', parameters('_artifactsLocationSasToken')))]"
+            }
+          }
+        }
+      },
+      {
+        "name": "UpdateVNetDNS2",
+        "type": "Microsoft.Resources/deployments",
+        "apiVersion": "2019-09-01",
+        "dependsOn": [
+          "Microsoft.Resources/deployments/ConfiguringBackupADDomainController"
+        ],
+        "properties": {
+          "mode": "Incremental",
+          "templateLink": {
+            "uri": "[uri(parameters('_artifactsLocation'), concat('nestedtemplates/vnet-with-dns-server.json', parameters('_artifactsLocationSasToken')))]",
+            "contentVersion": "1.0.0.0"
+          },
+          "parameters": {
+            "location": {
+              "value": "[resourceGroup().location]"
+            },
+            "virtualNetworkName": {
+              "value": "adVNET"
+            },
+            "virtualNetworkAddressRange": {
+              "value": "10.0.0.0/16"
+            },
+            "subnetName": {
+              "value": "adSubnet"
+            },
+            "subnetRange": {
+              "value": "10.0.0.0/24"
+            },
+            "DNSServerAddress": {
+              "value": [
+                "10.0.0.4",
+                "10.0.0.5"
+              ]
+            }
+          }
+        }
+      }
+    ],
+    "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+  }
+}

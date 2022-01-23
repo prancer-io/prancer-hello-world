@@ -1,0 +1,90 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAzureQuickStart",
+  "paths": [
+    "/quickstarts/microsoft.resources/deployment-script-ssh-key-gen/prereqs/prereq.azuredeploy.json",
+    "/quickstarts/microsoft.resources/deployment-script-ssh-key-gen/prereqs/prereq.azuredeploy.parameters.json"
+  ],
+  "timestamp": 1642962909986,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/quickstarts/microsoft.resources/deployment-script-ssh-key-gen/prereqs/prereq.azuredeploy.json",
+      "/quickstarts/microsoft.resources/deployment-script-ssh-key-gen/prereqs/prereq.azuredeploy.parameters.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT1643",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "microsoft.resources/deployments"
+    ]
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT1643",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "accessPolicies": {
+        "type": "array",
+        "value": [
+          {
+            "objectId": "GEN-AZUREAD-OBJECTID",
+            "tenantId": "GEN-AZUREAD-AKS-TENANTID",
+            "permissions": {
+              "secrets": [
+                "set"
+              ]
+            }
+          }
+        ]
+      }
+    },
+    "resources": [
+      {
+        "name": "prereqs",
+        "type": "Microsoft.Resources/deployments",
+        "apiVersion": "2019-09-01",
+        "properties": {
+          "mode": "Incremental",
+          "templateLink": {
+            "uri": "https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/modules/Microsoft.KeyVault/vaults/1.0/azuredeploy.json",
+            "contentVersion": "1.0.0.0"
+          },
+          "parameters": {
+            "accessPolicies": {
+              "value": [
+                {
+                  "objectId": "GEN-AZUREAD-OBJECTID",
+                  "tenantId": "GEN-AZUREAD-AKS-TENANTID",
+                  "permissions": {
+                    "secrets": [
+                      "set"
+                    ]
+                  }
+                }
+              ]
+            }
+          }
+        }
+      }
+    ],
+    "outputs": {
+      "vaultName": {
+        "type": "string",
+        "value": "[reference('prereqs').outputs.vaultName.value]"
+      },
+      "vaultResourceGroup": {
+        "type": "string",
+        "value": "[reference('prereqs').outputs.vaultResourceGroup.value]"
+      }
+    },
+    "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+  }
+}

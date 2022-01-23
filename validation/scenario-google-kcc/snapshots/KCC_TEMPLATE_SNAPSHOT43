@@ -2,12 +2,12 @@
   "structure": "filesystem",
   "error": null,
   "reference": "master",
-  "contentType": "yaml",
+  "contentType": "json",
   "source": "gitConnectorGoogleKcc",
   "paths": [
-    "/samples/resources/bigtabletable/bigtable_v1beta1_bigtabletable.yaml"
+    "/samples/resources/bigtabletable/bigtable_v1beta1_bigtableinstance.yaml"
   ],
-  "timestamp": 1628765139159,
+  "timestamp": 1642973301867,
   "queryuser": null,
   "checksum": "99914b932bd37a50b983c5e7c90ae93b",
   "node": {
@@ -15,34 +15,36 @@
     "type": "kcc",
     "collection": "kcctemplate",
     "paths": [
-      "/samples/resources/bigtabletable/bigtable_v1beta1_bigtabletable.yaml"
+      "/samples/resources/bigtabletable/bigtable_v1beta1_bigtableinstance.yaml"
     ],
     "snapshotId": "KCC_TEMPLATE_SNAPSHOT43",
     "status": "active",
-    "validate": true
+    "validate": true,
+    "resourceTypes": [
+      "bigtableinstance"
+    ]
   },
   "snapshotId": "KCC_TEMPLATE_SNAPSHOT43",
   "collection": "kcctemplate",
   "json": {
     "apiVersion": "bigtable.cnrm.cloud.google.com/v1beta1",
-    "kind": "BigtableTable",
+    "kind": "BigtableInstance",
     "metadata": {
-      "name": "bigtabletable-sample"
+      "name": "bigtabletable-dep"
     },
     "spec": {
-      "columnFamily": [
+      "displayName": "BigtableSample",
+      "cluster": [
         {
-          "family": "family1"
+          "clusterId": "cluster1",
+          "zone": "us-central1-a",
+          "numNodes": 3
         },
         {
-          "family": "family2"
+          "clusterId": "cluster2",
+          "zone": "us-west1-a",
+          "numNodes": 3
         }
-      ],
-      "instanceRef": {
-        "name": "bigtabletable-dep"
-      },
-      "splitKeys": [
-        "a"
       ]
     }
   }

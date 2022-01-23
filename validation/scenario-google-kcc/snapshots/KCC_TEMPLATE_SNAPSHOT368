@@ -2,12 +2,12 @@
   "structure": "filesystem",
   "error": null,
   "reference": "master",
-  "contentType": "yaml",
+  "contentType": "json",
   "source": "gitConnectorGoogleKcc",
   "paths": [
-    "/samples/resources/gkehubfeature/multi-cluster-ingress-feature/serviceusage_v1beta1_service_multiple_yaml_3.yaml"
+    "/samples/resources/datafusioninstance/datafusion_v1beta1_datafusioninstance.yaml"
   ],
-  "timestamp": 1628765146841,
+  "timestamp": 1642973303890,
   "queryuser": null,
   "checksum": "99914b932bd37a50b983c5e7c90ae93b",
   "node": {
@@ -15,28 +15,43 @@
     "type": "kcc",
     "collection": "kcctemplate",
     "paths": [
-      "/samples/resources/gkehubfeature/multi-cluster-ingress-feature/serviceusage_v1beta1_service_multiple_yaml_3.yaml"
+      "/samples/resources/datafusioninstance/datafusion_v1beta1_datafusioninstance.yaml"
     ],
     "snapshotId": "KCC_TEMPLATE_SNAPSHOT368",
     "status": "active",
-    "validate": true
+    "validate": true,
+    "resourceTypes": [
+      "datafusioninstance"
+    ]
   },
   "snapshotId": "KCC_TEMPLATE_SNAPSHOT368",
   "collection": "kcctemplate",
   "json": {
-    "apiVersion": "serviceusage.cnrm.cloud.google.com/v1beta1",
-    "kind": "Service",
+    "apiVersion": "datafusion.cnrm.cloud.google.com/v1beta1",
+    "kind": "DataFusionInstance",
     "metadata": {
-      "annotations": {
-        "cnrm.cloud.google.com/disable-dependent-services": "false"
+      "labels": {
+        "label-one": "value-one"
       },
-      "name": "gkehubfeature-dep-mcifeature-4"
+      "name": "datafusioninstance-sample"
     },
     "spec": {
-      "projectRef": {
-        "name": "gkehubfeature-dep-mcifeature"
+      "description": "A sample DataFusion instance.",
+      "displayName": "Sample DataFusion Instance",
+      "location": "us-central1",
+      "type": "BASIC",
+      "enableStackdriverMonitoring": true,
+      "enableStackdriverLogging": true,
+      "privateInstance": true,
+      "networkConfig": {
+        "networkRef": {
+          "name": "datafusioninstance-dep"
+        },
+        "ipAllocation": "10.89.48.0/22"
       },
-      "resourceID": "multiclusterservicediscovery.googleapis.com"
+      "dataprocServiceAccountRef": {
+        "name": "datafusioninstance-dep"
+      }
     }
   }
 }

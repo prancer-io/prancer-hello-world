@@ -2,12 +2,12 @@
   "structure": "filesystem",
   "error": null,
   "reference": "master",
-  "contentType": "yaml",
+  "contentType": "json",
   "source": "gitConnectorGoogleKcc",
   "paths": [
-    "/samples/resources/spannerdatabase/spanner_v1beta1_spannerdatabase.yaml"
+    "/samples/resources/logginglogmetric/exponential-log-metric/logging_v1beta1_logginglogmetric.yaml"
   ],
-  "timestamp": 1628765150734,
+  "timestamp": 1642973304509,
   "queryuser": null,
   "checksum": "99914b932bd37a50b983c5e7c90ae93b",
   "node": {
@@ -15,27 +15,40 @@
     "type": "kcc",
     "collection": "kcctemplate",
     "paths": [
-      "/samples/resources/spannerdatabase/spanner_v1beta1_spannerdatabase.yaml"
+      "/samples/resources/logginglogmetric/exponential-log-metric/logging_v1beta1_logginglogmetric.yaml"
     ],
     "snapshotId": "KCC_TEMPLATE_SNAPSHOT508",
     "status": "active",
-    "validate": true
+    "validate": true,
+    "resourceTypes": [
+      "logginglogmetric"
+    ]
   },
   "snapshotId": "KCC_TEMPLATE_SNAPSHOT508",
   "collection": "kcctemplate",
   "json": {
-    "apiVersion": "spanner.cnrm.cloud.google.com/v1beta1",
-    "kind": "SpannerDatabase",
+    "apiVersion": "logging.cnrm.cloud.google.com/v1beta1",
+    "kind": "LoggingLogMetric",
     "metadata": {
-      "name": "spannerdatabase-sample"
+      "name": "logginglogmetric-sample-exponentiallogmetric"
     },
     "spec": {
-      "instanceRef": {
-        "name": "spannerdatabase-dep"
+      "filter": "resource.type=gae_app AND severity<=ERROR",
+      "metricDescriptor": {
+        "metricKind": "DELTA",
+        "valueType": "DISTRIBUTION"
       },
-      "ddl": [
-        "CREATE TABLE t1 (t1 INT64 NOT NULL,) PRIMARY KEY(t1)"
-      ]
+      "valueExtractor": "EXTRACT(jsonPayload.request)",
+      "bucketOptions": {
+        "exponentialBuckets": {
+          "numFiniteBuckets": 4,
+          "growthFactor": 2.5,
+          "scale": 0.5
+        }
+      },
+      "projectRef": {
+        "external": "projects/${PROJECT_ID?}"
+      }
     }
   }
 }

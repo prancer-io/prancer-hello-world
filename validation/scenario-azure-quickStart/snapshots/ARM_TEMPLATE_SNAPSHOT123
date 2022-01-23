@@ -1,0 +1,243 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAzureQuickStart",
+  "paths": [
+    "/application-workloads/elastic/elasticsearch/nestedtemplates/data-nodes-4disk-resources.json"
+  ],
+  "timestamp": 1642962887214,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/application-workloads/elastic/elasticsearch/nestedtemplates/data-nodes-4disk-resources.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT123",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "microsoft.network/networkinterfaces",
+      "microsoft.compute/virtualmachines",
+      "microsoft.compute/availabilitysets"
+    ]
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT123",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "adminUsername": {
+        "type": "string",
+        "metadata": {
+          "description": "Admin username used when provisioning virtual machines"
+        }
+      },
+      "authSet": {
+        "type": "object",
+        "metadata": {
+          "description": "Authentication information"
+        }
+      },
+      "storageSettings": {
+        "type": "object",
+        "metadata": {
+          "description": "Storage Account Settings"
+        }
+      },
+      "subnet": {
+        "type": "object",
+        "metadata": {
+          "description": "The name of the subnet to deploy resources into"
+        }
+      },
+      "vmSize": {
+        "type": "string",
+        "defaultValue": "Standard_D2_v3",
+        "metadata": {
+          "description": "Size of the Elasticsearch data nodes"
+        }
+      },
+      "vmCount": {
+        "type": "int",
+        "defaultValue": 2,
+        "metadata": {
+          "description": "Number of Elasticsearch data nodes"
+        }
+      },
+      "osSettings": {
+        "type": "object",
+        "metadata": {
+          "description": "OS settings to deploy on"
+        }
+      },
+      "dataDiskSize": {
+        "type": "int",
+        "defaultValue": 1023,
+        "metadata": {
+          "description": "Size of each data disk attached to data nodes in (Gb)"
+        }
+      },
+      "namespace": {
+        "type": "string",
+        "metadata": {
+          "description": "The namespace for resources created by this template"
+        }
+      },
+      "lbBackendPools": {
+        "type": "object",
+        "metadata": {
+          "description": "loadBalancerBackendAddressPools config object"
+        }
+      },
+      "location": {
+        "type": "string",
+        "metadata": {
+          "description": "Location for all resources."
+        }
+      }
+    },
+    "variables": {
+      "subnetRef": "Microsoft.Network/virtualNetworks/subnets/subnet/subnet",
+      "storageAccountNameAFS": "storageSettings",
+      "vmName": "namespace-vm"
+    },
+    "resources": [
+      {
+        "apiVersion": "2020-12-01",
+        "type": "Microsoft.Compute/availabilitySets",
+        "name": "es-data-set",
+        "location": "location",
+        "sku": {
+          "name": "Aligned"
+        },
+        "properties": {
+          "platformUpdateDomainCount": 20,
+          "platformFaultDomainCount": 3
+        }
+      },
+      {
+        "apiVersion": "2020-05-01",
+        "type": "Microsoft.Network/networkInterfaces",
+        "name": "namespace-niccopyindex()",
+        "location": "location",
+        "copy": {
+          "name": "namespacenicLoop",
+          "count": 2
+        },
+        "properties": {
+          "ipConfigurations": [
+            {
+              "name": "ipconfig1",
+              "properties": {
+                "privateIPAllocationMethod": "Dynamic",
+                "subnet": {
+                  "id": "Microsoft.Network/virtualNetworks/subnets/subnet/subnet"
+                },
+                "loadBalancerBackendAddressPools": "lbBackendPools"
+              }
+            }
+          ]
+        }
+      },
+      {
+        "apiVersion": "2020-12-01",
+        "type": "Microsoft.Compute/virtualMachines",
+        "name": "namespace-vmcopyindex()",
+        "location": "location",
+        "copy": {
+          "name": "namespacevirtualMachineLoop",
+          "count": 2
+        },
+        "dependsOn": [
+          "Microsoft.Network/networkInterfaces/namespace-niccopyindex()",
+          "Microsoft.Compute/availabilitySets/es-data-set"
+        ],
+        "properties": {
+          "availabilitySet": {
+            "id": "Microsoft.Compute/availabilitySets/es-data-set"
+          },
+          "hardwareProfile": {
+            "vmSize": "Standard_D2_v3"
+          },
+          "osProfile": {
+            "computerName": "data-vmcopyIndex()",
+            "adminUsername": "adminUsername",
+            "adminPassword": "authSet",
+            "linuxConfiguration": "osSettings"
+          },
+          "storageProfile": {
+            "imageReference": "osSettings",
+            "osDisk": {
+              "name": "namespace-vmcopyindex()_OSDisk",
+              "caching": "ReadWrite",
+              "createOption": "FromImage"
+            },
+            "dataDisks": [
+              {
+                "name": "namespace-vmcopyindex()_DataDisk1",
+                "diskSizeGB": 1023,
+                "lun": 0,
+                "caching": "None",
+                "createOption": "Empty"
+              },
+              {
+                "name": "namespace-vmcopyindex()_DataDisk2",
+                "diskSizeGB": 1023,
+                "lun": 1,
+                "caching": "None",
+                "createOption": "Empty"
+              },
+              {
+                "name": "namespace-vmcopyindex()_DataDisk3",
+                "diskSizeGB": 1023,
+                "lun": 2,
+                "caching": "None",
+                "createOption": "Empty"
+              },
+              {
+                "name": "namespace-vmcopyindex()_DataDisk4",
+                "diskSizeGB": 1023,
+                "lun": 3,
+                "caching": "None",
+                "createOption": "Empty"
+              }
+            ]
+          },
+          "networkProfile": {
+            "networkInterfaces": [
+              {
+                "id": "Microsoft.Network/networkInterfaces/namespace-niccopyindex()"
+              }
+            ]
+          }
+        },
+        "resources": [
+          {
+            "type": "extensions",
+            "name": "installelasticsearch",
+            "apiVersion": "2020-12-01",
+            "location": "location",
+            "dependsOn": [
+              "Microsoft.Compute/virtualMachines/namespace-vmcopyindex()"
+            ],
+            "properties": {
+              "publisher": "osSettings",
+              "type": "osSettings",
+              "typeHandlerVersion": "osSettings",
+              "settings": {
+                "fileUris": "osSettings",
+                "commandToExecute": "[concat(parameters('osSettings').extensionSettings.data.settings.commandToExecute, listKeys(resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountNameAFS')), '2021-01-01').keys[0].value)]"
+              }
+            }
+          }
+        ]
+      }
+    ],
+    "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+  }
+}

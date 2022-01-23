@@ -2,12 +2,12 @@
   "structure": "filesystem",
   "error": null,
   "reference": "master",
-  "contentType": "yaml",
+  "contentType": "json",
   "source": "gitConnectorGoogleKcc",
   "paths": [
-    "/samples/resources/gkehubfeature/multi-cluster-service-discovery-feature/resourcemanager_v1beta1_project.yaml"
+    "/samples/resources/dataprocautoscalingpolicy/dataproc_v1beta1_dataprocautoscalingpolicy.yaml"
   ],
-  "timestamp": 1628765146900,
+  "timestamp": 1642973303895,
   "queryuser": null,
   "checksum": "99914b932bd37a50b983c5e7c90ae93b",
   "node": {
@@ -15,30 +15,37 @@
     "type": "kcc",
     "collection": "kcctemplate",
     "paths": [
-      "/samples/resources/gkehubfeature/multi-cluster-service-discovery-feature/resourcemanager_v1beta1_project.yaml"
+      "/samples/resources/dataprocautoscalingpolicy/dataproc_v1beta1_dataprocautoscalingpolicy.yaml"
     ],
     "snapshotId": "KCC_TEMPLATE_SNAPSHOT370",
     "status": "active",
-    "validate": true
+    "validate": true,
+    "resourceTypes": [
+      "dataprocautoscalingpolicy"
+    ]
   },
   "snapshotId": "KCC_TEMPLATE_SNAPSHOT370",
   "collection": "kcctemplate",
   "json": {
-    "apiVersion": "resourcemanager.cnrm.cloud.google.com/v1beta1",
-    "kind": "Project",
+    "apiVersion": "dataproc.cnrm.cloud.google.com/v1beta1",
+    "kind": "DataprocAutoscalingPolicy",
     "metadata": {
-      "annotations": {
-        "cnrm.cloud.google.com/auto-create-network": "false"
-      },
-      "name": "gkehubfeature-dep-mcsdfeature"
+      "name": "dataprocautoscalingpolicy-sample"
     },
     "spec": {
-      "name": "Config Connector Sample",
-      "organizationRef": {
-        "external": "${ORG_ID?}"
+      "location": "us-central1",
+      "workerConfig": {
+        "maxInstances": 2
       },
-      "billingAccountRef": {
-        "external": "${BILLING_ACCOUNT_ID?}"
+      "secondaryWorkerConfig": {
+        "maxInstances": 2
+      },
+      "basicAlgorithm": {
+        "yarnConfig": {
+          "gracefulDecommissionTimeout": "60s",
+          "scaleDownFactor": 0.5,
+          "scaleUpFactor": 0.5
+        }
       }
     }
   }

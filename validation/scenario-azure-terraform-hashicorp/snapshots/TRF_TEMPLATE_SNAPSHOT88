@@ -1,0 +1,124 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "main",
+  "contentType": "json",
+  "source": "gitConnectorAzureTerraHashicorp",
+  "paths": [
+    "/examples/private-endpoint/postgresql/variables.tf",
+    "/examples/private-endpoint/postgresql/main.tf"
+  ],
+  "timestamp": 1642943279871,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "TRF_TEMPLATE_SNAPSHOT",
+    "type": "terraform",
+    "collection": "terraformtemplate",
+    "paths": [
+      "/examples/private-endpoint/postgresql/variables.tf",
+      "/examples/private-endpoint/postgresql/main.tf"
+    ],
+    "snapshotId": "TRF_TEMPLATE_SNAPSHOT88",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "azurerm_postgresql_server",
+      "azurerm_private_endpoint",
+      "azurerm_subnet",
+      "azurerm_virtual_network",
+      "azurerm_resource_group"
+    ]
+  },
+  "snapshotId": "TRF_TEMPLATE_SNAPSHOT88",
+  "collection": "terraformtemplate",
+  "json": {
+    "provider": [
+      {
+        "azurerm": {
+          "features": [
+            {}
+          ]
+        }
+      }
+    ],
+    "resources": [
+      {
+        "type": "azurerm_resource_group",
+        "name": "example",
+        "properties": {
+          "name": "${var.prefix}-resources",
+          "location": "${var.location}",
+          "compiletime_identity": "azurerm_resource_group.example"
+        }
+      },
+      {
+        "type": "azurerm_virtual_network",
+        "name": "example",
+        "properties": {
+          "name": "${var.prefix}-vnet",
+          "address_space": [
+            "10.0.0.0/16"
+          ],
+          "location": "${azurerm_resource_group.example.location}",
+          "resource_group_name": "${azurerm_resource_group.example.name}",
+          "compiletime_identity": "azurerm_virtual_network.example"
+        }
+      },
+      {
+        "type": "azurerm_subnet",
+        "name": "endpoint",
+        "properties": {
+          "name": "endpoint",
+          "resource_group_name": "${azurerm_resource_group.example.name}",
+          "virtual_network_name": "${azurerm_virtual_network.example.name}",
+          "address_prefixes": [
+            "10.0.2.0/24"
+          ],
+          "enforce_private_link_endpoint_network_policies": true,
+          "compiletime_identity": "azurerm_subnet.endpoint"
+        }
+      },
+      {
+        "type": "azurerm_postgresql_server",
+        "name": "example",
+        "properties": {
+          "name": "${var.prefix}-postgresql",
+          "location": "${azurerm_resource_group.example.location}",
+          "resource_group_name": "${azurerm_resource_group.example.name}",
+          "administrator_login": "psqladmin",
+          "administrator_login_password": "H@Sh1CoR3!",
+          "auto_grow_enabled": true,
+          "backup_retention_days": 7,
+          "geo_redundant_backup_enabled": false,
+          "sku_name": "GP_Gen5_2",
+          "ssl_enforcement_enabled": true,
+          "storage_mb": 51200,
+          "version": 11,
+          "compiletime_identity": "azurerm_postgresql_server.example"
+        }
+      },
+      {
+        "type": "azurerm_private_endpoint",
+        "name": "example",
+        "properties": {
+          "name": "${var.prefix}-pe",
+          "location": "${azurerm_resource_group.example.location}",
+          "resource_group_name": "${azurerm_resource_group.example.name}",
+          "subnet_id": "${azurerm_subnet.endpoint.id}",
+          "private_service_connection": [
+            {
+              "name": "tfex-postgresql-connection",
+              "is_manual_connection": false,
+              "private_connection_resource_id": "${azurerm_postgresql_server.example.id}",
+              "subresource_names": [
+                "postgresqlServer"
+              ]
+            }
+          ],
+          "compiletime_identity": "azurerm_private_endpoint.example"
+        }
+      }
+    ]
+  }
+}

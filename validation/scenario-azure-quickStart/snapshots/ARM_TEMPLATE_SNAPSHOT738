@@ -1,0 +1,1022 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAzureQuickStart",
+  "paths": [
+    "/demos/nested-vms-in-virtual-network/azuredeploy.json",
+    "/demos/nested-vms-in-virtual-network/azuredeploy.parameters.json"
+  ],
+  "timestamp": 1642962900500,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/demos/nested-vms-in-virtual-network/azuredeploy.json",
+      "/demos/nested-vms-in-virtual-network/azuredeploy.parameters.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT738",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "microsoft.network/publicipaddresses",
+      "microsoft.network/virtualnetworks",
+      "microsoft.resources/deployments",
+      "microsoft.compute/virtualmachines/extensions",
+      "microsoft.compute/virtualmachines",
+      "microsoft.network/networksecuritygroups"
+    ]
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT738",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.0.0.0",
+    "metadata": {
+      "_generator": {
+        "name": "bicep",
+        "version": "0.4.412.5873",
+        "templateHash": "4253688112151179551"
+      }
+    },
+    "parameters": {
+      "_artifactsLocation": {
+        "type": "string",
+        "defaultValue": "[deployment().properties.templateLink.uri]",
+        "metadata": {
+          "description": "The base URI where artifacts required by this template are located including a trailing '/'"
+        }
+      },
+      "_artifactsLocationSasToken": {
+        "type": "secureString",
+        "defaultValue": "",
+        "metadata": {
+          "description": "The sasToken required to access _artifactsLocation.  When the template is deployed using the accompanying scripts, a sasToken will be automatically generated. Use the defaultValue if the staging location is not secured."
+        }
+      },
+      "location": {
+        "type": "string",
+        "defaultValue": "[resourceGroup().location]",
+        "metadata": {
+          "description": "Location for all resources."
+        }
+      },
+      "HostPublicIPAddressName": {
+        "type": "string",
+        "defaultValue": "HVHOSTPIP",
+        "metadata": {
+          "description": "Resource Name for Public IP address attached to Hyper-V Host"
+        }
+      },
+      "virtualNetworkName": {
+        "type": "string",
+        "defaultValue": "VirtualNetwork",
+        "metadata": {
+          "description": "Hyper-V Host and Guest VMs Virtual Network"
+        }
+      },
+      "virtualNetworkAddressPrefix": {
+        "type": "string",
+        "defaultValue": "10.0.0.0/22",
+        "metadata": {
+          "description": "Virtual Network Address Space"
+        }
+      },
+      "NATSubnetName": {
+        "type": "string",
+        "defaultValue": "NAT",
+        "metadata": {
+          "description": "NAT Subnet Name"
+        }
+      },
+      "NATSubnetPrefix": {
+        "type": "string",
+        "defaultValue": "10.0.0.0/24",
+        "metadata": {
+          "description": "NAT Subnet Address Space"
+        }
+      },
+      "hyperVSubnetName": {
+        "type": "string",
+        "defaultValue": "Hyper-V-LAN",
+        "metadata": {
+          "description": "Hyper-V Host Subnet Name"
+        }
+      },
+      "hyperVSubnetPrefix": {
+        "type": "string",
+        "defaultValue": "10.0.1.0/24",
+        "metadata": {
+          "description": "Hyper-V Host Subnet Address Space"
+        }
+      },
+      "ghostedSubnetName": {
+        "type": "string",
+        "defaultValue": "Ghosted",
+        "metadata": {
+          "description": "Ghosted Subnet Name"
+        }
+      },
+      "ghostedSubnetPrefix": {
+        "type": "string",
+        "defaultValue": "10.0.2.0/24",
+        "metadata": {
+          "description": "Ghosted Subnet Address Space"
+        }
+      },
+      "azureVMsSubnetName": {
+        "type": "string",
+        "defaultValue": "Azure-VMs",
+        "metadata": {
+          "description": "Azure VMs Subnet Name"
+        }
+      },
+      "azureVMsSubnetPrefix": {
+        "type": "string",
+        "defaultValue": "10.0.3.0/24",
+        "metadata": {
+          "description": "Azure VMs Address Space"
+        }
+      },
+      "HostNetworkInterface1Name": {
+        "type": "string",
+        "defaultValue": "HVHOSTNIC1",
+        "metadata": {
+          "description": "Hyper-V Host Network Interface 1 Name, attached to NAT Subnet"
+        }
+      },
+      "HostNetworkInterface2Name": {
+        "type": "string",
+        "defaultValue": "HVHOSTNIC2",
+        "metadata": {
+          "description": "Hyper-V Host Network Interface 2 Name, attached to Hyper-V LAN Subnet"
+        }
+      },
+      "HostVirtualMachineName": {
+        "type": "string",
+        "defaultValue": "HVHOST",
+        "maxLength": 15,
+        "metadata": {
+          "description": "Name of Hyper-V Host Virtual Machine, Maximum of 15 characters, use letters and numbers only."
+        }
+      },
+      "HostVirtualMachineSize": {
+        "type": "string",
+        "defaultValue": "Standard_D4s_v3",
+        "allowedValues": [
+          "Standard_D2_v3",
+          "Standard_D4_v3",
+          "Standard_D8_v3",
+          "Standard_D16_v3",
+          "Standard_D32_v3",
+          "Standard_D2s_v3",
+          "Standard_D4s_v3",
+          "Standard_D8s_v3",
+          "Standard_D16s_v3",
+          "Standard_D32s_v3",
+          "Standard_D64_v3",
+          "Standard_E2_v3",
+          "Standard_E4_v3",
+          "Standard_E8_v3",
+          "Standard_E16_v3",
+          "Standard_E32_v3",
+          "Standard_E64_v3",
+          "Standard_D64s_v3",
+          "Standard_E2s_v3",
+          "Standard_E4s_v3",
+          "Standard_E8s_v3",
+          "Standard_E16s_v3",
+          "Standard_E32s_v3",
+          "Standard_E64s_v3"
+        ],
+        "metadata": {
+          "description": "Size of the Host Virtual Machine"
+        }
+      },
+      "HostAdminUsername": {
+        "type": "string",
+        "metadata": {
+          "description": "Admin Username for the Host Virtual Machine"
+        }
+      },
+      "HostAdminPassword": {
+        "type": "secureString",
+        "metadata": {
+          "description": "Admin User Password for the Host Virtual Machine"
+        },
+        "value": "GEN-PASSWORD"
+      },
+      "HostAdminUserName": {
+        "value": "GEN-UNIQUE"
+      }
+    },
+    "functions": [],
+    "variables": {
+      "NATSubnetNSGName": "[format('{0}NSG', parameters('NATSubnetName'))]",
+      "hyperVSubnetNSGName": "[format('{0}NSG', parameters('hyperVSubnetName'))]",
+      "ghostedSubnetNSGName": "[format('{0}NSG', parameters('ghostedSubnetName'))]",
+      "azureVMsSubnetNSGName": "[format('{0}NSG', parameters('azureVMsSubnetName'))]",
+      "azureVMsSubnetUDRName": "[format('{0}UDR', parameters('azureVMsSubnetName'))]",
+      "DSCInstallWindowsFeaturesUri": "[uri(parameters('_artifactsLocation'), format('dsc/dscinstallwindowsfeatures.zip{0}', parameters('_artifactsLocationSasToken')))]",
+      "HVHostSetupScriptUri": "[uri(parameters('_artifactsLocation'), format('hvhostsetup.ps1{0}', parameters('_artifactsLocationSasToken')))]"
+    },
+    "resources": [
+      {
+        "type": "Microsoft.Network/publicIPAddresses",
+        "apiVersion": "2021-02-01",
+        "name": "HVHOSTPIP",
+        "location": "[resourceGroup().location]",
+        "sku": {
+          "name": "Basic"
+        },
+        "properties": {
+          "publicIPAllocationMethod": "Dynamic",
+          "dnsSettings": {
+            "domainNameLabel": "[toLower(format('{0}-{1}', parameters('HostVirtualMachineName'), uniqueString(resourceGroup().id)))]"
+          }
+        }
+      },
+      {
+        "type": "Microsoft.Network/networkSecurityGroups",
+        "apiVersion": "2021-02-01",
+        "name": "[format('{0}NSG', parameters('NATSubnetName'))]",
+        "location": "[resourceGroup().location]",
+        "properties": {}
+      },
+      {
+        "type": "Microsoft.Network/networkSecurityGroups",
+        "apiVersion": "2021-02-01",
+        "name": "[format('{0}NSG', parameters('hyperVSubnetName'))]",
+        "location": "[resourceGroup().location]",
+        "properties": {}
+      },
+      {
+        "type": "Microsoft.Network/networkSecurityGroups",
+        "apiVersion": "2021-02-01",
+        "name": "[format('{0}NSG', parameters('ghostedSubnetName'))]",
+        "location": "[resourceGroup().location]",
+        "properties": {}
+      },
+      {
+        "type": "Microsoft.Network/networkSecurityGroups",
+        "apiVersion": "2021-02-01",
+        "name": "[format('{0}NSG', parameters('azureVMsSubnetName'))]",
+        "location": "[resourceGroup().location]",
+        "properties": {}
+      },
+      {
+        "type": "Microsoft.Network/virtualNetworks",
+        "apiVersion": "2021-02-01",
+        "name": "VirtualNetwork",
+        "location": "[resourceGroup().location]",
+        "properties": {
+          "addressSpace": {
+            "addressPrefixes": [
+              "10.0.0.0/22"
+            ]
+          },
+          "subnets": [
+            {
+              "name": "NAT",
+              "properties": {
+                "addressPrefix": "10.0.0.0/24",
+                "networkSecurityGroup": {
+                  "id": "Microsoft.Network/networkSecurityGroups/[format('{0}NSG', parameters('NATSubnetName'))]"
+                }
+              }
+            },
+            {
+              "name": "Hyper-V-LAN",
+              "properties": {
+                "addressPrefix": "10.0.1.0/24",
+                "networkSecurityGroup": {
+                  "id": "Microsoft.Network/networkSecurityGroups/[format('{0}NSG', parameters('hyperVSubnetName'))]"
+                }
+              }
+            },
+            {
+              "name": "Ghosted",
+              "properties": {
+                "addressPrefix": "10.0.2.0/24",
+                "networkSecurityGroup": {
+                  "id": "Microsoft.Network/networkSecurityGroups/[format('{0}NSG', parameters('ghostedSubnetName'))]"
+                }
+              }
+            },
+            {
+              "name": "Azure-VMs",
+              "properties": {
+                "addressPrefix": "10.0.3.0/24",
+                "networkSecurityGroup": {
+                  "id": "Microsoft.Network/networkSecurityGroups/[format('{0}NSG', parameters('azureVMsSubnetName'))]"
+                },
+                "routeTable": {
+                  "id": "[reference(resourceId('Microsoft.Resources/deployments', 'udrDeploy'), '2019-10-01').outputs.udrId.value]"
+                }
+              }
+            }
+          ]
+        },
+        "dependsOn": [
+          "Microsoft.Network/networkSecurityGroups/[format('{0}NSG', parameters('azureVMsSubnetName'))]",
+          "Microsoft.Resources/deployments/udrDeploy",
+          "Microsoft.Network/networkSecurityGroups/[format('{0}NSG', parameters('ghostedSubnetName'))]",
+          "Microsoft.Network/networkSecurityGroups/[format('{0}NSG', parameters('hyperVSubnetName'))]",
+          "Microsoft.Network/networkSecurityGroups/[format('{0}NSG', parameters('NATSubnetName'))]"
+        ]
+      },
+      {
+        "type": "Microsoft.Compute/virtualMachines",
+        "apiVersion": "2021-03-01",
+        "name": "HVHOST",
+        "location": "[resourceGroup().location]",
+        "properties": {
+          "hardwareProfile": {
+            "vmSize": "Standard_D4s_v3"
+          },
+          "storageProfile": {
+            "imageReference": {
+              "publisher": "MicrosoftWindowsServer",
+              "offer": "WindowsServer",
+              "sku": "2016-Datacenter",
+              "version": "latest"
+            },
+            "osDisk": {
+              "name": "[format('{0}OsDisk', parameters('HostVirtualMachineName'))]",
+              "createOption": "FromImage",
+              "managedDisk": {
+                "storageAccountType": "Premium_LRS"
+              },
+              "caching": "ReadWrite"
+            },
+            "dataDisks": [
+              {
+                "lun": 0,
+                "name": "[format('{0}DataDisk1', parameters('HostVirtualMachineName'))]",
+                "createOption": "Empty",
+                "diskSizeGB": 1024,
+                "caching": "ReadOnly",
+                "managedDisk": {
+                  "storageAccountType": "Premium_LRS"
+                }
+              }
+            ]
+          },
+          "osProfile": {
+            "computerName": "HVHOST",
+            "adminUsername": "HostAdminUsername",
+            "adminPassword": "GEN-PASSWORD"
+          },
+          "networkProfile": {
+            "networkInterfaces": [
+              {
+                "id": "[reference(resourceId('Microsoft.Resources/deployments', 'createNic1'), '2019-10-01').outputs.nicId.value]",
+                "properties": {
+                  "primary": true
+                }
+              },
+              {
+                "id": "[reference(resourceId('Microsoft.Resources/deployments', 'createNic2'), '2019-10-01').outputs.nicId.value]",
+                "properties": {
+                  "primary": false
+                }
+              }
+            ]
+          }
+        },
+        "dependsOn": [
+          "Microsoft.Resources/deployments/createNic1",
+          "Microsoft.Resources/deployments/createNic2"
+        ]
+      },
+      {
+        "type": "Microsoft.Compute/virtualMachines/extensions",
+        "apiVersion": "2021-03-01",
+        "name": "[format('{0}/{1}', parameters('HostVirtualMachineName'), 'InstallWindowsFeatures')]",
+        "location": "[resourceGroup().location]",
+        "properties": {
+          "publisher": "Microsoft.Powershell",
+          "type": "DSC",
+          "typeHandlerVersion": "2.77",
+          "autoUpgradeMinorVersion": true,
+          "settings": {
+            "wmfVersion": "latest",
+            "configuration": {
+              "url": "[uri(parameters('_artifactsLocation'), format('dsc/dscinstallwindowsfeatures.zip{0}', parameters('_artifactsLocationSasToken')))]",
+              "script": "DSCInstallWindowsFeatures.ps1",
+              "function": "InstallWindowsFeatures"
+            }
+          }
+        },
+        "dependsOn": [
+          "Microsoft.Compute/virtualMachines/HVHOST"
+        ]
+      },
+      {
+        "type": "Microsoft.Compute/virtualMachines/extensions",
+        "apiVersion": "2021-03-01",
+        "name": "[format('{0}/{1}', parameters('HostVirtualMachineName'), 'HVHOSTSetup')]",
+        "location": "[resourceGroup().location]",
+        "properties": {
+          "publisher": "Microsoft.Compute",
+          "type": "CustomScriptExtension",
+          "typeHandlerVersion": "1.9",
+          "autoUpgradeMinorVersion": true,
+          "settings": {
+            "fileUris": [
+              "[uri(parameters('_artifactsLocation'), format('hvhostsetup.ps1{0}', parameters('_artifactsLocationSasToken')))]"
+            ],
+            "commandToExecute": "[format('powershell -ExecutionPolicy Unrestricted -File HVHostSetup.ps1 -NIC1IPAddress {0} -NIC2IPAddress {1} -GhostedSubnetPrefix {2} -VirtualNetworkPrefix {3}', reference(resourceId('Microsoft.Resources/deployments', 'createNic1'), '2019-10-01').outputs.assignedIp.value, reference(resourceId('Microsoft.Resources/deployments', 'createNic2'), '2019-10-01').outputs.assignedIp.value, parameters('ghostedSubnetPrefix'), parameters('virtualNetworkAddressPrefix'))]"
+          }
+        },
+        "dependsOn": [
+          "Microsoft.Resources/deployments/createNic1",
+          "Microsoft.Resources/deployments/createNic2",
+          "Microsoft.Compute/virtualMachines/HVHOST",
+          "Microsoft.Compute/virtualMachines/extensions/HVHOST/InstallWindowsFeatures"
+        ]
+      },
+      {
+        "type": "Microsoft.Resources/deployments",
+        "apiVersion": "2019-10-01",
+        "name": "createNic1",
+        "properties": {
+          "expressionEvaluationOptions": {
+            "scope": "inner"
+          },
+          "mode": "Incremental",
+          "parameters": {
+            "location": {
+              "value": "[resourceGroup().location]"
+            },
+            "nicName": {
+              "value": "HVHOSTNIC1"
+            },
+            "subnetId": {
+              "value": "[format('{0}/subnets/{1}', resourceId('Microsoft.Network/virtualNetworks', parameters('virtualNetworkName')), parameters('NATSubnetName'))]"
+            },
+            "pipId": {
+              "value": "Microsoft.Network/publicIPAddresses/HVHOSTPIP"
+            }
+          },
+          "template": {
+            "contentVersion": "1.0.0.0",
+            "metadata": {
+              "_generator": {
+                "name": "bicep",
+                "version": "0.4.412.5873",
+                "templateHash": "15585594711656125126"
+              }
+            },
+            "parameters": {
+              "nicName": {
+                "type": "string"
+              },
+              "location": {
+                "type": "string"
+              },
+              "subnetId": {
+                "type": "string"
+              },
+              "pipId": {
+                "type": "string",
+                "defaultValue": ""
+              },
+              "ipAllocationMethod": {
+                "type": "string",
+                "defaultValue": "Dynamic",
+                "allowedValues": [
+                  "Dynamic",
+                  "Static"
+                ]
+              },
+              "staticIpAddress": {
+                "type": "string",
+                "defaultValue": ""
+              },
+              "enableIPForwarding": {
+                "type": "bool",
+                "defaultValue": false
+              }
+            },
+            "functions": [],
+            "resources": [
+              {
+                "type": "Microsoft.Network/networkInterfaces",
+                "apiVersion": "2020-06-01",
+                "name": "nicName",
+                "location": "[resourceGroup().location]",
+                "properties": {
+                  "ipConfigurations": [
+                    {
+                      "name": "ipconfig",
+                      "properties": {
+                        "primary": true,
+                        "privateIPAllocationMethod": "ipAllocationMethod",
+                        "privateIPAddress": "staticIpAddress",
+                        "subnet": {
+                          "id": "subnetId"
+                        },
+                        "publicIPAddress": "[if(equals(parameters('pipId'), ''), null(), createObject('id', parameters('pipId')))]"
+                      }
+                    }
+                  ],
+                  "enableIPForwarding": "enableIPForwarding"
+                }
+              }
+            ],
+            "outputs": {
+              "nicId": {
+                "type": "string",
+                "value": "Microsoft.Network/networkInterfaces/nicName"
+              },
+              "assignedIp": {
+                "type": "string",
+                "value": "[reference(resourceId('Microsoft.Network/networkInterfaces', parameters('nicName'))).ipConfigurations[0].properties.privateIPAddress]"
+              }
+            },
+            "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+          }
+        },
+        "dependsOn": [
+          "Microsoft.Network/publicIPAddresses/HVHOSTPIP",
+          "Microsoft.Network/virtualNetworks/VirtualNetwork"
+        ]
+      },
+      {
+        "type": "Microsoft.Resources/deployments",
+        "apiVersion": "2019-10-01",
+        "name": "createNic2",
+        "properties": {
+          "expressionEvaluationOptions": {
+            "scope": "inner"
+          },
+          "mode": "Incremental",
+          "parameters": {
+            "location": {
+              "value": "[resourceGroup().location]"
+            },
+            "nicName": {
+              "value": "HVHOSTNIC2"
+            },
+            "enableIPForwarding": {
+              "value": true
+            },
+            "subnetId": {
+              "value": "[format('{0}/subnets/{1}', resourceId('Microsoft.Network/virtualNetworks', parameters('virtualNetworkName')), parameters('hyperVSubnetName'))]"
+            }
+          },
+          "template": {
+            "contentVersion": "1.0.0.0",
+            "metadata": {
+              "_generator": {
+                "name": "bicep",
+                "version": "0.4.412.5873",
+                "templateHash": "15585594711656125126"
+              }
+            },
+            "parameters": {
+              "nicName": {
+                "type": "string"
+              },
+              "location": {
+                "type": "string"
+              },
+              "subnetId": {
+                "type": "string"
+              },
+              "pipId": {
+                "type": "string",
+                "defaultValue": ""
+              },
+              "ipAllocationMethod": {
+                "type": "string",
+                "defaultValue": "Dynamic",
+                "allowedValues": [
+                  "Dynamic",
+                  "Static"
+                ]
+              },
+              "staticIpAddress": {
+                "type": "string",
+                "defaultValue": ""
+              },
+              "enableIPForwarding": {
+                "type": "bool",
+                "defaultValue": false
+              }
+            },
+            "functions": [],
+            "resources": [
+              {
+                "type": "Microsoft.Network/networkInterfaces",
+                "apiVersion": "2020-06-01",
+                "name": "nicName",
+                "location": "[resourceGroup().location]",
+                "properties": {
+                  "ipConfigurations": [
+                    {
+                      "name": "ipconfig",
+                      "properties": {
+                        "primary": true,
+                        "privateIPAllocationMethod": "ipAllocationMethod",
+                        "privateIPAddress": "staticIpAddress",
+                        "subnet": {
+                          "id": "subnetId"
+                        },
+                        "publicIPAddress": "[if(equals(parameters('pipId'), ''), null(), createObject('id', parameters('pipId')))]"
+                      }
+                    }
+                  ],
+                  "enableIPForwarding": "enableIPForwarding"
+                }
+              }
+            ],
+            "outputs": {
+              "nicId": {
+                "type": "string",
+                "value": "Microsoft.Network/networkInterfaces/nicName"
+              },
+              "assignedIp": {
+                "type": "string",
+                "value": "[reference(resourceId('Microsoft.Network/networkInterfaces', parameters('nicName'))).ipConfigurations[0].properties.privateIPAddress]"
+              }
+            },
+            "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+          }
+        },
+        "dependsOn": [
+          "Microsoft.Network/virtualNetworks/VirtualNetwork"
+        ]
+      },
+      {
+        "type": "Microsoft.Resources/deployments",
+        "apiVersion": "2019-10-01",
+        "name": "updateNic1",
+        "properties": {
+          "expressionEvaluationOptions": {
+            "scope": "inner"
+          },
+          "mode": "Incremental",
+          "parameters": {
+            "location": {
+              "value": "[resourceGroup().location]"
+            },
+            "ipAllocationMethod": {
+              "value": "Static"
+            },
+            "staticIpAddress": {
+              "value": "[reference(resourceId('Microsoft.Resources/deployments', 'createNic1'), '2019-10-01').outputs.assignedIp.value]"
+            },
+            "nicName": {
+              "value": "HVHOSTNIC1"
+            },
+            "subnetId": {
+              "value": "[format('{0}/subnets/{1}', resourceId('Microsoft.Network/virtualNetworks', parameters('virtualNetworkName')), parameters('NATSubnetName'))]"
+            },
+            "pipId": {
+              "value": "Microsoft.Network/publicIPAddresses/HVHOSTPIP"
+            }
+          },
+          "template": {
+            "contentVersion": "1.0.0.0",
+            "metadata": {
+              "_generator": {
+                "name": "bicep",
+                "version": "0.4.412.5873",
+                "templateHash": "15585594711656125126"
+              }
+            },
+            "parameters": {
+              "nicName": {
+                "type": "string"
+              },
+              "location": {
+                "type": "string"
+              },
+              "subnetId": {
+                "type": "string"
+              },
+              "pipId": {
+                "type": "string",
+                "defaultValue": ""
+              },
+              "ipAllocationMethod": {
+                "type": "string",
+                "defaultValue": "Dynamic",
+                "allowedValues": [
+                  "Dynamic",
+                  "Static"
+                ]
+              },
+              "staticIpAddress": {
+                "type": "string",
+                "defaultValue": ""
+              },
+              "enableIPForwarding": {
+                "type": "bool",
+                "defaultValue": false
+              }
+            },
+            "functions": [],
+            "resources": [
+              {
+                "type": "Microsoft.Network/networkInterfaces",
+                "apiVersion": "2020-06-01",
+                "name": "nicName",
+                "location": "[resourceGroup().location]",
+                "properties": {
+                  "ipConfigurations": [
+                    {
+                      "name": "ipconfig",
+                      "properties": {
+                        "primary": true,
+                        "privateIPAllocationMethod": "ipAllocationMethod",
+                        "privateIPAddress": "staticIpAddress",
+                        "subnet": {
+                          "id": "subnetId"
+                        },
+                        "publicIPAddress": "[if(equals(parameters('pipId'), ''), null(), createObject('id', parameters('pipId')))]"
+                      }
+                    }
+                  ],
+                  "enableIPForwarding": "enableIPForwarding"
+                }
+              }
+            ],
+            "outputs": {
+              "nicId": {
+                "type": "string",
+                "value": "Microsoft.Network/networkInterfaces/nicName"
+              },
+              "assignedIp": {
+                "type": "string",
+                "value": "[reference(resourceId('Microsoft.Network/networkInterfaces', parameters('nicName'))).ipConfigurations[0].properties.privateIPAddress]"
+              }
+            },
+            "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+          }
+        },
+        "dependsOn": [
+          "Microsoft.Resources/deployments/createNic1",
+          "Microsoft.Network/publicIPAddresses/HVHOSTPIP",
+          "Microsoft.Network/virtualNetworks/VirtualNetwork"
+        ]
+      },
+      {
+        "type": "Microsoft.Resources/deployments",
+        "apiVersion": "2019-10-01",
+        "name": "updateNic2",
+        "properties": {
+          "expressionEvaluationOptions": {
+            "scope": "inner"
+          },
+          "mode": "Incremental",
+          "parameters": {
+            "location": {
+              "value": "[resourceGroup().location]"
+            },
+            "ipAllocationMethod": {
+              "value": "Static"
+            },
+            "staticIpAddress": {
+              "value": "[reference(resourceId('Microsoft.Resources/deployments', 'createNic2'), '2019-10-01').outputs.assignedIp.value]"
+            },
+            "nicName": {
+              "value": "HVHOSTNIC2"
+            },
+            "enableIPForwarding": {
+              "value": true
+            },
+            "subnetId": {
+              "value": "[format('{0}/subnets/{1}', resourceId('Microsoft.Network/virtualNetworks', parameters('virtualNetworkName')), parameters('hyperVSubnetName'))]"
+            }
+          },
+          "template": {
+            "contentVersion": "1.0.0.0",
+            "metadata": {
+              "_generator": {
+                "name": "bicep",
+                "version": "0.4.412.5873",
+                "templateHash": "15585594711656125126"
+              }
+            },
+            "parameters": {
+              "nicName": {
+                "type": "string"
+              },
+              "location": {
+                "type": "string"
+              },
+              "subnetId": {
+                "type": "string"
+              },
+              "pipId": {
+                "type": "string",
+                "defaultValue": ""
+              },
+              "ipAllocationMethod": {
+                "type": "string",
+                "defaultValue": "Dynamic",
+                "allowedValues": [
+                  "Dynamic",
+                  "Static"
+                ]
+              },
+              "staticIpAddress": {
+                "type": "string",
+                "defaultValue": ""
+              },
+              "enableIPForwarding": {
+                "type": "bool",
+                "defaultValue": false
+              }
+            },
+            "functions": [],
+            "resources": [
+              {
+                "type": "Microsoft.Network/networkInterfaces",
+                "apiVersion": "2020-06-01",
+                "name": "nicName",
+                "location": "[resourceGroup().location]",
+                "properties": {
+                  "ipConfigurations": [
+                    {
+                      "name": "ipconfig",
+                      "properties": {
+                        "primary": true,
+                        "privateIPAllocationMethod": "ipAllocationMethod",
+                        "privateIPAddress": "staticIpAddress",
+                        "subnet": {
+                          "id": "subnetId"
+                        },
+                        "publicIPAddress": "[if(equals(parameters('pipId'), ''), null(), createObject('id', parameters('pipId')))]"
+                      }
+                    }
+                  ],
+                  "enableIPForwarding": "enableIPForwarding"
+                }
+              }
+            ],
+            "outputs": {
+              "nicId": {
+                "type": "string",
+                "value": "Microsoft.Network/networkInterfaces/nicName"
+              },
+              "assignedIp": {
+                "type": "string",
+                "value": "[reference(resourceId('Microsoft.Network/networkInterfaces', parameters('nicName'))).ipConfigurations[0].properties.privateIPAddress]"
+              }
+            },
+            "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+          }
+        },
+        "dependsOn": [
+          "Microsoft.Resources/deployments/createNic2",
+          "Microsoft.Network/virtualNetworks/VirtualNetwork"
+        ]
+      },
+      {
+        "type": "Microsoft.Resources/deployments",
+        "apiVersion": "2019-10-01",
+        "name": "udrDeploy",
+        "properties": {
+          "expressionEvaluationOptions": {
+            "scope": "inner"
+          },
+          "mode": "Incremental",
+          "parameters": {
+            "location": {
+              "value": "[resourceGroup().location]"
+            },
+            "udrName": {
+              "value": "[format('{0}UDR', parameters('azureVMsSubnetName'))]"
+            }
+          },
+          "template": {
+            "contentVersion": "1.0.0.0",
+            "metadata": {
+              "_generator": {
+                "name": "bicep",
+                "version": "0.4.412.5873",
+                "templateHash": "7650487793556412399"
+              }
+            },
+            "parameters": {
+              "udrName": {
+                "type": "string"
+              },
+              "location": {
+                "type": "string"
+              },
+              "addressPrefix": {
+                "type": "string",
+                "defaultValue": ""
+              },
+              "nextHopAddress": {
+                "type": "string",
+                "defaultValue": ""
+              }
+            },
+            "functions": [],
+            "resources": [
+              {
+                "type": "Microsoft.Network/routeTables",
+                "apiVersion": "2020-06-01",
+                "name": "udrName",
+                "location": "[resourceGroup().location]",
+                "properties": {
+                  "routes": "[if(equals(parameters('addressPrefix'), ''), null(), createArray(createObject('name', 'Nested-VMs', 'properties', createObject('addressPrefix', parameters('addressPrefix'), 'nextHopType', 'VirtualAppliance', 'nextHopIpAddress', parameters('nextHopAddress')))))]"
+                }
+              }
+            ],
+            "outputs": {
+              "udrId": {
+                "type": "string",
+                "value": "Microsoft.Network/routeTables/udrName"
+              }
+            },
+            "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+          }
+        }
+      },
+      {
+        "type": "Microsoft.Resources/deployments",
+        "apiVersion": "2019-10-01",
+        "name": "udrUpdate",
+        "properties": {
+          "expressionEvaluationOptions": {
+            "scope": "inner"
+          },
+          "mode": "Incremental",
+          "parameters": {
+            "location": {
+              "value": "[resourceGroup().location]"
+            },
+            "udrName": {
+              "value": "[format('{0}UDR', parameters('azureVMsSubnetName'))]"
+            },
+            "addressPrefix": {
+              "value": "10.0.2.0/24"
+            },
+            "nextHopAddress": {
+              "value": "[reference(resourceId('Microsoft.Resources/deployments', 'createNic2'), '2019-10-01').outputs.assignedIp.value]"
+            }
+          },
+          "template": {
+            "contentVersion": "1.0.0.0",
+            "metadata": {
+              "_generator": {
+                "name": "bicep",
+                "version": "0.4.412.5873",
+                "templateHash": "7650487793556412399"
+              }
+            },
+            "parameters": {
+              "udrName": {
+                "type": "string"
+              },
+              "location": {
+                "type": "string"
+              },
+              "addressPrefix": {
+                "type": "string",
+                "defaultValue": ""
+              },
+              "nextHopAddress": {
+                "type": "string",
+                "defaultValue": ""
+              }
+            },
+            "functions": [],
+            "resources": [
+              {
+                "type": "Microsoft.Network/routeTables",
+                "apiVersion": "2020-06-01",
+                "name": "udrName",
+                "location": "[resourceGroup().location]",
+                "properties": {
+                  "routes": "[if(equals(parameters('addressPrefix'), ''), null(), createArray(createObject('name', 'Nested-VMs', 'properties', createObject('addressPrefix', parameters('addressPrefix'), 'nextHopType', 'VirtualAppliance', 'nextHopIpAddress', parameters('nextHopAddress')))))]"
+                }
+              }
+            ],
+            "outputs": {
+              "udrId": {
+                "type": "string",
+                "value": "Microsoft.Network/routeTables/udrName"
+              }
+            },
+            "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+          }
+        },
+        "dependsOn": [
+          "Microsoft.Resources/deployments/createNic2"
+        ]
+      }
+    ],
+    "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+  }
+}

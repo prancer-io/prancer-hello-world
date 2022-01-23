@@ -1,0 +1,589 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAzureQuickStart",
+  "paths": [
+    "/demos/create-hpc-cluster/mainTemplate.json",
+    "/demos/create-hpc-cluster/azuredeploy.parameters.json"
+  ],
+  "timestamp": 1642962898922,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/demos/create-hpc-cluster/mainTemplate.json",
+      "/demos/create-hpc-cluster/azuredeploy.parameters.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT676",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "microsoft.network/virtualnetworks",
+      "microsoft.resources/deployments",
+      "microsoft.network/networkinterfaces",
+      "microsoft.compute/virtualmachines/extensions",
+      "microsoft.storage/storageaccounts",
+      "microsoft.compute/availabilitysets"
+    ]
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT676",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "clusterName": {
+        "type": "string",
+        "minLength": 3,
+        "maxLength": 15,
+        "metadata": {
+          "description": "The HPC Pack cluster name, also used as the host name of the head node. It must contain between 3 and 15 characters with lowercase letters and numbers, and must start with a letter."
+        },
+        "value": "GEN-UNIQUE-12"
+      },
+      "virtualNetworkName": {
+        "type": "string",
+        "metadata": {
+          "description": "Name of the virtual network to be created. It must contain between 2 and 63 characters, start with a letter, end with a letter or number, and may contain only letters, numbers, underscores, periods, or hyphens."
+        }
+      },
+      "privateDomainName": {
+        "type": "string",
+        "defaultValue": "hpc.local",
+        "metadata": {
+          "description": "The fully qualified domain name (FQDN) for the private domain forest which will be created by this template, for example 'hpc.local'."
+        },
+        "value": "hpc.local"
+      },
+      "headNodeVMSize": {
+        "type": "string",
+        "defaultValue": "Standard_D8s_v3",
+        "metadata": {
+          "description": "The VM size of the head node, all available VM sizes in Azure can be found at https://azure.microsoft.com/en-us/documentation/articles/virtual-machines-windows-sizes. Note that some VM sizes in the list are only available in some particular locations. Please check the availability and the price of the VM sizes at https://azure.microsoft.com/pricing/details/virtual-machines/windows/ before deployment."
+        },
+        "value": "Standard_D8_v3"
+      },
+      "headNodeDiskType": {
+        "type": "string",
+        "defaultValue": "SSD",
+        "allowedValues": [
+          "HDD",
+          "SSD"
+        ],
+        "metadata": {
+          "description": "The disk type of head node VM. Note that SSD only supports DS-series, DSv2-series, GS-series, and Fs-series VMs."
+        }
+      },
+      "computeNodeImageOsPlatform": {
+        "type": "string",
+        "allowedValues": [
+          "Windows",
+          "Linux"
+        ],
+        "metadata": {
+          "description": "The VM image OS platform for the compute nodes"
+        }
+      },
+      "computeNodeImagePublisher": {
+        "type": "string",
+        "metadata": {
+          "description": "The VM image publisher for the compute nodes"
+        }
+      },
+      "computeNodeImageOffer": {
+        "type": "string",
+        "metadata": {
+          "description": "The VM image offer for the compute nodes"
+        }
+      },
+      "computeNodeImageSku": {
+        "type": "string",
+        "metadata": {
+          "description": "The VM image sku for the compute nodes"
+        }
+      },
+      "computeNodeNamePrefix": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 12,
+        "defaultValue": "IaaSCN",
+        "metadata": {
+          "description": "The name prefix of the compute nodes. It must be no more than 12 characters, begin with a letter, and contain only letters, numbers and hyphens. For example, if 'IaaSCN-' is specified, the compute node names will be 'IaaSCN-000', 'IaaSCN-001', ..."
+        },
+        "value": "IaaSCN-"
+      },
+      "computeNodeNumber": {
+        "type": "int",
+        "defaultValue": 10,
+        "minValue": 1,
+        "maxValue": 500,
+        "metadata": {
+          "description": "The number of the compute nodes"
+        },
+        "value": 2
+      },
+      "computeNodeVMSize": {
+        "type": "string",
+        "defaultValue": "Standard_D4_v3",
+        "metadata": {
+          "description": "The VM size of the compute nodes, all available VM sizes in Azure can be found at https://azure.microsoft.com/en-us/documentation/articles/virtual-machines-windows-sizes. Note that some VM sizes in the list are only available in some particular locations. Please check the availability and the price of the VM sizes at https://azure.microsoft.com/pricing/details/virtual-machines/windows/ before deployment."
+        },
+        "value": "Standard_D4_v3"
+      },
+      "computeNodeDiskType": {
+        "type": "string",
+        "defaultValue": "HDD",
+        "allowedValues": [
+          "HDD",
+          "SSD"
+        ],
+        "metadata": {
+          "description": "The disk type of the compute node VMs. Note that SSD only supports DS-series, DSv2-series, GS-series, and Fs-series VMs."
+        }
+      },
+      "publicIPName": {
+        "type": "string",
+        "metadata": {
+          "description": "The name of the public IP address"
+        }
+      },
+      "publicIPRGName": {
+        "type": "string",
+        "defaultValue": "",
+        "metadata": {
+          "description": "Resource group for the public IP address resource"
+        }
+      },
+      "publicIPNewOrExisting": {
+        "type": "string",
+        "defaultValue": "new",
+        "allowedValues": [
+          "new",
+          "existing"
+        ],
+        "metadata": {
+          "description": "Indicates whether the public IP address is new or existing"
+        }
+      },
+      "publicIPDNSNameLabel": {
+        "type": "string",
+        "metadata": {
+          "description": "The DNS name label of the public IP address"
+        }
+      },
+      "adminUsername": {
+        "type": "string",
+        "metadata": {
+          "description": "Administrator user name for the virtual machines and the Active Directory domain."
+        },
+        "value": "azureuser"
+      },
+      "adminPassword": {
+        "type": "securestring",
+        "metadata": {
+          "description": "Administrator password for the virtual machines and the Active Directory domain"
+        },
+        "value": "GEN-PASSWORD"
+      },
+      "headNodePostConfigScript": {
+        "type": "string",
+        "defaultValue": "",
+        "metadata": {
+          "description": "Optional URL of a public available PowerShell script you want to run on the head node after it is configured. The script will be run as the Local System account. You can also specify arguments for the script, for example 'http://www.contoso.com/myhnpostscript.ps1 -Arg1 arg1 -Arg2 arg2'."
+        }
+      },
+      "computeNodePostConfigScript": {
+        "type": "string",
+        "defaultValue": "",
+        "metadata": {
+          "description": "Optional URL of a public available PowerShell script you want to run on the compute nodes after they are configured. The script will be run as the Local System account. You can also specify arguments for the script, for example 'http://www.contoso.com/mycnpostscript.ps1 -Arg1 arg1 -Arg2 arg2'."
+        }
+      },
+      "_artifactsLocation": {
+        "type": "string",
+        "metadata": {
+          "description": "The location of resources, such as templates and DSC modules, that the template depends on"
+        },
+        "defaultValue": "[deployment().properties.templateLink.uri]"
+      },
+      "_artifactsLocationSasToken": {
+        "type": "securestring",
+        "metadata": {
+          "description": "Auto-generated token to access _artifactsLocation"
+        },
+        "defaultValue": ""
+      },
+      "location": {
+        "type": "string",
+        "metadata": {
+          "description": "Location for all resources."
+        }
+      },
+      "computeNodeImage": {
+        "value": "ComputeNode"
+      }
+    },
+    "variables": {
+      "storageAccountTypes": {
+        "HDD": "Standard_LRS",
+        "SSD": "Premium_LRS"
+      },
+      "hnStorageAccountName": "[toLower(concat('hpc', uniqueString(resourceGroup().id, toLower(parameters('clusterName')))))]",
+      "hnStorageAccountId": "Microsoft.Storage/storageAccounts/[toLower(concat('hpc', uniqueString(resourceGroup().id, toLower(parameters('clusterName')))))]",
+      "addressPrefix": "10.0.0.0/16",
+      "subnet1Name": "Subnet-1",
+      "subnet1Prefix": "10.0.0.0/22",
+      "subnetRef": "Microsoft.Network/virtualNetworks/subnets/virtualNetworkName/Subnet-1",
+      "publicIPAddressType": "Dynamic",
+      "availabilitySetNamePrefix": "GEN-UNIQUE-12-avset",
+      "nbrVMPerAvailabilitySet": 180,
+      "availabilitySetNumber": "[add(div(parameters('computeNodeNumber'), variables('nbrVMPerAvailabilitySet')), 1)]",
+      "nicNameSuffix": "[concat('-nic', uniqueString(variables('subnetRef')))]",
+      "nicNameHN": "[concat(parameters('clusterName'), variables('nicNameSuffix'))]",
+      "vmSizeSuffix": "[uniqueString(resourceGroup().id)]",
+      "suffixA8Size": "Standard_A8[uniqueString(resourceGroup().id)]",
+      "suffixA9Size": "Standard_A9[uniqueString(resourceGroup().id)]",
+      "suffixH16rSize": "Standard_H16r[uniqueString(resourceGroup().id)]",
+      "suffixH16mrSize": "Standard_H16mr[uniqueString(resourceGroup().id)]",
+      "suffixNC24rSize": "Standard_NC24r[uniqueString(resourceGroup().id)]",
+      "suffixHNSize": "Standard_D8_v3[uniqueString(resourceGroup().id)]",
+      "suffixCNSize": "Standard_D4_v3[uniqueString(resourceGroup().id)]",
+      "cnRDMACapable": "[replace(replace(replace(replace(replace(replace(variables('suffixCNSize'), variables('suffixA8Size'), 'enabled'), variables('suffixA9Size'), 'enabled'), variables('suffixH16rSize'), 'enabled'), variables('suffixH16mrSize'), 'enabled'), variables('suffixNC24rSize'), 'enabled'), variables('suffixCNSize'), 'disabled')]",
+      "hnRDMACapable": "[replace(replace(replace(replace(replace(replace(variables('suffixHNSize'), variables('suffixA8Size'), 'enabled'), variables('suffixA9Size'), 'enabled'), variables('suffixH16rSize'), 'enabled'), variables('suffixH16mrSize'), 'enabled'), variables('suffixNC24rSize'), 'enabled'), variables('suffixHNSize'), 'disabled')]",
+      "hnRDMAJumpBox": {
+        "disabled-disabled": "disabled",
+        "disabled-enabled": "disabled",
+        "enabled-disabled": "disabled",
+        "enabled-enabled": "enabled"
+      },
+      "hnRDMAState": "(hnRDMAJumpBox)[concat(variables(hnRDMACapable), -, variables(cnRDMACapable))]",
+      "cnRDMAState": "[replace(replace(replace(replace(replace(replace(variables('suffixCNSize'), variables('suffixA8Size'), 'enabled'), variables('suffixA9Size'), 'enabled'), variables('suffixH16rSize'), 'enabled'), variables('suffixH16mrSize'), 'enabled'), variables('suffixNC24rSize'), 'enabled'), variables('suffixCNSize'), 'disabled')]",
+      "cnOsPlatformRelated": {
+        "Linux": {
+          "template": "linuxnode.json"
+        },
+        "Windows": {
+          "template": "windowsnode-rdma-[replace(replace(replace(replace(replace(replace(variables('suffixCNSize'), variables('suffixA8Size'), 'enabled'), variables('suffixA9Size'), 'enabled'), variables('suffixH16rSize'), 'enabled'), variables('suffixH16mrSize'), 'enabled'), variables('suffixNC24rSize'), 'enabled'), variables('suffixCNSize'), 'disabled')].json"
+        }
+      },
+      "curCNOSPlatformRelated": "(cnOsPlatformRelated)[parameters(computeNodeImageOsPlatform)]",
+      "computeNodeTemplateUrl": "[uri(parameters('_artifactsLocation'), concat(variables('curCNOSPlatformRelated').template, parameters('_artifactsLocationSasToken')))]",
+      "computeNodeCustomData": "[base64(concat('HPCClusterName=', parameters('clusterName'), '\r\nImageCategory=public\r\nImageName=', parameters('computeNodeImageOffer'), '-', parameters('computeNodeImageSku'), '\r\nVMSize=', parameters('computeNodeVMSize')))]",
+      "adminBase64Password": "[base64(parameters('adminPassword'))]",
+      "iaasInfoArg": "[concat('-SubscriptionId ', subscription().subscriptionId, ' -VNet ', parameters('virtualNetworkName'), ' -Subnet ', variables('subnet1Name'), ' -Location \"', parameters('location'), '\" -ResourceGroup ', resourceGroup().name)]",
+      "headNodeCommandStr": "[concat('powershell.exe -ExecutionPolicy Unrestricted -File PrepareHN.ps1 -DomainFQDN ', parameters('privateDomainName'), ' -AdminUserName ', parameters('adminUsername'), ' -AdminBase64Password \"', variables('adminBase64Password'), '\" -CNSize ', parameters('computeNodeVMSize'), ' -PostConfigScript \"', base64(trim(parameters('headNodePostConfigScript'))), '\" ', variables('iaasInfoArg'))]",
+      "hnStorageConnStrPrefix": "DefaultEndpointsProtocol=https;AccountName=[toLower(concat('hpc', uniqueString(resourceGroup().id, toLower(parameters('clusterName')))))];AccountKey="
+    },
+    "resources": [
+      {
+        "type": "Microsoft.Storage/storageAccounts",
+        "name": "[toLower(concat('hpc', uniqueString(resourceGroup().id, toLower(parameters('clusterName')))))]",
+        "apiVersion": "2021-04-01",
+        "location": "location",
+        "sku": {
+          "name": "Standard_LRS"
+        },
+        "kind": "Storage",
+        "properties": {}
+      },
+      {
+        "apiVersion": "2017-10-01",
+        "type": "Microsoft.Network/virtualNetworks",
+        "name": "virtualNetworkName",
+        "location": "location",
+        "properties": {
+          "addressSpace": {
+            "addressPrefixes": [
+              "10.0.0.0/16"
+            ]
+          },
+          "subnets": [
+            {
+              "name": "Subnet-1",
+              "properties": {
+                "addressPrefix": "10.0.0.0/22"
+              }
+            }
+          ]
+        }
+      },
+      {
+        "name": "setupClusterPublicIP",
+        "type": "Microsoft.Resources/deployments",
+        "apiVersion": "2017-05-10",
+        "properties": {
+          "mode": "Incremental",
+          "templateLink": {
+            "uri": "[uri(parameters('_artifactsLocation'), concat('publicip-', parameters('publicIPNewOrExisting'), '.json', parameters('_artifactsLocationSasToken')))]",
+            "contentVersion": "1.0.0.0"
+          },
+          "parameters": {
+            "publicIPAddressName": {
+              "value": "publicIPName"
+            },
+            "publicIPAddressType": {
+              "value": "Dynamic"
+            },
+            "domainNameLabel": {
+              "value": "publicIPDNSNameLabel"
+            },
+            "publicIPRGName": {
+              "value": "publicIpRGName"
+            },
+            "location": {
+              "value": "location"
+            }
+          }
+        }
+      },
+      {
+        "apiVersion": "2017-10-01",
+        "type": "Microsoft.Network/networkInterfaces",
+        "name": "[variables('nicNameHN')]",
+        "location": "location",
+        "dependsOn": [
+          "Microsoft.Network/virtualNetworks//virtualNetworkName",
+          "Microsoft.Resources/deployments/setupClusterPublicIP"
+        ],
+        "properties": {
+          "ipConfigurations": [
+            {
+              "name": "IPConfig",
+              "properties": {
+                "privateIPAllocationMethod": "Static",
+                "privateIPAddress": "10.0.0.4",
+                "publicIPAddress": {
+                  "id": "[reference('setupClusterPublicIP').outputs.resourceId.value]"
+                },
+                "subnet": {
+                  "id": "Microsoft.Network/virtualNetworks/subnets/virtualNetworkName/Subnet-1"
+                }
+              }
+            }
+          ]
+        }
+      },
+      {
+        "apiVersion": "2017-12-01",
+        "type": "Microsoft.Compute/availabilitySets",
+        "name": "[concat(variables('availabilitySetNamePrefix'), padLeft(string(copyIndex()), 2, '0'))]",
+        "location": "location",
+        "sku": {
+          "name": "Aligned"
+        },
+        "properties": {
+          "platformUpdateDomainCount": 5,
+          "platformFaultDomainCount": 2
+        },
+        "copy": {
+          "name": "availabilitySetCopy",
+          "count": "[add(div(parameters('computeNodeNumber'), variables('nbrVMPerAvailabilitySet')), 1)]"
+        }
+      },
+      {
+        "apiVersion": "2017-05-10",
+        "type": "Microsoft.Resources/deployments",
+        "name": "createHeadNode",
+        "dependsOn": [
+          "[resourceId('Microsoft.Network/networkInterfaces/', variables('nicNameHN'))]",
+          "[resourceId('Microsoft.Storage/storageAccounts/', variables('hnStorageAccountName'))]",
+          "availabilitySetCopy"
+        ],
+        "properties": {
+          "mode": "Incremental",
+          "templateLink": {
+            "uri": "[uri(parameters('_artifactsLocation'),concat('headnode-rdma-', variables('hnRDMAState'), '.json', parameters('_artifactsLocationSasToken')))]",
+            "contentVersion": "1.0.0.0"
+          },
+          "parameters": {
+            "vmName": {
+              "value": "GEN-UNIQUE-12"
+            },
+            "vmSize": {
+              "value": "Standard_D8_v3"
+            },
+            "storageAccountType": {
+              "value": "(storageAccountTypes)[parameters(headNodeDiskType)]"
+            },
+            "nicName": {
+              "value": "[variables('nicNameHN')]"
+            },
+            "adminUsername": {
+              "value": "azureuser"
+            },
+            "adminPassword": {
+              "value": "GEN-PASSWORD"
+            },
+            "availabilitySetName": {
+              "value": "GEN-UNIQUE-12-avset00"
+            },
+            "_artifactsLocation": {
+              "value": "[deployment().properties.templateLink.uri]"
+            },
+            "_artifactsLocationSasToken": {
+              "value": ""
+            },
+            "privateDomainName": {
+              "value": "hpc.local"
+            },
+            "location": {
+              "value": "location"
+            }
+          }
+        }
+      },
+      {
+        "apiVersion": "2017-05-10",
+        "type": "Microsoft.Resources/deployments",
+        "name": "updateVNetDNS",
+        "dependsOn": [
+          "Microsoft.Resources/deployments/createHeadNode"
+        ],
+        "properties": {
+          "mode": "Incremental",
+          "templateLink": {
+            "uri": "[uri(parameters('_artifactsLocation'), concat('vnet-with-dns-server.json', parameters('_artifactsLocationSasToken')))]",
+            "contentVersion": "1.0.0.0"
+          },
+          "parameters": {
+            "virtualNetworkName": {
+              "value": "virtualNetworkName"
+            },
+            "virtualNetworkAddressRange": {
+              "value": "10.0.0.0/16"
+            },
+            "subnetName": {
+              "value": "Subnet-1"
+            },
+            "subnetRange": {
+              "value": "10.0.0.0/22"
+            },
+            "DNSServerAddress": {
+              "value": [
+                "10.0.0.4",
+                "8.8.8.8"
+              ]
+            },
+            "location": {
+              "value": "location"
+            }
+          }
+        }
+      },
+      {
+        "type": "Microsoft.Compute/virtualMachines/extensions",
+        "name": "GEN-UNIQUE-12/configureHeadNode",
+        "apiVersion": "2017-12-01",
+        "location": "location",
+        "dependsOn": [
+          "Microsoft.Resources/deployments/updateVNetDNS"
+        ],
+        "properties": {
+          "publisher": "Microsoft.Compute",
+          "type": "CustomScriptExtension",
+          "typeHandlerVersion": "1.9",
+          "autoUpgradeMinorVersion": true,
+          "settings": {
+            "fileUris": [
+              "[uri(parameters('_artifactsLocation'), concat('PrepareHN.ps1', parameters('_artifactsLocationSasToken')))]",
+              "[uri(parameters('_artifactsLocation'), concat('HPCHNPrepare.ps1', parameters('_artifactsLocationSasToken')))]"
+            ]
+          },
+          "protectedSettings": {
+            "commandToExecute": "[concat(variables('headNodeCommandStr'), ' -AzureStorageConnStr \"', variables('hnStorageConnStrPrefix'), listKeys(variables('hnStorageAccountId'),'2017-10-01').keys[0].value, '\" -PublicDnsName ', reference('setupClusterPublicIP').outputs.fqdn.value)]"
+          }
+        }
+      },
+      {
+        "apiVersion": "2017-05-10",
+        "type": "Microsoft.Resources/deployments",
+        "name": "[concat('create', parameters('computeNodeNamePrefix'), padLeft(string(copyIndex()), 3, '0'))]",
+        "dependsOn": [
+          "availabilitySetCopy",
+          "Microsoft.Resources/deployments/updateVNetDNS"
+        ],
+        "copy": {
+          "name": "CN",
+          "count": 2
+        },
+        "properties": {
+          "mode": "Incremental",
+          "templateLink": {
+            "uri": "[uri(parameters('_artifactsLocation'), concat(variables('curCNOSPlatformRelated').template, parameters('_artifactsLocationSasToken')))]",
+            "contentVersion": "1.0.0.0"
+          },
+          "parameters": {
+            "nicName": {
+              "value": "[concat(parameters('computeNodeNamePrefix'), padLeft(string(copyIndex()), 3, '0'), variables('nicNameSuffix'))]"
+            },
+            "subnetId": {
+              "value": "Microsoft.Network/virtualNetworks/subnets/virtualNetworkName/Subnet-1"
+            },
+            "vmName": {
+              "value": "[concat(parameters('computeNodeNamePrefix'), padLeft(string(copyIndex()), 3, '0'))]"
+            },
+            "vmSize": {
+              "value": "Standard_D4_v3"
+            },
+            "storageAccountType": {
+              "value": "(storageAccountTypes)[parameters(computeNodeDiskType)]"
+            },
+            "imgPublisher": {
+              "value": "computeNodeImagePublisher"
+            },
+            "imgOffer": {
+              "value": "computeNodeImageOffer"
+            },
+            "imgSku": {
+              "value": "computeNodeImageSku"
+            },
+            "imgVersion": {
+              "value": "latest"
+            },
+            "adminUsername": {
+              "value": "azureuser"
+            },
+            "adminPassword": {
+              "value": "GEN-PASSWORD"
+            },
+            "availabilitySetName": {
+              "value": "[concat(variables('availabilitySetNamePrefix'), padLeft(string(div(add(copyIndex(), 1), variables('nbrVMPerAvailabilitySet'))), 2, '0'))]"
+            },
+            "customData": {
+              "value": "[base64(concat('HPCClusterName=', parameters('clusterName'), '\r\nImageCategory=public\r\nImageName=', parameters('computeNodeImageOffer'), '-', parameters('computeNodeImageSku'), '\r\nVMSize=', parameters('computeNodeVMSize')))]"
+            },
+            "_artifactsLocation": {
+              "value": "[deployment().properties.templateLink.uri]"
+            },
+            "_artifactsLocationSasToken": {
+              "value": ""
+            },
+            "clusterName": {
+              "value": "GEN-UNIQUE-12"
+            },
+            "privateDomainName": {
+              "value": "hpc.local"
+            },
+            "computeNodePostConfigScript": {
+              "value": "[trim(parameters('computeNodePostConfigScript'))]"
+            },
+            "location": {
+              "value": "location"
+            }
+          }
+        }
+      }
+    ],
+    "outputs": {
+      "clusterDNSName": {
+        "type": "string",
+        "value": "[reference('setupClusterPublicIP').outputs.fqdn.value]"
+      }
+    },
+    "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+  }
+}

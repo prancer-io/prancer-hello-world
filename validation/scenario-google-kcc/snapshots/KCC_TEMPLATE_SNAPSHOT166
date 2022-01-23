@@ -2,12 +2,12 @@
   "structure": "filesystem",
   "error": null,
   "reference": "master",
-  "contentType": "yaml",
+  "contentType": "json",
   "source": "gitConnectorGoogleKcc",
   "paths": [
-    "/samples/resources/computeinstancetemplate/compute_v1beta1_computeimage.yaml"
+    "/samples/resources/computeinstance/instance-from-template/compute_v1beta1_computeinstancetemplate.yaml"
   ],
-  "timestamp": 1628765141719,
+  "timestamp": 1642973302804,
   "queryuser": null,
   "checksum": "99914b932bd37a50b983c5e7c90ae93b",
   "node": {
@@ -15,25 +15,41 @@
     "type": "kcc",
     "collection": "kcctemplate",
     "paths": [
-      "/samples/resources/computeinstancetemplate/compute_v1beta1_computeimage.yaml"
+      "/samples/resources/computeinstance/instance-from-template/compute_v1beta1_computeinstancetemplate.yaml"
     ],
     "snapshotId": "KCC_TEMPLATE_SNAPSHOT166",
     "status": "active",
-    "validate": true
+    "validate": true,
+    "resourceTypes": [
+      "computeinstancetemplate"
+    ]
   },
   "snapshotId": "KCC_TEMPLATE_SNAPSHOT166",
   "collection": "kcctemplate",
   "json": {
     "apiVersion": "compute.cnrm.cloud.google.com/v1beta1",
-    "kind": "ComputeImage",
+    "kind": "ComputeInstanceTemplate",
     "metadata": {
-      "name": "instancetemplate-dep"
+      "name": "computeinstance-dep-fromtemplate"
     },
     "spec": {
-      "description": "A sample image created from an empty disk resource",
-      "diskRef": {
-        "name": "instancetemplate-dep"
-      }
+      "machineType": "n1-standard-1",
+      "region": "us-west1",
+      "disk": [
+        {
+          "sourceDiskRef": {
+            "name": "computeinstance-dep-fromtemplate"
+          },
+          "boot": true
+        }
+      ],
+      "networkInterface": [
+        {
+          "networkRef": {
+            "name": "computeinstance-dep-fromtemplate"
+          }
+        }
+      ]
     }
   }
 }

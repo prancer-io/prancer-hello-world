@@ -1,0 +1,192 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAzureQuickStart",
+  "paths": [
+    "/quickstarts/microsoft.web/function-app-create-dedicated/azuredeploy.json",
+    "/quickstarts/microsoft.web/function-app-create-dedicated/azuredeploy.parameters.us.json"
+  ],
+  "timestamp": 1642962910890,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/quickstarts/microsoft.web/function-app-create-dedicated/azuredeploy.json",
+      "/quickstarts/microsoft.web/function-app-create-dedicated/azuredeploy.parameters.us.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT1752",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "microsoft.storage/storageaccounts",
+      "microsoft.web/serverfarms",
+      "microsoft.insights/components",
+      "microsoft.web/sites"
+    ]
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT1752",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "appName": {
+        "type": "string",
+        "metadata": {
+          "description": "The name of the function app that you wish to create."
+        },
+        "value": "GEN-UNIQUE"
+      },
+      "sku": {
+        "type": "string",
+        "allowedValues": [
+          "D1",
+          "F1",
+          "B1",
+          "B2",
+          "B3",
+          "S1",
+          "S2",
+          "S3",
+          "P1",
+          "P2",
+          "P3",
+          "P1V2",
+          "P2V2",
+          "P3V2",
+          "I1",
+          "I2",
+          "I3",
+          "Y1"
+        ],
+        "defaultValue": "S1",
+        "metadata": {
+          "description": "The pricing tier for the hosting plan."
+        }
+      },
+      "workerSize": {
+        "type": "string",
+        "allowedValues": [
+          "0",
+          "1",
+          "2"
+        ],
+        "defaultValue": "0",
+        "metadata": {
+          "description": "The instance size of the hosting plan (small, medium, or large)."
+        }
+      },
+      "storageAccountType": {
+        "type": "string",
+        "defaultValue": "Standard_LRS",
+        "allowedValues": [
+          "Standard_LRS",
+          "Standard_GRS",
+          "Standard_RAGRS"
+        ],
+        "metadata": {
+          "description": "Storage Account type"
+        }
+      },
+      "location": {
+        "type": "string",
+        "defaultValue": "[resourceGroup().location]",
+        "metadata": {
+          "description": "Location for all resources."
+        }
+      },
+      "appInsightsLocation": {
+        "type": "string",
+        "metadata": {
+          "description": "Location for Application Insights"
+        },
+        "value": "usgovvirginia"
+      }
+    },
+    "variables": {
+      "functionAppName": "GEN-UNIQUE",
+      "hostingPlanName": "GEN-UNIQUE",
+      "applicationInsightsName": "GEN-UNIQUE",
+      "storageAccountName": "[concat(uniquestring(resourceGroup().id), 'functions')]"
+    },
+    "resources": [
+      {
+        "type": "Microsoft.Storage/storageAccounts",
+        "name": "[variables('storageAccountName')]",
+        "apiVersion": "2019-06-01",
+        "location": "[resourceGroup().location]",
+        "kind": "Storage",
+        "sku": {
+          "name": "Standard_LRS"
+        }
+      },
+      {
+        "type": "microsoft.insights/components",
+        "apiVersion": "2020-02-02-preview",
+        "name": "GEN-UNIQUE",
+        "location": "usgovvirginia",
+        "tags": {
+          "[concat('hidden-link:', resourceId('Microsoft.Web/sites', variables('applicationInsightsName')))]": "Resource"
+        },
+        "properties": {
+          "ApplicationId": "GEN-UNIQUE",
+          "Request_Source": "IbizaWebAppExtensionCreate"
+        }
+      },
+      {
+        "type": "Microsoft.Web/serverfarms",
+        "apiVersion": "2020-06-01",
+        "name": "GEN-UNIQUE",
+        "location": "[resourceGroup().location]",
+        "sku": {
+          "Name": "S1"
+        },
+        "properties": {
+          "name": "GEN-UNIQUE",
+          "workerSize": "0",
+          "numberOfWorkers": 1
+        }
+      },
+      {
+        "apiVersion": "2020-06-01",
+        "type": "Microsoft.Web/sites",
+        "name": "GEN-UNIQUE",
+        "location": "[resourceGroup().location]",
+        "kind": "functionapp",
+        "properties": {
+          "name": "GEN-UNIQUE",
+          "serverFarmId": "Microsoft.Web/serverfarms/GEN-UNIQUE",
+          "clientAffinityEnabled": false,
+          "siteConfig": {
+            "alwaysOn": true
+          }
+        },
+        "dependsOn": [
+          "[resourceId('Microsoft.Web/serverfarms', variables('hostingPlanName'))]",
+          "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]"
+        ],
+        "resources": [
+          {
+            "apiVersion": "2018-11-01",
+            "name": "appsettings",
+            "type": "config",
+            "dependsOn": [
+              "[resourceId('Microsoft.Web/sites', variables('functionAppName'))]",
+              "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]"
+            ],
+            "properties": {
+              "AzureWebJobsStorage": "[concat('DefaultEndpointsProtocol=https;AccountName=', variables('storageAccountName'), ';EndpointSuffix=', environment().suffixes.storage, ';AccountKey=',listKeys(resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName')), '2019-06-01').keys[0].value)]",
+              "APPINSIGHTS_INSTRUMENTATIONKEY": "[reference(resourceId('microsoft.insights/components', variables('applicationInsightsName')), '2020-02-02-preview').InstrumentationKey]",
+              "FUNCTIONS_EXTENSION_VERSION": "~3"
+            }
+          }
+        ]
+      }
+    ],
+    "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+  }
+}

@@ -1,0 +1,364 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAzureQuickStart",
+  "paths": [
+    "/application-workloads/sap/sap-2-tier-marketplace-image/shared/cs-server-Standard_DS14_multiNIC_No.json"
+  ],
+  "timestamp": 1642962893919,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/application-workloads/sap/sap-2-tier-marketplace-image/shared/cs-server-Standard_DS14_multiNIC_No.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT397",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "microsoft.compute/virtualmachines"
+    ]
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT397",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "imageReference": {
+        "type": "object",
+        "metadata": {
+          "description": "imageReference object that should be used to create the virtual machine"
+        }
+      },
+      "osDisk": {
+        "type": "object",
+        "metadata": {
+          "description": "osDisk object that should be used to create the virtual machine"
+        }
+      },
+      "osDiskType": {
+        "type": "string",
+        "allowedValues": [
+          "image",
+          "userImage",
+          "osdisk"
+        ],
+        "metadata": {
+          "description": "The type of OS disk."
+        }
+      },
+      "sidlower": {
+        "type": "string",
+        "metadata": {
+          "description": "SAP System ID in lower case."
+        }
+      },
+      "vmName": {
+        "type": "string",
+        "metadata": {
+          "description": "Prefix of the virtual machine name."
+        }
+      },
+      "vmSize": {
+        "type": "string",
+        "metadata": {
+          "description": "Size of the Virtual Machine."
+        }
+      },
+      "adminUsername": {
+        "type": "string",
+        "metadata": {
+          "description": "Username for the Virtual Machine."
+        }
+      },
+      "adminPassword": {
+        "type": "securestring",
+        "metadata": {
+          "description": "Password for the Virtual Machine."
+        }
+      },
+      "storageAccountUri": {
+        "type": "string",
+        "metadata": {
+          "description": "Name of the storage account where the os disk and data disk should be placed."
+        }
+      },
+      "nicName": {
+        "type": "string",
+        "metadata": {
+          "description": "Name of the network interface."
+        }
+      },
+      "location": {
+        "type": "string",
+        "metadata": {
+          "description": "Location for all resources."
+        }
+      }
+    },
+    "variables": {
+      "dataDisks": [
+        {
+          "name": "dbdisk1",
+          "lun": 0,
+          "vhd": {
+            "uri": "storageAccountUrivmName/sidlower-dbdisk1.vhd"
+          },
+          "createOption": "Empty",
+          "caching": "None",
+          "diskSizeGB": 1023
+        },
+        {
+          "name": "dbdisk2",
+          "lun": 1,
+          "vhd": {
+            "uri": "storageAccountUrivmName/sidlower-dbdisk2.vhd"
+          },
+          "createOption": "Empty",
+          "caching": "None",
+          "diskSizeGB": 1023
+        },
+        {
+          "name": "dbdisk3",
+          "lun": 2,
+          "vhd": {
+            "uri": "storageAccountUrivmName/sidlower-dbdisk3.vhd"
+          },
+          "createOption": "Empty",
+          "caching": "None",
+          "diskSizeGB": 1023
+        },
+        {
+          "name": "dbdisk4",
+          "lun": 3,
+          "vhd": {
+            "uri": "storageAccountUrivmName/sidlower-dbdisk4.vhd"
+          },
+          "createOption": "Empty",
+          "caching": "None",
+          "diskSizeGB": 512
+        }
+      ],
+      "hardwareProfile": {
+        "vmSize": "vmSize"
+      },
+      "networkProfile": {
+        "networkInterfaces": [
+          {
+            "id": "Microsoft.Network/networkInterfaces/nicName"
+          }
+        ]
+      },
+      "availableProperties": {
+        "image": {
+          "hardwareProfile": {
+            "vmSize": "vmSize"
+          },
+          "osProfile": {
+            "computerName": "vmName",
+            "adminUsername": "adminUsername",
+            "adminPassword": "adminPassword"
+          },
+          "storageProfile": {
+            "imageReference": "imageReference",
+            "osDisk": "osDisk",
+            "dataDisks": [
+              {
+                "name": "dbdisk1",
+                "lun": 0,
+                "vhd": {
+                  "uri": "storageAccountUrivmName/sidlower-dbdisk1.vhd"
+                },
+                "createOption": "Empty",
+                "caching": "None",
+                "diskSizeGB": 1023
+              },
+              {
+                "name": "dbdisk2",
+                "lun": 1,
+                "vhd": {
+                  "uri": "storageAccountUrivmName/sidlower-dbdisk2.vhd"
+                },
+                "createOption": "Empty",
+                "caching": "None",
+                "diskSizeGB": 1023
+              },
+              {
+                "name": "dbdisk3",
+                "lun": 2,
+                "vhd": {
+                  "uri": "storageAccountUrivmName/sidlower-dbdisk3.vhd"
+                },
+                "createOption": "Empty",
+                "caching": "None",
+                "diskSizeGB": 1023
+              },
+              {
+                "name": "dbdisk4",
+                "lun": 3,
+                "vhd": {
+                  "uri": "storageAccountUrivmName/sidlower-dbdisk4.vhd"
+                },
+                "createOption": "Empty",
+                "caching": "None",
+                "diskSizeGB": 512
+              }
+            ]
+          },
+          "networkProfile": {
+            "networkInterfaces": [
+              {
+                "id": "Microsoft.Network/networkInterfaces/nicName"
+              }
+            ]
+          }
+        },
+        "userImage": {
+          "hardwareProfile": {
+            "vmSize": "vmSize"
+          },
+          "osProfile": {
+            "computerName": "vmName",
+            "adminUsername": "adminUsername",
+            "adminPassword": "adminPassword"
+          },
+          "storageProfile": {
+            "osDisk": "osDisk",
+            "dataDisks": [
+              {
+                "name": "dbdisk1",
+                "lun": 0,
+                "vhd": {
+                  "uri": "storageAccountUrivmName/sidlower-dbdisk1.vhd"
+                },
+                "createOption": "Empty",
+                "caching": "None",
+                "diskSizeGB": 1023
+              },
+              {
+                "name": "dbdisk2",
+                "lun": 1,
+                "vhd": {
+                  "uri": "storageAccountUrivmName/sidlower-dbdisk2.vhd"
+                },
+                "createOption": "Empty",
+                "caching": "None",
+                "diskSizeGB": 1023
+              },
+              {
+                "name": "dbdisk3",
+                "lun": 2,
+                "vhd": {
+                  "uri": "storageAccountUrivmName/sidlower-dbdisk3.vhd"
+                },
+                "createOption": "Empty",
+                "caching": "None",
+                "diskSizeGB": 1023
+              },
+              {
+                "name": "dbdisk4",
+                "lun": 3,
+                "vhd": {
+                  "uri": "storageAccountUrivmName/sidlower-dbdisk4.vhd"
+                },
+                "createOption": "Empty",
+                "caching": "None",
+                "diskSizeGB": 512
+              }
+            ]
+          },
+          "networkProfile": {
+            "networkInterfaces": [
+              {
+                "id": "Microsoft.Network/networkInterfaces/nicName"
+              }
+            ]
+          }
+        },
+        "osdisk": {
+          "hardwareProfile": {
+            "vmSize": "vmSize"
+          },
+          "storageProfile": {
+            "osDisk": "osDisk",
+            "dataDisks": [
+              {
+                "name": "dbdisk1",
+                "lun": 0,
+                "vhd": {
+                  "uri": "storageAccountUrivmName/sidlower-dbdisk1.vhd"
+                },
+                "createOption": "Empty",
+                "caching": "None",
+                "diskSizeGB": 1023
+              },
+              {
+                "name": "dbdisk2",
+                "lun": 1,
+                "vhd": {
+                  "uri": "storageAccountUrivmName/sidlower-dbdisk2.vhd"
+                },
+                "createOption": "Empty",
+                "caching": "None",
+                "diskSizeGB": 1023
+              },
+              {
+                "name": "dbdisk3",
+                "lun": 2,
+                "vhd": {
+                  "uri": "storageAccountUrivmName/sidlower-dbdisk3.vhd"
+                },
+                "createOption": "Empty",
+                "caching": "None",
+                "diskSizeGB": 1023
+              },
+              {
+                "name": "dbdisk4",
+                "lun": 3,
+                "vhd": {
+                  "uri": "storageAccountUrivmName/sidlower-dbdisk4.vhd"
+                },
+                "createOption": "Empty",
+                "caching": "None",
+                "diskSizeGB": 512
+              }
+            ]
+          },
+          "networkProfile": {
+            "networkInterfaces": [
+              {
+                "id": "Microsoft.Network/networkInterfaces/nicName"
+              }
+            ]
+          }
+        }
+      },
+      "internalProperties": "(availableProperties)[parameters(osDiskType)]"
+    },
+    "resources": [
+      {
+        "apiVersion": "2020-12-01",
+        "type": "Microsoft.Compute/virtualMachines",
+        "name": "vmName",
+        "location": "location",
+        "properties": "(availableProperties)[parameters(osDiskType)]"
+      }
+    ],
+    "outputs": {
+      "dbDataLUNs": {
+        "value": "0,1,2",
+        "type": "string"
+      },
+      "dbLogLUNs": {
+        "value": "3",
+        "type": "string"
+      }
+    },
+    "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+  }
+}

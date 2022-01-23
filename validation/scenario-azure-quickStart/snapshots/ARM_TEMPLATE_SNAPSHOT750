@@ -1,0 +1,711 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAzureQuickStart",
+  "paths": [
+    "/demos/oms-azure-resource-usage-solution/azuredeployonlyautomation.json",
+    "/demos/oms-azure-resource-usage-solution/azuredeploy.parameters.json"
+  ],
+  "timestamp": 1642962900672,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/demos/oms-azure-resource-usage-solution/azuredeployonlyautomation.json",
+      "/demos/oms-azure-resource-usage-solution/azuredeploy.parameters.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT750",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "microsoft.automation/automationaccounts"
+    ]
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT750",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "omsWorkspaceId": {
+        "type": "string",
+        "defaultValue": "",
+        "metadata": {
+          "description": "Specify the Log Analytics workspace Id  where Azure VM Inventory solution is deployed"
+        }
+      },
+      "omsWorkspaceKey": {
+        "type": "string",
+        "defaultValue": "",
+        "metadata": {
+          "description": "Specify the Log Analytics workspace key  where Azure VM Inventory solution is deployed"
+        }
+      },
+      "omsAutomationAccountName": {
+        "type": "string",
+        "defaultValue": "",
+        "metadata": {
+          "description": "Use an existing Automation account or create a new"
+        },
+        "value": "GEN-UNIQUE-30"
+      },
+      "omsAutomationRegion": {
+        "type": "string",
+        "allowedValues": [
+          "westeurope",
+          "southeastasia",
+          "eastus2",
+          "southcentralus",
+          "japaneast",
+          "southeastasia",
+          "southcentralus",
+          "northeurope",
+          "canadacentral",
+          "australiasoutheast",
+          "centralindia",
+          "japaneast"
+        ],
+        "metadata": {
+          "description": "Specify the Azure Region for your OMS Automation Account"
+        },
+        "value": "eastus2"
+      },
+      "omsAutomationSku": {
+        "type": "string",
+        "defaultValue": "basic",
+        "allowedValues": [
+          "free",
+          "basic"
+        ],
+        "metadata": {
+          "description": "Specify the SKU for Automation Account"
+        }
+      },
+      "omsDataIngestionFrequency": {
+        "type": "string",
+        "defaultValue": "Hourly",
+        "allowedValues": [
+          "Hourly",
+          "Daily"
+        ],
+        "metadata": {
+          "description": "Specify the Azure Usage data retrieval frequency"
+        },
+        "value": "Hourly"
+      },
+      "currency": {
+        "type": "string",
+        "defaultValue": "USD",
+        "allowedValues": [
+          "ARS",
+          "AUD",
+          "BRL",
+          "CAD",
+          "CHF",
+          "DKK",
+          "EUR",
+          "GBP",
+          "HKD",
+          "IDR",
+          "INR",
+          "JPY",
+          "KRW",
+          "MXN",
+          "MYR",
+          "NOK",
+          "NZD",
+          "RUB",
+          "SAR",
+          "SEK",
+          "TRY",
+          "TWD",
+          "USD",
+          "ZAR"
+        ],
+        "metadata": {
+          "description": "Specify the Azure Billing Currency"
+        },
+        "value": "USD"
+      },
+      "regionInfo": {
+        "type": "string",
+        "defaultValue": "United States",
+        "allowedValues": [
+          "Afghanistan",
+          "Albania",
+          "Algeria",
+          "Angola",
+          "Argentina",
+          "Armenia",
+          "Australia",
+          "Austria",
+          "Azerbaijan",
+          "Bahamas",
+          "Bahrain",
+          "Bangladesh",
+          "Barbados",
+          "Belarus",
+          "Belgium",
+          "Belize",
+          "Bermuda",
+          "Bolivia",
+          "Bosnia and Herzegovina",
+          "Botswana",
+          "Brazil",
+          "Brunei",
+          "Bulgaria",
+          "Cameroon",
+          "Canada",
+          "Cape Verde",
+          "Cayman Islands",
+          "Chile",
+          "Colombia",
+          "Costa Rica",
+          "C\ufffdte d\ufffdIvoire",
+          "Croatia",
+          "Cura\ufffdao",
+          "Cyprus",
+          "Czech Republic",
+          "Denmark",
+          "Dominican Republic",
+          "Ecuador",
+          "Egypt",
+          "El Salvador",
+          "Estonia",
+          "Ethiopia",
+          "Faroe Islands",
+          "Fiji",
+          "Finland",
+          "France",
+          "Georgia",
+          "Germany",
+          "Ghana",
+          "Greece",
+          "Guatemala",
+          "Honduras",
+          "Hong Kong SAR",
+          "Hungary",
+          "Iceland",
+          "India",
+          "Indonesia",
+          "Iraq",
+          "Ireland",
+          "Israel",
+          "Italy",
+          "Jamaica",
+          "Japan",
+          "Jordan",
+          "Kazakhstan",
+          "Kenya",
+          "Korea",
+          "Kuwait",
+          "Kyrgyzstan",
+          "Latvia",
+          "Lebanon",
+          "Libya",
+          "Liechtenstein",
+          "Lithuania",
+          "Luxembourg",
+          "Macao SAR",
+          "Macedonia, FYRO",
+          "Malaysia",
+          "Malta",
+          "Mauritius",
+          "Mexico",
+          "Moldova",
+          "Monaco",
+          "Mongolia",
+          "Montenegro",
+          "Morocco",
+          "Namibia",
+          "Nepal",
+          "Netherlands",
+          "New Zealand",
+          "Nicaragua",
+          "Nigeria",
+          "Norway",
+          "Oman",
+          "Pakistan",
+          "Palestinian Territory",
+          "Panama",
+          "Paraguay",
+          "Peru",
+          "Philippines",
+          "Poland",
+          "Portugal",
+          "Puerto Rico",
+          "Qatar",
+          "Romania",
+          "Russia",
+          "Rwanda",
+          "Saint Kitts and Nevis",
+          "Saudi Arabia",
+          "Senegal",
+          "Serbia",
+          "Singapore",
+          "Slovakia",
+          "Slovenia",
+          "South Africa",
+          "Spain",
+          "Sri Lanka",
+          "Sweden",
+          "Switzerland",
+          "Taiwan",
+          "Tajikistan",
+          "Tanzania",
+          "Thailand",
+          "Trinidad and Tobago",
+          "Tunisia",
+          "Turkey",
+          "Turkmenistan",
+          "U.S. Virgin Islands",
+          "Uganda",
+          "Ukraine",
+          "United Arab Emirates",
+          "United Kingdom",
+          "United States",
+          "Uruguay",
+          "Uzbekistan",
+          "Venezuela",
+          "Vietnam",
+          "Yemen",
+          "Zambia",
+          "Zimbabwe"
+        ],
+        "metadata": {
+          "description": "Specify region for Azure BillingSee https://github.com/Azure/azure-content-nlnl/blob/master/articles/billing-countries-and-currencies.md for details."
+        },
+        "value": "United States"
+      },
+      "locale": {
+        "type": "string",
+        "defaultValue": "en-US",
+        "allowedValues": [
+          "en-AU",
+          "ar-AE",
+          "ar-BH",
+          "ar-DZ",
+          "ar-IQ",
+          "ar-JO",
+          "ar-KW",
+          "ar-LB",
+          "ar-LY",
+          "ar-MA",
+          "ar-OM",
+          "ar-QA",
+          "ar-SA",
+          "ar-TN",
+          "ar-YE",
+          "bg-BG",
+          "ca-ES",
+          "cs-CZ",
+          "da-DK",
+          "de-AT",
+          "de-CH",
+          "de-DE",
+          "de-LI",
+          "de-LU",
+          "el-CY",
+          "el-GR",
+          "en-AE",
+          "en-BZ",
+          "en-CA",
+          "en-DZ",
+          "en-GB",
+          "en-HK",
+          "en-IE",
+          "en-IN",
+          "en-JM",
+          "en-JO",
+          "en-KE",
+          "en-MT",
+          "en-MY",
+          "en-NG",
+          "en-NZ",
+          "en-PH",
+          "en-SG",
+          "en-SI",
+          "en-SK",
+          "en-TH",
+          "en-TT",
+          "en-US",
+          "en-ZA",
+          "en-ZW",
+          "es-AR",
+          "es-BO",
+          "es-CL",
+          "es-CO",
+          "es-CR",
+          "es-DO",
+          "es-EC",
+          "es-ES",
+          "es-GT",
+          "es-HN",
+          "es-MX",
+          "es-NI",
+          "es-PA",
+          "es-PE",
+          "es-PR",
+          "es-PY",
+          "es-SV",
+          "es-US",
+          "es-UY",
+          "es-VE",
+          "et-EE",
+          "eu-ES",
+          "fi-FI",
+          "fr-BE",
+          "fr-CA",
+          "fr-CH",
+          "fr-DZ",
+          "fr-FR",
+          "fr-LU",
+          "fr-MA",
+          "fr-MC",
+          "fr-SN",
+          "fr-TN",
+          "gl-ES",
+          "he-IL",
+          "hi-IN",
+          "hr-HR",
+          "hu-HU",
+          "id-ID",
+          "it-CH",
+          "it-IT",
+          "ja-JP",
+          "kk-KZ",
+          "ko-KR",
+          "lt-LT",
+          "lv-LV",
+          "ms-BN",
+          "ms-MY",
+          "nb-NO",
+          "nl-BE",
+          "nl-NL",
+          "pl-PL",
+          "pt-BR",
+          "pt-PT",
+          "ro-RO",
+          "ru-BY",
+          "ru-KZ",
+          "ru-RU",
+          "ru-UA",
+          "sk-SK",
+          "sl-SI",
+          "sr-Cyrl-RS",
+          "sr-Latn-ME",
+          "sr-Latn-RS",
+          "sv-FI",
+          "sv-SE",
+          "th-TH",
+          "tr-TR",
+          "uk-UA",
+          "vi-VN",
+          "zh-CN",
+          "zh-HK",
+          "zh-MO",
+          "zh-SG",
+          "zh-TW"
+        ],
+        "metadata": {
+          "description": "Specify locale for Azure Billing. See https://github.com/Azure/azure-content-nlnl/blob/master/articles/billing-countries-and-currencies.md for details."
+        },
+        "value": "en-US"
+      },
+      "offerDurableId": {
+        "type": "string",
+        "allowedValues": [
+          "MS-AZR-0003P  :  Pay-As-You-Go",
+          "MS-AZR-0041P  :  Support Plans",
+          "MS-AZR-0042P  :  Support Plans",
+          "MS-AZR-0043P  :  Support Plans",
+          "MS-AZR-0044P  :  Free Trial",
+          "MS-AZR-0059P  :  Visual Studio Professional subscribers",
+          "MS-AZR-0060P  :  Visual Studio Test Professional subscribers",
+          "MS-AZR-0062P  :  MSDN Platforms subscribers",
+          "MS-AZR-0063P  :  Visual Studio Enterprise subscribers",
+          "MS-AZR-0064P  :  Visual Studio Enterprise (BizSpark) subscribers",
+          "MS-AZR-0029P  :  Visual Studio Enterprise (MPN) subscribers",
+          "MS-AZR-0022P  :  Visual Studio Dev Essentials members",
+          "MS-AZR-0023P  :  Pay-As-You-Go Dev/Test",
+          "MS-AZR-0148P  :  Enterprise Dev/Test",
+          "MS-AZR-0025P  :  Action Pack",
+          "MS-AZR-0036P  :  Microsoft Azure Sponsored Offer",
+          "MS-AZR-0120P  :  Azure Pass",
+          "MS-AZR-0130P  :  Azure Pass",
+          "MS-AZR-0111p  :  Azure in Open Licensing",
+          "MS-AZR-0144P  :  Microsoft Imagine",
+          "MS-AZR-0149P  :  BizSpark Plus",
+          "MS-AZR-0145P  :  Azure in CSP",
+          "MS-AZR-DE-0145P  :  Azure Germany in CSP for Microsoft Cloud Germany",
+          "MS-AZR-0044P  :  Azure Germany Free Trial",
+          "MS-AZR-DE-0003P  :  Azure Germany Pay-As-You-Go",
+          "MS-AZR-DE-0041P  :  Azure Germany Support Plans",
+          "MS-AZR-DE-0042P  :  Azure Germany Support Plans",
+          "MS-AZR-DE-0043P  :  Azure Germany Support Plans",
+          "MS-AZR-0051p  :  Azure NotInUse"
+        ],
+        "metadata": {
+          "description": "Specify the Azure Offer ID  available in subscription details from Azure Portal"
+        },
+        "value": "MS-AZR-0003P  :  Pay-As-You-Go"
+      },
+      "_artifactsLocation": {
+        "type": "string",
+        "defaultValue": "https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/oms-azure-vminventory-solution",
+        "metadata": {
+          "description": "The base URI where artifacts required by this template are located"
+        },
+        "value": "https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/oms-azure-vminventory-solution"
+      },
+      "_artifactsLocationSasToken": {
+        "type": "securestring",
+        "defaultValue": "",
+        "metadata": {
+          "description": "The sasToken required to access _artifactsLocation.  When the template is deployed using the accompanying scripts, a sasToken will be automatically generated."
+        }
+      },
+      "ingestSchedulerGuid": {
+        "type": "string",
+        "defaultValue": "53c6dea7-806f-4598-9ec9-a35ca2732b54",
+        "metadata": {
+          "description": "GUID for the schedule creation - create a unique before deploy"
+        },
+        "value": "2c84767f-feaf-47b1-9bc0-e9280ec740b1"
+      },
+      "omsLogAnalyticsWorkspaceName": {
+        "value": "GEN-UNIQUE-20"
+      },
+      "omsLogAnalyticsRegion": {
+        "value": "eastus"
+      },
+      "omsLogAnalyticsSku": {
+        "value": "standalone"
+      }
+    },
+    "variables": {
+      "runbooks": {
+        "ingestParentRunbook": {
+          "name": "AzureUsage-MS-Mgmt",
+          "version": "1.0.0.1",
+          "description": "Runbook to automatically ingest Azure Usage data and events into OMS Log Analytics",
+          "type": "PowerShell",
+          "Id": ""
+        },
+        "ingestSchedulerRunbook": {
+          "name": "AzureUsage-Schedules-MS-Mgmt",
+          "version": "1.0.0.1",
+          "description": "Runbook to automatically create required schedules for OMS Log Analytics ingestion",
+          "type": "PowerShell",
+          "Id": ""
+        }
+      },
+      "parentRunbookUri": "https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/oms-azure-vminventory-solution/scripts/AzureUsage-MS-Mgmt.ps1 parameters('_artifactsLocationSasToken')",
+      "schedulerRunbookUri": "https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/oms-azure-vminventory-solution/scripts/AzureUsage-Schedules-MS-Mgmt.ps1 parameters('_artifactsLocationSasToken')",
+      "opsInsightWorkspaceID": "AzureUsage-OPSINSIGHTS_WS_ID",
+      "opsInsightWorkspaceIDType": "string",
+      "opsInsightWorkspaceIDDescription": "Value of the user's omsWorkspaceId",
+      "opsInsightWorkspaceKey": "AzureUsage-OPSINSIGHTS_WS_KEY",
+      "opsInsightWorkspaceKeyType": "string",
+      "opsInsightWorkspaceKeyDescription": "Encrypted value of the user's omsWorkspaceKey",
+      "createScheduleAutomationAccountName": "AzureUsage-AzureAutomationAccount-MS-Mgmt",
+      "createScheduleAutomationAccountType": "string",
+      "createScheduleAutomationAccountDescription": "The name of the Automation Account",
+      "createScheduleResourceGroupName": "AzureUsage-AzureAutomationResourceGroup-MS-Mgmt",
+      "createScheduleResourceGroupType": "string",
+      "createScheduleResourceGroupDescription": "The name of the resource group",
+      "ingestInterval": "1",
+      "ingestFrequency": "hour",
+      "ingestScheduleName": "AzureUsage-Scheduler-",
+      "propagatetags": "1"
+    },
+    "resources": [
+      {
+        "apiVersion": "2015-10-31",
+        "location": "eastus2",
+        "name": "GEN-UNIQUE-30",
+        "type": "Microsoft.Automation/automationAccounts",
+        "properties": {
+          "sku": {
+            "name": "basic"
+          }
+        },
+        "resources": [
+          {
+            "name": "AzureUsage-OPSINSIGHTS_WS_ID",
+            "type": "variables",
+            "apiVersion": "2015-10-31",
+            "dependsOn": [
+              "Microsoft.Automation/automationAccounts/GEN-UNIQUE-30"
+            ],
+            "tags": {},
+            "properties": {
+              "description": "Value of the user's omsWorkspaceId",
+              "isEncrypted": false,
+              "type": "string",
+              "value": "\"parameters('omsWorkspaceId')\""
+            }
+          },
+          {
+            "name": "(opsInsightWorkspaceKey)",
+            "type": "variables",
+            "apiVersion": "2015-10-31",
+            "dependsOn": [
+              "Microsoft.Automation/automationAccounts/GEN-UNIQUE-30"
+            ],
+            "tags": {},
+            "properties": {
+              "description": "Encrypted value of the user's omsWorkspaceKey",
+              "isEncrypted": 1,
+              "type": "string",
+              "value": "\"parameters('omsWorkspaceKey')\""
+            }
+          },
+          {
+            "name": "AzureUsage-AzureAutomationAccount-MS-Mgmt",
+            "type": "variables",
+            "apiVersion": "2015-10-31",
+            "dependsOn": [
+              "Microsoft.Automation/automationAccounts/GEN-UNIQUE-30"
+            ],
+            "tags": {},
+            "properties": {
+              "description": "The name of the Automation Account",
+              "isEncrypted": false,
+              "type": "string",
+              "value": "\"GEN-UNIQUE-30\""
+            }
+          },
+          {
+            "name": "AzureUsage-AzureAutomationResourceGroup-MS-Mgmt",
+            "type": "variables",
+            "apiVersion": "2015-10-31",
+            "dependsOn": [
+              "Microsoft.Automation/automationAccounts/GEN-UNIQUE-30"
+            ],
+            "tags": {},
+            "properties": {
+              "description": "The name of the resource group",
+              "isEncrypted": false,
+              "type": "string",
+              "value": "[concat('\"', resourceGroup().name, '\"')]"
+            }
+          },
+          {
+            "name": "(runbooks).ingestParentRunbook.name",
+            "type": "runbooks",
+            "apiVersion": "2015-10-31",
+            "location": "eastus2",
+            "dependsOn": [
+              "Microsoft.Automation/automationAccounts/GEN-UNIQUE-30",
+              "Microsoft.Automation/automationAccounts/GEN-UNIQUE-30/variables/AzureUsage-OPSINSIGHTS_WS_ID",
+              "Microsoft.Automation/automationAccounts/GEN-UNIQUE-30/variables/AzureUsage-OPSINSIGHTS_WS_KEY"
+            ],
+            "tags": {},
+            "properties": {
+              "runbookType": "(runbooks).ingestParentRunbook.type",
+              "logProgress": false,
+              "logVerbose": false,
+              "description": "(runbooks).ingestParentRunbook.description",
+              "publishContentLink": {
+                "uri": "https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/oms-azure-vminventory-solution/scripts/AzureUsage-MS-Mgmt.ps1 parameters('_artifactsLocationSasToken')",
+                "version": "(runbooks).ingestParentRunbook.version"
+              }
+            }
+          },
+          {
+            "name": "(runbooks).ingestSchedulerRunbook.name",
+            "type": "runbooks",
+            "apiVersion": "2015-10-31",
+            "location": "eastus2",
+            "dependsOn": [
+              "Microsoft.Automation/automationAccounts/GEN-UNIQUE-30",
+              "Microsoft.Automation/automationAccounts/GEN-UNIQUE-30/variables/AzureUsage-OPSINSIGHTS_WS_ID",
+              "Microsoft.Automation/automationAccounts/GEN-UNIQUE-30/variables/AzureUsage-OPSINSIGHTS_WS_KEY"
+            ],
+            "tags": {},
+            "properties": {
+              "runbookType": "(runbooks).ingestSchedulerRunbook.type",
+              "logProgress": false,
+              "logVerbose": false,
+              "description": "(runbooks).ingestSchedulerRunbook.description",
+              "publishContentLink": {
+                "uri": "https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/oms-azure-vminventory-solution/scripts/AzureUsage-Schedules-MS-Mgmt.ps1 parameters('_artifactsLocationSasToken')",
+                "version": "(runbooks).ingestSchedulerRunbook.version"
+              }
+            }
+          },
+          {
+            "name": "GEN-UNIQUE-30/ingestscheduleName-2c84767f-feaf-47b1-9bc0-e9280ec740b1",
+            "type": "microsoft.automation/automationAccounts/schedules",
+            "apiVersion": "2015-10-31",
+            "location": "eastus2",
+            "dependsOn": [
+              "Microsoft.Automation/automationAccounts/GEN-UNIQUE-30",
+              "Microsoft.Automation/automationAccounts/GEN-UNIQUE-30/runbooks/(runbooks).ingestSchedulerRunbook.name"
+            ],
+            "tags": {},
+            "properties": {
+              "description": "OMS Ingestion API Scheduler",
+              "startTime": "",
+              "isEnabled": "true",
+              "interval": "1",
+              "frequency": "hour"
+            }
+          },
+          {
+            "name": "GEN-UNIQUE-30/2c84767f-feaf-47b1-9bc0-e9280ec740b1",
+            "type": "microsoft.automation/automationAccounts/jobSchedules",
+            "apiVersion": "2015-10-31",
+            "location": "eastus2",
+            "dependsOn": [
+              "Microsoft.Automation/automationAccounts/GEN-UNIQUE-30/schedules/ingestscheduleName-2c84767f-feaf-47b1-9bc0-e9280ec740b1",
+              "Microsoft.Automation/automationAccounts/GEN-UNIQUE-30"
+            ],
+            "tags": {},
+            "properties": {
+              "schedule": {
+                "name": "ingestscheduleName-2c84767f-feaf-47b1-9bc0-e9280ec740b1"
+              },
+              "runbook": {
+                "name": "(Runbooks).ingestSchedulerRunbook.name"
+              }
+            }
+          },
+          {
+            "name": "GEN-UNIQUE-30/2c84767f-feaf-47b1-9bc0-e9280ec740b1",
+            "type": "Microsoft.Automation/automationAccounts/jobs",
+            "apiVersion": "2015-10-31",
+            "location": "eastus2",
+            "dependsOn": [
+              "Microsoft.Automation/automationAccounts/GEN-UNIQUE-30",
+              "Microsoft.Automation/automationAccounts/GEN-UNIQUE-30/runbooks/(runbooks).ingestSchedulerRunbook.name",
+              "Microsoft.Automation/automationAccounts/GEN-UNIQUE-30/runbooks/(runbooks).ingestParentRunbook.name"
+            ],
+            "tags": {},
+            "properties": {
+              "runbook": {
+                "name": "(runbooks).ingestSchedulerRunbook.name"
+              },
+              "parameters": {
+                "Currency": "Currency",
+                "Locale": "Locale",
+                "RegionInfo": "RegionInfo",
+                "OfferDurableId": "OfferDurableId",
+                "propagatetags": "1",
+                "syncInterval": "Hourly",
+                "clearLocks": "1"
+              }
+            }
+          }
+        ]
+      }
+    ],
+    "outputs": {},
+    "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+  }
+}

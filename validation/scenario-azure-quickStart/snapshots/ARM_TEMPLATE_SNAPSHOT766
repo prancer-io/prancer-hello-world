@@ -1,0 +1,99 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAzureQuickStart",
+  "paths": [
+    "/demos/oms-cloudfoundry-solution/nested/omsWorkspace.json"
+  ],
+  "timestamp": 1642962900911,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/demos/oms-cloudfoundry-solution/nested/omsWorkspace.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT766",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "microsoft.operationalinsights/workspaces"
+    ]
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT766",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "omsWorkspaceName": {
+        "type": "string",
+        "metadata": {
+          "description": "Assign a name for the Log Analytic Workspace Name"
+        }
+      },
+      "omsWorkspaceRegion": {
+        "type": "string",
+        "defaultValue": "West Europe",
+        "allowedValues": [
+          "Australia Southeast",
+          "East US",
+          "Japan East",
+          "Southeast Asia",
+          "UK South",
+          "West Central US",
+          "West Europe",
+          "North Europe"
+        ],
+        "metadata": {
+          "description": "Specify the region for your Workspace"
+        }
+      },
+      "azureMonitorPricingModel": {
+        "type": "string",
+        "defaultValue": "Pre April 2018",
+        "allowedValues": [
+          "Pre April 2018",
+          "April 2018"
+        ],
+        "metadata": {
+          "description": "Select Azure Monitor pricing model your subscription has enabled, NOTE that April 2018 pricing model would be enabled automatically if you onboard Azure Monitor later than April 2, 2018"
+        }
+      },
+      "omsWorkspaceSku": {
+        "type": "string",
+        "defaultValue": "free",
+        "allowedValues": [
+          "free",
+          "pernode",
+          "standalone"
+        ],
+        "metadata": {
+          "description": "Select the SKU for your workspace"
+        }
+      }
+    },
+    "resources": [
+      {
+        "apiVersion": "2017-03-03-preview",
+        "location": "West Europe",
+        "name": "omsWorkspaceName",
+        "type": "Microsoft.OperationalInsights/workspaces",
+        "comments": "Log Analytics workspace",
+        "tags": {
+          "Source": "QuickstartTemplates"
+        },
+        "properties": {
+          "sku": {
+            "name": "[if(equals(parameters('azureMonitorPricingModel'),'Pre April 2018'), parameters('omsWorkspaceSku'), 'pergb2018')]"
+          }
+        }
+      }
+    ],
+    "outputs": {},
+    "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+  }
+}

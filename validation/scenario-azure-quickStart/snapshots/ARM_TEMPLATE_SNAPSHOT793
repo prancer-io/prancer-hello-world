@@ -1,0 +1,654 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAzureQuickStart",
+  "paths": [
+    "/demos/sql-alwayson-md-ilb-zones/nestedtemplates/deploy-sql-cluster.json"
+  ],
+  "timestamp": 1642962901571,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/demos/sql-alwayson-md-ilb-zones/nestedtemplates/deploy-sql-cluster.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT793",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "microsoft.network/publicipaddresses",
+      "microsoft.resources/deployments",
+      "microsoft.network/loadbalancers",
+      "microsoft.network/networkinterfaces",
+      "microsoft.compute/virtualmachines/extensions",
+      "microsoft.storage/storageaccounts"
+    ]
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT793",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "location": {
+        "type": "string",
+        "metadata": {
+          "description": "Location for the VM, only certain regions support zones during preview."
+        }
+      },
+      "namePrefix": {
+        "type": "string",
+        "minLength": 3,
+        "maxLength": 8,
+        "metadata": {
+          "description": "Naming prefix for each new resource created. 3-char min, 8-char max, lowercase alphanumeric"
+        }
+      },
+      "domainName": {
+        "type": "string",
+        "metadata": {
+          "description": "DNS domain name for existing Active Directory domain"
+        }
+      },
+      "adminUsername": {
+        "type": "string",
+        "metadata": {
+          "description": "Name of the Administrator of the existing Active Directory Domain"
+        }
+      },
+      "adminPassword": {
+        "type": "securestring",
+        "minLength": 12,
+        "metadata": {
+          "description": "Password for the Administrator account of the existing Active Directory Domain"
+        }
+      },
+      "sqlServiceAccount": {
+        "type": "string",
+        "metadata": {
+          "description": "Name of the user account to be used for the SQL Server service account"
+        }
+      },
+      "sqlServicePassword": {
+        "type": "securestring",
+        "minLength": 12,
+        "metadata": {
+          "description": "Password to be used for the SQL Server service account"
+        }
+      },
+      "subnetId": {
+        "type": "string",
+        "metadata": {
+          "description": "Resource ID for existing vnet/subnet to which VM NICs should be attached"
+        }
+      },
+      "enableOutboundInternet": {
+        "type": "string",
+        "allowedValues": [
+          "Yes",
+          "No"
+        ],
+        "metadata": {
+          "description": "Enable outbound Internet access via source NAT to support ongoing VM Agent extension communication needs"
+        }
+      },
+      "vmSize": {
+        "type": "string",
+        "metadata": {
+          "description": "Size of the SQL Server VMs to be created"
+        }
+      },
+      "vmCount": {
+        "type": "int",
+        "minValue": 2,
+        "maxValue": 9,
+        "metadata": {
+          "description": "Number of SQL Server VMs to be created in AlwaysOn Availability Group cluster (Min=2, Max=9)"
+        },
+        "defaultValue": 2
+      },
+      "vmDiskSize": {
+        "type": "int",
+        "minValue": 128,
+        "maxValue": 1023,
+        "metadata": {
+          "description": "Size of each data disk in GB on each SQL Server VM (Min=128, Max=1023)"
+        }
+      },
+      "vmDiskCount": {
+        "type": "int",
+        "minValue": 2,
+        "maxValue": 32,
+        "metadata": {
+          "description": "Number of data disks on each SQL Server VM (Min=2, Max=32). Ensure that the VM size you've selected will support this number of data disks."
+        }
+      },
+      "workloadType": {
+        "type": "string",
+        "defaultValue": "GENERAL"
+      },
+      "imagePublisher": {
+        "type": "string",
+        "defaultValue": "MicrosoftSQLServer"
+      },
+      "imageOffer": {
+        "type": "string",
+        "defaultValue": "SQL2016SP1-WS2016"
+      },
+      "imageSKU": {
+        "type": "string",
+        "defaultValue": "Enterprise"
+      },
+      "imageVersion": {
+        "type": "string",
+        "defaultValue": "latest"
+      },
+      "_artifactsLocation": {
+        "type": "string"
+      },
+      "_artifactsLocationSasToken": {
+        "type": "securestring"
+      }
+    },
+    "variables": {
+      "witnessStorageName": "[concat(parameters('namePrefix'),uniqueString(resourceGroup().id),'cw')]",
+      "witnessStorageType": "Standard_LRS",
+      "vmNamePrefix": "namePrefix-sql-",
+      "clusterName": "namePrefix-sql-c",
+      "vmLoopTemplateURL": "[uri(parameters('_artifactsLocation'), concat('nestedtemplates/newVM.json',parameters('_artifactsLocationSasToken')))]",
+      "ipLoopTemplateURL": "[uri(parameters('_artifactsLocation'), concat('nestedtemplates/getIpAddress.json',parameters('_artifactsLocationSasToken')))]",
+      "sqlPrepModulesURL": "[uri(parameters('_artifactsLocation'), concat('dsc/prep-sqlao.ps1.zip',parameters('_artifactsLocationSasToken')))]",
+      "sqlPrepFunction": "PrepSQLAO.ps1\\PrepSQLAO",
+      "sqlConfigModulesURL": "[uri(parameters('_artifactsLocation'), concat('dsc/config-sqlao.ps1.zip',parameters('_artifactsLocationSasToken')))]",
+      "sqlConfigFunction": "ConfigSQLAO.ps1\\ConfigSQLAO",
+      "agName": "namePrefix-sql-ag",
+      "agListenerName": "namePrefix-sql-agl",
+      "agEpName": "namePrefix-sql-ha",
+      "albName": "namePrefix-sql-alb",
+      "albPip": "namePrefix-sql-albpip",
+      "albPipID": "Microsoft.Network/publicIPAddresses/namePrefix-sql-albpip",
+      "albFE1": "namePrefix-sql-albfe1",
+      "albBE": "namePrefix-sql-albbe",
+      "albBEAddressPoolID": "Microsoft.Network/loadBalancers/backendAddressPools/namePrefix-sql-alb/namePrefix-sql-albbe",
+      "albBEPoolTemplateURL": "[uri(parameters('_artifactsLocation'), concat('nestedtemplates/albBEPool.json',parameters('_artifactsLocationSasToken')))]",
+      "albFEConfigID1": "Microsoft.Network/loadBalancers/frontendIPConfigurations/namePrefix-sql-alb/namePrefix-sql-albfe1",
+      "albProbe1": "namePrefix-sql-albp1",
+      "albProbeID1": "Microsoft.Network/loadBalancers/probes/namePrefix-sql-alb/namePrefix-sql-albp1",
+      "lbName": "namePrefix-sql-ilb",
+      "lbFE1": "namePrefix-sql-ilbfe1",
+      "lbBE": "namePrefix-sql-ilbbe",
+      "lbFEConfigID1": "Microsoft.Network/loadBalancers/frontendIPConfigurations/namePrefix-sql-ilb/namePrefix-sql-ilbfe1",
+      "lbBEAddressPoolID": "Microsoft.Network/loadBalancers/backendAddressPools/namePrefix-sql-ilb/namePrefix-sql-ilbbe",
+      "lbProbe1": "namePrefix-sql-ilbp1",
+      "lbProbeID1": "Microsoft.Network/loadBalancers/probes/namePrefix-sql-ilb/namePrefix-sql-ilbp1",
+      "lbBEPoolTemplateURL": "[uri(parameters('_artifactsLocation'), concat('nestedtemplates/lbBEPool.json',parameters('_artifactsLocationSasToken')))]",
+      "agListenerPort": 1433,
+      "agProbePort": 59999,
+      "snatTcpPort": 59998,
+      "snatProbePort": 3389,
+      "zones": [
+        "1",
+        "2",
+        "3"
+      ]
+    },
+    "resources": [
+      {
+        "type": "Microsoft.Storage/storageAccounts",
+        "name": "[variables('witnessStorageName')]",
+        "apiVersion": "2019-06-01",
+        "location": "location",
+        "sku": {
+          "name": "Standard_LRS"
+        },
+        "kind": "Storage"
+      },
+      {
+        "apiVersion": "2020-08-01",
+        "name": "namePrefix-sql-ilb",
+        "type": "Microsoft.Network/loadBalancers",
+        "location": "location",
+        "sku": {
+          "name": "Standard"
+        },
+        "properties": {
+          "frontendIPConfigurations": [
+            {
+              "name": "namePrefix-sql-ilbfe1",
+              "properties": {
+                "privateIPAllocationMethod": "Dynamic",
+                "subnet": {
+                  "id": "subnetId"
+                }
+              }
+            }
+          ],
+          "backendAddressPools": [
+            {
+              "name": "namePrefix-sql-ilbbe"
+            }
+          ],
+          "loadBalancingRules": [
+            {
+              "name": "namePrefix-sql-agl",
+              "properties": {
+                "frontendIPConfiguration": {
+                  "id": "Microsoft.Network/loadBalancers/frontendIPConfigurations/namePrefix-sql-ilb/namePrefix-sql-ilbfe1"
+                },
+                "backendAddressPool": {
+                  "id": "Microsoft.Network/loadBalancers/backendAddressPools/namePrefix-sql-ilb/namePrefix-sql-ilbbe"
+                },
+                "probe": {
+                  "id": "Microsoft.Network/loadBalancers/probes/namePrefix-sql-ilb/namePrefix-sql-ilbp1"
+                },
+                "protocol": "Tcp",
+                "frontendPort": 1433,
+                "backendPort": 1433,
+                "enableFloatingIP": true
+              }
+            }
+          ],
+          "probes": [
+            {
+              "name": "namePrefix-sql-ilbp1",
+              "properties": {
+                "protocol": "Tcp",
+                "port": 59999,
+                "intervalInSeconds": 5,
+                "numberOfProbes": 2
+              }
+            }
+          ]
+        }
+      },
+      {
+        "apiVersion": "2020-08-01",
+        "type": "Microsoft.Network/publicIPAddresses",
+        "name": "namePrefix-sql-albpip",
+        "location": "location",
+        "condition": false,
+        "sku": {
+          "name": "Standard"
+        },
+        "properties": {
+          "publicIPAllocationMethod": "Static"
+        }
+      },
+      {
+        "apiVersion": "2020-08-01",
+        "name": "namePrefix-sql-alb",
+        "type": "Microsoft.Network/loadBalancers",
+        "location": "location",
+        "condition": false,
+        "dependsOn": [
+          "namePrefix-sql-albpip"
+        ],
+        "sku": {
+          "name": "Standard"
+        },
+        "properties": {
+          "frontendIPConfigurations": [
+            {
+              "name": "namePrefix-sql-albfe1",
+              "properties": {
+                "publicIPAddress": {
+                  "id": "Microsoft.Network/publicIPAddresses/namePrefix-sql-albpip"
+                }
+              }
+            }
+          ],
+          "backendAddressPools": [
+            {
+              "name": "namePrefix-sql-albbe"
+            }
+          ],
+          "loadBalancingRules": [
+            {
+              "name": "outbound-snat-rule",
+              "properties": {
+                "frontendIPConfiguration": {
+                  "id": "Microsoft.Network/loadBalancers/frontendIPConfigurations/namePrefix-sql-alb/namePrefix-sql-albfe1"
+                },
+                "backendAddressPool": {
+                  "id": "Microsoft.Network/loadBalancers/backendAddressPools/namePrefix-sql-alb/namePrefix-sql-albbe"
+                },
+                "probe": {
+                  "id": "Microsoft.Network/loadBalancers/probes/namePrefix-sql-alb/namePrefix-sql-albp1"
+                },
+                "protocol": "Tcp",
+                "frontendPort": 59998,
+                "backendPort": 59998,
+                "enableFloatingIP": false
+              }
+            }
+          ],
+          "probes": [
+            {
+              "name": "namePrefix-sql-albp1",
+              "properties": {
+                "protocol": "Tcp",
+                "port": 3389,
+                "intervalInSeconds": 5,
+                "numberOfProbes": 2
+              }
+            }
+          ]
+        }
+      },
+      {
+        "name": "namePrefix-sql-copyindex()-nic",
+        "type": "Microsoft.Network/networkInterfaces",
+        "location": "location",
+        "apiVersion": "2020-08-01",
+        "copy": {
+          "name": "nicLoop",
+          "count": 2
+        },
+        "properties": {
+          "ipConfigurations": [
+            {
+              "name": "ipconfig1",
+              "properties": {
+                "privateIPAllocationMethod": "Dynamic",
+                "subnet": {
+                  "id": "subnetId"
+                },
+                "primary": true
+              }
+            },
+            {
+              "name": "ipconfig2",
+              "properties": {
+                "privateIPAllocationMethod": "Dynamic",
+                "subnet": {
+                  "id": "subnetId"
+                }
+              }
+            }
+          ]
+        }
+      },
+      {
+        "type": "Microsoft.Resources/deployments",
+        "apiVersion": "2020-10-01",
+        "name": "namePrefix-sql-0-clusterIp",
+        "dependsOn": [
+          "nicLoop"
+        ],
+        "properties": {
+          "mode": "Incremental",
+          "templateLink": {
+            "uri": "[uri(parameters('_artifactsLocation'), concat('nestedtemplates/getIpAddress.json',parameters('_artifactsLocationSasToken')))]"
+          },
+          "parameters": {
+            "ipConfig": {
+              "value": "[reference(resourceId('Microsoft.Network/networkInterfaces', concat(variables('vmNamePrefix'), '0-nic'))).ipConfigurations[1].properties.privateIPAddress]"
+            }
+          }
+        }
+      },
+      {
+        "type": "Microsoft.Resources/deployments",
+        "apiVersion": "2020-10-01",
+        "copy": {
+          "name": "clusterIpLoop",
+          "count": "[sub(parameters('vmCount'),1)]"
+        },
+        "name": "[concat(variables('vmNamePrefix'),copyIndex(1),'-clusterIp')]",
+        "dependsOn": [
+          "nicLoop",
+          "Microsoft.Resources/deployments/namePrefix-sql-0-clusterIp"
+        ],
+        "properties": {
+          "mode": "Incremental",
+          "templateLink": {
+            "uri": "[uri(parameters('_artifactsLocation'), concat('nestedtemplates/getIpAddress.json',parameters('_artifactsLocationSasToken')))]"
+          },
+          "parameters": {
+            "ipConfig": {
+              "value": "[reference(resourceId('Microsoft.Network/networkInterfaces',concat(variables('vmNamePrefix'), copyIndex(1), '-nic'))).ipConfigurations[1].properties.privateIPAddress]"
+            },
+            "ipAddresses": {
+              "value": "[reference(resourceId('Microsoft.Resources/deployments', concat(variables('vmNamePrefix'),copyIndex(),'-clusterIp'))).outputs.result.value]"
+            }
+          }
+        }
+      },
+      {
+        "type": "Microsoft.Resources/deployments",
+        "apiVersion": "2020-10-01",
+        "copy": {
+          "name": "virtualMachineLoop",
+          "count": 2
+        },
+        "name": "namePrefix-sql-copyindex()-newVM",
+        "dependsOn": [
+          "nicLoop"
+        ],
+        "properties": {
+          "mode": "Incremental",
+          "templateLink": {
+            "uri": "[uri(parameters('_artifactsLocation'), concat('nestedtemplates/newVM.json',parameters('_artifactsLocationSasToken')))]"
+          },
+          "parameters": {
+            "location": {
+              "value": "location"
+            },
+            "vmName": {
+              "value": "namePrefix-sql-copyindex()"
+            },
+            "vmSize": {
+              "value": "vmSize"
+            },
+            "vmDiskCount": {
+              "value": "vmDiskCount"
+            },
+            "vmDiskSize": {
+              "value": "vmDiskSize"
+            },
+            "adminUsername": {
+              "value": "adminUsername"
+            },
+            "adminPassword": {
+              "value": "adminPassword"
+            },
+            "imagePublisher": {
+              "value": "MicrosoftSQLServer"
+            },
+            "imageOffer": {
+              "value": "SQL2016SP1-WS2016"
+            },
+            "imageSKU": {
+              "value": "Enterprise"
+            },
+            "imageVersion": {
+              "value": "latest"
+            },
+            "zones": {
+              "value": "[take(skip(variables('zones'),mod(copyIndex(),length(variables('zones')))),1)]"
+            }
+          }
+        }
+      },
+      {
+        "type": "Microsoft.Compute/virtualMachines/extensions",
+        "name": "[concat(variables('vmNamePrefix'),copyindex(1),'/sqlPrep')]",
+        "apiVersion": "2020-12-01",
+        "location": "location",
+        "dependsOn": [
+          "virtualMachineLoop"
+        ],
+        "copy": {
+          "name": "virtualMachineExtensionLoop",
+          "count": "[sub(parameters('vmCount'),1)]"
+        },
+        "properties": {
+          "publisher": "Microsoft.Powershell",
+          "type": "DSC",
+          "typeHandlerVersion": "2.71",
+          "autoUpgradeMinorVersion": true,
+          "settings": {
+            "modulesUrl": "[uri(parameters('_artifactsLocation'), concat('dsc/prep-sqlao.ps1.zip',parameters('_artifactsLocationSasToken')))]",
+            "configurationFunction": "PrepSQLAO.ps1\\PrepSQLAO",
+            "properties": {
+              "domainName": "domainName",
+              "adminCreds": {
+                "userName": "adminUserName",
+                "password": "PrivateSettingsRef:adminPassword"
+              },
+              "sqlServiceCreds": {
+                "userName": "sqlServiceAccount",
+                "password": "PrivateSettingsRef:sqlServicePassword"
+              },
+              "numberOfDisks": "vmDiskCount",
+              "workloadType": "GENERAL",
+              "databaseEnginePort": 1433,
+              "probePortNumber": 59999
+            }
+          },
+          "protectedSettings": {
+            "items": {
+              "adminPassword": "adminPassword",
+              "sqlServicePassword": "sqlServicePassword"
+            }
+          }
+        }
+      },
+      {
+        "type": "Microsoft.Compute/virtualMachines/extensions",
+        "name": "namePrefix-sql-0/sqlConfig",
+        "apiVersion": "2020-12-01",
+        "location": "location",
+        "dependsOn": [
+          "virtualMachineLoop",
+          "virtualMachineExtensionLoop",
+          "clusterIpLoop",
+          "[resourceId('Microsoft.Storage/storageAccounts', variables('witnessStorageName'))]"
+        ],
+        "properties": {
+          "publisher": "Microsoft.Powershell",
+          "type": "DSC",
+          "typeHandlerVersion": "2.71",
+          "autoUpgradeMinorVersion": true,
+          "settings": {
+            "modulesUrl": "[uri(parameters('_artifactsLocation'), concat('dsc/config-sqlao.ps1.zip',parameters('_artifactsLocationSasToken')))]",
+            "configurationFunction": "ConfigSQLAO.ps1\\ConfigSQLAO",
+            "properties": {
+              "domainName": "domainName",
+              "clusterName": "namePrefix-sql-c",
+              "vmNamePrefix": "namePrefix-sql-",
+              "sqlAlwaysOnAvailabilityGroupName": "namePrefix-sql-ag",
+              "sqlAlwaysOnAvailabilityGroupListenerName": "namePrefix-sql-agl",
+              "sqlAlwaysOnEndpointName": "namePrefix-sql-ha",
+              "vmCount": 2,
+              "clusterIpAddresses": "[reference(resourceId('Microsoft.Resources/deployments', concat(variables('vmNamePrefix'),sub(parameters('vmCount'),1),'-clusterIp'))).outputs.result.value]",
+              "agListenerIpAddress": "[reference(resourceId('Microsoft.Network/loadbalancers', variables('lbName'))).frontendIPConfigurations[0].properties.privateIPAddress]",
+              "numberOfDisks": "vmDiskCount",
+              "workloadType": "GENERAL",
+              "databaseEnginePort": 1433,
+              "probePortNumber": 59999,
+              "witnessStorageName": "[variables('witnessStorageName')]",
+              "witnessStorageKey": {
+                "userName": "PLACEHOLDER-DO-NOT-USE",
+                "password": "PrivateSettingsRef:witnessStorageKey"
+              },
+              "adminCreds": {
+                "userName": "adminUserName",
+                "password": "PrivateSettingsRef:adminPassword"
+              },
+              "sqlServiceCreds": {
+                "userName": "sqlServiceAccount",
+                "password": "PrivateSettingsRef:sqlServicePassword"
+              }
+            }
+          },
+          "protectedSettings": {
+            "items": {
+              "adminPassword": "adminPassword",
+              "sqlServicePassword": "sqlServicePassword",
+              "witnessStorageKey": "[listKeys(resourceId('Microsoft.Storage/storageAccounts',variables('witnessStorageName')), '2019-06-01').keys[0].value]"
+            }
+          }
+        }
+      },
+      {
+        "type": "Microsoft.Resources/deployments",
+        "apiVersion": "2020-10-01",
+        "name": "namePrefix-sql-lbbepool",
+        "condition": false,
+        "dependsOn": [
+          "Microsoft.Compute/virtualMachines/extensions/namePrefix-sql-0/sqlConfig"
+        ],
+        "properties": {
+          "mode": "Incremental",
+          "templateLink": {
+            "uri": "[uri(parameters('_artifactsLocation'), concat('nestedtemplates/lbBEPool.json',parameters('_artifactsLocationSasToken')))]"
+          },
+          "parameters": {
+            "location": {
+              "value": "location"
+            },
+            "vmNamePrefix": {
+              "value": "namePrefix-sql-"
+            },
+            "vmCount": {
+              "value": 2
+            },
+            "subnetId": {
+              "value": "subnetId"
+            },
+            "lbBEAddressPoolID": {
+              "value": "Microsoft.Network/loadBalancers/backendAddressPools/namePrefix-sql-ilb/namePrefix-sql-ilbbe"
+            }
+          }
+        }
+      },
+      {
+        "type": "Microsoft.Resources/deployments",
+        "apiVersion": "2020-10-01",
+        "name": "namePrefix-sql-albbepool",
+        "condition": false,
+        "dependsOn": [
+          "Microsoft.Compute/virtualMachines/extensions/namePrefix-sql-0/sqlConfig"
+        ],
+        "properties": {
+          "mode": "Incremental",
+          "templateLink": {
+            "uri": "[uri(parameters('_artifactsLocation'), concat('nestedtemplates/albBEPool.json',parameters('_artifactsLocationSasToken')))]"
+          },
+          "parameters": {
+            "location": {
+              "value": "location"
+            },
+            "vmNamePrefix": {
+              "value": "namePrefix-sql-"
+            },
+            "vmCount": {
+              "value": 2
+            },
+            "subnetId": {
+              "value": "subnetId"
+            },
+            "lbBEAddressPoolID": {
+              "value": "Microsoft.Network/loadBalancers/backendAddressPools/namePrefix-sql-ilb/namePrefix-sql-ilbbe"
+            },
+            "albBEAddressPoolID": {
+              "value": "Microsoft.Network/loadBalancers/backendAddressPools/namePrefix-sql-alb/namePrefix-sql-albbe"
+            }
+          }
+        }
+      }
+    ],
+    "outputs": {
+      "agListenerName": {
+        "type": "string",
+        "value": "[variables('agListenerName')]"
+      }
+    },
+    "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+  }
+}

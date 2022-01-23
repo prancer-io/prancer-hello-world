@@ -1,0 +1,260 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAzureQuickStart",
+  "paths": [
+    "/quickstarts/microsoft.datafactory/dependency-between-scripts-using-extensions/azuredeploy.json",
+    "/quickstarts/microsoft.datafactory/dependency-between-scripts-using-extensions/azuredeploy.parameters.json"
+  ],
+  "timestamp": 1642962905863,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/quickstarts/microsoft.datafactory/dependency-between-scripts-using-extensions/azuredeploy.json",
+      "/quickstarts/microsoft.datafactory/dependency-between-scripts-using-extensions/azuredeploy.parameters.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT1239",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "microsoft.network/publicipaddresses",
+      "microsoft.network/virtualnetworks",
+      "microsoft.resources/deployments",
+      "microsoft.network/networkinterfaces",
+      "microsoft.compute/virtualmachines/extensions",
+      "microsoft.compute/virtualmachines"
+    ]
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT1239",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "dnsNameForPublicIP": {
+        "type": "string",
+        "metadata": {
+          "description": "This is the unique DNS name of the for the public IP for your VM"
+        },
+        "value": "GEN-UNIQUE"
+      },
+      "adminUsername": {
+        "type": "string",
+        "metadata": {
+          "description": "This is the username you wish to assign to your VMs admin account"
+        },
+        "value": "GEN-UNIQUE"
+      },
+      "vmSize": {
+        "type": "string",
+        "defaultValue": "Standard_D2_v3",
+        "metadata": {
+          "description": "Size of VM"
+        }
+      },
+      "location": {
+        "type": "string",
+        "defaultValue": "[resourceGroup().location]",
+        "metadata": {
+          "description": "Location for all resources."
+        }
+      },
+      "adminPassword": {
+        "type": "securestring",
+        "metadata": {
+          "description": "SSH Key or password for the Virtual Machine. SSH key is recommended."
+        },
+        "value": "GEN-PASSWORD"
+      },
+      "_artifactsLocation": {
+        "type": "string",
+        "metadata": {
+          "description": "The base URI where artifacts required by this template are located including a trailing '/'"
+        },
+        "defaultValue": "[deployment().properties.templateLink.uri]"
+      },
+      "_artifactsLocationSasToken": {
+        "type": "securestring",
+        "metadata": {
+          "description": "The sasToken required to access _artifactsLocation.  When the template is deployed using the accompanying scripts, a sasToken will be automatically generated. Use the defaultValue if the staging location is not secured."
+        },
+        "defaultValue": ""
+      }
+    },
+    "variables": {
+      "addressPrefix": "10.0.0.0/16",
+      "imagePublisher": "Canonical",
+      "imageVersion": "latest",
+      "imageSKU": "18.04-LTS",
+      "imageOffer": "UbuntuServer",
+      "subnetName": "Subnet-1",
+      "subnetPrefix": "10.0.0.0/24",
+      "publicIPAddressType": "Dynamic",
+      "publicIPAddressName": "myPublicIP",
+      "storageAccountType": "StandardSSD_LRS",
+      "vmName": "myVM",
+      "virtualNetworkName": "myVNET",
+      "nicName": "myVMNic",
+      "subnetID": "Microsoft.Network/virtualNetworks/subnets//myVNET/Subnet-1"
+    },
+    "resources": [
+      {
+        "apiVersion": "2020-08-01",
+        "type": "Microsoft.Network/publicIPAddresses",
+        "name": "myPublicIP",
+        "location": "[resourceGroup().location]",
+        "properties": {
+          "publicIPAllocationMethod": "Dynamic",
+          "dnsSettings": {
+            "domainNameLabel": "GEN-UNIQUE"
+          }
+        }
+      },
+      {
+        "apiVersion": "2020-08-01",
+        "type": "Microsoft.Network/virtualNetworks",
+        "name": "myVNET",
+        "location": "[resourceGroup().location]",
+        "properties": {
+          "addressSpace": {
+            "addressPrefixes": [
+              "10.0.0.0/16"
+            ]
+          },
+          "subnets": [
+            {
+              "name": "Subnet-1",
+              "properties": {
+                "addressPrefix": "10.0.0.0/24"
+              }
+            }
+          ]
+        }
+      },
+      {
+        "apiVersion": "2020-08-01",
+        "type": "Microsoft.Network/networkInterfaces",
+        "name": "myVMNic",
+        "location": "[resourceGroup().location]",
+        "dependsOn": [
+          "Microsoft.Network/publicIPAddresses//myPublicIP",
+          "Microsoft.Network/virtualNetworks//myVNET"
+        ],
+        "properties": {
+          "ipConfigurations": [
+            {
+              "name": "ipconfig1",
+              "properties": {
+                "privateIPAllocationMethod": "Dynamic",
+                "publicIPAddress": {
+                  "id": "Microsoft.Network/publicIPAddresses/myPublicIP"
+                },
+                "subnet": {
+                  "id": "Microsoft.Network/virtualNetworks/subnets//myVNET/Subnet-1"
+                }
+              }
+            }
+          ]
+        }
+      },
+      {
+        "apiVersion": "2020-12-01",
+        "type": "Microsoft.Compute/virtualMachines",
+        "name": "myVM",
+        "location": "[resourceGroup().location]",
+        "dependsOn": [
+          "Microsoft.Network/networkInterfaces//myVMNic"
+        ],
+        "properties": {
+          "hardwareProfile": {
+            "vmSize": "Standard_D2_v3"
+          },
+          "osProfile": {
+            "computerName": "myVM",
+            "adminUsername": "GEN-UNIQUE",
+            "adminPassword": "GEN-PASSWORD",
+            "linuxConfiguration": {
+              "patchSettings": {
+                "patchMode": "ImageDefault"
+              }
+            }
+          },
+          "storageProfile": {
+            "imageReference": {
+              "publisher": "Canonical",
+              "offer": "UbuntuServer",
+              "sku": "18.04-LTS",
+              "version": "latest"
+            },
+            "osDisk": {
+              "createOption": "FromImage",
+              "managedDisk": {
+                "storageAccountType": "StandardSSD_LRS"
+              }
+            }
+          },
+          "networkProfile": {
+            "networkInterfaces": [
+              {
+                "id": "Microsoft.Network/networkInterfaces/myVMNic"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "type": "Microsoft.Compute/virtualMachines/extensions",
+        "name": "myVM/configuremongo",
+        "apiVersion": "2020-12-01",
+        "location": "[resourceGroup().location]",
+        "dependsOn": [
+          "Microsoft.Compute/virtualMachines//myVM"
+        ],
+        "properties": {
+          "publisher": "Microsoft.Azure.Extensions",
+          "type": "CustomScript",
+          "typeHandlerVersion": "2.0",
+          "autoUpgradeMinorVersion": true,
+          "settings": {
+            "fileUris": [
+              "[uri(parameters('_artifactsLocation'), concat('scripts/mongo-configure-ubuntu.sh', parameters('_artifactsLocationSasToken')))]"
+            ],
+            "commandToExecute": "sh mongo-configure-ubuntu.sh"
+          }
+        }
+      },
+      {
+        "name": "installmongo",
+        "type": "Microsoft.Resources/deployments",
+        "apiVersion": "2020-08-01",
+        "dependsOn": [
+          "Microsoft.Compute/virtualMachines/extensions//myVM/configuremongo"
+        ],
+        "properties": {
+          "mode": "Incremental",
+          "templateLink": {
+            "uri": "[uri(parameters('_artifactsLocation'), concat('templates/install-mongo.json', parameters('_artifactsLocationSasToken')))]",
+            "contentVersion": "1.0.0.0"
+          },
+          "parameters": {
+            "vmName": {
+              "value": "myVM"
+            },
+            "mongoinstalluri": {
+              "value": "[uri(parameters('_artifactsLocation'), concat('scripts/mongo-install-ubuntu.sh', parameters('_artifactsLocationSasToken')))]"
+            },
+            "location": {
+              "value": "[resourceGroup().location]"
+            }
+          }
+        }
+      }
+    ],
+    "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+  }
+}

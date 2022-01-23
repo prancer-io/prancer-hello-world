@@ -1,0 +1,275 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAzureQuickStart",
+  "paths": [
+    "/quickstarts/microsoft.databricks/databricks-all-in-one-template-for-vnet-injection-with-nat-gateway/azuredeploy.json",
+    "/quickstarts/microsoft.databricks/databricks-all-in-one-template-for-vnet-injection-with-nat-gateway/azuredeploy.parameters.json"
+  ],
+  "timestamp": 1642962905566,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/quickstarts/microsoft.databricks/databricks-all-in-one-template-for-vnet-injection-with-nat-gateway/azuredeploy.json",
+      "/quickstarts/microsoft.databricks/databricks-all-in-one-template-for-vnet-injection-with-nat-gateway/azuredeploy.parameters.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT1206",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "microsoft.network/publicipaddresses",
+      "microsoft.network/virtualnetworks",
+      "microsoft.databricks/workspaces",
+      "microsoft.network/networksecuritygroups",
+      "microsoft.network/natgateways"
+    ]
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT1206",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "disablePublicIp": {
+        "type": "bool",
+        "defaultValue": false,
+        "metadata": {
+          "description": "Specifies whether to deploy Azure Databricks workspace with Secure Cluster Connectivity (No Public IP) enabled or not"
+        }
+      },
+      "location": {
+        "type": "string",
+        "defaultValue": "[resourceGroup().location]",
+        "metadata": {
+          "description": "Location for all resources."
+        }
+      },
+      "natGatewayName": {
+        "defaultValue": "myNATgateway",
+        "type": "string",
+        "metadata": {
+          "description": "Name of the NAT gateway to be attached to the workspace subnets."
+        }
+      },
+      "natGatewayPublicIpName": {
+        "defaultValue": "myNATGatewayPublicIP",
+        "type": "string",
+        "metadata": {
+          "description": "Name of the NAT gateway public IP."
+        }
+      },
+      "nsgName": {
+        "defaultValue": "databricks-nsg",
+        "type": "string",
+        "metadata": {
+          "description": "The name of the network security group to create."
+        }
+      },
+      "pricingTier": {
+        "defaultValue": "premium",
+        "allowedValues": [
+          "trial",
+          "standard",
+          "premium"
+        ],
+        "type": "string",
+        "metadata": {
+          "description": "The pricing tier of workspace."
+        }
+      },
+      "privateSubnetCidr": {
+        "defaultValue": "10.179.0.0/18",
+        "type": "string",
+        "metadata": {
+          "description": "Cidr range for the private subnet."
+        }
+      },
+      "privateSubnetName": {
+        "defaultValue": "private-subnet",
+        "type": "string",
+        "metadata": {
+          "description": "The name of the private subnet to create."
+        }
+      },
+      "publicSubnetCidr": {
+        "defaultValue": "10.179.64.0/18",
+        "type": "string",
+        "metadata": {
+          "description": "Cidr range for the public subnet.."
+        }
+      },
+      "publicSubnetName": {
+        "defaultValue": "public-subnet",
+        "type": "string",
+        "metadata": {
+          "description": "The name of the public subnet to create."
+        }
+      },
+      "vnetCidr": {
+        "defaultValue": "10.179.0.0/16",
+        "type": "string",
+        "metadata": {
+          "description": "Cidr range for the vnet."
+        }
+      },
+      "vnetName": {
+        "defaultValue": "databricks-vnet",
+        "type": "string",
+        "metadata": {
+          "description": "The name of the virtual network to create."
+        }
+      },
+      "workspaceName": {
+        "type": "string",
+        "metadata": {
+          "description": "The name of the Azure Databricks workspace to create."
+        },
+        "value": "GEN-UNIQUE"
+      }
+    },
+    "variables": {
+      "managedResourceGroupName": "[concat('databricks-rg-', parameters('workspaceName'), '-', uniqueString(parameters('workspaceName'), resourceGroup().id))]",
+      "managedResourceGroupId": "[subscriptionResourceId('Microsoft.Resources/resourceGroups', variables('managedResourceGroupName'))]",
+      "nsgId": "Microsoft.Network/networkSecurityGroups/databricks-nsg",
+      "vnetId": "Microsoft.Network/virtualNetworks/databricks-vnet"
+    },
+    "resources": [
+      {
+        "apiVersion": "2020-05-01",
+        "type": "Microsoft.Network/networkSecurityGroups",
+        "location": "[resourceGroup().location]",
+        "name": "databricks-nsg"
+      },
+      {
+        "type": "Microsoft.Network/publicIPAddresses",
+        "apiVersion": "2020-06-01",
+        "name": "myNATGatewayPublicIP",
+        "location": "[resourceGroup().location]",
+        "sku": {
+          "name": "Standard"
+        },
+        "properties": {
+          "publicIPAddressVersion": "IPv4",
+          "publicIPAllocationMethod": "Static",
+          "idleTimeoutInMinutes": 4
+        }
+      },
+      {
+        "type": "Microsoft.Network/natGateways",
+        "apiVersion": "2020-06-01",
+        "name": "myNATgateway",
+        "location": "[resourceGroup().location]",
+        "sku": {
+          "name": "Standard"
+        },
+        "dependsOn": [
+          "Microsoft.Network/publicIPAddresses/myNATGatewayPublicIP"
+        ],
+        "properties": {
+          "idleTimeoutInMinutes": 4,
+          "publicIpAddresses": [
+            {
+              "id": "Microsoft.Network/publicIPAddresses/myNATGatewayPublicIP"
+            }
+          ]
+        }
+      },
+      {
+        "apiVersion": "2020-05-01",
+        "type": "Microsoft.Network/virtualNetworks",
+        "location": "[resourceGroup().location]",
+        "name": "databricks-vnet",
+        "dependsOn": [
+          "Microsoft.Network/natGateways/myNATgateway",
+          "Microsoft.Network/networkSecurityGroups//databricks-nsg"
+        ],
+        "properties": {
+          "addressSpace": {
+            "addressPrefixes": [
+              "10.179.0.0/16"
+            ]
+          },
+          "subnets": [
+            {
+              "name": "public-subnet",
+              "properties": {
+                "addressPrefix": "10.179.64.0/18",
+                "networkSecurityGroup": {
+                  "id": "Microsoft.Network/networkSecurityGroups/databricks-nsg"
+                },
+                "natGateway": {
+                  "id": "Microsoft.Network/natGateways/myNATgateway"
+                },
+                "delegations": [
+                  {
+                    "name": "databricks-del-public",
+                    "properties": {
+                      "serviceName": "Microsoft.Databricks/workspaces"
+                    }
+                  }
+                ]
+              }
+            },
+            {
+              "name": "private-subnet",
+              "properties": {
+                "addressPrefix": "10.179.0.0/18",
+                "networkSecurityGroup": {
+                  "id": "Microsoft.Network/networkSecurityGroups/databricks-nsg"
+                },
+                "natGateway": {
+                  "id": "Microsoft.Network/natGateways/myNATgateway"
+                },
+                "delegations": [
+                  {
+                    "name": "databricks-del-private",
+                    "properties": {
+                      "serviceName": "Microsoft.Databricks/workspaces"
+                    }
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      },
+      {
+        "apiVersion": "2018-04-01",
+        "type": "Microsoft.Databricks/workspaces",
+        "location": "[resourceGroup().location]",
+        "name": "GEN-UNIQUE",
+        "dependsOn": [
+          "Microsoft.Network/networkSecurityGroups//databricks-nsg",
+          "Microsoft.Network/virtualNetworks//databricks-vnet"
+        ],
+        "sku": {
+          "name": "premium"
+        },
+        "comments": "The managed resource group specified will be locked after deployment.",
+        "properties": {
+          "ManagedResourceGroupId": "[subscriptionResourceId('Microsoft.Resources/resourceGroups', variables('managedResourceGroupName'))]",
+          "parameters": {
+            "customVirtualNetworkId": {
+              "value": "Microsoft.Network/virtualNetworks/databricks-vnet"
+            },
+            "customPublicSubnetName": {
+              "value": "public-subnet"
+            },
+            "customPrivateSubnetName": {
+              "value": "private-subnet"
+            },
+            "enableNoPublicIp": {
+              "value": false
+            }
+          }
+        }
+      }
+    ],
+    "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+  }
+}

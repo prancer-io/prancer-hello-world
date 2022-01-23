@@ -1,0 +1,401 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAzureQuickStart",
+  "paths": [
+    "/demos/oms-automation-solution/azuredeploy.json",
+    "/demos/oms-automation-solution/azuredeploy.parameters.json"
+  ],
+  "timestamp": 1642962900648,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/demos/oms-automation-solution/azuredeploy.json",
+      "/demos/oms-automation-solution/azuredeploy.parameters.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT748",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "microsoft.operationalinsights/workspaces",
+      "microsoft.operationsmanagement/solutions"
+    ]
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT748",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "location": {
+        "type": "string",
+        "defaultValue": "[resourceGroup().location]",
+        "metadata": {
+          "description": "Location for all resources"
+        }
+      },
+      "workspaceName": {
+        "type": "string",
+        "defaultValue": "",
+        "metadata": {
+          "description": "Specify the workspace name"
+        },
+        "value": "GEN-UNIQUE"
+      },
+      "workspaceSku": {
+        "type": "string",
+        "defaultValue": "standard",
+        "allowedValues": [
+          "free",
+          "pernode",
+          "standard"
+        ],
+        "metadata": {
+          "description": "Select the SKU for your workspace"
+        },
+        "value": "free"
+      }
+    },
+    "variables": {
+      "omsSolutions": {
+        "customSolution": {
+          "name": "AzureAutomationJobMonitoring",
+          "solutionName": "[concat('AzureAutomationJobMonitoring', '[', parameters('workspaceName'), ']')]",
+          "publisher": "cameron.fuller@catapultsystems.com",
+          "displayName": "Azure Automation Job Monitoring",
+          "description": "Monitor automation runbook jobs",
+          "author": "cameron.fuller@catapultsystems.com"
+        }
+      }
+    },
+    "resources": [
+      {
+        "apiVersion": "2020-08-01",
+        "name": "GEN-UNIQUE",
+        "type": "Microsoft.OperationalInsights/workspaces",
+        "location": "[resourceGroup().location]",
+        "properties": {
+          "sku": {
+            "name": "free"
+          }
+        },
+        "resources": [
+          {
+            "apiVersion": "2020-08-01",
+            "name": "(omsSolutions).customSolution.name",
+            "type": "views",
+            "location": "[resourceGroup().location]",
+            "dependsOn": [
+              "Microsoft.OperationalInsights/workspaces//GEN-UNIQUE"
+            ],
+            "properties": {
+              "Name": "Azure Automation Job Monitoring",
+              "Author": "cameron.fuller@catapultsystems.com",
+              "Source": "Local",
+              "Dashboard": [
+                {
+                  "Type": "Blade",
+                  "Version": 0,
+                  "Configuration": {
+                    "General": {
+                      "title": "Recent Azure Automation Jobs",
+                      "newGroup": false,
+                      "useIcon": false
+                    },
+                    "Header": {
+                      "Title": "Jobs run"
+                    },
+                    "Donut": {
+                      "Query": "Category=JobLogs  | measure count() by RunbookName_s",
+                      "CenterLegend": {
+                        "Text": "Total",
+                        "Operation": "Sum"
+                      },
+                      "Options": {
+                        "colors": [
+                          "#00188f",
+                          "#0072c6",
+                          "#00bcf2"
+                        ]
+                      }
+                    },
+                    "List": {
+                      "Query": "Category=JobLogs  | measure count() by RunbookName_s",
+                      "HideGraph": false,
+                      "enableSparklines": true,
+                      "operation": "Summary",
+                      "ColumnsTitle": {
+                        "Name": "Name",
+                        "Value": "Count"
+                      },
+                      "Color": "#0072c6",
+                      "thresholds": {
+                        "isEnabled": false,
+                        "values": [
+                          {
+                            "name": "Normal",
+                            "threshold": "Default",
+                            "color": "#009e49",
+                            "isDefault": true
+                          },
+                          {
+                            "name": "Warning",
+                            "threshold": "60",
+                            "color": "#fcd116",
+                            "isDefault": false
+                          },
+                          {
+                            "name": "Error",
+                            "threshold": "90",
+                            "color": "#ba141a",
+                            "isDefault": false
+                          }
+                        ]
+                      },
+                      "NavigationQuery": "{selected item}"
+                    }
+                  }
+                },
+                {
+                  "Type": "Blade",
+                  "Version": 0,
+                  "Configuration": {
+                    "General": {
+                      "title": "Recent Azure Automation Jobs",
+                      "newGroup": false,
+                      "useIcon": false
+                    },
+                    "Header": {
+                      "Title": "Jobs run"
+                    },
+                    "LineChart": {
+                      "Query": "Category=JobLogs NOT(ResultType=\"started\") | measure Count() by RunbookName_s | display linechart",
+                      "yAxis": {
+                        "isLogarithmic": false
+                      }
+                    },
+                    "List": {
+                      "Query": "Category=JobLogs NOT(ResultType=\"started\") | measure Count() by RunbookName_s",
+                      "HideGraph": false,
+                      "enableSparklines": true,
+                      "operation": "Summary",
+                      "ColumnsTitle": {
+                        "Name": "Type",
+                        "Value": "Count"
+                      },
+                      "Color": "#0072c6",
+                      "thresholds": {
+                        "isEnabled": false,
+                        "values": [
+                          {
+                            "name": "Normal",
+                            "threshold": "Default",
+                            "color": "#009e49",
+                            "isDefault": true
+                          },
+                          {
+                            "name": "Warning",
+                            "threshold": "60",
+                            "color": "#fcd116",
+                            "isDefault": false
+                          },
+                          {
+                            "name": "Error",
+                            "threshold": "90",
+                            "color": "#ba141a",
+                            "isDefault": false
+                          }
+                        ]
+                      },
+                      "NavigationQuery": "{selected item}"
+                    }
+                  }
+                },
+                {
+                  "Type": "Blade",
+                  "Version": 0,
+                  "Configuration": {
+                    "General": {
+                      "title": "Recent Azure Automation Job",
+                      "newGroup": false,
+                      "useIcon": false
+                    },
+                    "Header": {
+                      "Title": "Result"
+                    },
+                    "Donut": {
+                      "Query": "Category=JobLogs  | measure count() by ResultType",
+                      "CenterLegend": {
+                        "Text": "Total",
+                        "Operation": "Sum"
+                      },
+                      "Options": {
+                        "colors": [
+                          "#00188f",
+                          "#0072c6",
+                          "#00bcf2"
+                        ]
+                      }
+                    },
+                    "List": {
+                      "Query": "Category=JobLogs  | measure count() by ResultType",
+                      "HideGraph": false,
+                      "enableSparklines": false,
+                      "operation": "Summary",
+                      "ColumnsTitle": {
+                        "Name": "Results",
+                        "Value": "Count"
+                      },
+                      "Color": "#0072c6",
+                      "thresholds": {
+                        "isEnabled": false,
+                        "values": [
+                          {
+                            "name": "Normal",
+                            "threshold": "Default",
+                            "color": "#009e49",
+                            "isDefault": true
+                          },
+                          {
+                            "name": "Warning",
+                            "threshold": "60",
+                            "color": "#fcd116",
+                            "isDefault": false
+                          },
+                          {
+                            "name": "Error",
+                            "threshold": "90",
+                            "color": "#ba141a",
+                            "isDefault": false
+                          }
+                        ]
+                      },
+                      "NavigationQuery": "{selected item}"
+                    }
+                  }
+                },
+                {
+                  "Type": "Blade",
+                  "Version": 0,
+                  "Configuration": {
+                    "General": {
+                      "title": "Recent Azure Automation Job Streams",
+                      "newGroup": false,
+                      "useIcon": false
+                    },
+                    "Header": {
+                      "Title": "Job Streams"
+                    },
+                    "Donut": {
+                      "Query": "Category=JobStreams | measure count() by RunbookName_s",
+                      "CenterLegend": {
+                        "Text": "Total",
+                        "Operation": "Sum"
+                      },
+                      "Options": {
+                        "colors": [
+                          "#00188f",
+                          "#0072c6",
+                          "#00bcf2"
+                        ]
+                      }
+                    },
+                    "List": {
+                      "Query": "Category=JobStreams | measure count() by RunbookName_s",
+                      "HideGraph": false,
+                      "enableSparklines": false,
+                      "operation": "Summary",
+                      "ColumnsTitle": {
+                        "Name": "Computer",
+                        "Value": "Count"
+                      },
+                      "Color": "#0072c6",
+                      "thresholds": {
+                        "isEnabled": false,
+                        "values": [
+                          {
+                            "name": "Normal",
+                            "threshold": "Default",
+                            "color": "#009e49",
+                            "isDefault": true
+                          },
+                          {
+                            "name": "Warning",
+                            "threshold": "60",
+                            "color": "#fcd116",
+                            "isDefault": false
+                          },
+                          {
+                            "name": "Error",
+                            "threshold": "90",
+                            "color": "#ba141a",
+                            "isDefault": false
+                          }
+                        ]
+                      },
+                      "NavigationQuery": "{selected item}"
+                    }
+                  }
+                }
+              ],
+              "OverviewTile": {
+                "Type": "OverviewTile",
+                "Version": 0,
+                "Configuration": {
+                  "Donut": {
+                    "Query": "Category=JobLogs  | measure count() by RunbookName_s",
+                    "CenterLegend": {
+                      "Text": "Total",
+                      "Operation": "Sum"
+                    },
+                    "Options": {
+                      "colors": [
+                        "#00188f",
+                        "#0072c6",
+                        "#00bcf2"
+                      ]
+                    }
+                  },
+                  "Advanced": {
+                    "DataFlowVerification": {
+                      "Enabled": false,
+                      "Query": "*"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        ]
+      },
+      {
+        "name": "(omsSolutions).customSolution.solutionName",
+        "type": "Microsoft.OperationsManagement/solutions",
+        "apiVersion": "2015-11-01-preview",
+        "location": "[resourceGroup().location]",
+        "dependsOn": [
+          "Microsoft.OperationalInsights/workspaces//GEN-UNIQUE",
+          "Microsoft.OperationalInsights/workspaces/views/GEN-UNIQUE/(omsSolutions).customSolution.name"
+        ],
+        "plan": {
+          "name": "(omsSolutions).customSolution.solutionName",
+          "product": "(omsSolutions).customSolution.name",
+          "publisher": "(omsSolutions).customSolution.publisher",
+          "promotionCode": ""
+        },
+        "properties": {
+          "workspaceResourceId": "Microsoft.OperationalInsights/workspaces//GEN-UNIQUE",
+          "containedResources": [
+            "Microsoft.OperationalInsights/workspaces/views//GEN-UNIQUE/(omsSolutions).customSolution.name"
+          ]
+        }
+      }
+    ],
+    "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+  }
+}

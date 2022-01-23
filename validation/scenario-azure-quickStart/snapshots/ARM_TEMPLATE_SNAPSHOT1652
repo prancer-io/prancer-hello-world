@@ -1,0 +1,153 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAzureQuickStart",
+  "paths": [
+    "/quickstarts/microsoft.security/securitycenter-create-automation-for-alertnamecontains/azuredeploy.json",
+    "/quickstarts/microsoft.security/securitycenter-create-automation-for-alertnamecontains/azuredeploy.parameters.json"
+  ],
+  "timestamp": 1642962910056,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/quickstarts/microsoft.security/securitycenter-create-automation-for-alertnamecontains/azuredeploy.json",
+      "/quickstarts/microsoft.security/securitycenter-create-automation-for-alertnamecontains/azuredeploy.parameters.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT1652",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "microsoft.security/automations"
+    ]
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT1652",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "automationName": {
+        "type": "string",
+        "minLength": 3,
+        "maxLength": 24,
+        "value": "GEN-UNIQUE"
+      },
+      "location": {
+        "type": "string",
+        "defaultValue": "[resourceGroup().location]",
+        "metadata": {
+          "description": "Location for the automation"
+        }
+      },
+      "logicAppName": {
+        "type": "string",
+        "minLength": 3,
+        "value": "GET-PREREQ-logicAppName"
+      },
+      "logicAppResourceGroupName": {
+        "type": "string",
+        "minLength": 3,
+        "value": "GET-PREREQ-logicAppResourceGroupName"
+      },
+      "subscriptionId": {
+        "type": "string",
+        "defaultValue": "[subscription().subscriptionId]",
+        "metadata": {
+          "description": "The Azure resource GUID id of the subscription"
+        }
+      },
+      "alertSettings": {
+        "type": "object",
+        "metadata": {
+          "description": "The alert settings object used for deploying the automation"
+        },
+        "value": {
+          "name": "alertSettings",
+          "alertSeverityMapping": [
+            {
+              "expectedValue": "Virtual machine",
+              "jpath": "AlertDisplayName",
+              "severity": "high",
+              "operator": "Contains"
+            },
+            {
+              "expectedValue": "Virtual machine",
+              "jpath": "AlertDisplayName",
+              "severity": "medium",
+              "operator": "Contains"
+            },
+            {
+              "expectedValue": "Virtual machine",
+              "jpath": "AlertDisplayName",
+              "severity": "low",
+              "operator": "Contains"
+            }
+          ]
+        }
+      }
+    },
+    "variables": {
+      "automationDescription": "automation description for subscription {0}",
+      "scopeDescription": "automation scope for subscription {0}"
+    },
+    "resources": [
+      {
+        "type": "Microsoft.Security/automations",
+        "apiVersion": "2019-01-01-preview",
+        "name": "GEN-UNIQUE",
+        "location": "[resourceGroup().location]",
+        "properties": {
+          "description": "[format(variables('automationDescription'),'{0}', parameters('subscriptionId'))]",
+          "isEnabled": true,
+          "actions": [
+            {
+              "actionType": "LogicApp",
+              "logicAppResourceId": "Microsoft.Logic/workflows/GET-PREREQ-logicAppName",
+              "uri": "[listCallbackURL(resourceId(parameters('subscriptionId'), parameters('logicAppResourceGroupName'), 'Microsoft.Logic/workflows/triggers', parameters('logicAppName'), 'manual'), '2019-05-01').value]"
+            }
+          ],
+          "scopes": [
+            {
+              "description": "[format(variables('scopeDescription'),'{0}', parameters('subscriptionId'))]",
+              "scopePath": "[subscription().id]"
+            }
+          ],
+          "sources": [
+            {
+              "eventSource": "Alerts",
+              "eventVersionType": "Api",
+              "copy": [
+                {
+                  "name": "ruleSets",
+                  "count": 48,
+                  "input": {
+                    "rules": [
+                      {
+                        "propertyJPath": "alertSettings).alertSeverityMapping[copyIndex(ruleSets",
+                        "propertyType": "string",
+                        "expectedValue": "alertSettings).alertSeverityMapping[copyIndex(ruleSets",
+                        "operator": "alertSettings).alertSeverityMapping[copyIndex(ruleSets"
+                      },
+                      {
+                        "propertyJPath": "Severity",
+                        "propertyType": "string",
+                        "expectedValue": "alertSettings).alertSeverityMapping[copyIndex(ruleSets",
+                        "operator": "Equals"
+                      }
+                    ]
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      }
+    ],
+    "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+  }
+}

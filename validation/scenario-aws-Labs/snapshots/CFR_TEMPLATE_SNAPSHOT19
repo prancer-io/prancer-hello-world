@@ -1,0 +1,644 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAwsLabs",
+  "paths": [
+    "/aws/services/DMS/DMSAuroraToS3FullLoadAndOngoingReplication.json"
+  ],
+  "timestamp": 1642972590348,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "CFR_TEMPLATE_SNAPSHOT",
+    "type": "cloudformation",
+    "collection": "cloudformationtemplate",
+    "paths": [
+      "/aws/services/DMS/DMSAuroraToS3FullLoadAndOngoingReplication.json"
+    ],
+    "snapshotId": "CFR_TEMPLATE_SNAPSHOT19",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "aws::rds::dbclusterparametergroup",
+      "aws::ec2::vpc",
+      "aws::ec2::subnet",
+      "aws::rds::dbcluster",
+      "aws::ec2::routetable",
+      "aws::rds::dbsubnetgroup",
+      "aws::ec2::securitygroup",
+      "aws::s3::bucket",
+      "aws::iam::role",
+      "aws::ec2::route",
+      "aws::dms::replicationsubnetgroup",
+      "aws::ec2::internetgateway",
+      "aws::dms::endpoint",
+      "aws::rds::dbinstance",
+      "aws::ec2::subnetroutetableassociation",
+      "aws::dms::replicationinstance",
+      "aws::ec2::vpcgatewayattachment",
+      "aws::dms::replicationtask"
+    ]
+  },
+  "snapshotId": "CFR_TEMPLATE_SNAPSHOT19",
+  "collection": "cloudformationtemplate",
+  "json": {
+    "AWSTemplateFormatVersion": "2010-09-09",
+    "Description": "This CloudFormation sample template DMSAuroraToS3FullLoadAndOngoingReplication creates an Aurora RDS instance and DMS instance in a VPC, and a S3 bucket. The Aurora RDS instance is configured as the DMS Source Endpoint and the S3 bucket is configured as the DMS Target Endpoint. A DMS task is created and configured to migrate existing data and replicate ongoing changes from the source endpoint to the target endpoint. You will be billed for the AWS resources used if you create a stack from this template.",
+    "Parameters": {
+      "ClientIP": {
+        "Description": "The IP address range that can be used to connect to the RDS instances from your local machine. It must be a valid IP CIDR range of the form x.x.x.x/x. Pls get your address using checkip.amazonaws.com or whatsmyip.org",
+        "Type": "String",
+        "MinLength": "9",
+        "MaxLength": "18",
+        "Default": "0.0.0.0/0",
+        "AllowedPattern": "(\\d{1,3})\\.(\\d{1,3})\\.(\\d{1,3})\\.(\\d{1,3})/(\\d{1,2})",
+        "ConstraintDescription": "It must be a valid IP CIDR range of the form x.x.x.x/x. Suggest to enable access to your IP address only. Pls get your address using checkip.amazonaws.com or whatsmyip.org."
+      },
+      "ExistsDMSVPCRole": {
+        "Default": "N",
+        "Description": "If the dms-vpc-role exists in your account, please enter Y, else enter N",
+        "Type": "String",
+        "MinLength": "1",
+        "MaxLength": "1",
+        "AllowedPattern": "[YN]",
+        "ConstraintDescription": "Permitted value is Y or N."
+      },
+      "ExistsDMSCloudwatchRole": {
+        "Default": "N",
+        "Description": "If the dms-cloudwatch-logs-role exists in your account, please enter Y, else enter N",
+        "Type": "String",
+        "MinLength": "1",
+        "MaxLength": "1",
+        "AllowedPattern": "[YN]",
+        "ConstraintDescription": "Permitted value is Y or N."
+      }
+    },
+    "Conditions": {
+      "NotExistsDMSVPCRole": {
+        "Fn::Equals": [
+          {
+            "Ref": "ExistsDMSVPCRole"
+          },
+          "N"
+        ]
+      },
+      "NotExistsDMSCloudwatchRole": {
+        "Fn::Equals": [
+          {
+            "Ref": "ExistsDMSCloudwatchRole"
+          },
+          "N"
+        ]
+      }
+    },
+    "Resources": [
+      {
+        "Type": "AWS::EC2::VPC",
+        "Properties": {
+          "CidrBlock": "10.0.0.0/24",
+          "EnableDnsSupport": "true",
+          "EnableDnsHostnames": "true",
+          "Tags": [
+            {
+              "Key": "Application",
+              "Value": {
+                "Ref": "AWS::StackId"
+              }
+            },
+            {
+              "Key": "Name",
+              "Value": {
+                "Ref": "AWS::StackName"
+              }
+            }
+          ]
+        },
+        "Name": "VPC"
+      },
+      {
+        "Type": "AWS::EC2::Subnet",
+        "Properties": {
+          "VpcId": {
+            "Ref": "VPC"
+          },
+          "CidrBlock": "10.0.0.0/26",
+          "AvailabilityZone": {
+            "Fn::Select": [
+              "0",
+              {
+                "Fn::GetAZs": ""
+              }
+            ]
+          },
+          "Tags": [
+            {
+              "Key": "Application",
+              "Value": {
+                "Ref": "AWS::StackId"
+              }
+            }
+          ]
+        },
+        "Name": "DBSubnet1"
+      },
+      {
+        "Type": "AWS::EC2::Subnet",
+        "Properties": {
+          "VpcId": {
+            "Ref": "VPC"
+          },
+          "CidrBlock": "10.0.0.64/26",
+          "AvailabilityZone": {
+            "Fn::Select": [
+              "1",
+              {
+                "Fn::GetAZs": ""
+              }
+            ]
+          },
+          "Tags": [
+            {
+              "Key": "Application",
+              "Value": {
+                "Ref": "AWS::StackId"
+              }
+            }
+          ]
+        },
+        "Name": "DBSubnet2"
+      },
+      {
+        "Type": "AWS::EC2::InternetGateway",
+        "Properties": {
+          "Tags": [
+            {
+              "Key": "Application",
+              "Value": {
+                "Ref": "AWS::StackId"
+              }
+            }
+          ]
+        },
+        "Name": "InternetGateway"
+      },
+      {
+        "Type": "AWS::EC2::VPCGatewayAttachment",
+        "Properties": {
+          "VpcId": {
+            "Ref": "VPC"
+          },
+          "InternetGatewayId": {
+            "Ref": "InternetGateway"
+          }
+        },
+        "Name": "AttachGateway"
+      },
+      {
+        "Type": "AWS::EC2::RouteTable",
+        "Properties": {
+          "VpcId": {
+            "Ref": "VPC"
+          },
+          "Tags": [
+            {
+              "Key": "Application",
+              "Value": {
+                "Ref": "AWS::StackId"
+              }
+            }
+          ]
+        },
+        "Name": "RouteTable"
+      },
+      {
+        "Type": "AWS::EC2::Route",
+        "Properties": {
+          "RouteTableId": {
+            "Ref": "RouteTable"
+          },
+          "DestinationCidrBlock": "0.0.0.0/0",
+          "GatewayId": {
+            "Ref": "InternetGateway"
+          }
+        },
+        "DependsOn": [
+          "AttachGateway"
+        ],
+        "Name": "Route"
+      },
+      {
+        "Type": "AWS::EC2::SubnetRouteTableAssociation",
+        "Properties": {
+          "SubnetId": {
+            "Ref": "DBSubnet1"
+          },
+          "RouteTableId": {
+            "Ref": "RouteTable"
+          }
+        },
+        "Name": "SubnetRouteTableAssociation"
+      },
+      {
+        "Type": "AWS::EC2::SubnetRouteTableAssociation",
+        "Properties": {
+          "SubnetId": {
+            "Ref": "DBSubnet2"
+          },
+          "RouteTableId": {
+            "Ref": "RouteTable"
+          }
+        },
+        "Name": "SubnetRouteTableAssociation1"
+      },
+      {
+        "Type": "AWS::RDS::DBSubnetGroup",
+        "Properties": {
+          "DBSubnetGroupDescription": "Subnets available for the Aurora SampleDB DB Instance",
+          "SubnetIds": [
+            {
+              "Ref": "DBSubnet1"
+            },
+            {
+              "Ref": "DBSubnet2"
+            }
+          ]
+        },
+        "Name": "AuroraDBSubnetGroup"
+      },
+      {
+        "Type": "AWS::EC2::SecurityGroup",
+        "Properties": {
+          "GroupDescription": "Security group for Aurora SampleDB DB Instance",
+          "GroupName": "Aurora SampleDB Security Group",
+          "VpcId": {
+            "Ref": "VPC"
+          },
+          "SecurityGroupIngress": [
+            {
+              "IpProtocol": "tcp",
+              "FromPort": "3306",
+              "ToPort": "3306",
+              "CidrIp": "0.0.0.0/0"
+            },
+            {
+              "IpProtocol": "tcp",
+              "FromPort": "3306",
+              "ToPort": "3306",
+              "CidrIp": "10.0.0.0/24"
+            }
+          ]
+        },
+        "Name": "AuroraSecurityGroup"
+      },
+      {
+        "Type": "AWS::RDS::DBClusterParameterGroup",
+        "Properties": {
+          "Description": "Enables bin_log prerequisites",
+          "Family": "aurora5.6",
+          "Parameters": {
+            "binlog_format": "ROW",
+            "binlog_checksum": "NONE"
+          }
+        },
+        "Name": "AuroraClusterParameterGroup"
+      },
+      {
+        "Type": "AWS::RDS::DBCluster",
+        "Properties": {
+          "DatabaseName": "dms_sample",
+          "DBClusterParameterGroupName": {
+            "Ref": "AuroraClusterParameterGroup"
+          },
+          "DBSubnetGroupName": {
+            "Ref": "AuroraDBSubnetGroup"
+          },
+          "Engine": "aurora",
+          "SnapshotIdentifier": "arn:aws:rds:us-east-1:343299325021:cluster-snapshot:dms-sampledb-snapshot",
+          "VpcSecurityGroupIds": [
+            {
+              "Ref": "AuroraSecurityGroup"
+            }
+          ]
+        },
+        "Name": "AuroraCluster"
+      },
+      {
+        "Type": "AWS::RDS::DBInstance",
+        "Properties": {
+          "DBClusterIdentifier": {
+            "Ref": "AuroraCluster"
+          },
+          "DBInstanceClass": "db.t2.medium",
+          "DBInstanceIdentifier": "dms-sample",
+          "DBSubnetGroupName": {
+            "Ref": "AuroraDBSubnetGroup"
+          },
+          "Engine": "aurora",
+          "MultiAZ": "false",
+          "PubliclyAccessible": "true",
+          "Tags": [
+            {
+              "Key": "Application",
+              "Value": {
+                "Ref": "AWS::StackId"
+              }
+            }
+          ]
+        },
+        "DependsOn": [
+          "AuroraCluster"
+        ],
+        "Name": "AuroraDB"
+      },
+      {
+        "Type": "AWS::S3::Bucket",
+        "Properties": {
+          "AccessControl": "Private"
+        },
+        "Name": "S3Bucket"
+      },
+      {
+        "Type": "AWS::IAM::Role",
+        "Condition": "NotExistsDMSCloudwatchRole",
+        "Properties": {
+          "RoleName": "dms-cloudwatch-logs-role",
+          "AssumeRolePolicyDocument": {
+            "Version": "2012-10-17",
+            "Statement": [
+              {
+                "Effect": "Allow",
+                "Principal": {
+                  "Service": [
+                    "dms.amazonaws.com"
+                  ]
+                },
+                "Action": [
+                  "sts:AssumeRole"
+                ]
+              }
+            ]
+          },
+          "ManagedPolicyArns": [
+            "arn:aws:iam::aws:policy/service-role/AmazonDMSCloudWatchLogsRole"
+          ],
+          "Path": "/"
+        },
+        "Name": "DMSCloudwatchRole"
+      },
+      {
+        "Type": "AWS::IAM::Role",
+        "Condition": "NotExistsDMSVPCRole",
+        "Properties": {
+          "RoleName": "dms-vpc-role",
+          "AssumeRolePolicyDocument": {
+            "Version": "2012-10-17",
+            "Statement": [
+              {
+                "Effect": "Allow",
+                "Principal": {
+                  "Service": [
+                    "dms.amazonaws.com"
+                  ]
+                },
+                "Action": [
+                  "sts:AssumeRole"
+                ]
+              }
+            ]
+          },
+          "ManagedPolicyArns": [
+            "arn:aws:iam::aws:policy/service-role/AmazonDMSVPCManagementRole"
+          ],
+          "Path": "/"
+        },
+        "Name": "DMSVpcRole"
+      },
+      {
+        "Type": "AWS::IAM::Role",
+        "Properties": {
+          "RoleName": "dms-s3-target-role",
+          "AssumeRolePolicyDocument": {
+            "Version": "2012-10-17",
+            "Statement": [
+              {
+                "Effect": "Allow",
+                "Principal": {
+                  "Service": [
+                    "dms.amazonaws.com"
+                  ]
+                },
+                "Action": [
+                  "sts:AssumeRole"
+                ]
+              }
+            ]
+          },
+          "Path": "/",
+          "Policies": [
+            {
+              "PolicyName": "S3AccessForDMSPolicy",
+              "PolicyDocument": {
+                "Version": "2012-10-17",
+                "Statement": [
+                  {
+                    "Effect": "Allow",
+                    "Action": [
+                      "s3:PutObject",
+                      "s3:DeleteObject"
+                    ],
+                    "Resource": [
+                      {
+                        "Fn::GetAtt": [
+                          "S3Bucket",
+                          "Arn"
+                        ]
+                      },
+                      {
+                        "Fn::Join": [
+                          "",
+                          [
+                            {
+                              "Fn::GetAtt": [
+                                "S3Bucket",
+                                "Arn"
+                              ]
+                            },
+                            "/*"
+                          ]
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "Effect": "Allow",
+                    "Action": "s3:ListBucket",
+                    "Resource": {
+                      "Fn::GetAtt": [
+                        "S3Bucket",
+                        "Arn"
+                      ]
+                    }
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        "DependsOn": [
+          "S3Bucket"
+        ],
+        "Name": "S3TargetDMSRole"
+      },
+      {
+        "Type": "AWS::DMS::ReplicationSubnetGroup",
+        "Properties": {
+          "ReplicationSubnetGroupDescription": "Subnets available for DMS",
+          "SubnetIds": [
+            {
+              "Ref": "DBSubnet1"
+            },
+            {
+              "Ref": "DBSubnet2"
+            }
+          ]
+        },
+        "Name": "DMSReplicationSubnetGroup"
+      },
+      {
+        "Type": "AWS::EC2::SecurityGroup",
+        "Properties": {
+          "GroupDescription": "Security group for DMS Instance",
+          "GroupName": "DMS Demo Security Group",
+          "VpcId": {
+            "Ref": "VPC"
+          }
+        },
+        "Name": "DMSSecurityGroup"
+      },
+      {
+        "Type": "AWS::DMS::ReplicationInstance",
+        "Properties": {
+          "AvailabilityZone": {
+            "Fn::GetAtt": [
+              "DBSubnet1",
+              "AvailabilityZone"
+            ]
+          },
+          "PubliclyAccessible": false,
+          "ReplicationInstanceClass": "dms.t2.small",
+          "ReplicationInstanceIdentifier": "aurora-s3-repinstance-sampledb",
+          "ReplicationSubnetGroupIdentifier": {
+            "Ref": "DMSReplicationSubnetGroup"
+          },
+          "VpcSecurityGroupIds": [
+            {
+              "Ref": "DMSSecurityGroup"
+            }
+          ]
+        },
+        "DependsOn": [
+          "DMSReplicationSubnetGroup",
+          "DMSSecurityGroup"
+        ],
+        "Name": "DMSReplicationInstance"
+      },
+      {
+        "Type": "AWS::DMS::Endpoint",
+        "Properties": {
+          "EndpointType": "source",
+          "EngineName": "AURORA",
+          "Password": "password",
+          "Port": 3306,
+          "ServerName": {
+            "Fn::GetAtt": [
+              "AuroraCluster",
+              "Endpoint.Address"
+            ]
+          },
+          "Username": "admin"
+        },
+        "DependsOn": [
+          "DMSReplicationInstance",
+          "AuroraCluster",
+          "AuroraDB"
+        ],
+        "Name": "AuroraSourceEndpoint"
+      },
+      {
+        "Type": "AWS::DMS::Endpoint",
+        "Properties": {
+          "EndpointType": "target",
+          "EngineName": "S3",
+          "ExtraConnectionAttributes": "addColumnName=true",
+          "S3Settings": {
+            "BucketName": {
+              "Ref": "S3Bucket"
+            },
+            "ServiceAccessRoleArn": {
+              "Fn::GetAtt": [
+                "S3TargetDMSRole",
+                "Arn"
+              ]
+            }
+          }
+        },
+        "DependsOn": [
+          "DMSReplicationInstance",
+          "S3Bucket",
+          "S3TargetDMSRole"
+        ],
+        "Name": "S3TargetEndpoint"
+      },
+      {
+        "Type": "AWS::DMS::ReplicationTask",
+        "Properties": {
+          "MigrationType": "full-load-and-cdc",
+          "ReplicationInstanceArn": {
+            "Ref": "DMSReplicationInstance"
+          },
+          "ReplicationTaskSettings": "{ \"Logging\" : { \"EnableLogging\" : true, \"LogComponents\": [ { \"Id\" : \"SOURCE_UNLOAD\", \"Severity\" : \"LOGGER_SEVERITY_DEFAULT\" }, { \"Id\" : \"SOURCE_CAPTURE\", \"Severity\" : \"LOGGER_SEVERITY_DEFAULT\" }, { \"Id\" : \"TARGET_LOAD\", \"Severity\" : \"LOGGER_SEVERITY_DEFAULT\" }, { \"Id\" : \"TARGET_APPLY\", \"Severity\" : \"LOGGER_SEVERITY_DEFAULT\" } ] } }",
+          "SourceEndpointArn": {
+            "Ref": "AuroraSourceEndpoint"
+          },
+          "TableMappings": "{ \"rules\": [ { \"rule-type\" : \"selection\", \"rule-id\" : \"1\", \"rule-name\" : \"1\", \"object-locator\" : { \"schema-name\" : \"dms_sample\", \"table-name\" : \"%\" }, \"rule-action\" : \"include\" } ] }",
+          "TargetEndpointArn": {
+            "Ref": "S3TargetEndpoint"
+          }
+        },
+        "DependsOn": [
+          "AuroraSourceEndpoint",
+          "S3TargetEndpoint",
+          "DMSReplicationInstance"
+        ],
+        "Name": "DMSReplicationTask"
+      }
+    ],
+    "Outputs": {
+      "StackName": {
+        "Value": {
+          "Ref": "AWS::StackName"
+        }
+      },
+      "RegionName": {
+        "Value": {
+          "Ref": "AWS::Region"
+        }
+      },
+      "S3BucketName": {
+        "Value": {
+          "Ref": "S3Bucket"
+        }
+      },
+      "AuroraEndpoint": {
+        "Value": {
+          "Fn::GetAtt": [
+            "AuroraCluster",
+            "Endpoint.Address"
+          ]
+        }
+      }
+    }
+  }
+}

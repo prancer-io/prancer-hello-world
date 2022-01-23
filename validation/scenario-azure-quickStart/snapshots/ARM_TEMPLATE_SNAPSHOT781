@@ -1,0 +1,661 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAzureQuickStart",
+  "paths": [
+    "/demos/oms-vmm-analytics/azuredeploy.json",
+    "/demos/oms-vmm-analytics/azuredeploy.parameters.json"
+  ],
+  "timestamp": 1642962901114,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/demos/oms-vmm-analytics/azuredeploy.json",
+      "/demos/oms-vmm-analytics/azuredeploy.parameters.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT781",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "microsoft.operationalinsights/workspaces",
+      "microsoft.operationsmanagement/solutions",
+      "microsoft.automation/automationaccounts"
+    ]
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT781",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "workspaceName": {
+        "type": "string",
+        "metadata": {
+          "description": "Specify the name of the OMS workspace"
+        },
+        "value": "GEN-UNIQUE-10"
+      },
+      "location": {
+        "type": "string",
+        "defaultValue": "[resourceGroup().location]",
+        "metadata": {
+          "description": "Specify the region for all resources"
+        }
+      },
+      "pricingTier": {
+        "type": "string",
+        "defaultValue": "Free",
+        "metadata": {
+          "description": "Specify the pricing tier"
+        },
+        "value": "perNode"
+      },
+      "automationName": {
+        "type": "string",
+        "metadata": {
+          "description": "Specify the name of the Azure Automation account"
+        },
+        "value": "GEN-UNIQUE-20"
+      },
+      "vmmServers": {
+        "type": "string",
+        "metadata": {
+          "description": "Specify the comma seperated list of the on-prem VMM server(s)"
+        },
+        "value": "GEN-UNIQUE-30"
+      }
+    },
+    "variables": {
+      "omsSolutions": {
+        "customSolution": {
+          "name": "VMM Analytics",
+          "solutionName": "[concat('VMMAnalytics', '[', parameters('workspaceName'), ']')]",
+          "publisher": "veharshv@microsoft.com",
+          "displayName": "VMM Analytics",
+          "description": "Monitor and analyze your VMM jobs",
+          "author": "veharshv@microsoft.com"
+        }
+      },
+      "omsWorkspaceId": "workspaceId",
+      "omsWorkspaceKey": "workspaceKey",
+      "vmmServersVariable": "vmmServers",
+      "lastRunTimeVariable": "lastRunTime",
+      "runbooks": {
+        "vmmAnalytics": {
+          "name": "vmmanalytics",
+          "version": "1.0.0.0",
+          "description": "Runbook to automatically ingest VMM Job data and events into OMS Log Analytics",
+          "type": "PowerShell",
+          "uri": "https://raw.githubusercontent.com/krnese/AzureDeploy/master/OMS/MSOMS/Solutions/vmm/scripts/vmmanalytics.ps1"
+        }
+      }
+    },
+    "resources": [
+      {
+        "apiVersion": "2021-06-01",
+        "name": "GEN-UNIQUE-10",
+        "type": "Microsoft.OperationalInsights/workspaces",
+        "location": "[resourceGroup().location]",
+        "properties": {
+          "sku": {
+            "name": "perNode"
+          }
+        },
+        "resources": [
+          {
+            "apiVersion": "2015-11-01-preview",
+            "name": "(omsSolutions).customSolution.name",
+            "type": "views",
+            "location": "[resourceGroup().location]",
+            "dependsOn": [
+              "Microsoft.OperationalInsights/workspaces//GEN-UNIQUE-10"
+            ],
+            "properties": {
+              "Name": "(omsSolutions).customSolution.name",
+              "DisplayName": "(omsSolutions).customSolution.displayName",
+              "Description": "(omsSolutions).customSolution.description",
+              "Author": "(omsSolutions).customSolution.author",
+              "Source": "Local",
+              "Dashboard": [
+                {
+                  "Type": "Blade",
+                  "Version": 0,
+                  "Configuration": {
+                    "General": {
+                      "title": "Error Distribution by VMM Server",
+                      "newGroup": false,
+                      "useIcon": false
+                    },
+                    "Header": {
+                      "Title": "Errors"
+                    },
+                    "Donut": {
+                      "Query": "Type=VMMjobs_CL ErrorInfo_s!=\"Success (0)\" | measure count() by VMMServer_s",
+                      "CenterLegend": {
+                        "Text": "Total",
+                        "Operation": "Sum"
+                      },
+                      "Options": {
+                        "colors": [
+                          "#00188f",
+                          "#0072c6",
+                          "#00bcf2"
+                        ]
+                      }
+                    },
+                    "List": {
+                      "Query": "Type=VMMjobs_CL ErrorInfo_s!=\"Success (0)\" |measure count() by VMMServer_s",
+                      "HideGraph": false,
+                      "enableSparklines": true,
+                      "operation": "Summary",
+                      "ColumnsTitle": {
+                        "Name": "VMM Server",
+                        "Value": "Count"
+                      },
+                      "Color": "#0072c6",
+                      "thresholds": {
+                        "isEnabled": false,
+                        "values": [
+                          {
+                            "name": "Normal",
+                            "threshold": "Default",
+                            "color": "#009e49",
+                            "isDefault": true
+                          },
+                          {
+                            "name": "Warning",
+                            "threshold": "60",
+                            "color": "#fcd116",
+                            "isDefault": false
+                          },
+                          {
+                            "name": "Error",
+                            "threshold": "90",
+                            "color": "#ba141a",
+                            "isDefault": false
+                          }
+                        ]
+                      },
+                      "NavigationQuery": "Type=VMMjobs_CL ErrorInfo_s!= \"Success (0)\" {selected item}"
+                    }
+                  }
+                },
+                {
+                  "Type": "Blade",
+                  "Version": 0,
+                  "Configuration": {
+                    "General": {
+                      "title": "Errors over time",
+                      "newGroup": false,
+                      "useIcon": false
+                    },
+                    "Header": {
+                      "Title": "Errors over time"
+                    },
+                    "LineChart": {
+                      "Query": "Type=VMMjobs_CL ErrorInfo_s!= \"Success (0)\"  | measure count() by ErrorInfo_s| display linechart ",
+                      "Callout": {
+                        "Title": "Avg per 30",
+                        "Operation": "Average"
+                      },
+                      "yAxis": {
+                        "isLogarithmic": false
+                      }
+                    },
+                    "List": {
+                      "Query": "Type=VMMjobs_CL ErrorInfo_s!= \"Success (0)\"  | measure count() by ErrorInfo_s",
+                      "HideGraph": false,
+                      "enableSparklines": false,
+                      "operation": "Summary",
+                      "ColumnsTitle": {
+                        "Name": "Type",
+                        "Value": "Count"
+                      },
+                      "Color": "#0072c6",
+                      "thresholds": {
+                        "isEnabled": false,
+                        "values": [
+                          {
+                            "name": "Normal",
+                            "threshold": "Default",
+                            "color": "#009e49",
+                            "isDefault": true
+                          },
+                          {
+                            "name": "Warning",
+                            "threshold": "60",
+                            "color": "#fcd116",
+                            "isDefault": false
+                          },
+                          {
+                            "name": "Error",
+                            "threshold": "90",
+                            "color": "#ba141a",
+                            "isDefault": false
+                          }
+                        ]
+                      },
+                      "NavigationQuery": "{selected item}"
+                    }
+                  }
+                },
+                {
+                  "Type": "Blade",
+                  "Version": 0,
+                  "Configuration": {
+                    "General": {
+                      "title": "Data type distribution",
+                      "newGroup": false,
+                      "useIcon": false
+                    },
+                    "Header": {
+                      "Title": "Data types over time"
+                    },
+                    "LineChart": {
+                      "Query": "Type=VMMjobs_CL ErrorInfo_s!= \"Success (0)\" |measure count() by TimeGenerated, ErrorInfo_s, VMMServer_s interval 15minutes | display linechart",
+                      "yAxis": {
+                        "isLogarithmic": false
+                      }
+                    },
+                    "List": {
+                      "Query": "Type=VMMjobs_CL ErrorInfo_s!= \"Success (0)\" |measure count() by TimeGenerated, ErrorInfo_s, VMMServer_s interval 15minutes | display linechart",
+                      "HideGraph": false,
+                      "enableSparklines": false,
+                      "operation": "Summary",
+                      "ColumnsTitle": {
+                        "Name": "Type",
+                        "Value": "Count"
+                      },
+                      "Color": "#0072c6",
+                      "thresholds": {
+                        "isEnabled": false,
+                        "values": [
+                          {
+                            "name": "Normal",
+                            "threshold": "Default",
+                            "color": "#009e49",
+                            "isDefault": true
+                          },
+                          {
+                            "name": "Warning",
+                            "threshold": "60",
+                            "color": "#fcd116",
+                            "isDefault": false
+                          },
+                          {
+                            "name": "Error",
+                            "threshold": "90",
+                            "color": "#ba141a",
+                            "isDefault": false
+                          }
+                        ]
+                      },
+                      "NavigationQuery": "Type=VMMjobs_CL ErrorInfo_s!= \"Success (0)\" {selected item}"
+                    }
+                  }
+                },
+                {
+                  "Type": "Blade",
+                  "Version": 0,
+                  "Configuration": {
+                    "General": {
+                      "title": "VMM Failed Jobs",
+                      "newGroup": false,
+                      "useIcon": false
+                    },
+                    "Header": {
+                      "Title": "Failed Jobs"
+                    },
+                    "Donut": {
+                      "Query": "Type=VMMjobs_CL ErrorInfo_s!= \"Success (0)\" | measure count() by JobName_s",
+                      "CenterLegend": {
+                        "Text": "Total",
+                        "Operation": "Sum"
+                      },
+                      "Options": {
+                        "colors": [
+                          "#00188f",
+                          "#0072c6",
+                          "#00bcf2"
+                        ]
+                      }
+                    },
+                    "List": {
+                      "Query": "Type=VMMjobs_CL ErrorInfo_s!= \"Success (0)\" | measure count() by JobName_s",
+                      "HideGraph": false,
+                      "enableSparklines": false,
+                      "operation": "Summary",
+                      "ColumnsTitle": {
+                        "Name": "Jobs",
+                        "Value": "Failed"
+                      },
+                      "Color": "#0072c6",
+                      "thresholds": {
+                        "isEnabled": false,
+                        "values": [
+                          {
+                            "name": "Normal",
+                            "threshold": "Default",
+                            "color": "#009e49",
+                            "isDefault": true
+                          },
+                          {
+                            "name": "Warning",
+                            "threshold": "60",
+                            "color": "#fcd116",
+                            "isDefault": false
+                          },
+                          {
+                            "name": "Error",
+                            "threshold": "90",
+                            "color": "#ba141a",
+                            "isDefault": false
+                          }
+                        ]
+                      },
+                      "NavigationQuery": "Type=VMMjobs_CL ErrorInfo_s!= \"Success (0)\" {selected item}"
+                    }
+                  }
+                },
+                {
+                  "Type": "Blade",
+                  "Version": 0,
+                  "Configuration": {
+                    "General": {
+                      "title": "Distribution by Errors",
+                      "newGroup": false,
+                      "useIcon": false
+                    },
+                    "Header": {
+                      "Title": "Total Errors"
+                    },
+                    "Donut": {
+                      "Query": "Type=VMMjobs_CL ErrorInfo_s!= \"Success (0)\" | measure count() by ErrorInfo_s",
+                      "CenterLegend": {
+                        "Text": "Total",
+                        "Operation": "Sum"
+                      },
+                      "Options": {
+                        "colors": [
+                          "#00188f",
+                          "#0072c6",
+                          "#00bcf2"
+                        ]
+                      }
+                    },
+                    "List": {
+                      "Query": "Type=VMMjobs_CL ErrorInfo_s!= \"Success (0)\" | measure count() by ErrorInfo_s",
+                      "HideGraph": false,
+                      "enableSparklines": true,
+                      "operation": "Summary",
+                      "ColumnsTitle": {
+                        "Name": "Errors",
+                        "Value": "Count"
+                      },
+                      "Color": "#0072c6",
+                      "thresholds": {
+                        "isEnabled": false,
+                        "values": [
+                          {
+                            "name": "Normal",
+                            "threshold": "Default",
+                            "color": "#009e49",
+                            "isDefault": true
+                          },
+                          {
+                            "name": "Warning",
+                            "threshold": "60",
+                            "color": "#fcd116",
+                            "isDefault": false
+                          },
+                          {
+                            "name": "Error",
+                            "threshold": "90",
+                            "color": "#ba141a",
+                            "isDefault": false
+                          }
+                        ]
+                      },
+                      "NavigationQuery": "Type=VMMjobs_CL {selected item}"
+                    }
+                  }
+                },
+                {
+                  "Type": "Blade",
+                  "Version": 0,
+                  "Configuration": {
+                    "General": {
+                      "title": "VMM Insights - Jobs",
+                      "newGroup": false,
+                      "useIcon": false
+                    },
+                    "Header": {
+                      "Title": "Total Jobs"
+                    },
+                    "Donut": {
+                      "Query": "Type:VMMjobs_CL | measure Count() by JobName_s",
+                      "CenterLegend": {
+                        "Text": "Jobs",
+                        "Operation": "Sum"
+                      },
+                      "Options": {
+                        "colors": [
+                          "#00188f",
+                          "#0072c6",
+                          "#00bcf2"
+                        ]
+                      }
+                    },
+                    "List": {
+                      "Query": "Type=VMMjobs_CL | measure Count() by JobName_s",
+                      "HideGraph": false,
+                      "enableSparklines": false,
+                      "operation": "Summary",
+                      "ColumnsTitle": {
+                        "Name": "Jobs",
+                        "Value": "Count"
+                      },
+                      "Color": "#0072c6",
+                      "thresholds": {
+                        "isEnabled": false,
+                        "values": [
+                          {
+                            "name": "Normal",
+                            "threshold": "Default",
+                            "color": "#009e49",
+                            "isDefault": true
+                          },
+                          {
+                            "name": "Warning",
+                            "threshold": "60",
+                            "color": "#fcd116",
+                            "isDefault": false
+                          },
+                          {
+                            "name": "Error",
+                            "threshold": "90",
+                            "color": "#ba141a",
+                            "isDefault": false
+                          }
+                        ]
+                      },
+                      "NavigationQuery": "{selected item}"
+                    }
+                  }
+                },
+                {
+                  "Type": "Blade",
+                  "Version": 0,
+                  "Configuration": {
+                    "General": {
+                      "title": "List of queries",
+                      "newGroup": false,
+                      "preselectedFilters": "Type, Computer",
+                      "renderMode": "default"
+                    },
+                    "queries": [
+                      {
+                        "query": "Type=VMMjobs_CL | measure count(), percentile25(Duration_d) as Perc25, percentile50(Duration_d) as Perc50,  percentile75(Duration_d) as Perc75, percentile90(Duration_d) as Perc90 by JobName_s",
+                        "displayName": "Performance analysis (All runs)"
+                      },
+                      {
+                        "query": "Type=VMMjobs_CL AND ErrorInfo_s= \"Success (0)\" | measure count(), percentile25(Duration_d) as Perc25, percentile50(Duration_d) as Perc50,  percentile75(Duration_d) as Perc75, percentile90(Duration_d) as Perc90 by JobName_s",
+                        "displayName": "Performance analysis (Successful runs)"
+                      },
+                      {
+                        "query": "Type=VMMjobs_CL | measure count() by VMMServer_s, JobName_s, Status_s | sort VMMServer_s, JobName_s, Status_s",
+                        "displayName": "Job failure analysis for each job type and host"
+                      }
+                    ]
+                  }
+                }
+              ],
+              "OverviewTile": {
+                "Type": "OverviewTile",
+                "Version": 0,
+                "Configuration": {
+                  "Donut": {
+                    "Query": "Type=VMMjobs_CL  | measure count() by Type",
+                    "CenterLegend": {
+                      "Text": "Total",
+                      "Operation": "Sum"
+                    },
+                    "Options": {
+                      "colors": [
+                        "#00188f",
+                        "#0072c6",
+                        "#00bcf2"
+                      ]
+                    }
+                  },
+                  "Advanced": {
+                    "DataFlowVerification": {
+                      "Enabled": false,
+                      "Query": "*"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        ]
+      },
+      {
+        "name": "(omsSolutions).customSolution.solutionName",
+        "type": "Microsoft.OperationsManagement/solutions",
+        "apiVersion": "2015-11-01-preview",
+        "location": "[resourceGroup().location]",
+        "dependsOn": [
+          "Microsoft.OperationalInsights/workspaces//GEN-UNIQUE-10",
+          "Microsoft.OperationalInsights/workspaces/views/GEN-UNIQUE-10/(omsSolutions).customSolution.name"
+        ],
+        "plan": {
+          "name": "(omsSolutions).customSolution.solutionName",
+          "product": "(omsSolutions).customSolution.name",
+          "publisher": "(omsSolutions).customSolution.publisher",
+          "promotionCode": ""
+        },
+        "properties": {
+          "workspaceResourceId": "Microsoft.OperationalInsights/workspaces//GEN-UNIQUE-10",
+          "containedResources": [
+            "Microsoft.OperationalInsights/workspaces/views//GEN-UNIQUE-10/(omsSolutions).customSolution.name"
+          ]
+        }
+      },
+      {
+        "type": "Microsoft.Automation/automationAccounts",
+        "apiVersion": "2015-10-31",
+        "name": "GEN-UNIQUE-20",
+        "location": "[resourceGroup().location]",
+        "dependsOn": [
+          "Microsoft.OperationalInsights/workspaces//GEN-UNIQUE-10"
+        ],
+        "properties": {
+          "sku": {
+            "name": "Basic"
+          }
+        },
+        "resources": [
+          {
+            "type": "variables",
+            "apiVersion": "2015-10-31",
+            "name": "workspaceId",
+            "location": "[resourceGroup().location]",
+            "dependsOn": [
+              "Microsoft.Automation/automationAccounts//GEN-UNIQUE-20"
+            ],
+            "properties": {
+              "description": "OMS Workspace Id",
+              "value": "[concat('\"',reference(resourceId('Microsoft.OperationalInsights/workspaces/', parameters('workspaceName')),'2021-06-01').customerId,'\"')]"
+            }
+          },
+          {
+            "type": "variables",
+            "apiVersion": "2021-04-01",
+            "name": "lastRunTime",
+            "location": "[resourceGroup().location]",
+            "dependsOn": [
+              "Microsoft.Automation/automationAccounts//GEN-UNIQUE-20"
+            ],
+            "properties": {
+              "description": "LastRunTime variable"
+            }
+          },
+          {
+            "type": "variables",
+            "apiVersion": "2021-04-01",
+            "name": "vmmServers",
+            "location": "[resourceGroup().location]",
+            "dependsOn": [
+              "Microsoft.Automation/automationAccounts//GEN-UNIQUE-20"
+            ],
+            "properties": {
+              "description": "VMMServers",
+              "value": "\"GEN-UNIQUE-30\""
+            }
+          },
+          {
+            "type": "variables",
+            "apiVersion": "2021-04-01",
+            "name": "workspaceKey",
+            "location": "[resourceGroup().location]",
+            "dependsOn": [
+              "Microsoft.Automation/automationAccounts//GEN-UNIQUE-20"
+            ],
+            "properties": {
+              "description": "OMS Workspace key",
+              "value": "[concat('\"',listKeys(resourceId('Microsoft.OperationalInsights/workspaces/', parameters('workspaceName')), '2021-06-01').primarySharedKey,'\"')]"
+            }
+          },
+          {
+            "name": "(runbooks).vmmAnalytics.name",
+            "type": "runbooks",
+            "apiVersion": "2020-01-13-preview",
+            "location": "[resourceGroup().location]",
+            "dependsOn": [
+              "Microsoft.Automation/automationAccounts//GEN-UNIQUE-20",
+              "Microsoft.Automation/automationAccounts/variables/GEN-UNIQUE-20/workspaceId",
+              "Microsoft.Automation/automationAccounts/variables/GEN-UNIQUE-20/workspaceKey"
+            ],
+            "properties": {
+              "runbookType": "(runbooks).vmmAnalytics.type",
+              "logProgress": false,
+              "logVerbose": false,
+              "description": "(runbooks).vmmAnalytics.description",
+              "publishContentLink": {
+                "uri": "(runbooks).vmmAnalytics.uri",
+                "version": "(runbooks).vmmAnalytics.version"
+              }
+            }
+          }
+        ]
+      }
+    ],
+    "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+  }
+}

@@ -1,0 +1,129 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAzureQuickStart",
+  "paths": [
+    "/application-workloads/sonarqube/sonarqube-azuresql/nested/azureDBDeploy.json"
+  ],
+  "timestamp": 1642962896312,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/application-workloads/sonarqube/sonarqube-azuresql/nested/azureDBDeploy.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT522",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "microsoft.sql/servers"
+    ]
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT522",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "adminLogin": {
+        "type": "string",
+        "minLength": 1
+      },
+      "adminPassword": {
+        "type": "securestring"
+      },
+      "sonarSqlName": {
+        "type": "string",
+        "minLength": 1,
+        "defaultValue": "sonarsql"
+      },
+      "sonarDbName": {
+        "type": "string",
+        "minLength": 1,
+        "defaultValue": "sonar"
+      },
+      "sonarEdition": {
+        "type": "string",
+        "allowedValues": [
+          "Basic",
+          "Standard",
+          "Premium"
+        ]
+      },
+      "location": {
+        "type": "string",
+        "metadata": {
+          "description": "Location for all resources."
+        }
+      }
+    },
+    "variables": {
+      "sonarCollation": "Latin1_General_100_CS_AS"
+    },
+    "resources": [
+      {
+        "name": "sonarsql",
+        "type": "Microsoft.Sql/servers",
+        "kind": "v12.0",
+        "location": "location",
+        "apiVersion": "2020-02-02-preview",
+        "tags": {
+          "displayName": "sonarqsl"
+        },
+        "properties": {
+          "administratorLogin": "adminLogin",
+          "administratorLoginPassword": "adminPassword",
+          "version": "12.0"
+        },
+        "resources": [
+          {
+            "name": "[uniqueString(parameters('sonarSqlName'), 'AllowAllWindowsAzureIps' )]",
+            "type": "firewallrules",
+            "location": "location",
+            "apiVersion": "2020-02-02-preview",
+            "dependsOn": [
+              "Microsoft.Sql/servers/sonarsql"
+            ],
+            "properties": {
+              "startIpAddress": "0.0.0.0",
+              "endIpAddress": "0.0.0.0"
+            }
+          },
+          {
+            "name": "sonar",
+            "type": "databases",
+            "kind": "v12.0,user",
+            "location": "location",
+            "apiVersion": "2020-02-02-preview",
+            "dependsOn": [
+              "sonarsql"
+            ],
+            "tags": {
+              "displayName": "sonar"
+            },
+            "properties": {
+              "collation": "Latin1_General_100_CS_AS",
+              "edition": "sonarEdition",
+              "maxSizeBytes": "1073741824"
+            }
+          }
+        ]
+      }
+    ],
+    "outputs": {
+      "jdbcConnString": {
+        "type": "string",
+        "value": "[concat('jdbc:sqlserver://', reference(resourceId('Microsoft.Sql/servers', parameters('sonarSqlName'))).fullyQualifiedDomainName, ':1433;database=', parameters('sonarDbName'), ';ssl=require')]"
+      },
+      "jdbcUserName": {
+        "type": "string",
+        "value": "[concat(parameters('adminLogin'), '@', parameters('sonarSqlName'))]"
+      }
+    },
+    "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+  }
+}

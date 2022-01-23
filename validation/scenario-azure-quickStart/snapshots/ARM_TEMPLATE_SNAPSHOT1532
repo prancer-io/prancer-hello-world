@@ -1,0 +1,183 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAzureQuickStart",
+  "paths": [
+    "/quickstarts/microsoft.network/front-door-health-probes/azuredeploy.json",
+    "/quickstarts/microsoft.network/front-door-health-probes/azuredeploy.parameters.json"
+  ],
+  "timestamp": 1642962908850,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/quickstarts/microsoft.network/front-door-health-probes/azuredeploy.json",
+      "/quickstarts/microsoft.network/front-door-health-probes/azuredeploy.parameters.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT1532",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "microsoft.network/frontdoors"
+    ]
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT1532",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.0.0.0",
+    "metadata": {
+      "_generator": {
+        "name": "bicep",
+        "version": "0.4.1124.51302",
+        "templateHash": "15183626171325419306"
+      }
+    },
+    "parameters": {
+      "frontDoorName": {
+        "type": "string",
+        "metadata": {
+          "description": "The name of the frontdoor resource."
+        },
+        "value": "GEN-UNIQUE"
+      },
+      "backendAddress": {
+        "type": "string",
+        "metadata": {
+          "description": "The hostname of the backend. Must be an IP address or FQDN."
+        },
+        "value": "GEN-CUSTOM-FQDN-NAME"
+      },
+      "healthProbeName": {
+        "type": "string",
+        "metadata": {
+          "description": "Name of the Health probe settings associated with this Front Door instance."
+        },
+        "value": "healthProbeSettings1"
+      },
+      "healthProbePath": {
+        "type": "string",
+        "metadata": {
+          "description": "The path to use for the health probe. Default is /"
+        },
+        "value": "/"
+      },
+      "healthProbeProtocol": {
+        "type": "string",
+        "allowedValues": [
+          "Http",
+          "Https"
+        ],
+        "metadata": {
+          "description": "Protocol scheme to use for this probe. Must be Http or Https."
+        },
+        "value": "Http"
+      },
+      "healthProbeIntervalInSeconds": {
+        "type": "int",
+        "metadata": {
+          "description": "The number of seconds between health probes."
+        },
+        "value": 120
+      }
+    },
+    "variables": {
+      "frontdoorLocation": "global",
+      "frontDoorSuffix": "[if(equals(toLower(environment().name), 'azureusgovernment'), 'azurefd.us', environment().suffixes.azureFrontDoorEndpointSuffix)]",
+      "frontDoorHostName": "[format('{0}.{1}', toLower(parameters('frontDoorName')), variables('frontDoorSuffix'))]"
+    },
+    "resources": [
+      {
+        "type": "Microsoft.Network/frontDoors",
+        "apiVersion": "2020-05-01",
+        "name": "GEN-UNIQUE",
+        "location": "global",
+        "properties": {
+          "routingRules": [
+            {
+              "name": "routingRule1",
+              "properties": {
+                "frontendEndpoints": [
+                  {
+                    "id": "Microsoft.Network/frontDoors/frontendEndpoints/GEN-UNIQUE/frontendEndpoint1"
+                  }
+                ],
+                "acceptedProtocols": [
+                  "Http"
+                ],
+                "patternsToMatch": [
+                  "/*"
+                ],
+                "routeConfiguration": {
+                  "@odata.type": "#Microsoft.Azure.FrontDoor.Models.FrontdoorForwardingConfiguration",
+                  "forwardingProtocol": "MatchRequest",
+                  "backendPool": {
+                    "id": "Microsoft.Network/frontDoors/backendPools/GEN-UNIQUE/backendPool1"
+                  }
+                },
+                "enabledState": "Enabled"
+              }
+            }
+          ],
+          "healthProbeSettings": [
+            {
+              "name": "healthProbeSettings1",
+              "properties": {
+                "path": "/",
+                "protocol": "Http",
+                "intervalInSeconds": 120
+              }
+            }
+          ],
+          "loadBalancingSettings": [
+            {
+              "name": "loadBalancingSettings1",
+              "properties": {
+                "sampleSize": 4,
+                "successfulSamplesRequired": 2
+              }
+            }
+          ],
+          "backendPools": [
+            {
+              "name": "backendPool1",
+              "properties": {
+                "backends": [
+                  {
+                    "address": "GEN-CUSTOM-FQDN-NAME",
+                    "httpPort": 80,
+                    "httpsPort": 443,
+                    "weight": 50,
+                    "priority": 1,
+                    "enabledState": "Enabled"
+                  }
+                ],
+                "loadBalancingSettings": {
+                  "id": "Microsoft.Network/frontDoors/loadBalancingSettings/GEN-UNIQUE/loadBalancingSettings1"
+                },
+                "healthProbeSettings": {
+                  "id": "Microsoft.Network/frontDoors/healthProbeSettings/GEN-UNIQUE/healthProbeSettings1"
+                }
+              }
+            }
+          ],
+          "frontendEndpoints": [
+            {
+              "name": "frontendEndpoint1",
+              "properties": {
+                "hostName": "[format('{0}.{1}', toLower(parameters('frontDoorName')), variables('frontDoorSuffix'))]",
+                "sessionAffinityEnabledState": "Disabled"
+              }
+            }
+          ],
+          "enabledState": "Enabled"
+        }
+      }
+    ],
+    "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+  }
+}

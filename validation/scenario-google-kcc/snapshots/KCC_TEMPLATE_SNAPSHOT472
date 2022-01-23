@@ -2,12 +2,12 @@
   "structure": "filesystem",
   "error": null,
   "reference": "master",
-  "contentType": "yaml",
+  "contentType": "json",
   "source": "gitConnectorGoogleKcc",
   "paths": [
-    "/samples/resources/monitoringnotificationchannel/sms-monitoring-notification-channel/monitoring_v1beta1_monitoringnotificationchannel.yaml"
+    "/samples/resources/iampolicymember/org-level-iam-custom-role-policy-member/iam_v1beta1_iamcustomrole.yaml"
   ],
-  "timestamp": 1628765149611,
+  "timestamp": 1642973304350,
   "queryuser": null,
   "checksum": "99914b932bd37a50b983c5e7c90ae93b",
   "node": {
@@ -15,31 +15,34 @@
     "type": "kcc",
     "collection": "kcctemplate",
     "paths": [
-      "/samples/resources/monitoringnotificationchannel/sms-monitoring-notification-channel/monitoring_v1beta1_monitoringnotificationchannel.yaml"
+      "/samples/resources/iampolicymember/org-level-iam-custom-role-policy-member/iam_v1beta1_iamcustomrole.yaml"
     ],
     "snapshotId": "KCC_TEMPLATE_SNAPSHOT472",
     "status": "active",
-    "validate": true
+    "validate": true,
+    "resourceTypes": [
+      "iamcustomrole"
+    ]
   },
   "snapshotId": "KCC_TEMPLATE_SNAPSHOT472",
   "collection": "kcctemplate",
   "json": {
-    "apiVersion": "monitoring.cnrm.cloud.google.com/v1beta1",
-    "kind": "MonitoringNotificationChannel",
+    "apiVersion": "iam.cnrm.cloud.google.com/v1beta1",
+    "kind": "IAMCustomRole",
     "metadata": {
-      "labels": {
-        "response-priority": "intervention",
-        "target-user": "on-call"
+      "annotations": {
+        "cnrm.cloud.google.com/organization-id": "${ORG_ID?}"
       },
-      "name": "monitoringnotificationchannel-sample-sms"
+      "name": "iampolicymemberdeporgrole"
     },
     "spec": {
-      "type": "sms",
-      "labels": {
-        "number": "12025550196"
-      },
-      "description": "A channel that sends notifications via Short Message Service (SMS).",
-      "enabled": true
+      "title": "Example Organization-Level Custom Role",
+      "description": "This role only contains two permissions - publish and update",
+      "permissions": [
+        "pubsub.topics.publish",
+        "pubsub.topics.update"
+      ],
+      "stage": "GA"
     }
   }
 }

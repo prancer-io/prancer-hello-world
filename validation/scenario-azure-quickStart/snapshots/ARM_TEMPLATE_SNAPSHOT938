@@ -1,0 +1,259 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAzureQuickStart",
+  "paths": [
+    "/quickstarts/microsoft.appconfiguration/app-configuration/azuredeploy.json",
+    "/quickstarts/microsoft.appconfiguration/app-configuration/azuredeploy.parameters.json"
+  ],
+  "timestamp": 1642962902924,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/quickstarts/microsoft.appconfiguration/app-configuration/azuredeploy.json",
+      "/quickstarts/microsoft.appconfiguration/app-configuration/azuredeploy.parameters.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT938",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "microsoft.network/publicipaddresses",
+      "microsoft.network/virtualnetworks",
+      "microsoft.network/networkinterfaces",
+      "microsoft.compute/virtualmachines",
+      "microsoft.storage/storageaccounts"
+    ]
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT938",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "location": {
+        "type": "string",
+        "defaultValue": "[resourceGroup().location]",
+        "metadata": {
+          "description": "Specify the locations for all resources."
+        }
+      },
+      "adminUsername": {
+        "type": "string",
+        "metadata": {
+          "description": "Specify the virtual machine admin user name."
+        },
+        "value": "GEN-UNIQUE"
+      },
+      "adminPassword": {
+        "type": "securestring",
+        "metadata": {
+          "description": "Specify the virtual machine admin password."
+        },
+        "value": "GEN-PASSWORD"
+      },
+      "domainNameLabel": {
+        "type": "string",
+        "metadata": {
+          "description": "Specify the DNS label for the virtual machine public IP address. It must be lowercase. It should match the following regular expression, or it will raise an error: ^[a-z][a-z0-9-]{1,61}[a-z0-9]$."
+        },
+        "value": "GEN-UNIQUE"
+      },
+      "vmSize": {
+        "type": "string",
+        "defaultValue": "Standard_D2_v3",
+        "metadata": {
+          "description": "Specify the size of the VM."
+        }
+      },
+      "storageAccountName": {
+        "type": "string",
+        "metadata": {
+          "description": "Specify the storage account name."
+        },
+        "value": "GEN-UNIQUE"
+      },
+      "appConfigStoreResourceGroup": {
+        "type": "string",
+        "metadata": {
+          "description": "Name of the resource group for the app config store."
+        },
+        "value": "GEN-APPCONFIGSTORE-RESOURCEGROUP-NAME"
+      },
+      "appConfigStoreName": {
+        "type": "string",
+        "metadata": {
+          "description": "App configuration store name."
+        },
+        "value": "GEN-APPCONFIGSTORE-NAME"
+      },
+      "vmSkuKey": {
+        "type": "string",
+        "metadata": {
+          "description": "Specify the name of the key in the app config store for the VM windows sku."
+        },
+        "value": "GEN-APPCONFIGSTORE-WINDOWSOSVERSION"
+      },
+      "diskSizeKey": {
+        "type": "string",
+        "metadata": {
+          "description": "Specify the name of the key in the app config store for the VM disk size"
+        },
+        "value": "GEN-APPCONFIGSTORE-DISKSIZEGB"
+      }
+    },
+    "variables": {
+      "nicName": "myVMNic",
+      "addressPrefix": "10.0.0.0/16",
+      "subnetName": "Subnet",
+      "subnetPrefix": "10.0.0.0/24",
+      "publicIPAddressName": "myPublicIP",
+      "vmName": "SimpleWinVM",
+      "virtualNetworkName": "MyVNET",
+      "subnetRef": "Microsoft.Network/virtualNetworks/subnets/MyVNET/Subnet",
+      "appConfigRef": "GEN-APPCONFIGSTORE-RESOURCEGROUP-NAME/Microsoft.AppConfiguration/configurationStores/GEN-APPCONFIGSTORE-NAME",
+      "windowsOSVersionParameters": {
+        "key": "GEN-APPCONFIGSTORE-WINDOWSOSVERSION",
+        "label": "template"
+      },
+      "diskSizeGBParameters": {
+        "key": "GEN-APPCONFIGSTORE-DISKSIZEGB",
+        "label": "template"
+      }
+    },
+    "resources": [
+      {
+        "type": "Microsoft.Storage/storageAccounts",
+        "apiVersion": "2019-06-01",
+        "name": "GEN-UNIQUE",
+        "location": "[resourceGroup().location]",
+        "sku": {
+          "name": "Standard_LRS"
+        },
+        "kind": "Storage",
+        "properties": {}
+      },
+      {
+        "type": "Microsoft.Network/publicIPAddresses",
+        "apiVersion": "2020-05-01",
+        "name": "myPublicIP",
+        "location": "[resourceGroup().location]",
+        "properties": {
+          "publicIPAllocationMethod": "Dynamic",
+          "dnsSettings": {
+            "domainNameLabel": "GEN-UNIQUE"
+          }
+        }
+      },
+      {
+        "type": "Microsoft.Network/virtualNetworks",
+        "apiVersion": "2020-05-01",
+        "name": "MyVNET",
+        "location": "[resourceGroup().location]",
+        "properties": {
+          "addressSpace": {
+            "addressPrefixes": [
+              "10.0.0.0/16"
+            ]
+          },
+          "subnets": [
+            {
+              "name": "Subnet",
+              "properties": {
+                "addressPrefix": "10.0.0.0/24"
+              }
+            }
+          ]
+        }
+      },
+      {
+        "type": "Microsoft.Network/networkInterfaces",
+        "apiVersion": "2020-05-01",
+        "name": "myVMNic",
+        "location": "[resourceGroup().location]",
+        "dependsOn": [
+          "Microsoft.Network/publicIPAddresses//myPublicIP",
+          "Microsoft.Network/virtualNetworks//MyVNET"
+        ],
+        "properties": {
+          "ipConfigurations": [
+            {
+              "name": "ipconfig1",
+              "properties": {
+                "privateIPAllocationMethod": "Dynamic",
+                "publicIPAddress": {
+                  "id": "Microsoft.Network/publicIPAddresses/myPublicIP"
+                },
+                "subnet": {
+                  "id": "Microsoft.Network/virtualNetworks/subnets/MyVNET/Subnet"
+                }
+              }
+            }
+          ]
+        }
+      },
+      {
+        "type": "Microsoft.Compute/virtualMachines",
+        "apiVersion": "2019-12-01",
+        "name": "SimpleWinVM",
+        "location": "[resourceGroup().location]",
+        "dependsOn": [
+          "Microsoft.Storage/storageAccounts//GEN-UNIQUE",
+          "Microsoft.Network/networkInterfaces//myVMNic"
+        ],
+        "properties": {
+          "hardwareProfile": {
+            "vmSize": "Standard_D2_v3"
+          },
+          "osProfile": {
+            "computerName": "SimpleWinVM",
+            "adminUsername": "GEN-UNIQUE",
+            "adminPassword": "GEN-PASSWORD"
+          },
+          "storageProfile": {
+            "imageReference": {
+              "publisher": "MicrosoftWindowsServer",
+              "offer": "WindowsServer",
+              "sku": "[listKeyValue(variables('appConfigRef'), '2019-10-01', variables('windowsOSVersionParameters')).value]",
+              "version": "latest"
+            },
+            "osDisk": {
+              "createOption": "FromImage"
+            },
+            "dataDisks": [
+              {
+                "diskSizeGB": "[listKeyValue(variables('appConfigRef'), '2019-10-01', variables('diskSizeGBParameters')).value]",
+                "lun": 0,
+                "createOption": "Empty"
+              }
+            ]
+          },
+          "networkProfile": {
+            "networkInterfaces": [
+              {
+                "id": "Microsoft.Network/networkInterfaces/myVMNic"
+              }
+            ]
+          },
+          "diagnosticsProfile": {
+            "bootDiagnostics": {
+              "enabled": true,
+              "storageUri": "[reference(resourceId('Microsoft.Storage/storageAccounts/', parameters('storageAccountName'))).primaryEndpoints.blob]"
+            }
+          }
+        }
+      }
+    ],
+    "outputs": {
+      "hostname": {
+        "type": "string",
+        "value": "[reference(variables('publicIPAddressName')).dnsSettings.fqdn]"
+      }
+    },
+    "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+  }
+}

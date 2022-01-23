@@ -1,0 +1,112 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAzureQuickStart",
+  "paths": [
+    "/quickstarts/microsoft.network/front-door-waf-clientip/azuredeploy.json",
+    "/quickstarts/microsoft.network/front-door-waf-clientip/azuredeploy.parameters.json"
+  ],
+  "timestamp": 1642962909100,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/quickstarts/microsoft.network/front-door-waf-clientip/azuredeploy.json",
+      "/quickstarts/microsoft.network/front-door-waf-clientip/azuredeploy.parameters.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT1555",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "microsoft.network/frontdoorwebapplicationfirewallpolicies"
+    ]
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT1555",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "wafPolicyName": {
+        "type": "string",
+        "metadata": {
+          "description": "The name of the WAF policy"
+        },
+        "value": "GEN-UNIQUE"
+      },
+      "wafMode": {
+        "type": "string",
+        "allowedValues": [
+          "Detection",
+          "Prevention"
+        ],
+        "defaultValue": "Detection",
+        "metadata": {
+          "description": "Describes if it is in detection mode or prevention mode at policy level."
+        }
+      },
+      "IPfilteringAction": {
+        "type": "string",
+        "allowedValues": [
+          "Allow",
+          "Block",
+          "Log"
+        ],
+        "metadata": {
+          "description": "Type of Action based on the match filter. Must be Allow, Block or Log."
+        },
+        "value": "Block"
+      },
+      "IPMatch": {
+        "type": "string",
+        "metadata": {
+          "description": "The operator to be matched."
+        },
+        "value": "192.168.0.10"
+      }
+    },
+    "variables": {
+      "wafLocation": "global"
+    },
+    "resources": [
+      {
+        "apiVersion": "2019-03-01",
+        "type": "Microsoft.Network/FrontDoorWebApplicationFirewallPolicies",
+        "name": "GEN-UNIQUE",
+        "location": "global",
+        "properties": {
+          "policySettings": {
+            "mode": "Detection",
+            "enabledState": "Enabled"
+          },
+          "customRules": {
+            "rules": [
+              {
+                "name": "Rule1",
+                "priority": 1,
+                "enabledState": "Enabled",
+                "ruleType": "MatchRule",
+                "matchConditions": [
+                  {
+                    "matchVariable": "RemoteAddr",
+                    "operator": "IPMatch",
+                    "matchValue": [
+                      "192.168.0.10"
+                    ]
+                  }
+                ],
+                "action": "Block"
+              }
+            ]
+          }
+        }
+      }
+    ],
+    "outputs": {},
+    "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+  }
+}

@@ -2,12 +2,12 @@
   "structure": "filesystem",
   "error": null,
   "reference": "master",
-  "contentType": "yaml",
+  "contentType": "json",
   "source": "gitConnectorGoogleKcc",
   "paths": [
-    "/samples/resources/dnsrecordset/dns-mx-record-set/dns_v1beta1_dnsrecordset.yaml"
+    "/samples/resources/configcontrollerinstance/configcontroller_v1beta1_configcontrollerinstance.yaml"
   ],
-  "timestamp": 1628765146149,
+  "timestamp": 1642973303707,
   "queryuser": null,
   "checksum": "99914b932bd37a50b983c5e7c90ae93b",
   "node": {
@@ -15,34 +15,41 @@
     "type": "kcc",
     "collection": "kcctemplate",
     "paths": [
-      "/samples/resources/dnsrecordset/dns-mx-record-set/dns_v1beta1_dnsrecordset.yaml"
+      "/samples/resources/configcontrollerinstance/configcontroller_v1beta1_configcontrollerinstance.yaml"
     ],
     "snapshotId": "KCC_TEMPLATE_SNAPSHOT338",
     "status": "active",
-    "validate": true
+    "validate": true,
+    "resourceTypes": [
+      "configcontrollerinstance"
+    ]
   },
   "snapshotId": "KCC_TEMPLATE_SNAPSHOT338",
   "collection": "kcctemplate",
   "json": {
-    "apiVersion": "dns.cnrm.cloud.google.com/v1beta1",
-    "kind": "DNSRecordSet",
+    "apiVersion": "configcontroller.cnrm.cloud.google.com/v1beta1",
+    "kind": "ConfigControllerInstance",
     "metadata": {
-      "name": "dnsrecordset-sample-mx"
+      "labels": {
+        "label-one": "value-one"
+      },
+      "name": "ccinstance-sample"
     },
     "spec": {
-      "name": "mail.example.com.",
-      "type": "MX",
-      "ttl": 300,
-      "managedZoneRef": {
-        "name": "dnsrecordset-dep-mx"
+      "projectRef": {
+        "external": "projects/${PROJECT_ID?}"
       },
-      "rrdatas": [
-        "5 gmr-stmp-in.l.google.com.",
-        "10 alt1.gmr-stmp-in.l.google.com.",
-        "10 alt2.gmr-stmp-in.l.google.com.",
-        "10 alt3.gmr-stmp-in.l.google.com.",
-        "10 alt4.gmr-stmp-in.l.google.com."
-      ]
+      "location": "us-central1",
+      "managementConfig": {
+        "standardManagementConfig": {
+          "networkRef": {
+            "name": "configcontrollerinstance-dep"
+          },
+          "masterIPv4CidrBlock": "172.16.123.64/28",
+          "clusterCidrBlock": "/20",
+          "servicesCidrBlock": "/24"
+        }
+      }
     }
   }
 }

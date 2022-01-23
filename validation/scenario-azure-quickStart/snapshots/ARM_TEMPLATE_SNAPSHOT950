@@ -1,0 +1,101 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAzureQuickStart",
+  "paths": [
+    "/quickstarts/microsoft.authorization/rbac-managedidentity-maps/azuredeploy.json",
+    "/quickstarts/microsoft.authorization/rbac-managedidentity-maps/azuredeploy.parameters.json"
+  ],
+  "timestamp": 1642962903055,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/quickstarts/microsoft.authorization/rbac-managedidentity-maps/azuredeploy.json",
+      "/quickstarts/microsoft.authorization/rbac-managedidentity-maps/azuredeploy.parameters.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT950",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "microsoft.maps/accounts",
+      "microsoft.managedidentity/userassignedidentities",
+      "microsoft.maps/accounts/providers/roleassignments"
+    ]
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT950",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "location": {
+        "type": "string",
+        "defaultValue": "[resourceGroup().location]",
+        "metadata": {
+          "description": "location for the the resources to deploy."
+        }
+      },
+      "userAssignedIdentityName": {
+        "type": "string",
+        "metadata": {
+          "description": "the name of the Managed Identity resource."
+        },
+        "value": "GEN-UNIQUE"
+      },
+      "mapsAccountName": {
+        "type": "string",
+        "metadata": {
+          "description": "the name of the Azure Map Account"
+        },
+        "value": "GEN-UNIQUE-10"
+      },
+      "guid": {
+        "type": "string",
+        "defaultValue": "[guid(resourceGroup().id)]",
+        "metadata": {
+          "description": "Input string for new GUID associated with assigning built in role types"
+        }
+      }
+    },
+    "variables": {
+      "Azure Maps Data Reader": "[subscriptionResourceId('Microsoft.Authorization/roleDefinitions', '423170ca-a8f6-4b0f-8487-9e4eb8f49bfa')]"
+    },
+    "resources": [
+      {
+        "type": "Microsoft.ManagedIdentity/userAssignedIdentities",
+        "name": "GEN-UNIQUE",
+        "apiVersion": "2018-11-30",
+        "location": "[resourceGroup().location]"
+      },
+      {
+        "apiVersion": "2018-05-01",
+        "name": "GEN-UNIQUE-10",
+        "location": "global",
+        "type": "Microsoft.Maps/accounts",
+        "sku": {
+          "name": "S0"
+        }
+      },
+      {
+        "apiVersion": "2018-09-01-preview",
+        "name": "GEN-UNIQUE-10/Microsoft.Authorization/[guid(resourceGroup().id)]",
+        "type": "Microsoft.Maps/accounts/providers/roleAssignments",
+        "dependsOn": [
+          "GEN-UNIQUE-10",
+          "GEN-UNIQUE"
+        ],
+        "properties": {
+          "roleDefinitionId": "[subscriptionResourceId('Microsoft.Authorization/roleDefinitions', '423170ca-a8f6-4b0f-8487-9e4eb8f49bfa')]",
+          "principalId": "[reference(parameters('userAssignedIdentityName')).principalId]",
+          "principalType": "ServicePrincipal"
+        }
+      }
+    ],
+    "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+  }
+}

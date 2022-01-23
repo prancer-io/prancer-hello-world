@@ -1,0 +1,385 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAzureQuickStart",
+  "paths": [
+    "/application-workloads/solace/solace-message-router/nestedtemplates/loadbalancer-shared-resources.json"
+  ],
+  "timestamp": 1642962896277,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/application-workloads/solace/solace-message-router/nestedtemplates/loadbalancer-shared-resources.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT518",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "microsoft.network/publicipaddresses",
+      "microsoft.network/loadbalancers"
+    ]
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT518",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "vmAndLoadbalancerExposure": {
+        "type": "string",
+        "metadata": {
+          "description": "Either 'Public' or 'Internal'. Internal Load balancer is only available from the virtual network, no public IP created"
+        }
+      },
+      "dnsLabelForPublicLoadBalancer": {
+        "type": "string",
+        "metadata": {
+          "description": "Unique DNS Label for the Public IP used to access the Load Balancer."
+        }
+      },
+      "publicIPAddressNameLB": {
+        "type": "string",
+        "defaultValue": "myLBPublicIPD",
+        "metadata": {
+          "description": "Load Balancer Public IP Address Name."
+        }
+      },
+      "publicIPAddressType": {
+        "type": "string",
+        "defaultValue": "Dynamic",
+        "metadata": {
+          "description": "Load Balancer Public IP Address Type."
+        }
+      },
+      "lbName": {
+        "type": "string",
+        "defaultValue": "myLB",
+        "metadata": {
+          "description": "Load Balancer Name."
+        }
+      },
+      "lbPoolName": {
+        "type": "string",
+        "defaultValue": "solace-ha-group",
+        "metadata": {
+          "description": "Load Balancer Backend Address Pool Name."
+        }
+      },
+      "subnetRef": {
+        "type": "string",
+        "defaultValue": "",
+        "metadata": {
+          "description": "Load Balancer Private IP subnet."
+        }
+      },
+      "location": {
+        "type": "string",
+        "defaultValue": "[resourceGroup().location]",
+        "metadata": {
+          "description": "Location for all resources."
+        }
+      }
+    },
+    "variables": {
+      "frontEndIPConfigName": "LoadBalancerFrontEnd",
+      "frontEndIPConfigID": "Microsoft.Network/loadBalancers/frontendIPConfigurations/myLB/LoadBalancerFrontEnd",
+      "lbPoolID": "Microsoft.Network/loadBalancers/backendAddressPools/myLB/solace-ha-group",
+      "lbProbeName": "solace-ha-ad-health-check",
+      "lbProbeID": "Microsoft.Network/loadBalancers/probes/myLB/solace-ha-ad-health-check",
+      "publicIPAddressJSON": {
+        "id": "Microsoft.Network/publicIPAddresses/myLBPublicIPD"
+      },
+      "subnetJSON": {
+        "id": ""
+      }
+    },
+    "resources": [
+      {
+        "condition": false,
+        "apiVersion": "2020-04-01",
+        "type": "Microsoft.Network/publicIPAddresses",
+        "name": "myLBPublicIPD",
+        "location": "[resourceGroup().location]",
+        "properties": {
+          "publicIPAllocationMethod": "Dynamic",
+          "dnsSettings": {
+            "domainNameLabel": "dnsLabelForPublicLoadBalancer"
+          }
+        }
+      },
+      {
+        "apiVersion": "2020-04-01",
+        "type": "Microsoft.Network/loadBalancers",
+        "name": "myLB",
+        "location": "[resourceGroup().location]",
+        "dependsOn": [
+          "Microsoft.Network/publicIPAddresses/myLBPublicIPD"
+        ],
+        "properties": {
+          "frontendIPConfigurations": [
+            {
+              "name": "LoadBalancerFrontEnd",
+              "properties": {
+                "publicIPAddress": "[if(equals(parameters('vmAndLoadbalancerExposure'),'Public'), variables('publicIPAddressJSON'), json('null'))]",
+                "subnet": "[if(equals(parameters('vmAndLoadbalancerExposure'),'Internal'), variables('subnetJSON'), json('null'))]"
+              }
+            }
+          ],
+          "backendAddressPools": [
+            {
+              "name": "solace-ha-group"
+            }
+          ],
+          "loadBalancingRules": [
+            {
+              "name": "ssh",
+              "properties": {
+                "frontendIPConfiguration": {
+                  "id": "Microsoft.Network/loadBalancers/frontendIPConfigurations/myLB/LoadBalancerFrontEnd"
+                },
+                "backendAddressPool": {
+                  "id": "Microsoft.Network/loadBalancers/backendAddressPools/myLB/solace-ha-group"
+                },
+                "protocol": "Tcp",
+                "frontendPort": 2222,
+                "backendPort": 2222,
+                "idleTimeoutInMinutes": 5,
+                "enableFloatingIP": false,
+                "probe": {
+                  "id": "Microsoft.Network/loadBalancers/probes/myLB/solace-ha-ad-health-check"
+                }
+              }
+            },
+            {
+              "name": "semp",
+              "properties": {
+                "frontendIPConfiguration": {
+                  "id": "Microsoft.Network/loadBalancers/frontendIPConfigurations/myLB/LoadBalancerFrontEnd"
+                },
+                "backendAddressPool": {
+                  "id": "Microsoft.Network/loadBalancers/backendAddressPools/myLB/solace-ha-group"
+                },
+                "protocol": "Tcp",
+                "frontendPort": 8080,
+                "backendPort": 8080,
+                "idleTimeoutInMinutes": 5,
+                "enableFloatingIP": false,
+                "probe": {
+                  "id": "Microsoft.Network/loadBalancers/probes/myLB/solace-ha-ad-health-check"
+                }
+              }
+            },
+            {
+              "name": "semptls",
+              "properties": {
+                "frontendIPConfiguration": {
+                  "id": "Microsoft.Network/loadBalancers/frontendIPConfigurations/myLB/LoadBalancerFrontEnd"
+                },
+                "backendAddressPool": {
+                  "id": "Microsoft.Network/loadBalancers/backendAddressPools/myLB/solace-ha-group"
+                },
+                "protocol": "Tcp",
+                "frontendPort": 1943,
+                "backendPort": 1943,
+                "idleTimeoutInMinutes": 5,
+                "enableFloatingIP": false,
+                "probe": {
+                  "id": "Microsoft.Network/loadBalancers/probes/myLB/solace-ha-ad-health-check"
+                }
+              }
+            },
+            {
+              "name": "smf",
+              "properties": {
+                "frontendIPConfiguration": {
+                  "id": "Microsoft.Network/loadBalancers/frontendIPConfigurations/myLB/LoadBalancerFrontEnd"
+                },
+                "backendAddressPool": {
+                  "id": "Microsoft.Network/loadBalancers/backendAddressPools/myLB/solace-ha-group"
+                },
+                "protocol": "Tcp",
+                "frontendPort": 55555,
+                "backendPort": 55555,
+                "idleTimeoutInMinutes": 5,
+                "enableFloatingIP": false,
+                "probe": {
+                  "id": "Microsoft.Network/loadBalancers/probes/myLB/solace-ha-ad-health-check"
+                }
+              }
+            },
+            {
+              "name": "smf-compressed",
+              "properties": {
+                "frontendIPConfiguration": {
+                  "id": "Microsoft.Network/loadBalancers/frontendIPConfigurations/myLB/LoadBalancerFrontEnd"
+                },
+                "backendAddressPool": {
+                  "id": "Microsoft.Network/loadBalancers/backendAddressPools/myLB/solace-ha-group"
+                },
+                "protocol": "Tcp",
+                "frontendPort": 55003,
+                "backendPort": 55003,
+                "idleTimeoutInMinutes": 5,
+                "enableFloatingIP": false,
+                "probe": {
+                  "id": "Microsoft.Network/loadBalancers/probes/myLB/solace-ha-ad-health-check"
+                }
+              }
+            },
+            {
+              "name": "smftls",
+              "properties": {
+                "frontendIPConfiguration": {
+                  "id": "Microsoft.Network/loadBalancers/frontendIPConfigurations/myLB/LoadBalancerFrontEnd"
+                },
+                "backendAddressPool": {
+                  "id": "Microsoft.Network/loadBalancers/backendAddressPools/myLB/solace-ha-group"
+                },
+                "protocol": "Tcp",
+                "frontendPort": 55443,
+                "backendPort": 55443,
+                "idleTimeoutInMinutes": 5,
+                "enableFloatingIP": false,
+                "probe": {
+                  "id": "Microsoft.Network/loadBalancers/probes/myLB/solace-ha-ad-health-check"
+                }
+              }
+            },
+            {
+              "name": "webservices",
+              "properties": {
+                "frontendIPConfiguration": {
+                  "id": "Microsoft.Network/loadBalancers/frontendIPConfigurations/myLB/LoadBalancerFrontEnd"
+                },
+                "backendAddressPool": {
+                  "id": "Microsoft.Network/loadBalancers/backendAddressPools/myLB/solace-ha-group"
+                },
+                "protocol": "Tcp",
+                "frontendPort": 8008,
+                "backendPort": 8008,
+                "idleTimeoutInMinutes": 5,
+                "enableFloatingIP": false,
+                "probe": {
+                  "id": "Microsoft.Network/loadBalancers/probes/myLB/solace-ha-ad-health-check"
+                }
+              }
+            },
+            {
+              "name": "webtls",
+              "properties": {
+                "frontendIPConfiguration": {
+                  "id": "Microsoft.Network/loadBalancers/frontendIPConfigurations/myLB/LoadBalancerFrontEnd"
+                },
+                "backendAddressPool": {
+                  "id": "Microsoft.Network/loadBalancers/backendAddressPools/myLB/solace-ha-group"
+                },
+                "protocol": "Tcp",
+                "frontendPort": 1443,
+                "backendPort": 1443,
+                "idleTimeoutInMinutes": 5,
+                "enableFloatingIP": false,
+                "probe": {
+                  "id": "Microsoft.Network/loadBalancers/probes/myLB/solace-ha-ad-health-check"
+                }
+              }
+            },
+            {
+              "name": "amqp",
+              "properties": {
+                "frontendIPConfiguration": {
+                  "id": "Microsoft.Network/loadBalancers/frontendIPConfigurations/myLB/LoadBalancerFrontEnd"
+                },
+                "backendAddressPool": {
+                  "id": "Microsoft.Network/loadBalancers/backendAddressPools/myLB/solace-ha-group"
+                },
+                "protocol": "Tcp",
+                "frontendPort": 5672,
+                "backendPort": 5672,
+                "idleTimeoutInMinutes": 5,
+                "enableFloatingIP": false,
+                "probe": {
+                  "id": "Microsoft.Network/loadBalancers/probes/myLB/solace-ha-ad-health-check"
+                }
+              }
+            },
+            {
+              "name": "mqtt",
+              "properties": {
+                "frontendIPConfiguration": {
+                  "id": "Microsoft.Network/loadBalancers/frontendIPConfigurations/myLB/LoadBalancerFrontEnd"
+                },
+                "backendAddressPool": {
+                  "id": "Microsoft.Network/loadBalancers/backendAddressPools/myLB/solace-ha-group"
+                },
+                "protocol": "Tcp",
+                "frontendPort": 1883,
+                "backendPort": 1883,
+                "idleTimeoutInMinutes": 5,
+                "enableFloatingIP": false,
+                "probe": {
+                  "id": "Microsoft.Network/loadBalancers/probes/myLB/solace-ha-ad-health-check"
+                }
+              }
+            },
+            {
+              "name": "mqttweb",
+              "properties": {
+                "frontendIPConfiguration": {
+                  "id": "Microsoft.Network/loadBalancers/frontendIPConfigurations/myLB/LoadBalancerFrontEnd"
+                },
+                "backendAddressPool": {
+                  "id": "Microsoft.Network/loadBalancers/backendAddressPools/myLB/solace-ha-group"
+                },
+                "protocol": "Tcp",
+                "frontendPort": 8000,
+                "backendPort": 8000,
+                "idleTimeoutInMinutes": 5,
+                "enableFloatingIP": false,
+                "probe": {
+                  "id": "Microsoft.Network/loadBalancers/probes/myLB/solace-ha-ad-health-check"
+                }
+              }
+            },
+            {
+              "name": "rest",
+              "properties": {
+                "frontendIPConfiguration": {
+                  "id": "Microsoft.Network/loadBalancers/frontendIPConfigurations/myLB/LoadBalancerFrontEnd"
+                },
+                "backendAddressPool": {
+                  "id": "Microsoft.Network/loadBalancers/backendAddressPools/myLB/solace-ha-group"
+                },
+                "protocol": "Tcp",
+                "frontendPort": 9000,
+                "backendPort": 9000,
+                "idleTimeoutInMinutes": 5,
+                "enableFloatingIP": false,
+                "probe": {
+                  "id": "Microsoft.Network/loadBalancers/probes/myLB/solace-ha-ad-health-check"
+                }
+              }
+            }
+          ],
+          "probes": [
+            {
+              "name": "solace-ha-ad-health-check",
+              "properties": {
+                "protocol": "http",
+                "port": 5550,
+                "intervalInSeconds": 5,
+                "numberOfProbes": 2,
+                "requestPath": "/health-check/guaranteed-active"
+              }
+            }
+          ]
+        }
+      }
+    ],
+    "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+  }
+}

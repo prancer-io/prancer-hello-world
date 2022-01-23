@@ -1,0 +1,224 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAzureQuickStart",
+  "paths": [
+    "/quickstarts/microsoft.compute/vm-custom-script-output/nestedtemplates/vm.json"
+  ],
+  "timestamp": 1642962904115,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/quickstarts/microsoft.compute/vm-custom-script-output/nestedtemplates/vm.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT1066",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "microsoft.network/publicipaddresses",
+      "microsoft.network/networkinterfaces",
+      "microsoft.compute/virtualmachines"
+    ]
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT1066",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "location": {
+        "metadata": {
+          "description": "The Location For the resources"
+        },
+        "type": "string"
+      },
+      "adminPasswordOrKey": {
+        "metadata": {
+          "description": "OS Admin password or SSH Key depending on value of authentication type"
+        },
+        "type": "securestring"
+      },
+      "adminUsername": {
+        "metadata": {
+          "description": "Username for the Virtual Machine."
+        },
+        "type": "string"
+      },
+      "authenticationType": {
+        "allowedValues": [
+          "password",
+          "sshPublicKey"
+        ],
+        "defaultValue": "password",
+        "metadata": {
+          "description": "Authentication type"
+        },
+        "type": "string"
+      },
+      "nsgId": {
+        "defaultValue": null,
+        "metadata": {
+          "description": "The nsg id for the VM"
+        },
+        "type": "string"
+      },
+      "operatingSystem": {
+        "type": "string",
+        "metadata": {
+          "description": "OS for the VM, this is the offer and SKU concatenated with underscores and then mapped to a variable"
+        }
+      },
+      "storageAccountId": {
+        "defaultValue": "",
+        "metadata": {
+          "description": "The storage account Id for boot diagnostics for the VMs"
+        },
+        "type": "string"
+      },
+      "subnetRef": {
+        "type": "string"
+      },
+      "vmSize": {
+        "defaultValue": "Standard_DS2_V3",
+        "metadata": {
+          "description": "The size of the VM to create"
+        },
+        "type": "string"
+      },
+      "vmName": {
+        "metadata": {
+          "description": "The name of the vm"
+        },
+        "type": "string"
+      }
+    },
+    "variables": {
+      "isWindowsOS": "[bool(contains(toLower(variables('imageReference')[parameters('operatingSystem')].offer), 'windows'))]",
+      "imageReference": {
+        "UbuntuServer_16.04-LTS": {
+          "publisher": "Canonical",
+          "offer": "UbuntuServer",
+          "sku": "16.04-LTS",
+          "version": "latest"
+        },
+        "UbuntuServer_18.04-LTS": {
+          "publisher": "Canonical",
+          "offer": "UbuntuServer",
+          "sku": "18.04-LTS",
+          "version": "latest"
+        },
+        "WindowsServer_2016-DataCenter": {
+          "publisher": "MicrosoftWindowsServer",
+          "offer": "WindowsServer",
+          "sku": "2016-Datacenter",
+          "version": "latest"
+        }
+      },
+      "windowsConfiguration": {
+        "provisionVmAgent": "true"
+      },
+      "publicIPAddressName": "publicIp",
+      "nicName": "nic",
+      "linuxConfiguration": {
+        "disablePasswordAuthentication": true,
+        "ssh": {
+          "publicKeys": [
+            {
+              "path": "/home/adminUsername/.ssh/authorized_keys",
+              "keyData": "adminPasswordOrKey"
+            }
+          ]
+        }
+      },
+      "enableBootDiags": "[not(equals(parameters('storageAccountId'), ''))]"
+    },
+    "resources": [
+      {
+        "type": "Microsoft.Network/publicIPAddresses",
+        "apiVersion": "2020-08-01",
+        "name": "publicIp",
+        "location": "location",
+        "properties": {
+          "publicIPAllocationMethod": "Dynamic"
+        }
+      },
+      {
+        "type": "Microsoft.Network/networkInterfaces",
+        "apiVersion": "2018-07-01",
+        "name": "nic",
+        "location": "location",
+        "dependsOn": [
+          "publicIp"
+        ],
+        "properties": {
+          "ipConfigurations": [
+            {
+              "name": "ipconfig1",
+              "properties": {
+                "privateIPAllocationMethod": "Dynamic",
+                "publicIPAddress": {
+                  "id": "Microsoft.Network/publicIPAddresses/publicIp"
+                },
+                "subnet": {
+                  "id": "subnetRef"
+                }
+              }
+            }
+          ],
+          "networkSecurityGroup": {
+            "id": null
+          }
+        }
+      },
+      {
+        "type": "Microsoft.Compute/virtualMachines",
+        "apiVersion": "2017-03-30",
+        "name": "vmName",
+        "location": "location",
+        "dependsOn": [
+          "nic"
+        ],
+        "properties": {
+          "hardwareProfile": {
+            "vmSize": "Standard_DS2_V3"
+          },
+          "osProfile": {
+            "computerName": "vmName",
+            "adminUsername": "adminUsername",
+            "adminPassword": "adminPasswordOrKey",
+            "linuxConfiguration": "[if(equals(parameters('authenticationType'), 'password'), json('null'), variables('linuxConfiguration'))]",
+            "windowsConfiguration": "[if(variables('isWindowsOS'), variables('windowsConfiguration'), json('null'))]"
+          },
+          "storageProfile": {
+            "imageReference": "(imageReference)[parameters(operatingSystem)]"
+          },
+          "networkProfile": {
+            "networkInterfaces": [
+              {
+                "id": "Microsoft.Network/networkInterfaces/nic"
+              }
+            ]
+          },
+          "diagnosticsProfile": {
+            "bootDiagnostics": {
+              "enabled": "[not(equals(parameters('storageAccountId'), ''))]",
+              "storageUri": "[if(variables('enableBootDiags'), reference(parameters('storageAccountId'), '2018-02-01').primaryEndpoints.blob, json('null'))]"
+            }
+          }
+        }
+      }
+    ],
+    "outputs": {
+      "publicIpId": {
+        "type": "string",
+        "value": "[resourceId('Microsoft.Network/publicIpAddresses', variables('publicIPAddressName'))]"
+      }
+    },
+    "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+  }
+}

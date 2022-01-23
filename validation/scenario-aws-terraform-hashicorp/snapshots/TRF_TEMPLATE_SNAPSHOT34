@@ -1,0 +1,216 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "main",
+  "contentType": "json",
+  "source": "gitConnectorAwsTerraHashicorp",
+  "paths": [
+    "/examples/sagemaker/main.tf"
+  ],
+  "timestamp": 1642967657733,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "TRF_TEMPLATE_SNAPSHOT",
+    "type": "terraform",
+    "collection": "terraformtemplate",
+    "paths": [
+      "/examples/sagemaker/main.tf"
+    ],
+    "snapshotId": "TRF_TEMPLATE_SNAPSHOT34",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "aws_s3_bucket_object",
+      "random_integer",
+      "aws_iam_role_policy_attachment",
+      "aws_iam_role",
+      "aws_sagemaker_endpoint",
+      "aws_iam_policy",
+      "aws_s3_bucket",
+      "aws_sagemaker_endpoint_configuration",
+      "aws_sagemaker_model"
+    ]
+  },
+  "snapshotId": "TRF_TEMPLATE_SNAPSHOT34",
+  "collection": "terraformtemplate",
+  "json": {
+    "terraform": [
+      {
+        "required_version": ">= 0.12"
+      }
+    ],
+    "provider": [
+      {
+        "aws": {
+          "region": "us-west-2"
+        }
+      }
+    ],
+    "data": {
+      "aws_caller_identity": {
+        "current": {
+          "compiletime_identity": "data.aws_caller_identity.current"
+        }
+      },
+      "aws_region": {
+        "current": {
+          "compiletime_identity": "data.aws_region.current"
+        }
+      },
+      "aws_iam_policy_document": {
+        "foo": {
+          "statement": [
+            {
+              "effect": "Allow",
+              "actions": [
+                "sagemaker:*"
+              ],
+              "resources": [
+                "*"
+              ]
+            },
+            {
+              "effect": "Allow",
+              "actions": [
+                "cloudwatch:PutMetricData",
+                "logs:CreateLogStream",
+                "logs:PutLogEvents",
+                "logs:CreateLogGroup",
+                "logs:DescribeLogStreams",
+                "ecr:GetAuthorizationToken",
+                "ecr:BatchCheckLayerAvailability",
+                "ecr:GetDownloadUrlForLayer",
+                "ecr:BatchGetImage"
+              ],
+              "resources": [
+                "*"
+              ]
+            },
+            {
+              "effect": "Allow",
+              "actions": [
+                "s3:GetObject"
+              ],
+              "resources": [
+                "arn:aws:s3:::${aws_s3_bucket.foo.bucket}",
+                "arn:aws:s3:::${aws_s3_bucket.foo.bucket}/*"
+              ]
+            }
+          ],
+          "compiletime_identity": "data.aws_iam_policy_document.foo"
+        }
+      }
+    },
+    "resources": [
+      {
+        "type": "aws_iam_role",
+        "name": "foo",
+        "properties": {
+          "name": "terraform-sagemaker-example",
+          "path": "/",
+          "assume_role_policy": "${data.aws_iam_policy_document.assume_role.json}",
+          "compiletime_identity": "aws_iam_role.foo"
+        }
+      },
+      {
+        "type": "aws_iam_policy",
+        "name": "foo",
+        "properties": {
+          "name": "terraform-sagemaker-example",
+          "description": "Allow Sagemaker to create model",
+          "policy": "${data.aws_iam_policy_document.foo.json}",
+          "compiletime_identity": "aws_iam_policy.foo"
+        }
+      },
+      {
+        "type": "aws_iam_role_policy_attachment",
+        "name": "foo",
+        "properties": {
+          "role": "${aws_iam_role.foo.name}",
+          "policy_arn": "${aws_iam_policy.foo.arn}",
+          "compiletime_identity": "aws_iam_role_policy_attachment.foo"
+        }
+      },
+      {
+        "type": "random_integer",
+        "name": "bucket_suffix",
+        "properties": {
+          "min": 1,
+          "max": 99999,
+          "compiletime_identity": "random_integer.bucket_suffix"
+        }
+      },
+      {
+        "type": "aws_s3_bucket",
+        "name": "foo",
+        "properties": {
+          "bucket": "terraform-sagemaker-example-${random_integer.bucket_suffix.result}",
+          "acl": "private",
+          "force_destroy": true,
+          "compiletime_identity": "aws_s3_bucket.foo"
+        }
+      },
+      {
+        "type": "aws_s3_bucket_object",
+        "name": "object",
+        "properties": {
+          "bucket": "${aws_s3_bucket.foo.bucket}",
+          "key": "model.tar.gz",
+          "source": "model.tar.gz",
+          "compiletime_identity": "aws_s3_bucket_object.object"
+        }
+      },
+      {
+        "type": "aws_sagemaker_model",
+        "name": "foo",
+        "properties": {
+          "name": "terraform-sagemaker-example",
+          "execution_role_arn": "${aws_iam_role.foo.arn}",
+          "primary_container": [
+            {
+              "image": "${data.aws_caller_identity.current.account_id}.dkr.ecr.${data.aws_region.current.name}.amazonaws.com/foo:latest",
+              "model_data_url": "https://s3-us-west-2.amazonaws.com/${aws_s3_bucket.foo.bucket}/model.tar.gz"
+            }
+          ],
+          "tags": {
+            "foo": "bar"
+          },
+          "compiletime_identity": "aws_sagemaker_model.foo"
+        }
+      },
+      {
+        "type": "aws_sagemaker_endpoint_configuration",
+        "name": "foo",
+        "properties": {
+          "name": "terraform-sagemaker-example",
+          "production_variants": [
+            {
+              "variant_name": "variant-1",
+              "model_name": "${aws_sagemaker_model.foo.name}",
+              "initial_instance_count": 1,
+              "instance_type": "ml.t2.medium",
+              "initial_variant_weight": 1
+            }
+          ],
+          "tags": {
+            "foo": "bar"
+          },
+          "compiletime_identity": "aws_sagemaker_endpoint_configuration.foo"
+        }
+      },
+      {
+        "type": "aws_sagemaker_endpoint",
+        "name": "foo",
+        "properties": {
+          "name": "terraform-sagemaker-example",
+          "endpoint_config_name": "${aws_sagemaker_endpoint_configuration.foo.name}",
+          "tags": {
+            "foo": "bar"
+          },
+          "compiletime_identity": "aws_sagemaker_endpoint.foo"
+        }
+      }
+    ]
+  }
+}

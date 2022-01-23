@@ -2,12 +2,12 @@
   "structure": "filesystem",
   "error": null,
   "reference": "master",
-  "contentType": "yaml",
+  "contentType": "json",
   "source": "gitConnectorGoogleKcc",
   "paths": [
-    "/samples/resources/dnsrecordset/dnssec-sshfp-record-set/dns_v1beta1_dnsrecordset.yaml"
+    "/samples/resources/dataflowflextemplatejob/batch-dataflow-flex-template-job/dataflow_v1beta1_dataflowflextemplatejob.yaml"
   ],
-  "timestamp": 1628765146463,
+  "timestamp": 1642973303813,
   "queryuser": null,
   "checksum": "99914b932bd37a50b983c5e7c90ae93b",
   "node": {
@@ -15,30 +15,36 @@
     "type": "kcc",
     "collection": "kcctemplate",
     "paths": [
-      "/samples/resources/dnsrecordset/dnssec-sshfp-record-set/dns_v1beta1_dnsrecordset.yaml"
+      "/samples/resources/dataflowflextemplatejob/batch-dataflow-flex-template-job/dataflow_v1beta1_dataflowflextemplatejob.yaml"
     ],
     "snapshotId": "KCC_TEMPLATE_SNAPSHOT352",
     "status": "active",
-    "validate": true
+    "validate": true,
+    "resourceTypes": [
+      "dataflowflextemplatejob"
+    ]
   },
   "snapshotId": "KCC_TEMPLATE_SNAPSHOT352",
   "collection": "kcctemplate",
   "json": {
-    "apiVersion": "dns.cnrm.cloud.google.com/v1beta1",
-    "kind": "DNSRecordSet",
+    "apiVersion": "dataflow.cnrm.cloud.google.com/v1beta1",
+    "kind": "DataflowFlexTemplateJob",
     "metadata": {
-      "name": "dnsrecordset-sample-dnssecsshfp"
+      "annotations": {
+        "cnrm.cloud.google.com/on-delete": "cancel"
+      },
+      "name": "dataflowflextemplatejob-sample-batch"
     },
     "spec": {
-      "name": "host.secure.example.com.",
-      "type": "SSHFP",
-      "ttl": 300,
-      "managedZoneRef": {
-        "name": "dnsrecordset-dep-dnssecsshfp"
-      },
-      "rrdatas": [
-        "2 1 123456789abcdef67890123456789abcdef67890"
-      ]
+      "region": "us-central1",
+      "containerSpecGcsPath": "gs://dataflow-templates/2020-08-31-00_RC00/flex/File_Format_Conversion",
+      "parameters": {
+        "inputFileFormat": "csv",
+        "outputFileFormat": "avro",
+        "inputFileSpec": "gs://config-connector-samples/dataflowflextemplate/numbertest.csv",
+        "outputBucket": "gs://${PROJECT_ID?}-dataflowflextemplatejob-dep-batch",
+        "schema": "gs://config-connector-samples/dataflowflextemplate/numbers.avsc"
+      }
     }
   }
 }

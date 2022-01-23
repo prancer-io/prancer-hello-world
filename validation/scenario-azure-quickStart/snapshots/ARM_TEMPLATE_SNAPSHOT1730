@@ -1,0 +1,99 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAzureQuickStart",
+  "paths": [
+    "/quickstarts/microsoft.streamanalytics/streamanalytics-create/azuredeploy.json",
+    "/quickstarts/microsoft.streamanalytics/streamanalytics-create/azuredeploy.parameters.json"
+  ],
+  "timestamp": 1642962910693,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/quickstarts/microsoft.streamanalytics/streamanalytics-create/azuredeploy.json",
+      "/quickstarts/microsoft.streamanalytics/streamanalytics-create/azuredeploy.parameters.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT1730",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "microsoft.streamanalytics/streamingjobs"
+    ]
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT1730",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.1.0.0",
+    "parameters": {
+      "location": {
+        "type": "string",
+        "defaultValue": "[resourceGroup().location]",
+        "metadata": {
+          "description": "Location for the resources."
+        }
+      },
+      "streamAnalyticsJobName": {
+        "type": "string",
+        "minLength": 3,
+        "maxLength": 63,
+        "metadata": {
+          "description": "Stream Analytics Job Name, can contain alphanumeric characters and hypen and must be 3-63 characters long"
+        },
+        "value": "StreamAnalyticsJobName"
+      },
+      "numberOfStreamingUnits": {
+        "type": "int",
+        "minValue": 1,
+        "maxValue": 48,
+        "allowedValues": [
+          1,
+          3,
+          6,
+          12,
+          18,
+          24,
+          30,
+          36,
+          42,
+          48
+        ],
+        "metadata": {
+          "description": "Number of Streaming Units"
+        },
+        "value": 1
+      }
+    },
+    "resources": [
+      {
+        "type": "Microsoft.StreamAnalytics/StreamingJobs",
+        "apiVersion": "2019-06-01",
+        "name": "StreamAnalyticsJobName",
+        "location": "[resourceGroup().location]",
+        "properties": {
+          "sku": {
+            "name": "standard"
+          },
+          "outputErrorPolicy": "stop",
+          "eventsOutOfOrderPolicy": "adjust",
+          "eventsOutOfOrderMaxDelayInSeconds": 0,
+          "eventsLateArrivalMaxDelayInSeconds": 5,
+          "dataLocale": "en-US",
+          "transformation": {
+            "name": "Transformation",
+            "properties": {
+              "streamingUnits": 1,
+              "query": "SELECT\r\n    *\r\nINTO\r\n    [YourOutputAlias]\r\nFROM\r\n    [YourInputAlias]"
+            }
+          }
+        }
+      }
+    ],
+    "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+  }
+}

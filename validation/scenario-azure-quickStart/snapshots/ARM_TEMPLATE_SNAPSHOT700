@@ -1,0 +1,84 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAzureQuickStart",
+  "paths": [
+    "/demos/dns-records-office365/mdm.json",
+    "/demos/dns-records-office365/azuredeploy.parameters.json"
+  ],
+  "timestamp": 1642962899212,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/demos/dns-records-office365/mdm.json",
+      "/demos/dns-records-office365/azuredeploy.parameters.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT700",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "microsoft.network/dnszones/cname"
+    ]
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT700",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "dnsZoneName": {
+        "type": "string",
+        "metadata": {
+          "description": "Name of the DNS Zone."
+        },
+        "value": "contoso.local"
+      },
+      "ttl": {
+        "type": "int",
+        "defaultValue": "3600",
+        "metadata": {
+          "description": "Time to live value, in seconds."
+        },
+        "value": 3600
+      },
+      "recordTypes": {
+        "value": [
+          "mail",
+          "mdm",
+          "sfb"
+        ]
+      }
+    },
+    "resources": [
+      {
+        "type": "Microsoft.Network/dnszones/CNAME",
+        "name": "contoso.local/enterpriseregistration",
+        "apiVersion": "2018-05-01",
+        "properties": {
+          "TTL": 3600,
+          "CNAMERecord": {
+            "cname": "enterpriseregistration.windows.net"
+          }
+        }
+      },
+      {
+        "comments": "CNAME record needed for Mobile Device Management (MDM) with Office 365.",
+        "type": "Microsoft.Network/dnszones/CNAME",
+        "name": "contoso.local/enterpriseenrollment",
+        "apiVersion": "2018-05-01",
+        "properties": {
+          "TTL": 3600,
+          "CNAMERecord": {
+            "cname": "enterpriseenrollment.manage.microsoft.com"
+          }
+        }
+      }
+    ],
+    "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+  }
+}

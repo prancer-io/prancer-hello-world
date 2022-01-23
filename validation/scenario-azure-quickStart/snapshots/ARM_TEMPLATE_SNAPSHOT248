@@ -1,0 +1,443 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAzureQuickStart",
+  "paths": [
+    "/application-workloads/minio/minio-azure-gateway/azuredeploy.json",
+    "/application-workloads/minio/minio-azure-gateway/azuredeploy.parameters.us.json"
+  ],
+  "timestamp": 1642962891320,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/application-workloads/minio/minio-azure-gateway/azuredeploy.json",
+      "/application-workloads/minio/minio-azure-gateway/azuredeploy.parameters.us.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT248",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "microsoft.network/privatednszones",
+      "microsoft.network/virtualnetworks",
+      "microsoft.authorization/roleassignments",
+      "microsoft.resources/deploymentscripts",
+      "microsoft.network/privateendpoints",
+      "microsoft.network/privateendpoints/privatednszonegroups",
+      "microsoft.containerservice/managedclusters",
+      "microsoft.storage/storageaccounts",
+      "microsoft.managedidentity/userassignedidentities"
+    ]
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT248",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "location": {
+        "defaultValue": "[resourceGroup().location]",
+        "type": "string",
+        "metadata": {
+          "description": "Location of all resources to be deployed"
+        },
+        "value": "usgovvirginia"
+      },
+      "virtualNetworkAddressPrefix": {
+        "defaultValue": [
+          "10.0.0.0/16"
+        ],
+        "type": "array",
+        "metadata": {
+          "description": "VNET address space."
+        }
+      },
+      "virtualNetworkSubnetAddressPrefix": {
+        "defaultValue": "10.0.0.0/16",
+        "type": "string",
+        "metadata": {
+          "description": "Subnet address space."
+        }
+      },
+      "agentPoolVmSku": {
+        "type": "string",
+        "defaultValue": "Standard_D16s_v3",
+        "metadata": {
+          "description": "VM SKU for AKS user node pool"
+        }
+      },
+      "maxpods": {
+        "type": "int",
+        "defaultValue": 20,
+        "metadata": {
+          "description": "AKS max pods per node"
+        }
+      },
+      "nodecount": {
+        "type": "int",
+        "defaultValue": 4,
+        "metadata": {
+          "description": "Initial node count for AKS user node pool"
+        }
+      },
+      "mincount": {
+        "type": "int",
+        "defaultValue": 4,
+        "metadata": {
+          "description": "Min count for AKS user node pool autoscaling"
+        }
+      },
+      "maxcount": {
+        "type": "int",
+        "defaultValue": 50,
+        "metadata": {
+          "description": "Max count for AKS user node pool autoscaling"
+        }
+      },
+      "linuxSSHKey": {
+        "type": "string",
+        "metadata": {
+          "description": "Public key for SSH authentication"
+        },
+        "value": "GEN-SSH-PUB-KEY"
+      },
+      "adminUsername": {
+        "type": "string",
+        "metadata": {
+          "description": "Linux admin username for AKS cluster nodes"
+        },
+        "value": "GEN-UNIQUE"
+      },
+      "_artifactsLocation": {
+        "type": "string",
+        "metadata": {
+          "description": "The base URI where artifacts required by this template are located"
+        },
+        "defaultValue": "[deployment().properties.templatelink.uri]"
+      },
+      "_artifactsLocationSasToken": {
+        "type": "securestring",
+        "metadata": {
+          "description": "The sasToken required to access artifacts"
+        },
+        "defaultValue": ""
+      },
+      "utcValue": {
+        "type": "string",
+        "defaultValue": "[utcNow()]"
+      }
+    },
+    "functions": [],
+    "variables": {
+      "vnetName": "minio-gateway-vnet",
+      "resgpguid": "[substring(replace(guid(resourceGroup().id), '-', ''), 0, 4)]",
+      "installScriptUri": "[uri(parameters('_artifactsLocation'), concat('scripts/minio.sh', parameters('_artifactsLocationSasToken')))]",
+      "helmValuesUri": "[uri(parameters('_artifactsLocation'), concat('scripts/values.yaml', parameters('_artifactsLocationSasToken')))]",
+      "blobStorageAccountName": "minio[substring(replace(guid(resourceGroup().id), '-', ''), 0, 4)]",
+      "blobStorageAccountPrivateEndpointName": "minio[substring(replace(guid(resourceGroup().id), '-', ''), 0, 4)]",
+      "blobStorageAccountId": "Microsoft.Storage/storageAccounts/minio[substring(replace(guid(resourceGroup().id), '-', ''), 0, 4)]",
+      "blobPublicDNSZoneForwarder": "[concat('.blob.', environment().suffixes.storage)]",
+      "blobPrivateDnsZoneName": "[concat('privatelink', variables('blobPublicDNSZoneForwarder'))]",
+      "blobPrivateDnsZoneId": "[resourceId('Microsoft.Network/privateDnsZones', variables('blobPrivateDnsZoneName'))]",
+      "blobStorageAccountPrivateEndpointId": "Microsoft.Network/privateEndpoints/minio[substring(replace(guid(resourceGroup().id), '-', ''), 0, 4)]",
+      "blobStorageAccountPrivateEndpointGroupName": "blob",
+      "blobPrivateDnsZoneGroup": "minio[substring(replace(guid(resourceGroup().id), '-', ''), 0, 4)]/blobPrivateDnsZoneGroup",
+      "dsRoleAssignmentId": "[guid(resourceGroup().id, variables('dsRoleDefinitionId'), resourceId('Microsoft.ManagedIdentity/identities', variables('dsIdentityName')))]",
+      "dsRoleDefinitionId": "[subscriptionResourceId('Microsoft.Authorization/roleDefinitions', 'b24988ac-6180-42a0-ab88-20f7382dd24c')]",
+      "aksRoleAssignmentId": "[guid(resourceGroup().id, variables('aksRoleDefinitionId'), resourceId('Microsoft.ManagedIdentity/identities', 'aks'))]",
+      "aksRoleDefinitionId": "[subscriptionResourceId('Microsoft.Authorization/roleDefinitions', '4d97b98b-1d4f-4787-a291-c67834d212e7')]",
+      "dsIdentityName": "dsId"
+    },
+    "resources": [
+      {
+        "type": "Microsoft.Network/virtualNetworks",
+        "name": "minio-gateway-vnet",
+        "apiVersion": "2020-05-01",
+        "location": "usgovvirginia",
+        "properties": {
+          "addressSpace": {
+            "addressPrefixes": [
+              "10.0.0.0/16"
+            ]
+          },
+          "subnets": [
+            {
+              "name": "default",
+              "properties": {
+                "addressPrefix": "10.0.0.0/16",
+                "serviceEndpoints": [
+                  {
+                    "service": "Microsoft.Storage"
+                  }
+                ],
+                "privateEndpointNetworkPolicies": "Disabled",
+                "privateLinkServiceNetworkPolicies": "Enabled"
+              }
+            }
+          ]
+        }
+      },
+      {
+        "name": "minio[substring(replace(guid(resourceGroup().id), '-', ''), 0, 4)]",
+        "type": "Microsoft.Storage/storageAccounts",
+        "apiVersion": "2019-06-01",
+        "tags": {
+          "displayName": "minio[substring(replace(guid(resourceGroup().id), '-', ''), 0, 4)]"
+        },
+        "location": "usgovvirginia",
+        "kind": "StorageV2",
+        "sku": {
+          "name": "Standard_LRS",
+          "tier": "Standard"
+        },
+        "properties": {
+          "networkAcls": {
+            "bypass": "AzureServices",
+            "defaultAction": "Deny"
+          }
+        },
+        "resources": [
+          {
+            "type": "blobServices/containers",
+            "apiVersion": "2019-06-01",
+            "name": "default/defaultcontainer",
+            "dependsOn": [
+              "Microsoft.Storage/storageAccounts/minio[substring(replace(guid(resourceGroup().id), '-', ''), 0, 4)]"
+            ]
+          }
+        ]
+      },
+      {
+        "type": "Microsoft.Network/privateDnsZones",
+        "apiVersion": "2018-09-01",
+        "name": "[variables('blobPrivateDnsZoneName')]",
+        "dependsOn": [
+          "Microsoft.Network/virtualNetworks//minio-gateway-vnet"
+        ],
+        "location": "global",
+        "properties": {},
+        "resources": [
+          {
+            "name": "vnet-link",
+            "type": "virtualNetworkLinks",
+            "apiVersion": "2018-09-01",
+            "location": "global",
+            "dependsOn": [
+              "[resourceId('Microsoft.Network/virtualNetworks', variables('vnetName'))]",
+              "[resourceId('Microsoft.Network/privateDnsZones', variables('blobPrivateDnsZoneName'))]"
+            ],
+            "properties": {
+              "virtualNetwork": {
+                "id": "Microsoft.Network/virtualNetworks/minio-gateway-vnet"
+              },
+              "registrationEnabled": false
+            }
+          }
+        ]
+      },
+      {
+        "type": "Microsoft.Network/privateEndpoints",
+        "apiVersion": "2020-04-01",
+        "name": "minio[substring(replace(guid(resourceGroup().id), '-', ''), 0, 4)]",
+        "location": "usgovvirginia",
+        "dependsOn": [
+          "Microsoft.Network/virtualNetworks/minio-gateway-vnet",
+          "Microsoft.Storage/storageAccounts/minio[substring(replace(guid(resourceGroup().id), '-', ''), 0, 4)]"
+        ],
+        "properties": {
+          "privateLinkServiceConnections": [
+            {
+              "name": "minio[substring(replace(guid(resourceGroup().id), '-', ''), 0, 4)]",
+              "properties": {
+                "privateLinkServiceId": "Microsoft.Storage/storageAccounts/minio[substring(replace(guid(resourceGroup().id), '-', ''), 0, 4)]",
+                "groupIds": [
+                  "blob"
+                ]
+              }
+            }
+          ],
+          "subnet": {
+            "id": "Microsoft.Network/virtualNetworks/subnets/minio-gateway-vnet/default"
+          },
+          "customDnsConfigs": [
+            {
+              "fqdn": "[concat(variables('blobStorageAccountName'), variables('blobPublicDNSZoneForwarder'))]"
+            }
+          ]
+        }
+      },
+      {
+        "type": "Microsoft.Network/privateEndpoints/privateDnsZoneGroups",
+        "apiVersion": "2020-03-01",
+        "name": "minio[substring(replace(guid(resourceGroup().id), '-', ''), 0, 4)]/blobPrivateDnsZoneGroup",
+        "location": "usgovvirginia",
+        "dependsOn": [
+          "[variables('blobPrivateDnsZoneId')]",
+          "[variables('blobStorageAccountPrivateEndpointId')]"
+        ],
+        "properties": {
+          "privateDnsZoneConfigs": [
+            {
+              "name": "dnsConfig",
+              "properties": {
+                "privateDnsZoneId": "[variables('blobPrivateDnsZoneId')]"
+              }
+            }
+          ]
+        }
+      },
+      {
+        "type": "Microsoft.ManagedIdentity/userAssignedIdentities",
+        "name": "dsId",
+        "apiVersion": "2018-11-30",
+        "location": "usgovvirginia"
+      },
+      {
+        "type": "Microsoft.Authorization/roleAssignments",
+        "apiVersion": "2018-09-01-preview",
+        "name": "[guid(resourceGroup().id, variables('dsRoleDefinitionId'), resourceId('Microsoft.ManagedIdentity/identities', variables('dsIdentityName')))]",
+        "properties": {
+          "roleDefinitionId": "[subscriptionResourceId('Microsoft.Authorization/roleDefinitions', 'b24988ac-6180-42a0-ab88-20f7382dd24c')]",
+          "principalId": "[reference(resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', variables('dsIdentityName')), '2018-11-30').principalId]",
+          "scope": "[resourceGroup().id]",
+          "principalType": "ServicePrincipal"
+        }
+      },
+      {
+        "type": "Microsoft.Authorization/roleAssignments",
+        "apiVersion": "2018-09-01-preview",
+        "name": "[guid(resourceGroup().id, variables('aksRoleDefinitionId'), resourceId('Microsoft.ManagedIdentity/identities', 'aks'))]",
+        "properties": {
+          "roleDefinitionId": "[subscriptionResourceId('Microsoft.Authorization/roleDefinitions', '4d97b98b-1d4f-4787-a291-c67834d212e7')]",
+          "principalId": "[reference(resourceId('Microsoft.ContainerService/managedClusters', 'minio-cluster'), '2020-11-01', 'Full').identity.principalId]",
+          "scope": "[resourceGroup().id]",
+          "principalType": "ServicePrincipal"
+        }
+      },
+      {
+        "type": "Microsoft.Resources/deploymentScripts",
+        "name": "minio",
+        "apiVersion": "2019-10-01-preview",
+        "location": "usgovvirginia",
+        "kind": "AzureCLI",
+        "dependsOn": [
+          "Microsoft.ManagedIdentity/userAssignedIdentities/dsId",
+          "Microsoft.Storage/storageAccounts/minio[substring(replace(guid(resourceGroup().id), '-', ''), 0, 4)]",
+          "Microsoft.ContainerService/managedClusters/minio-cluster"
+        ],
+        "identity": {
+          "type": "UserAssigned",
+          "userAssignedIdentities": {
+            "[resourceID('Microsoft.ManagedIdentity/userAssignedIdentities', 'dsId')]": {}
+          }
+        },
+        "properties": {
+          "forceUpdateTag": "[utcNow()]",
+          "AzCliVersion": "2.10.1",
+          "timeout": "PT30M",
+          "environmentVariables": [
+            {
+              "name": "RESOURCEGROUP",
+              "secureValue": "[resourceGroup().name]"
+            },
+            {
+              "name": "STORAGEACCOUNTNAME",
+              "value": "minio[substring(replace(guid(resourceGroup().id), '-', ''), 0, 4)]"
+            },
+            {
+              "name": "STORAGEACCOUNTKEY",
+              "secureValue": "[listKeys(resourceId('Microsoft.Storage/storageAccounts', variables('blobStorageAccountName')), '2019-06-01').keys[0].value]"
+            },
+            {
+              "name": "HELMVALUES",
+              "value": "[uri(parameters('_artifactsLocation'), concat('scripts/values.yaml', parameters('_artifactsLocationSasToken')))]"
+            }
+          ],
+          "primaryScriptUri": "[uri(parameters('_artifactsLocation'), concat('scripts/minio.sh', parameters('_artifactsLocationSasToken')))]",
+          "cleanupPreference": "OnExpiration",
+          "retentionInterval": "P1D"
+        }
+      },
+      {
+        "name": "minio-cluster",
+        "type": "Microsoft.ContainerService/managedClusters",
+        "apiVersion": "2020-11-01",
+        "location": "usgovvirginia",
+        "identity": {
+          "type": "SystemAssigned"
+        },
+        "dependsOn": [
+          "Microsoft.Network/virtualNetworks/minio-gateway-vnet"
+        ],
+        "properties": {
+          "enableRBAC": false,
+          "dnsPrefix": "minio[substring(replace(guid(resourceGroup().id), '-', ''), 0, 4)]",
+          "networkProfile": {
+            "networkPlugin": "azure",
+            "loadBalancerSku": "standard",
+            "serviceCidr": "172.16.0.0/24",
+            "dnsServiceIP": "172.16.0.10"
+          },
+          "agentPoolProfiles": [
+            {
+              "name": "system",
+              "count": 3,
+              "vmSize": "Standard_D4s_v3",
+              "osType": "Linux",
+              "osDiskSizeGB": 80,
+              "mode": "System",
+              "type": "VirtualMachineScaleSets",
+              "availabilityZones": [
+                "1",
+                "2",
+                "3"
+              ],
+              "vnetSubnetID": "Microsoft.Network/virtualNetworks/subnets/minio-gateway-vnet/default"
+            },
+            {
+              "name": "user",
+              "count": 4,
+              "vmSize": "Standard_D16s_v3",
+              "osType": "Linux",
+              "osDiskType": "Ephemeral",
+              "maxPods": 20,
+              "scaleSetPriority": "Regular",
+              "mode": "User",
+              "type": "VirtualMachineScaleSets",
+              "enableAutoScaling": true,
+              "minCount": 4,
+              "maxCount": 50,
+              "availabilityZones": [
+                "1",
+                "2",
+                "3"
+              ],
+              "vnetSubnetID": "Microsoft.Network/virtualNetworks/subnets/minio-gateway-vnet/default"
+            }
+          ],
+          "linuxProfile": {
+            "adminUsername": "GEN-UNIQUE",
+            "ssh": {
+              "publicKeys": [
+                {
+                  "keyData": "GEN-SSH-PUB-KEY"
+                }
+              ]
+            }
+          }
+        }
+      }
+    ],
+    "outputs": {
+      "minioServiceIp": {
+        "type": "string",
+        "value": "[reference(resourceId('Microsoft.Resources/deploymentScripts', 'minio')).outputs.loadBalancerIP]"
+      }
+    },
+    "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+  }
+}

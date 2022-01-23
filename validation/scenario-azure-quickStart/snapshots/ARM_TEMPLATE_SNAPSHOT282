@@ -1,0 +1,170 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAzureQuickStart",
+  "paths": [
+    "/application-workloads/mongo/mongodb-sharding-centos/nested/config-secondary-resources.json"
+  ],
+  "timestamp": 1642962891808,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/application-workloads/mongo/mongodb-sharding-centos/nested/config-secondary-resources.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT282",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "microsoft.network/networkinterfaces",
+      "microsoft.compute/virtualmachines",
+      "microsoft.compute/virtualmachines/extensions"
+    ]
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT282",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "adminUsername": {
+        "type": "string"
+      },
+      "namespace": {
+        "type": "string"
+      },
+      "vmbasename": {
+        "type": "string"
+      },
+      "osSettings": {
+        "type": "object"
+      },
+      "vmSize": {
+        "type": "string"
+      },
+      "zabbixServerIPAddress": {
+        "type": "string"
+      },
+      "subnet": {
+        "type": "object"
+      },
+      "staticIp": {
+        "type": "string"
+      },
+      "location": {
+        "type": "string",
+        "metadata": {
+          "description": "Location for all resources."
+        }
+      },
+      "authenticationType": {
+        "type": "string"
+      },
+      "adminPasswordOrKey": {
+        "type": "securestring"
+      }
+    },
+    "variables": {
+      "subnetRef": "Microsoft.Network/virtualNetworks/subnets/subnet/subnet",
+      "linuxConfiguration": {
+        "disablePasswordAuthentication": true,
+        "ssh": {
+          "publicKeys": [
+            {
+              "path": "/home/adminUsername/.ssh/authorized_keys",
+              "keyData": "adminPasswordOrKey"
+            }
+          ]
+        }
+      }
+    },
+    "resources": [
+      {
+        "apiVersion": "2020-11-01",
+        "type": "Microsoft.Network/networkInterfaces",
+        "name": "namespacevmbasenamenic",
+        "location": "location",
+        "properties": {
+          "ipConfigurations": [
+            {
+              "name": "ipconfig1",
+              "properties": {
+                "privateIPAllocationMethod": "Static",
+                "privateIPAddress": "staticIp",
+                "subnet": {
+                  "id": "Microsoft.Network/virtualNetworks/subnets/subnet/subnet"
+                }
+              }
+            }
+          ]
+        }
+      },
+      {
+        "apiVersion": "2020-12-01",
+        "type": "Microsoft.Compute/virtualMachines",
+        "name": "namespacevmbasenamevm",
+        "location": "location",
+        "dependsOn": [
+          "Microsoft.Network/networkInterfaces//namespacevmbasenamenic"
+        ],
+        "properties": {
+          "hardwareProfile": {
+            "vmSize": "vmSize"
+          },
+          "osProfile": {
+            "computerName": "vmbasenamevm",
+            "adminUsername": "adminUsername",
+            "adminPassword": "adminPasswordOrKey",
+            "linuxConfiguration": "[if(equals(parameters('authenticationType'), 'password'), json('null'), variables('linuxConfiguration'))]"
+          },
+          "storageProfile": {
+            "imageReference": "osSettings",
+            "osDisk": {
+              "name": "namespacevmbasenamevm_OSDisk",
+              "caching": "ReadWrite",
+              "createOption": "FromImage"
+            }
+          },
+          "networkProfile": {
+            "networkInterfaces": [
+              {
+                "id": "Microsoft.Network/networkInterfaces/namespacevmbasenamenic"
+              }
+            ]
+          },
+          "availabilitySet": {
+            "id": "Microsoft.Compute/availabilitySets/namespaceset"
+          }
+        }
+      },
+      {
+        "type": "Microsoft.Compute/virtualMachines/extensions",
+        "name": "namespacevmbasenamevm/configSecondaryInstall",
+        "apiVersion": "2020-12-01",
+        "location": "location",
+        "dependsOn": [
+          "Microsoft.Compute/virtualMachines//namespacevmbasenamevm",
+          "Microsoft.Network/networkInterfaces//namespacevmbasenamenic"
+        ],
+        "properties": {
+          "publisher": "Microsoft.Azure.Extensions",
+          "type": "CustomScript",
+          "typeHandlerVersion": "2.0",
+          "autoUpgradeMinorVersion": true,
+          "settings": {
+            "fileUris": "osSettings"
+          },
+          "protectedSettings": {
+            "commandToExecute": "bash config_secondary.sh zabbixServerIPAddress"
+          }
+        }
+      }
+    ],
+    "outputs": {},
+    "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+  }
+}

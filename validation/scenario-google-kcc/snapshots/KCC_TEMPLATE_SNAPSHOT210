@@ -2,12 +2,12 @@
   "structure": "filesystem",
   "error": null,
   "reference": "master",
-  "contentType": "yaml",
+  "contentType": "json",
   "source": "gitConnectorGoogleKcc",
   "paths": [
-    "/samples/resources/computerouternat/router-nat-for-list-of-subnets/compute_v1beta1_computerouter.yaml"
+    "/samples/resources/computenodetemplate/typed-node-template/compute_v1beta1_computenodetemplate.yaml"
   ],
-  "timestamp": 1628765142700,
+  "timestamp": 1642973302983,
   "queryuser": null,
   "checksum": "99914b932bd37a50b983c5e7c90ae93b",
   "node": {
@@ -15,26 +15,31 @@
     "type": "kcc",
     "collection": "kcctemplate",
     "paths": [
-      "/samples/resources/computerouternat/router-nat-for-list-of-subnets/compute_v1beta1_computerouter.yaml"
+      "/samples/resources/computenodetemplate/typed-node-template/compute_v1beta1_computenodetemplate.yaml"
     ],
     "snapshotId": "KCC_TEMPLATE_SNAPSHOT210",
     "status": "active",
-    "validate": true
+    "validate": true,
+    "resourceTypes": [
+      "computenodetemplate"
+    ]
   },
   "snapshotId": "KCC_TEMPLATE_SNAPSHOT210",
   "collection": "kcctemplate",
   "json": {
     "apiVersion": "compute.cnrm.cloud.google.com/v1beta1",
-    "kind": "ComputeRouter",
+    "kind": "ComputeNodeTemplate",
     "metadata": {
-      "name": "computerouternat-dep-forlistofsubnets"
+      "name": "computenodetemplate-sample-template",
+      "labels": {
+        "memory_guarantee": "true",
+        "desired_workload": "sustained"
+      }
     },
     "spec": {
-      "description": "example router description",
-      "region": "us-west1",
-      "networkRef": {
-        "name": "computerouternat-dep-forlistofsubnets"
-      }
+      "description": "Node template for sole tenant nodes running in us-central1, with 96vCPUs and 624GB of memory, on n1 machines.",
+      "region": "us-central1",
+      "nodeType": "n1-node-96-624"
     }
   }
 }

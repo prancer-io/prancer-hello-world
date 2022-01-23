@@ -1,0 +1,112 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAzureQuickStart",
+  "paths": [
+    "/quickstarts/microsoft.web/web-app-ase-ilb-configure-default-ssl/azuredeploy.json",
+    "/quickstarts/microsoft.web/web-app-ase-ilb-configure-default-ssl/azuredeploy.parameters.json"
+  ],
+  "timestamp": 1642962911071,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/quickstarts/microsoft.web/web-app-ase-ilb-configure-default-ssl/azuredeploy.json",
+      "/quickstarts/microsoft.web/web-app-ase-ilb-configure-default-ssl/azuredeploy.parameters.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT1770",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "microsoft.web/certificates",
+      "microsoft.web/hostingenvironments"
+    ]
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT1770",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "appServiceEnvironmentName": {
+        "type": "string",
+        "metadata": {
+          "description": "The default SSL certificate will be configured for this App Service Environment."
+        },
+        "value": "changeme"
+      },
+      "existingAseLocation": {
+        "type": "string",
+        "metadata": {
+          "description": "Set this to the same location as the App Service Environment defined in appServiceEnvironmentName."
+        },
+        "value": "changeme"
+      },
+      "pfxBlobString": {
+        "type": "string",
+        "metadata": {
+          "description": "A pfx file encoded as a base-64 string.  The pfx contains the SSL certificate that will be configured as the default SSL certificate for the ASE."
+        },
+        "value": "changeme"
+      },
+      "password": {
+        "type": "securestring",
+        "metadata": {
+          "description": "The password for the pfx filed contained in pfxBlobString."
+        },
+        "value": "changeme"
+      },
+      "certificateThumbprint": {
+        "type": "string",
+        "metadata": {
+          "description": "The hexadecimal certificate thumbprint of the certificate contained in pfxBlobString.  All spaces need to be removed from the hex string."
+        },
+        "value": "changeme"
+      },
+      "certificateName": {
+        "type": "string",
+        "metadata": {
+          "description": "Name of the certificate.  This can be any name you want to use to identify the certificate."
+        },
+        "value": "DefaultCertificateFor_changeme_InternalLoadBalancingASE"
+      }
+    },
+    "resources": [
+      {
+        "apiVersion": "2015-08-01",
+        "type": "Microsoft.Web/certificates",
+        "name": "DefaultCertificateFor_changeme_InternalLoadBalancingASE",
+        "location": "changeme",
+        "properties": {
+          "pfxBlob": "changeme",
+          "password": "changeme",
+          "hostingEnvironmentProfile": {
+            "id": "Microsoft.Web/hostingEnvironments/changeme"
+          }
+        }
+      },
+      {
+        "apiVersion": "2015-08-01",
+        "type": "Microsoft.Web/hostingEnvironments",
+        "name": "changeme",
+        "location": "changeme",
+        "properties": {
+          "clusterSettings": [
+            {
+              "name": "DefaultSslCertificateThumbprint",
+              "value": "changeme"
+            }
+          ]
+        },
+        "dependsOn": [
+          "Microsoft.Web/certificates/DefaultCertificateFor_changeme_InternalLoadBalancingASE"
+        ]
+      }
+    ],
+    "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+  }
+}

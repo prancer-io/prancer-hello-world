@@ -1,0 +1,93 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAzureQuickStart",
+  "paths": [
+    "/demos/azmgmt-demo/nestedtemplates/managedVmsBackup.json"
+  ],
+  "timestamp": 1642962898275,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/demos/azmgmt-demo/nestedtemplates/managedVmsBackup.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT624",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "microsoft.recoveryservices/vaults/backupfabrics/protectioncontainers/protecteditems"
+    ]
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT624",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "instanceCount": {
+        "type": "int"
+      },
+      "vmNamePrefix": {
+        "type": "string",
+        "metadata": {
+          "description": "Name of Azure Virtual Machines"
+        }
+      },
+      "vmRgName": {
+        "type": "string",
+        "metadata": {
+          "description": "Resource group containing the virtual machines."
+        }
+      },
+      "omsRecoveryVaultName": {
+        "type": "string",
+        "metadata": {
+          "description": "Recovery services vault name where the VMs will be backed up to. The default vaule is 'Backup-vault'."
+        }
+      },
+      "omsRecoveryVaultRegion": {
+        "type": "string",
+        "metadata": {
+          "description": "Location of the Backup Vault"
+        }
+      },
+      "platform": {
+        "type": "string",
+        "metadata": {
+          "description": "Specify OS platform"
+        }
+      }
+    },
+    "variables": {
+      "backupFabric": "Azure",
+      "backupPolicy": "DefaultPolicy",
+      "v2VmType": "Microsoft.Compute/virtualMachines",
+      "v2VmContainer": "iaasvmcontainer;iaasvmcontainerv2;",
+      "v2Vm": "vm;iaasvmcontainerv2;"
+    },
+    "resources": [
+      {
+        "name": "omsRecoveryVaultName/Azure/iaasvmcontainer;iaasvmcontainerv2;vmRgName;vmNamePrefixplatformcopyIndex()/vm;iaasvmcontainerv2;vmRgName;vmNamePrefixplatformcopyIndex()",
+        "apiVersion": "2016-12-01",
+        "location": "omsRecoveryVaultRegion",
+        "type": "Microsoft.RecoveryServices/vaults/backupFabrics/protectionContainers/protectedItems",
+        "copy": {
+          "name": "iaasBackupCopy",
+          "count": "instanceCount"
+        },
+        "properties": {
+          "protectedItemType": "Microsoft.Compute/virtualMachines",
+          "policyId": "Microsoft.RecoveryServices/vaults/backupPolicies/omsRecoveryVaultName/DefaultPolicy",
+          "sourceResourceId": "[concat('/subscriptions/', subscription().subscriptionId, '/resourceGroups/', parameters('vmRgName'), '/providers/Microsoft.Compute/virtualMachines/', parameters('vmNamePrefix'), parameters('platform'), copyIndex())]"
+        }
+      }
+    ],
+    "outputs": {},
+    "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+  }
+}

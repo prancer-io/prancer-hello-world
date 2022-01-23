@@ -2,12 +2,12 @@
   "structure": "filesystem",
   "error": null,
   "reference": "master",
-  "contentType": "yaml",
+  "contentType": "json",
   "source": "gitConnectorGoogleKcc",
   "paths": [
-    "/samples/resources/computeinstancegroupmanager/regional-compute-instance-group-manager/compute_v1beta1_computesubnetwork.yaml"
+    "/samples/resources/computeinstance/cloud-machine-instance/compute_v1beta1_computeinstance.yaml"
   ],
-  "timestamp": 1628765141571,
+  "timestamp": 1642973302749,
   "queryuser": null,
   "checksum": "99914b932bd37a50b983c5e7c90ae93b",
   "node": {
@@ -15,26 +15,88 @@
     "type": "kcc",
     "collection": "kcctemplate",
     "paths": [
-      "/samples/resources/computeinstancegroupmanager/regional-compute-instance-group-manager/compute_v1beta1_computesubnetwork.yaml"
+      "/samples/resources/computeinstance/cloud-machine-instance/compute_v1beta1_computeinstance.yaml"
     ],
     "snapshotId": "KCC_TEMPLATE_SNAPSHOT159",
     "status": "active",
-    "validate": true
+    "validate": true,
+    "resourceTypes": [
+      "computeinstance"
+    ]
   },
   "snapshotId": "KCC_TEMPLATE_SNAPSHOT159",
   "collection": "kcctemplate",
   "json": {
     "apiVersion": "compute.cnrm.cloud.google.com/v1beta1",
-    "kind": "ComputeSubnetwork",
+    "kind": "ComputeInstance",
     "metadata": {
-      "name": "computeinstancegroupmanager-dep-regional"
+      "annotations": {
+        "cnrm.cloud.google.com/allow-stopping-for-update": "true"
+      },
+      "name": "computeinstance-sample-cloudmachine",
+      "labels": {
+        "created-from": "image",
+        "network-type": "subnetwork"
+      }
     },
     "spec": {
-      "ipCidrRange": "10.2.0.0/16",
-      "region": "us-central1",
-      "privateIpGoogleAccess": false,
-      "networkRef": {
-        "name": "computeinstancegroupmanager-dep-regional"
+      "machineType": "n1-standard-1",
+      "zone": "us-west1-a",
+      "bootDisk": {
+        "initializeParams": {
+          "size": 24,
+          "type": "pd-ssd",
+          "sourceImageRef": {
+            "external": "debian-cloud/debian-9"
+          }
+        }
+      },
+      "networkInterface": [
+        {
+          "subnetworkRef": {
+            "name": "computeinstance-dep-cloudmachine"
+          },
+          "aliasIpRange": [
+            {
+              "ipCidrRange": "/24",
+              "subnetworkRangeName": "cloudrange"
+            }
+          ]
+        }
+      ],
+      "attachedDisk": [
+        {
+          "sourceDiskRef": {
+            "name": "computeinstance-dep1-cloudmachine"
+          },
+          "mode": "READ_ONLY",
+          "deviceName": "proxycontroldisk",
+          "diskEncryptionKeyRaw": {
+            "valueFrom": {
+              "secretKeyRef": {
+                "name": "computeinstance-dep-cloudmachine",
+                "key": "diskEncryptionKey"
+              }
+            }
+          }
+        },
+        {
+          "sourceDiskRef": {
+            "name": "computeinstance-dep2-cloudmachine"
+          },
+          "mode": "READ_WRITE",
+          "deviceName": "persistentdisk"
+        }
+      ],
+      "minCpuPlatform": "Intel Skylake",
+      "serviceAccount": {
+        "serviceAccountRef": {
+          "name": "inst-dep-cloudmachine"
+        },
+        "scopes": [
+          "compute-rw",
+          "logging-write"
+        ]
       }
     }
   }

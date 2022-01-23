@@ -2,12 +2,12 @@
   "structure": "filesystem",
   "error": null,
   "reference": "master",
-  "contentType": "yaml",
+  "contentType": "json",
   "source": "gitConnectorGoogleKcc",
   "paths": [
-    "/samples/resources/iampartialpolicy/pubsub-admin-policy/iam_v1beta1_iampartialpolicy.yaml"
+    "/samples/resources/dnsrecordset/dns-txt-record-set/dns_v1beta1_dnsrecordset.yaml"
   ],
-  "timestamp": 1628765147573,
+  "timestamp": 1642973304030,
   "queryuser": null,
   "checksum": "99914b932bd37a50b983c5e7c90ae93b",
   "node": {
@@ -15,35 +15,34 @@
     "type": "kcc",
     "collection": "kcctemplate",
     "paths": [
-      "/samples/resources/iampartialpolicy/pubsub-admin-policy/iam_v1beta1_iampartialpolicy.yaml"
+      "/samples/resources/dnsrecordset/dns-txt-record-set/dns_v1beta1_dnsrecordset.yaml"
     ],
     "snapshotId": "KCC_TEMPLATE_SNAPSHOT393",
     "status": "active",
-    "validate": true
+    "validate": true,
+    "resourceTypes": [
+      "dnsrecordset"
+    ]
   },
   "snapshotId": "KCC_TEMPLATE_SNAPSHOT393",
   "collection": "kcctemplate",
   "json": {
-    "apiVersion": "iam.cnrm.cloud.google.com/v1beta1",
-    "kind": "IAMPartialPolicy",
+    "apiVersion": "dns.cnrm.cloud.google.com/v1beta1",
+    "kind": "DNSRecordSet",
     "metadata": {
-      "name": "iampartialpolicy-sample-pubsubadmin"
+      "name": "dnsrecordset-sample-txt"
     },
     "spec": {
-      "resourceRef": {
-        "apiVersion": "pubsub.cnrm.cloud.google.com/v1beta1",
-        "kind": "PubSubTopic",
-        "name": "iampartialpolicy-dep-pubsubadmin"
+      "name": "example.com.",
+      "type": "TXT",
+      "ttl": 300,
+      "managedZoneRef": {
+        "name": "dnsrecordset-dep-txt"
       },
-      "bindings": [
-        {
-          "role": "roles/editor",
-          "members": [
-            {
-              "member": "serviceAccount:partialpolicy-dep-pubsubadmin@${PROJECT_ID?}.iam.gserviceaccount.com"
-            }
-          ]
-        }
+      "rrdatas": [
+        "\"This is a sample DNS text record string\"",
+        "Text records are normally split on spaces",
+        "To prevent this, \"quote your text like this\""
       ]
     }
   }

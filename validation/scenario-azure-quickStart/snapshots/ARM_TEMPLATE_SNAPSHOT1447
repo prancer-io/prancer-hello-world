@@ -1,0 +1,56 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAzureQuickStart",
+  "paths": [
+    "/quickstarts/microsoft.machinelearningservices/machine-learning-linkedservice-create/prereqs/nestedtemplates/logicapproleassignments.json"
+  ],
+  "timestamp": 1642962907860,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/quickstarts/microsoft.machinelearningservices/machine-learning-linkedservice-create/prereqs/nestedtemplates/logicapproleassignments.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT1447",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "microsoft.authorization/roleassignments"
+    ]
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT1447",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "logicAppName": {
+        "type": "string"
+      }
+    },
+    "variables": {
+      "contributor": "b24988ac-6180-42a0-ab88-20f7382dd24c",
+      "roleDefinitionId": "Microsoft.Authorization/roleDefinitions/b24988ac-6180-42a0-ab88-20f7382dd24c",
+      "roleAssignmentName": "[guid(resourceId('Microsoft.Logic/workflows', parameters('logicAppName')), resourceGroup().id, variables('roleDefinitionId'))]"
+    },
+    "resources": [
+      {
+        "type": "Microsoft.Authorization/roleAssignments",
+        "apiVersion": "2020-04-01-preview",
+        "name": "[guid(resourceId('Microsoft.Logic/workflows', parameters('logicAppName')), resourceGroup().id, variables('roleDefinitionId'))]",
+        "properties": {
+          "principalId": "[reference(resourceId('Microsoft.Logic/workflows', parameters('logicAppName')), '2019-05-01', 'full').identity.principalId]",
+          "roleDefinitionId": "Microsoft.Authorization/roleDefinitions/b24988ac-6180-42a0-ab88-20f7382dd24c",
+          "scope": "[resourceGroup().id]",
+          "principalType": "ServicePrincipal"
+        }
+      }
+    ],
+    "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+  }
+}

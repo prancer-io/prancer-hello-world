@@ -1,0 +1,220 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAzureQuickStart",
+  "paths": [
+    "/demos/sql-injection-attack-prevention/nested/microsoft.network/applicationgateways.json"
+  ],
+  "timestamp": 1642962901693,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/demos/sql-injection-attack-prevention/nested/microsoft.network/applicationgateways.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT801",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "microsoft.network/applicationgateways"
+    ]
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT801",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "applicationGatewaySize": {
+        "type": "string",
+        "allowedValues": [
+          "WAF_Medium",
+          "WAF_Large"
+        ],
+        "defaultValue": "WAF_Medium",
+        "metadata": {
+          "description": "application gateway size"
+        }
+      },
+      "capacity": {
+        "type": "int",
+        "minValue": 2,
+        "maxValue": 10,
+        "defaultValue": 2,
+        "metadata": {
+          "description": "Number of instances"
+        }
+      },
+      "wafEnabled": {
+        "type": "bool",
+        "defaultValue": true,
+        "metadata": {
+          "description": "WAF Enabled"
+        }
+      },
+      "wafMode": {
+        "type": "string",
+        "allowedValues": [
+          "Detection",
+          "Prevention"
+        ],
+        "defaultValue": "Detection",
+        "metadata": {
+          "description": "WAF Mode"
+        }
+      },
+      "wafRuleSetType": {
+        "type": "string",
+        "allowedValues": [
+          "OWASP"
+        ],
+        "defaultValue": "OWASP",
+        "metadata": {
+          "description": "WAF Rule Set Type"
+        }
+      },
+      "wafRuleSetVersion": {
+        "type": "string",
+        "allowedValues": [
+          "2.2.9",
+          "3.0"
+        ],
+        "defaultValue": "3.0",
+        "metadata": {
+          "description": "WAF Rule Set Version"
+        }
+      },
+      "applicationGatewayName": {
+        "type": "string"
+      },
+      "publicIPRef": {
+        "type": "string"
+      },
+      "frontendPorts": {
+        "type": "array"
+      },
+      "gatewayIPConfigurations": {
+        "type": "array"
+      },
+      "backendAddressPools": {
+        "type": "array"
+      },
+      "backendHttpSettingsCollection": {
+        "type": "array"
+      },
+      "httpListeners": {
+        "type": "array"
+      },
+      "requestRoutingRules": {
+        "type": "array"
+      },
+      "probes": {
+        "type": "array"
+      },
+      "omsWorkspaceResourceId": {
+        "type": "string"
+      },
+      "location": {
+        "type": "string"
+      }
+    },
+    "resources": [
+      {
+        "apiVersion": "2020-05-01",
+        "name": "applicationGatewayName",
+        "type": "Microsoft.Network/applicationGateways",
+        "location": "location",
+        "properties": {
+          "sku": {
+            "name": "WAF_Medium",
+            "tier": "WAF",
+            "capacity": 2
+          },
+          "gatewayIPConfigurations": "gatewayIPConfigurations",
+          "frontendIPConfigurations": [
+            {
+              "name": "appGatewayFrontendIP",
+              "properties": {
+                "PublicIPAddress": {
+                  "id": "publicIPRef"
+                }
+              }
+            }
+          ],
+          "frontendPorts": "frontendPorts",
+          "backendAddressPools": "backendAddressPools",
+          "backendHttpSettingsCollection": "backendHttpSettingsCollection",
+          "httpListeners": "httpListeners",
+          "requestRoutingRules": "requestRoutingRules",
+          "webApplicationFirewallConfiguration": {
+            "enabled": true,
+            "firewallMode": "Detection",
+            "ruleSetType": "OWASP",
+            "ruleSetVersion": "3.0"
+          },
+          "probes": "probes",
+          "sslPolicy": {
+            "disabledSslProtocols": [
+              "TLSv1_0",
+              "TLSv1_1"
+            ]
+          }
+        },
+        "resources": [
+          {
+            "type": "providers/diagnosticSettings",
+            "name": "Microsoft.Insights/service",
+            "apiVersion": "2017-05-01-preview",
+            "dependsOn": [
+              "applicationGatewayName"
+            ],
+            "properties": {
+              "workspaceId": "omsWorkspaceResourceId",
+              "logs": [
+                {
+                  "category": "ApplicationGatewayAccessLog",
+                  "enabled": true,
+                  "retentionPolicy": {
+                    "days": 90,
+                    "enabled": true
+                  }
+                },
+                {
+                  "category": "ApplicationGatewayPerformanceLog",
+                  "enabled": true,
+                  "retentionPolicy": {
+                    "days": 90,
+                    "enabled": false
+                  }
+                },
+                {
+                  "category": "ApplicationGatewayFirewallLog",
+                  "enabled": true,
+                  "retentionPolicy": {
+                    "days": 90,
+                    "enabled": false
+                  }
+                }
+              ],
+              "metrics": [
+                {
+                  "category": "AllMetrics",
+                  "enabled": true,
+                  "retentionPolicy": {
+                    "enabled": false,
+                    "days": 0
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      }
+    ],
+    "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+  }
+}

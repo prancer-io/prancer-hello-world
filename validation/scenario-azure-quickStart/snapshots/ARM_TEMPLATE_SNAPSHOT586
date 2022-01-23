@@ -1,0 +1,517 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAzureQuickStart",
+  "paths": [
+    "/application-workloads/wordpress/aci-wordpress-vnet/azuredeploy.json",
+    "/application-workloads/wordpress/aci-wordpress-vnet/azuredeploy.parameters.json"
+  ],
+  "timestamp": 1642962897339,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/application-workloads/wordpress/aci-wordpress-vnet/azuredeploy.json",
+      "/application-workloads/wordpress/aci-wordpress-vnet/azuredeploy.parameters.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT586",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "microsoft.network/publicipaddresses",
+      "microsoft.network/virtualnetworks",
+      "microsoft.network/applicationgateways",
+      "microsoft.storage/storageaccounts",
+      "microsoft.containerinstance/containergroups",
+      "microsoft.network/networkprofiles"
+    ]
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT586",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "vnetName": {
+        "type": "string",
+        "defaultValue": "aci-vnet",
+        "metadata": {
+          "description": "VNet name"
+        }
+      },
+      "vnetAddressPrefix": {
+        "type": "string",
+        "defaultValue": "10.0.0.0/16",
+        "metadata": {
+          "description": "Address prefix"
+        }
+      },
+      "subnet1AddressPrefix": {
+        "type": "string",
+        "defaultValue": "10.0.0.0/24",
+        "metadata": {
+          "description": "Subnet prefix for ACI"
+        }
+      },
+      "subnet1Name": {
+        "type": "string",
+        "defaultValue": "aci-subnet",
+        "metadata": {
+          "description": "Subnet name for ACI"
+        }
+      },
+      "subnet2AddressPrefix": {
+        "type": "string",
+        "defaultValue": "10.0.1.0/24",
+        "metadata": {
+          "description": "Subnet prefix for application gateway"
+        }
+      },
+      "subnet2Name": {
+        "type": "string",
+        "defaultValue": "ag-subnet",
+        "metadata": {
+          "description": "Subnet name for application gateway"
+        }
+      },
+      "mysqlPassword": {
+        "type": "securestring",
+        "metadata": {
+          "description": "MySQL database password"
+        },
+        "value": "GEN-PASSWORD"
+      },
+      "location": {
+        "type": "string",
+        "defaultValue": "[resourceGroup().location]",
+        "metadata": {
+          "description": "Location for all resources."
+        }
+      }
+    },
+    "variables": {
+      "storageAccountName": "[uniquestring(resourceGroup().id)]",
+      "storageAccountType": "Standard_LRS",
+      "publicIPAddressName": "publicIp1",
+      "publicIPRef": "Microsoft.Network/publicIPAddresses/publicIp1",
+      "networkProfileName": "aci-networkProfile",
+      "interfaceConfigName": "eth0",
+      "interfaceIpConfig": "ipconfigprofile1",
+      "image": "mcr.microsoft.com/azure-cli",
+      "shareContainerGroupName": "createshare-containerinstance",
+      "wordpressContainerGroupName": "wordpress-containerinstance",
+      "mysqlContainerGroupName": "mysql-containerinstance",
+      "wordpressShareName": "wordpress-share",
+      "mysqlShareName": "mysql-share",
+      "cpuCores": "1.0",
+      "memoryInGb": "1.5",
+      "skuName": "Standard_Medium",
+      "capacity": "2",
+      "applicationGatewayName": "applicationGateway1",
+      "subnet2Ref": "Microsoft.Network/virtualNetworks/subnets/aci-vnet/ag-subnet",
+      "wordpressContainerGroupRef": "Microsoft.ContainerInstance/containerGroups//wordpresscontainerGroupName",
+      "mysqlContainerGroupRef": "Microsoft.ContainerInstance/containerGroups//mysql-containerinstance"
+    },
+    "resources": [
+      {
+        "type": "Microsoft.Storage/storageAccounts",
+        "name": "[uniquestring(resourceGroup().id)]",
+        "apiVersion": "2021-06-01",
+        "location": "[resourceGroup().location]",
+        "sku": {
+          "name": "Standard_LRS"
+        },
+        "kind": "Storage",
+        "properties": {}
+      },
+      {
+        "apiVersion": "2020-05-01",
+        "type": "Microsoft.Network/publicIPAddresses",
+        "name": "publicIp1",
+        "location": "[resourceGroup().location]",
+        "properties": {
+          "publicIPAllocationMethod": "Dynamic",
+          "dnsSettings": {
+            "domainNameLabel": "[concat('acisite', uniqueString(resourceGroup().id))]"
+          }
+        }
+      },
+      {
+        "type": "Microsoft.Network/virtualNetworks",
+        "name": "aci-vnet",
+        "apiVersion": "2020-05-01",
+        "location": "[resourceGroup().location]",
+        "properties": {
+          "addressSpace": {
+            "addressPrefixes": [
+              "10.0.0.0/16"
+            ]
+          },
+          "subnets": [
+            {
+              "name": "aci-subnet",
+              "properties": {
+                "addressPrefix": "10.0.0.0/24",
+                "serviceEndpoints": [
+                  {
+                    "service": "Microsoft.Storage",
+                    "locations": [
+                      "[resourceGroup().location]"
+                    ]
+                  }
+                ],
+                "delegations": [
+                  {
+                    "name": "DelegationService",
+                    "properties": {
+                      "serviceName": "Microsoft.ContainerInstance/containerGroups"
+                    }
+                  }
+                ]
+              }
+            },
+            {
+              "name": "ag-subnet",
+              "properties": {
+                "addressPrefix": "10.0.1.0/24"
+              }
+            }
+          ]
+        }
+      },
+      {
+        "name": "aci-networkProfile",
+        "type": "Microsoft.Network/networkProfiles",
+        "apiVersion": "2020-05-01",
+        "location": "[resourceGroup().location]",
+        "dependsOn": [
+          "Microsoft.Network/virtualNetworks/aci-vnet"
+        ],
+        "properties": {
+          "containerNetworkInterfaceConfigurations": [
+            {
+              "name": "eth0",
+              "properties": {
+                "ipConfigurations": [
+                  {
+                    "name": "ipconfigprofile1",
+                    "properties": {
+                      "subnet": {
+                        "id": "Microsoft.Network/virtualNetworks/subnets/aci-vnet/aci-subnet"
+                      }
+                    }
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      },
+      {
+        "name": "createshare-containerinstance",
+        "type": "Microsoft.ContainerInstance/containerGroups",
+        "apiVersion": "2019-12-01",
+        "location": "[resourceGroup().location]",
+        "dependsOn": [
+          "Microsoft.Storage/storageAccounts//[uniquestring(resourceGroup().id)]"
+        ],
+        "properties": {
+          "containers": [
+            {
+              "name": "wordpress-share",
+              "properties": {
+                "image": "mcr.microsoft.com/azure-cli",
+                "command": [
+                  "az",
+                  "storage",
+                  "share",
+                  "create",
+                  "--name",
+                  "wordpress-share"
+                ],
+                "environmentVariables": [
+                  {
+                    "name": "AZURE_STORAGE_KEY",
+                    "value": "[listKeys(variables('storageAccountName'),'2021-06-01').keys[0].value]"
+                  },
+                  {
+                    "name": "AZURE_STORAGE_ACCOUNT",
+                    "value": "[uniquestring(resourceGroup().id)]"
+                  }
+                ],
+                "resources": {
+                  "requests": {
+                    "cpu": "1.0",
+                    "memoryInGb": "1.5"
+                  }
+                }
+              }
+            },
+            {
+              "name": "mysql-share",
+              "properties": {
+                "image": "mcr.microsoft.com/azure-cli",
+                "command": [
+                  "az",
+                  "storage",
+                  "share",
+                  "create",
+                  "--name",
+                  "mysql-share"
+                ],
+                "environmentVariables": [
+                  {
+                    "name": "AZURE_STORAGE_KEY",
+                    "value": "[listKeys(variables('storageAccountName'),'2021-06-01').keys[0].value]"
+                  },
+                  {
+                    "name": "AZURE_STORAGE_ACCOUNT",
+                    "value": "[uniquestring(resourceGroup().id)]"
+                  }
+                ],
+                "resources": {
+                  "requests": {
+                    "cpu": "1.0",
+                    "memoryInGb": "1.5"
+                  }
+                }
+              }
+            }
+          ],
+          "restartPolicy": "OnFailure",
+          "osType": "Linux"
+        }
+      },
+      {
+        "name": "mysql-containerinstance",
+        "type": "Microsoft.ContainerInstance/containerGroups",
+        "apiVersion": "2019-12-01",
+        "location": "[resourceGroup().location]",
+        "dependsOn": [
+          "Microsoft.ContainerInstance/containerGroups//createshare-containerinstance",
+          "Microsoft.Network/networkProfiles//aci-networkProfile"
+        ],
+        "properties": {
+          "containers": [
+            {
+              "name": "mysql",
+              "properties": {
+                "image": "mysql:5.6",
+                "ports": [
+                  {
+                    "protocol": "Tcp",
+                    "port": 3306
+                  }
+                ],
+                "environmentVariables": [
+                  {
+                    "name": "MYSQL_ROOT_PASSWORD",
+                    "value": "GEN-PASSWORD"
+                  }
+                ],
+                "volumeMounts": [
+                  {
+                    "mountPath": "/var/lib/mysql",
+                    "name": "mysqlfile"
+                  }
+                ],
+                "resources": {
+                  "requests": {
+                    "cpu": "1.0",
+                    "memoryInGb": "1.5"
+                  }
+                }
+              }
+            }
+          ],
+          "volumes": [
+            {
+              "azureFile": {
+                "shareName": "mysql-share",
+                "storageAccountKey": "[listKeys(variables('storageAccountName'),'2021-06-01').keys[0].value]",
+                "storageAccountName": "[uniquestring(resourceGroup().id)]"
+              },
+              "name": "mysqlfile"
+            }
+          ],
+          "networkProfile": {
+            "Id": "Microsoft.Network/networkProfiles/aci-networkProfile"
+          },
+          "osType": "Linux"
+        }
+      },
+      {
+        "name": "wordpress-containerinstance",
+        "type": "Microsoft.ContainerInstance/containerGroups",
+        "apiVersion": "2019-12-01",
+        "location": "[resourceGroup().location]",
+        "dependsOn": [
+          "Microsoft.ContainerInstance/containerGroups//createshare-containerinstance",
+          "Microsoft.ContainerInstance/containerGroups//mysql-containerinstance"
+        ],
+        "properties": {
+          "containers": [
+            {
+              "name": "wordpress",
+              "properties": {
+                "image": "wordpress:4.9-apache",
+                "ports": [
+                  {
+                    "protocol": "Tcp",
+                    "port": 80
+                  }
+                ],
+                "environmentVariables": [
+                  {
+                    "name": "WORDPRESS_DB_HOST",
+                    "value": "[concat(reference(variables('mysqlContainerGroupRef')).ipAddress.ip, ':3306')]"
+                  },
+                  {
+                    "name": "WORDPRESS_DB_PASSWORD",
+                    "value": "GEN-PASSWORD"
+                  }
+                ],
+                "volumeMounts": [
+                  {
+                    "mountPath": "/var/www/html",
+                    "name": "wordpressfile"
+                  }
+                ],
+                "resources": {
+                  "requests": {
+                    "cpu": "1.0",
+                    "memoryInGb": "1.5"
+                  }
+                }
+              }
+            }
+          ],
+          "volumes": [
+            {
+              "azureFile": {
+                "shareName": "wordpress-share",
+                "storageAccountKey": "[listKeys(variables('storageAccountName'),'2021-06-01').keys[0].value]",
+                "storageAccountName": "[uniquestring(resourceGroup().id)]"
+              },
+              "name": "wordpressfile"
+            }
+          ],
+          "networkProfile": {
+            "Id": "Microsoft.Network/networkProfiles/aci-networkProfile"
+          },
+          "osType": "Linux"
+        }
+      },
+      {
+        "apiVersion": "2020-05-01",
+        "name": "applicationGateway1",
+        "type": "Microsoft.Network/applicationGateways",
+        "location": "[resourceGroup().location]",
+        "dependsOn": [
+          "Microsoft.Network/virtualNetworks//aci-vnet",
+          "Microsoft.Network/publicIPAddresses//publicIp1",
+          "Microsoft.ContainerInstance/containerGroups//wordpress-containerinstance"
+        ],
+        "properties": {
+          "sku": {
+            "name": "Standard_Medium",
+            "tier": "Standard",
+            "capacity": "2"
+          },
+          "gatewayIPConfigurations": [
+            {
+              "name": "appGatewayIpConfig",
+              "properties": {
+                "subnet": {
+                  "id": "Microsoft.Network/virtualNetworks/subnets/aci-vnet/ag-subnet"
+                }
+              }
+            }
+          ],
+          "frontendIPConfigurations": [
+            {
+              "name": "appGatewayFrontendIP",
+              "properties": {
+                "PublicIPAddress": {
+                  "id": "Microsoft.Network/publicIPAddresses/publicIp1"
+                }
+              }
+            }
+          ],
+          "frontendPorts": [
+            {
+              "name": "appGatewayFrontendPort",
+              "properties": {
+                "Port": 80
+              }
+            }
+          ],
+          "backendAddressPools": [
+            {
+              "name": "appGatewayBackendPool",
+              "properties": {
+                "BackendAddresses": [
+                  {
+                    "IpAddress": "[reference(variables('wordpressContainerGroupRef')).ipAddress.ip]"
+                  }
+                ]
+              }
+            }
+          ],
+          "backendHttpSettingsCollection": [
+            {
+              "name": "appGatewayBackendHttpSettings",
+              "properties": {
+                "Port": 80,
+                "Protocol": "Http",
+                "CookieBasedAffinity": "Disabled"
+              }
+            }
+          ],
+          "httpListeners": [
+            {
+              "name": "appGatewayHttpListener",
+              "properties": {
+                "FrontendIPConfiguration": {
+                  "Id": "Microsoft.Network/applicationGateways/frontendIPConfigurations/applicationGateway1/appGatewayFrontendIP"
+                },
+                "FrontendPort": {
+                  "Id": "Microsoft.Network/applicationGateways/frontendPorts/applicationGateway1/appGatewayFrontendPort"
+                },
+                "Protocol": "Http"
+              }
+            }
+          ],
+          "requestRoutingRules": [
+            {
+              "Name": "rule1",
+              "properties": {
+                "RuleType": "Basic",
+                "httpListener": {
+                  "id": "Microsoft.Network/applicationGateways/httpListeners/applicationGateway1/appGatewayHttpListener"
+                },
+                "backendAddressPool": {
+                  "id": "Microsoft.Network/applicationGateways/backendAddressPools/applicationGateway1/appGatewayBackendPool"
+                },
+                "backendHttpSettings": {
+                  "id": "Microsoft.Network/applicationGateways/backendHttpSettingsCollection/applicationGateway1/appGatewayBackendHttpSettings"
+                }
+              }
+            }
+          ]
+        }
+      }
+    ],
+    "outputs": {
+      "SiteFQDN": {
+        "type": "string",
+        "value": "[reference(variables('publicIPRef')).dnsSettings.fqdn]"
+      }
+    },
+    "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+  }
+}

@@ -1,0 +1,106 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAzureQuickStart",
+  "paths": [
+    "/application-workloads/sap/sap-lama-apps/nestedtemplates/runCommand.json"
+  ],
+  "timestamp": 1642962896041,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/application-workloads/sap/sap-lama-apps/nestedtemplates/runCommand.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT499",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "microsoft.compute/virtualmachines/extensions"
+    ]
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT499",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "vmName": {
+        "type": "string",
+        "metadata": {
+          "description": "The name of the virtual machine."
+        }
+      },
+      "command": {
+        "type": "string",
+        "metadata": {
+          "description": "The command to execute."
+        }
+      },
+      "files": {
+        "type": "array",
+        "metadata": {
+          "description": "The files that should be uploaded to the virtual machine."
+        }
+      },
+      "osType": {
+        "type": "string",
+        "allowedValues": [
+          "Linux",
+          "Windows"
+        ],
+        "metadata": {
+          "description": "Operating system type of the virtual machine."
+        }
+      },
+      "location": {
+        "type": "string",
+        "metadata": {
+          "description": "Location for all resources."
+        }
+      }
+    },
+    "variables": {
+      "osConfigs": {
+        "Windows": {
+          "Publisher": "Microsoft.Compute",
+          "Name": "CustomScriptExtension",
+          "Version": "1.7"
+        },
+        "Linux": {
+          "Publisher": "Microsoft.Azure.Extensions",
+          "Name": "CustomScript",
+          "Version": "2.0"
+        }
+      },
+      "cseExtPublisher": "(osConfigs)[parameters(osType)].Publisher",
+      "cseExtName": "(osConfigs)[parameters(osType)].Name",
+      "cseExtVersion": "(osConfigs)[parameters(osType)].Version"
+    },
+    "resources": [
+      {
+        "type": "Microsoft.Compute/virtualMachines/extensions",
+        "name": "vmName/(osConfigs)[parameters(osType)].Name",
+        "apiVersion": "2020-12-01",
+        "location": "location",
+        "properties": {
+          "publisher": "(osConfigs)[parameters(osType)].Publisher",
+          "type": "(osConfigs)[parameters(osType)].Name",
+          "typeHandlerVersion": "(osConfigs)[parameters(osType)].Version",
+          "autoUpgradeMinorVersion": true,
+          "settings": {
+            "fileUris": "files"
+          },
+          "protectedSettings": {
+            "commandToExecute": "command"
+          }
+        }
+      }
+    ],
+    "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+  }
+}

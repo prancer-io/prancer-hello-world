@@ -2,12 +2,12 @@
   "structure": "filesystem",
   "error": null,
   "reference": "master",
-  "contentType": "yaml",
+  "contentType": "json",
   "source": "gitConnectorGoogleKcc",
   "paths": [
-    "/samples/resources/computevpngateway/compute_v1beta1_computenetwork.yaml"
+    "/samples/resources/computetargethttpsproxy/compute_v1beta1_computebackendservice.yaml"
   ],
-  "timestamp": 1628765144753,
+  "timestamp": 1642973303280,
   "queryuser": null,
   "checksum": "99914b932bd37a50b983c5e7c90ae93b",
   "node": {
@@ -15,22 +15,32 @@
     "type": "kcc",
     "collection": "kcctemplate",
     "paths": [
-      "/samples/resources/computevpngateway/compute_v1beta1_computenetwork.yaml"
+      "/samples/resources/computetargethttpsproxy/compute_v1beta1_computebackendservice.yaml"
     ],
     "snapshotId": "KCC_TEMPLATE_SNAPSHOT285",
     "status": "active",
-    "validate": true
+    "validate": true,
+    "resourceTypes": [
+      "computebackendservice"
+    ]
   },
   "snapshotId": "KCC_TEMPLATE_SNAPSHOT285",
   "collection": "kcctemplate",
   "json": {
     "apiVersion": "compute.cnrm.cloud.google.com/v1beta1",
-    "kind": "ComputeNetwork",
+    "kind": "ComputeBackendService",
     "metadata": {
-      "name": "computevpngateway-dep"
+      "name": "computetargethttpsproxy-dep"
     },
     "spec": {
-      "autoCreateSubnetworks": false
+      "healthChecks": [
+        {
+          "healthCheckRef": {
+            "name": "computetargethttpsproxy-dep"
+          }
+        }
+      ],
+      "location": "global"
     }
   }
 }

@@ -2,12 +2,12 @@
   "structure": "filesystem",
   "error": null,
   "reference": "master",
-  "contentType": "yaml",
+  "contentType": "json",
   "source": "gitConnectorGoogleKcc",
   "paths": [
-    "/samples/resources/binaryauthorizationpolicy/namespace-policy/binaryauthorization_v1beta1_binaryauthorizationpolicy.yaml"
+    "/samples/resources/binaryauthorizationpolicy/default-policy/binaryauthorization_v1beta1_binaryauthorizationpolicy.yaml"
   ],
-  "timestamp": 1628765139356,
+  "timestamp": 1642973301933,
   "queryuser": null,
   "checksum": "99914b932bd37a50b983c5e7c90ae93b",
   "node": {
@@ -15,11 +15,14 @@
     "type": "kcc",
     "collection": "kcctemplate",
     "paths": [
-      "/samples/resources/binaryauthorizationpolicy/namespace-policy/binaryauthorization_v1beta1_binaryauthorizationpolicy.yaml"
+      "/samples/resources/binaryauthorizationpolicy/default-policy/binaryauthorization_v1beta1_binaryauthorizationpolicy.yaml"
     ],
     "snapshotId": "KCC_TEMPLATE_SNAPSHOT53",
     "status": "active",
-    "validate": true
+    "validate": true,
+    "resourceTypes": [
+      "binaryauthorizationpolicy"
+    ]
   },
   "snapshotId": "KCC_TEMPLATE_SNAPSHOT53",
   "collection": "kcctemplate",
@@ -27,36 +30,34 @@
     "apiVersion": "binaryauthorization.cnrm.cloud.google.com/v1beta1",
     "kind": "BinaryAuthorizationPolicy",
     "metadata": {
-      "name": "binaryauthorizationpolicy-sample-namespace"
+      "name": "binaryauthorizationpolicy-sample-default"
     },
     "spec": {
+      "projectRef": {
+        "name": "binauthpolicy-dep-default"
+      },
       "admissionWhitelistPatterns": [
         {
-          "namePattern": "gcr.io/*"
+          "namePattern": "gcr.io/google_containers/*"
+        },
+        {
+          "namePattern": "gcr.io/google-containers/*"
+        },
+        {
+          "namePattern": "k8s.gcr.io/*"
+        },
+        {
+          "namePattern": "gke.gcr.io/*"
+        },
+        {
+          "namePattern": "gcr.io/stackdriver-agents/*"
         }
       ],
-      "kubernetesNamespaceAdmissionRules": {
-        "test-namespace": {
-          "evaluationMode": "REQUIRE_ATTESTATION",
-          "requireAttestationsBy": [
-            {
-              "name": "binaryauthorizationpolicy-dep-namespace"
-            }
-          ],
-          "enforcementMode": "ENFORCED_BLOCK_AND_AUDIT_LOG"
-        }
-      },
       "defaultAdmissionRule": {
-        "evaluationMode": "REQUIRE_ATTESTATION",
-        "requireAttestationsBy": [
-          {
-            "name": "binaryauthorizationpolicy-dep-namespace"
-          }
-        ],
-        "enforcementMode": "ENFORCED_BLOCK_AND_AUDIT_LOG"
+        "enforcementMode": "ENFORCED_BLOCK_AND_AUDIT_LOG",
+        "evaluationMode": "ALWAYS_ALLOW"
       },
-      "description": "A sample Binary Authorization policy",
-      "globalPolicyEvaluationMode": "DISABLE"
+      "globalPolicyEvaluationMode": "ENABLE"
     }
   }
 }

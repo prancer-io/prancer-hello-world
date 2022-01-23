@@ -1,0 +1,198 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAzureQuickStart",
+  "paths": [
+    "/quickstarts/microsoft.automation/automation-configuration/nested/provisionConfiguration.json"
+  ],
+  "timestamp": 1642962903078,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/quickstarts/microsoft.automation/automation-configuration/nested/provisionConfiguration.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT953",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "microsoft.automation/automationaccounts"
+    ]
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT953",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "_artifactsLocation": {
+        "type": "string"
+      },
+      "_artifactsLocationSasToken": {
+        "type": "secureString"
+      },
+      "automationAccountName": {
+        "type": "string"
+      },
+      "location": {
+        "type": "string"
+      },
+      "adminUsername": {
+        "type": "string"
+      },
+      "adminPassword": {
+        "type": "secureString"
+      },
+      "domainName": {
+        "type": "string"
+      },
+      "compileName": {
+        "type": "string",
+        "defaultValue": "[guid(resourceGroup().id, deployment().name)]"
+      },
+      "devopsStoragePackagesBase": {
+        "type": "string",
+        "metadata": {
+          "description": "DC Resource URL"
+        }
+      }
+    },
+    "variables": {
+      "dscConfigurations": {
+        "DomainControllerConfig": {
+          "name": "DomainControllerConfig",
+          "description": "minimum viable configuration for a domain controller role",
+          "script": "nested/DomainControllerConfig.ps1"
+        }
+      },
+      "dscResources": {
+        "xActiveDirectory": {
+          "name": "xActiveDirectory",
+          "url": "[uri(parameters('devopsStoragePackagesBase'), 'xactivedirectory.2.17.0.nupkg')]"
+        },
+        "xStorage": {
+          "name": "xStorage",
+          "url": "[uri(parameters('devopsStoragePackagesBase'), 'xstorage.3.4.0.nupkg')]"
+        },
+        "xPendingReboot": {
+          "name": "xPendingReboot",
+          "url": "[uri(parameters('devopsStoragePackagesBase'), 'xpendingreboot.0.3.0.nupkg')]"
+        }
+      }
+    },
+    "resources": [
+      {
+        "name": "automationAccountName",
+        "type": "Microsoft.Automation/automationAccounts",
+        "apiversion": "2020-01-13-preview",
+        "location": "location",
+        "comments": "Automation account for OMS",
+        "properties": {
+          "sku": {
+            "name": "OMS"
+          }
+        },
+        "resources": [
+          {
+            "name": "(dscResources).xActiveDirectory.name",
+            "type": "modules",
+            "apiVersion": "2020-01-13-preview",
+            "location": "location",
+            "dependsOn": [
+              "AutomationAccountName"
+            ],
+            "properties": {
+              "contentLink": {
+                "uri": "(dscResources).xActiveDirectory.url"
+              }
+            }
+          },
+          {
+            "name": "(dscResources).xStorage.name",
+            "type": "modules",
+            "apiVersion": "2020-01-13-preview",
+            "location": "location",
+            "dependsOn": [
+              "AutomationAccountName"
+            ],
+            "properties": {
+              "contentLink": {
+                "uri": "(dscResources).xStorage.url"
+              }
+            }
+          },
+          {
+            "name": "(dscResources).xPendingReboot.name",
+            "type": "modules",
+            "apiVersion": "2020-01-13-preview",
+            "location": "location",
+            "dependsOn": [
+              "AutomationAccountName"
+            ],
+            "properties": {
+              "contentLink": {
+                "uri": "(dscResources).xPendingReboot.url"
+              }
+            }
+          },
+          {
+            "name": "Credential",
+            "type": "credentials",
+            "apiVersion": "2020-01-13-preview",
+            "location": "location",
+            "dependsOn": [
+              "AutomationAccountName"
+            ],
+            "properties": {
+              "userName": "adminUsername",
+              "password": "adminPassword"
+            }
+          },
+          {
+            "name": "(dscConfigurations).DomainControllerConfig.name",
+            "type": "configurations",
+            "apiVersion": "2018-06-30",
+            "location": "location",
+            "dependsOn": [
+              "AutomationAccountName",
+              "(dscResources).xActiveDirectory.name",
+              "(dscResources).xStorage.name",
+              "(dscResources).xPendingReboot.name",
+              "Credential"
+            ],
+            "properties": {
+              "overwrite": true,
+              "source": {
+                "type": "uri",
+                "value": "[uri(parameters('_artifactsLocation'), concat(variables('dscConfigurations').DomainControllerConfig.script, parameters('_artifactsLocationSasToken')))]"
+              }
+            }
+          },
+          {
+            "name": "[guid(resourceGroup().id, deployment().name)]",
+            "type": "compilationjobs",
+            "apiVersion": "2020-01-13-preview",
+            "location": "location",
+            "dependsOn": [
+              "AutomationAccountName",
+              "(dscConfigurations).DomainControllerConfig.name"
+            ],
+            "properties": {
+              "configuration": {
+                "name": "(dscConfigurations).DomainControllerConfig.name"
+              },
+              "parameters": {
+                "configurationData": "{\"AllNodes\":{\"nodename\":\"localhost\"\"domainname\":\"domainName\"}}"
+              }
+            }
+          }
+        ]
+      }
+    ],
+    "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+  }
+}

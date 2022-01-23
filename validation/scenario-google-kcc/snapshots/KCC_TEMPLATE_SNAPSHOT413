@@ -2,12 +2,12 @@
   "structure": "filesystem",
   "error": null,
   "reference": "master",
-  "contentType": "yaml",
+  "contentType": "json",
   "source": "gitConnectorGoogleKcc",
   "paths": [
-    "/samples/resources/iampolicymember/external-project-level-policy-member/iam_v1beta1_iampolicymember.yaml"
+    "/samples/resources/gkehubfeature/anthos-config-management-feature/serviceusage_v1beta1_service_multiple_yaml_0.yaml"
   ],
-  "timestamp": 1628765148037,
+  "timestamp": 1642973304113,
   "queryuser": null,
   "checksum": "99914b932bd37a50b983c5e7c90ae93b",
   "node": {
@@ -15,28 +15,31 @@
     "type": "kcc",
     "collection": "kcctemplate",
     "paths": [
-      "/samples/resources/iampolicymember/external-project-level-policy-member/iam_v1beta1_iampolicymember.yaml"
+      "/samples/resources/gkehubfeature/anthos-config-management-feature/serviceusage_v1beta1_service_multiple_yaml_0.yaml"
     ],
     "snapshotId": "KCC_TEMPLATE_SNAPSHOT413",
     "status": "active",
-    "validate": true
+    "validate": true,
+    "resourceTypes": [
+      "service"
+    ]
   },
   "snapshotId": "KCC_TEMPLATE_SNAPSHOT413",
   "collection": "kcctemplate",
   "json": {
-    "apiVersion": "iam.cnrm.cloud.google.com/v1beta1",
-    "kind": "IAMPolicyMember",
+    "apiVersion": "serviceusage.cnrm.cloud.google.com/v1beta1",
+    "kind": "Service",
     "metadata": {
-      "name": "iampolicymember-sample-projectlevel"
+      "annotations": {
+        "cnrm.cloud.google.com/disable-dependent-services": "false"
+      },
+      "name": "gkehubfeature-dep-acmfeature-1"
     },
     "spec": {
-      "member": "serviceAccount:iampolicymember-dep-projectlevel@${PROJECT_ID?}.iam.gserviceaccount.com",
-      "role": "roles/storage.admin",
-      "resourceRef": {
-        "apiVersion": "resourcemanager.cnrm.cloud.google.com/v1beta1",
-        "kind": "Project",
-        "external": "projects/${PROJECT_ID?}"
-      }
+      "projectRef": {
+        "name": "gkehubfeature-dep-acmfeature"
+      },
+      "resourceID": "gkehub.googleapis.com"
     }
   }
 }

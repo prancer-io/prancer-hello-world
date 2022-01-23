@@ -1,0 +1,111 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAzureQuickStart",
+  "paths": [
+    "/quickstarts/microsoft.devices/iothub-device-provisioning/azuredeploy.json",
+    "/quickstarts/microsoft.devices/iothub-device-provisioning/azuredeploy.parameters.json"
+  ],
+  "timestamp": 1642962906264,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/quickstarts/microsoft.devices/iothub-device-provisioning/azuredeploy.json",
+      "/quickstarts/microsoft.devices/iothub-device-provisioning/azuredeploy.parameters.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT1268",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "microsoft.devices/iothubs",
+      "microsoft.devices/provisioningservices"
+    ]
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT1268",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "iotHubName": {
+        "type": "string",
+        "metadata": {
+          "description": "Specify the name of the Iot hub."
+        },
+        "value": "GEN-UNIQUE"
+      },
+      "provisioningServiceName": {
+        "type": "string",
+        "metadata": {
+          "description": "Specify the name of the provisioning service."
+        },
+        "value": "GEN-UNIQUE"
+      },
+      "location": {
+        "type": "string",
+        "defaultValue": "[resourceGroup().location]",
+        "metadata": {
+          "description": "Specify the location of the resources."
+        }
+      },
+      "skuName": {
+        "type": "string",
+        "defaultValue": "S1",
+        "metadata": {
+          "description": "The SKU to use for the IoT Hub."
+        }
+      },
+      "skuUnits": {
+        "type": "string",
+        "defaultValue": "1",
+        "metadata": {
+          "description": "The number of IoT Hub units."
+        }
+      }
+    },
+    "variables": {
+      "iotHubKeyName": "iothubowner"
+    },
+    "resources": [
+      {
+        "type": "Microsoft.Devices/IotHubs",
+        "apiVersion": "2021-03-31",
+        "name": "GEN-UNIQUE",
+        "location": "[resourceGroup().location]",
+        "sku": {
+          "name": "S1",
+          "capacity": "1"
+        },
+        "properties": {}
+      },
+      {
+        "type": "Microsoft.Devices/provisioningServices",
+        "apiVersion": "2020-03-01",
+        "name": "GEN-UNIQUE",
+        "location": "[resourceGroup().location]",
+        "sku": {
+          "name": "S1",
+          "capacity": "1"
+        },
+        "dependsOn": [
+          "GEN-UNIQUE"
+        ],
+        "properties": {
+          "iotHubs": [
+            {
+              "connectionString": "[concat('HostName=', reference(resourceId('Microsoft.Devices/Iothubs', parameters('iotHubName'))).hostName, ';SharedAccessKeyName=', variables('iotHubKeyName'), ';SharedAccessKey=', listkeys(resourceId('Microsoft.Devices/Iothubs/Iothubkeys', parameters('iotHubName'), variables('iotHubKeyName')), '2020-03-01').primaryKey)]",
+              "location": "[resourceGroup().location]",
+              "name": "[reference(resourceId('Microsoft.Devices/Iothubs', parameters('iotHubName'))).hostName]"
+            }
+          ]
+        }
+      }
+    ],
+    "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+  }
+}

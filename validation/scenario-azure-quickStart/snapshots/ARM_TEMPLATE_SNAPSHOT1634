@@ -1,0 +1,352 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAzureQuickStart",
+  "paths": [
+    "/quickstarts/microsoft.recoveryservices/recovery-services-vm-workload-backup/prereqs/prereq.azuredeploy.json",
+    "/quickstarts/microsoft.recoveryservices/recovery-services-vm-workload-backup/prereqs/prereq.azuredeploy.parameters.json"
+  ],
+  "timestamp": 1642962909916,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/quickstarts/microsoft.recoveryservices/recovery-services-vm-workload-backup/prereqs/prereq.azuredeploy.json",
+      "/quickstarts/microsoft.recoveryservices/recovery-services-vm-workload-backup/prereqs/prereq.azuredeploy.parameters.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT1634",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "microsoft.network/publicipaddresses",
+      "microsoft.network/virtualnetworks",
+      "microsoft.sqlvirtualmachine/sqlvirtualmachines",
+      "microsoft.network/networkinterfaces",
+      "microsoft.compute/virtualmachines",
+      "microsoft.network/networksecuritygroups"
+    ]
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT1634",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "virtualMachineName": {
+        "type": "string",
+        "value": "sqlvmbackupdemo"
+      },
+      "virtualMachineSize": {
+        "type": "string",
+        "value": "Standard_B2s"
+      },
+      "adminUsername": {
+        "type": "string",
+        "value": "GEN-UNIQUE"
+      },
+      "virtualNetworkName": {
+        "type": "string",
+        "value": "GEN-VNET-NAME"
+      },
+      "networkInterfaceName": {
+        "type": "string",
+        "value": "sqlvmbackupdemo-ni"
+      },
+      "networkSecurityGroupName": {
+        "type": "string",
+        "value": "sqlvmbackupdemo-nsg"
+      },
+      "adminPassword": {
+        "type": "securestring",
+        "value": "GEN-PASSWORD"
+      },
+      "addressPrefix": {
+        "type": "string",
+        "value": "10.3.0.0/16"
+      },
+      "subnetName": {
+        "type": "string",
+        "value": "GEN-VNET-SUBNET1-NAME"
+      },
+      "subnetPrefix": {
+        "type": "string",
+        "value": "10.3.0.0/24"
+      },
+      "publicIpAddressName": {
+        "type": "string",
+        "value": "sqlvmbackupdemo-ip"
+      },
+      "publicIpAddressType": {
+        "type": "string",
+        "value": "Dynamic"
+      },
+      "publicIpAddressSku": {
+        "type": "string",
+        "value": "Basic"
+      },
+      "sqlConnectivityType": {
+        "type": "string",
+        "value": "Public"
+      },
+      "sqlPortNumber": {
+        "type": "int",
+        "value": 1433
+      },
+      "sqlStorageDisksCount": {
+        "type": "int",
+        "value": 1
+      },
+      "sqlStorageWorkloadType": {
+        "type": "string",
+        "value": "GENERAL"
+      },
+      "sqlStorageDisksConfigurationType": {
+        "type": "string",
+        "value": "NEW"
+      },
+      "sqlStorageStartingDeviceId": {
+        "type": "int",
+        "value": 2
+      },
+      "sqlAutopatchingDayOfWeek": {
+        "type": "string",
+        "value": "Sunday"
+      },
+      "sqlAutopatchingStartHour": {
+        "type": "string",
+        "value": "2"
+      },
+      "sqlAutopatchingWindowDuration": {
+        "type": "string",
+        "value": "60"
+      },
+      "sqlAuthenticationLogin": {
+        "type": "string",
+        "value": "GEN-UNIQUE"
+      },
+      "sqlAuthenticationPassword": {
+        "type": "securestring",
+        "value": "GEN-PASSWORD"
+      },
+      "rServicesEnabled": {
+        "type": "string",
+        "value": "false"
+      }
+    },
+    "variables": {
+      "subnetRef": "Microsoft.Network/virtualNetworks/subnets/GEN-VNET-NAME/GEN-VNET-SUBNET1-NAME"
+    },
+    "resources": [
+      {
+        "type": "Microsoft.Compute/virtualMachines",
+        "name": "sqlvmbackupdemo",
+        "apiVersion": "2018-06-01",
+        "location": "[resourceGroup().location]",
+        "dependsOn": [
+          "Microsoft.Network/networkInterfaces/sqlvmbackupdemo-ni"
+        ],
+        "properties": {
+          "osProfile": {
+            "computerName": "sqlvmbackupdemo",
+            "adminUsername": "GEN-UNIQUE",
+            "adminPassword": "GEN-PASSWORD",
+            "windowsConfiguration": {
+              "provisionVmAgent": "true"
+            }
+          },
+          "hardwareProfile": {
+            "vmSize": "Standard_B2s"
+          },
+          "storageProfile": {
+            "imageReference": {
+              "publisher": "MicrosoftSQLServer",
+              "offer": "SQL2016SP1-WS2016",
+              "sku": "Enterprise",
+              "version": "latest"
+            },
+            "osDisk": {
+              "createOption": "fromImage",
+              "managedDisk": {
+                "storageAccountType": "Premium_LRS"
+              }
+            },
+            "dataDisks": [
+              {
+                "createOption": "empty",
+                "lun": 0,
+                "diskSizeGB": "1023",
+                "caching": "ReadOnly",
+                "managedDisk": {
+                  "storageAccountType": "Premium_LRS"
+                }
+              }
+            ]
+          },
+          "networkProfile": {
+            "networkInterfaces": [
+              {
+                "id": "Microsoft.Network/networkInterfaces/sqlvmbackupdemo-ni"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "type": "Microsoft.SqlVirtualMachine/SqlVirtualMachines",
+        "name": "sqlvmbackupdemo",
+        "apiVersion": "2017-03-01-preview",
+        "location": "[resourceGroup().location]",
+        "dependsOn": [
+          "Microsoft.Compute/virtualMachines/sqlvmbackupdemo",
+          "Microsoft.Compute/virtualMachines/sqlvmbackupdemo"
+        ],
+        "properties": {
+          "virtualMachineResourceId": "Microsoft.Compute/virtualMachines/sqlvmbackupdemo",
+          "AutoPatchingSettings": {
+            "Enable": true,
+            "DayOfWeek": "Sunday",
+            "MaintenanceWindowStartingHour": "2",
+            "MaintenanceWindowDuration": "60"
+          },
+          "KeyVaultCredentialSettings": {
+            "Enable": false,
+            "CredentialName": ""
+          },
+          "ServerConfigurationsManagementSettings": {
+            "SQLConnectivityUpdateSettings": {
+              "ConnectivityType": "Public",
+              "Port": 1433,
+              "SQLAuthUpdateUserName": "GEN-UNIQUE",
+              "SQLAuthUpdatePassword": "GEN-PASSWORD"
+            },
+            "SQLWorkloadTypeUpdateSettings": {
+              "SQLWorkloadType": "GENERAL"
+            },
+            "SQLStorageUpdateSettings": {
+              "DiskCount": 1,
+              "DiskConfigurationType": "NEW",
+              "StartingDeviceID": 2
+            },
+            "AdditionalFeaturesServerConfigurations": {
+              "IsRServicesEnabled": "false"
+            }
+          }
+        }
+      },
+      {
+        "name": "GEN-VNET-NAME",
+        "type": "Microsoft.Network/virtualNetworks",
+        "apiVersion": "2018-08-01",
+        "location": "[resourceGroup().location]",
+        "properties": {
+          "addressSpace": {
+            "addressPrefixes": [
+              "10.3.0.0/16"
+            ]
+          },
+          "subnets": [
+            {
+              "name": "GEN-VNET-SUBNET1-NAME",
+              "properties": {
+                "addressPrefix": "10.3.0.0/24"
+              }
+            }
+          ]
+        }
+      },
+      {
+        "type": "Microsoft.Network/networkInterfaces",
+        "name": "sqlvmbackupdemo-ni",
+        "apiVersion": "2018-10-01",
+        "location": "[resourceGroup().location]",
+        "dependsOn": [
+          "Microsoft.Network/virtualNetworks/GEN-VNET-NAME",
+          "Microsoft.Network/publicIpAddresses/sqlvmbackupdemo-ip",
+          "Microsoft.Network/networkSecurityGroups/sqlvmbackupdemo-nsg"
+        ],
+        "properties": {
+          "ipConfigurations": [
+            {
+              "name": "ipconfig1",
+              "properties": {
+                "subnet": {
+                  "id": "Microsoft.Network/virtualNetworks/subnets/GEN-VNET-NAME/GEN-VNET-SUBNET1-NAME"
+                },
+                "privateIPAllocationMethod": "Dynamic",
+                "publicIpAddress": {
+                  "id": "Microsoft.Network/publicIpAddresses/sqlvmbackupdemo-ip"
+                }
+              }
+            }
+          ],
+          "networkSecurityGroup": {
+            "id": "Microsoft.Network/networkSecurityGroups/sqlvmbackupdemo-nsg"
+          }
+        }
+      },
+      {
+        "type": "Microsoft.Network/publicIpAddresses",
+        "sku": {
+          "name": "Basic"
+        },
+        "name": "sqlvmbackupdemo-ip",
+        "apiVersion": "2018-08-01",
+        "location": "[resourceGroup().location]",
+        "properties": {
+          "publicIpAllocationMethod": "Dynamic"
+        }
+      },
+      {
+        "type": "Microsoft.Network/networkSecurityGroups",
+        "name": "sqlvmbackupdemo-nsg",
+        "apiVersion": "2018-08-01",
+        "location": "[resourceGroup().location]",
+        "properties": {
+          "securityRules": [
+            {
+              "name": "RDP",
+              "properties": {
+                "priority": 300,
+                "protocol": "TCP",
+                "access": "Allow",
+                "direction": "Inbound",
+                "sourceAddressPrefix": "*",
+                "sourcePortRange": "*",
+                "destinationAddressPrefix": "*",
+                "destinationPortRange": "3389"
+              }
+            },
+            {
+              "name": "default-allow-sql",
+              "properties": {
+                "priority": 1500,
+                "protocol": "TCP",
+                "access": "Allow",
+                "direction": "Inbound",
+                "sourceAddressPrefix": "*",
+                "sourcePortRange": "*",
+                "destinationAddressPrefix": "*",
+                "destinationPortRange": "1433"
+              }
+            }
+          ]
+        }
+      }
+    ],
+    "outputs": {
+      "adminUsername": {
+        "type": "string",
+        "value": "[parameters('adminUsername')]"
+      },
+      "virtualMachineName": {
+        "type": "string",
+        "value": "[parameters('virtualMachineName')]"
+      }
+    },
+    "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+  }
+}

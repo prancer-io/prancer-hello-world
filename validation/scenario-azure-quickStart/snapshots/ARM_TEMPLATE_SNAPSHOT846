@@ -1,0 +1,331 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAzureQuickStart",
+  "paths": [
+    "/demos/vm-32-data-disks-high-iops/azuredeploy.json",
+    "/demos/vm-32-data-disks-high-iops/azuredeploy.parameters.json"
+  ],
+  "timestamp": 1642962902186,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/demos/vm-32-data-disks-high-iops/azuredeploy.json",
+      "/demos/vm-32-data-disks-high-iops/azuredeploy.parameters.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT846",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "microsoft.network/publicipaddresses",
+      "microsoft.network/virtualnetworks",
+      "microsoft.network/networkinterfaces",
+      "microsoft.compute/virtualmachines/extensions",
+      "microsoft.compute/virtualmachines",
+      "microsoft.network/networksecuritygroups"
+    ]
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT846",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "location": {
+        "type": "string",
+        "defaultValue": "[resourceGroup().location]",
+        "metadata": {
+          "description": "Location for all resources"
+        }
+      },
+      "adminUsername": {
+        "type": "string",
+        "metadata": {
+          "description": "The username of the initial account to be created"
+        },
+        "value": "GEN-UNIQUE"
+      },
+      "adminPassword": {
+        "type": "securestring",
+        "metadata": {
+          "description": "The password of the initial account to be created"
+        },
+        "value": "GEN-PASSWORD"
+      },
+      "sizeOfEachDataDiskInGB": {
+        "type": "int",
+        "defaultValue": 1024,
+        "allowedValues": [
+          32,
+          64,
+          128,
+          256,
+          512,
+          1024,
+          2048,
+          4095
+        ],
+        "metadata": {
+          "description": "The size of the datadisks to be striped. The total capacity will be this size multiplied by the number of data disks you specify."
+        }
+      },
+      "numberOfDisks": {
+        "type": "int",
+        "defaultValue": 32,
+        "allowedValues": [
+          8,
+          16,
+          32
+        ],
+        "metadata": {
+          "description": "The number of data disks to include in the storage pool."
+        }
+      },
+      "dnsName": {
+        "type": "string",
+        "defaultValue": "[concat('vm-data-disks-', uniqueString(resourceGroup().id))]",
+        "metadata": {
+          "description": "DNS name for the Public IP"
+        }
+      },
+      "vmSize": {
+        "type": "string",
+        "defaultValue": "Standard_D16s_v3",
+        "allowedValues": [
+          "Standard_D16s_v3",
+          "Standard_D32s_v3",
+          "Standard_D64s_v3"
+        ],
+        "metadata": {
+          "description": "VM Size, the list of sizes here all support premium and standard storage up to 32 data disks."
+        }
+      },
+      "storageType": {
+        "type": "string",
+        "defaultValue": "Premium_LRS",
+        "allowedValues": [
+          "Premium_LRS",
+          "StahdardSSD_LRS",
+          "Standard_LRS"
+        ],
+        "metadata": {
+          "description": "Storage SKU type"
+        }
+      },
+      "_artifactsLocation": {
+        "type": "string",
+        "metadata": {
+          "description": "The base URI where artifacts required by this template are located. When the template is deployed using the accompanying scripts, a private location in the subscription will be used and this value will be automatically generated."
+        },
+        "defaultValue": "[deployment().properties.templatelink.uri]"
+      },
+      "_artifactsLocationSasToken": {
+        "type": "securestring",
+        "metadata": {
+          "description": "The sasToken required to access _artifactsLocation.  When the template is deployed using the accompanying scripts, a sasToken will be automatically generated."
+        },
+        "defaultValue": ""
+      }
+    },
+    "variables": {
+      "vmName": "vm-high-iops",
+      "imagePublisher": "MicrosoftWindowsServer",
+      "imageOffer": "WindowsServer",
+      "imageSKU": "2016-Datacenter",
+      "virtualNetworkName": "highIopsVNET",
+      "nicName": "highIopsNIC",
+      "addressPrefix": "10.0.0.0/16",
+      "subnet1Name": "Subnet-1",
+      "subnet1Prefix": "10.0.0.0/24",
+      "publicIPAddressName": "highIopsPubIP",
+      "publicIPAddressType": "Dynamic",
+      "configurationFunction": "StoragePool.ps1\\StoragePool",
+      "modulesUrl": "[uri(parameters('_artifactsLocation'), 'DSC/StoragePool.zip')]",
+      "DscExtensionName": "DscExtension",
+      "subnet1Ref": "Microsoft.Network/virtualNetworks/subnets/highIopsVNET/Subnet-1",
+      "networkSecurityGroupName": "default-NSG"
+    },
+    "resources": [
+      {
+        "apiVersion": "2020-08-01",
+        "type": "Microsoft.Network/publicIPAddresses",
+        "name": "highIopsPubIP",
+        "location": "[resourceGroup().location]",
+        "properties": {
+          "publicIPAllocationMethod": "Dynamic",
+          "dnsSettings": {
+            "domainNameLabel": "[concat('vm-data-disks-', uniqueString(resourceGroup().id))]"
+          }
+        }
+      },
+      {
+        "comments": "Default Network Security Group for template",
+        "type": "Microsoft.Network/networkSecurityGroups",
+        "apiVersion": "2019-08-01",
+        "name": "default-NSG",
+        "location": "[resourceGroup().location]",
+        "properties": {
+          "securityRules": [
+            {
+              "name": "default-allow-3389",
+              "properties": {
+                "priority": 1000,
+                "access": "Allow",
+                "direction": "Inbound",
+                "destinationPortRange": "3389",
+                "protocol": "Tcp",
+                "sourceAddressPrefix": "*",
+                "sourcePortRange": "*",
+                "destinationAddressPrefix": "*"
+              }
+            }
+          ]
+        }
+      },
+      {
+        "apiVersion": "2018-04-01",
+        "type": "Microsoft.Network/virtualNetworks",
+        "name": "highIopsVNET",
+        "location": "[resourceGroup().location]",
+        "dependsOn": [
+          "Microsoft.Network/networkSecurityGroups/default-NSG"
+        ],
+        "properties": {
+          "addressSpace": {
+            "addressPrefixes": [
+              "10.0.0.0/16"
+            ]
+          },
+          "subnets": [
+            {
+              "name": "Subnet-1",
+              "properties": {
+                "addressPrefix": "10.0.0.0/24",
+                "networkSecurityGroup": {
+                  "id": "Microsoft.Network/networkSecurityGroups/default-NSG"
+                }
+              }
+            }
+          ]
+        }
+      },
+      {
+        "apiVersion": "2018-04-01",
+        "type": "Microsoft.Network/networkInterfaces",
+        "name": "highIopsNIC",
+        "location": "[resourceGroup().location]",
+        "dependsOn": [
+          "highIopsPubIP",
+          "highIopsVNET"
+        ],
+        "properties": {
+          "ipConfigurations": [
+            {
+              "name": "ipconfig1",
+              "properties": {
+                "privateIPAllocationMethod": "Dynamic",
+                "publicIPAddress": {
+                  "id": "Microsoft.Network/publicIPAddresses/highIopsPubIP"
+                },
+                "subnet": {
+                  "id": "Microsoft.Network/virtualNetworks/subnets/highIopsVNET/Subnet-1"
+                }
+              }
+            }
+          ]
+        }
+      },
+      {
+        "apiVersion": "2017-03-30",
+        "type": "Microsoft.Compute/virtualMachines",
+        "name": "vm-high-iops",
+        "location": "[resourceGroup().location]",
+        "dependsOn": [
+          "highIopsNIC"
+        ],
+        "properties": {
+          "hardwareProfile": {
+            "vmSize": "Standard_D16s_v3"
+          },
+          "osProfile": {
+            "computerName": "vm-high-iops",
+            "adminUsername": "GEN-UNIQUE",
+            "adminPassword": "GEN-PASSWORD"
+          },
+          "storageProfile": {
+            "imageReference": {
+              "publisher": "MicrosoftWindowsServer",
+              "offer": "WindowsServer",
+              "sku": "2016-Datacenter",
+              "version": "latest"
+            },
+            "osDisk": {
+              "caching": "ReadWrite",
+              "createOption": "FromImage",
+              "managedDisk": {
+                "storageAccountType": "Premium_LRS"
+              }
+            },
+            "copy": [
+              {
+                "name": "dataDisks",
+                "count": 32,
+                "input": {
+                  "diskSizeGB": 1024,
+                  "lun": "[copyIndex('dataDisks')]",
+                  "name": "[concat(variables('vmName'), '_DataDisk', copyIndex('dataDisks'))]",
+                  "createOption": "Empty",
+                  "managedDisk": {
+                    "storageAccountType": "Premium_LRS"
+                  }
+                }
+              }
+            ]
+          },
+          "networkProfile": {
+            "networkInterfaces": [
+              {
+                "id": "Microsoft.Network/networkInterfaces/highIopsNIC"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "type": "Microsoft.Compute/virtualMachines/extensions",
+        "name": "vm-high-iops/DscExtension",
+        "apiVersion": "2017-03-30",
+        "location": "[resourceGroup().location]",
+        "dependsOn": [
+          "vm-high-iops"
+        ],
+        "properties": {
+          "publisher": "Microsoft.Powershell",
+          "type": "DSC",
+          "typeHandlerVersion": "2.19",
+          "autoUpgradeMinorVersion": true,
+          "settings": {
+            "ModulesUrl": "[uri(parameters('_artifactsLocation'), 'DSC/StoragePool.zip')]",
+            "SasToken": "",
+            "ConfigurationFunction": "StoragePool.ps1\\StoragePool",
+            "Properties": {
+              "MachineName": "vm-high-iops"
+            }
+          }
+        }
+      }
+    ],
+    "outputs": {
+      "fqdn": {
+        "type": "string",
+        "value": "[reference(variables('publicIPAddressName')).dnsSettings.fqdn]"
+      }
+    },
+    "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+  }
+}

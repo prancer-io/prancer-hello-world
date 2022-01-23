@@ -1,0 +1,446 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAzureQuickStart",
+  "paths": [
+    "/application-workloads/qlik/qlik-sense-enterprise/azuredeploy.json",
+    "/application-workloads/qlik/qlik-sense-enterprise/azuredeploy.parameters.json"
+  ],
+  "timestamp": 1642962893228,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/application-workloads/qlik/qlik-sense-enterprise/azuredeploy.json",
+      "/application-workloads/qlik/qlik-sense-enterprise/azuredeploy.parameters.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT363",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "microsoft.network/publicipaddresses",
+      "microsoft.network/virtualnetworks",
+      "microsoft.network/networkinterfaces",
+      "microsoft.compute/virtualmachines",
+      "microsoft.network/networksecuritygroups",
+      "microsoft.storage/storageaccounts"
+    ]
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT363",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "_artifactsLocation": {
+        "type": "string",
+        "metadata": {
+          "description": "The base URI where artifacts required by this template are located. When the template is deployed using the accompanying scripts, a private location in the subscription will be used and this value will be automatically generated."
+        },
+        "defaultValue": "[deployment().properties.templatelink.uri]"
+      },
+      "_artifactsLocationSasToken": {
+        "type": "securestring",
+        "metadata": {
+          "description": "The sasToken required to access _artifactsLocation.  When the template is deployed using the accompanying scripts, a sasToken will be automatically generated."
+        },
+        "defaultValue": ""
+      },
+      "virtualMachineName": {
+        "type": "string",
+        "defaultValue": "qlik-sense",
+        "metadata": {
+          "description": "Name of virtual machine to create. Has to be unique in subscription."
+        }
+      },
+      "adminUsername": {
+        "type": "string",
+        "metadata": {
+          "description": "Username for the Virtual Machine."
+        },
+        "value": "GEN-UNIQUE-8"
+      },
+      "adminPassword": {
+        "type": "securestring",
+        "metadata": {
+          "description": "Password for the Virtual Machine."
+        },
+        "value": "GEN-PASSWORD"
+      },
+      "dnsLabelPrefix": {
+        "type": "string",
+        "metadata": {
+          "description": "Unique DNS Name for the Public IP used to access the Virtual Machine."
+        },
+        "value": "GEN-UNIQUE-13"
+      },
+      "qlikSenseVersion": {
+        "type": "string",
+        "defaultValue": "Qlik Sense November 2017",
+        "allowedValues": [
+          "Qlik Sense November 2017",
+          "Qlik Sense September 2017 Patch 1",
+          "Qlik Sense September 2017",
+          "Qlik Sense June 2017 Patch 3",
+          "Qlik Sense June 2017 Patch 2",
+          "Qlik Sense June 2017 Patch 1",
+          "Qlik Sense June 2017",
+          "Qlik Sense 3.2 SR5",
+          "Qlik Sense 3.2 SR4"
+        ],
+        "metadata": {
+          "description": "Version of Qlik Sense to provision."
+        }
+      },
+      "qlikSenseServiceAccount": {
+        "type": "string",
+        "defaultValue": "qService",
+        "metadata": {
+          "description": "User to run the Qlik Sense services."
+        }
+      },
+      "qlikSenseServiceAccountPassword": {
+        "type": "securestring",
+        "minLength": 12,
+        "metadata": {
+          "description": "Password for the Qlik Sense service account."
+        },
+        "value": "GEN-PASSWORD"
+      },
+      "qlikSenseRepositoryPassword": {
+        "type": "securestring",
+        "metadata": {
+          "description": "Password for the Qlik Sense Repository user."
+        },
+        "value": "GEN-PASSWORD"
+      },
+      "qlikSenseSerial": {
+        "type": "string",
+        "defaultValue": "defaultValue",
+        "metadata": {
+          "description": "Password for the Qlik Sense Repository user. Replace with your license details to license server during provisioning."
+        }
+      },
+      "qlikSenseControl": {
+        "type": "securestring",
+        "metadata": {
+          "description": "Control key for Qlik Sense license. Replace with your license details to license server during provisioning."
+        },
+        "value": "defaultValue"
+      },
+      "qlikSenseOrganization": {
+        "type": "string",
+        "defaultValue": "defaultValue",
+        "metadata": {
+          "description": "Organization owner of license. Replace with your license details to license server during provisioning."
+        }
+      },
+      "qlikSenseName": {
+        "type": "string",
+        "defaultValue": "defaultValue",
+        "metadata": {
+          "description": "Name of licensed organization. Replace with your license details to license server during provisioning."
+        }
+      },
+      "virtualMachineSize": {
+        "type": "string",
+        "defaultValue": "Standard_D4s_v3",
+        "allowedValues": [
+          "Standard_D2s_v3",
+          "Standard_D2s_v3",
+          "Standard_D4s_v3",
+          "Standard_D8s_v3",
+          "Standard_D16s_v3",
+          "Standard_D4s_v3",
+          "Standard_D4s_v3",
+          "Standard_D8s_v3",
+          "Standard_D16s_v3",
+          "Standard_D32s_v3"
+        ],
+        "metadata": {
+          "description": "Size of VM to be created. Recommended start size is Standard_DS3_V2"
+        }
+      },
+      "windowsOSVersion": {
+        "type": "string",
+        "defaultValue": "2016-Datacenter",
+        "allowedValues": [
+          "2012-Datacenter",
+          "2012-R2-Datacenter",
+          "2016-Datacenter-with-Containers",
+          "2016-Datacenter"
+        ],
+        "metadata": {
+          "description": "The Windows version for the VM. This will pick a fully patched image of this given Windows version."
+        }
+      },
+      "location": {
+        "type": "string",
+        "defaultValue": "[resourceGroup().location]",
+        "metadata": {
+          "description": "Location for all resources."
+        }
+      }
+    },
+    "variables": {
+      "storageAccountName": "[concat(uniquestring(resourceGroup().id), 'sawinvm')]",
+      "nicName": "myVMNic",
+      "addressPrefix": "10.0.0.0/16",
+      "subnetName": "Subnet",
+      "subnetPrefix": "10.0.0.0/24",
+      "publicIPAddressName": "myPublicIP",
+      "vmName": "qlik-sense",
+      "virtualNetworkName": "MyVNET",
+      "networkSecurityGroupName": "qlikSenseSecurityGroup",
+      "subnetRef": "Microsoft.Network/virtualNetworks/subnets/MyVNET/Subnet",
+      "scriptBootStrapFileName": "qs-bootstrap.ps1"
+    },
+    "resources": [
+      {
+        "apiVersion": "2021-02-01",
+        "type": "Microsoft.Network/networkSecurityGroups",
+        "name": "qlikSenseSecurityGroup",
+        "location": "[resourceGroup().location]",
+        "tags": {
+          "displayName": "qlikSenseSecurityGroup"
+        },
+        "properties": {
+          "securityRules": [
+            {
+              "name": "http",
+              "properties": {
+                "description": "http endpoint",
+                "protocol": "Tcp",
+                "sourcePortRange": "*",
+                "destinationPortRange": "80",
+                "sourceAddressPrefix": "*",
+                "destinationAddressPrefix": "*",
+                "access": "Allow",
+                "priority": 100,
+                "direction": "Inbound"
+              }
+            },
+            {
+              "name": "httpAuth",
+              "properties": {
+                "description": "http Windows Auth endpoint",
+                "protocol": "Tcp",
+                "sourcePortRange": "*",
+                "destinationPortRange": "4248",
+                "sourceAddressPrefix": "*",
+                "destinationAddressPrefix": "*",
+                "access": "Allow",
+                "priority": 1100,
+                "direction": "Inbound"
+              }
+            },
+            {
+              "name": "https",
+              "properties": {
+                "description": "https endpoint",
+                "protocol": "Tcp",
+                "sourcePortRange": "*",
+                "destinationPortRange": "443",
+                "sourceAddressPrefix": "*",
+                "destinationAddressPrefix": "*",
+                "access": "Allow",
+                "priority": 1200,
+                "direction": "Inbound"
+              }
+            },
+            {
+              "name": "httpsAuth",
+              "properties": {
+                "description": "https Windows Auth endpoint",
+                "protocol": "Tcp",
+                "sourcePortRange": "*",
+                "destinationPortRange": "4244",
+                "sourceAddressPrefix": "*",
+                "destinationAddressPrefix": "*",
+                "access": "Allow",
+                "priority": 1300,
+                "direction": "Inbound"
+              }
+            },
+            {
+              "name": "rdp",
+              "properties": {
+                "description": "rdp endpoint",
+                "protocol": "Tcp",
+                "sourcePortRange": "*",
+                "destinationPortRange": "3389",
+                "sourceAddressPrefix": "*",
+                "destinationAddressPrefix": "*",
+                "access": "Allow",
+                "priority": 200,
+                "direction": "Inbound"
+              }
+            }
+          ]
+        }
+      },
+      {
+        "type": "Microsoft.Storage/storageAccounts",
+        "name": "[variables('storageAccountName')]",
+        "apiVersion": "2016-01-01",
+        "location": "[resourceGroup().location]",
+        "sku": {
+          "name": "Standard_LRS"
+        },
+        "kind": "Storage",
+        "properties": {}
+      },
+      {
+        "apiVersion": "2016-03-30",
+        "type": "Microsoft.Network/publicIPAddresses",
+        "name": "myPublicIP",
+        "location": "[resourceGroup().location]",
+        "properties": {
+          "publicIPAllocationMethod": "Dynamic",
+          "dnsSettings": {
+            "domainNameLabel": "GEN-UNIQUE-13"
+          }
+        }
+      },
+      {
+        "apiVersion": "2017-06-01",
+        "type": "Microsoft.Network/virtualNetworks",
+        "name": "MyVNET",
+        "location": "[resourceGroup().location]",
+        "dependsOn": [
+          "Microsoft.Network/networkSecurityGroups//qlikSenseSecurityGroup"
+        ],
+        "properties": {
+          "addressSpace": {
+            "addressPrefixes": [
+              "10.0.0.0/16"
+            ]
+          },
+          "subnets": [
+            {
+              "name": "Subnet",
+              "properties": {
+                "addressPrefix": "10.0.0.0/24",
+                "networkSecurityGroup": {
+                  "id": "Microsoft.Network/networkSecurityGroups//qlikSenseSecurityGroup"
+                }
+              }
+            }
+          ]
+        }
+      },
+      {
+        "apiVersion": "2016-03-30",
+        "type": "Microsoft.Network/networkInterfaces",
+        "name": "myVMNic",
+        "location": "[resourceGroup().location]",
+        "dependsOn": [
+          "Microsoft.Network/publicIPAddresses//myPublicIP",
+          "Microsoft.Network/virtualNetworks//MyVNET"
+        ],
+        "properties": {
+          "ipConfigurations": [
+            {
+              "name": "ipconfig1",
+              "properties": {
+                "privateIPAllocationMethod": "Dynamic",
+                "publicIPAddress": {
+                  "id": "Microsoft.Network/publicIPAddresses/myPublicIP"
+                },
+                "subnet": {
+                  "id": "Microsoft.Network/virtualNetworks/subnets/MyVNET/Subnet"
+                }
+              }
+            }
+          ]
+        }
+      },
+      {
+        "apiVersion": "2017-03-30",
+        "type": "Microsoft.Compute/virtualMachines",
+        "name": "qlik-sense",
+        "location": "[resourceGroup().location]",
+        "dependsOn": [
+          "[resourceId('Microsoft.Storage/storageAccounts/', variables('storageAccountName'))]",
+          "[resourceId('Microsoft.Network/networkInterfaces/', variables('nicName'))]"
+        ],
+        "properties": {
+          "hardwareProfile": {
+            "vmSize": "Standard_D4s_v3"
+          },
+          "osProfile": {
+            "computerName": "qlik-sense",
+            "adminUsername": "GEN-UNIQUE-8",
+            "adminPassword": "GEN-PASSWORD"
+          },
+          "storageProfile": {
+            "imageReference": {
+              "publisher": "MicrosoftWindowsServer",
+              "offer": "WindowsServer",
+              "sku": "2016-Datacenter",
+              "version": "latest"
+            },
+            "osDisk": {
+              "name": "qlik-sense_OSDisk",
+              "caching": "ReadWrite",
+              "createOption": "FromImage"
+            }
+          },
+          "networkProfile": {
+            "networkInterfaces": [
+              {
+                "id": "Microsoft.Network/networkInterfaces/myVMNic"
+              }
+            ]
+          },
+          "diagnosticsProfile": {
+            "bootDiagnostics": {
+              "enabled": true,
+              "storageUri": "[reference(resourceId('Microsoft.Storage/storageAccounts/', variables('storageAccountName'))).primaryEndpoints.blob]"
+            }
+          }
+        },
+        "resources": [
+          {
+            "type": "extensions",
+            "apiVersion": "2016-03-30",
+            "name": "qlikSenseBootstrap",
+            "location": "[resourceGroup().location]",
+            "dependsOn": [
+              "Microsoft.Compute/virtualMachines/qlik-sense"
+            ],
+            "tags": {
+              "displayName": "QlikSenseBootstrap"
+            },
+            "properties": {
+              "publisher": "Microsoft.Compute",
+              "type": "CustomScriptExtension",
+              "typeHandlerVersion": "1.9",
+              "autoUpgradeMinorVersion": true,
+              "settings": {
+                "fileUris": [
+                  "[uri(parameters('_artifactsLocation'), concat('scripts/qs-bootstrap.ps1', parameters('_artifactsLocationSasToken')))]",
+                  "[uri(parameters('_artifactsLocation'), concat('scripts/qs-install.ps1', parameters('_artifactsLocationSasToken')))]"
+                ]
+              },
+              "protectedSettings": {
+                "commandToExecute": "powershell -noninteractive -ExecutionPolicy Bypass -file .\\Scripts\\qs-bootstrap.ps1 \"GEN-UNIQUE-8\" \"GEN-PASSWORD\" \"qService\" \"GEN-PASSWORD\" \"GEN-PASSWORD\" \"Qlik Sense November 2017\" \"defaultValue\" \"defaultValue\" \"defaultValue\" \"defaultValue\" \"[deployment().properties.templatelink.uri]\""
+              }
+            }
+          }
+        ]
+      }
+    ],
+    "outputs": {
+      "hostname": {
+        "type": "string",
+        "value": "[reference(variables('publicIPAddressName')).dnsSettings.fqdn]"
+      }
+    },
+    "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+  }
+}

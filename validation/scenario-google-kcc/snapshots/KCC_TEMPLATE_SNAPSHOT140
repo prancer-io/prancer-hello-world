@@ -2,12 +2,12 @@
   "structure": "filesystem",
   "error": null,
   "reference": "master",
-  "contentType": "yaml",
+  "contentType": "json",
   "source": "gitConnectorGoogleKcc",
   "paths": [
-    "/samples/resources/computeinstance/instance-from-template/compute_v1beta1_computeinstance.yaml"
+    "/samples/resources/computeforwardingrule/global-forwarding-rule-with-target-ssl-proxy/compute_v1beta1_computetargetsslproxy.yaml"
   ],
-  "timestamp": 1628765141163,
+  "timestamp": 1642973302623,
   "queryuser": null,
   "checksum": "99914b932bd37a50b983c5e7c90ae93b",
   "node": {
@@ -15,33 +15,32 @@
     "type": "kcc",
     "collection": "kcctemplate",
     "paths": [
-      "/samples/resources/computeinstance/instance-from-template/compute_v1beta1_computeinstance.yaml"
+      "/samples/resources/computeforwardingrule/global-forwarding-rule-with-target-ssl-proxy/compute_v1beta1_computetargetsslproxy.yaml"
     ],
     "snapshotId": "KCC_TEMPLATE_SNAPSHOT140",
     "status": "active",
-    "validate": true
+    "validate": true,
+    "resourceTypes": [
+      "computetargetsslproxy"
+    ]
   },
   "snapshotId": "KCC_TEMPLATE_SNAPSHOT140",
   "collection": "kcctemplate",
   "json": {
     "apiVersion": "compute.cnrm.cloud.google.com/v1beta1",
-    "kind": "ComputeInstance",
+    "kind": "ComputeTargetSSLProxy",
     "metadata": {
-      "annotations": {
-        "cnrm.cloud.google.com/allow-stopping-for-update": "false"
-      },
-      "name": "computeinstance-sample-fromtemplate",
-      "labels": {
-        "created-from": "template",
-        "override-type": "largermachine"
-      }
+      "name": "computeforwardingrule-dep-global-with-target-ssl-proxy"
     },
     "spec": {
-      "machineType": "n1-standard-2",
-      "instanceTemplateRef": {
-        "name": "computeinstance-dep-fromtemplate"
+      "backendServiceRef": {
+        "name": "computeforwardingrule-dep-global-with-target-ssl-proxy"
       },
-      "zone": "us-west1-c"
+      "sslCertificates": [
+        {
+          "name": "computeforwardingrule-dep-global-with-target-ssl-proxy"
+        }
+      ]
     }
   }
 }

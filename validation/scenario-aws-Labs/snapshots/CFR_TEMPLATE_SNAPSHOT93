@@ -1,0 +1,216 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAwsLabs",
+  "paths": [
+    "/aws/solutions/StackSetsResource/Templates/stackset-function-template.yaml"
+  ],
+  "timestamp": 1642972590672,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "CFR_TEMPLATE_SNAPSHOT",
+    "type": "cloudformation",
+    "collection": "cloudformationtemplate",
+    "paths": [
+      "/aws/solutions/StackSetsResource/Templates/stackset-function-template.yaml"
+    ],
+    "snapshotId": "CFR_TEMPLATE_SNAPSHOT93",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "aws::iam::role",
+      "aws::logs::loggroup",
+      "aws::lambda::function"
+    ]
+  },
+  "snapshotId": "CFR_TEMPLATE_SNAPSHOT93",
+  "collection": "cloudformationtemplate",
+  "json": {
+    "AWSTemplateFormatVersion": "2010-09-09",
+    "Description": "Deploy required components for StackSet custom resources in this region.  Lambda ARN is exported as StackSetCustomResource",
+    "Parameters": {
+      "ModuleName": {
+        "Type": "String",
+        "Default": "lambda_function"
+      },
+      "RoleName": {
+        "Type": "String",
+        "Default": ""
+      },
+      "RolePath": {
+        "Type": "String",
+        "Default": ""
+      }
+    },
+    "Conditions": {
+      "UseRoleName": {
+        "Fn::Not": [
+          {
+            "Fn::Equals": [
+              {
+                "Ref": "RoleName"
+              },
+              ""
+            ]
+          }
+        ]
+      },
+      "UseRolePath": {
+        "Fn::Not": [
+          {
+            "Fn::Equals": [
+              {
+                "Ref": "RolePath"
+              },
+              ""
+            ]
+          }
+        ]
+      }
+    },
+    "Resources": [
+      {
+        "Type": "AWS::IAM::Role",
+        "Properties": {
+          "RoleName": {
+            "Ref": "AWS::NoValue"
+          },
+          "Path": "/",
+          "AssumeRolePolicyDocument": {
+            "Version": "2012-10-17",
+            "Statement": [
+              {
+                "Effect": "Allow",
+                "Principal": {
+                  "Service": "lambda.amazonaws.com"
+                },
+                "Action": "sts:AssumeRole"
+              }
+            ]
+          },
+          "Policies": [
+            {
+              "PolicyName": "IAMPassRolePermissions",
+              "PolicyDocument": {
+                "Version": "2012-10-17",
+                "Statement": [
+                  {
+                    "Effect": "Allow",
+                    "Action": "iam:PassRole",
+                    "Resource": "*"
+                  }
+                ]
+              }
+            },
+            {
+              "PolicyName": "CloudFormationPermissions",
+              "PolicyDocument": {
+                "Version": "2012-10-17",
+                "Statement": [
+                  {
+                    "Effect": "Allow",
+                    "Action": "cloudformation:*",
+                    "Resource": "*"
+                  }
+                ]
+              }
+            },
+            {
+              "PolicyName": "LambdaPermissions",
+              "PolicyDocument": {
+                "Version": "2012-10-17",
+                "Statement": [
+                  {
+                    "Effect": "Allow",
+                    "Action": "logs:CreateLogGroup",
+                    "Resource": [
+                      {
+                        "Fn::Sub": "arn:aws:logs:${AWS::Region}:${AWS::AccountId}:*"
+                      }
+                    ]
+                  },
+                  {
+                    "Effect": "Allow",
+                    "Action": [
+                      "logs:CreateLogStream",
+                      "logs:PutLogEvents"
+                    ],
+                    "Resource": [
+                      {
+                        "Fn::Sub": "arn:aws:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/*"
+                      }
+                    ]
+                  }
+                ]
+              }
+            },
+            {
+              "PolicyName": "S3Permissions",
+              "PolicyDocument": {
+                "Version": "2012-10-17",
+                "Statement": [
+                  {
+                    "Effect": "Allow",
+                    "Action": [
+                      "s3:Get*",
+                      "s3:List*"
+                    ],
+                    "Resource": "*"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        "Name": "StackSetResourceRole"
+      },
+      {
+        "Type": "AWS::Lambda::Function",
+        "Properties": {
+          "Description": "Custom CloudFormation resource for managing Stack Sets",
+          "Code": "../FunctionCode",
+          "Handler": {
+            "Fn::Sub": "${ModuleName}.handler"
+          },
+          "Runtime": "python3.6",
+          "Timeout": 900,
+          "Role": {
+            "Fn::GetAtt": [
+              "StackSetResourceRole",
+              "Arn"
+            ]
+          }
+        },
+        "Name": "StackSetResourceFunction"
+      },
+      {
+        "DependsOn": "StackSetResourceFunction",
+        "Type": "AWS::Logs::LogGroup",
+        "Properties": {
+          "LogGroupName": {
+            "Fn::Sub": "/aws/lambda/${StackSetResourceFunction}"
+          },
+          "RetentionInDays": 7
+        },
+        "Name": "StackSetResourceLogGroup"
+      }
+    ],
+    "Outputs": {
+      "StackSetFunctionArn": {
+        "Description": "Resource ARN for the StackSetCustom resource Lambda function",
+        "Value": {
+          "Fn::GetAtt": [
+            "StackSetResourceFunction",
+            "Arn"
+          ]
+        },
+        "Export": {
+          "Name": "StackSetCustomResource"
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,136 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAzureQuickStart",
+  "paths": [
+    "/quickstarts/microsoft.machinelearningservices/machine-learning-linkedservice-create/azuredeploy.json",
+    "/quickstarts/microsoft.machinelearningservices/machine-learning-linkedservice-create/azuredeploy.parameters.json"
+  ],
+  "timestamp": 1642962907897,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/quickstarts/microsoft.machinelearningservices/machine-learning-linkedservice-create/azuredeploy.json",
+      "/quickstarts/microsoft.machinelearningservices/machine-learning-linkedservice-create/azuredeploy.parameters.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT1451",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "microsoft.machinelearningservices/workspaces/computes",
+      "microsoft.machinelearningservices/workspaces/linkedservices"
+    ]
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT1451",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "amlWorkspaceName": {
+        "type": "string",
+        "metadata": {
+          "description": "Name of the existing AML workspace to create the linked service."
+        },
+        "value": "GET-PREREQ-amlWorkspaceName"
+      },
+      "linkName": {
+        "type": "string",
+        "defaultValue": "link1",
+        "metadata": {
+          "description": "Name of the LinkedService"
+        }
+      },
+      "synapseWorkspaceResourceId": {
+        "type": "string",
+        "metadata": {
+          "description": "ResourceId of the existing Synapse workspace which you want to link to the aml workspace by linked service."
+        },
+        "value": "GET-PREREQ-synapseWorkspaceResourceId"
+      },
+      "sparkPools": {
+        "type": "array",
+        "metadata": {
+          "description": "Spark pools you want to attach to the aml workspace, in such format: [ {\"computeName\":\"compute1\", \"poolName\":\"sparkPool1\"}, ... ]. Pool name is the name of spark pool shown in Synapse workspace, while compute name is the alias for this pool after it is attached to aml workspace."
+        },
+        "value": [
+          {
+            "computeName": "sparkPool1",
+            "poolName": "GET-PREREQ-sparkPoolName"
+          }
+        ]
+      },
+      "location": {
+        "type": "string",
+        "allowedValues": [
+          "australiaeast",
+          "brazilsouth",
+          "canadacentral",
+          "centralindia",
+          "centralus",
+          "eastasia",
+          "eastus",
+          "eastus2",
+          "francecentral",
+          "japaneast",
+          "koreacentral",
+          "northcentralus",
+          "northeurope",
+          "southcentralus",
+          "southeastasia",
+          "uksouth",
+          "westcentralus",
+          "westeurope",
+          "westus",
+          "westus2"
+        ],
+        "metadata": {
+          "description": "Location(aka region) of the LinkedService"
+        },
+        "value": "GET-PREREQ-location"
+      }
+    },
+    "variables": {
+      "synapseWorkspaceName": "[substring(parameters('synapseWorkspaceResourceId'), add(lastIndexOf(parameters('synapseWorkspaceResourceId'), '/'), 1))]"
+    },
+    "resources": [
+      {
+        "type": "Microsoft.MachineLearningServices/workspaces/linkedServices",
+        "apiVersion": "2020-09-01-preview",
+        "name": "GET-PREREQ-amlWorkspaceName/link1",
+        "location": "GET-PREREQ-location",
+        "identity": {
+          "type": "SystemAssigned"
+        },
+        "properties": {
+          "linkedServiceResourceId": "GET-PREREQ-synapseWorkspaceResourceId"
+        }
+      },
+      {
+        "type": "Microsoft.MachineLearningServices/workspaces/computes",
+        "apiVersion": "2018-11-19",
+        "name": "[concat(parameters('amlWorkspaceName'), '/', parameters('sparkPools')[copyIndex()].computeName)]",
+        "location": "GET-PREREQ-location",
+        "properties": {
+          "resourceId": "[resourceId(reference(parameters('synapseWorkspaceResourceId'), '2019-06-01-preview', 'Full').subscriptionId, reference(parameters('synapseWorkspaceResourceId'), '2019-06-01-preview', 'Full').resourceGroupName, 'Microsoft.Synapse/workspaces/bigDataPools', variables('synapseWorkspaceName'), parameters('sparkPools')[copyIndex()].poolName)]",
+          "computeType": "SynapseSpark"
+        }
+      }
+    ],
+    "outputs": {
+      "SaiPrincipalId": {
+        "type": "string",
+        "value": "[reference(parameters('linkName'), '2020-04-01-preview', 'Full').identity.principalId]",
+        "metadata": {
+          "description": "PrincipalId of the SAI(System Assigned Identity) of the LinkedService, please use this to asssign roles."
+        }
+      }
+    },
+    "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+  }
+}

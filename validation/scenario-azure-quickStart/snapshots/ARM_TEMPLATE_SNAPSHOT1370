@@ -1,0 +1,124 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAzureQuickStart",
+  "paths": [
+    "/quickstarts/microsoft.insights/insights-alertrules-servicehealth/azuredeploy.json",
+    "/quickstarts/microsoft.insights/insights-alertrules-servicehealth/azuredeploy.parameters.json"
+  ],
+  "timestamp": 1642962907228,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/quickstarts/microsoft.insights/insights-alertrules-servicehealth/azuredeploy.json",
+      "/quickstarts/microsoft.insights/insights-alertrules-servicehealth/azuredeploy.parameters.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT1370",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "microsoft.insights/activitylogalerts",
+      "microsoft.insights/actiongroups"
+    ]
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT1370",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "alertName": {
+        "type": "string",
+        "metadata": {
+          "description": "Name of alert"
+        },
+        "value": "ResolvedAlert"
+      },
+      "status": {
+        "type": "string",
+        "defaultValue": "",
+        "allowedValues": [
+          "Active",
+          "InProgress",
+          "Resolved"
+        ],
+        "metadata": {
+          "description": "Description of alert"
+        },
+        "value": "Resolved"
+      },
+      "emailAddress": {
+        "type": "string",
+        "defaultValue": "email@example.com",
+        "metadata": {
+          "description": "Email address where the alerts are sent."
+        },
+        "value": "email@example.com"
+      },
+      "emailName": {
+        "type": "string",
+        "defaultValue": "Example",
+        "metadata": {
+          "description": "Email address where the alerts are sent."
+        },
+        "value": "Example"
+      }
+    },
+    "resources": [
+      {
+        "type": "Microsoft.Insights/activityLogAlerts",
+        "apiVersion": "2017-04-01",
+        "name": "ResolvedAlert",
+        "location": "global",
+        "properties": {
+          "enabled": true,
+          "scopes": [
+            "[subscription().id]"
+          ],
+          "condition": {
+            "allOf": [
+              {
+                "field": "category",
+                "equals": "ResourceHealth"
+              },
+              {
+                "field": "status",
+                "equals": "Resolved"
+              }
+            ]
+          },
+          "actions": {
+            "actionGroups": [
+              {
+                "actionGroupId": "microsoft.insights/actionGroups/emailActionGroup"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "name": "emailActionGroup",
+        "type": "microsoft.insights/actionGroups",
+        "apiVersion": "2019-06-01",
+        "location": "global",
+        "properties": {
+          "groupShortName": "string",
+          "enabled": true,
+          "emailReceivers": [
+            {
+              "name": "Example",
+              "emailAddress": "email@example.com",
+              "useCommonAlertSchema": true
+            }
+          ]
+        }
+      }
+    ],
+    "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+  }
+}

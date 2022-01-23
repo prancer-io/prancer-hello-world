@@ -1,0 +1,104 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "main",
+  "contentType": "json",
+  "source": "gitConnectorAzureTerraHashicorp",
+  "paths": [
+    "/examples/datalake/variables.tf",
+    "/examples/datalake/main.tf"
+  ],
+  "timestamp": 1642943279708,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "TRF_TEMPLATE_SNAPSHOT",
+    "type": "terraform",
+    "collection": "terraformtemplate",
+    "paths": [
+      "/examples/datalake/variables.tf",
+      "/examples/datalake/main.tf"
+    ],
+    "snapshotId": "TRF_TEMPLATE_SNAPSHOT43",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "azurerm_data_lake_store",
+      "azurerm_data_lake_store_firewall_rule",
+      "azurerm_resource_group",
+      "azurerm_data_lake_analytics_firewall_rule",
+      "azurerm_data_lake_analytics_account"
+    ]
+  },
+  "snapshotId": "TRF_TEMPLATE_SNAPSHOT43",
+  "collection": "terraformtemplate",
+  "json": {
+    "provider": [
+      {
+        "azurerm": {
+          "features": [
+            {}
+          ]
+        }
+      }
+    ],
+    "resources": [
+      {
+        "type": "azurerm_resource_group",
+        "name": "example",
+        "properties": {
+          "name": "${var.prefix}-resources",
+          "location": "${var.location}",
+          "compiletime_identity": "azurerm_resource_group.example"
+        }
+      },
+      {
+        "type": "azurerm_data_lake_store",
+        "name": "example",
+        "properties": {
+          "name": "${var.prefix}-dls",
+          "resource_group_name": "${azurerm_resource_group.example.name}",
+          "location": "${azurerm_resource_group.example.location}",
+          "tier": "Consumption",
+          "compiletime_identity": "azurerm_data_lake_store.example"
+        }
+      },
+      {
+        "type": "azurerm_data_lake_store_firewall_rule",
+        "name": "test",
+        "properties": {
+          "name": "${var.prefix}-dls-fwrule",
+          "account_name": "${azurerm_data_lake_store.example.name}",
+          "resource_group_name": "${azurerm_resource_group.example.name}",
+          "start_ip_address": "0.0.0.0",
+          "end_ip_address": "0.0.0.0",
+          "compiletime_identity": "azurerm_data_lake_store_firewall_rule.test"
+        }
+      },
+      {
+        "type": "azurerm_data_lake_analytics_account",
+        "name": "example",
+        "properties": {
+          "name": "${var.prefix}-dla",
+          "resource_group_name": "${azurerm_resource_group.example.name}",
+          "location": "${azurerm_resource_group.example.location}",
+          "tier": "Consumption",
+          "default_store_account_name": "${azurerm_data_lake_store.example.name}",
+          "compiletime_identity": "azurerm_data_lake_analytics_account.example"
+        }
+      },
+      {
+        "type": "azurerm_data_lake_analytics_firewall_rule",
+        "name": "test",
+        "properties": {
+          "name": "${var.prefix}-dlafwrule",
+          "account_name": "${azurerm_data_lake_analytics_account.example.name}",
+          "resource_group_name": "${azurerm_resource_group.example.name}",
+          "start_ip_address": "0.0.0.0",
+          "end_ip_address": "0.0.0.0",
+          "compiletime_identity": "azurerm_data_lake_analytics_firewall_rule.test"
+        }
+      }
+    ]
+  }
+}

@@ -1,0 +1,68 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorGoogleKcc",
+  "paths": [
+    "/samples/resources/networkconnectivityspoke/compute_v1beta1_computeinstance.yaml"
+  ],
+  "timestamp": 1642973304791,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "KCC_TEMPLATE_SNAPSHOT",
+    "type": "kcc",
+    "collection": "kcctemplate",
+    "paths": [
+      "/samples/resources/networkconnectivityspoke/compute_v1beta1_computeinstance.yaml"
+    ],
+    "snapshotId": "KCC_TEMPLATE_SNAPSHOT560",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "computeinstance"
+    ]
+  },
+  "snapshotId": "KCC_TEMPLATE_SNAPSHOT560",
+  "collection": "kcctemplate",
+  "json": {
+    "apiVersion": "compute.cnrm.cloud.google.com/v1beta1",
+    "kind": "ComputeInstance",
+    "metadata": {
+      "annotations": {
+        "cnrm.cloud.google.com/allow-stopping-for-update": "true"
+      },
+      "name": "networkconnectivityspoke-dep",
+      "labels": {
+        "created-from": "image",
+        "network-type": "subnetwork"
+      }
+    },
+    "spec": {
+      "machineType": "n1-standard-1",
+      "zone": "us-central1-a",
+      "bootDisk": {
+        "initializeParams": {
+          "sourceImageRef": {
+            "external": "debian-cloud/debian-9"
+          }
+        }
+      },
+      "networkInterface": [
+        {
+          "subnetworkRef": {
+            "name": "networkconnectivityspoke-dep"
+          },
+          "networkIp": "10.0.0.2",
+          "accessConfigs": [
+            {
+              "networkTier": "PREMIUM"
+            }
+          ]
+        }
+      ],
+      "canIpForward": true
+    }
+  }
+}

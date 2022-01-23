@@ -1,0 +1,172 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAzureQuickStart",
+  "paths": [
+    "/application-workloads/sap/sap-2-tier-marketplace-image/shared/lb-DB-SQL.json"
+  ],
+  "timestamp": 1642962894439,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/application-workloads/sap/sap-2-tier-marketplace-image/shared/lb-DB-SQL.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT411",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": []
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT411",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "loadBalancerName": {
+        "type": "string",
+        "metadata": {
+          "description": "The name of the the load balancer"
+        }
+      },
+      "dbInstanceNumber": {
+        "type": "int",
+        "defaultValue": 4,
+        "metadata": {
+          "description": "The instance number of the database"
+        }
+      },
+      "subnetId": {
+        "type": "string",
+        "metadata": {
+          "description": "The id of the subnet you want to use."
+        }
+      },
+      "nicBackAddressPoolsArray": {
+        "type": "array",
+        "defaultValue": [],
+        "metadata": {
+          "description": "The array that contains the backaddress pools for the Network Interface creation"
+        }
+      },
+      "frontendIPConfigurationsArray": {
+        "type": "array",
+        "defaultValue": [],
+        "metadata": {
+          "description": "The array that contains the frontend IP configurations for the Load Balancer creation"
+        }
+      },
+      "backendAddressPoolsArray": {
+        "type": "array",
+        "defaultValue": [],
+        "metadata": {
+          "description": "The array that contains the backend address pools for the Load Balancer creation"
+        }
+      },
+      "loadBalancingRulesArray": {
+        "type": "array",
+        "defaultValue": [],
+        "metadata": {
+          "description": "The array that contains the fload balancing rules for the Load Balancer creation"
+        }
+      },
+      "probesArray": {
+        "type": "array",
+        "defaultValue": [],
+        "metadata": {
+          "description": "The array that contains the probes for the Load Balancer creation"
+        }
+      }
+    },
+    "variables": {
+      "lbPrefix": "[concat('lb', padLeft(parameters('dbInstanceNumber'), 2, '0'))]",
+      "lbrulePrefix": "[concat(variables('lbPrefix'), 'Rule')]",
+      "backendPoolDB": "[concat(variables('lbPrefix'), 'BackendPoolDB')]",
+      "loadBalancerFrontendDB": "[concat(variables('lbPrefix'), 'FrontendDB')]",
+      "lbProbePortDB": "[concat(variables('lbPrefix'), 'ProbePortDB')]",
+      "lbProbePortInternalDB": "[add(62500, parameters('dbInstanceNumber'))]",
+      "idleTimeoutInMinutesDB": 30,
+      "nicBackAddressPoolsResult": [
+        {
+          "id": "[concat(resourceId('Microsoft.Network/loadBalancers', parameters('loadBalancerName')), '/backendAddressPools/', variables('backendPoolDB'))]"
+        }
+      ],
+      "frontendIPConfigurationsResult": [
+        {
+          "properties": {
+            "subnet": {
+              "id": "subnetId"
+            },
+            "privateIPAllocationMethod": "Dynamic"
+          },
+          "name": "[variables('loadBalancerFrontendDB')]"
+        }
+      ],
+      "backendAddressPoolsResult": [
+        {
+          "name": "[variables('backendPoolDB')]"
+        }
+      ],
+      "loadBalancingRulesResult": [
+        {
+          "properties": {
+            "frontendIPConfiguration": {
+              "id": "[concat(resourceId('Microsoft.Network/loadBalancers', parameters('loadBalancerName')), '/frontendIpConfigurations/', variables('loadBalancerFrontendDB'))]"
+            },
+            "backendAddressPool": {
+              "id": "[concat(resourceId('Microsoft.Network/loadBalancers', parameters('loadBalancerName')), '/backendAddressPools/', variables('backendPoolDB'))]"
+            },
+            "probe": {
+              "id": "[concat(resourceId('Microsoft.Network/loadBalancers', parameters('loadBalancerName')), '/probes/', variables('lbProbePortDB'))]"
+            },
+            "protocol": "Tcp",
+            "frontendPort": 1433,
+            "backendPort": 1433,
+            "enableFloatingIP": true,
+            "idleTimeoutInMinutes": 30
+          },
+          "name": "[concat(variables('lbrulePrefix'), '1433')]"
+        }
+      ],
+      "probesResult": [
+        {
+          "properties": {
+            "protocol": "Tcp",
+            "port": "[add(62500, parameters('dbInstanceNumber'))]",
+            "intervalInSeconds": 5,
+            "numberOfProbes": 2
+          },
+          "name": "[variables('lbProbePortDB')]"
+        }
+      ]
+    },
+    "resources": [],
+    "outputs": {
+      "nicBackAddressPools": {
+        "value": "[concat(parameters('nicBackAddressPoolsArray'), variables('nicBackAddressPoolsResult'))]",
+        "type": "array"
+      },
+      "frontendIPConfigurations": {
+        "value": "[concat(parameters('frontendIPConfigurationsArray'), variables('frontendIPConfigurationsResult'))]",
+        "type": "array"
+      },
+      "backendAddressPools": {
+        "value": "[concat(parameters('backendAddressPoolsArray'), variables('backendAddressPoolsResult'))]",
+        "type": "array"
+      },
+      "loadBalancingRules": {
+        "value": "[concat(parameters('loadBalancingRulesArray'), variables('loadBalancingRulesResult'))]",
+        "type": "array"
+      },
+      "probes": {
+        "value": "[concat(parameters('probesArray'), variables('probesResult'))]",
+        "type": "array"
+      }
+    },
+    "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+  }
+}

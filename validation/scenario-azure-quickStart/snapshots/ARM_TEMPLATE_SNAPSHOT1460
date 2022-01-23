@@ -1,0 +1,229 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAzureQuickStart",
+  "paths": [
+    "/quickstarts/microsoft.machinelearningservices/machine-learning-workspace-cmk/azuredeploy.json",
+    "/quickstarts/microsoft.machinelearningservices/machine-learning-workspace-cmk/azuredeploy.parameters.json"
+  ],
+  "timestamp": 1642962907964,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/quickstarts/microsoft.machinelearningservices/machine-learning-workspace-cmk/azuredeploy.json",
+      "/quickstarts/microsoft.machinelearningservices/machine-learning-workspace-cmk/azuredeploy.parameters.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT1460",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "microsoft.machinelearningservices/workspaces",
+      "microsoft.containerregistry/registries",
+      "microsoft.storage/storageaccounts",
+      "microsoft.keyvault/vaults",
+      "microsoft.insights/components"
+    ]
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT1460",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "name": {
+        "type": "string",
+        "metadata": {
+          "description": "Specifies the name of the deployment."
+        },
+        "value": "GEN-UNIQUE-8"
+      },
+      "environment": {
+        "type": "string",
+        "metadata": {
+          "description": "Specifies the name of the environment."
+        },
+        "value": "GEN-UNIQUE-3"
+      },
+      "location": {
+        "type": "string",
+        "allowedValues": [
+          "australiaeast",
+          "brazilsouth",
+          "canadacentral",
+          "centralus",
+          "eastasia",
+          "eastus",
+          "eastus2",
+          "francecentral",
+          "japaneast",
+          "koreacentral",
+          "northcentralus",
+          "northeurope",
+          "southeastasia",
+          "southcentralus",
+          "uksouth",
+          "westcentralus",
+          "westus",
+          "westus2",
+          "westeurope",
+          "usgovvirginia",
+          "usgovarizona"
+        ],
+        "metadata": {
+          "description": "Specifies the location of the Azure Machine Learning workspace and dependent resources."
+        },
+        "value": "eastus2"
+      },
+      "hbi_workspace": {
+        "type": "string",
+        "defaultValue": "true",
+        "allowedValues": [
+          "false",
+          "true"
+        ],
+        "metadata": {
+          "description": "Specifies whether to reduce telemetry collection and enable additional encryption."
+        }
+      },
+      "encryption_status": {
+        "type": "string",
+        "defaultValue": "Enabled",
+        "allowedValues": [
+          "Enabled",
+          "Disabled"
+        ],
+        "metadata": {
+          "description": "Specifies if the Azure Machine Learning workspace should be encrypted with the customer managed key."
+        }
+      },
+      "cmk_keyvault_id": {
+        "type": "string",
+        "metadata": {
+          "description": "Specifies the customer managed keyvault Resource Manager ID."
+        },
+        "value": "GET-PREREQ-cmk_keyvault"
+      },
+      "cmk_keyvault_key_uri": {
+        "type": "string",
+        "metadata": {
+          "description": "Specifies the customer managed keyvault key uri."
+        },
+        "value": "GET-PREREQ-cmk_keyvault_key_uri"
+      }
+    },
+    "variables": {
+      "tenantId": "[subscription().tenantId]",
+      "storageAccountName": "stGEN-UNIQUE-8GEN-UNIQUE-3",
+      "keyVaultName": "kv-GEN-UNIQUE-8-GEN-UNIQUE-3",
+      "applicationInsightsName": "appi-GEN-UNIQUE-8-GEN-UNIQUE-3",
+      "resourceGroupName": "[resourceGroup().name]",
+      "containerRegistryName": "crGEN-UNIQUE-8GEN-UNIQUE-3",
+      "workspaceName": "mlwGEN-UNIQUE-8GEN-UNIQUE-3",
+      "storageAccount": "[resourceGroup().name]/Microsoft.Storage/storageAccounts/stGEN-UNIQUE-8GEN-UNIQUE-3",
+      "keyVault": "[resourceGroup().name]/Microsoft.KeyVault/vaults/kv-GEN-UNIQUE-8-GEN-UNIQUE-3",
+      "applicationInsights": "[resourceGroup().name]/Microsoft.Insights/components/appi-GEN-UNIQUE-8-GEN-UNIQUE-3",
+      "containerRegistry": "[resourceGroup().name]/Microsoft.ContainerRegistry/registries/crGEN-UNIQUE-8GEN-UNIQUE-3"
+    },
+    "resources": [
+      {
+        "type": "Microsoft.Storage/storageAccounts",
+        "apiVersion": "2021-01-01",
+        "name": "stGEN-UNIQUE-8GEN-UNIQUE-3",
+        "location": "eastus2",
+        "sku": {
+          "name": "Standard_RAGRS"
+        },
+        "kind": "StorageV2",
+        "properties": {
+          "encryption": {
+            "services": {
+              "blob": {
+                "enabled": true
+              },
+              "file": {
+                "enabled": true
+              }
+            },
+            "keySource": "Microsoft.Storage"
+          },
+          "supportsHttpsTrafficOnly": true
+        }
+      },
+      {
+        "type": "Microsoft.KeyVault/vaults",
+        "apiVersion": "2021-04-01-preview",
+        "name": "kv-GEN-UNIQUE-8-GEN-UNIQUE-3",
+        "location": "eastus2",
+        "properties": {
+          "tenantId": "[subscription().tenantId]",
+          "sku": {
+            "name": "standard",
+            "family": "A"
+          },
+          "accessPolicies": [],
+          "enableSoftDelete": true,
+          "enablePurgeProtection": true
+        }
+      },
+      {
+        "type": "Microsoft.Insights/components",
+        "apiVersion": "2020-02-02",
+        "name": "appi-GEN-UNIQUE-8-GEN-UNIQUE-3",
+        "location": "[if(or(equals(parameters('location'),'eastus2'), equals(parameters('location'),'westcentralus')),'southcentralus',parameters('location'))]",
+        "kind": "web",
+        "properties": {
+          "Application_Type": "web"
+        }
+      },
+      {
+        "type": "Microsoft.ContainerRegistry/registries",
+        "sku": {
+          "name": "Standard",
+          "tier": "Standard"
+        },
+        "name": "crGEN-UNIQUE-8GEN-UNIQUE-3",
+        "apiVersion": "2019-12-01-preview",
+        "location": "eastus2",
+        "properties": {
+          "adminUserEnabled": true
+        }
+      },
+      {
+        "type": "Microsoft.MachineLearningServices/workspaces",
+        "apiVersion": "2020-03-01",
+        "identity": {
+          "type": "systemAssigned"
+        },
+        "name": "mlwGEN-UNIQUE-8GEN-UNIQUE-3",
+        "location": "eastus2",
+        "dependsOn": [
+          "[resourceGroup().name]/Microsoft.Storage/storageAccounts/stGEN-UNIQUE-8GEN-UNIQUE-3",
+          "[resourceGroup().name]/Microsoft.KeyVault/vaults/kv-GEN-UNIQUE-8-GEN-UNIQUE-3",
+          "[resourceGroup().name]/Microsoft.Insights/components/appi-GEN-UNIQUE-8-GEN-UNIQUE-3",
+          "[resourceGroup().name]/Microsoft.ContainerRegistry/registries/crGEN-UNIQUE-8GEN-UNIQUE-3"
+        ],
+        "properties": {
+          "friendlyName": "mlwGEN-UNIQUE-8GEN-UNIQUE-3",
+          "storageAccount": "[resourceGroup().name]/Microsoft.Storage/storageAccounts/stGEN-UNIQUE-8GEN-UNIQUE-3",
+          "keyVault": "[resourceGroup().name]/Microsoft.KeyVault/vaults/kv-GEN-UNIQUE-8-GEN-UNIQUE-3",
+          "applicationInsights": "[resourceGroup().name]/Microsoft.Insights/components/appi-GEN-UNIQUE-8-GEN-UNIQUE-3",
+          "containerRegistry": "[resourceGroup().name]/Microsoft.ContainerRegistry/registries/crGEN-UNIQUE-8GEN-UNIQUE-3",
+          "hbiWorkspace": "true",
+          "encryption": {
+            "status": "Enabled",
+            "keyVaultProperties": {
+              "keyVaultArmId": "GET-PREREQ-cmk_keyvault",
+              "keyIdentifier": "GET-PREREQ-cmk_keyvault_key_uri"
+            }
+          }
+        }
+      }
+    ],
+    "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+  }
+}

@@ -2,12 +2,12 @@
   "structure": "filesystem",
   "error": null,
   "reference": "master",
-  "contentType": "yaml",
+  "contentType": "json",
   "source": "gitConnectorGoogleKcc",
   "paths": [
-    "/samples/resources/computeinstancegroup/compute_v1beta1_computeinstancetemplate.yaml"
+    "/samples/resources/computehttphealthcheck/compute_v1beta1_computehttphealthcheck.yaml"
   ],
-  "timestamp": 1628765141421,
+  "timestamp": 1642973302695,
   "queryuser": null,
   "checksum": "99914b932bd37a50b983c5e7c90ae93b",
   "node": {
@@ -15,40 +15,31 @@
     "type": "kcc",
     "collection": "kcctemplate",
     "paths": [
-      "/samples/resources/computeinstancegroup/compute_v1beta1_computeinstancetemplate.yaml"
+      "/samples/resources/computehttphealthcheck/compute_v1beta1_computehttphealthcheck.yaml"
     ],
     "snapshotId": "KCC_TEMPLATE_SNAPSHOT152",
     "status": "active",
-    "validate": true
+    "validate": true,
+    "resourceTypes": [
+      "computehttphealthcheck"
+    ]
   },
   "snapshotId": "KCC_TEMPLATE_SNAPSHOT152",
   "collection": "kcctemplate",
   "json": {
     "apiVersion": "compute.cnrm.cloud.google.com/v1beta1",
-    "kind": "ComputeInstanceTemplate",
+    "kind": "ComputeHTTPHealthCheck",
     "metadata": {
-      "name": "computeinstancegroup-dep"
+      "name": "computehttphealthcheck-sample"
     },
     "spec": {
-      "machineType": "n1-standard-1",
-      "disk": [
-        {
-          "sourceImageRef": {
-            "external": "debian-cloud/debian-9"
-          },
-          "boot": true
-        }
-      ],
-      "networkInterface": [
-        {
-          "networkRef": {
-            "name": "computeinstancegroup-dep"
-          },
-          "subnetworkRef": {
-            "name": "computeinstancegroup-dep"
-          }
-        }
-      ]
+      "checkIntervalSec": 10,
+      "description": "example HTTP health check",
+      "healthyThreshold": 2,
+      "port": 80,
+      "requestPath": "/",
+      "timeoutSec": 5,
+      "unhealthyThreshold": 2
     }
   }
 }

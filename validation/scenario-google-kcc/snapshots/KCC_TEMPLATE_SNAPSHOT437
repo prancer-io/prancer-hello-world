@@ -2,12 +2,12 @@
   "structure": "filesystem",
   "error": null,
   "reference": "master",
-  "contentType": "yaml",
+  "contentType": "json",
   "source": "gitConnectorGoogleKcc",
   "paths": [
-    "/samples/resources/identityplatformtenantoauthidpconfig/identityplatform_v1beta1_identityplatformtenantoauthidpconfig.yaml"
+    "/samples/resources/iamauditconfig/iam_v1beta1_iamauditconfig.yaml"
   ],
-  "timestamp": 1628765148673,
+  "timestamp": 1642973304208,
   "queryuser": null,
   "checksum": "99914b932bd37a50b983c5e7c90ae93b",
   "node": {
@@ -15,39 +15,40 @@
     "type": "kcc",
     "collection": "kcctemplate",
     "paths": [
-      "/samples/resources/identityplatformtenantoauthidpconfig/identityplatform_v1beta1_identityplatformtenantoauthidpconfig.yaml"
+      "/samples/resources/iamauditconfig/iam_v1beta1_iamauditconfig.yaml"
     ],
     "snapshotId": "KCC_TEMPLATE_SNAPSHOT437",
     "status": "active",
-    "validate": true
+    "validate": true,
+    "resourceTypes": [
+      "iamauditconfig"
+    ]
   },
   "snapshotId": "KCC_TEMPLATE_SNAPSHOT437",
   "collection": "kcctemplate",
   "json": {
-    "apiVersion": "identityplatform.cnrm.cloud.google.com/v1beta1",
-    "kind": "IdentityPlatformTenantOAuthIDPConfig",
+    "apiVersion": "iam.cnrm.cloud.google.com/v1beta1",
+    "kind": "IAMAuditConfig",
     "metadata": {
-      "labels": {
-        "foo": "bar"
-      },
-      "name": "identityplatformtenantoauthidpconfig-sample"
+      "name": "iamauditconfig-sample"
     },
     "spec": {
-      "resourceID": "oidc.tenant-oauth-idp-config-sample",
-      "tenantRef": {
-        "name": "identityplatformtenantoauthidpconfig-dep"
-      },
-      "displayName": "sample tenant oauth idp config",
-      "clientId": "client-id",
-      "issuer": "issuer",
-      "enabled": true,
-      "clientSecret": {
-        "valueFrom": {
-          "secretKeyRef": {
-            "key": "clientSecret",
-            "name": "identityplatformtenantoauthidpconfig-dep"
-          }
+      "service": "allServices",
+      "auditLogConfigs": [
+        {
+          "logType": "DATA_WRITE"
+        },
+        {
+          "logType": "DATA_READ",
+          "exemptedMembers": [
+            "serviceAccount:iamauditconfig-dep@${PROJECT_ID?}.iam.gserviceaccount.com"
+          ]
         }
+      ],
+      "resourceRef": {
+        "apiVersion": "resourcemanager.cnrm.cloud.google.com/v1beta1",
+        "kind": "Project",
+        "external": "projects/${PROJECT_ID?}"
       }
     }
   }

@@ -1,0 +1,292 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAzureQuickStart",
+  "paths": [
+    "/quickstarts/microsoft.network/application-gateway-waf/azuredeploy.json",
+    "/quickstarts/microsoft.network/application-gateway-waf/azuredeploy.parameters.json"
+  ],
+  "timestamp": 1642962908421,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/quickstarts/microsoft.network/application-gateway-waf/azuredeploy.json",
+      "/quickstarts/microsoft.network/application-gateway-waf/azuredeploy.parameters.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT1493",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "microsoft.network/publicipaddresses",
+      "microsoft.network/virtualnetworks",
+      "microsoft.network/applicationgateways"
+    ]
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT1493",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "location": {
+        "type": "string",
+        "defaultValue": "[resourceGroup().location]",
+        "metadata": {
+          "description": "Specifies the location for all resources that is created by this template."
+        }
+      },
+      "vNetAddressPrefix": {
+        "type": "string",
+        "defaultValue": "10.0.0.0/16",
+        "metadata": {
+          "description": "Specifies the address prefix for the Virtual Network."
+        }
+      },
+      "vNetSubnetPrefix": {
+        "type": "string",
+        "defaultValue": "10.0.0.0/28",
+        "metadata": {
+          "description": "Specifies the subnet prefix"
+        }
+      },
+      "applicationGatewaySize": {
+        "type": "string",
+        "allowedValues": [
+          "WAF_v2"
+        ],
+        "defaultValue": "WAF_v2",
+        "metadata": {
+          "description": "Specifies the application gateway SKU name."
+        }
+      },
+      "applicationGatewayCapacity": {
+        "type": "int",
+        "allowedValues": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10
+        ],
+        "defaultValue": 2,
+        "metadata": {
+          "description": "Specifies the number of the application gateway instances."
+        }
+      },
+      "backendIpAddress1": {
+        "type": "string",
+        "defaultValue": "10.0.1.10",
+        "metadata": {
+          "description": "IP Address for Backend Server 1"
+        }
+      },
+      "backendIpAddress2": {
+        "type": "string",
+        "defaultValue": "10.0.1.11",
+        "metadata": {
+          "description": "IP Address for Backend Server 2"
+        }
+      },
+      "wafEnabled": {
+        "type": "bool",
+        "defaultValue": true,
+        "metadata": {
+          "description": "WAF Enabled"
+        }
+      },
+      "wafMode": {
+        "type": "string",
+        "allowedValues": [
+          "Detection",
+          "Prevention"
+        ],
+        "defaultValue": "Detection",
+        "metadata": {
+          "description": "WAF Mode"
+        }
+      },
+      "wafRuleSetType": {
+        "type": "string",
+        "allowedValues": [
+          "OWASP"
+        ],
+        "defaultValue": "OWASP",
+        "metadata": {
+          "description": "WAF Rule Set Type"
+        }
+      },
+      "wafRuleSetVersion": {
+        "type": "string",
+        "allowedValues": [
+          "2.2.9",
+          "3.0"
+        ],
+        "defaultValue": "3.0",
+        "metadata": {
+          "description": "WAF Rule Set Version"
+        }
+      }
+    },
+    "variables": {
+      "applicationGatewayName": "applicationGateway1",
+      "publicIPAddressName": "publicIp1",
+      "virtualNetworkName": "virtualNetwork1",
+      "subnetName": "appGatewaySubnet",
+      "subnetRef": "Microsoft.Network/virtualNetworks/subnets//virtualNetwork1/appGatewaySubnet",
+      "publicIPRef": "Microsoft.Network/publicIPAddresses/publicIp1"
+    },
+    "resources": [
+      {
+        "apiVersion": "2020-05-01",
+        "type": "Microsoft.Network/publicIPAddresses",
+        "name": "publicIp1",
+        "location": "[resourceGroup().location]",
+        "sku": {
+          "name": "Standard"
+        },
+        "properties": {
+          "publicIPAllocationMethod": "Static"
+        }
+      },
+      {
+        "apiVersion": "2020-05-01",
+        "type": "Microsoft.Network/virtualNetworks",
+        "name": "virtualNetwork1",
+        "location": "[resourceGroup().location]",
+        "properties": {
+          "addressSpace": {
+            "addressPrefixes": [
+              "10.0.0.0/16"
+            ]
+          },
+          "subnets": [
+            {
+              "name": "appGatewaySubnet",
+              "properties": {
+                "addressPrefix": "10.0.0.0/28"
+              }
+            }
+          ]
+        }
+      },
+      {
+        "apiVersion": "2020-05-01",
+        "name": "applicationGateway1",
+        "type": "Microsoft.Network/applicationGateways",
+        "location": "[resourceGroup().location]",
+        "dependsOn": [
+          "virtualNetwork1",
+          "publicIp1"
+        ],
+        "properties": {
+          "sku": {
+            "name": "WAF_v2",
+            "tier": "WAF_v2",
+            "capacity": "applicationGateWayCapacity"
+          },
+          "gatewayIPConfigurations": [
+            {
+              "name": "appGatewayIpConfig",
+              "properties": {
+                "subnet": {
+                  "id": "Microsoft.Network/virtualNetworks/subnets//virtualNetwork1/appGatewaySubnet"
+                }
+              }
+            }
+          ],
+          "frontendIPConfigurations": [
+            {
+              "name": "appGatewayFrontendIP",
+              "properties": {
+                "PublicIPAddress": {
+                  "id": "Microsoft.Network/publicIPAddresses/publicIp1"
+                }
+              }
+            }
+          ],
+          "frontendPorts": [
+            {
+              "name": "appGatewayFrontendPort",
+              "properties": {
+                "Port": 80
+              }
+            }
+          ],
+          "backendAddressPools": [
+            {
+              "name": "appGatewayBackendPool",
+              "properties": {
+                "BackendAddresses": [
+                  {
+                    "IpAddress": "10.0.1.10"
+                  },
+                  {
+                    "IpAddress": "10.0.1.11"
+                  }
+                ]
+              }
+            }
+          ],
+          "backendHttpSettingsCollection": [
+            {
+              "name": "appGatewayBackendHttpSettings",
+              "properties": {
+                "Port": 80,
+                "Protocol": "Http",
+                "CookieBasedAffinity": "Disabled"
+              }
+            }
+          ],
+          "httpListeners": [
+            {
+              "name": "appGatewayHttpListener",
+              "properties": {
+                "FrontendIPConfiguration": {
+                  "id": "Microsoft.Network/applicationGateways/frontendIPConfigurations/applicationGateway1/appGatewayFrontendIP"
+                },
+                "FrontendPort": {
+                  "id": "Microsoft.Network/applicationGateways/frontendPorts/applicationGateway1/appGatewayFrontendPort"
+                },
+                "Protocol": "Http"
+              }
+            }
+          ],
+          "requestRoutingRules": [
+            {
+              "Name": "rule1",
+              "properties": {
+                "RuleType": "Basic",
+                "httpListener": {
+                  "id": "Microsoft.Network/applicationGateways/httpListeners/applicationGateway1/appGatewayHttpListener"
+                },
+                "backendAddressPool": {
+                  "id": "Microsoft.Network/applicationGateways/backendAddressPools/applicationGateway1/appGatewayBackendPool"
+                },
+                "backendHttpSettings": {
+                  "id": "Microsoft.Network/applicationGateways/backendHttpSettingsCollection/applicationGateway1/appGatewayBackendHttpSettings"
+                }
+              }
+            }
+          ],
+          "webApplicationFirewallConfiguration": {
+            "enabled": true,
+            "firewallMode": "Detection",
+            "ruleSetType": "OWASP",
+            "ruleSetVersion": "3.0"
+          }
+        }
+      }
+    ],
+    "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+  }
+}

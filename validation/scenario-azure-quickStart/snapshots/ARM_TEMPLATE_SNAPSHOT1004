@@ -1,0 +1,246 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAzureQuickStart",
+  "paths": [
+    "/quickstarts/microsoft.compute/decrypt-running-linux-vm-without-aad/prereqs/prereq.azuredeploy.json",
+    "/quickstarts/microsoft.compute/decrypt-running-linux-vm-without-aad/prereqs/prereq.azuredeploy.parameters.json"
+  ],
+  "timestamp": 1642962903496,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/quickstarts/microsoft.compute/decrypt-running-linux-vm-without-aad/prereqs/prereq.azuredeploy.json",
+      "/quickstarts/microsoft.compute/decrypt-running-linux-vm-without-aad/prereqs/prereq.azuredeploy.parameters.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT1004",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "microsoft.network/virtualnetworks",
+      "microsoft.network/networkinterfaces",
+      "microsoft.compute/virtualmachines",
+      "microsoft.compute/virtualmachines/extensions"
+    ]
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT1004",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "adminUsername": {
+        "type": "string",
+        "metadata": {
+          "description": "User name for the Virtual Machine."
+        },
+        "value": "GEN-UNIQUE"
+      },
+      "keyVaultName": {
+        "type": "string",
+        "metadata": {
+          "description": "Name of the KeyVault to place the volume encryption key"
+        },
+        "value": "GEN-KEYVAULT-NAME"
+      },
+      "keyVaultResourceGroup": {
+        "type": "string",
+        "metadata": {
+          "description": "Resource group of the KeyVault"
+        },
+        "value": "GEN-KEYVAULT-RESOURCEGROUP-NAME"
+      },
+      "vmSize": {
+        "type": "string",
+        "defaultValue": "Standard_A1",
+        "metadata": {
+          "description": "VM Size"
+        }
+      },
+      "keyEncryptionKeyURL": {
+        "type": "string",
+        "defaultValue": "",
+        "metadata": {
+          "description": "URL of the KeyEncryptionKey used to encrypt the volume encryption key"
+        },
+        "value": "GEN-KEYVAULT-ENCRYPTION-KEY-URI"
+      },
+      "location": {
+        "type": "string",
+        "defaultValue": "[resourceGroup().location]",
+        "metadata": {
+          "description": "Location for all resources."
+        }
+      },
+      "authenticationType": {
+        "type": "string",
+        "defaultValue": "sshPublicKey",
+        "allowedValues": [
+          "sshPublicKey",
+          "password"
+        ],
+        "metadata": {
+          "description": "Type of authentication to use on the Virtual Machine. SSH key is recommended."
+        }
+      },
+      "adminPasswordOrKey": {
+        "type": "securestring",
+        "metadata": {
+          "description": "SSH Key or password for the Virtual Machine. SSH key is recommended."
+        },
+        "value": "GEN-SSH-PUB-KEY"
+      }
+    },
+    "variables": {
+      "nicName": "myVMNic",
+      "subnetName": "Subnet",
+      "vmName": "MyLinuxVM",
+      "virtualNetworkName": "MyVNET",
+      "subnetRef": "Microsoft.Network/virtualNetworks/subnets//MyVNET/Subnet",
+      "extensionName": "AzureDiskEncryptionForLinux",
+      "extensionVersion": "1.1",
+      "encryptionOperation": "EnableEncryption",
+      "keyEncryptionAlgorithm": "RSA-OAEP",
+      "keyVaultResourceID": "GEN-KEYVAULT-RESOURCEGROUP-NAME/Microsoft.KeyVault/vaults//GEN-KEYVAULT-NAME",
+      "linuxConfiguration": {
+        "disablePasswordAuthentication": true,
+        "ssh": {
+          "publicKeys": [
+            {
+              "path": "/home/GEN-UNIQUE/.ssh/authorized_keys",
+              "keyData": "GEN-SSH-PUB-KEY"
+            }
+          ]
+        }
+      }
+    },
+    "resources": [
+      {
+        "apiVersion": "2020-08-01",
+        "type": "Microsoft.Network/virtualNetworks",
+        "name": "MyVNET",
+        "location": "[resourceGroup().location]",
+        "properties": {
+          "addressSpace": {
+            "addressPrefixes": [
+              "10.0.0.0/16"
+            ]
+          },
+          "subnets": [
+            {
+              "name": "Subnet",
+              "properties": {
+                "addressPrefix": "10.0.0.0/24"
+              }
+            }
+          ]
+        }
+      },
+      {
+        "apiVersion": "2017-04-01",
+        "type": "Microsoft.Network/networkInterfaces",
+        "name": "myVMNic",
+        "location": "[resourceGroup().location]",
+        "dependsOn": [
+          "Microsoft.Network/virtualNetworks//MyVNET"
+        ],
+        "properties": {
+          "ipConfigurations": [
+            {
+              "name": "ipconfig1",
+              "properties": {
+                "privateIPAllocationMethod": "Dynamic",
+                "subnet": {
+                  "id": "Microsoft.Network/virtualNetworks/subnets//MyVNET/Subnet"
+                }
+              }
+            }
+          ]
+        }
+      },
+      {
+        "apiVersion": "2017-03-30",
+        "type": "Microsoft.Compute/virtualMachines",
+        "name": "MyLinuxVM",
+        "location": "[resourceGroup().location]",
+        "dependsOn": [
+          "Microsoft.Network/networkInterfaces//myVMNic"
+        ],
+        "properties": {
+          "hardwareProfile": {
+            "vmSize": "Standard_A1"
+          },
+          "osProfile": {
+            "computerName": "MyLinuxVM",
+            "adminUsername": "GEN-UNIQUE",
+            "adminPassword": "GEN-SSH-PUB-KEY",
+            "linuxConfiguration": "[if(equals(parameters('authenticationType'), 'password'), json('null'), variables('linuxConfiguration'))]"
+          },
+          "storageProfile": {
+            "imageReference": {
+              "publisher": "Canonical",
+              "offer": "UbuntuServer",
+              "sku": "16.04-DAILY-LTS",
+              "version": "latest"
+            },
+            "osDisk": {
+              "createOption": "FromImage"
+            },
+            "dataDisks": [
+              {
+                "diskSizeGB": "1023",
+                "lun": 0,
+                "createOption": "Empty"
+              }
+            ]
+          },
+          "networkProfile": {
+            "networkInterfaces": [
+              {
+                "id": "Microsoft.Network/networkInterfaces/myVMNic"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "type": "Microsoft.Compute/virtualMachines/extensions",
+        "name": "MyLinuxVM/AzureDiskEncryptionForLinux",
+        "location": "[resourceGroup().location]",
+        "dependsOn": [
+          "Microsoft.Compute/virtualMachines//MyLinuxVM"
+        ],
+        "apiVersion": "2017-03-30",
+        "properties": {
+          "publisher": "Microsoft.Azure.Security",
+          "type": "AzureDiskEncryptionForLinux",
+          "typeHandlerVersion": "1.1",
+          "autoUpgradeMinorVersion": true,
+          "forceUpdateTag": "1.0",
+          "settings": {
+            "EncryptionOperation": "EnableEncryption",
+            "KeyVaultURL": "[reference(variables('keyVaultResourceId'),'2018-02-14-preview').vaultUri]",
+            "KeyVaultResourceId": "GEN-KEYVAULT-RESOURCEGROUP-NAME/Microsoft.KeyVault/vaults//GEN-KEYVAULT-NAME",
+            "KeyEncryptionKeyURL": "GEN-KEYVAULT-ENCRYPTION-KEY-URI",
+            "KekVaultResourceId": "GEN-KEYVAULT-RESOURCEGROUP-NAME/Microsoft.KeyVault/vaults//GEN-KEYVAULT-NAME",
+            "KeyEncryptionAlgorithm": "RSA-OAEP",
+            "VolumeType": "DATA",
+            "ResizeOSDisk": false
+          }
+        }
+      }
+    ],
+    "outputs": {
+      "vmName": {
+        "type": "string",
+        "value": "[variables('vmName')]"
+      }
+    },
+    "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+  }
+}

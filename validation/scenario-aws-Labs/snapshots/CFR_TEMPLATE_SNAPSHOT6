@@ -1,0 +1,54 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAwsLabs",
+  "paths": [
+    "/aws/services/CloudFormation/MacrosExamples/Count/test_2.yaml"
+  ],
+  "timestamp": 1642972590292,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "CFR_TEMPLATE_SNAPSHOT",
+    "type": "cloudformation",
+    "collection": "cloudformationtemplate",
+    "paths": [
+      "/aws/services/CloudFormation/MacrosExamples/Count/test_2.yaml"
+    ],
+    "snapshotId": "CFR_TEMPLATE_SNAPSHOT6",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "aws::s3::bucket"
+    ]
+  },
+  "snapshotId": "CFR_TEMPLATE_SNAPSHOT6",
+  "collection": "cloudformationtemplate",
+  "json": {
+    "AWSTemplateFormatVersion": "2010-09-09",
+    "Transform": [
+      "Count"
+    ],
+    "Resources": [
+      {
+        "Type": "AWS::S3::Bucket",
+        "Properties": {
+          "Tags": [
+            {
+              "Key": "TestKey",
+              "Value": "my bucket %d"
+            },
+            {
+              "Key": "Another key",
+              "Value": "%d value"
+            }
+          ]
+        },
+        "Count": 3,
+        "Name": "BucketToCopy"
+      }
+    ]
+  }
+}

@@ -1,0 +1,91 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "main",
+  "contentType": "json",
+  "source": "gitConnectorAzureTerraHashicorp",
+  "paths": [
+    "/examples/app-service/windows-java/outputs.tf",
+    "/examples/app-service/windows-java/variables.tf",
+    "/examples/app-service/windows-java/main.tf"
+  ],
+  "timestamp": 1642943279618,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "TRF_TEMPLATE_SNAPSHOT",
+    "type": "terraform",
+    "collection": "terraformtemplate",
+    "paths": [
+      "/examples/app-service/windows-java/outputs.tf",
+      "/examples/app-service/windows-java/variables.tf",
+      "/examples/app-service/windows-java/main.tf"
+    ],
+    "snapshotId": "TRF_TEMPLATE_SNAPSHOT17",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "azurerm_app_service_plan",
+      "azurerm_app_service",
+      "azurerm_resource_group"
+    ]
+  },
+  "snapshotId": "TRF_TEMPLATE_SNAPSHOT17",
+  "collection": "terraformtemplate",
+  "json": {
+    "provider": [
+      {
+        "azurerm": {
+          "features": [
+            {}
+          ]
+        }
+      }
+    ],
+    "resources": [
+      {
+        "type": "azurerm_resource_group",
+        "name": "main",
+        "properties": {
+          "name": "${var.prefix}-resources",
+          "location": "${var.location}",
+          "compiletime_identity": "azurerm_resource_group.main"
+        }
+      },
+      {
+        "type": "azurerm_app_service_plan",
+        "name": "main",
+        "properties": {
+          "name": "${var.prefix}-asp",
+          "location": "${azurerm_resource_group.main.location}",
+          "resource_group_name": "${azurerm_resource_group.main.name}",
+          "sku": [
+            {
+              "tier": "Basic",
+              "size": "B1"
+            }
+          ],
+          "compiletime_identity": "azurerm_app_service_plan.main"
+        }
+      },
+      {
+        "type": "azurerm_app_service",
+        "name": "main",
+        "properties": {
+          "name": "${var.prefix}-appservice",
+          "location": "${azurerm_resource_group.main.location}",
+          "resource_group_name": "${azurerm_resource_group.main.name}",
+          "app_service_plan_id": "${azurerm_app_service_plan.main.id}",
+          "site_config": [
+            {
+              "java_version": 1.8,
+              "java_container": "JETTY",
+              "java_container_version": 9.3
+            }
+          ],
+          "compiletime_identity": "azurerm_app_service.main"
+        }
+      }
+    ]
+  }
+}

@@ -2,12 +2,12 @@
   "structure": "filesystem",
   "error": null,
   "reference": "master",
-  "contentType": "yaml",
+  "contentType": "json",
   "source": "gitConnectorGoogleKcc",
   "paths": [
-    "/samples/resources/computeinstancegroupmanager/regional-compute-instance-group-manager/compute_v1beta1_computeinstancetemplate.yaml"
+    "/samples/resources/computeinstance/cloud-machine-instance/compute_v1beta1_computedisk_multiple_yaml_0.yaml"
   ],
-  "timestamp": 1628765141528,
+  "timestamp": 1642973302739,
   "queryuser": null,
   "checksum": "99914b932bd37a50b983c5e7c90ae93b",
   "node": {
@@ -15,40 +15,39 @@
     "type": "kcc",
     "collection": "kcctemplate",
     "paths": [
-      "/samples/resources/computeinstancegroupmanager/regional-compute-instance-group-manager/compute_v1beta1_computeinstancetemplate.yaml"
+      "/samples/resources/computeinstance/cloud-machine-instance/compute_v1beta1_computedisk_multiple_yaml_0.yaml"
     ],
     "snapshotId": "KCC_TEMPLATE_SNAPSHOT157",
     "status": "active",
-    "validate": true
+    "validate": true,
+    "resourceTypes": [
+      "computedisk"
+    ]
   },
   "snapshotId": "KCC_TEMPLATE_SNAPSHOT157",
   "collection": "kcctemplate",
   "json": {
     "apiVersion": "compute.cnrm.cloud.google.com/v1beta1",
-    "kind": "ComputeInstanceTemplate",
+    "kind": "ComputeDisk",
     "metadata": {
-      "name": "computeinstancegroupmanager-dep-regional"
+      "name": "computeinstance-dep1-cloudmachine"
     },
     "spec": {
-      "machineType": "n1-standard-1",
-      "disk": [
-        {
-          "sourceImageRef": {
-            "external": "debian-cloud/debian-9"
-          },
-          "boot": true
-        }
-      ],
-      "networkInterface": [
-        {
-          "networkRef": {
-            "name": "computeinstancegroupmanager-dep-regional"
-          },
-          "subnetworkRef": {
-            "name": "computeinstancegroupmanager-dep-regional"
+      "description": "a sample encrypted, blank disk",
+      "diskEncryptionKey": {
+        "rawKey": {
+          "valueFrom": {
+            "secretKeyRef": {
+              "key": "diskEncryptionKey",
+              "name": "computeinstance-dep-cloudmachine"
+            }
           }
         }
-      ]
+      },
+      "location": "us-west1-a",
+      "physicalBlockSizeBytes": 4096,
+      "size": 1,
+      "type": "pd-ssd"
     }
   }
 }

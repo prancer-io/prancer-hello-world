@@ -1,0 +1,687 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAzureQuickStart",
+  "paths": [
+    "/application-workloads/swarm/acsengine-swarmmode/azuredeploy.json",
+    "/application-workloads/swarm/acsengine-swarmmode/azuredeploy.parameters.json"
+  ],
+  "timestamp": 1642962896740,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/application-workloads/swarm/acsengine-swarmmode/azuredeploy.json",
+      "/application-workloads/swarm/acsengine-swarmmode/azuredeploy.parameters.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT558",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "microsoft.network/publicipaddresses",
+      "microsoft.network/virtualnetworks",
+      "microsoft.network/loadbalancers",
+      "microsoft.network/networkinterfaces",
+      "microsoft.compute/virtualmachinescalesets",
+      "microsoft.compute/virtualmachines/extensions",
+      "microsoft.compute/virtualmachines",
+      "microsoft.network/loadbalancers/inboundnatrules",
+      "microsoft.compute/availabilitysets"
+    ]
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT558",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "agentCount": {
+        "minValue": 1,
+        "maxValue": 100,
+        "defaultValue": 2,
+        "metadata": {
+          "description": "The number of agents for the cluster.  This value can be from 1 to 100"
+        },
+        "type": "int",
+        "value": 3
+      },
+      "agentEndpointDNSNamePrefix": {
+        "metadata": {
+          "description": "Sets the Domain name label for the agent pool IP Address.  The concatenation of the domain name label and the regional DNS zone make up the fully qualified domain name associated with the public IP address."
+        },
+        "type": "string",
+        "value": "GEN-UNIQUE"
+      },
+      "agentSubnet": {
+        "defaultValue": "10.0.0.0/16",
+        "metadata": {
+          "description": "Sets the subnet of agent pool 'agent'."
+        },
+        "type": "string",
+        "value": "10.0.0.0/16"
+      },
+      "agentVMSize": {
+        "defaultValue": "Standard_D2_v3",
+        "metadata": {
+          "description": "The size of the Virtual Machine."
+        },
+        "type": "string",
+        "value": "Standard_D2_v3"
+      },
+      "firstConsecutiveStaticIP": {
+        "defaultValue": "172.16.0.5",
+        "metadata": {
+          "description": "Sets the static IP of the first master"
+        },
+        "type": "string",
+        "value": "172.16.0.5"
+      },
+      "linuxAdminUsername": {
+        "metadata": {
+          "description": "User name for the Linux Virtual Machines (SSH or Password)."
+        },
+        "type": "string",
+        "value": "azureuser"
+      },
+      "location": {
+        "defaultValue": "[resourceGroup().location]",
+        "metadata": {
+          "description": "Sets the location for all resources in the cluster"
+        },
+        "type": "string"
+      },
+      "masterEndpointDNSNamePrefix": {
+        "metadata": {
+          "description": "Sets the Domain name label for the master IP Address.  The concatenation of the domain name label and the regional DNS zone make up the fully qualified domain name associated with the public IP address."
+        },
+        "type": "string",
+        "value": "GEN-UNIQUE"
+      },
+      "masterSubnet": {
+        "defaultValue": "172.16.0.0/24",
+        "metadata": {
+          "description": "Sets the subnet of the master node(s)."
+        },
+        "type": "string",
+        "value": "172.16.0.0/24"
+      },
+      "masterVMSize": {
+        "metadata": {
+          "description": "The size of the Virtual Machine."
+        },
+        "type": "string",
+        "value": "Standard_D2_v3"
+      },
+      "nameSuffix": {
+        "defaultValue": "13957614",
+        "metadata": {
+          "description": "A string hash of the master DNS name to uniquely identify the cluster."
+        },
+        "type": "string"
+      },
+      "sshRSAPublicKey": {
+        "metadata": {
+          "description": "SSH public key used for auth to all Linux machines.  Not Required.  If not set, you must provide a password key."
+        },
+        "type": "string",
+        "value": "GEN-SSH-PUB-KEY"
+      }
+    },
+    "variables": {
+      "adminUsername": "azureuser",
+      "agentCount": 3,
+      "agentCustomScript": "/usr/bin/nohup /bin/bash -c \"/bin/bash /opt/azure/containers/configure-swarmmode-cluster.sh 1 swarmm-master-13957614- (masterFirstAddrOctets)[3] azureuser disabled [concat(variables('masterFirstAddrOctets')[0],'.',variables('masterFirstAddrOctets')[1],'.',variables('masterFirstAddrOctets')[2],'.')] >> /var/log/azure/cluster-bootstrap.log 2>&1 &\" &",
+      "agentEndpointDNSNamePrefix": "[tolower(parameters('agentEndpointDNSNamePrefix'))]",
+      "agentIPAddressName": "swarmm-agent-ip-[tolower(parameters('agentEndpointDNSNamePrefix'))]-13957614",
+      "agentLbBackendPoolName": "swarmm-agent-13957614",
+      "agentLbIPConfigID": "Microsoft.Network/loadBalancers/frontendIPConfigurations/swarmm-agent-13957614/swarmm-agent-13957614",
+      "agentLbIPConfigName": "swarmm-agent-13957614",
+      "agentLbName": "swarmm-agent-13957614",
+      "agentRunCmd": "[concat('runcmd:\n -  [ /bin/bash, /opt/azure/containers/install-cluster.sh ]\n\n')]",
+      "agentRunCmdFile": "[concat(' -  content: |\n        #!/bin/bash\n        ','sudo mkdir -p /var/log/azure\n        ',variables('agentCustomScript'),'\n    path: /opt/azure/containers/install-cluster.sh\n    permissions: \"0744\"\n')]",
+      "agentSubnet": "10.0.0.0/16",
+      "agentSubnetName": "swarmm-agentsubnet",
+      "agentVMNamePrefix": "swarmm-agent-13957614",
+      "agentVMSize": "Standard_D2_v3",
+      "agentVnetSubnetID": "Microsoft.Network/virtualNetworks/subnets/swarmm-vnet-13957614/swarmm-agentsubnet",
+      "clusterInstallParameters": "1 swarmm-master-13957614- (masterFirstAddrOctets)[3] azureuser disabled [concat(variables('masterFirstAddrOctets')[0],'.',variables('masterFirstAddrOctets')[1],'.',variables('masterFirstAddrOctets')[2],'.')]",
+      "configureClusterScriptFile": "configure-swarmmode-cluster.sh",
+      "location": "(locations)[mod(add(2,length(parameters(location))),add(1,length(parameters(location))))]",
+      "locations": [
+        "[resourceGroup().location]",
+        "[resourceGroup().location]"
+      ],
+      "masterAvailabilitySet": "swarmm-master-availabilitySet-13957614",
+      "masterCount": 1,
+      "masterCustomScript": "/bin/bash -c \"/bin/bash /opt/azure/containers/configure-swarmmode-cluster.sh 1 swarmm-master-13957614- (masterFirstAddrOctets)[3] azureuser disabled [concat(variables('masterFirstAddrOctets')[0],'.',variables('masterFirstAddrOctets')[1],'.',variables('masterFirstAddrOctets')[2],'.')] >> /var/log/azure/cluster-bootstrap.log 2>&1\"",
+      "masterEndpointDNSNamePrefix": "[tolower(parameters('masterEndpointDNSNamePrefix'))]",
+      "masterFirstAddrOctet4": "(masterFirstAddrOctets)[3]",
+      "masterFirstAddrOctets": "[split(parameters('firstConsecutiveStaticIP'),'.')]",
+      "masterFirstAddrPrefix": "[concat(variables('masterFirstAddrOctets')[0],'.',variables('masterFirstAddrOctets')[1],'.',variables('masterFirstAddrOctets')[2],'.')]",
+      "masterLbBackendPoolName": "swarmm-master-pool-13957614",
+      "masterLbIPConfigID": "Microsoft.Network/loadBalancers/frontendIPConfigurations/swarmm-master-lb-13957614/swarmm-master-lbFrontEnd-13957614",
+      "masterLbIPConfigName": "swarmm-master-lbFrontEnd-13957614",
+      "masterLbInboundNatRules": [
+        [
+          {
+            "id": "Microsoft.Network/loadBalancers/inboundNatRules/swarmm-master-lb-13957614/SSH-swarmm-master-13957614-0"
+          },
+          {
+            "id": "Microsoft.Network/loadBalancers/inboundNatRules/swarmm-master-lb-13957614/SSHPort22-swarmm-master-13957614-0"
+          }
+        ],
+        [
+          {
+            "id": "Microsoft.Network/loadBalancers/inboundNatRules/swarmm-master-lb-13957614/SSH-swarmm-master-13957614-1"
+          }
+        ],
+        [
+          {
+            "id": "Microsoft.Network/loadBalancers/inboundNatRules/swarmm-master-lb-13957614/SSH-swarmm-master-13957614-22"
+          }
+        ],
+        [
+          {
+            "id": "Microsoft.Network/loadBalancers/inboundNatRules/swarmm-master-lb-13957614/SSH-swarmm-master-13957614-3"
+          }
+        ],
+        [
+          {
+            "id": "Microsoft.Network/loadBalancers/inboundNatRules/swarmm-master-lb-13957614/SSH-swarmm-master-13957614-4"
+          }
+        ]
+      ],
+      "masterLbName": "swarmm-master-lb-13957614",
+      "masterPublicIPAddressName": "swarmm-master-ip-[tolower(parameters('masterEndpointDNSNamePrefix'))]-13957614",
+      "masterSshPort22InboundNatRuleNamePrefix": "swarmm-master-lb-13957614/SSHPort22-swarmm-master-13957614-",
+      "masterSubnet": "172.16.0.0/24",
+      "masterSubnetName": "swarmm-masterSubnet",
+      "masterVMNamePrefix": "swarmm-master-13957614-",
+      "masterVMSize": "Standard_D2_v3",
+      "masterVnetSubnetID": "Microsoft.Network/virtualNetworks/subnets/swarmm-vnet-13957614/swarmm-masterSubnet",
+      "nameSuffix": "13957614",
+      "orchestratorName": "swarmm",
+      "osImageOffer": "UbuntuServer",
+      "osImagePublisher": "Canonical",
+      "osImageSKU": "16.04-LTS",
+      "osImageVersion": "latest",
+      "postInstallScriptURI": "disabled",
+      "sshKeyPath": "/home/azureuser/.ssh/authorized_keys",
+      "sshRSAPublicKey": "GEN-SSH-PUB-KEY",
+      "virtualNetworkName": "swarmm-vnet-13957614",
+      "agentVmSizeSuffix": "[toLower(split(parameters('agentVMSize'), '_')[1])]",
+      "masterVmSizeSuffix": "[toLower(split(parameters('masterVMSize'), '_')[1])]",
+      "agentDiskType": "[if(contains(variables('agentVmSizeSuffix'), 's'), 'Premium_LRS', 'StandardSSD_LRS')]",
+      "masterDiskType": "[if(contains(variables('masterVmSizeSuffix'), 's'), 'Premium_LRS', 'StandardSSD_LRS')]"
+    },
+    "resources": [
+      {
+        "type": "Microsoft.Network/publicIPAddresses",
+        "apiVersion": "2020-04-01",
+        "location": "(locations)[mod(add(2,length(parameters(location))),add(1,length(parameters(location))))]",
+        "name": "swarmm-agent-ip-[tolower(parameters('agentEndpointDNSNamePrefix'))]-13957614",
+        "properties": {
+          "dnsSettings": {
+            "domainNameLabel": "[tolower(parameters('agentEndpointDNSNamePrefix'))]"
+          },
+          "publicIPAllocationMethod": "Dynamic"
+        }
+      },
+      {
+        "apiVersion": "2020-04-01",
+        "type": "Microsoft.Network/loadBalancers",
+        "dependsOn": [
+          "[resourceID('Microsoft.Network/publicIPAddresses', variables('agentIPAddressName'))]"
+        ],
+        "location": "(locations)[mod(add(2,length(parameters(location))),add(1,length(parameters(location))))]",
+        "name": "swarmm-agent-13957614",
+        "properties": {
+          "backendAddressPools": [
+            {
+              "name": "swarmm-agent-13957614"
+            }
+          ],
+          "frontendIPConfigurations": [
+            {
+              "name": "swarmm-agent-13957614",
+              "properties": {
+                "publicIPAddress": {
+                  "id": "Microsoft.Network/publicIPAddresses/swarmm-agent-ip-[tolower(parameters('agentEndpointDNSNamePrefix'))]-13957614"
+                }
+              }
+            }
+          ],
+          "loadBalancingRules": [
+            {
+              "name": "LBRule80",
+              "properties": {
+                "backendAddressPool": {
+                  "id": "Microsoft.Network/loadBalancers/backendAddressPools//swarmm-agent-13957614/swarmm-agent-13957614"
+                },
+                "backendPort": 80,
+                "enableFloatingIP": false,
+                "frontendIPConfiguration": {
+                  "id": "Microsoft.Network/loadBalancers/frontendIPConfigurations/swarmm-agent-13957614/swarmm-agent-13957614"
+                },
+                "frontendPort": 80,
+                "idleTimeoutInMinutes": 5,
+                "loadDistribution": "Default",
+                "probe": {
+                  "id": "Microsoft.Network/loadBalancers/probes/swarmm-agent-13957614/tcp80Probe"
+                },
+                "protocol": "Tcp"
+              }
+            },
+            {
+              "name": "LBRule443",
+              "properties": {
+                "backendAddressPool": {
+                  "id": "Microsoft.Network/loadBalancers/backendAddressPools/swarmm-agent-13957614/swarmm-agent-13957614"
+                },
+                "backendPort": 443,
+                "enableFloatingIP": false,
+                "frontendIPConfiguration": {
+                  "id": "Microsoft.Network/loadBalancers/frontendIPConfigurations/swarmm-agent-13957614/swarmm-agent-13957614"
+                },
+                "frontendPort": 443,
+                "idleTimeoutInMinutes": 5,
+                "loadDistribution": "Default",
+                "probe": {
+                  "id": "Microsoft.Network/loadBalancers/probes/swarmm-agent-13957614/tcp443Probe"
+                },
+                "protocol": "Tcp"
+              }
+            },
+            {
+              "name": "LBRule8080",
+              "properties": {
+                "backendAddressPool": {
+                  "id": "Microsoft.Network/loadBalancers/backendAddressPools/swarmm-agent-13957614/swarmm-agent-13957614"
+                },
+                "backendPort": 8080,
+                "enableFloatingIP": false,
+                "frontendIPConfiguration": {
+                  "id": "Microsoft.Network/loadBalancers/frontendIPConfigurations/swarmm-agent-13957614/swarmm-agent-13957614"
+                },
+                "frontendPort": 8080,
+                "idleTimeoutInMinutes": 5,
+                "loadDistribution": "Default",
+                "probe": {
+                  "id": "Microsoft.Network/loadBalancers/probes/swarmm-agent-13957614/tcp8080Probe"
+                },
+                "protocol": "Tcp"
+              }
+            }
+          ],
+          "probes": [
+            {
+              "name": "tcp80Probe",
+              "properties": {
+                "intervalInSeconds": 5,
+                "numberOfProbes": 2,
+                "port": 80,
+                "protocol": "Tcp"
+              }
+            },
+            {
+              "name": "tcp443Probe",
+              "properties": {
+                "intervalInSeconds": 5,
+                "numberOfProbes": 2,
+                "port": 443,
+                "protocol": "Tcp"
+              }
+            },
+            {
+              "name": "tcp8080Probe",
+              "properties": {
+                "intervalInSeconds": 5,
+                "numberOfProbes": 2,
+                "port": 8080,
+                "protocol": "Tcp"
+              }
+            }
+          ]
+        }
+      },
+      {
+        "apiVersion": "2019-07-01",
+        "type": "Microsoft.Compute/virtualMachineScaleSets",
+        "location": "(locations)[mod(add(2,length(parameters(location))),add(1,length(parameters(location))))]",
+        "name": "swarmm-agent-13957614-vmss",
+        "sku": {
+          "capacity": 3,
+          "name": "Standard_D2_v3",
+          "tier": "Standard"
+        },
+        "tags": {
+          "creationSource": "acsengine-swarmm-agent-13957614-vmss"
+        },
+        "dependsOn": [
+          "Microsoft.Network/publicIPAddresses/swarmm-master-ip-[tolower(parameters('masterEndpointDNSNamePrefix'))]-13957614",
+          "swarmm-vnet-13957614",
+          "Microsoft.Network/loadBalancers/swarmm-agent-13957614"
+        ],
+        "properties": {
+          "upgradePolicy": {
+            "mode": "Automatic"
+          },
+          "virtualMachineProfile": {
+            "networkProfile": {
+              "networkInterfaceConfigurations": [
+                {
+                  "name": "nic",
+                  "properties": {
+                    "ipConfigurations": [
+                      {
+                        "name": "nicipconfig",
+                        "properties": {
+                          "loadBalancerBackendAddressPools": [
+                            {
+                              "id": "Microsoft.Network/loadBalancers/backendAddressPools/swarmm-agent-13957614/swarmm-agent-13957614"
+                            }
+                          ],
+                          "subnet": {
+                            "id": "Microsoft.Network/virtualNetworks/subnets/swarmm-vnet-13957614/swarmm-agentsubnet"
+                          }
+                        }
+                      }
+                    ],
+                    "primary": true
+                  }
+                }
+              ]
+            },
+            "osProfile": {
+              "adminUsername": "azureuser",
+              "computerNamePrefix": "swarmm-agent-13957614",
+              "customData": "[base64(concat('#cloud-config\n\nwrite_files:\n -  encoding: gzip\n    content: !!binary |\n        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\n    path: /opt/azure/containers/configure-swarmmode-cluster.sh\n    permissions: \"0744\"\n\n',variables('agentRunCmdFile'),variables('agentRunCmd')))]",
+              "linuxConfiguration": {
+                "disablePasswordAuthentication": true,
+                "ssh": {
+                  "publicKeys": [
+                    {
+                      "keyData": "GEN-SSH-PUB-KEY",
+                      "path": "/home/azureuser/.ssh/authorized_keys"
+                    }
+                  ]
+                }
+              }
+            },
+            "storageProfile": {
+              "imageReference": {
+                "offer": "UbuntuServer",
+                "publisher": "Canonical",
+                "sku": "16.04-LTS",
+                "version": "latest"
+              },
+              "osDisk": {
+                "caching": "ReadWrite",
+                "createOption": "FromImage",
+                "managedDisk": {
+                  "storageAccountType": "[if(contains(variables('agentVmSizeSuffix'), 's'), 'Premium_LRS', 'StandardSSD_LRS')]"
+                }
+              }
+            }
+          }
+        }
+      },
+      {
+        "type": "Microsoft.Network/virtualNetworks",
+        "apiVersion": "2020-04-01",
+        "location": "(locations)[mod(add(2,length(parameters(location))),add(1,length(parameters(location))))]",
+        "name": "swarmm-vnet-13957614",
+        "properties": {
+          "addressSpace": {
+            "addressPrefixes": [
+              "172.16.0.0/24",
+              "10.0.0.0/16"
+            ]
+          },
+          "subnets": [
+            {
+              "name": "swarmm-masterSubnet",
+              "properties": {
+                "addressPrefix": "172.16.0.0/24"
+              }
+            },
+            {
+              "name": "swarmm-agentsubnet",
+              "properties": {
+                "addressPrefix": "10.0.0.0/16"
+              }
+            }
+          ]
+        }
+      },
+      {
+        "apiVersion": "2019-07-01",
+        "type": "Microsoft.Compute/availabilitySets",
+        "location": "(locations)[mod(add(2,length(parameters(location))),add(1,length(parameters(location))))]",
+        "name": "swarmm-master-availabilitySet-13957614",
+        "properties": {
+          "PlatformUpdateDomainCount": 20,
+          "PlatformFaultDomainCount": 2
+        },
+        "sku": {
+          "name": "Aligned"
+        }
+      },
+      {
+        "type": "Microsoft.Network/publicIPAddresses",
+        "apiVersion": "2020-04-01",
+        "location": "(locations)[mod(add(2,length(parameters(location))),add(1,length(parameters(location))))]",
+        "name": "swarmm-master-ip-[tolower(parameters('masterEndpointDNSNamePrefix'))]-13957614",
+        "properties": {
+          "dnsSettings": {
+            "domainNameLabel": "[tolower(parameters('masterEndpointDNSNamePrefix'))]"
+          },
+          "publicIPAllocationMethod": "Dynamic"
+        }
+      },
+      {
+        "type": "Microsoft.Network/loadBalancers",
+        "apiVersion": "2020-04-01",
+        "location": "(locations)[mod(add(2,length(parameters(location))),add(1,length(parameters(location))))]",
+        "name": "swarmm-master-lb-13957614",
+        "dependsOn": [
+          "Microsoft.Network/publicIPAddresses/swarmm-master-ip-[tolower(parameters('masterEndpointDNSNamePrefix'))]-13957614"
+        ],
+        "properties": {
+          "backendAddressPools": [
+            {
+              "name": "swarmm-master-pool-13957614"
+            }
+          ],
+          "frontendIPConfigurations": [
+            {
+              "name": "swarmm-master-lbFrontEnd-13957614",
+              "properties": {
+                "publicIPAddress": {
+                  "id": "Microsoft.Network/publicIPAddresses/swarmm-master-ip-[tolower(parameters('masterEndpointDNSNamePrefix'))]-13957614"
+                }
+              }
+            }
+          ]
+        }
+      },
+      {
+        "type": "Microsoft.Network/loadBalancers/inboundNatRules",
+        "apiVersion": "2020-04-01",
+        "location": "(locations)[mod(add(2,length(parameters(location))),add(1,length(parameters(location))))]",
+        "name": "swarmm-master-lb-13957614/SSH-swarmm-master-13957614-copyIndex()",
+        "copy": {
+          "count": 1,
+          "name": "masterLbLoopNode"
+        },
+        "dependsOn": [
+          "Microsoft.Network/loadBalancers/swarmm-master-lb-13957614"
+        ],
+        "properties": {
+          "backendPort": 22,
+          "enableFloatingIP": false,
+          "frontendIPConfiguration": {
+            "id": "Microsoft.Network/loadBalancers/frontendIPConfigurations/swarmm-master-lb-13957614/swarmm-master-lbFrontEnd-13957614"
+          },
+          "frontendPort": "[copyIndex(2200)]",
+          "protocol": "Tcp"
+        }
+      },
+      {
+        "type": "Microsoft.Network/loadBalancers/inboundNatRules",
+        "apiVersion": "2020-04-01",
+        "location": "(locations)[mod(add(2,length(parameters(location))),add(1,length(parameters(location))))]",
+        "name": "swarmm-master-lb-13957614/SSHPort22-swarmm-master-13957614-0",
+        "dependsOn": [
+          "Microsoft.Network/loadBalancers/swarmm-master-lb-13957614"
+        ],
+        "properties": {
+          "backendPort": 2222,
+          "enableFloatingIP": false,
+          "frontendIPConfiguration": {
+            "id": "Microsoft.Network/loadBalancers/frontendIPConfigurations/swarmm-master-lb-13957614/swarmm-master-lbFrontEnd-13957614"
+          },
+          "frontendPort": 22,
+          "protocol": "Tcp"
+        }
+      },
+      {
+        "type": "Microsoft.Network/networkInterfaces",
+        "apiVersion": "2020-04-01",
+        "name": "swarmm-master-13957614-nic-copyIndex()",
+        "location": "(locations)[mod(add(2,length(parameters(location))),add(1,length(parameters(location))))]",
+        "copy": {
+          "count": 1,
+          "name": "nicLoopNode"
+        },
+        "dependsOn": [
+          "swarmm-vnet-13957614",
+          "Microsoft.Network/loadBalancers/swarmm-master-lb-13957614",
+          "Microsoft.Network/loadBalancers/inboundNatRules/swarmm-master-lb-13957614/SSHPort22-swarmm-master-13957614-0",
+          "Microsoft.Network/loadBalancers/inboundNatRules/swarmm-master-lb-13957614/SSH-swarmm-master-13957614-copyIndex()"
+        ],
+        "properties": {
+          "ipConfigurations": [
+            {
+              "name": "ipConfigNode",
+              "properties": {
+                "loadBalancerBackendAddressPools": [
+                  {
+                    "id": "Microsoft.Network/loadBalancers/backendAddressPools/swarmm-master-lb-13957614/swarmm-master-pool-13957614"
+                  }
+                ],
+                "loadBalancerInboundNatRules": "(masterLbInboundNatRules)[copyIndex()]",
+                "privateIPAddress": "[concat(variables('masterFirstAddrPrefix'), copyIndex(int(variables('masterFirstAddrOctet4'))))]",
+                "privateIPAllocationMethod": "Static",
+                "subnet": {
+                  "id": "Microsoft.Network/virtualNetworks/subnets/swarmm-vnet-13957614/swarmm-masterSubnet"
+                }
+              }
+            }
+          ]
+        }
+      },
+      {
+        "apiVersion": "2019-07-01",
+        "type": "Microsoft.Compute/virtualMachines",
+        "name": "swarmm-master-13957614-copyIndex()",
+        "location": "(locations)[mod(add(2,length(parameters(location))),add(1,length(parameters(location))))]",
+        "copy": {
+          "count": 1,
+          "name": "vmLoopNode"
+        },
+        "dependsOn": [
+          "Microsoft.Network/networkInterfaces/swarmm-master-13957614-nic-copyIndex()",
+          "Microsoft.Compute/availabilitySets/swarmm-master-availabilitySet-13957614"
+        ],
+        "tags": {
+          "creationSource": "acsengine-swarmm-master-13957614-copyIndex()"
+        },
+        "properties": {
+          "availabilitySet": {
+            "id": "Microsoft.Compute/availabilitySets/swarmm-master-availabilitySet-13957614"
+          },
+          "hardwareProfile": {
+            "vmSize": "Standard_D2_v3"
+          },
+          "networkProfile": {
+            "networkInterfaces": [
+              {
+                "id": "Microsoft.Network/networkInterfaces/swarmm-master-13957614-nic-copyIndex()"
+              }
+            ]
+          },
+          "osProfile": {
+            "adminUsername": "azureuser",
+            "computerName": "swarmm-master-13957614-copyIndex()",
+            "customData": "[base64('#cloud-config\n\nwrite_files:\n -  encoding: gzip\n    content: !!binary |\n        H4sIACkUqlkAA81ZbXPbNhL+zl+xpTW1nYaipDSXOWeUG8dWLp6rLY9kd24uaWOIhCzWFKEQoGSfq/9+u3ihSFmK3TaZOWUSkuAC++wunt0Fs/NdOEqycMTkxPN2/vzP24EjkY2T6yLnMFywfAqnIubQzzi8FbceCVxMEglJJhVLUwlqwmEs0lQskuwaIjGdiYxnSqJgAMciuuF55RZXRwHJ9VBl/SmTiudyfZhdm6X+gkGe5AqCW8/j0USAj6hzRUgrWqK0IO0I3ljOVCIy34uZ4t5MAsPJx/2jf/UGn476p+f9Ye/Tz73B8KR/1vXbzXan2fLrCNGKc5azKTcm1eGcHg4veoOj/uXZRbdx317agfNB793Jv3Gk40benQyGF4fHxwMcfLH0Dv9zOehdDnv0+OPSQxgXJ2co8NNPw6PByfnF5eAE37xcem8Ph73h5duzHq3/t6X38+nZ4WmvezURUmUI6opGLk/f4kpX2icNIwG/g+Qx7Mqw+ezDr63g77983PugLz983H/WCD+2w12aa5Fumftxr5y9/8xOd3NtCE51rHEnFJk6gEbFIX5d4jzn4+S2FDGK12TeJblUcBjHeSlXOs6Jzqdk94ED64adG8wLffscnH16sK5x5Vh8uXpwr8sA4dvy3t/IRs2y6VRk8K7IItptG/c4OiyTSMTD/+I/Z1wtRH6zt+/dewA7YF5p+mXmFdA/El/a5/ecpWpy123j0FjkkCBp4b7dxC27fA2xwGGAxTXRox/GfB5mRZrCRKnZQUjZ5LqJbNZCyRg+QOMfEPDP0IJf9BgqzvQNgXF7CyZMwojzDBUWWUyMQrIV3AquAWvZYeO/qiWYYCZGyLcyo5yzG30/TvRFppzPoE1rxJhxPIeyrgMCTFwGcgl4o7pMKKfyObCRMEnCZjnfesEkCPMwA2ZWu00UdDyLqxYX8goJRiyDnEuRzvmTotNahad0bJD8v0fiWwQCPUfP1nna6ch0LuWfj9FyA6m8932baq8qDseElUhTmMDSTlvm1/MRdLs4VCaLuok5V0WeAfmXp5JXx9oODy5a6nntpjrfaI9gjcIrs1XS93AaQtPFcQXs4Ro1VevqWzX1eq0va89MNTbajQdaJ+faa37jfpUPl437tTy83JwFTSJ0sZU8HRMFjs+G24Rtom24aJUJncpPEQtQHOPGIOQqCimQ8qFe1HhiNkzZnGxRY8VoizFDIN0c0LOZiVbZvWeebSjqZG6tp9pA5QmX8CPeYSTyuwAXzrDQFVRAg2DBEqXHu+2XEHzuBzohS8zIOLsZa0WUl8nkyVdNCcZq26ZZwxCSLKIICTfG2vD0ZLz0VIIKa+7BToxihHbmU4Gmsn+CMadSLp3vL2fYfK08DTHjVC3FTNdKdHxBAty8PdYv++adDQKYDTG9iZMcgpnZEvIO+TGN7TW0zkQ88yTizdgz7hpSh+gUU+TTBMVReQYHnRevXsJeJoAVavIcRoWiQM8xfe2TqF2BpVKgsylhKcBCGoMSuiAUWXILklZWwBSEc5aHeZGVSPCywk69PAQR7BqXfBganCbAvVseaaDdtcewkLk+Cpg10c/vQUVU0VtN/cfYgKMEBoe3gPDhzZOcFoo5z/Mk5k0iyK6L/Nb4bGBX/WTg10llR8u2R7sGi+G3JFqiJsWISGatDSMDIsx5ypnkEscXWSpYHDY2HwzsxMBODK4KU1PkVXk7vSIPU7RSEbG0EjM36xuwu67gW7Dcne+iCZH8h9tHTDQ5weytSKWW6Bgw8q59abaaSxZYL2iju964lnor3RfSy05YdTAaN41t7b1erDaR1u2WyMbiq0ajDqO1MQM/aLyqiPBYGrA/2hrXtG5vyFYAKr2YX++eXErfXKm3/bD4RuXXhSTD7JgXKXLUxhSoKs9yQTuR/9FTv7e5jyp7Ntc0YL9WdnC2f8Ge7XU1jCtXHKFrdR1i2KIu7DcDLARjfep07dhqlo2O1HLawCBgMWZIlWAWoN4VGnuVFnOfsvErFDI1ZquEiY7r4Fb4hhz9GbP8zmLBqoJEmmnIWHN+E7ivsXHD/leuPnqsAGucyFOuxA3Puv62N4fR5yLJeawJY37bjyxbFm/sWedg6am731Qk4zNCHOgJmJPRqAx7zny/tu4aBx9E7osGtB4IrthTmpbU7dBselmOWUpVwWxWVmGY+T0AuiWIkSjSONtVRJaMR4pCqSO37dRTrufOOQ8MqW1MvS0C6+Y18Bti88rlFn3s2H5Yec/mhExi22JbJsQ9Q7zQwR9gQlxwJDheOx3CbbN7DLjNwZfhr+dGthHaG+/cTQ7bvu1G5IT+xp/sMe8RSEOuDH3nLEnZKEkTdQdi7BxNZ5sD2LXHiF2NlxXUg5Qe08cf080Ql6vraFF3BlkhWTtKOSiHevjp/NzMzS/y8suc/Ap8pLNylY6PU/FJNKxTsLJrq9QrafdkytXAVINQ8kv7/1FmVVhlsf01NtmdgkZs+ogL32F9inEbjbAvo68JtQ3tGk8E+lwfTm6S6IZQi/EYuUbfm+zpVkZ5MlNkRfk/A3Sa8GvNcaf15O54M9jfkSCTYlbR8eaNOdek4jpk9I0ltJ/Xg5EQSqqczQICanE2UQ46b75vw/fmy4Kxs+wC6JzE0U4krbPIfJLXX+eNMDWTKVcI/PGP+naK6zhM50lcdH5j2R32I1OG1ZuSmRgrXJNOJRu4LSeFoohAQIli4dkKvQPkPmjDFFs+zBu4utNnEs+DoFQXcp74H9DolC7TGQAA\n    path: /opt/azure/containers/configure-swarmmode-cluster.sh\n    permissions: \"0744\"\n\n')]",
+            "linuxConfiguration": {
+              "disablePasswordAuthentication": true,
+              "ssh": {
+                "publicKeys": [
+                  {
+                    "keyData": "GEN-SSH-PUB-KEY",
+                    "path": "/home/azureuser/.ssh/authorized_keys"
+                  }
+                ]
+              }
+            }
+          },
+          "storageProfile": {
+            "imageReference": {
+              "offer": "UbuntuServer",
+              "publisher": "Canonical",
+              "sku": "16.04-LTS",
+              "version": "latest"
+            },
+            "osDisk": {
+              "name": "swarmm-master-13957614-copyIndex()_OSDisk",
+              "caching": "ReadWrite",
+              "createOption": "FromImage",
+              "managedDisk": {
+                "storageAccountType": "[if(contains(variables('masterVmSizeSuffix'), 's'), 'Premium_LRS', 'StandardSSD_LRS')]"
+              }
+            }
+          }
+        }
+      },
+      {
+        "apiVersion": "2019-07-01",
+        "type": "Microsoft.Compute/virtualMachines/extensions",
+        "name": "swarmm-master-13957614-copyIndex()/configuremaster",
+        "location": "(locations)[mod(add(2,length(parameters(location))),add(1,length(parameters(location))))]",
+        "copy": {
+          "count": 1,
+          "name": "vmLoopNode"
+        },
+        "dependsOn": [
+          "Microsoft.Compute/virtualMachines/swarmm-master-13957614-copyIndex()"
+        ],
+        "properties": {
+          "publisher": "Microsoft.OSTCExtensions",
+          "autoUpgradeMinorVersion": true,
+          "settings": {
+            "commandToExecute": "/bin/bash -c \"/bin/bash /opt/azure/containers/configure-swarmmode-cluster.sh 1 swarmm-master-13957614- (masterFirstAddrOctets)[3] azureuser disabled [concat(variables('masterFirstAddrOctets')[0],'.',variables('masterFirstAddrOctets')[1],'.',variables('masterFirstAddrOctets')[2],'.')] >> /var/log/azure/cluster-bootstrap.log 2>&1\""
+          },
+          "type": "CustomScriptForLinux",
+          "typeHandlerVersion": "1.4"
+        }
+      }
+    ],
+    "outputs": {
+      "agentFQDN": {
+        "type": "string",
+        "value": "[reference(resourceId('Microsoft.Network/publicIPAddresses', variables('agentIPAddressName'))).dnsSettings.fqdn]"
+      },
+      "masterFQDN": {
+        "type": "string",
+        "value": "[reference(resourceId('Microsoft.Network/publicIPAddresses', variables('masterPublicIPAddressName'))).dnsSettings.fqdn]"
+      }
+    },
+    "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+  }
+}

@@ -1,0 +1,87 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAzureQuickStart",
+  "paths": [
+    "/application-workloads/moodle/moodle-scalable-cluster-ubuntu/nested/glustervmconfig.json"
+  ],
+  "timestamp": 1642962892004,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/application-workloads/moodle/moodle-scalable-cluster-ubuntu/nested/glustervmconfig.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT296",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "microsoft.compute/virtualmachines/extensions"
+    ]
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT296",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "moodleCommon": {
+        "metadata": {
+          "description": "Common Moodle values"
+        },
+        "type": "object"
+      },
+      "vmName": {
+        "metadata": {
+          "description": "Name of VM to process script - not actually used"
+        },
+        "type": "string"
+      },
+      "vmNumber": {
+        "metadata": {
+          "description": "Number of the VM in the pool"
+        },
+        "type": "int"
+      },
+      "location": {
+        "type": "string",
+        "metadata": {
+          "description": "Location for all resources."
+        }
+      }
+    },
+    "resources": [
+      {
+        "type": "Microsoft.Compute/virtualMachines/extensions",
+        "apiVersion": "2020-12-01",
+        "location": "location",
+        "name": "vmName/install_gluster",
+        "properties": {
+          "publisher": "Microsoft.Azure.Extensions",
+          "settings": {
+            "fileUris": [
+              "moodleCommonmoodleCommonmoodleCommon"
+            ]
+          },
+          "protectedSettings": {
+            "commandToExecute": "bash moodleCommon moodleCommon moodleCommon data vmNumber moodleCommon"
+          },
+          "type": "CustomScript",
+          "typeHandlerVersion": "2.0"
+        },
+        "tags": {
+          "displayName": "GfsVmExtension"
+        }
+      }
+    ],
+    "variables": {
+      "cmdExec": "bash moodleCommon moodleCommon moodleCommon data vmNumber moodleCommon",
+      "scriptUri": "moodleCommonmoodleCommonmoodleCommon"
+    },
+    "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+  }
+}

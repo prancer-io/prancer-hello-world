@@ -1,0 +1,1178 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAzureQuickStart",
+  "paths": [
+    "/application-workloads/mongo/mongodb-sharding-centos/azuredeploy.json",
+    "/application-workloads/mongo/mongodb-sharding-centos/azuredeploy.parameters.json"
+  ],
+  "timestamp": 1642962891913,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/application-workloads/mongo/mongodb-sharding-centos/azuredeploy.json",
+      "/application-workloads/mongo/mongodb-sharding-centos/azuredeploy.parameters.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT289",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "microsoft.resources/deployments"
+    ]
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT289",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "location": {
+        "type": "string",
+        "defaultValue": "[resourceGroup().location]",
+        "metadata": {
+          "description": "Location for all resources"
+        }
+      },
+      "adminUsername": {
+        "type": "string",
+        "metadata": {
+          "description": "Administrator user name used when provisioning virtual machines"
+        },
+        "value": "GEN-UNIQUE"
+      },
+      "mongoAdminUsername": {
+        "type": "string",
+        "metadata": {
+          "description": "MongoDB Administrator user name used when provisioning MongoDB sharding cluster"
+        },
+        "value": "mongoadmin"
+      },
+      "mongoAdminPassword": {
+        "type": "securestring",
+        "metadata": {
+          "description": "MongoDB Administrator password used when provisioning MongoDB sharding cluster"
+        },
+        "value": "GEN-PASSWORD"
+      },
+      "dnsNamePrefix": {
+        "type": "string",
+        "metadata": {
+          "description": "DNS Name for the publicly accessible router nodes. Must be lowercase. It should match with the following regular expression: ^[a-z][a-z0-9-]{1,61}[a-z0-9]$ or it will raise an error."
+        },
+        "value": "GEN-UNIQUE"
+      },
+      "centOsVersion": {
+        "type": "string",
+        "defaultValue": "7.7",
+        "allowedValues": [
+          "6.5",
+          "6.6",
+          "6.7",
+          "6.8",
+          "6.9",
+          "6.10",
+          "7.0",
+          "7.1",
+          "7.2",
+          "7.3",
+          "7.4",
+          "7.5",
+          "7.6",
+          "7.7"
+        ],
+        "metadata": {
+          "description": "The CentOS version for the VM. This will pick a fully patched image of this given CentOS version."
+        },
+        "value": "7.7"
+      },
+      "environment": {
+        "type": "string",
+        "allowedValues": [
+          "AzureCloud",
+          "AzureChinaCloud"
+        ],
+        "metadata": {
+          "description": "Different environments in Azure. Choose AzureCloud for Global Azure, and choose AzureChinaCloud for Mooncake (Azure China Cloud)."
+        },
+        "value": "AzureCloud"
+      },
+      "numDataDisks": {
+        "type": "string",
+        "defaultValue": "4",
+        "allowedValues": [
+          "2",
+          "3",
+          "4",
+          "5",
+          "6",
+          "7",
+          "8",
+          "9",
+          "10",
+          "11",
+          "12",
+          "13",
+          "14",
+          "15",
+          "16",
+          "32"
+        ],
+        "metadata": {
+          "description": "The number of data disks on each shard node. We will use Raid0 for the data disks to improve performance. On each shard."
+        },
+        "value": "4"
+      },
+      "sizeOfDataDiskInGB": {
+        "type": "int",
+        "minValue": 1,
+        "maxValue": 1023,
+        "defaultValue": 20,
+        "metadata": {
+          "description": "The size of each data disk, the value is between 1 and 1023."
+        },
+        "value": 20
+      },
+      "routerNodeVmSize": {
+        "type": "string",
+        "defaultValue": "Standard_D4s_v3",
+        "metadata": {
+          "description": "The size of the virtual machines used when provisioning the router nodes"
+        },
+        "value": "Standard_D4s_v3"
+      },
+      "configNodeVmSize": {
+        "type": "string",
+        "defaultValue": "Standard_D4s_v3",
+        "metadata": {
+          "description": "The size of the virtual machines used when provisioning config nodes"
+        },
+        "value": "Standard_D4s_v3"
+      },
+      "replicaNodeVmSize": {
+        "type": "string",
+        "defaultValue": "Standard_D4s_v3",
+        "metadata": {
+          "description": "The size of the virtual machines used when provisioning replica set nodes"
+        },
+        "value": "Standard_D4s_v3"
+      },
+      "zabbixServerIPAddress": {
+        "type": "string",
+        "defaultValue": "",
+        "metadata": {
+          "description": "The zabbix server IP which will monitor the mongodb nodes' mongodb status. Null means no zabbix server."
+        },
+        "value": "Null"
+      },
+      "authenticationType": {
+        "type": "string",
+        "defaultValue": "sshPublicKey",
+        "allowedValues": [
+          "sshPublicKey",
+          "password"
+        ],
+        "metadata": {
+          "description": "Type of authentication to use on the Virtual Machine. SSH key is recommended."
+        }
+      },
+      "adminPasswordOrKey": {
+        "type": "securestring",
+        "metadata": {
+          "description": "SSH Key or password for the Virtual Machine. SSH key is recommended."
+        },
+        "value": "GEN-SSH-PUB-KEY"
+      },
+      "_artifactsLocation": {
+        "type": "string",
+        "metadata": {
+          "description": "The base URI where artifacts required by this template are located including a trailing '/'"
+        },
+        "defaultValue": "[deployment().properties.templateLink.uri]"
+      },
+      "_artifactsLocationSasToken": {
+        "type": "securestring",
+        "metadata": {
+          "description": "The sasToken required to access _artifactsLocation.  When the template is deployed using the accompanying scripts, a sasToken will be automatically generated. Use the defaultValue if the staging location is not secured."
+        },
+        "defaultValue": ""
+      },
+      "_artifactsChinaLocation": {
+        "type": "string",
+        "metadata": {
+          "description": "The base URI where artifacts required by this template are located. When the template is deployed using the accompanying scripts, a private location in the subscription will be used and this value will be automatically generated."
+        },
+        "defaultValue": "http://msmirrors.blob.core.chinacloudapi.cn/mongodb/mongodb-sharding-centos/"
+      },
+      "_artifactsChinaLocationSasToken": {
+        "type": "securestring",
+        "metadata": {
+          "description": "The sasToken required to access _artifactsLocation.  When the template is deployed using the accompanying scripts, a sasToken will be automatically generated."
+        },
+        "defaultValue": ""
+      }
+    },
+    "variables": {
+      "environmentType": {
+        "AzureCloud": {
+          "serviceEndPoint": "[environment().suffixes.storage]",
+          "artifactsLocation": "[deployment().properties.templateLink.uri]",
+          "artifactsLocationSasToken": "",
+          "configPrimaryNodeScript": "[uri(parameters('_artifactsLocation'), concat('scripts/config_primary.sh', parameters('_artifactsLocationSasToken')))]",
+          "configSecondaryNodeScript": "[uri(parameters('_artifactsLocation'), concat('scripts/config_secondary.sh', parameters('_artifactsLocationSasToken')))]",
+          "router1NodeScript": "[uri(parameters('_artifactsLocation'), concat('scripts/router1.sh', parameters('_artifactsLocationSasToken')))]",
+          "router2NodeScript": "[uri(parameters('_artifactsLocation'), concat('scripts/router2.sh', parameters('_artifactsLocationSasToken')))]",
+          "replicaPrimaryNodeScript": "[uri(parameters('_artifactsLocation'), concat('scripts/replica_primary.sh', parameters('_artifactsLocationSasToken')))]",
+          "replicaSecondaryNodeScript": "[uri(parameters('_artifactsLocation'), concat('scripts/replica_secondary.sh', parameters('_artifactsLocationSasToken')))]"
+        },
+        "AzureChinaCloud": {
+          "serviceEndPoint": "core.chinacloudapi.cn",
+          "artifactsLocation": "http://msmirrors.blob.core.chinacloudapi.cn/mongodb/mongodb-sharding-centos/",
+          "artifactsLocationSasToken": "",
+          "configPrimaryNodeScript": "[uri(parameters('_artifactsChinaLocation'), concat('scripts/config_primary.sh', parameters('_artifactsChinaLocationSasToken')))]",
+          "configSecondaryNodeScript": "[uri(parameters('_artifactsChinaLocation'), concat('scripts/config_secondary.sh', parameters('_artifactsChinaLocationSasToken')))]",
+          "router1NodeScript": "[uri(parameters('_artifactsChinaLocation'), concat('scripts/router1.sh', parameters('_artifactsChinaLocationSasToken')))]",
+          "router2NodeScript": "[uri(parameters('_artifactsChinaLocation'), concat('scripts/router2.sh', parameters('_artifactsChinaLocationSasToken')))]",
+          "replicaPrimaryNodeScript": "[uri(parameters('_artifactsChinaLocation'), concat('scripts/replica_primary.sh', parameters('_artifactsChinaLocationSasToken')))]",
+          "replicaSecondaryNodeScript": "[uri(parameters('_artifactsChinaLocation'), concat('scripts/replica_secondary.sh', parameters('_artifactsChinaLocationSasToken')))]"
+        }
+      },
+      "environment": "(environmentType)[parameters(environment)]",
+      "templateBaseUrl": "(environment).artifactsLocation",
+      "sharedTemplateUrl": "[uri(variables('templateBaseUrl'), concat('nested/shared-resources.json', variables('environment').artifactsLocationSasToken))]",
+      "configPrimaryTemplateUrl": "[uri(variables('templateBaseUrl'), concat('nested/config-primary-resources.json', variables('environment').artifactsLocationSasToken))]",
+      "configSecondaryTemplateUrl": "[uri(variables('templateBaseUrl'), concat('nested/config-secondary-resources.json', variables('environment').artifactsLocationSasToken))]",
+      "router1TemplateUrl": "[uri(variables('templateBaseUrl'), concat('nested/router1-resources.json', variables('environment').artifactsLocationSasToken))]",
+      "router2TemplateUrl": "[uri(variables('templateBaseUrl'), concat('nested/router2-resources.json', variables('environment').artifactsLocationSasToken))]",
+      "replicaPrimaryTemplateUrl": "[uri(variables('templateBaseUrl'), concat('nested/replica-primary-resources.json', variables('environment').artifactsLocationSasToken))]",
+      "replicaSecondaryTemplateUrl": "[uri(variables('templateBaseUrl'), concat('nested/replica-secondary-resources.json', variables('environment').artifactsLocationSasToken))]",
+      "namespace": "mongodb-",
+      "virtualNetworkName": "myVNET",
+      "networkSettings": {
+        "virtualNetworkName": "myVNET",
+        "addressPrefix": "10.0.0.0/16",
+        "subnet": {
+          "dse": {
+            "name": "dse",
+            "prefix": "10.0.0.0/24",
+            "vnet": "myVNET"
+          }
+        },
+        "statics": {
+          "clusterRange": {
+            "base": "10.0.0.",
+            "start": 5
+          },
+          "configPrimaryIp": "10.0.0.240",
+          "configSecondaryIp1": "10.0.0.241",
+          "configSecondaryIp2": "10.0.0.242",
+          "routerIp1": "10.0.0.230",
+          "routerIp2": "10.0.0.231",
+          "replicaPrimaryIp1": "10.0.0.100",
+          "replicaPrimaryIp2": "10.0.0.110"
+        }
+      },
+      "configPrimaryOsSettings": {
+        "imageReference": {
+          "publisher": "OpenLogic",
+          "offer": "CentOS",
+          "sku": "7.7",
+          "version": "latest"
+        },
+        "scripts": [
+          "(environment).configPrimaryNodeScript"
+        ]
+      },
+      "configSecondaryOsSettings": {
+        "imageReference": {
+          "publisher": "OpenLogic",
+          "offer": "CentOS",
+          "sku": "7.7",
+          "version": "latest"
+        },
+        "scripts": [
+          "(environment).configSecondaryNodeScript"
+        ]
+      },
+      "router1OsSettings": {
+        "imageReference": {
+          "publisher": "OpenLogic",
+          "offer": "CentOS",
+          "sku": "7.7",
+          "version": "latest"
+        },
+        "scripts": [
+          "(environment).router1NodeScript"
+        ]
+      },
+      "router2OsSettings": {
+        "imageReference": {
+          "publisher": "OpenLogic",
+          "offer": "CentOS",
+          "sku": "7.7",
+          "version": "latest"
+        },
+        "scripts": [
+          "(environment).router2NodeScript"
+        ]
+      },
+      "replicaPrimaryOsSettings": {
+        "imageReference": {
+          "publisher": "OpenLogic",
+          "offer": "CentOS",
+          "sku": "7.7",
+          "version": "latest"
+        },
+        "scripts": [
+          "(environment).replicaPrimaryNodeScript"
+        ]
+      },
+      "replicaSecondaryOsSettings": {
+        "imageReference": {
+          "publisher": "OpenLogic",
+          "offer": "CentOS",
+          "sku": "7.7",
+          "version": "latest"
+        },
+        "scripts": [
+          "(environment).replicaSecondaryNodeScript"
+        ]
+      }
+    },
+    "resources": [
+      {
+        "name": "shared",
+        "type": "Microsoft.Resources/deployments",
+        "apiVersion": "2020-10-01",
+        "properties": {
+          "mode": "Incremental",
+          "templateLink": {
+            "uri": "[uri(variables('templateBaseUrl'), concat('nested/shared-resources.json', variables('environment').artifactsLocationSasToken))]",
+            "contentVersion": "1.0.0.0"
+          },
+          "parameters": {
+            "networkSettings": {
+              "value": {
+                "virtualNetworkName": "myVNET",
+                "addressPrefix": "10.0.0.0/16",
+                "subnet": {
+                  "dse": {
+                    "name": "dse",
+                    "prefix": "10.0.0.0/24",
+                    "vnet": "myVNET"
+                  }
+                },
+                "statics": {
+                  "clusterRange": {
+                    "base": "10.0.0.",
+                    "start": 5
+                  },
+                  "configPrimaryIp": "10.0.0.240",
+                  "configSecondaryIp1": "10.0.0.241",
+                  "configSecondaryIp2": "10.0.0.242",
+                  "routerIp1": "10.0.0.230",
+                  "routerIp2": "10.0.0.231",
+                  "replicaPrimaryIp1": "10.0.0.100",
+                  "replicaPrimaryIp2": "10.0.0.110"
+                }
+              }
+            },
+            "namespace": {
+              "value": "mongodb-"
+            },
+            "zabbixServerIPAddress": {
+              "value": "Null"
+            },
+            "location": {
+              "value": "[resourceGroup().location]"
+            }
+          }
+        }
+      },
+      {
+        "name": "configSecondaryNode1",
+        "type": "Microsoft.Resources/deployments",
+        "apiVersion": "2020-10-01",
+        "dependsOn": [
+          "Microsoft.Resources/deployments//shared"
+        ],
+        "properties": {
+          "mode": "Incremental",
+          "templateLink": {
+            "uri": "[uri(variables('templateBaseUrl'), concat('nested/config-secondary-resources.json', variables('environment').artifactsLocationSasToken))]",
+            "contentVersion": "1.0.0.0"
+          },
+          "parameters": {
+            "adminUsername": {
+              "value": "GEN-UNIQUE"
+            },
+            "namespace": {
+              "value": "mongodb-"
+            },
+            "vmbasename": {
+              "value": "configSecondary1"
+            },
+            "subnet": {
+              "value": "(networkSettings).subnet.dse"
+            },
+            "vmSize": {
+              "value": "Standard_D4s_v3"
+            },
+            "staticIp": {
+              "value": "(networkSettings).statics.configSecondaryIp1"
+            },
+            "zabbixServerIPAddress": {
+              "value": "Null"
+            },
+            "osSettings": {
+              "value": {
+                "imageReference": {
+                  "publisher": "OpenLogic",
+                  "offer": "CentOS",
+                  "sku": "7.7",
+                  "version": "latest"
+                },
+                "scripts": [
+                  "(environment).configSecondaryNodeScript"
+                ]
+              }
+            },
+            "authenticationType": {
+              "value": "sshPublicKey"
+            },
+            "adminPasswordOrKey": {
+              "value": "GEN-SSH-PUB-KEY"
+            },
+            "location": {
+              "value": "[resourceGroup().location]"
+            }
+          }
+        }
+      },
+      {
+        "name": "configSecondaryNode2",
+        "type": "Microsoft.Resources/deployments",
+        "apiVersion": "2020-10-01",
+        "dependsOn": [
+          "Microsoft.Resources/deployments//shared",
+          "Microsoft.Resources/deployments//configSecondaryNode1"
+        ],
+        "properties": {
+          "mode": "Incremental",
+          "templateLink": {
+            "uri": "[uri(variables('templateBaseUrl'), concat('nested/config-secondary-resources.json', variables('environment').artifactsLocationSasToken))]",
+            "contentVersion": "1.0.0.0"
+          },
+          "parameters": {
+            "adminUsername": {
+              "value": "GEN-UNIQUE"
+            },
+            "namespace": {
+              "value": "mongodb-"
+            },
+            "vmbasename": {
+              "value": "configSecondary2"
+            },
+            "subnet": {
+              "value": "(networkSettings).subnet.dse"
+            },
+            "vmSize": {
+              "value": "Standard_D4s_v3"
+            },
+            "staticIp": {
+              "value": "(networkSettings).statics.configSecondaryIp2"
+            },
+            "zabbixServerIPAddress": {
+              "value": "Null"
+            },
+            "osSettings": {
+              "value": {
+                "imageReference": {
+                  "publisher": "OpenLogic",
+                  "offer": "CentOS",
+                  "sku": "7.7",
+                  "version": "latest"
+                },
+                "scripts": [
+                  "(environment).configSecondaryNodeScript"
+                ]
+              }
+            },
+            "authenticationType": {
+              "value": "sshPublicKey"
+            },
+            "adminPasswordOrKey": {
+              "value": "GEN-SSH-PUB-KEY"
+            },
+            "location": {
+              "value": "[resourceGroup().location]"
+            }
+          }
+        }
+      },
+      {
+        "name": "configPrimaryNode",
+        "type": "Microsoft.Resources/deployments",
+        "apiVersion": "2020-10-01",
+        "dependsOn": [
+          "Microsoft.Resources/deployments//shared",
+          "Microsoft.Resources/deployments//configSecondaryNode2"
+        ],
+        "properties": {
+          "mode": "Incremental",
+          "templateLink": {
+            "uri": "[uri(variables('templateBaseUrl'), concat('nested/config-primary-resources.json', variables('environment').artifactsLocationSasToken))]",
+            "contentVersion": "1.0.0.0"
+          },
+          "parameters": {
+            "adminUsername": {
+              "value": "GEN-UNIQUE"
+            },
+            "mongoAdminUsername": {
+              "value": "mongoadmin"
+            },
+            "mongoAdminPassword": {
+              "value": "GEN-PASSWORD"
+            },
+            "namespace": {
+              "value": "mongodb-"
+            },
+            "vmbasename": {
+              "value": "configPrimary"
+            },
+            "subnet": {
+              "value": "(networkSettings).subnet.dse"
+            },
+            "staticIp": {
+              "value": "(networkSettings).statics.configPrimaryIp"
+            },
+            "vmSize": {
+              "value": "Standard_D4s_v3"
+            },
+            "zabbixServerIPAddress": {
+              "value": "Null"
+            },
+            "osSettings": {
+              "value": {
+                "imageReference": {
+                  "publisher": "OpenLogic",
+                  "offer": "CentOS",
+                  "sku": "7.7",
+                  "version": "latest"
+                },
+                "scripts": [
+                  "(environment).configPrimaryNodeScript"
+                ]
+              }
+            },
+            "authenticationType": {
+              "value": "sshPublicKey"
+            },
+            "adminPasswordOrKey": {
+              "value": "GEN-SSH-PUB-KEY"
+            },
+            "location": {
+              "value": "[resourceGroup().location]"
+            }
+          }
+        }
+      },
+      {
+        "name": "aReplicaSecondaryNode0",
+        "type": "Microsoft.Resources/deployments",
+        "apiVersion": "2020-10-01",
+        "dependsOn": [
+          "Microsoft.Resources/deployments//shared"
+        ],
+        "properties": {
+          "mode": "Incremental",
+          "templateLink": {
+            "uri": "[uri(variables('templateBaseUrl'), concat('nested/replica-secondary-resources.json', variables('environment').artifactsLocationSasToken))]",
+            "contentVersion": "1.0.0.0"
+          },
+          "parameters": {
+            "adminUsername": {
+              "value": "GEN-UNIQUE"
+            },
+            "replSetName": {
+              "value": "repset1"
+            },
+            "namespace": {
+              "value": "mongodb-"
+            },
+            "vmbasename": {
+              "value": "aReplicaSecondary0"
+            },
+            "sizeOfDataDiskInGB": {
+              "value": 20
+            },
+            "numDataDisks": {
+              "value": "4"
+            },
+            "templateBaseUrl": {
+              "value": "(environment).artifactsLocation"
+            },
+            "subnet": {
+              "value": "(networkSettings).subnet.dse"
+            },
+            "vmSize": {
+              "value": "Standard_D4s_v3"
+            },
+            "zabbixServerIPAddress": {
+              "value": "Null"
+            },
+            "osSettings": {
+              "value": {
+                "imageReference": {
+                  "publisher": "OpenLogic",
+                  "offer": "CentOS",
+                  "sku": "7.7",
+                  "version": "latest"
+                },
+                "scripts": [
+                  "(environment).replicaSecondaryNodeScript"
+                ]
+              }
+            },
+            "authenticationType": {
+              "value": "sshPublicKey"
+            },
+            "adminPasswordOrKey": {
+              "value": "GEN-SSH-PUB-KEY"
+            },
+            "_artifactsLocationSasToken": {
+              "value": "(environment).artifactsLocationSasToken"
+            },
+            "location": {
+              "value": "[resourceGroup().location]"
+            }
+          }
+        }
+      },
+      {
+        "name": "aReplicaSecondaryNode1",
+        "type": "Microsoft.Resources/deployments",
+        "apiVersion": "2020-10-01",
+        "dependsOn": [
+          "Microsoft.Resources/deployments//shared",
+          "Microsoft.Resources/deployments//aReplicaSecondaryNode0"
+        ],
+        "properties": {
+          "mode": "Incremental",
+          "templateLink": {
+            "uri": "[uri(variables('templateBaseUrl'), concat('nested/replica-secondary-resources.json', variables('environment').artifactsLocationSasToken))]",
+            "contentVersion": "1.0.0.0"
+          },
+          "parameters": {
+            "adminUsername": {
+              "value": "GEN-UNIQUE"
+            },
+            "replSetName": {
+              "value": "repset1"
+            },
+            "namespace": {
+              "value": "mongodb-"
+            },
+            "vmbasename": {
+              "value": "aReplicaSecondary1"
+            },
+            "sizeOfDataDiskInGB": {
+              "value": 20
+            },
+            "numDataDisks": {
+              "value": "4"
+            },
+            "templateBaseUrl": {
+              "value": "(environment).artifactsLocation"
+            },
+            "subnet": {
+              "value": "(networkSettings).subnet.dse"
+            },
+            "vmSize": {
+              "value": "Standard_D4s_v3"
+            },
+            "zabbixServerIPAddress": {
+              "value": "Null"
+            },
+            "osSettings": {
+              "value": {
+                "imageReference": {
+                  "publisher": "OpenLogic",
+                  "offer": "CentOS",
+                  "sku": "7.7",
+                  "version": "latest"
+                },
+                "scripts": [
+                  "(environment).replicaSecondaryNodeScript"
+                ]
+              }
+            },
+            "authenticationType": {
+              "value": "sshPublicKey"
+            },
+            "adminPasswordOrKey": {
+              "value": "GEN-SSH-PUB-KEY"
+            },
+            "_artifactsLocationSasToken": {
+              "value": "(environment).artifactsLocationSasToken"
+            },
+            "location": {
+              "value": "[resourceGroup().location]"
+            }
+          }
+        }
+      },
+      {
+        "name": "aReplicaPrimaryNode",
+        "type": "Microsoft.Resources/deployments",
+        "apiVersion": "2020-10-01",
+        "dependsOn": [
+          "Microsoft.Resources/deployments//shared",
+          "Microsoft.Resources/deployments//aReplicaSecondaryNode1"
+        ],
+        "properties": {
+          "mode": "Incremental",
+          "templateLink": {
+            "uri": "[uri(variables('templateBaseUrl'), concat('nested/replica-primary-resources.json', variables('environment').artifactsLocationSasToken))]",
+            "contentVersion": "1.0.0.0"
+          },
+          "parameters": {
+            "adminUsername": {
+              "value": "GEN-UNIQUE"
+            },
+            "mongoAdminUsername": {
+              "value": "mongoadmin"
+            },
+            "mongoAdminPassword": {
+              "value": "GEN-PASSWORD"
+            },
+            "replSetName": {
+              "value": "repset1"
+            },
+            "namespace": {
+              "value": "mongodb-"
+            },
+            "vmbasename": {
+              "value": "aReplicaPrimary"
+            },
+            "subnet": {
+              "value": "(networkSettings).subnet.dse"
+            },
+            "vmSize": {
+              "value": "Standard_D4s_v3"
+            },
+            "sizeOfDataDiskInGB": {
+              "value": 20
+            },
+            "numDataDisks": {
+              "value": "4"
+            },
+            "templateBaseUrl": {
+              "value": "(environment).artifactsLocation"
+            },
+            "staticIp": {
+              "value": "(networkSettings).statics.replicaPrimaryIp1"
+            },
+            "zabbixServerIPAddress": {
+              "value": "Null"
+            },
+            "osSettings": {
+              "value": {
+                "imageReference": {
+                  "publisher": "OpenLogic",
+                  "offer": "CentOS",
+                  "sku": "7.7",
+                  "version": "latest"
+                },
+                "scripts": [
+                  "(environment).replicaPrimaryNodeScript"
+                ]
+              }
+            },
+            "authenticationType": {
+              "value": "sshPublicKey"
+            },
+            "adminPasswordOrKey": {
+              "value": "GEN-SSH-PUB-KEY"
+            },
+            "_artifactsLocationSasToken": {
+              "value": "(environment).artifactsLocationSasToken"
+            },
+            "location": {
+              "value": "[resourceGroup().location]"
+            }
+          }
+        }
+      },
+      {
+        "name": "bReplicaSecondaryNode0",
+        "type": "Microsoft.Resources/deployments",
+        "apiVersion": "2020-10-01",
+        "dependsOn": [
+          "Microsoft.Resources/deployments//shared",
+          "Microsoft.Resources/deployments//aReplicaPrimaryNode"
+        ],
+        "properties": {
+          "mode": "Incremental",
+          "templateLink": {
+            "uri": "[uri(variables('templateBaseUrl'), concat('nested/replica-secondary-resources.json', variables('environment').artifactsLocationSasToken))]",
+            "contentVersion": "1.0.0.0"
+          },
+          "parameters": {
+            "adminUsername": {
+              "value": "GEN-UNIQUE"
+            },
+            "replSetName": {
+              "value": "repset2"
+            },
+            "namespace": {
+              "value": "mongodb-"
+            },
+            "vmbasename": {
+              "value": "bReplicaSecondary0"
+            },
+            "sizeOfDataDiskInGB": {
+              "value": 20
+            },
+            "numDataDisks": {
+              "value": "4"
+            },
+            "templateBaseUrl": {
+              "value": "(environment).artifactsLocation"
+            },
+            "subnet": {
+              "value": "(networkSettings).subnet.dse"
+            },
+            "vmSize": {
+              "value": "Standard_D4s_v3"
+            },
+            "zabbixServerIPAddress": {
+              "value": "Null"
+            },
+            "osSettings": {
+              "value": {
+                "imageReference": {
+                  "publisher": "OpenLogic",
+                  "offer": "CentOS",
+                  "sku": "7.7",
+                  "version": "latest"
+                },
+                "scripts": [
+                  "(environment).replicaSecondaryNodeScript"
+                ]
+              }
+            },
+            "authenticationType": {
+              "value": "sshPublicKey"
+            },
+            "adminPasswordOrKey": {
+              "value": "GEN-SSH-PUB-KEY"
+            },
+            "_artifactsLocationSasToken": {
+              "value": "(environment).artifactsLocationSasToken"
+            },
+            "location": {
+              "value": "[resourceGroup().location]"
+            }
+          }
+        }
+      },
+      {
+        "name": "bReplicaSecondaryNode1",
+        "type": "Microsoft.Resources/deployments",
+        "apiVersion": "2020-10-01",
+        "dependsOn": [
+          "Microsoft.Resources/deployments//shared",
+          "Microsoft.Resources/deployments//bReplicaSecondaryNode0"
+        ],
+        "properties": {
+          "mode": "Incremental",
+          "templateLink": {
+            "uri": "[uri(variables('templateBaseUrl'), concat('nested/replica-secondary-resources.json', variables('environment').artifactsLocationSasToken))]",
+            "contentVersion": "1.0.0.0"
+          },
+          "parameters": {
+            "adminUsername": {
+              "value": "GEN-UNIQUE"
+            },
+            "replSetName": {
+              "value": "repset2"
+            },
+            "namespace": {
+              "value": "mongodb-"
+            },
+            "vmbasename": {
+              "value": "bReplicaSecondary1"
+            },
+            "sizeOfDataDiskInGB": {
+              "value": 20
+            },
+            "numDataDisks": {
+              "value": "4"
+            },
+            "templateBaseUrl": {
+              "value": "(environment).artifactsLocation"
+            },
+            "subnet": {
+              "value": "(networkSettings).subnet.dse"
+            },
+            "vmSize": {
+              "value": "Standard_D4s_v3"
+            },
+            "zabbixServerIPAddress": {
+              "value": "Null"
+            },
+            "osSettings": {
+              "value": {
+                "imageReference": {
+                  "publisher": "OpenLogic",
+                  "offer": "CentOS",
+                  "sku": "7.7",
+                  "version": "latest"
+                },
+                "scripts": [
+                  "(environment).replicaSecondaryNodeScript"
+                ]
+              }
+            },
+            "authenticationType": {
+              "value": "sshPublicKey"
+            },
+            "adminPasswordOrKey": {
+              "value": "GEN-SSH-PUB-KEY"
+            },
+            "_artifactsLocationSasToken": {
+              "value": "(environment).artifactsLocationSasToken"
+            },
+            "location": {
+              "value": "[resourceGroup().location]"
+            }
+          }
+        }
+      },
+      {
+        "name": "bReplicaPrimaryNode",
+        "type": "Microsoft.Resources/deployments",
+        "apiVersion": "2020-10-01",
+        "dependsOn": [
+          "Microsoft.Resources/deployments//shared",
+          "Microsoft.Resources/deployments//bReplicaSecondaryNode1"
+        ],
+        "properties": {
+          "mode": "Incremental",
+          "templateLink": {
+            "uri": "[uri(variables('templateBaseUrl'), concat('nested/replica-primary-resources.json', variables('environment').artifactsLocationSasToken))]",
+            "contentVersion": "1.0.0.0"
+          },
+          "parameters": {
+            "adminUsername": {
+              "value": "GEN-UNIQUE"
+            },
+            "mongoAdminUsername": {
+              "value": "mongoadmin"
+            },
+            "mongoAdminPassword": {
+              "value": "GEN-PASSWORD"
+            },
+            "replSetName": {
+              "value": "repset2"
+            },
+            "namespace": {
+              "value": "mongodb-"
+            },
+            "vmbasename": {
+              "value": "bReplicaPrimary"
+            },
+            "sizeOfDataDiskInGB": {
+              "value": 20
+            },
+            "numDataDisks": {
+              "value": "4"
+            },
+            "templateBaseUrl": {
+              "value": "(environment).artifactsLocation"
+            },
+            "subnet": {
+              "value": "(networkSettings).subnet.dse"
+            },
+            "vmSize": {
+              "value": "Standard_D4s_v3"
+            },
+            "staticIp": {
+              "value": "(networkSettings).statics.replicaPrimaryIp2"
+            },
+            "zabbixServerIPAddress": {
+              "value": "Null"
+            },
+            "osSettings": {
+              "value": {
+                "imageReference": {
+                  "publisher": "OpenLogic",
+                  "offer": "CentOS",
+                  "sku": "7.7",
+                  "version": "latest"
+                },
+                "scripts": [
+                  "(environment).replicaPrimaryNodeScript"
+                ]
+              }
+            },
+            "authenticationType": {
+              "value": "sshPublicKey"
+            },
+            "adminPasswordOrKey": {
+              "value": "GEN-SSH-PUB-KEY"
+            },
+            "_artifactsLocationSasToken": {
+              "value": "(environment).artifactsLocationSasToken"
+            },
+            "location": {
+              "value": "[resourceGroup().location]"
+            }
+          }
+        }
+      },
+      {
+        "name": "routerNode1",
+        "type": "Microsoft.Resources/deployments",
+        "apiVersion": "2020-10-01",
+        "dependsOn": [
+          "Microsoft.Resources/deployments//shared",
+          "Microsoft.Resources/deployments//configPrimaryNode",
+          "Microsoft.Resources/deployments//bReplicaPrimaryNode"
+        ],
+        "properties": {
+          "mode": "Incremental",
+          "templateLink": {
+            "uri": "[uri(variables('templateBaseUrl'), concat('nested/router1-resources.json', variables('environment').artifactsLocationSasToken))]",
+            "contentVersion": "1.0.0.0"
+          },
+          "parameters": {
+            "adminUsername": {
+              "value": "GEN-UNIQUE"
+            },
+            "mongoAdminUsername": {
+              "value": "mongoadmin"
+            },
+            "mongoAdminPassword": {
+              "value": "GEN-PASSWORD"
+            },
+            "namespace": {
+              "value": "mongodb-"
+            },
+            "vmbasename": {
+              "value": "router1"
+            },
+            "subnet": {
+              "value": "(networkSettings).subnet.dse"
+            },
+            "vmSize": {
+              "value": "Standard_D4s_v3"
+            },
+            "dnsname": {
+              "value": "GEN-UNIQUE"
+            },
+            "staticIp": {
+              "value": "(networkSettings).statics.routerIp1"
+            },
+            "zabbixServerIPAddress": {
+              "value": "Null"
+            },
+            "osSettings": {
+              "value": {
+                "imageReference": {
+                  "publisher": "OpenLogic",
+                  "offer": "CentOS",
+                  "sku": "7.7",
+                  "version": "latest"
+                },
+                "scripts": [
+                  "(environment).router1NodeScript"
+                ]
+              }
+            },
+            "authenticationType": {
+              "value": "sshPublicKey"
+            },
+            "adminPasswordOrKey": {
+              "value": "GEN-SSH-PUB-KEY"
+            },
+            "location": {
+              "value": "[resourceGroup().location]"
+            }
+          }
+        }
+      },
+      {
+        "name": "routerNode2",
+        "type": "Microsoft.Resources/deployments",
+        "apiVersion": "2020-10-01",
+        "dependsOn": [
+          "Microsoft.Resources/deployments//shared",
+          "Microsoft.Resources/deployments//routerNode1"
+        ],
+        "properties": {
+          "mode": "Incremental",
+          "templateLink": {
+            "uri": "[uri(variables('templateBaseUrl'), concat('nested/router2-resources.json', variables('environment').artifactsLocationSasToken))]",
+            "contentVersion": "1.0.0.0"
+          },
+          "parameters": {
+            "adminUsername": {
+              "value": "GEN-UNIQUE"
+            },
+            "namespace": {
+              "value": "mongodb-"
+            },
+            "vmbasename": {
+              "value": "router2"
+            },
+            "subnet": {
+              "value": "(networkSettings).subnet.dse"
+            },
+            "vmSize": {
+              "value": "Standard_D4s_v3"
+            },
+            "dnsname": {
+              "value": "GEN-UNIQUE"
+            },
+            "staticIp": {
+              "value": "(networkSettings).statics.routerIp2"
+            },
+            "zabbixServerIPAddress": {
+              "value": "Null"
+            },
+            "osSettings": {
+              "value": {
+                "imageReference": {
+                  "publisher": "OpenLogic",
+                  "offer": "CentOS",
+                  "sku": "7.7",
+                  "version": "latest"
+                },
+                "scripts": [
+                  "(environment).router2NodeScript"
+                ]
+              }
+            },
+            "authenticationType": {
+              "value": "sshPublicKey"
+            },
+            "adminPasswordOrKey": {
+              "value": "GEN-SSH-PUB-KEY"
+            },
+            "location": {
+              "value": "[resourceGroup().location]"
+            }
+          }
+        }
+      }
+    ],
+    "outputs": {},
+    "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+  }
+}

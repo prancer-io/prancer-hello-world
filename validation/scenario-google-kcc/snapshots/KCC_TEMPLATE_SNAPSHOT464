@@ -2,12 +2,12 @@
   "structure": "filesystem",
   "error": null,
   "reference": "master",
-  "contentType": "yaml",
+  "contentType": "json",
   "source": "gitConnectorGoogleKcc",
   "paths": [
-    "/samples/resources/monitoringalertpolicy/network-connectivity-alert-policy/monitoring_v1beta1_monitoringnotificationchannel_multiple_yaml_1.yaml"
+    "/samples/resources/iampolicy/workload-identity-policy/kubernetes_service_account.yaml"
   ],
-  "timestamp": 1628765149353,
+  "timestamp": 1642973304319,
   "queryuser": null,
   "checksum": "99914b932bd37a50b983c5e7c90ae93b",
   "node": {
@@ -15,25 +15,25 @@
     "type": "kcc",
     "collection": "kcctemplate",
     "paths": [
-      "/samples/resources/monitoringalertpolicy/network-connectivity-alert-policy/monitoring_v1beta1_monitoringnotificationchannel_multiple_yaml_1.yaml"
+      "/samples/resources/iampolicy/workload-identity-policy/kubernetes_service_account.yaml"
     ],
     "snapshotId": "KCC_TEMPLATE_SNAPSHOT464",
     "status": "active",
-    "validate": true
+    "validate": true,
+    "resourceTypes": [
+      "serviceaccount"
+    ]
   },
   "snapshotId": "KCC_TEMPLATE_SNAPSHOT464",
   "collection": "kcctemplate",
   "json": {
-    "apiVersion": "monitoring.cnrm.cloud.google.com/v1beta1",
-    "kind": "MonitoringNotificationChannel",
+    "apiVersion": "v1",
+    "kind": "ServiceAccount",
     "metadata": {
-      "name": "monitoringalertpolicy-dep2-networkconnectivity"
-    },
-    "spec": {
-      "labels": {
-        "email_address": "dev@example.com"
-      },
-      "type": "email"
+      "name": "iampolicy-dep-workloadidentity",
+      "annotations": {
+        "iam.gke.io/gcp-service-account": "iampolicy-dep-workloadidentity@${PROJECT_ID?}.iam.gserviceaccount.com"
+      }
     }
   }
 }

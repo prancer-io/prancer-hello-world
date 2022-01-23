@@ -1,0 +1,105 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAzureQuickStart",
+  "paths": [
+    "/application-workloads/sap/sap-2-tier-user-disk-md/shared/nic-config.json"
+  ],
+  "timestamp": 1642962894836,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/application-workloads/sap/sap-2-tier-user-disk-md/shared/nic-config.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT435",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": []
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT435",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "vnetName": {
+        "type": "string",
+        "defaultValue": "",
+        "metadata": {
+          "description": "Name of the virtual network."
+        }
+      },
+      "subnetName": {
+        "type": "string",
+        "defaultValue": "",
+        "metadata": {
+          "description": "Name of the virtual network subnet."
+        }
+      },
+      "publicIpName": {
+        "type": "string",
+        "defaultValue": "",
+        "metadata": {
+          "description": "Name of the public ip address."
+        }
+      },
+      "nsgName": {
+        "type": "string",
+        "defaultValue": "",
+        "metadata": {
+          "description": "Name of the network security group."
+        }
+      },
+      "subnetId": {
+        "type": "string",
+        "defaultValue": "",
+        "metadata": {
+          "description": "The id of the subnet you want to use."
+        }
+      },
+      "location": {
+        "type": "string",
+        "defaultValue": "[resourceGroup().location]",
+        "metadata": {
+          "description": "Location for all resources."
+        }
+      }
+    },
+    "variables": {
+      "nicConfigurations": {
+        "true": {
+          "subnet": {
+            "id": "Microsoft.Network/virtualNetworks/ parameters('vnetName')/subnets/ parameters('subnetName')"
+          },
+          "publicIPAddress": {
+            "id": "Microsoft.Network/publicIPAddresses/ parameters('publicIpName')"
+          },
+          "networkSecurityGroup": {
+            "id": "Microsoft.Network/networkSecurityGroups/ parameters('nsgName')"
+          }
+        },
+        "false": {
+          "subnet": {
+            "id": ""
+          },
+          "publicIPAddress": null,
+          "networkSecurityGroup": null
+        }
+      },
+      "selectedConfiguration": "(nicConfigurations)[string(equals(length(parameters(subnetId)), 0))]"
+    },
+    "resources": [],
+    "outputs": {
+      "selectedConfiguration": {
+        "value": "[variables('selectedConfiguration')]",
+        "type": "object"
+      }
+    },
+    "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+  }
+}

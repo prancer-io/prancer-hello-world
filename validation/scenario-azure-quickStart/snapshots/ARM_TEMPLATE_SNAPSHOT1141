@@ -1,0 +1,76 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAzureQuickStart",
+  "paths": [
+    "/quickstarts/microsoft.compute/vms-with-selfhost-integration-runtime/nested/IRInstall.json"
+  ],
+  "timestamp": 1642962904758,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/quickstarts/microsoft.compute/vms-with-selfhost-integration-runtime/nested/IRInstall.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT1141",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "microsoft.compute/virtualmachines/extensions"
+    ]
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT1141",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "existingDataFactoryVersion": {
+        "type": "string"
+      },
+      "datafactoryId": {
+        "type": "string"
+      },
+      "virtualMachineName": {
+        "type": "string"
+      },
+      "existingVnetLocation": {
+        "type": "string"
+      },
+      "scriptUrl": {
+        "type": "string"
+      }
+    },
+    "variables": {},
+    "resources": [
+      {
+        "type": "Microsoft.Compute/virtualMachines/extensions",
+        "name": "virtualMachineName/virtualMachineNameinstallGW",
+        "apiVersion": "2019-07-01",
+        "location": "existingVnetLocation",
+        "tags": {
+          "vmname": "virtualMachineName"
+        },
+        "properties": {
+          "publisher": "Microsoft.Compute",
+          "type": "CustomScriptExtension",
+          "typeHandlerVersion": "1.7",
+          "autoUpgradeMinorVersion": true,
+          "settings": {
+            "fileUris": [
+              "scriptURL"
+            ]
+          },
+          "protectedSettings": {
+            "commandToExecute": "[concat('powershell.exe -ExecutionPolicy Unrestricted -File gatewayInstall.ps1 ', if(equals(parameters('existingDataFactoryVersion'), 'V2'), listAuthKeys(parameters('datafactoryId'), '2017-09-01-preview').authKey1, listAuthKeys(parameters('datafactoryId'), '2015-10-01').key1))]"
+          }
+        }
+      }
+    ],
+    "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+  }
+}

@@ -1,0 +1,130 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAzureQuickStart",
+  "paths": [
+    "/quickstarts/microsoft.machinelearningservices/machine-learning-datastore-create-blob/azuredeploy.json",
+    "/quickstarts/microsoft.machinelearningservices/machine-learning-datastore-create-blob/azuredeploy.parameters.json"
+  ],
+  "timestamp": 1642962907743,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/quickstarts/microsoft.machinelearningservices/machine-learning-datastore-create-blob/azuredeploy.json",
+      "/quickstarts/microsoft.machinelearningservices/machine-learning-datastore-create-blob/azuredeploy.parameters.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT1433",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "microsoft.machinelearningservices/workspaces/datastores"
+    ]
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT1433",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "workspaceName": {
+        "type": "string",
+        "metadata": {
+          "description": "Specifies the name of the Azure Machine Learning workspace which will hold this datastore target."
+        },
+        "value": "GET-PREREQ-workspaceResource"
+      },
+      "datastoreName": {
+        "type": "string",
+        "metadata": {
+          "description": "The name of the datastore, case insensitive, can only contain alphanumeric characters and underscore"
+        },
+        "value": "GEN-UNIQUE-10"
+      },
+      "storageAccountName": {
+        "type": "string",
+        "metadata": {
+          "description": "The name of the storage account."
+        },
+        "value": "GET-PREREQ-storageAccountResource"
+      },
+      "containerName": {
+        "type": "string",
+        "metadata": {
+          "description": "The name of the azure blob container."
+        },
+        "value": "GEN-UNIQUE-8"
+      },
+      "authenticationType": {
+        "type": "string",
+        "defaultValue": "SAS token",
+        "allowedValues": [
+          "SAS token",
+          "Account Key"
+        ],
+        "metadata": {
+          "description": "Authentication type"
+        }
+      },
+      "sasTokenOrAccountKey": {
+        "type": "securestring",
+        "metadata": {
+          "description": "Storage account SAS token or Account Key"
+        },
+        "value": "GEN-PASSWORD"
+      },
+      "storageAccountSubscriptionId": {
+        "type": "string",
+        "defaultValue": "[subscription().subscriptionId]",
+        "metadata": {
+          "description": "Optional : The subscription ID of the storage account. Defaults to selected subscription"
+        }
+      },
+      "storageAccountResourceGroup": {
+        "type": "string",
+        "defaultValue": "[resourceGroup().name]",
+        "metadata": {
+          "description": "Optional : The resource group of the storage account. Defaults to selected resource group"
+        }
+      },
+      "skipValidation": {
+        "type": "bool",
+        "defaultValue": false,
+        "metadata": {
+          "description": "Optional : If set to true, the call will skip datastore validation. Defaults to false"
+        },
+        "value": true
+      },
+      "location": {
+        "type": "string",
+        "defaultValue": "[resourceGroup().location]",
+        "metadata": {
+          "description": "The location of the Azure Machine Learning Workspace."
+        }
+      }
+    },
+    "resources": [
+      {
+        "type": "Microsoft.MachineLearningServices/workspaces/datastores",
+        "name": "GET-PREREQ-workspaceResource/GEN-UNIQUE-10",
+        "apiVersion": "2020-05-01-preview",
+        "location": "[resourceGroup().location]",
+        "properties": {
+          "DataStoreType": "blob",
+          "SkipValidation": true,
+          "AccountName": "GET-PREREQ-storageAccountResource",
+          "ContainerName": "GEN-UNIQUE-8",
+          "AccountKey": "[if(equals(parameters('authenticationType'), 'Account Key'), parameters('sasTokenOrAccountKey'), json('null'))]",
+          "SasToken": "[if(equals(parameters('authenticationType'), 'SAS token'), parameters('sasTokenOrAccountKey'), json('null'))]",
+          "StorageAccountSubscriptionId": "[subscription().subscriptionId]",
+          "StorageAccountResourceGroup": "[resourceGroup().name]"
+        }
+      }
+    ],
+    "\uff04schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#"
+  }
+}

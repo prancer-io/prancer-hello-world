@@ -2,12 +2,12 @@
   "structure": "filesystem",
   "error": null,
   "reference": "master",
-  "contentType": "yaml",
+  "contentType": "json",
   "source": "gitConnectorGoogleKcc",
   "paths": [
-    "/samples/resources/computeforwardingrule/global-forwarding-rule-with-target-tcp-proxy/compute_v1beta1_computebackendservice.yaml"
+    "/samples/resources/computeexternalvpngateway/compute_v1beta1_computeexternalvpngateway.yaml"
   ],
-  "timestamp": 1628765140685,
+  "timestamp": 1642973302442,
   "queryuser": null,
   "checksum": "99914b932bd37a50b983c5e7c90ae93b",
   "node": {
@@ -15,30 +15,35 @@
     "type": "kcc",
     "collection": "kcctemplate",
     "paths": [
-      "/samples/resources/computeforwardingrule/global-forwarding-rule-with-target-tcp-proxy/compute_v1beta1_computebackendservice.yaml"
+      "/samples/resources/computeexternalvpngateway/compute_v1beta1_computeexternalvpngateway.yaml"
     ],
     "snapshotId": "KCC_TEMPLATE_SNAPSHOT117",
     "status": "active",
-    "validate": true
+    "validate": true,
+    "resourceTypes": [
+      "computeexternalvpngateway"
+    ]
   },
   "snapshotId": "KCC_TEMPLATE_SNAPSHOT117",
   "collection": "kcctemplate",
   "json": {
     "apiVersion": "compute.cnrm.cloud.google.com/v1beta1",
-    "kind": "ComputeBackendService",
+    "kind": "ComputeExternalVPNGateway",
     "metadata": {
-      "name": "computeforwardingrule-dep-global-with-target-tcp-proxy"
+      "name": "computeexternalvpngateway-sample",
+      "labels": {
+        "label-one": "value-one"
+      }
     },
     "spec": {
-      "healthChecks": [
+      "description": "an external vpn gateway",
+      "redundancyType": "SINGLE_IP_INTERNALLY_REDUNDANT",
+      "interface": [
         {
-          "healthCheckRef": {
-            "name": "computeforwardingrule-dep-global-with-target-tcp-proxy"
-          }
+          "id": 0,
+          "ipAddress": "8.8.8.8"
         }
-      ],
-      "protocol": "TCP",
-      "location": "global"
+      ]
     }
   }
 }

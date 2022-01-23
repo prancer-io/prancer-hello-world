@@ -2,12 +2,12 @@
   "structure": "filesystem",
   "error": null,
   "reference": "master",
-  "contentType": "yaml",
+  "contentType": "json",
   "source": "gitConnectorGoogleKcc",
   "paths": [
-    "/samples/resources/computetargetinstance/compute_v1beta1_computetargetinstance.yaml"
+    "/samples/resources/computesecuritypolicy/multirule-security-policy/compute_v1beta1_computesecuritypolicy.yaml"
   ],
-  "timestamp": 1628765143896,
+  "timestamp": 1642973303151,
   "queryuser": null,
   "checksum": "99914b932bd37a50b983c5e7c90ae93b",
   "node": {
@@ -15,26 +15,82 @@
     "type": "kcc",
     "collection": "kcctemplate",
     "paths": [
-      "/samples/resources/computetargetinstance/compute_v1beta1_computetargetinstance.yaml"
+      "/samples/resources/computesecuritypolicy/multirule-security-policy/compute_v1beta1_computesecuritypolicy.yaml"
     ],
     "snapshotId": "KCC_TEMPLATE_SNAPSHOT253",
     "status": "active",
-    "validate": true
+    "validate": true,
+    "resourceTypes": [
+      "computesecuritypolicy"
+    ]
   },
   "snapshotId": "KCC_TEMPLATE_SNAPSHOT253",
   "collection": "kcctemplate",
   "json": {
     "apiVersion": "compute.cnrm.cloud.google.com/v1beta1",
-    "kind": "ComputeTargetInstance",
+    "kind": "ComputeSecurityPolicy",
     "metadata": {
-      "name": "computetargetinstance-sample"
+      "name": "computesecuritypolicy-sample-multirule"
     },
     "spec": {
-      "description": "Target instance, containing a VM instance which will have no NAT applied to it and can be used for protocol forwarding.",
-      "zone": "us-central1-a",
-      "instanceRef": {
-        "name": "computetargetinstance-dep"
-      }
+      "description": "A generally permissive policy that locks out a large block of untrusted IPs, except for some allowed trusted IP ranges within them, and never allows IPs from a denylist.",
+      "rule": [
+        {
+          "action": "allow",
+          "priority": 2147483647,
+          "match": {
+            "versionedExpr": "SRC_IPS_V1",
+            "config": {
+              "srcIpRanges": [
+                "*"
+              ]
+            }
+          },
+          "description": "This rule must be included in any rule array. Action can change."
+        },
+        {
+          "action": "deny(502)",
+          "priority": 111111111,
+          "match": {
+            "versionedExpr": "SRC_IPS_V1",
+            "config": {
+              "srcIpRanges": [
+                "60.0.0.0/6"
+              ]
+            }
+          },
+          "description": "Untrusted range. Block IPs and return 502."
+        },
+        {
+          "action": "allow",
+          "priority": 555,
+          "match": {
+            "versionedExpr": "SRC_IPS_V1",
+            "config": {
+              "srcIpRanges": [
+                "63.0.0.0/8",
+                "61.128.0.0/10"
+              ]
+            }
+          },
+          "description": "Even though they're in an untrusted block, these ranges are OK."
+        },
+        {
+          "action": "deny(403)",
+          "priority": 0,
+          "match": {
+            "versionedExpr": "SRC_IPS_V1",
+            "config": {
+              "srcIpRanges": [
+                "145.4.56.4/30",
+                "63.63.63.63/32",
+                "4.5.4.0/24"
+              ]
+            }
+          },
+          "description": "Never allow these denylisted IP ranges."
+        }
+      ]
     }
   }
 }

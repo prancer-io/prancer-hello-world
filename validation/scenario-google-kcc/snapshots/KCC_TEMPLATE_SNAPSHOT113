@@ -2,12 +2,12 @@
   "structure": "filesystem",
   "error": null,
   "reference": "master",
-  "contentType": "yaml",
+  "contentType": "json",
   "source": "gitConnectorGoogleKcc",
   "paths": [
-    "/samples/resources/computeforwardingrule/global-forwarding-rule-with-target-ssl-proxy/compute_v1beta1_computehealthcheck.yaml"
+    "/samples/resources/computedisk/regional-compute-disk/compute_v1beta1_computedisk_multiple_yaml_1.yaml"
   ],
-  "timestamp": 1628765140593,
+  "timestamp": 1642973302409,
   "queryuser": null,
   "checksum": "99914b932bd37a50b983c5e7c90ae93b",
   "node": {
@@ -15,26 +15,38 @@
     "type": "kcc",
     "collection": "kcctemplate",
     "paths": [
-      "/samples/resources/computeforwardingrule/global-forwarding-rule-with-target-ssl-proxy/compute_v1beta1_computehealthcheck.yaml"
+      "/samples/resources/computedisk/regional-compute-disk/compute_v1beta1_computedisk_multiple_yaml_1.yaml"
     ],
     "snapshotId": "KCC_TEMPLATE_SNAPSHOT113",
     "status": "active",
-    "validate": true
+    "validate": true,
+    "resourceTypes": [
+      "computedisk"
+    ]
   },
   "snapshotId": "KCC_TEMPLATE_SNAPSHOT113",
   "collection": "kcctemplate",
   "json": {
     "apiVersion": "compute.cnrm.cloud.google.com/v1beta1",
-    "kind": "ComputeHealthCheck",
+    "kind": "ComputeDisk",
     "metadata": {
-      "name": "computeforwardingrule-dep-global-with-target-ssl-proxy"
+      "labels": {
+        "extra-gb": "100"
+      },
+      "name": "computedisk-sample-regional"
     },
     "spec": {
-      "checkIntervalSec": 10,
-      "sslHealthCheck": {
-        "port": 995
-      },
-      "location": "global"
+      "description": "A 600GB regional disk from a 500GB snapshot.",
+      "location": "us-central1",
+      "physicalBlockSizeBytes": 16384,
+      "replicaZones": [
+        "us-central1-a",
+        "us-central1-f"
+      ],
+      "size": 600,
+      "snapshotRef": {
+        "name": "computedisk-dep-regional"
+      }
     }
   }
 }

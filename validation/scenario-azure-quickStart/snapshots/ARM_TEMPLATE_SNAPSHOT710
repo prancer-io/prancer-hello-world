@@ -1,0 +1,226 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAzureQuickStart",
+  "paths": [
+    "/demos/eset-vm-extension/azuredeploy.json",
+    "/demos/eset-vm-extension/azuredeploy.parameters.json"
+  ],
+  "timestamp": 1642962899356,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/demos/eset-vm-extension/azuredeploy.json",
+      "/demos/eset-vm-extension/azuredeploy.parameters.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT710",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "microsoft.network/publicipaddresses",
+      "microsoft.network/virtualnetworks",
+      "microsoft.network/networkinterfaces",
+      "microsoft.compute/virtualmachines/extensions",
+      "microsoft.compute/virtualmachines"
+    ]
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT710",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "adminUsername": {
+        "type": "string",
+        "metadata": {
+          "description": "Username for the Virtual Machine."
+        },
+        "value": "GEN-UNIQUE"
+      },
+      "adminPassword": {
+        "type": "securestring",
+        "metadata": {
+          "description": "Password for the Virtual Machine."
+        },
+        "value": "GEN-PASSWORD"
+      },
+      "dnsNameForPublicIP": {
+        "type": "string",
+        "metadata": {
+          "description": "Unique DNS Name for the Public IP used to access the Virtual Machine."
+        },
+        "value": "GEN-UNIQUE"
+      },
+      "vmName": {
+        "type": "string",
+        "defaultValue": "myVM",
+        "metadata": {
+          "description": "Vitual machine's unique name."
+        }
+      },
+      "vmSize": {
+        "type": "string",
+        "defaultValue": "Standard_D2_v3",
+        "metadata": {
+          "description": "Virtual machine size"
+        }
+      },
+      "windowsOSVersion": {
+        "type": "string",
+        "defaultValue": "2012-R2-Datacenter",
+        "allowedValues": [
+          "2008-R2-SP1",
+          "2012-Datacenter",
+          "2012-R2-Datacenter",
+          "Windows-Server-Technical-Preview"
+        ],
+        "metadata": {
+          "description": "The Windows version for the VM. This will pick a fully patched image of this given Windows version. Allowed values: 2008-R2-SP1, 2012-Datacenter, 2012-R2-Datacenter, Windows-Server-Technical-Preview."
+        }
+      },
+      "location": {
+        "type": "string",
+        "defaultValue": "[resourceGroup().location]",
+        "metadata": {
+          "description": "Location for all resources."
+        }
+      }
+    },
+    "variables": {
+      "imagePublisher": "MicrosoftWindowsServer",
+      "imageOffer": "WindowsServer",
+      "nicName": "myVMNic",
+      "addressPrefix": "10.0.0.0/16",
+      "subnetName": "Subnet",
+      "subnetPrefix": "10.0.0.0/24",
+      "diskStorageType": "StandardSSD_LRS",
+      "publicIPAddressName": "myPublicIP",
+      "publicIPAddressType": "Dynamic",
+      "virtualNetworkName": "MyVNET",
+      "subnetRef": "Microsoft.Network/virtualNetworks/subnets/MyVNET/Subnet"
+    },
+    "resources": [
+      {
+        "apiVersion": "2020-07-01",
+        "type": "Microsoft.Network/publicIPAddresses",
+        "name": "myPublicIP",
+        "location": "[resourceGroup().location]",
+        "properties": {
+          "publicIPAllocationMethod": "Dynamic",
+          "dnsSettings": {
+            "domainNameLabel": "GEN-UNIQUE"
+          }
+        }
+      },
+      {
+        "apiVersion": "2020-07-01",
+        "type": "Microsoft.Network/virtualNetworks",
+        "name": "MyVNET",
+        "location": "[resourceGroup().location]",
+        "properties": {
+          "addressSpace": {
+            "addressPrefixes": [
+              "10.0.0.0/16"
+            ]
+          },
+          "subnets": [
+            {
+              "name": "Subnet",
+              "properties": {
+                "addressPrefix": "10.0.0.0/24"
+              }
+            }
+          ]
+        }
+      },
+      {
+        "apiVersion": "2020-07-01",
+        "type": "Microsoft.Network/networkInterfaces",
+        "name": "myVMNic",
+        "location": "[resourceGroup().location]",
+        "dependsOn": [
+          "Microsoft.Network/publicIPAddresses//myPublicIP",
+          "Microsoft.Network/virtualNetworks//MyVNET"
+        ],
+        "properties": {
+          "ipConfigurations": [
+            {
+              "name": "ipconfig1",
+              "properties": {
+                "privateIPAllocationMethod": "Dynamic",
+                "publicIPAddress": {
+                  "id": "Microsoft.Network/publicIPAddresses/myPublicIP"
+                },
+                "subnet": {
+                  "id": "Microsoft.Network/virtualNetworks/subnets/MyVNET/Subnet"
+                }
+              }
+            }
+          ]
+        }
+      },
+      {
+        "apiVersion": "2020-12-01",
+        "type": "Microsoft.Compute/virtualMachines",
+        "name": "myVM",
+        "location": "[resourceGroup().location]",
+        "dependsOn": [
+          "Microsoft.Network/networkInterfaces//myVMNic"
+        ],
+        "properties": {
+          "hardwareProfile": {
+            "vmSize": "Standard_D2_v3"
+          },
+          "osProfile": {
+            "computerName": "myVM",
+            "adminUsername": "GEN-UNIQUE",
+            "adminPassword": "GEN-PASSWORD"
+          },
+          "storageProfile": {
+            "imageReference": {
+              "publisher": "MicrosoftWindowsServer",
+              "offer": "WindowsServer",
+              "sku": "2012-R2-Datacenter",
+              "version": "latest"
+            },
+            "osDisk": {
+              "name": "myVM_OSDisk",
+              "caching": "ReadWrite",
+              "createOption": "FromImage",
+              "managedDisk": {
+                "storageAccountType": "StandardSSD_LRS"
+              }
+            }
+          },
+          "networkProfile": {
+            "networkInterfaces": [
+              {
+                "id": "Microsoft.Network/networkInterfaces/myVMNic"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "type": "Microsoft.Compute/virtualMachines/extensions",
+        "name": "myVM/fileSecurityExtension",
+        "apiVersion": "2020-12-01",
+        "location": "[resourceGroup().location]",
+        "dependsOn": [
+          "Microsoft.Compute/virtualMachines//myVM"
+        ],
+        "properties": {
+          "publisher": "ESET",
+          "type": "FileSecurity",
+          "typeHandlerVersion": "6.5"
+        }
+      }
+    ],
+    "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+  }
+}

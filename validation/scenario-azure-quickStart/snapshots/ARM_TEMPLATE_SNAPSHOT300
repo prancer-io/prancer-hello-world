@@ -1,0 +1,133 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAzureQuickStart",
+  "paths": [
+    "/application-workloads/moodle/moodle-scalable-cluster-ubuntu/nested/recoveryservices.json"
+  ],
+  "timestamp": 1642962892035,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/application-workloads/moodle/moodle-scalable-cluster-ubuntu/nested/recoveryservices.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT300",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "microsoft.recoveryservices/vaults",
+      "microsoft.recoveryservices/vaults/backuppolicies"
+    ]
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT300",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "moodleCommon": {
+        "metadata": {
+          "description": "Common Moodle values"
+        },
+        "type": "object"
+      },
+      "location": {
+        "type": "string",
+        "metadata": {
+          "description": "Location for all resources."
+        }
+      }
+    },
+    "resources": [
+      {
+        "type": "Microsoft.RecoveryServices/vaults",
+        "apiVersion": "2021-01-01",
+        "location": "location",
+        "name": "moodleCommon",
+        "properties": {},
+        "sku": {
+          "name": "RS0",
+          "tier": "Standard"
+        }
+      },
+      {
+        "type": "Microsoft.RecoveryServices/vaults/backupPolicies",
+        "apiVersion": "2021-02-01",
+        "dependsOn": [
+          "Microsoft.RecoveryServices/vaults//moodleCommon"
+        ],
+        "location": "location",
+        "name": "moodleCommon/moodleCommon",
+        "properties": {
+          "backupManagementType": "AzureIaasVM",
+          "retentionPolicy": {
+            "dailySchedule": {
+              "retentionDuration": {
+                "count": 7,
+                "durationType": "Days"
+              },
+              "retentionTimes": [
+                "2017-01-01T22:30:00Z"
+              ]
+            },
+            "monthlySchedule": {
+              "retentionDuration": {
+                "count": 6,
+                "durationType": "Months"
+              },
+              "retentionScheduleDaily": {
+                "daysOfTheMonth": [
+                  {
+                    "date": 1,
+                    "isLast": false
+                  }
+                ]
+              },
+              "retentionScheduleFormatType": "Daily",
+              "retentionTimes": [
+                "2017-01-01T22:30:00Z"
+              ]
+            },
+            "retentionPolicyType": "LongTermRetentionPolicy",
+            "weeklySchedule": {
+              "daysOfTheWeek": [
+                "Sunday"
+              ],
+              "retentionDuration": {
+                "count": 4,
+                "durationType": "Weeks"
+              },
+              "retentionTimes": [
+                "2017-01-01T22:30:00Z"
+              ]
+            }
+          },
+          "schedulePolicy": {
+            "schedulePolicyType": "SimpleSchedulePolicy",
+            "scheduleRunFrequency": "Daily",
+            "scheduleRunTimes": [
+              "2017-01-01T22:30:00Z"
+            ]
+          }
+        }
+      }
+    ],
+    "variables": {
+      "dailyRetentionDurationCount": 7,
+      "daysOfTheWeek": [
+        "Sunday"
+      ],
+      "monthlyRetentionDurationCount": 6,
+      "scheduleRunTimes": [
+        "2017-01-01T22:30:00Z"
+      ],
+      "weeklyRetentionDurationCount": 4
+    },
+    "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+  }
+}

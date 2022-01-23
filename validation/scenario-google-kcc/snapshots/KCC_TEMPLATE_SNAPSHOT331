@@ -2,12 +2,12 @@
   "structure": "filesystem",
   "error": null,
   "reference": "master",
-  "contentType": "yaml",
+  "contentType": "json",
   "source": "gitConnectorGoogleKcc",
   "paths": [
-    "/samples/resources/dnsrecordset/dns-a-record-set/dns_v1beta1_dnsmanagedzone.yaml"
+    "/samples/resources/computevpntunnel/compute_v1beta1_computeforwardingrule_multiple_yaml_1.yaml"
   ],
-  "timestamp": 1628765145970,
+  "timestamp": 1642973303608,
   "queryuser": null,
   "checksum": "99914b932bd37a50b983c5e7c90ae93b",
   "node": {
@@ -15,22 +15,41 @@
     "type": "kcc",
     "collection": "kcctemplate",
     "paths": [
-      "/samples/resources/dnsrecordset/dns-a-record-set/dns_v1beta1_dnsmanagedzone.yaml"
+      "/samples/resources/computevpntunnel/compute_v1beta1_computeforwardingrule_multiple_yaml_1.yaml"
     ],
     "snapshotId": "KCC_TEMPLATE_SNAPSHOT331",
     "status": "active",
-    "validate": true
+    "validate": true,
+    "resourceTypes": [
+      "computeforwardingrule"
+    ]
   },
   "snapshotId": "KCC_TEMPLATE_SNAPSHOT331",
   "collection": "kcctemplate",
   "json": {
-    "apiVersion": "dns.cnrm.cloud.google.com/v1beta1",
-    "kind": "DNSManagedZone",
+    "apiVersion": "compute.cnrm.cloud.google.com/v1beta1",
+    "kind": "ComputeForwardingRule",
     "metadata": {
-      "name": "dnsrecordset-dep-a"
+      "labels": {
+        "label-one": "value-one"
+      },
+      "name": "computevpntunnel-dep2"
     },
     "spec": {
-      "dnsName": "example.com."
+      "description": "A regional forwarding rule",
+      "ipAddress": {
+        "addressRef": {
+          "name": "computevpntunnel-dep"
+        }
+      },
+      "ipProtocol": "UDP",
+      "location": "us-central1",
+      "portRange": "500",
+      "target": {
+        "targetVPNGatewayRef": {
+          "name": "computevpntunnel-dep"
+        }
+      }
     }
   }
 }

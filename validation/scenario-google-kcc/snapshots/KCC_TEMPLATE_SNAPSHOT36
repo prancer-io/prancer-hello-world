@@ -2,12 +2,12 @@
   "structure": "filesystem",
   "error": null,
   "reference": "master",
-  "contentType": "yaml",
+  "contentType": "json",
   "source": "gitConnectorGoogleKcc",
   "paths": [
-    "/samples/resources/bigtableappprofile/single-cluster-bigtable-app-profile/bigtable_v1beta1_bigtableappprofile.yaml"
+    "/samples/resources/bigtableappprofile/multicluster-bigtable-app-profile/bigtable_v1beta1_bigtableinstance.yaml"
   ],
-  "timestamp": 1628765139019,
+  "timestamp": 1642973301838,
   "queryuser": null,
   "checksum": "99914b932bd37a50b983c5e7c90ae93b",
   "node": {
@@ -15,29 +15,37 @@
     "type": "kcc",
     "collection": "kcctemplate",
     "paths": [
-      "/samples/resources/bigtableappprofile/single-cluster-bigtable-app-profile/bigtable_v1beta1_bigtableappprofile.yaml"
+      "/samples/resources/bigtableappprofile/multicluster-bigtable-app-profile/bigtable_v1beta1_bigtableinstance.yaml"
     ],
     "snapshotId": "KCC_TEMPLATE_SNAPSHOT36",
     "status": "active",
-    "validate": true
+    "validate": true,
+    "resourceTypes": [
+      "bigtableinstance"
+    ]
   },
   "snapshotId": "KCC_TEMPLATE_SNAPSHOT36",
   "collection": "kcctemplate",
   "json": {
     "apiVersion": "bigtable.cnrm.cloud.google.com/v1beta1",
-    "kind": "BigtableAppProfile",
+    "kind": "BigtableInstance",
     "metadata": {
-      "name": "bigtableappprofile-sample-singlecluster"
+      "name": "bigtableappprofile-dep-multi"
     },
     "spec": {
-      "description": "Routes all requests to a single cluster. If that cluster becomes unavailable, you must manually fail over to another cluster.",
-      "instanceRef": {
-        "name": "bigtableappprofile-dep-single"
-      },
-      "singleClusterRouting": {
-        "allowTransactionalWrites": true,
-        "clusterId": "bigtableappprofile-dep1-single"
-      }
+      "displayName": "BigtableSample",
+      "cluster": [
+        {
+          "clusterId": "bigtableappprofile-dep1-multi",
+          "zone": "us-central1-a",
+          "numNodes": 3
+        },
+        {
+          "clusterId": "bigtableappprofile-dep2-multi",
+          "zone": "us-west1-a",
+          "numNodes": 3
+        }
+      ]
     }
   }
 }

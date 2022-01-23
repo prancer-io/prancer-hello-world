@@ -1,0 +1,1241 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAzureQuickStart",
+  "paths": [
+    "/application-workloads/sap/sap-3-tier-user-image-md/azuredeploy.json",
+    "/application-workloads/sap/sap-3-tier-user-image-md/azuredeploy.parameters.json"
+  ],
+  "timestamp": 1642962895988,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/application-workloads/sap/sap-3-tier-user-image-md/azuredeploy.json",
+      "/application-workloads/sap/sap-3-tier-user-image-md/azuredeploy.parameters.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT494",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "microsoft.resources/deployments",
+      "microsoft.network/networkinterfaces",
+      "microsoft.compute/availabilitysets"
+    ]
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT494",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "sapSystemId": {
+        "type": "string",
+        "maxLength": 3,
+        "minLength": 3,
+        "metadata": {
+          "description": "SAP System ID."
+        },
+        "value": "DEV"
+      },
+      "stackType": {
+        "type": "string",
+        "allowedValues": [
+          "ABAP",
+          "JAVA",
+          "ABAP+JAVA"
+        ],
+        "defaultValue": "ABAP",
+        "metadata": {
+          "description": "The stack type of the SAP system."
+        }
+      },
+      "osType": {
+        "type": "string",
+        "allowedValues": [
+          "Windows",
+          "Linux"
+        ],
+        "metadata": {
+          "description": "The operating system type of the private OS image."
+        },
+        "value": "Linux"
+      },
+      "dbType": {
+        "type": "string",
+        "allowedValues": [
+          "SQL",
+          "HANA"
+        ],
+        "defaultValue": "SQL",
+        "metadata": {
+          "description": "The database type you want to use on the cluster. This information is used to create the load balancer"
+        }
+      },
+      "sapSystemSize": {
+        "type": "string",
+        "allowedValues": [
+          "Demo",
+          "Small < 30.000 SAPS",
+          "Medium < 70.000 SAPS",
+          "Large < 180.000 SAPS",
+          "X-Large < 250.000 SAPS"
+        ],
+        "defaultValue": "Small < 30.000 SAPS",
+        "metadata": {
+          "description": "The size of the SAP System you want to deploy."
+        },
+        "value": "Demo"
+      },
+      "systemAvailability": {
+        "type": "string",
+        "allowedValues": [
+          "HA",
+          "Not HA"
+        ],
+        "defaultValue": "Not HA",
+        "metadata": {
+          "description": "Determines whether this is a high available deployment or not. A HA deployment contains multiple instances of single point of failures."
+        },
+        "value": "HA"
+      },
+      "userImageId": {
+        "type": "string",
+        "metadata": {
+          "description": "Id of the user image."
+        },
+        "value": "<linux private managed image id>"
+      },
+      "adminUsername": {
+        "type": "string",
+        "metadata": {
+          "description": "Username for the Virtual Machine."
+        },
+        "value": "GEN-UNIQUE"
+      },
+      "adminPassword": {
+        "type": "securestring",
+        "metadata": {
+          "description": "Password for the Virtual Machine."
+        },
+        "value": "GEN-PASSWORD"
+      },
+      "subnetId": {
+        "type": "string",
+        "defaultValue": "",
+        "metadata": {
+          "description": "The id of the subnet you want to use."
+        }
+      },
+      "_artifactsLocation": {
+        "type": "string",
+        "metadata": {
+          "description": "The base URI where artifacts required by this template are located. When the template is deployed using the accompanying scripts, a private location in the subscription will be used and this value will be automatically generated."
+        },
+        "defaultValue": "https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/application-workloads/sap/sap-3-tier-user-image-md/"
+      },
+      "_artifactsLocationSasToken": {
+        "type": "securestring",
+        "metadata": {
+          "description": "The sasToken required to access _artifactsLocation.  When the template is deployed using the accompanying scripts, a sasToken will be automatically generated."
+        },
+        "defaultValue": ""
+      },
+      "location": {
+        "type": "string",
+        "defaultValue": "[resourceGroup().location]",
+        "metadata": {
+          "description": "Location for all resources."
+        }
+      }
+    },
+    "variables": {
+      "internalOSType": "Linux",
+      "csExtension": {
+        "Windows": {
+          "script": "https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/application-workloads/sap/sap-3-tier-user-image-md//shared/configureSAPVM.ps1 parameters('_artifactsLocationSasToken')",
+          "scriptCall": "powershell.exe -ExecutionPolicy bypass -File .\\shared\\configureSAPVM.ps1"
+        },
+        "Linux": {
+          "script": "https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/application-workloads/sap/sap-3-tier-user-image-md//shared/configureSAPVM.sh parameters('_artifactsLocationSasToken')",
+          "scriptCall": "sh configureSAPVM.sh"
+        }
+      },
+      "vmSizes": {
+        "Demo": {
+          "Not HA": {
+            "dbserversize": "Standard_D4s_v3",
+            "dbservercount": 1,
+            "dbserverdisks": [
+              {
+                "size": 128
+              }
+            ],
+            "ascsserversize": "Standard_D2s_v3",
+            "ascsservercount": 1,
+            "diserversize": "Standard_D2s_v3",
+            "diservercount": 1
+          },
+          "HA": {
+            "dbserversize": "Standard_D4s_v3",
+            "dbservercount": 2,
+            "dbserverdisks": [
+              {
+                "size": 128
+              }
+            ],
+            "ascsserversize": "Standard_D2s_v3",
+            "ascsservercount": 2,
+            "diserversize": "Standard_D2s_v3",
+            "diservercount": 2
+          }
+        },
+        "Small < 30.000 SAPS": {
+          "Not HA": {
+            "dbserversize": "Standard_D8s_v3",
+            "dbservercount": 1,
+            "dbserverdisks": [
+              {
+                "size": 512
+              },
+              {
+                "size": 512
+              },
+              {
+                "size": 512
+              },
+              {
+                "size": 512
+              },
+              {
+                "size": 512
+              }
+            ],
+            "ascsserversize": "Standard_D4s_v3",
+            "ascsservercount": 1,
+            "diserversize": "Standard_D8s_v3",
+            "diservercount": 1
+          },
+          "HA": {
+            "dbserversize": "Standard_D8s_v3",
+            "dbservercount": 2,
+            "dbserverdisks": [
+              {
+                "size": 512
+              },
+              {
+                "size": 512
+              },
+              {
+                "size": 512
+              },
+              {
+                "size": 512
+              },
+              {
+                "size": 512
+              }
+            ],
+            "ascsserversize": "Standard_D4s_v3",
+            "ascsservercount": 2,
+            "diserversize": "Standard_D8s_v3",
+            "diservercount": 2
+          }
+        },
+        "Medium < 70.000 SAPS": {
+          "Not HA": {
+            "dbserversize": "Standard_D16s_v3",
+            "dbservercount": 1,
+            "dbserverdisks": [
+              {
+                "size": 512
+              },
+              {
+                "size": 512
+              },
+              {
+                "size": 512
+              },
+              {
+                "size": 512
+              },
+              {
+                "size": 512
+              },
+              {
+                "size": 512
+              },
+              {
+                "size": 512
+              }
+            ],
+            "ascsserversize": "Standard_D4s_v3",
+            "ascsservercount": 1,
+            "diserversize": "Standard_D8s_v3",
+            "diservercount": 4
+          },
+          "HA": {
+            "dbserversize": "Standard_D16s_v3",
+            "dbservercount": 2,
+            "dbserverdisks": [
+              {
+                "size": 512
+              },
+              {
+                "size": 512
+              },
+              {
+                "size": 512
+              },
+              {
+                "size": 512
+              },
+              {
+                "size": 512
+              },
+              {
+                "size": 512
+              },
+              {
+                "size": 512
+              }
+            ],
+            "ascsserversize": "Standard_D4s_v3",
+            "ascsservercount": 2,
+            "diserversize": "Standard_D8s_v3",
+            "diservercount": 4
+          }
+        },
+        "Large < 180.000 SAPS": {
+          "Not HA": {
+            "dbserversize": "Standard_GS4",
+            "dbservercount": 1,
+            "dbserverdisks": [
+              {
+                "size": 1023
+              },
+              {
+                "size": 1023
+              },
+              {
+                "size": 1023
+              },
+              {
+                "size": 1023
+              },
+              {
+                "size": 1023
+              },
+              {
+                "size": 512
+              }
+            ],
+            "ascsserversize": "Standard_D4s_v3",
+            "ascsservercount": 1,
+            "diserversize": "Standard_D16s_v3",
+            "diservercount": 6
+          },
+          "HA": {
+            "dbserversize": "Standard_GS4",
+            "dbservercount": 2,
+            "dbserverdisks": [
+              {
+                "size": 1023
+              },
+              {
+                "size": 1023
+              },
+              {
+                "size": 1023
+              },
+              {
+                "size": 1023
+              },
+              {
+                "size": 1023
+              },
+              {
+                "size": 512
+              }
+            ],
+            "ascsserversize": "Standard_D4s_v3",
+            "ascsservercount": 2,
+            "diserversize": "Standard_D16s_v3",
+            "diservercount": 6
+          }
+        },
+        "X-Large < 250.000 SAPS": {
+          "Not HA": {
+            "dbserversize": "Standard_GS5",
+            "dbservercount": 1,
+            "dbserverdisks": [
+              {
+                "size": 1023
+              },
+              {
+                "size": 1023
+              },
+              {
+                "size": 1023
+              },
+              {
+                "size": 1023
+              },
+              {
+                "size": 1023
+              },
+              {
+                "size": 1023
+              },
+              {
+                "size": 1023
+              }
+            ],
+            "ascsserversize": "Standard_D4s_v3",
+            "ascsservercount": 1,
+            "diserversize": "Standard_D16s_v3",
+            "diservercount": 10
+          },
+          "HA": {
+            "dbserversize": "Standard_GS5",
+            "dbservercount": 2,
+            "dbserverdisks": [
+              {
+                "size": 1023
+              },
+              {
+                "size": 1023
+              },
+              {
+                "size": 1023
+              },
+              {
+                "size": 1023
+              },
+              {
+                "size": 1023
+              },
+              {
+                "size": 1023
+              },
+              {
+                "size": 1023
+              }
+            ],
+            "ascsserversize": "Standard_D4s_v3",
+            "ascsservercount": 2,
+            "diserversize": "Standard_D16s_v3",
+            "diservercount": 10
+          }
+        }
+      },
+      "dbvmCount": "(vmSizes)[parameters(sapSystemSize)][parameters(systemAvailability)].dbservercount",
+      "dbvmDataDisks": "(vmSizes)[parameters(sapSystemSize)][parameters(systemAvailability)].dbserverdisks",
+      "ascsvmCount": "(vmSizes)[parameters(sapSystemSize)][parameters(systemAvailability)].ascsservercount",
+      "divmCount": "(vmSizes)[parameters(sapSystemSize)][parameters(systemAvailability)].diservercount",
+      "sidlower": "[toLower(parameters('sapSystemId'))]",
+      "vmName": "[toLower(parameters('sapSystemId'))]",
+      "vnetName": "[toLower(parameters('sapSystemId'))]-vnet",
+      "subnetName": "Subnet",
+      "subnets": {
+        "true": "Microsoft.Network/virtualNetworks/subnets/[toLower(parameters('sapSystemId'))]-vnet/Subnet",
+        "false": ""
+      },
+      "selectedSubnetId": "(subnets)[string(equals(length(parameters(subnetId)), 0))]",
+      "nestedDeploymentName": "nestedTemplate",
+      "nestedDeploymentNameVNet": "nestedTemplatevnet",
+      "nestedDeploymentNamePIP": "nestedTemplatepip",
+      "nestedDeploymentNameASCS": "nestedTemplateascs",
+      "nestedDeploymentNameDB": "nestedTemplatedb",
+      "nestedDeploymentNameDI": "nestedTemplatedi",
+      "nestedDeploymentNameProf": "nestedTemplateprof",
+      "nestedDeploymentNameNIC": "nestedTemplatenic",
+      "nestedDeploymentNameNICASCS": "nestedTemplatenicascs",
+      "nestedDeploymentNameNICDB": "nestedTemplatenicdb",
+      "nestedDeploymentNameNICDI": "nestedTemplatenicdi",
+      "nestedDeploymentNameLBASCS": "nestedTemplatelbascs",
+      "nestedDeploymentNameLBDB": "nestedTemplatelbdb",
+      "publicIpNameASCS": "[toLower(parameters('sapSystemId'))]-pip-ascs",
+      "avSetNameASCS": "[toLower(parameters('sapSystemId'))]-avset-ascs",
+      "nestedDeploymentNameNSG": "nestedTemplateascsnsg",
+      "nsgName": "[toLower(parameters('sapSystemId'))]-nsg",
+      "loadBalancerNameASCS": "[toLower(parameters('sapSystemId'))]-lb-ascs",
+      "vmNameASCS": "[toLower(parameters('sapSystemId'))]-ascs",
+      "nicNameASCS": "[toLower(parameters('sapSystemId'))]-nic-ascs",
+      "avSetNameDB": "[toLower(parameters('sapSystemId'))]-avset-db",
+      "loadBalancerNameDB": "[toLower(parameters('sapSystemId'))]-lb-db",
+      "nicNameDB": "[toLower(parameters('sapSystemId'))]-nic-db",
+      "vmNameDB": "[toLower(parameters('sapSystemId'))]-db",
+      "avSetNameDI": "[toLower(parameters('sapSystemId'))]-avset-di",
+      "nicNameDI": "[toLower(parameters('sapSystemId'))]-nic-di",
+      "vmNameDI": "[toLower(parameters('sapSystemId'))]-di",
+      "osDiskType": "userImage"
+    },
+    "resources": [
+      {
+        "apiVersion": "2017-05-10",
+        "name": "nestedTemplateascsnsg",
+        "type": "Microsoft.Resources/deployments",
+        "condition": false,
+        "properties": {
+          "mode": "Incremental",
+          "templateLink": {
+            "uri": "https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/application-workloads/sap/sap-3-tier-user-image-md//shared/newnsg.json parameters('_artifactsLocationSasToken')",
+            "contentVersion": "1.0.0.0"
+          },
+          "parameters": {
+            "nsgName": {
+              "value": "[toLower(parameters('sapSystemId'))]-nsg"
+            },
+            "osType": {
+              "value": "Linux"
+            }
+          }
+        }
+      },
+      {
+        "apiVersion": "2017-05-10",
+        "name": "nestedDeploymentNameVnet",
+        "type": "Microsoft.Resources/deployments",
+        "condition": false,
+        "dependsOn": [
+          "Microsoft.Resources/deployments/nestedTemplateascsnsg"
+        ],
+        "properties": {
+          "mode": "Incremental",
+          "templateLink": {
+            "uri": "https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/application-workloads/sap/sap-3-tier-user-image-md//shared/newvnetnsg.json parameters('_artifactsLocationSasToken')",
+            "contentVersion": "1.0.0.0"
+          },
+          "parameters": {
+            "vnetName": {
+              "value": "[toLower(parameters('sapSystemId'))]-vnet"
+            },
+            "addressPrefix": {
+              "value": "10.0.0.0/16"
+            },
+            "subnetName": {
+              "value": "Subnet"
+            },
+            "subnetPrefix": {
+              "value": "10.0.0.0/24"
+            },
+            "nsgName": {
+              "value": "[toLower(parameters('sapSystemId'))]-nsg"
+            }
+          }
+        }
+      },
+      {
+        "type": "Microsoft.Compute/availabilitySets",
+        "name": "[toLower(parameters('sapSystemId'))]-avset-ascs",
+        "apiVersion": "2016-04-30-preview",
+        "location": "[resourceGroup().location]",
+        "sku": {
+          "name": "Aligned"
+        },
+        "properties": {
+          "platformFaultDomainCount": 3,
+          "platformUpdateDomainCount": 20
+        }
+      },
+      {
+        "apiVersion": "2017-05-10",
+        "name": "nestedTemplatepip-copyIndex()",
+        "type": "Microsoft.Resources/deployments",
+        "copy": {
+          "name": "pipASCSloop",
+          "count": "(vmSizes)[parameters(sapSystemSize)][parameters(systemAvailability)].ascsservercount"
+        },
+        "condition": false,
+        "properties": {
+          "mode": "Incremental",
+          "templateLink": {
+            "uri": "https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/application-workloads/sap/sap-3-tier-user-image-md//shared/newpip.json parameters('_artifactsLocationSasToken')",
+            "contentVersion": "1.0.0.0"
+          },
+          "parameters": {
+            "publicIpName": {
+              "value": "[toLower(parameters('sapSystemId'))]-pip-ascs-copyIndex()"
+            },
+            "publicIPAddressType": {
+              "value": "Dynamic"
+            }
+          }
+        }
+      },
+      {
+        "apiVersion": "2017-05-10",
+        "name": "nestedTemplatelbascs",
+        "type": "Microsoft.Resources/deployments",
+        "dependsOn": [
+          "Microsoft.Resources/deployments/nestedDeploymentNameVnet"
+        ],
+        "properties": {
+          "mode": "Incremental",
+          "templateLink": {
+            "uri": "https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/application-workloads/sap/sap-3-tier-user-image-md//shared/loadbalancer.json parameters('_artifactsLocationSasToken')",
+            "contentVersion": "1.0.0.0"
+          },
+          "parameters": {
+            "loadBalancerName": {
+              "value": "[toLower(parameters('sapSystemId'))]-lb-ascs"
+            },
+            "sapSystemCount": {
+              "value": 1
+            },
+            "stackType": {
+              "value": "ABAP"
+            },
+            "osType": {
+              "value": "Linux"
+            },
+            "createXSCS": {
+              "value": true
+            },
+            "createDB": {
+              "value": false
+            },
+            "subnetId": {
+              "value": "(subnets)[string(equals(length(parameters(subnetId)), 0))]"
+            },
+            "_artifactsLocation": {
+              "value": "https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/application-workloads/sap/sap-3-tier-user-image-md/"
+            },
+            "_artifactsLocationSasToken": {
+              "value": ""
+            }
+          }
+        }
+      },
+      {
+        "apiVersion": "2017-05-10",
+        "name": "nestedTemplatenicascs-copyIndex()",
+        "type": "Microsoft.Resources/deployments",
+        "copy": {
+          "name": "nicConfigASCSloop",
+          "count": "(vmSizes)[parameters(sapSystemSize)][parameters(systemAvailability)].ascsservercount"
+        },
+        "properties": {
+          "mode": "Incremental",
+          "templateLink": {
+            "uri": "https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/application-workloads/sap/sap-3-tier-user-image-md//shared/nic-config.json parameters('_artifactsLocationSasToken')",
+            "contentVersion": "1.0.0.0"
+          },
+          "parameters": {
+            "vnetName": {
+              "value": "[toLower(parameters('sapSystemId'))]-vnet"
+            },
+            "subnetName": {
+              "value": "Subnet"
+            },
+            "publicIpName": {
+              "value": "[toLower(parameters('sapSystemId'))]-pip-ascs-copyIndex()"
+            },
+            "subnetId": {
+              "value": ""
+            }
+          }
+        }
+      },
+      {
+        "type": "Microsoft.Network/networkInterfaces",
+        "name": "[toLower(parameters('sapSystemId'))]-nic-ascs-copyIndex()",
+        "apiVersion": "2017-06-01",
+        "copy": {
+          "name": "nicASCSLoop",
+          "count": "(vmSizes)[parameters(sapSystemSize)][parameters(systemAvailability)].ascsservercount"
+        },
+        "dependsOn": [
+          "pipASCSloop",
+          "nicConfigASCSloop",
+          "Microsoft.Resources/deployments/nestedDeploymentNameVnet",
+          "Microsoft.Resources/deployments/nestedTemplatelbascs"
+        ],
+        "location": "[resourceGroup().location]",
+        "properties": {
+          "ipConfigurations": [
+            {
+              "name": "ipconfig1",
+              "properties": {
+                "privateIPAllocationMethod": "Dynamic",
+                "publicIPAddress": "[reference(concat(variables('nestedDeploymentNameNICASCS'), '-', copyIndex())).outputs.selectedConfiguration.value.publicIPAddress]",
+                "subnet": "[reference(concat(variables('nestedDeploymentNameNICASCS'), '-', copyIndex())).outputs.selectedConfiguration.value.subnet]",
+                "loadBalancerBackendAddressPools": "[reference(variables('nestedDeploymentNameLBASCS')).outputs.nicBackAddressPools.value]"
+              }
+            }
+          ]
+        }
+      },
+      {
+        "apiVersion": "2017-05-10",
+        "name": "nestedTemplateprof-ascs-copyIndex()",
+        "type": "Microsoft.Resources/deployments",
+        "copy": {
+          "name": "osDiskPartsASCSloop",
+          "count": "(vmSizes)[parameters(sapSystemSize)][parameters(systemAvailability)].ascsservercount"
+        },
+        "properties": {
+          "mode": "Incremental",
+          "templateLink": {
+            "uri": "https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/application-workloads/sap/sap-3-tier-user-image-md//shared/os-disk-parts-md.json parameters('_artifactsLocationSasToken')",
+            "contentVersion": "1.0.0.0"
+          },
+          "parameters": {
+            "imageSku": {
+              "value": ""
+            },
+            "imagePublisher": {
+              "value": ""
+            },
+            "imageOffer": {
+              "value": ""
+            },
+            "imageVersion": {
+              "value": ""
+            },
+            "osDiskType": {
+              "value": "userImage"
+            },
+            "osType": {
+              "value": "Linux"
+            },
+            "vmName": {
+              "value": "[toLower(parameters('sapSystemId'))]-ascs-copyIndex()"
+            },
+            "storageType": {
+              "value": "Premium_LRS"
+            },
+            "managedDiskId": {
+              "value": "<linux private managed image id>"
+            }
+          }
+        }
+      },
+      {
+        "apiVersion": "2017-05-10",
+        "name": "nestedTemplateascs-copyIndex()",
+        "type": "Microsoft.Resources/deployments",
+        "copy": {
+          "name": "serverASCSloop",
+          "count": "(vmSizes)[parameters(sapSystemSize)][parameters(systemAvailability)].ascsservercount"
+        },
+        "dependsOn": [
+          "nicASCSLoop",
+          "Microsoft.Compute/availabilitySets/[toLower(parameters('sapSystemId'))]-avset-ascs",
+          "osDiskPartsASCSloop"
+        ],
+        "properties": {
+          "mode": "Incremental",
+          "templateLink": {
+            "uri": "https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/application-workloads/sap/sap-3-tier-user-image-md//shared/server-md.json parameters('_artifactsLocationSasToken')",
+            "contentVersion": "1.0.0.0"
+          },
+          "parameters": {
+            "imageReference": {
+              "value": "[reference(concat(variables('nestedDeploymentNameProf'), '-ascs-', copyIndex())).outputs.imageReference.value]"
+            },
+            "osDisk": {
+              "value": "[reference(concat(variables('nestedDeploymentNameProf'), '-ascs-', copyIndex())).outputs.osDisk.value]"
+            },
+            "osDiskType": {
+              "value": "userImage"
+            },
+            "vmName": {
+              "value": "[toLower(parameters('sapSystemId'))]-ascs-copyIndex()"
+            },
+            "vmSize": {
+              "value": "(vmSizes)[parameters(sapSystemSize)][parameters(systemAvailability)].ascsserversize"
+            },
+            "adminUsername": {
+              "value": "GEN-UNIQUE"
+            },
+            "adminPassword": {
+              "value": "GEN-PASSWORD"
+            },
+            "csExtensionScript": {
+              "value": "(csExtension)[variables(internalOSType)].script"
+            },
+            "csExtensionscriptCall": {
+              "value": "(csExtension)[variables(internalOSType)].scriptCall"
+            },
+            "csExtensionscriptArgs": {
+              "value": ""
+            },
+            "avSetObj": {
+              "value": {
+                "id": "Microsoft.Compute/availabilitySets/[toLower(parameters('sapSystemId'))]-avset-ascs"
+              }
+            },
+            "useAVSet": {
+              "value": true
+            },
+            "nicName": {
+              "value": "[toLower(parameters('sapSystemId'))]-nic-ascs-copyIndex()"
+            },
+            "dataDisksObj": {
+              "value": {
+                "dataDisks": [
+                  {
+                    "lun": 0,
+                    "createOption": "Empty",
+                    "diskSizeGB": 128
+                  }
+                ]
+              }
+            },
+            "osType": {
+              "value": "Linux"
+            }
+          }
+        }
+      },
+      {
+        "type": "Microsoft.Compute/availabilitySets",
+        "name": "[toLower(parameters('sapSystemId'))]-avset-db",
+        "apiVersion": "2016-04-30-preview",
+        "location": "[resourceGroup().location]",
+        "sku": {
+          "name": "Aligned"
+        },
+        "properties": {
+          "platformFaultDomainCount": 3,
+          "platformUpdateDomainCount": 20
+        }
+      },
+      {
+        "apiVersion": "2017-05-10",
+        "name": "nestedTemplatelbdb",
+        "type": "Microsoft.Resources/deployments",
+        "dependsOn": [
+          "Microsoft.Resources/deployments/nestedDeploymentNameVnet"
+        ],
+        "properties": {
+          "mode": "Incremental",
+          "templateLink": {
+            "uri": "https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/application-workloads/sap/sap-3-tier-user-image-md//shared/loadbalancer.json parameters('_artifactsLocationSasToken')",
+            "contentVersion": "1.0.0.0"
+          },
+          "parameters": {
+            "loadBalancerName": {
+              "value": "[toLower(parameters('sapSystemId'))]-lb-db"
+            },
+            "sapSystemCount": {
+              "value": 1
+            },
+            "stackType": {
+              "value": "ABAP"
+            },
+            "osType": {
+              "value": "Linux"
+            },
+            "createXSCS": {
+              "value": false
+            },
+            "createDB": {
+              "value": true
+            },
+            "dbType": {
+              "value": "SQL"
+            },
+            "subnetId": {
+              "value": "(subnets)[string(equals(length(parameters(subnetId)), 0))]"
+            },
+            "_artifactsLocation": {
+              "value": "https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/application-workloads/sap/sap-3-tier-user-image-md/"
+            },
+            "_artifactsLocationSasToken": {
+              "value": ""
+            }
+          }
+        }
+      },
+      {
+        "apiVersion": "2017-05-10",
+        "name": "nestedTemplatenicdb-copyIndex()",
+        "type": "Microsoft.Resources/deployments",
+        "copy": {
+          "name": "nicConfigDBloop",
+          "count": "(vmSizes)[parameters(sapSystemSize)][parameters(systemAvailability)].dbservercount"
+        },
+        "properties": {
+          "mode": "Incremental",
+          "templateLink": {
+            "uri": "https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/application-workloads/sap/sap-3-tier-user-image-md//shared/nic-config.json parameters('_artifactsLocationSasToken')",
+            "contentVersion": "1.0.0.0"
+          },
+          "parameters": {
+            "vnetName": {
+              "value": "[toLower(parameters('sapSystemId'))]-vnet"
+            },
+            "subnetName": {
+              "value": "Subnet"
+            },
+            "publicIpName": {
+              "value": ""
+            },
+            "subnetId": {
+              "value": ""
+            }
+          }
+        }
+      },
+      {
+        "type": "Microsoft.Network/networkInterfaces",
+        "name": "[toLower(parameters('sapSystemId'))]-nic-db-copyIndex()",
+        "apiVersion": "2017-06-01",
+        "copy": {
+          "name": "nicDBloop",
+          "count": "(vmSizes)[parameters(sapSystemSize)][parameters(systemAvailability)].dbservercount"
+        },
+        "dependsOn": [
+          "Microsoft.Resources/deployments/nestedDeploymentNameVnet",
+          "Microsoft.Resources/deployments/nestedTemplatelbdb",
+          "nicConfigDBloop"
+        ],
+        "location": "[resourceGroup().location]",
+        "properties": {
+          "ipConfigurations": [
+            {
+              "name": "ipconfig1",
+              "properties": {
+                "privateIPAllocationMethod": "Dynamic",
+                "subnet": "[reference(concat(variables('nestedDeploymentNameNICDB'), '-', copyIndex())).outputs.selectedConfiguration.value.subnet]",
+                "loadBalancerBackendAddressPools": "[reference(variables('nestedDeploymentNameLBDB')).outputs.nicBackAddressPools.value]"
+              }
+            }
+          ]
+        }
+      },
+      {
+        "apiVersion": "2017-05-10",
+        "name": "nestedTemplateprof-db-copyIndex()",
+        "type": "Microsoft.Resources/deployments",
+        "copy": {
+          "name": "osDiskPartsDBloop",
+          "count": "(vmSizes)[parameters(sapSystemSize)][parameters(systemAvailability)].dbservercount"
+        },
+        "properties": {
+          "mode": "Incremental",
+          "templateLink": {
+            "uri": "https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/application-workloads/sap/sap-3-tier-user-image-md//shared/os-disk-parts-md.json parameters('_artifactsLocationSasToken')",
+            "contentVersion": "1.0.0.0"
+          },
+          "parameters": {
+            "imageSku": {
+              "value": ""
+            },
+            "imagePublisher": {
+              "value": ""
+            },
+            "imageOffer": {
+              "value": ""
+            },
+            "imageVersion": {
+              "value": ""
+            },
+            "osDiskType": {
+              "value": "userImage"
+            },
+            "osType": {
+              "value": "Linux"
+            },
+            "sidlower": {
+              "value": "[toLower(parameters('sapSystemId'))]"
+            },
+            "vmName": {
+              "value": "[toLower(parameters('sapSystemId'))]-db-copyIndex()"
+            },
+            "storageType": {
+              "value": "Premium_LRS"
+            },
+            "managedDiskId": {
+              "value": "<linux private managed image id>"
+            }
+          }
+        }
+      },
+      {
+        "apiVersion": "2017-05-10",
+        "name": "nestedTemplatedb-copyIndex()",
+        "copy": {
+          "name": "serverDBloop",
+          "count": "(vmSizes)[parameters(sapSystemSize)][parameters(systemAvailability)].dbservercount"
+        },
+        "type": "Microsoft.Resources/deployments",
+        "dependsOn": [
+          "nicDBloop",
+          "Microsoft.Compute/availabilitySets/[toLower(parameters('sapSystemId'))]-avset-db",
+          "osDiskPartsDBloop"
+        ],
+        "properties": {
+          "mode": "Incremental",
+          "templateLink": {
+            "uri": "https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/application-workloads/sap/sap-3-tier-user-image-md//shared/server-md.json parameters('_artifactsLocationSasToken')",
+            "contentVersion": "1.0.0.0"
+          },
+          "parameters": {
+            "imageReference": {
+              "value": "[reference(concat(variables('nestedDeploymentNameProf'), '-db-', copyIndex())).outputs.imageReference.value]"
+            },
+            "osDisk": {
+              "value": "[reference(concat(variables('nestedDeploymentNameProf'), '-db-', copyIndex())).outputs.osDisk.value]"
+            },
+            "osDiskType": {
+              "value": "userImage"
+            },
+            "vmName": {
+              "value": "[toLower(parameters('sapSystemId'))]-db-copyIndex()"
+            },
+            "vmSize": {
+              "value": "(vmSizes)[parameters(sapSystemSize)][parameters(systemAvailability)].dbserversize"
+            },
+            "adminUsername": {
+              "value": "GEN-UNIQUE"
+            },
+            "adminPassword": {
+              "value": "GEN-PASSWORD"
+            },
+            "csExtensionScript": {
+              "value": "(csExtension)[variables(internalOSType)].script"
+            },
+            "csExtensionscriptCall": {
+              "value": "(csExtension)[variables(internalOSType)].scriptCall"
+            },
+            "csExtensionscriptArgs": {
+              "value": ""
+            },
+            "avSetObj": {
+              "value": {
+                "id": "Microsoft.Compute/availabilitySets/[toLower(parameters('sapSystemId'))]-avset-db"
+              }
+            },
+            "useAVSet": {
+              "value": true
+            },
+            "nicName": {
+              "value": "[toLower(parameters('sapSystemId'))]-nic-db-copyIndex()"
+            },
+            "dataDisksObj": {
+              "value": {
+                "copy": [
+                  {
+                    "name": "dataDisks",
+                    "count": 26,
+                    "input": {
+                      "lun": "[copyIndex('dataDisks')]",
+                      "createOption": "Empty",
+                      "diskSizeGB": "(dbvmDataDisks)[copyIndex(dataDisks)].size"
+                    }
+                  }
+                ]
+              }
+            },
+            "osType": {
+              "value": "Linux"
+            }
+          }
+        }
+      },
+      {
+        "type": "Microsoft.Compute/availabilitySets",
+        "name": "[toLower(parameters('sapSystemId'))]-avset-di",
+        "apiVersion": "2016-04-30-preview",
+        "location": "[resourceGroup().location]",
+        "sku": {
+          "name": "Aligned"
+        },
+        "properties": {
+          "platformFaultDomainCount": 3,
+          "platformUpdateDomainCount": 20
+        }
+      },
+      {
+        "apiVersion": "2017-05-10",
+        "name": "nestedTemplatenicdi-copyIndex()",
+        "type": "Microsoft.Resources/deployments",
+        "copy": {
+          "name": "nicConfigDIloop",
+          "count": "(vmSizes)[parameters(sapSystemSize)][parameters(systemAvailability)].diservercount"
+        },
+        "properties": {
+          "mode": "Incremental",
+          "templateLink": {
+            "uri": "https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/application-workloads/sap/sap-3-tier-user-image-md//shared/nic-config.json parameters('_artifactsLocationSasToken')",
+            "contentVersion": "1.0.0.0"
+          },
+          "parameters": {
+            "vnetName": {
+              "value": "[toLower(parameters('sapSystemId'))]-vnet"
+            },
+            "subnetName": {
+              "value": "Subnet"
+            },
+            "publicIpName": {
+              "value": ""
+            },
+            "subnetId": {
+              "value": ""
+            }
+          }
+        }
+      },
+      {
+        "type": "Microsoft.Network/networkInterfaces",
+        "name": "[toLower(parameters('sapSystemId'))]-nic-di-copyindex()",
+        "apiVersion": "2017-06-01",
+        "dependsOn": [
+          "Microsoft.Resources/deployments/nestedDeploymentNameVnet",
+          "nicConfigDIloop"
+        ],
+        "copy": {
+          "name": "nicDIloop",
+          "count": "(vmSizes)[parameters(sapSystemSize)][parameters(systemAvailability)].diservercount"
+        },
+        "location": "[resourceGroup().location]",
+        "properties": {
+          "ipConfigurations": [
+            {
+              "name": "ipconfig1",
+              "properties": {
+                "privateIPAllocationMethod": "Dynamic",
+                "subnet": "[reference(concat(variables('nestedDeploymentNameNICDI'), '-', copyIndex())).outputs.selectedConfiguration.value.subnet]"
+              }
+            }
+          ]
+        }
+      },
+      {
+        "apiVersion": "2017-05-10",
+        "name": "nestedTemplateprof-di-copyIndex()",
+        "type": "Microsoft.Resources/deployments",
+        "copy": {
+          "name": "osDiskPartsDIloop",
+          "count": "(vmSizes)[parameters(sapSystemSize)][parameters(systemAvailability)].diservercount"
+        },
+        "properties": {
+          "mode": "Incremental",
+          "templateLink": {
+            "uri": "https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/application-workloads/sap/sap-3-tier-user-image-md//shared/os-disk-parts-md.json parameters('_artifactsLocationSasToken')",
+            "contentVersion": "1.0.0.0"
+          },
+          "parameters": {
+            "imageSku": {
+              "value": ""
+            },
+            "imagePublisher": {
+              "value": ""
+            },
+            "imageOffer": {
+              "value": ""
+            },
+            "imageVersion": {
+              "value": ""
+            },
+            "osDiskType": {
+              "value": "userImage"
+            },
+            "osType": {
+              "value": "Linux"
+            },
+            "sidlower": {
+              "value": "[toLower(parameters('sapSystemId'))]"
+            },
+            "vmName": {
+              "value": "[toLower(parameters('sapSystemId'))]-di-copyIndex()"
+            },
+            "storageType": {
+              "value": "Premium_LRS"
+            },
+            "managedDiskId": {
+              "value": "<linux private managed image id>"
+            }
+          }
+        }
+      },
+      {
+        "apiVersion": "2017-05-10",
+        "name": "nestedTemplatedi-copyIndex()",
+        "type": "Microsoft.Resources/deployments",
+        "copy": {
+          "name": "serverDIloop",
+          "count": "(vmSizes)[parameters(sapSystemSize)][parameters(systemAvailability)].diservercount"
+        },
+        "dependsOn": [
+          "nicDIloop",
+          "Microsoft.Compute/availabilitySets/[toLower(parameters('sapSystemId'))]-avset-di",
+          "osDiskPartsDIloop"
+        ],
+        "properties": {
+          "mode": "Incremental",
+          "templateLink": {
+            "uri": "https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/application-workloads/sap/sap-3-tier-user-image-md//shared/server-md.json parameters('_artifactsLocationSasToken')",
+            "contentVersion": "1.0.0.0"
+          },
+          "parameters": {
+            "imageReference": {
+              "value": "[reference(concat(variables('nestedDeploymentNameProf'), '-di-', copyIndex())).outputs.imageReference.value]"
+            },
+            "osDisk": {
+              "value": "[reference(concat(variables('nestedDeploymentNameProf'), '-di-', copyIndex())).outputs.osDisk.value]"
+            },
+            "osDiskType": {
+              "value": "userImage"
+            },
+            "vmName": {
+              "value": "[toLower(parameters('sapSystemId'))]-di-copyIndex()"
+            },
+            "vmSize": {
+              "value": "(vmSizes)[parameters(sapSystemSize)][parameters(systemAvailability)].diserversize"
+            },
+            "adminUsername": {
+              "value": "GEN-UNIQUE"
+            },
+            "adminPassword": {
+              "value": "GEN-PASSWORD"
+            },
+            "csExtensionScript": {
+              "value": "(csExtension)[variables(internalOSType)].script"
+            },
+            "csExtensionscriptCall": {
+              "value": "(csExtension)[variables(internalOSType)].scriptCall"
+            },
+            "csExtensionscriptArgs": {
+              "value": ""
+            },
+            "avSetObj": {
+              "value": {
+                "id": "Microsoft.Compute/availabilitySets/[toLower(parameters('sapSystemId'))]-avset-di"
+              }
+            },
+            "useAVSet": {
+              "value": true
+            },
+            "nicName": {
+              "value": "[toLower(parameters('sapSystemId'))]-nic-di-copyIndex()"
+            },
+            "dataDisksObj": {
+              "value": {
+                "dataDisks": [
+                  {
+                    "lun": 0,
+                    "createOption": "Empty",
+                    "diskSizeGB": 128
+                  }
+                ]
+              }
+            },
+            "osType": {
+              "value": "Linux"
+            }
+          }
+        }
+      }
+    ],
+    "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+  }
+}

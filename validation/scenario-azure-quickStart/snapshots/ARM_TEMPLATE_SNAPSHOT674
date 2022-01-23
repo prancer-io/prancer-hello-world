@@ -1,0 +1,241 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAzureQuickStart",
+  "paths": [
+    "/demos/create-hpc-cluster/headnode-rdma-enabled.json",
+    "/demos/create-hpc-cluster/azuredeploy.parameters.json"
+  ],
+  "timestamp": 1642962898905,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/demos/create-hpc-cluster/headnode-rdma-enabled.json",
+      "/demos/create-hpc-cluster/azuredeploy.parameters.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT674",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "microsoft.compute/virtualmachines"
+    ]
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT674",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "vmName": {
+        "type": "string",
+        "metadata": {
+          "description": "The VM name"
+        }
+      },
+      "vmSize": {
+        "type": "string",
+        "metadata": {
+          "description": "The VM role size"
+        }
+      },
+      "storageAccountType": {
+        "type": "string",
+        "defaultValue": "StandardSSD_LRS",
+        "allowedValues": [
+          "Standard_LRS",
+          "StandardSSD_LRS",
+          "Premium_LRS"
+        ],
+        "metadata": {
+          "description": "The storage account type for the disks of the VM"
+        }
+      },
+      "nicName": {
+        "type": "string",
+        "metadata": {
+          "description": "The network interface name"
+        }
+      },
+      "adminUsername": {
+        "type": "string",
+        "metadata": {
+          "description": "The user name of the administrator"
+        },
+        "value": "azureuser"
+      },
+      "adminPassword": {
+        "type": "securestring",
+        "metadata": {
+          "description": "The password of the administrator"
+        },
+        "value": "GEN-PASSWORD"
+      },
+      "availabilitySetName": {
+        "type": "string",
+        "defaultValue": "",
+        "metadata": {
+          "description": "The availability set name to join if specified"
+        }
+      },
+      "_artifactsLocation": {
+        "type": "string",
+        "metadata": {
+          "description": "The location of resources, such as templates and DSC modules, that the template depends on"
+        }
+      },
+      "_artifactsLocationSasToken": {
+        "type": "securestring",
+        "metadata": {
+          "description": "Auto-generated token to access _artifactsLocation"
+        }
+      },
+      "privateDomainName": {
+        "type": "string",
+        "metadata": {
+          "description": "The fully qualified domain name (FQDN) for the private domain forest which will be created by this template, for example 'hpc.local'."
+        },
+        "value": "hpc.local"
+      },
+      "location": {
+        "type": "string",
+        "metadata": {
+          "description": "Location for all resources."
+        }
+      },
+      "clusterName": {
+        "value": "GEN-UNIQUE-12"
+      },
+      "headNodeVMSize": {
+        "value": "Standard_D8_v3"
+      },
+      "computeNodeImage": {
+        "value": "ComputeNode"
+      },
+      "computeNodeNamePrefix": {
+        "value": "IaaSCN-"
+      },
+      "computeNodeNumber": {
+        "value": 2
+      },
+      "computeNodeVMSize": {
+        "value": "Standard_D4_v3"
+      }
+    },
+    "variables": {
+      "availabilitySet": {
+        "id": "Microsoft.Compute/availabilitySets/ parameters('availabilitySetName')"
+      }
+    },
+    "resources": [
+      {
+        "apiVersion": "2021-07-01",
+        "type": "Microsoft.Compute/virtualMachines",
+        "name": "vmName",
+        "location": "location",
+        "properties": {
+          "availabilitySet": "[if(empty(parameters('availabilitySetName')), json('null'), variables('availabilitySet'))]",
+          "hardwareProfile": {
+            "vmSize": "vmSize"
+          },
+          "osProfile": {
+            "computerName": "vmName",
+            "adminUsername": "azureuser",
+            "adminPassword": "GEN-PASSWORD"
+          },
+          "storageProfile": {
+            "imageReference": {
+              "publisher": "MicrosoftWindowsServerHPCPack",
+              "offer": "WindowsServerHPCPack",
+              "sku": "2012R2",
+              "version": "latest"
+            },
+            "osDisk": {
+              "name": "vmName-osdisk",
+              "caching": "ReadOnly",
+              "createOption": "FromImage",
+              "managedDisk": {
+                "storageAccountType": "StandardSSD_LRS"
+              }
+            },
+            "dataDisks": [
+              {
+                "name": "vmName-datadisk",
+                "caching": "None",
+                "createOption": "Empty",
+                "diskSizeGB": 500,
+                "managedDisk": {
+                  "storageAccountType": "StandardSSD_LRS"
+                },
+                "lun": 0
+              }
+            ]
+          },
+          "networkProfile": {
+            "networkInterfaces": [
+              {
+                "id": "Microsoft.Network/networkInterfaces/nicName"
+              }
+            ]
+          }
+        },
+        "resources": [
+          {
+            "apiVersion": "2021-07-01",
+            "type": "Microsoft.Compute/virtualMachines/extensions",
+            "name": "vmName/installRDMADriver",
+            "location": "location",
+            "dependsOn": [
+              "Microsoft.Compute/virtualMachines//vmName"
+            ],
+            "properties": {
+              "publisher": "Microsoft.HpcCompute",
+              "type": "HpcVmDrivers",
+              "typeHandlerVersion": "1.1",
+              "autoUpgradeMinorVersion": true
+            }
+          },
+          {
+            "apiVersion": "2021-07-01",
+            "type": "Microsoft.Compute/virtualMachines/extensions",
+            "name": "vmName/promoteDomainController",
+            "location": "location",
+            "dependsOn": [
+              "Microsoft.Compute/virtualMachines//vmName",
+              "Microsoft.Compute/virtualMachines/extensions/vmName/installRDMADriver"
+            ],
+            "properties": {
+              "publisher": "Microsoft.Powershell",
+              "type": "DSC",
+              "typeHandlerVersion": "2.26",
+              "autoUpgradeMinorVersion": true,
+              "settings": {
+                "configuration": {
+                  "url": "[uri(parameters('_artifactsLocation'), concat('CreateADPDC.ps1.zip', parameters('_artifactsLocationSasToken')))]",
+                  "script": "CreateADPDC.ps1",
+                  "function": "CreateADPDC"
+                },
+                "configurationArguments": {
+                  "DomainName": "hpc.local"
+                }
+              },
+              "protectedSettings": {
+                "configurationArguments": {
+                  "AdminCreds": {
+                    "UserName": "azureuser",
+                    "Password": "GEN-PASSWORD"
+                  }
+                }
+              }
+            }
+          }
+        ]
+      }
+    ],
+    "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+  }
+}

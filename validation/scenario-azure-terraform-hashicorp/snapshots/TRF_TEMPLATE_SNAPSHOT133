@@ -1,0 +1,99 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "main",
+  "contentType": "json",
+  "source": "gitConnectorAzureTerraHashicorp",
+  "paths": [
+    "/examples/virtual-machines/virtual_machine/managed-disks/attaching-external-disks/variables.tf",
+    "/examples/virtual-machines/virtual_machine/managed-disks/attaching-external-disks/1-dependencies.tf"
+  ],
+  "timestamp": 1642943280055,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "TRF_TEMPLATE_SNAPSHOT",
+    "type": "terraform",
+    "collection": "terraformtemplate",
+    "paths": [
+      "/examples/virtual-machines/virtual_machine/managed-disks/attaching-external-disks/variables.tf",
+      "/examples/virtual-machines/virtual_machine/managed-disks/attaching-external-disks/1-dependencies.tf"
+    ],
+    "snapshotId": "TRF_TEMPLATE_SNAPSHOT133",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "azurerm_subnet",
+      "azurerm_virtual_network",
+      "azurerm_resource_group",
+      "azurerm_network_interface"
+    ]
+  },
+  "snapshotId": "TRF_TEMPLATE_SNAPSHOT133",
+  "collection": "terraformtemplate",
+  "json": {
+    "provider": [
+      {
+        "azurerm": {
+          "features": [
+            {}
+          ]
+        }
+      }
+    ],
+    "resources": [
+      {
+        "type": "azurerm_resource_group",
+        "name": "example",
+        "properties": {
+          "name": "${var.prefix}-resources",
+          "location": "${var.location}",
+          "compiletime_identity": "azurerm_resource_group.example"
+        }
+      },
+      {
+        "type": "azurerm_virtual_network",
+        "name": "example",
+        "properties": {
+          "name": "${var.prefix}-network",
+          "address_space": [
+            "10.0.0.0/16"
+          ],
+          "location": "${azurerm_resource_group.example.location}",
+          "resource_group_name": "${azurerm_resource_group.example.name}",
+          "compiletime_identity": "azurerm_virtual_network.example"
+        }
+      },
+      {
+        "type": "azurerm_subnet",
+        "name": "example",
+        "properties": {
+          "name": "internal",
+          "resource_group_name": "${azurerm_resource_group.example.name}",
+          "virtual_network_name": "${azurerm_virtual_network.example.name}",
+          "address_prefixes": [
+            "10.0.2.0/24"
+          ],
+          "compiletime_identity": "azurerm_subnet.example"
+        }
+      },
+      {
+        "type": "azurerm_network_interface",
+        "name": "example",
+        "properties": {
+          "name": "${var.prefix}-nic",
+          "location": "${azurerm_resource_group.example.location}",
+          "resource_group_name": "${azurerm_resource_group.example.name}",
+          "ip_configuration": [
+            {
+              "name": "testconfiguration1",
+              "subnet_id": "${azurerm_subnet.example.id}",
+              "private_ip_address_allocation": "Dynamic"
+            }
+          ],
+          "compiletime_identity": "azurerm_network_interface.example"
+        }
+      }
+    ]
+  }
+}

@@ -1,0 +1,228 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "main",
+  "contentType": "json",
+  "source": "gitConnectorAwsTerraHashicorp",
+  "paths": [
+    "/examples/two-tier/outputs.tf",
+    "/examples/two-tier/terraform.template.tfvars",
+    "/examples/two-tier/variables.tf",
+    "/examples/two-tier/main.tf"
+  ],
+  "timestamp": 1642967657742,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "TRF_TEMPLATE_SNAPSHOT",
+    "type": "terraform",
+    "collection": "terraformtemplate",
+    "paths": [
+      "/examples/two-tier/outputs.tf",
+      "/examples/two-tier/terraform.template.tfvars",
+      "/examples/two-tier/variables.tf",
+      "/examples/two-tier/main.tf"
+    ],
+    "snapshotId": "TRF_TEMPLATE_SNAPSHOT37",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "aws_security_group",
+      "aws_vpc",
+      "aws_key_pair",
+      "aws_route",
+      "aws_subnet",
+      "aws_instance",
+      "aws_internet_gateway",
+      "aws_elb"
+    ]
+  },
+  "snapshotId": "TRF_TEMPLATE_SNAPSHOT37",
+  "collection": "terraformtemplate",
+  "json": {
+    "terraform": [
+      {
+        "required_version": ">= 0.12"
+      }
+    ],
+    "provider": [
+      {
+        "aws": {
+          "region": "${var.aws_region}"
+        }
+      }
+    ],
+    "resources": [
+      {
+        "type": "aws_vpc",
+        "name": "default",
+        "properties": {
+          "cidr_block": "10.0.0.0/16",
+          "compiletime_identity": "aws_vpc.default"
+        }
+      },
+      {
+        "type": "aws_internet_gateway",
+        "name": "default",
+        "properties": {
+          "vpc_id": "${aws_vpc.default.id}",
+          "compiletime_identity": "aws_internet_gateway.default"
+        }
+      },
+      {
+        "type": "aws_route",
+        "name": "internet_access",
+        "properties": {
+          "route_table_id": "${aws_vpc.default.main_route_table_id}",
+          "destination_cidr_block": "0.0.0.0/0",
+          "gateway_id": "${aws_internet_gateway.default.id}",
+          "compiletime_identity": "aws_route.internet_access"
+        }
+      },
+      {
+        "type": "aws_subnet",
+        "name": "default",
+        "properties": {
+          "vpc_id": "${aws_vpc.default.id}",
+          "cidr_block": "10.0.1.0/24",
+          "map_public_ip_on_launch": true,
+          "compiletime_identity": "aws_subnet.default"
+        }
+      },
+      {
+        "type": "aws_security_group",
+        "name": "elb",
+        "properties": {
+          "name": "terraform_example_elb",
+          "description": "Used in the terraform",
+          "vpc_id": "${aws_vpc.default.id}",
+          "ingress": [
+            {
+              "from_port": 80,
+              "to_port": 80,
+              "protocol": "tcp",
+              "cidr_blocks": [
+                "0.0.0.0/0"
+              ]
+            }
+          ],
+          "egress": [
+            {
+              "from_port": 0,
+              "to_port": 0,
+              "protocol": -1,
+              "cidr_blocks": [
+                "0.0.0.0/0"
+              ]
+            }
+          ],
+          "compiletime_identity": "aws_security_group.elb"
+        }
+      },
+      {
+        "type": "aws_security_group",
+        "name": "default",
+        "properties": {
+          "name": "terraform_example",
+          "description": "Used in the terraform",
+          "vpc_id": "${aws_vpc.default.id}",
+          "ingress": [
+            {
+              "from_port": 22,
+              "to_port": 22,
+              "protocol": "tcp",
+              "cidr_blocks": [
+                "0.0.0.0/0"
+              ]
+            },
+            {
+              "from_port": 80,
+              "to_port": 80,
+              "protocol": "tcp",
+              "cidr_blocks": [
+                "10.0.0.0/16"
+              ]
+            }
+          ],
+          "egress": [
+            {
+              "from_port": 0,
+              "to_port": 0,
+              "protocol": -1,
+              "cidr_blocks": [
+                "0.0.0.0/0"
+              ]
+            }
+          ],
+          "compiletime_identity": "aws_security_group.default"
+        }
+      },
+      {
+        "type": "aws_elb",
+        "name": "web",
+        "properties": {
+          "name": "terraform-example-elb",
+          "subnets": [
+            "${aws_subnet.default.id}"
+          ],
+          "security_groups": [
+            "${aws_security_group.elb.id}"
+          ],
+          "instances": [
+            "${aws_instance.web.id}"
+          ],
+          "listener": [
+            {
+              "instance_port": 80,
+              "instance_protocol": "http",
+              "lb_port": 80,
+              "lb_protocol": "http"
+            }
+          ],
+          "compiletime_identity": "aws_elb.web"
+        }
+      },
+      {
+        "type": "aws_key_pair",
+        "name": "auth",
+        "properties": {
+          "key_name": "terraform-provider-aws-example",
+          "public_key": "${file(var.public_key_path)}",
+          "compiletime_identity": "aws_key_pair.auth"
+        }
+      },
+      {
+        "type": "aws_instance",
+        "name": "web",
+        "properties": {
+          "connection": [
+            {
+              "type": "ssh",
+              "user": "ubuntu",
+              "host": "${self.public_ip}"
+            }
+          ],
+          "instance_type": "t2.micro",
+          "ami": "${var.aws_amis[var.aws_region]}",
+          "key_name": "${aws_key_pair.auth.id}",
+          "vpc_security_group_ids": [
+            "${aws_security_group.default.id}"
+          ],
+          "subnet_id": "${aws_subnet.default.id}",
+          "provisioner": [
+            {
+              "remote-exec": {
+                "inline": [
+                  "sudo apt-get -y update",
+                  "sudo apt-get -y install nginx",
+                  "sudo service nginx start"
+                ]
+              }
+            }
+          ],
+          "compiletime_identity": "aws_instance.web"
+        }
+      }
+    ]
+  }
+}

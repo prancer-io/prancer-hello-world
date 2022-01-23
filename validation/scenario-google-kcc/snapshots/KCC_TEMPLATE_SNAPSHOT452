@@ -2,12 +2,12 @@
   "structure": "filesystem",
   "error": null,
   "reference": "master",
-  "contentType": "yaml",
+  "contentType": "json",
   "source": "gitConnectorGoogleKcc",
   "paths": [
-    "/samples/resources/logginglogsink/organization-sink/storage_v1beta1_storagebucket.yaml"
+    "/samples/resources/iampolicy/external-project-level-policy/resourcemanager_v1beta1_project.yaml"
   ],
-  "timestamp": 1628765149016,
+  "timestamp": 1642973304268,
   "queryuser": null,
   "checksum": "99914b932bd37a50b983c5e7c90ae93b",
   "node": {
@@ -15,22 +15,32 @@
     "type": "kcc",
     "collection": "kcctemplate",
     "paths": [
-      "/samples/resources/logginglogsink/organization-sink/storage_v1beta1_storagebucket.yaml"
+      "/samples/resources/iampolicy/external-project-level-policy/resourcemanager_v1beta1_project.yaml"
     ],
     "snapshotId": "KCC_TEMPLATE_SNAPSHOT452",
     "status": "active",
-    "validate": true
+    "validate": true,
+    "resourceTypes": [
+      "project"
+    ]
   },
   "snapshotId": "KCC_TEMPLATE_SNAPSHOT452",
   "collection": "kcctemplate",
   "json": {
-    "apiVersion": "storage.cnrm.cloud.google.com/v1beta1",
-    "kind": "StorageBucket",
+    "apiVersion": "resourcemanager.cnrm.cloud.google.com/v1beta1",
+    "kind": "Project",
     "metadata": {
       "annotations": {
-        "cnrm.cloud.google.com/force-destroy": "true"
+        "cnrm.cloud.google.com/organization-id": "${ORG_ID?}",
+        "cnrm.cloud.google.com/auto-create-network": "false"
       },
-      "name": "${PROJECT_ID?}-logginglogsink-dep-org"
+      "name": "iampolicy-dep-external-project"
+    },
+    "spec": {
+      "name": "Config Connector Sample",
+      "billingAccountRef": {
+        "external": "${BILLING_ACCOUNT_ID?}"
+      }
     }
   }
 }

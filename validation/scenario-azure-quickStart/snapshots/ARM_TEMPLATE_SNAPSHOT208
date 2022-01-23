@@ -1,0 +1,224 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAzureQuickStart",
+  "paths": [
+    "/application-workloads/kafka/kafka-on-ubuntu/jumpbox-resources-enabled.json",
+    "/application-workloads/kafka/kafka-on-ubuntu/azuredeploy.parameters.json"
+  ],
+  "timestamp": 1642962890572,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/application-workloads/kafka/kafka-on-ubuntu/jumpbox-resources-enabled.json",
+      "/application-workloads/kafka/kafka-on-ubuntu/azuredeploy.parameters.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT208",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "microsoft.network/publicipaddresses",
+      "microsoft.network/networkinterfaces",
+      "microsoft.compute/virtualmachines"
+    ]
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT208",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "virtualNetworkName": {
+        "type": "string",
+        "defaultValue": "myVNET",
+        "metadata": {
+          "Description": "The arbitrary name of the virtual network provisioned for the cluster"
+        },
+        "value": "GEN-VNET-NAME"
+      },
+      "subnetName": {
+        "type": "string",
+        "defaultValue": "Subnet-1",
+        "metadata": {
+          "Description": "Subnet name for the virtual network that resources will be provisioned in to"
+        },
+        "value": "GEN-SUBNET1-NAME"
+      },
+      "adminUsername": {
+        "type": "string",
+        "metadata": {
+          "Description": "Administrator user name used when provisioning virtual machines"
+        },
+        "value": "GEN-UNIQUE"
+      },
+      "adminPassword": {
+        "type": "securestring",
+        "metadata": {
+          "Description": "Administrator password used when provisioning virtual machines"
+        },
+        "value": "GEN-PASSWORD"
+      },
+      "imagePublisher": {
+        "type": "string",
+        "defaultValue": "Canonical",
+        "metadata": {
+          "Description": "Image Publisher"
+        }
+      },
+      "imageOffer": {
+        "type": "string",
+        "defaultValue": "UbuntuServer",
+        "metadata": {
+          "Description": "Image Offer"
+        }
+      },
+      "imageSKU": {
+        "type": "string",
+        "defaultValue": "14.04.5-LTS",
+        "metadata": {
+          "Description": "Image SKU"
+        }
+      },
+      "computerNamePrefix": {
+        "type": "string",
+        "metadata": {
+          "Description": "The global VM name prefix"
+        }
+      },
+      "vmSize": {
+        "type": "string",
+        "defaultValue": "Standard_A0",
+        "metadata": {
+          "description": "VM Size"
+        }
+      },
+      "location": {
+        "type": "string",
+        "metadata": {
+          "description": "Location for all resources."
+        }
+      },
+      "storageAccountName": {
+        "value": "GEN-UNIQUE-8"
+      },
+      "addressPrefix": {
+        "value": "10.0.0.0/16"
+      },
+      "subnetPrefix": {
+        "value": "10.0.0.0/24"
+      },
+      "kafkaVersion": {
+        "value": "0.8.2.1"
+      },
+      "kafkaNodeIPAddressPrefix": {
+        "value": "10.0.0.1"
+      },
+      "kafkaZooNodeIPAddressPrefix": {
+        "value": "10.0.0.4"
+      },
+      "jumpbox": {
+        "value": "enabled"
+      },
+      "tshirtSize": {
+        "value": "S"
+      }
+    },
+    "variables": {
+      "subnetRef": "Microsoft.Network/virtualNetworks/subnets/GEN-VNET-NAME/GEN-SUBNET1-NAME"
+    },
+    "resources": [
+      {
+        "apiVersion": "2020-08-01",
+        "type": "Microsoft.Network/publicIPAddresses",
+        "name": "publicIP",
+        "location": "location",
+        "properties": {
+          "publicIPAllocationMethod": "Dynamic"
+        }
+      },
+      {
+        "apiVersion": "2020-08-01",
+        "type": "Microsoft.Network/networkInterfaces",
+        "name": "nicJumpbox",
+        "location": "location",
+        "dependsOn": [
+          "Microsoft.Network/publicIPAddresses//publicIP"
+        ],
+        "properties": {
+          "ipConfigurations": [
+            {
+              "name": "ipconfig1",
+              "properties": {
+                "privateIPAllocationMethod": "Dynamic",
+                "publicIPAddress": {
+                  "id": "Microsoft.Network/publicIPAddresses/publicIP"
+                },
+                "subnet": {
+                  "id": "Microsoft.Network/virtualNetworks/subnets/GEN-VNET-NAME/GEN-SUBNET1-NAME"
+                }
+              }
+            }
+          ]
+        }
+      },
+      {
+        "apiVersion": "2020-12-01",
+        "type": "Microsoft.Compute/virtualMachines",
+        "name": "jumpbox",
+        "location": "location",
+        "dependsOn": [
+          "Microsoft.Network/networkInterfaces//nicJumpbox"
+        ],
+        "properties": {
+          "hardwareProfile": {
+            "vmSize": "Standard_A0"
+          },
+          "osProfile": {
+            "computerName": "computerNamePrefixjumpbox",
+            "adminUsername": "GEN-UNIQUE",
+            "adminPassword": "GEN-PASSWORD",
+            "linuxConfiguration": {
+              "disablePasswordAuthentication": false
+            }
+          },
+          "storageProfile": {
+            "imageReference": {
+              "publisher": "Canonical",
+              "offer": "UbuntuServer",
+              "sku": "14.04.5-LTS",
+              "version": "latest"
+            },
+            "osDisk": {
+              "name": "jumpbox_OSDisk",
+              "caching": "ReadWrite",
+              "createOption": "FromImage"
+            }
+          },
+          "networkProfile": {
+            "networkInterfaces": [
+              {
+                "id": "Microsoft.Network/networkInterfaces/nicJumpbox"
+              }
+            ],
+            "inputEndpoints": [
+              {
+                "enableDirectServerReturn": "False",
+                "endpointName": "SSH",
+                "privatePort": 22,
+                "publicPort": 22,
+                "protocol": "Tcp"
+              }
+            ]
+          }
+        }
+      }
+    ],
+    "outputs": {},
+    "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+  }
+}

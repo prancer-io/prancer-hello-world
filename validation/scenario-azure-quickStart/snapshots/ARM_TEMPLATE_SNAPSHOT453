@@ -1,0 +1,160 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAzureQuickStart",
+  "paths": [
+    "/application-workloads/sap/sap-3-tier-marketplace-image-converged-md/shared/os-disk-parts-md.json"
+  ],
+  "timestamp": 1642962895189,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/application-workloads/sap/sap-3-tier-marketplace-image-converged-md/shared/os-disk-parts-md.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT453",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": []
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT453",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "imageSku": {
+        "type": "string",
+        "metadata": {
+          "description": "SKU of the image that should be used to deploy the virtual machine."
+        }
+      },
+      "imagePublisher": {
+        "type": "string",
+        "metadata": {
+          "description": "Publisher of the image that should be used to deploy the virtual machine."
+        }
+      },
+      "imageOffer": {
+        "type": "string",
+        "metadata": {
+          "description": "Offer of the image that should be used to deploy the virtual machine."
+        }
+      },
+      "imageVersion": {
+        "type": "string",
+        "defaultValue": "latest",
+        "metadata": {
+          "description": "SKU of the image that should be used to deploy the virtual machine."
+        }
+      },
+      "osDiskType": {
+        "type": "string",
+        "allowedValues": [
+          "image",
+          "userImage",
+          "osdisk"
+        ],
+        "metadata": {
+          "description": "The type of OS disk."
+        }
+      },
+      "osType": {
+        "type": "string",
+        "allowedValues": [
+          "Windows",
+          "Linux"
+        ],
+        "metadata": {
+          "description": "The type of the operating system you want to deploy."
+        }
+      },
+      "vmName": {
+        "type": "string",
+        "metadata": {
+          "description": "Prefix of the virtual machine name."
+        }
+      },
+      "storageType": {
+        "type": "string",
+        "defaultValue": "StandardSSD_LRS",
+        "allowedValues": [
+          "Standard_LRS",
+          "StandardSSD_LRS",
+          "Premium_LRS"
+        ],
+        "metadata": {
+          "description": "The storage type that should be used for the virtual machine."
+        }
+      },
+      "managedDiskId": {
+        "type": "string",
+        "defaultValue": "",
+        "metadata": {
+          "description": "Id of the managed disk."
+        }
+      }
+    },
+    "variables": {
+      "osDiskCaching": "ReadWrite",
+      "osDiskParts": {
+        "image": {
+          "imageReference": {
+            "publisher": "imagePublisher",
+            "offer": "imageOffer",
+            "sku": "imageSku",
+            "version": "latest"
+          },
+          "osDisk": {
+            "name": "vmName-osdisk",
+            "caching": "ReadWrite",
+            "createOption": "FromImage",
+            "managedDisk": {
+              "storageAccountType": "StandardSSD_LRS"
+            }
+          }
+        },
+        "userImage": {
+          "imageReference": {
+            "id": ""
+          },
+          "osDisk": {
+            "name": "vmName-osdisk",
+            "caching": "ReadWrite",
+            "createOption": "FromImage",
+            "managedDisk": {
+              "storageAccountType": "StandardSSD_LRS"
+            }
+          }
+        },
+        "osdisk": {
+          "osDisk": {
+            "name": "vmName-osdisk",
+            "osType": "osType",
+            "caching": "ReadWrite",
+            "createOption": "Attach",
+            "managedDisk": {
+              "id": ""
+            }
+          }
+        }
+      }
+    },
+    "resources": [],
+    "outputs": {
+      "imageReference": {
+        "value": "[variables('osDiskParts')[parameters('osDiskType')].imageReference]",
+        "type": "object"
+      },
+      "osDisk": {
+        "value": "[variables('osDiskParts')[parameters('osDiskType')].osDisk]",
+        "type": "object"
+      }
+    },
+    "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+  }
+}

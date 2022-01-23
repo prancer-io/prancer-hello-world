@@ -1,0 +1,419 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAzureQuickStart",
+  "paths": [
+    "/demos/vm-win-iis-app-ssl/azuredeploy.json",
+    "/demos/vm-win-iis-app-ssl/azuredeploy.parameters.json"
+  ],
+  "timestamp": 1642962902254,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/demos/vm-win-iis-app-ssl/azuredeploy.json",
+      "/demos/vm-win-iis-app-ssl/azuredeploy.parameters.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT853",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "microsoft.network/publicipaddresses",
+      "microsoft.network/virtualnetworks",
+      "microsoft.network/networkinterfaces",
+      "microsoft.compute/virtualmachines",
+      "microsoft.network/networksecuritygroups"
+    ]
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT853",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "appVMName": {
+        "type": "string",
+        "minLength": 1,
+        "metadata": {
+          "description": "Set this value for the VM name"
+        },
+        "value": "<uniqueVMName> e.g. myTestVM1"
+      },
+      "appVMAdminUserName": {
+        "type": "string",
+        "minLength": 1,
+        "metadata": {
+          "description": "Set this value for the VM admin user name"
+        },
+        "value": "<adminUsername> e.g. adminuser "
+      },
+      "appVMAdminPassword": {
+        "type": "securestring",
+        "metadata": {
+          "description": "Set this value for the VM admin user password"
+        }
+      },
+      "appVMWindowsOSVersion": {
+        "type": "string",
+        "defaultValue": "2012-R2-Datacenter",
+        "allowedValues": [
+          "2008-R2-SP1",
+          "2012-Datacenter",
+          "2012-R2-Datacenter",
+          "Windows-Server-Technical-Preview"
+        ],
+        "metadata": {
+          "description": "Set this value for the VM Windows OS Version"
+        }
+      },
+      "appPublicIPDnsName": {
+        "type": "string",
+        "minLength": 1,
+        "metadata": {
+          "description": "Set this value for the dns name of the public ip"
+        },
+        "value": "<DNS for the public IP> e.g. mytestvmdns"
+      },
+      "appDSCUpdateTagVersion": {
+        "type": "string",
+        "defaultValue": "1.0",
+        "metadata": {
+          "description": "This value must be changed from a previous deployment to ensure the extension will run"
+        }
+      },
+      "appWebPackage": {
+        "type": "string",
+        "defaultValue": "https://computeteststore.blob.core.windows.net/deploypackage/deployPackage.zip?sv=2015-04-05&ss=bfqt&srt=sco&sp=r&se=2099-10-16T02:03:39Z&st=2016-10-15T18:03:39Z&spr=https&sig=aSH6yNPEGPWXk6PxTPzS6fyEXMD1ZYIkI0j5E9Hu5%2Fk%3D",
+        "metadata": {
+          "description": "Set this value for the signed uri to download the deployment package"
+        }
+      },
+      "appVMVmSize": {
+        "type": "string",
+        "defaultValue": "Standard_D2_v3",
+        "allowedValues": [
+          "Standard_D2_v3",
+          "Standard_D2_v3",
+          "Standard_D4_v3",
+          "Standard_D8_v3",
+          "Standard_D5"
+        ],
+        "metadata": {
+          "description": "Set this value for the VM size"
+        }
+      },
+      "_artifactsLocation": {
+        "type": "string",
+        "metadata": {
+          "description": "Auto-generated container in staging storage account to receive post-build staging folder upload"
+        }
+      },
+      "_artifactsLocationSasToken": {
+        "type": "securestring",
+        "metadata": {
+          "description": "Auto-generated token to access _artifactsLocation"
+        }
+      },
+      "vaultName": {
+        "type": "string",
+        "metadata": {
+          "description": "The Azure Key vault where SSL certificates are stored"
+        },
+        "value": "<name of the Azure KeyVault> e.g. myKeyVault"
+      },
+      "vaultResourceGroup": {
+        "type": "string",
+        "metadata": {
+          "description": "Resource Group of the key vault"
+        },
+        "value": "<resource group name for the keyvault> e.g. myKeyVault-rg"
+      },
+      "httpssecretUrlWithVersion": {
+        "type": "string",
+        "metadata": {
+          "description": "full Key Vault Id to the secret that stores the SSL cert"
+        },
+        "value": "<uri with version of the pfx cert secret> e.g. https://mykeyvault.vault.azure.net/secrets/myPfxCert2/11f95456772549a2b6b0ba38bd1b319a"
+      },
+      "httpssecretCaUrlWithVersion": {
+        "type": "string",
+        "metadata": {
+          "description": "full Key Vault Id to the secret that stores the CA cert"
+        },
+        "value": "<uri with version of the pfx cert secret> e.g. https://mykeyvault.vault.azure.net/secrets/myPfxCert2/11f95456772549a2b6b0ba38bd1b319a"
+      },
+      "certificateStore": {
+        "type": "string",
+        "metadata": {
+          "description": "name of the certificate key secret"
+        },
+        "value": "<the cert store name on the target VM> e.g. myPfxCert2"
+      },
+      "certificateDomain": {
+        "type": "string",
+        "metadata": {
+          "description": "name of the domain the certificate is created for"
+        },
+        "value": "<the fully qualified domain name for which the cert is installed> e.g. www.mycompany.com for wildcard use *.mycompany.com"
+      },
+      "location": {
+        "type": "string",
+        "defaultValue": "[resourceGroup().location]",
+        "metadata": {
+          "description": "Location for all resources."
+        }
+      }
+    },
+    "variables": {
+      "appVnetPrefix": "10.0.0.0/16",
+      "appVnetSubnet1Name": "FrontEndSubNet",
+      "appVnetSubnet1Prefix": "10.0.0.0/24",
+      "appVnetSubnet2Name": "DatabaseSubNet",
+      "appVnetSubnet2Prefix": "10.0.1.0/24",
+      "appVMImagePublisher": "MicrosoftWindowsServer",
+      "appVMImageOffer": "WindowsServer",
+      "appVMVmSize": "Standard_D2_v3",
+      "appVMVnetID": "Microsoft.Network/virtualNetworks/appVnet",
+      "appVMSubnetRef": "appVMresourceId('Microsoft.Network/virtualNetworks/subnets', parameters('virtualNetworkName'), variables('appVMVnetID'), '/subnets/', variables('appVnetSubnet1Name'))]",
+      "appVMNicName": "<uniqueVMName> e.g. myTestVM1NetworkInterface",
+      "appPublicIPName": "appPublicIP",
+      "appDSCArchiveFolder": "dsc",
+      "appDSCArchiveFileName": "appDSC.zip",
+      "appDSCSqlArchiveFolder": "dsc",
+      "appDSCSqlArchiveFileName": "appDSCSql.zip"
+    },
+    "resources": [
+      {
+        "apiVersion": "2015-06-15",
+        "type": "Microsoft.Network/networkSecurityGroups",
+        "name": "appNetworkSecurityGroup",
+        "location": "[resourceGroup().location]",
+        "properties": {
+          "securityRules": [
+            {
+              "name": "webrule",
+              "properties": {
+                "description": "This rule allows traffic in on port 80",
+                "protocol": "Tcp",
+                "sourcePortRange": "*",
+                "destinationPortRange": "80",
+                "sourceAddressPrefix": "INTERNET",
+                "destinationAddressPrefix": "10.0.0.0/24",
+                "access": "Allow",
+                "priority": 100,
+                "direction": "Inbound"
+              }
+            },
+            {
+              "name": "httpsrule",
+              "properties": {
+                "description": "This rule allows traffic in on port 443",
+                "protocol": "Tcp",
+                "sourcePortRange": "*",
+                "destinationPortRange": "443",
+                "sourceAddressPrefix": "INTERNET",
+                "destinationAddressPrefix": "10.0.0.0/24",
+                "access": "Allow",
+                "priority": 110,
+                "direction": "Inbound"
+              }
+            },
+            {
+              "name": "rdprule",
+              "properties": {
+                "description": "This rule allows traffic on port 3389 from the web",
+                "protocol": "Tcp",
+                "sourcePortRange": "*",
+                "destinationPortRange": "3389",
+                "sourceAddressPrefix": "INTERNET",
+                "destinationAddressPrefix": "10.0.0.0/24",
+                "access": "Allow",
+                "priority": 200,
+                "direction": "Inbound"
+              }
+            }
+          ]
+        }
+      },
+      {
+        "name": "appVnet",
+        "type": "Microsoft.Network/virtualNetworks",
+        "location": "[resourceGroup().location]",
+        "apiVersion": "2015-06-15",
+        "dependsOn": [
+          "Microsoft.Network/networkSecurityGroups/appNetworkSecurityGroup"
+        ],
+        "tags": {
+          "displayName": "appVnet"
+        },
+        "properties": {
+          "addressSpace": {
+            "addressPrefixes": [
+              "10.0.0.0/16"
+            ]
+          },
+          "subnets": [
+            {
+              "name": "FrontEndSubNet",
+              "properties": {
+                "addressPrefix": "10.0.0.0/24",
+                "networkSecurityGroup": {
+                  "id": "Microsoft.Network/networkSecurityGroups/appNetworkSecurityGroup"
+                }
+              }
+            },
+            {
+              "name": "DatabaseSubNet",
+              "properties": {
+                "addressPrefix": "10.0.1.0/24"
+              }
+            }
+          ]
+        }
+      },
+      {
+        "name": "<uniqueVMName> e.g. myTestVM1NetworkInterface",
+        "type": "Microsoft.Network/networkInterfaces",
+        "location": "[resourceGroup().location]",
+        "apiVersion": "2015-06-15",
+        "dependsOn": [
+          "Microsoft.Network/virtualNetworks/appVnet",
+          "Microsoft.Network/publicIPAddresses/appPublicIP"
+        ],
+        "tags": {
+          "displayName": "appVMNic"
+        },
+        "properties": {
+          "ipConfigurations": [
+            {
+              "name": "ipconfig1",
+              "properties": {
+                "privateIPAllocationMethod": "Dynamic",
+                "subnet": {
+                  "id": "appVMresourceId('Microsoft.Network/virtualNetworks/subnets', parameters('virtualNetworkName'), variables('appVMVnetID'), '/subnets/', variables('appVnetSubnet1Name'))]"
+                },
+                "publicIPAddress": {
+                  "id": "Microsoft.Network/publicIPAddresses/appPublicIP"
+                }
+              }
+            }
+          ]
+        }
+      },
+      {
+        "name": "<uniqueVMName> e.g. myTestVM1",
+        "type": "Microsoft.Compute/virtualMachines",
+        "location": "[resourceGroup().location]",
+        "apiVersion": "2017-03-30",
+        "dependsOn": [
+          "Microsoft.Network/networkInterfaces/<uniqueVMName> e.g. myTestVM1NetworkInterface"
+        ],
+        "tags": {
+          "displayName": "appVM"
+        },
+        "properties": {
+          "hardwareProfile": {
+            "vmSize": "Standard_D2_v3"
+          },
+          "osProfile": {
+            "computerName": "<uniqueVMName> e.g. myTestVM1",
+            "adminUsername": "appVMAdminUsername",
+            "adminPassword": "appVMAdminPassword",
+            "secrets": [
+              {
+                "sourceVault": {
+                  "id": "<resource group name for the keyvault> e.g. myKeyVault-rg/Microsoft.KeyVault/vaults/<name of the Azure KeyVault> e.g. myKeyVault"
+                },
+                "vaultCertificates": [
+                  {
+                    "certificateUrl": "<uri with version of the pfx cert secret> e.g. https://mykeyvault.vault.azure.net/secrets/myPfxCert2/11f95456772549a2b6b0ba38bd1b319a",
+                    "certificateStore": "<the cert store name on the target VM> e.g. myPfxCert2"
+                  }
+                ]
+              }
+            ]
+          },
+          "storageProfile": {
+            "imageReference": {
+              "publisher": "MicrosoftWindowsServer",
+              "offer": "WindowsServer",
+              "sku": "2012-R2-Datacenter",
+              "version": "latest"
+            },
+            "osDisk": {
+              "name": "<uniqueVMName> e.g. myTestVM1_OSDisk",
+              "caching": "ReadWrite",
+              "createOption": "FromImage"
+            }
+          },
+          "networkProfile": {
+            "networkInterfaces": [
+              {
+                "id": "Microsoft.Network/networkInterfaces/<uniqueVMName> e.g. myTestVM1NetworkInterface"
+              }
+            ]
+          }
+        },
+        "resources": [
+          {
+            "name": "Microsoft.Powershell.DSC",
+            "type": "extensions",
+            "location": "[resourceGroup().location]",
+            "apiVersion": "2015-06-15",
+            "dependsOn": [
+              "Microsoft.Compute/virtualMachines/<uniqueVMName> e.g. myTestVM1"
+            ],
+            "tags": {
+              "displayName": "appDSC"
+            },
+            "properties": {
+              "publisher": "Microsoft.Powershell",
+              "type": "DSC",
+              "typeHandlerVersion": "2.9",
+              "autoUpgradeMinorVersion": true,
+              "forceUpdateTag": "1.0",
+              "settings": {
+                "configuration": {
+                  "url": "_artifactsLocation/dsc/appDSC.zip",
+                  "script": "appDSC.ps1",
+                  "function": "Main"
+                },
+                "configurationArguments": {
+                  "nodeName": "<uniqueVMName> e.g. myTestVM1",
+                  "webDeployPackage": "https://computeteststore.blob.core.windows.net/deploypackage/deployPackage.zip?sv=2015-04-05&ss=bfqt&srt=sco&sp=r&se=2099-10-16T02:03:39Z&st=2016-10-15T18:03:39Z&spr=https&sig=aSH6yNPEGPWXk6PxTPzS6fyEXMD1ZYIkI0j5E9Hu5%2Fk%3D",
+                  "certStoreName": "<the cert store name on the target VM> e.g. myPfxCert2",
+                  "certDomain": "<the fully qualified domain name for which the cert is installed> e.g. www.mycompany.com for wildcard use *.mycompany.com"
+                }
+              },
+              "protectedSettings": {
+                "configurationUrlSasToken": "_artifactsLocationSasToken"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "name": "appPublicIP",
+        "type": "Microsoft.Network/publicIPAddresses",
+        "location": "[resourceGroup().location]",
+        "apiVersion": "2015-06-15",
+        "dependsOn": [],
+        "tags": {
+          "displayName": "appPublicIP"
+        },
+        "properties": {
+          "publicIPAllocationMethod": "Dynamic",
+          "dnsSettings": {
+            "domainNameLabel": "<DNS for the public IP> e.g. mytestvmdns"
+          }
+        }
+      }
+    ],
+    "outputs": {},
+    "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+  }
+}

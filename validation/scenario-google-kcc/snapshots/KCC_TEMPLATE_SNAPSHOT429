@@ -2,12 +2,12 @@
   "structure": "filesystem",
   "error": null,
   "reference": "master",
-  "contentType": "yaml",
+  "contentType": "json",
   "source": "gitConnectorGoogleKcc",
   "paths": [
-    "/samples/resources/iamserviceaccountkey/iam_v1beta1_iamserviceaccountkey.yaml"
+    "/samples/resources/gkehubfeaturemembership/gkehub_v1beta1_gkehubfeaturemembership.yaml"
   ],
-  "timestamp": 1628765148391,
+  "timestamp": 1642973304178,
   "queryuser": null,
   "checksum": "99914b932bd37a50b983c5e7c90ae93b",
   "node": {
@@ -15,29 +15,63 @@
     "type": "kcc",
     "collection": "kcctemplate",
     "paths": [
-      "/samples/resources/iamserviceaccountkey/iam_v1beta1_iamserviceaccountkey.yaml"
+      "/samples/resources/gkehubfeaturemembership/gkehub_v1beta1_gkehubfeaturemembership.yaml"
     ],
     "snapshotId": "KCC_TEMPLATE_SNAPSHOT429",
     "status": "active",
-    "validate": true
+    "validate": true,
+    "resourceTypes": [
+      "gkehubfeaturemembership"
+    ]
   },
   "snapshotId": "KCC_TEMPLATE_SNAPSHOT429",
   "collection": "kcctemplate",
   "json": {
-    "apiVersion": "iam.cnrm.cloud.google.com/v1beta1",
-    "kind": "IAMServiceAccountKey",
+    "apiVersion": "gkehub.cnrm.cloud.google.com/v1beta1",
+    "kind": "GKEHubFeatureMembership",
     "metadata": {
-      "name": "iamserviceaccountkey-sample",
-      "labels": {
-        "label-one": "value-one"
-      }
+      "name": "gkehubfeaturemembership-sample"
     },
     "spec": {
-      "publicKeyType": "TYPE_X509_PEM_FILE",
-      "keyAlgorithm": "KEY_ALG_RSA_2048",
-      "privateKeyType": "TYPE_GOOGLE_CREDENTIALS_FILE",
-      "serviceAccountRef": {
-        "name": "iamserviceaccountkey-dep"
+      "projectRef": {
+        "name": "gkehubfeaturemembership-dep"
+      },
+      "location": "global",
+      "membershipRef": {
+        "name": "gkehubfeaturemembership-dep"
+      },
+      "featureRef": {
+        "name": "gkehubfeaturemembership-dep"
+      },
+      "configmanagement": {
+        "configSync": {
+          "sourceFormat": "unstructured",
+          "git": {
+            "syncRepo": "https://github.com/GoogleCloudPlatform/cloud-foundation-toolkit",
+            "syncBranch": "master",
+            "policyDir": "config-connector",
+            "syncWaitSecs": "20",
+            "syncRev": "HEAD"
+          }
+        },
+        "policyController": {
+          "enabled": true,
+          "exemptableNamespaces": [
+            "test-namespace"
+          ],
+          "referentialRulesEnabled": true,
+          "logDeniesEnabled": true,
+          "templateLibraryInstalled": true,
+          "auditIntervalSeconds": "20"
+        },
+        "binauthz": {
+          "enabled": true
+        },
+        "hierarchyController": {
+          "enabled": true,
+          "enablePodTreeLabels": true,
+          "enableHierarchicalResourceQuota": true
+        }
       }
     }
   }

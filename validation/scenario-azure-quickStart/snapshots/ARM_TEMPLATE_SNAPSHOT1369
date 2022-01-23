@@ -1,0 +1,165 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAzureQuickStart",
+  "paths": [
+    "/quickstarts/microsoft.insights/insights-alertrules-application-insights/azuredeploy.json",
+    "/quickstarts/microsoft.insights/insights-alertrules-application-insights/azuredeploy.parameters.json"
+  ],
+  "timestamp": 1642962907222,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/quickstarts/microsoft.insights/insights-alertrules-application-insights/azuredeploy.json",
+      "/quickstarts/microsoft.insights/insights-alertrules-application-insights/azuredeploy.parameters.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT1369",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "microsoft.operationalinsights/workspaces",
+      "microsoft.insights/components",
+      "microsoft.insights/metricalerts",
+      "microsoft.insights/actiongroups"
+    ]
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT1369",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.0.0.0",
+    "metadata": {
+      "_generator": {
+        "name": "bicep",
+        "version": "0.4.1.14562",
+        "templateHash": "12341853913869812535"
+      }
+    },
+    "parameters": {
+      "responseTimeThreshold": {
+        "type": "int",
+        "defaultValue": 3,
+        "maxValue": 10000,
+        "minValue": 1,
+        "metadata": {
+          "description": "Enter response time threshold in seconds."
+        }
+      },
+      "workspaceName": {
+        "type": "string",
+        "defaultValue": "myWorkspace",
+        "metadata": {
+          "description": "Name of the workspace where the data will be stored."
+        },
+        "value": "GEN-UNIQUE"
+      },
+      "applicationInsightsName": {
+        "type": "string",
+        "defaultValue": "myApplicationInsights",
+        "metadata": {
+          "description": "Name of the application insights resource."
+        },
+        "value": "GEN-UNIQUE"
+      },
+      "location": {
+        "type": "string",
+        "defaultValue": "[resourceGroup().location]",
+        "metadata": {
+          "description": "Location for all resources."
+        }
+      }
+    },
+    "functions": [],
+    "variables": {
+      "responseAlertName": "[format('ResponseTime-{0}', toLower(parameters('applicationInsightsName')))]"
+    },
+    "resources": [
+      {
+        "type": "Microsoft.OperationalInsights/workspaces",
+        "apiVersion": "2020-10-01",
+        "name": "GEN-UNIQUE",
+        "location": "[resourceGroup().location]",
+        "properties": {
+          "sku": {
+            "name": "Free"
+          }
+        }
+      },
+      {
+        "type": "Microsoft.Insights/components",
+        "apiVersion": "2020-02-02-preview",
+        "name": "GEN-UNIQUE",
+        "location": "[resourceGroup().location]",
+        "kind": "web",
+        "properties": {
+          "Application_Type": "web",
+          "WorkspaceResourceId": "Microsoft.OperationalInsights/workspaces/GEN-UNIQUE"
+        },
+        "dependsOn": [
+          "Microsoft.OperationalInsights/workspaces/GEN-UNIQUE"
+        ]
+      },
+      {
+        "type": "Microsoft.Insights/metricAlerts",
+        "apiVersion": "2018-03-01",
+        "name": "[format('ResponseTime-{0}', toLower(parameters('applicationInsightsName')))]",
+        "location": "global",
+        "properties": {
+          "description": "Response time alert",
+          "severity": 0,
+          "enabled": true,
+          "scopes": [
+            "Microsoft.Insights/components/GEN-UNIQUE"
+          ],
+          "evaluationFrequency": "PT1M",
+          "windowSize": "PT5M",
+          "criteria": {
+            "odata.type": "Microsoft.Azure.Monitor.SingleResourceMultipleMetricCriteria",
+            "allOf": [
+              {
+                "name": "1st criterion",
+                "metricName": "requests/duration",
+                "operator": "GreaterThan",
+                "threshold": 3,
+                "timeAggregation": "Average",
+                "criterionType": "StaticThresholdCriterion"
+              }
+            ]
+          },
+          "actions": [
+            {
+              "actionGroupId": "microsoft.insights/actionGroups/emailActionGroup"
+            }
+          ]
+        },
+        "dependsOn": [
+          "Microsoft.Insights/components/GEN-UNIQUE",
+          "microsoft.insights/actionGroups/emailActionGroup"
+        ]
+      },
+      {
+        "type": "microsoft.insights/actionGroups",
+        "apiVersion": "2019-06-01",
+        "name": "emailActionGroup",
+        "location": "global",
+        "properties": {
+          "groupShortName": "string",
+          "enabled": true,
+          "emailReceivers": [
+            {
+              "name": "Example",
+              "emailAddress": "example@test.com",
+              "useCommonAlertSchema": true
+            }
+          ]
+        }
+      }
+    ],
+    "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+  }
+}

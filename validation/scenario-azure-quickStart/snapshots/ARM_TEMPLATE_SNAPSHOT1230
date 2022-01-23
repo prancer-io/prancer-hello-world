@@ -1,0 +1,260 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAzureQuickStart",
+  "paths": [
+    "/quickstarts/microsoft.datafactory/data-factory-v2-blob-to-sql-copy/azuredeploy.json",
+    "/quickstarts/microsoft.datafactory/data-factory-v2-blob-to-sql-copy/azuredeploy.parameters.json"
+  ],
+  "timestamp": 1642962905754,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/quickstarts/microsoft.datafactory/data-factory-v2-blob-to-sql-copy/azuredeploy.json",
+      "/quickstarts/microsoft.datafactory/data-factory-v2-blob-to-sql-copy/azuredeploy.parameters.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT1230",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "microsoft.datafactory/factories"
+    ]
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT1230",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "dataFactoryName": {
+        "type": "string",
+        "metadata": {
+          "description": "Name of the data factory. Must be globally unique."
+        },
+        "value": "GEN-UNIQUE"
+      },
+      "dataFactoryLocation": {
+        "type": "string",
+        "allowedValues": [
+          "East US",
+          "East US 2",
+          "West Europe",
+          "Southeast Asia"
+        ],
+        "defaultValue": "East US",
+        "metadata": {
+          "description": "Location of the data factory."
+        },
+        "value": "East US"
+      },
+      "AzureStorage_connectionString": {
+        "type": "securestring",
+        "metadata": {
+          "description": "Connection string for the Azure Storage account."
+        },
+        "value": "GET-PREREQ-AzureStorage_connectionString"
+      },
+      "blobContainer": {
+        "type": "string",
+        "metadata": {
+          "description": "Name of the blob container in the Azure Storage account."
+        },
+        "value": "adftutorial"
+      },
+      "inputBlobFolder": {
+        "type": "string",
+        "metadata": {
+          "description": "The folder in the blob container that has the input file."
+        },
+        "value": "input"
+      },
+      "inputBlobName": {
+        "type": "string",
+        "metadata": {
+          "description": "Name of the input file/blob."
+        },
+        "value": "emp.txt"
+      },
+      "AzureSqlDatabase_connectionString": {
+        "type": "string",
+        "metadata": {
+          "description": "Connnection string for the Azure SQL database."
+        },
+        "value": "GET-PREREQ-AzureSqlDatabase_connectionString"
+      },
+      "sqlTableName": {
+        "type": "string",
+        "metadata": {
+          "description": "Name of the target table in the Azure SQL database."
+        },
+        "value": "[dbo].[emp]"
+      }
+    },
+    "variables": {
+      "azureStorageLinkedServiceName": "Tutorial2-AzureStorageLinkedService",
+      "azureSqlDatabaseLinkedServiceName": "Tutorial2-AzureSqlDatabaseLinkedService",
+      "inputDatasetName": "Tutorial2-InputBlobDataset",
+      "outputDatasetName": "Tutorial2-OutputSqlDataset",
+      "pipelineName": "Tutorial2-CopyFromBlobToSqlPipeline"
+    },
+    "resources": [
+      {
+        "name": "GEN-UNIQUE",
+        "apiVersion": "2017-09-01-preview",
+        "type": "Microsoft.DataFactory/factories",
+        "location": "East US",
+        "properties": {},
+        "resources": [
+          {
+            "type": "linkedservices",
+            "name": "Tutorial2-AzureStorageLinkedService",
+            "dependsOn": [
+              "GEN-UNIQUE"
+            ],
+            "apiVersion": "2017-09-01-preview",
+            "properties": {
+              "type": "AzureStorage",
+              "description": "Azure Storage linked service",
+              "typeProperties": {
+                "connectionString": {
+                  "value": "GET-PREREQ-AzureStorage_connectionString",
+                  "type": "SecureString"
+                }
+              }
+            }
+          },
+          {
+            "type": "linkedservices",
+            "name": "Tutorial2-AzureSqlDatabaseLinkedService",
+            "dependsOn": [
+              "GEN-UNIQUE"
+            ],
+            "apiVersion": "2017-09-01-preview",
+            "properties": {
+              "type": "AzureSqlDatabase",
+              "description": "Azure SQL Database linked service",
+              "typeProperties": {
+                "connectionString": {
+                  "value": "GET-PREREQ-AzureSqlDatabase_connectionString",
+                  "type": "SecureString"
+                }
+              }
+            }
+          },
+          {
+            "type": "datasets",
+            "name": "Tutorial2-InputBlobDataset",
+            "dependsOn": [
+              "GEN-UNIQUE",
+              "Tutorial2-AzureStorageLinkedService"
+            ],
+            "apiVersion": "2017-09-01-preview",
+            "properties": {
+              "type": "AzureBlob",
+              "structure": [
+                {
+                  "name": "Prop_0",
+                  "type": "string"
+                },
+                {
+                  "name": "Prop_1",
+                  "type": "string"
+                }
+              ],
+              "typeProperties": {
+                "format": {
+                  "type": "TextFormat",
+                  "columnDelimiter": ",",
+                  "nullValue": "\\N",
+                  "treatEmptyAsNull": false,
+                  "firstRowAsHeader": false
+                },
+                "folderPath": "adftutorial/input/",
+                "fileName": "emp.txt"
+              },
+              "linkedServiceName": {
+                "referenceName": "Tutorial2-AzureStorageLinkedService",
+                "type": "LinkedServiceReference"
+              }
+            }
+          },
+          {
+            "type": "datasets",
+            "name": "Tutorial2-OutputSqlDataset",
+            "dependsOn": [
+              "GEN-UNIQUE",
+              "Tutorial2-AzureSqlDatabaseLinkedService"
+            ],
+            "apiVersion": "2017-09-01-preview",
+            "properties": {
+              "type": "AzureSqlTable",
+              "structure": [
+                {
+                  "name": "FirstName",
+                  "type": "string"
+                },
+                {
+                  "name": "LastName",
+                  "type": "string"
+                }
+              ],
+              "typeProperties": {
+                "tableName": "[dbo].[emp]"
+              },
+              "linkedServiceName": {
+                "referenceName": "Tutorial2-AzureSqlDatabaseLinkedService",
+                "type": "LinkedServiceReference"
+              }
+            }
+          },
+          {
+            "type": "pipelines",
+            "name": "Tutorial2-CopyFromBlobToSqlPipeline",
+            "dependsOn": [
+              "GEN-UNIQUE",
+              "Tutorial2-InputBlobDataset",
+              "Tutorial2-OutputSqlDataset"
+            ],
+            "apiVersion": "2017-09-01-preview",
+            "properties": {
+              "activities": [
+                {
+                  "type": "Copy",
+                  "typeProperties": {
+                    "source": {
+                      "type": "BlobSource",
+                      "recursive": true
+                    },
+                    "sink": {
+                      "type": "SqlSink",
+                      "writeBatchSize": 10000
+                    }
+                  },
+                  "name": "MyCopyActivity",
+                  "inputs": [
+                    {
+                      "referenceName": "Tutorial2-InputBlobDataset",
+                      "type": "DatasetReference"
+                    }
+                  ],
+                  "outputs": [
+                    {
+                      "referenceName": "Tutorial2-OutputSqlDataset",
+                      "type": "DatasetReference"
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        ]
+      }
+    ],
+    "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+  }
+}

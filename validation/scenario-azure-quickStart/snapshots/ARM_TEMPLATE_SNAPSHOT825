@@ -1,0 +1,83 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAzureQuickStart",
+  "paths": [
+    "/demos/subnet-driven-deployment/AVSet.json",
+    "/demos/subnet-driven-deployment/azuredeploy.parameters.json"
+  ],
+  "timestamp": 1642962901982,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/demos/subnet-driven-deployment/AVSet.json",
+      "/demos/subnet-driven-deployment/azuredeploy.parameters.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT825",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "microsoft.compute/availabilitysets"
+    ]
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT825",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.0.0.1",
+    "parameters": {
+      "availabilitySetName": {
+        "type": "string",
+        "defaultValue": "AvSet1",
+        "metadata": {
+          "description": "AVSet name the VM will belong to"
+        }
+      },
+      "location": {
+        "type": "string",
+        "metadata": {
+          "description": "Location for all resources."
+        }
+      },
+      "dnsLabelPrefix": {
+        "value": "GEN-UNIQUE-8"
+      },
+      "adminUsername": {
+        "value": "zeAdmin"
+      },
+      "adminPassword": {
+        "value": "GEN-PASSWORD"
+      },
+      "storageCategory": {
+        "value": "Premium"
+      },
+      "numberOfSubnets": {
+        "value": 4
+      },
+      "memberServersPerSubnet": {
+        "value": 1
+      }
+    },
+    "resources": [
+      {
+        "type": "Microsoft.Compute/availabilitySets",
+        "name": "AvSet1",
+        "apiVersion": "2020-12-01",
+        "location": "location",
+        "sku": {
+          "name": "Aligned"
+        },
+        "properties": {
+          "platformFaultDomainCount": 2,
+          "platformUpdateDomainCount": 5
+        }
+      }
+    ],
+    "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+  }
+}

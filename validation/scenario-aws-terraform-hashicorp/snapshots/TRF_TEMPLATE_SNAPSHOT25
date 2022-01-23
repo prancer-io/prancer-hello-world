@@ -1,0 +1,58 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "main",
+  "contentType": "json",
+  "source": "gitConnectorAwsTerraHashicorp",
+  "paths": [
+    "/examples/networking/region/outputs.tf",
+    "/examples/networking/region/terraform.template.tfvars",
+    "/examples/networking/region/variables.tf",
+    "/examples/networking/region/versions.tf",
+    "/examples/networking/region/vpc.tf"
+  ],
+  "timestamp": 1642967657706,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "TRF_TEMPLATE_SNAPSHOT",
+    "type": "terraform",
+    "collection": "terraformtemplate",
+    "paths": [
+      "/examples/networking/region/outputs.tf",
+      "/examples/networking/region/terraform.template.tfvars",
+      "/examples/networking/region/variables.tf",
+      "/examples/networking/region/versions.tf",
+      "/examples/networking/region/vpc.tf"
+    ],
+    "snapshotId": "TRF_TEMPLATE_SNAPSHOT25",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "aws_vpc",
+      "aws_internet_gateway"
+    ]
+  },
+  "snapshotId": "TRF_TEMPLATE_SNAPSHOT25",
+  "collection": "terraformtemplate",
+  "json": {
+    "resources": [
+      {
+        "type": "aws_vpc",
+        "name": "main",
+        "properties": {
+          "cidr_block": "${cidrsubnet(var.base_cidr_block,4,var.region_numbers[var.region])}",
+          "compiletime_identity": "aws_vpc.main"
+        }
+      },
+      {
+        "type": "aws_internet_gateway",
+        "name": "main",
+        "properties": {
+          "vpc_id": "${aws_vpc.main.id}",
+          "compiletime_identity": "aws_internet_gateway.main"
+        }
+      }
+    ]
+  }
+}

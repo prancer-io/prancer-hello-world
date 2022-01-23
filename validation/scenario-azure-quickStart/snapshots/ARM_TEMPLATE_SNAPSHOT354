@@ -1,0 +1,188 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAzureQuickStart",
+  "paths": [
+    "/application-workloads/postgre/postgresql-on-ubuntu/database-resources.json",
+    "/application-workloads/postgre/postgresql-on-ubuntu/azuredeploy.parameters.json"
+  ],
+  "timestamp": 1642962893065,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/application-workloads/postgre/postgresql-on-ubuntu/database-resources.json",
+      "/application-workloads/postgre/postgresql-on-ubuntu/azuredeploy.parameters.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT354",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "microsoft.network/networkinterfaces",
+      "microsoft.compute/virtualmachines",
+      "microsoft.compute/virtualmachines/extensions"
+    ]
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT354",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "commonSettings": {
+        "type": "object"
+      },
+      "osSettings": {
+        "type": "object"
+      },
+      "adminPassword": {
+        "type": "securestring",
+        "value": "GEN-PASSWORD"
+      },
+      "machineSettings": {
+        "type": "object"
+      },
+      "subnet": {
+        "type": "object"
+      },
+      "replicatorPassword": {
+        "type": "securestring",
+        "value": "GEN-PASSWORD"
+      },
+      "masterIpAddress": {
+        "type": "string"
+      },
+      "dbType": {
+        "type": "string"
+      },
+      "location": {
+        "type": "string"
+      },
+      "adminUsername": {
+        "value": "GEN-UNQIUE"
+      }
+    },
+    "variables": {
+      "namespace": "commonSettings",
+      "subnetRef": "Microsoft.Network/virtualNetworks/subnets/subnet/subnet",
+      "vmName": "commonSettingsvm",
+      "nicName": "commonSettingsnic",
+      "adminUsername": "commonSettings",
+      "vmCount": "machineSettings"
+    },
+    "resources": [
+      {
+        "apiVersion": "2019-11-01",
+        "type": "Microsoft.Network/networkInterfaces",
+        "name": "commonSettingsniccopyindex()",
+        "location": "location",
+        "copy": {
+          "name": "nicCopyLoop",
+          "count": "machineSettings"
+        },
+        "properties": {
+          "ipConfigurations": [
+            {
+              "name": "ipconfig1",
+              "properties": {
+                "privateIPAllocationMethod": "Dynamic",
+                "subnet": {
+                  "id": "Microsoft.Network/virtualNetworks/subnets/subnet/subnet"
+                }
+              }
+            }
+          ]
+        }
+      },
+      {
+        "apiVersion": "2019-12-01",
+        "type": "Microsoft.Compute/virtualMachines",
+        "name": "commonSettingsvmcopyindex()",
+        "location": "location",
+        "dependsOn": [
+          "Microsoft.Network/networkInterfaces/commonSettingsniccopyindex()"
+        ],
+        "copy": {
+          "name": "vmCopyLoop",
+          "count": "machineSettings"
+        },
+        "properties": {
+          "availabilitySet": {
+            "id": "Microsoft.Compute/availabilitySets/machineSettings"
+          },
+          "hardwareProfile": {
+            "vmSize": "machineSettings"
+          },
+          "osProfile": {
+            "computerName": "commonSettingsvmcopyindex()",
+            "adminUsername": "commonSettings",
+            "adminPassword": "GEN-PASSWORD"
+          },
+          "storageProfile": {
+            "imageReference": "osSettings",
+            "osDisk": {
+              "name": "commonSettingsvmcopyindex()_OSDisk",
+              "caching": "ReadWrite",
+              "createOption": "FromImage"
+            },
+            "copy": [
+              {
+                "name": "dataDisks",
+                "count": "machineSettings",
+                "input": {
+                  "diskSizeGB": "machineSettings",
+                  "lun": "[copyIndex('dataDisks')]",
+                  "caching": "None",
+                  "createOption": "Empty"
+                }
+              }
+            ]
+          },
+          "networkProfile": {
+            "networkInterfaces": [
+              {
+                "id": "Microsoft.Network/networkInterfaces/commonSettingsniccopyindex()"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "type": "Microsoft.Compute/virtualMachines/extensions",
+        "name": "commonSettingsvmcopyindex()/install_postgresql",
+        "apiVersion": "2019-12-01",
+        "location": "location",
+        "dependsOn": [
+          "Microsoft.Compute/virtualMachines/commonSettingsvmcopyindex()"
+        ],
+        "copy": {
+          "name": "scriptCopyLoop",
+          "count": "machineSettings"
+        },
+        "properties": {
+          "publisher": "Microsoft.Azure.Extensions",
+          "type": "CustomScript",
+          "typeHandlerVersion": "2.0",
+          "autoUpgradeMinorVersion": true,
+          "settings": {
+            "fileUris": "osSettings"
+          },
+          "protectedSettings": {
+            "commandToExecute": "bash install_postgresql.sh -m masterIpAddress -s subnet -t dbType -p GEN-PASSWORD"
+          }
+        }
+      }
+    ],
+    "outputs": {
+      "masterip": {
+        "value": "[reference(resourceId('Microsoft.Network/networkInterfaces', concat(variables('nicName'),0))).ipConfigurations[0].properties.privateIPAddress]",
+        "type": "string"
+      }
+    },
+    "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+  }
+}

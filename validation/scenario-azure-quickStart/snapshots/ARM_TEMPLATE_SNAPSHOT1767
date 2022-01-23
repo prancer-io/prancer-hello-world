@@ -1,0 +1,1173 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAzureQuickStart",
+  "paths": [
+    "/quickstarts/microsoft.web/private-webapp-with-app-gateway-and-apim/azuredeploy.json",
+    "/quickstarts/microsoft.web/private-webapp-with-app-gateway-and-apim/azuredeploy.parameters.json"
+  ],
+  "timestamp": 1642962911032,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/quickstarts/microsoft.web/private-webapp-with-app-gateway-and-apim/azuredeploy.json",
+      "/quickstarts/microsoft.web/private-webapp-with-app-gateway-and-apim/azuredeploy.parameters.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT1767",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "microsoft.network/publicipaddresses",
+      "microsoft.web/sites",
+      "microsoft.network/privateendpoints",
+      "microsoft.network/privateendpoints/privatednszonegroups",
+      "microsoft.network/virtualnetworks",
+      "microsoft.network/privatednszones/virtualnetworklinks",
+      "microsoft.network/privatednszones/a",
+      "microsoft.operationalinsights/workspaces",
+      "microsoft.keyvault/vaults",
+      "microsoft.network/privatednszones",
+      "microsoft.web/sites/config",
+      "microsoft.keyvault/vaults/secrets",
+      "microsoft.network/applicationgateways",
+      "microsoft.apimanagement/service/loggers",
+      "microsoft.apimanagement/service",
+      "microsoft.network/networksecuritygroups",
+      "microsoft.insights/components",
+      "microsoft.web/serverfarms",
+      "microsoft.apimanagement/service/diagnostics",
+      "microsoft.insights/diagnosticsettings"
+    ]
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT1767",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.0.0.0",
+    "metadata": {
+      "_generator": {
+        "name": "bicep",
+        "version": "0.4.1124.51302",
+        "templateHash": "8187528492859930539"
+      }
+    },
+    "parameters": {
+      "location": {
+        "type": "string",
+        "defaultValue": "[resourceGroup().location]",
+        "metadata": {
+          "description": "The Azure region for the specified resources."
+        }
+      },
+      "apiManagementPublisherName": {
+        "type": "string",
+        "metadata": {
+          "description": "A unique name for the API Management service. The service name refers to both the service and the corresponding Azure resource. The service name is used to generate a default domain name: <name>.azure-api.net."
+        },
+        "value": "Contoso"
+      },
+      "apiManagementPublisherEmailAddress": {
+        "type": "string",
+        "metadata": {
+          "description": "The email address to which all the notifications from API Management will be sent."
+        },
+        "value": "email@example.com"
+      },
+      "apiManagementSku": {
+        "type": "string",
+        "defaultValue": "Developer",
+        "allowedValues": [
+          "Developer",
+          "Premium"
+        ],
+        "metadata": {
+          "description": "The API Management SKU."
+        }
+      },
+      "apiManagementCustomDnsName": {
+        "type": "string",
+        "metadata": {
+          "description": "A custom domain name to be used for the API Management service."
+        },
+        "value": "GEN-SELFSIGNED-CERT-DNSNAME"
+      },
+      "apiManagementPortalCustomHostname": {
+        "type": "string",
+        "metadata": {
+          "description": "A custom domain name for the API Management service developer portal (e.g., portal.consoto.com). "
+        },
+        "value": "portal.azurequickstarts.net"
+      },
+      "apiManagementProxyCustomHostname": {
+        "type": "string",
+        "metadata": {
+          "description": "A custom domain name for the API Management service gateway/proxy endpoint (e.g., api.consoto.com)."
+        },
+        "value": "api.azurequickstarts.net"
+      },
+      "apiManagementManagementCustomHostname": {
+        "type": "string",
+        "metadata": {
+          "description": "A custom domain name for the API Management service management portal (e.g., management.consoto.com)."
+        },
+        "value": "management.azurequickstarts.net"
+      },
+      "apiManagementPortalCertificatePassword": {
+        "type": "secureString",
+        "metadata": {
+          "description": "Password for corresponding to the certificate for the API Management custom developer portal domain name."
+        },
+        "value": "GEN-SELFSIGNED-CERT-PASSWORD"
+      },
+      "apiManagementPortalCustomHostnameBase64EncodedCertificate": {
+        "type": "secureString",
+        "metadata": {
+          "description": "Used by Application Gateway, the Base64 encoded PFX certificate corresponding to the API Management custom developer portal domain name."
+        },
+        "value": "GEN-SELFSIGNED-CERT-PFXDATA"
+      },
+      "apiManagementProxyCertificatePassword": {
+        "type": "secureString",
+        "metadata": {
+          "description": "Password for corresponding to the certificate for the API Management custom proxy domain name."
+        },
+        "value": "GEN-SELFSIGNED-CERT-PASSWORD"
+      },
+      "apiManagementProxyCustomHostnameBase64EncodedCertificate": {
+        "type": "secureString",
+        "metadata": {
+          "description": "Used by Application Gateway, the Base64 encoded PFX certificate corresponding to the API Management custom proxy domain name."
+        },
+        "value": "GEN-SELFSIGNED-CERT-PFXDATA"
+      },
+      "apiManagementManagementCertificatePassword": {
+        "type": "secureString",
+        "metadata": {
+          "description": "Password for corresponding to the certificate for the API Management custom management domain name."
+        },
+        "value": "GEN-SELFSIGNED-CERT-PASSWORD"
+      },
+      "apiManagementManagementCustomHostnameBase64EncodedCertificate": {
+        "type": "secureString",
+        "metadata": {
+          "description": "Used by Application Gateway, the Base64 encoded PFX certificate corresponding to the API Management custom management domain name."
+        },
+        "value": "GEN-SELFSIGNED-CERT-PFXDATA"
+      },
+      "applicationGatewayTrustedRootBase64EncodedCertificate": {
+        "type": "secureString",
+        "metadata": {
+          "description": "Used by Application Gateway, the Base64 encoded CER/CRT certificate corresponding to the root certificate for Application Gateway."
+        },
+        "value": "GEN-SELFSIGNED-CERT-CERDATA"
+      },
+      "useWellKnownCertificateAuthority": {
+        "type": "bool",
+        "defaultValue": true,
+        "metadata": {
+          "description": "Flag to indicate if certificates used by Application Gateway were signed by a public Certificate Authority."
+        }
+      },
+      "vnetAddressPrefix": {
+        "type": "string",
+        "defaultValue": "10.0.0.0/20",
+        "metadata": {
+          "description": "The virtual network IP space to use for the new virutal network."
+        }
+      },
+      "subnetAppServiceIntAddressPrefix": {
+        "type": "string",
+        "defaultValue": "10.0.3.0/26",
+        "metadata": {
+          "description": "The IP space to use for the subnet for Azure App Service regional virtual network integration."
+        }
+      },
+      "subnetPrivateEndpointAddressPrefix": {
+        "type": "string",
+        "defaultValue": "10.0.4.0/26",
+        "metadata": {
+          "description": "The IP space to use for the subnet for private endpoints."
+        }
+      },
+      "subnetApiManagementAddressPrefix": {
+        "type": "string",
+        "defaultValue": "10.0.5.0/24",
+        "metadata": {
+          "description": "Address prefix for the api subnet."
+        }
+      },
+      "subnetApplicationGatewayAddressPrefix": {
+        "type": "string",
+        "defaultValue": "10.0.6.0/24",
+        "metadata": {
+          "description": "Address prefix for the gateway subnet."
+        }
+      },
+      "webAppSkuName": {
+        "type": "string",
+        "defaultValue": "P1v2",
+        "allowedValues": [
+          "P1v2",
+          "P1v3",
+          "P2v2",
+          "P2v3",
+          "P3v2",
+          "P3v3"
+        ],
+        "metadata": {
+          "description": "SKU name, must be minimum P1v2"
+        }
+      }
+    },
+    "variables": {
+      "baseName": "[uniqueString(resourceGroup().id)]",
+      "keyVaultName": "[format('kv-{0}', variables('baseName'))]",
+      "applicationGatewayName": "[format('agw-{0}', variables('baseName'))]",
+      "apiManagementServiceName": "[format('apim-{0}', variables('baseName'))]",
+      "appGatewayPublicIpAddressName": "[format('pip-{0}-agw', variables('baseName'))]",
+      "vnetName": "[format('vnet-{0}', variables('baseName'))]",
+      "subnetApiManagementName": "[format('snet-{0}-apim', variables('baseName'))]",
+      "subnetAppGatewayName": "[format('snet-{0}-agw', variables('baseName'))]",
+      "subnetPrivateEndpointName": "[format('snet-{0}-pe', variables('baseName'))]",
+      "subnetAppServiceIntName": "[format('snet-{0}-ase', variables('baseName'))]",
+      "nsgAppGatewayName": "[format('nsg-{0}-agw', variables('baseName'))]",
+      "nsgApiManagementName": "[format('nsg-{0}-apim', variables('baseName'))]",
+      "apimSubnetId": "Microsoft.Network/virtualNetworks/subnets/[format('vnet-{0}', variables('baseName'))]/[format('snet-{0}-apim', variables('baseName'))]",
+      "appGatewaySubnetId": "Microsoft.Network/virtualNetworks/subnets/[format('vnet-{0}', variables('baseName'))]/[format('snet-{0}-agw', variables('baseName'))]",
+      "appServiceIntegrationSubnetId": "Microsoft.Network/virtualNetworks/subnets/[format('vnet-{0}', variables('baseName'))]/[format('snet-{0}-ase', variables('baseName'))]",
+      "privateEndpointSubnetId": "Microsoft.Network/virtualNetworks/subnets/[format('vnet-{0}', variables('baseName'))]/[format('snet-{0}-pe', variables('baseName'))]",
+      "webAppName": "[format('web-{0}', variables('baseName'))]",
+      "applicationGatewayTrustedRootCertificates": [
+        {
+          "name": "trustedrootcert",
+          "properties": {
+            "data": "GEN-SELFSIGNED-CERT-CERDATA"
+          }
+        }
+      ],
+      "applicationGatewayTrustedRootCertificateReferences": [
+        {
+          "id": "Microsoft.Network/applicationGateways/trustedRootCertificates/[format('agw-{0}', variables('baseName'))]/trustedrootcert"
+        }
+      ]
+    },
+    "resources": [
+      {
+        "type": "Microsoft.Network/privateDnsZones/A",
+        "apiVersion": "2020-06-01",
+        "name": "[format('{0}/{1}', parameters('apiManagementCustomDnsName'), 'api')]",
+        "properties": {
+          "ttl": 3600,
+          "aRecords": [
+            {
+              "ipv4Address": "[reference(resourceId('Microsoft.ApiManagement/service', variables('apiManagementServiceName'))).privateIPAddresses[0]]"
+            }
+          ]
+        },
+        "dependsOn": [
+          "Microsoft.ApiManagement/service/[format('apim-{0}', variables('baseName'))]",
+          "Microsoft.Network/privateDnsZones/GEN-SELFSIGNED-CERT-DNSNAME"
+        ]
+      },
+      {
+        "type": "Microsoft.Network/privateDnsZones/A",
+        "apiVersion": "2020-06-01",
+        "name": "[format('{0}/{1}', parameters('apiManagementCustomDnsName'), 'management')]",
+        "properties": {
+          "ttl": 3600,
+          "aRecords": [
+            {
+              "ipv4Address": "[reference(resourceId('Microsoft.ApiManagement/service', variables('apiManagementServiceName'))).privateIPAddresses[0]]"
+            }
+          ]
+        },
+        "dependsOn": [
+          "Microsoft.ApiManagement/service/[format('apim-{0}', variables('baseName'))]",
+          "Microsoft.Network/privateDnsZones/GEN-SELFSIGNED-CERT-DNSNAME"
+        ]
+      },
+      {
+        "type": "Microsoft.Network/privateDnsZones/A",
+        "apiVersion": "2020-06-01",
+        "name": "[format('{0}/{1}', parameters('apiManagementCustomDnsName'), 'portal')]",
+        "properties": {
+          "ttl": 3600,
+          "aRecords": [
+            {
+              "ipv4Address": "[reference(resourceId('Microsoft.ApiManagement/service', variables('apiManagementServiceName'))).privateIPAddresses[0]]"
+            }
+          ]
+        },
+        "dependsOn": [
+          "Microsoft.ApiManagement/service/[format('apim-{0}', variables('baseName'))]",
+          "Microsoft.Network/privateDnsZones/GEN-SELFSIGNED-CERT-DNSNAME"
+        ]
+      },
+      {
+        "type": "Microsoft.Network/privateDnsZones/virtualNetworkLinks",
+        "apiVersion": "2020-06-01",
+        "name": "[format('{0}/{1}', parameters('apiManagementCustomDnsName'), 'privateDnsZoneLink')]",
+        "location": "global",
+        "properties": {
+          "registrationEnabled": false,
+          "virtualNetwork": {
+            "id": "Microsoft.Network/virtualNetworks/[format('vnet-{0}', variables('baseName'))]"
+          }
+        },
+        "dependsOn": [
+          "Microsoft.Network/privateDnsZones/GEN-SELFSIGNED-CERT-DNSNAME",
+          "Microsoft.Network/virtualNetworks/[format('vnet-{0}', variables('baseName'))]"
+        ]
+      },
+      {
+        "type": "Microsoft.Network/privateDnsZones/virtualNetworkLinks",
+        "apiVersion": "2020-06-01",
+        "name": "[format('{0}/{1}', 'privatelink.azurewebsites.net', 'webAppPrivateDnsZoneLink')]",
+        "location": "global",
+        "properties": {
+          "registrationEnabled": false,
+          "virtualNetwork": {
+            "id": "Microsoft.Network/virtualNetworks/[format('vnet-{0}', variables('baseName'))]"
+          }
+        },
+        "dependsOn": [
+          "Microsoft.Network/virtualNetworks/[format('vnet-{0}', variables('baseName'))]",
+          "Microsoft.Network/privateDnsZones/privatelink.azurewebsites.net"
+        ]
+      },
+      {
+        "type": "Microsoft.Network/privateEndpoints/privateDnsZoneGroups",
+        "apiVersion": "2021-02-01",
+        "name": "[format('{0}/{1}', format('pe-{0}-sites', variables('baseName')), 'webAppPrivateDnsZoneGroup')]",
+        "properties": {
+          "privateDnsZoneConfigs": [
+            {
+              "name": "config",
+              "properties": {
+                "privateDnsZoneId": "Microsoft.Network/privateDnsZones/privatelink.azurewebsites.net"
+              }
+            }
+          ]
+        },
+        "dependsOn": [
+          "[resourceId('Microsoft.Network/privateDnsZones', 'privatelink.azurewebsites.net')]",
+          "[resourceId('Microsoft.Network/privateEndpoints', format('pe-{0}-sites', variables('baseName')))]"
+        ]
+      },
+      {
+        "type": "Microsoft.Network/privateEndpoints/privateDnsZoneGroups",
+        "apiVersion": "2021-02-01",
+        "name": "[format('{0}/{1}', format('pe-{0}-kv', variables('baseName')), 'keyVaultPrivateDnsZoneGroup')]",
+        "properties": {
+          "privateDnsZoneConfigs": [
+            {
+              "name": "config",
+              "properties": {
+                "privateDnsZoneId": "Microsoft.Network/privateDnsZones/privatelink.vaultcore.azure.net"
+              }
+            }
+          ]
+        },
+        "dependsOn": [
+          "[resourceId('Microsoft.Network/privateDnsZones', 'privatelink.vaultcore.azure.net')]",
+          "[resourceId('Microsoft.Network/privateEndpoints', format('pe-{0}-kv', variables('baseName')))]"
+        ]
+      },
+      {
+        "type": "Microsoft.Network/privateDnsZones/virtualNetworkLinks",
+        "apiVersion": "2020-06-01",
+        "name": "[format('{0}/{1}', 'privatelink.vaultcore.azure.net', 'keyVaultPrivateDnsZoneLink')]",
+        "location": "global",
+        "properties": {
+          "registrationEnabled": false,
+          "virtualNetwork": {
+            "id": "Microsoft.Network/virtualNetworks/[format('vnet-{0}', variables('baseName'))]"
+          }
+        },
+        "dependsOn": [
+          "Microsoft.Network/privateDnsZones/privatelink.vaultcore.azure.net",
+          "Microsoft.Network/virtualNetworks/[format('vnet-{0}', variables('baseName'))]"
+        ]
+      },
+      {
+        "type": "Microsoft.Web/sites/config",
+        "apiVersion": "2020-12-01",
+        "name": "[format('{0}/{1}', variables('webAppName'), 'web')]",
+        "properties": {
+          "ftpsState": "Disabled",
+          "minTlsVersion": "1.2",
+          "detailedErrorLoggingEnabled": true,
+          "httpLoggingEnabled": true,
+          "requestTracingEnabled": true,
+          "remoteDebuggingEnabled": false
+        },
+        "dependsOn": [
+          "Microsoft.Web/sites/[format('web-{0}', variables('baseName'))]"
+        ]
+      },
+      {
+        "type": "Microsoft.ApiManagement/service/loggers",
+        "apiVersion": "2020-12-01",
+        "name": "[format('{0}/{1}', variables('apiManagementServiceName'), 'appInsightsLogger')]",
+        "properties": {
+          "loggerType": "applicationInsights",
+          "credentials": {
+            "instrumentationKey": "[reference(resourceId('Microsoft.Insights/components', format('ai-{0}', variables('baseName')))).InstrumentationKey]"
+          }
+        },
+        "dependsOn": [
+          "[resourceId('Microsoft.ApiManagement/service', variables('apiManagementServiceName'))]",
+          "[resourceId('Microsoft.Insights/components', format('ai-{0}', variables('baseName')))]"
+        ]
+      },
+      {
+        "type": "Microsoft.ApiManagement/service/diagnostics",
+        "apiVersion": "2020-12-01",
+        "name": "[format('{0}/{1}', variables('apiManagementServiceName'), 'applicationinsights')]",
+        "properties": {
+          "loggerId": "Microsoft.ApiManagement/service/loggers/[format('apim-{0}', variables('baseName'))]/appInsightsLogger",
+          "logClientIp": true,
+          "alwaysLog": "allErrors",
+          "verbosity": "information",
+          "sampling": {
+            "percentage": 100,
+            "samplingType": "fixed"
+          },
+          "httpCorrelationProtocol": "Legacy"
+        },
+        "dependsOn": [
+          "Microsoft.ApiManagement/service/[format('apim-{0}', variables('baseName'))]",
+          "Microsoft.ApiManagement/service/loggers/[format('apim-{0}', variables('baseName'))]/appInsightsLogger"
+        ]
+      },
+      {
+        "type": "Microsoft.KeyVault/vaults/secrets",
+        "apiVersion": "2021-04-01-preview",
+        "name": "[format('{0}/{1}', variables('keyVaultName'), format('kvs-{0}-aikey', variables('baseName')))]",
+        "properties": {
+          "value": "[reference(resourceId('Microsoft.Insights/components', format('ai-{0}', variables('baseName')))).InstrumentationKey]"
+        },
+        "dependsOn": [
+          "[resourceId('Microsoft.Insights/components', format('ai-{0}', variables('baseName')))]",
+          "[resourceId('Microsoft.KeyVault/vaults', variables('keyVaultName'))]"
+        ]
+      },
+      {
+        "type": "Microsoft.Network/virtualNetworks",
+        "apiVersion": "2021-03-01",
+        "name": "[format('vnet-{0}', variables('baseName'))]",
+        "location": "[resourceGroup().location]",
+        "properties": {
+          "addressSpace": {
+            "addressPrefixes": [
+              "10.0.0.0/20"
+            ]
+          },
+          "subnets": [
+            {
+              "name": "[format('snet-{0}-ase', variables('baseName'))]",
+              "properties": {
+                "addressPrefix": "10.0.3.0/26",
+                "delegations": [
+                  {
+                    "name": "delegation",
+                    "properties": {
+                      "serviceName": "Microsoft.Web/serverFarms"
+                    }
+                  }
+                ]
+              }
+            },
+            {
+              "name": "[format('snet-{0}-pe', variables('baseName'))]",
+              "properties": {
+                "addressPrefix": "10.0.4.0/26",
+                "privateEndpointNetworkPolicies": "Disabled"
+              }
+            },
+            {
+              "name": "[format('snet-{0}-apim', variables('baseName'))]",
+              "properties": {
+                "addressPrefix": "10.0.5.0/24",
+                "networkSecurityGroup": {
+                  "id": "Microsoft.Network/networkSecurityGroups/[format('nsg-{0}-apim', variables('baseName'))]"
+                }
+              }
+            },
+            {
+              "name": "[format('snet-{0}-agw', variables('baseName'))]",
+              "properties": {
+                "addressPrefix": "10.0.6.0/24",
+                "networkSecurityGroup": {
+                  "id": "Microsoft.Network/networkSecurityGroups/[format('nsg-{0}-agw', variables('baseName'))]"
+                }
+              }
+            }
+          ]
+        },
+        "dependsOn": [
+          "Microsoft.Network/networkSecurityGroups/[format('nsg-{0}-apim', variables('baseName'))]",
+          "Microsoft.Network/networkSecurityGroups/[format('nsg-{0}-agw', variables('baseName'))]"
+        ]
+      },
+      {
+        "type": "Microsoft.Network/networkSecurityGroups",
+        "apiVersion": "2021-02-01",
+        "name": "[format('nsg-{0}-agw', variables('baseName'))]",
+        "location": "[resourceGroup().location]",
+        "properties": {
+          "securityRules": [
+            {
+              "name": "agw-in",
+              "properties": {
+                "direction": "Inbound",
+                "access": "Allow",
+                "protocol": "*",
+                "description": "App Gateway inbound",
+                "priority": 100,
+                "sourceAddressPrefix": "GatewayManager",
+                "sourcePortRange": "*",
+                "destinationAddressPrefix": "*",
+                "destinationPortRange": "65200-65535"
+              }
+            },
+            {
+              "name": "https-in",
+              "properties": {
+                "protocol": "Tcp",
+                "sourcePortRange": "*",
+                "destinationPortRange": "443",
+                "sourceAddressPrefix": "*",
+                "destinationAddressPrefix": "*",
+                "access": "Allow",
+                "priority": 110,
+                "direction": "Inbound",
+                "description": "Allow HTTPS Inbound"
+              }
+            }
+          ]
+        }
+      },
+      {
+        "type": "Microsoft.Network/networkSecurityGroups",
+        "apiVersion": "2021-02-01",
+        "name": "[format('nsg-{0}-apim', variables('baseName'))]",
+        "location": "[resourceGroup().location]",
+        "properties": {
+          "securityRules": [
+            {
+              "name": "apim-in",
+              "properties": {
+                "direction": "Inbound",
+                "access": "Allow",
+                "protocol": "Tcp",
+                "description": "API Management inbound",
+                "priority": 100,
+                "sourceAddressPrefix": "ApiManagement",
+                "sourcePortRange": "*",
+                "destinationAddressPrefix": "VirtualNetwork",
+                "destinationPortRange": "3443"
+              }
+            }
+          ]
+        }
+      },
+      {
+        "type": "Microsoft.Network/publicIPAddresses",
+        "apiVersion": "2021-03-01",
+        "name": "[format('pip-{0}-agw', variables('baseName'))]",
+        "location": "[resourceGroup().location]",
+        "sku": {
+          "name": "Standard"
+        },
+        "properties": {
+          "publicIPAllocationMethod": "Static",
+          "publicIPAddressVersion": "IPv4",
+          "idleTimeoutInMinutes": 4
+        }
+      },
+      {
+        "type": "Microsoft.Network/privateDnsZones",
+        "apiVersion": "2020-06-01",
+        "name": "GEN-SELFSIGNED-CERT-DNSNAME",
+        "location": "global"
+      },
+      {
+        "type": "Microsoft.Network/privateDnsZones",
+        "apiVersion": "2020-06-01",
+        "name": "privatelink.azurewebsites.net",
+        "location": "global"
+      },
+      {
+        "type": "Microsoft.Network/privateEndpoints",
+        "apiVersion": "2021-02-01",
+        "name": "[format('pe-{0}-sites', variables('baseName'))]",
+        "location": "[resourceGroup().location]",
+        "properties": {
+          "subnet": {
+            "id": "Microsoft.Network/virtualNetworks/subnets/[format('vnet-{0}', variables('baseName'))]/[format('snet-{0}-pe', variables('baseName'))]"
+          },
+          "privateLinkServiceConnections": [
+            {
+              "name": "[format('plsc-{0}-sites', variables('baseName'))]",
+              "properties": {
+                "privateLinkServiceId": "Microsoft.Web/sites/[format('web-{0}', variables('baseName'))]",
+                "groupIds": [
+                  "sites"
+                ]
+              }
+            }
+          ]
+        },
+        "dependsOn": [
+          "Microsoft.Web/sites/[format('web-{0}', variables('baseName'))]"
+        ]
+      },
+      {
+        "type": "Microsoft.Network/privateEndpoints",
+        "apiVersion": "2021-02-01",
+        "name": "[format('pe-{0}-kv', variables('baseName'))]",
+        "location": "[resourceGroup().location]",
+        "properties": {
+          "subnet": {
+            "id": "Microsoft.Network/virtualNetworks/subnets/[format('vnet-{0}', variables('baseName'))]/[format('snet-{0}-pe', variables('baseName'))]",
+            "name": "[format('snet-{0}-pe', variables('baseName'))]"
+          },
+          "privateLinkServiceConnections": [
+            {
+              "id": "Microsoft.KeyVault/vaults/[format('kv-{0}', variables('baseName'))]",
+              "name": "[format('plsc-{0}-kv', variables('baseName'))]",
+              "properties": {
+                "privateLinkServiceId": "Microsoft.KeyVault/vaults/[format('kv-{0}', variables('baseName'))]",
+                "groupIds": [
+                  "vault"
+                ]
+              }
+            }
+          ]
+        },
+        "dependsOn": [
+          "Microsoft.KeyVault/vaults/[format('kv-{0}', variables('baseName'))]"
+        ]
+      },
+      {
+        "type": "Microsoft.Network/privateDnsZones",
+        "apiVersion": "2020-06-01",
+        "name": "privatelink.vaultcore.azure.net",
+        "location": "Global"
+      },
+      {
+        "type": "Microsoft.Insights/components",
+        "apiVersion": "2020-02-02",
+        "name": "[format('ai-{0}', variables('baseName'))]",
+        "location": "[resourceGroup().location]",
+        "kind": "web",
+        "properties": {
+          "Application_Type": "web",
+          "WorkspaceResourceId": "[resourceId('Microsoft.OperationalInsights/workspaces', format('log-{0}', variables('baseName')))]"
+        },
+        "dependsOn": [
+          "[resourceId('Microsoft.OperationalInsights/workspaces', format('log-{0}', variables('baseName')))]"
+        ]
+      },
+      {
+        "type": "Microsoft.OperationalInsights/workspaces",
+        "apiVersion": "2021-06-01",
+        "name": "[format('log-{0}', variables('baseName'))]",
+        "location": "[resourceGroup().location]",
+        "properties": {
+          "sku": {
+            "name": "PerGB2018"
+          }
+        }
+      },
+      {
+        "type": "Microsoft.Web/serverfarms",
+        "apiVersion": "2021-01-01",
+        "name": "[format('plan-{0}', variables('baseName'))]",
+        "location": "[resourceGroup().location]",
+        "kind": "app",
+        "sku": {
+          "name": "P1v2",
+          "capacity": 1
+        },
+        "properties": {}
+      },
+      {
+        "type": "Microsoft.Web/sites",
+        "apiVersion": "2020-12-01",
+        "name": "[format('web-{0}', variables('baseName'))]",
+        "location": "[resourceGroup().location]",
+        "kind": "app",
+        "properties": {
+          "httpsOnly": true,
+          "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', format('plan-{0}', variables('baseName')))]",
+          "virtualNetworkSubnetId": "Microsoft.Network/virtualNetworks/subnets/[format('vnet-{0}', variables('baseName'))]/[format('snet-{0}-ase', variables('baseName'))]",
+          "siteConfig": {
+            "vnetRouteAllEnabled": true
+          }
+        },
+        "identity": {
+          "type": "SystemAssigned"
+        },
+        "dependsOn": [
+          "[resourceId('Microsoft.Network/virtualNetworks', variables('vnetName'))]",
+          "[resourceId('Microsoft.Web/serverfarms', format('plan-{0}', variables('baseName')))]"
+        ]
+      },
+      {
+        "type": "Microsoft.Web/sites/config",
+        "apiVersion": "2021-01-15",
+        "name": "[format('{0}/appsettings', variables('webAppName'))]",
+        "properties": {
+          "APPINSIGHTS_INSTRUMENTATIONKEY": "[format('@Microsoft.KeyVault(SecretUri={0})', reference(resourceId('Microsoft.KeyVault/vaults/secrets', variables('keyVaultName'), format('kvs-{0}-aikey', variables('baseName')))).secretUri)]"
+        },
+        "dependsOn": [
+          "[resourceId('Microsoft.KeyVault/vaults/secrets', variables('keyVaultName'), format('kvs-{0}-aikey', variables('baseName')))]",
+          "[resourceId('Microsoft.Web/sites', variables('webAppName'))]"
+        ]
+      },
+      {
+        "type": "Microsoft.ApiManagement/service",
+        "apiVersion": "2020-12-01",
+        "name": "[format('apim-{0}', variables('baseName'))]",
+        "location": "[resourceGroup().location]",
+        "sku": {
+          "capacity": 1,
+          "name": "Developer"
+        },
+        "properties": {
+          "publisherEmail": "email@example.com",
+          "publisherName": "Contoso",
+          "virtualNetworkType": "Internal",
+          "virtualNetworkConfiguration": {
+            "subnetResourceId": "Microsoft.Network/virtualNetworks/subnets/[format('vnet-{0}', variables('baseName'))]/[format('snet-{0}-apim', variables('baseName'))]"
+          },
+          "hostnameConfigurations": [
+            {
+              "type": "DeveloperPortal",
+              "hostName": "portal.azurequickstarts.net",
+              "encodedCertificate": "GEN-SELFSIGNED-CERT-PFXDATA",
+              "certificatePassword": "GEN-SELFSIGNED-CERT-PASSWORD",
+              "negotiateClientCertificate": false
+            },
+            {
+              "type": "Proxy",
+              "hostName": "api.azurequickstarts.net",
+              "encodedCertificate": "GEN-SELFSIGNED-CERT-PFXDATA",
+              "certificatePassword": "GEN-SELFSIGNED-CERT-PASSWORD",
+              "negotiateClientCertificate": false
+            },
+            {
+              "type": "Management",
+              "hostName": "management.azurequickstarts.net",
+              "encodedCertificate": "GEN-SELFSIGNED-CERT-PFXDATA",
+              "certificatePassword": "GEN-SELFSIGNED-CERT-PASSWORD",
+              "negotiateClientCertificate": false
+            }
+          ]
+        },
+        "dependsOn": [
+          "Microsoft.Network/virtualNetworks/[format('vnet-{0}', variables('baseName'))]"
+        ]
+      },
+      {
+        "type": "Microsoft.Insights/diagnosticSettings",
+        "apiVersion": "2021-05-01-preview",
+        "scope": "[format('Microsoft.ApiManagement/service/{0}', variables('apiManagementServiceName'))]",
+        "name": "apiManagementDiagnosticSettings",
+        "properties": {
+          "workspaceId": "[resourceId('Microsoft.OperationalInsights/workspaces', format('log-{0}', variables('baseName')))]",
+          "logs": [
+            {
+              "category": "GatewayLogs",
+              "enabled": true
+            }
+          ],
+          "metrics": [
+            {
+              "category": "AllMetrics",
+              "enabled": true
+            }
+          ]
+        },
+        "dependsOn": [
+          "[resourceId('Microsoft.ApiManagement/service', variables('apiManagementServiceName'))]",
+          "[resourceId('Microsoft.OperationalInsights/workspaces', format('log-{0}', variables('baseName')))]"
+        ]
+      },
+      {
+        "type": "Microsoft.Network/applicationGateways",
+        "apiVersion": "2020-11-01",
+        "name": "[format('agw-{0}', variables('baseName'))]",
+        "location": "[resourceGroup().location]",
+        "properties": {
+          "sku": {
+            "name": "WAF_v2",
+            "tier": "WAF_v2",
+            "capacity": 2
+          },
+          "gatewayIPConfigurations": [
+            {
+              "name": "gatewayIP01",
+              "properties": {
+                "subnet": {
+                  "id": "Microsoft.Network/virtualNetworks/subnets/[format('vnet-{0}', variables('baseName'))]/[format('snet-{0}-agw', variables('baseName'))]"
+                }
+              }
+            }
+          ],
+          "sslCertificates": [
+            {
+              "name": "gatewaycert",
+              "properties": {
+                "data": "GEN-SELFSIGNED-CERT-PFXDATA",
+                "password": "GEN-SELFSIGNED-CERT-PASSWORD"
+              }
+            },
+            {
+              "name": "portalcert",
+              "properties": {
+                "data": "GEN-SELFSIGNED-CERT-PFXDATA",
+                "password": "GEN-SELFSIGNED-CERT-PASSWORD"
+              }
+            },
+            {
+              "name": "managementcert",
+              "properties": {
+                "data": "GEN-SELFSIGNED-CERT-PFXDATA",
+                "password": "GEN-SELFSIGNED-CERT-PASSWORD"
+              }
+            }
+          ],
+          "trustedRootCertificates": "[if(parameters('useWellKnownCertificateAuthority'), null(), variables('applicationGatewayTrustedRootCertificates'))]",
+          "frontendIPConfigurations": [
+            {
+              "name": "frontend1",
+              "properties": {
+                "privateIPAllocationMethod": "Dynamic",
+                "publicIPAddress": {
+                  "id": "Microsoft.Network/publicIPAddresses/[format('pip-{0}-agw', variables('baseName'))]"
+                }
+              }
+            }
+          ],
+          "frontendPorts": [
+            {
+              "name": "port01",
+              "properties": {
+                "port": 443
+              }
+            }
+          ],
+          "backendAddressPools": [
+            {
+              "name": "gatewaybackend",
+              "properties": {
+                "backendAddresses": [
+                  {
+                    "fqdn": "api.azurequickstarts.net"
+                  }
+                ]
+              }
+            },
+            {
+              "name": "portalbackend",
+              "properties": {
+                "backendAddresses": [
+                  {
+                    "fqdn": "portal.azurequickstarts.net"
+                  }
+                ]
+              }
+            },
+            {
+              "name": "managementbackend",
+              "properties": {
+                "backendAddresses": [
+                  {
+                    "fqdn": "management.azurequickstarts.net"
+                  }
+                ]
+              }
+            }
+          ],
+          "backendHttpSettingsCollection": [
+            {
+              "name": "apimPoolGatewaySetting",
+              "properties": {
+                "port": 443,
+                "protocol": "Https",
+                "cookieBasedAffinity": "Disabled",
+                "pickHostNameFromBackendAddress": true,
+                "requestTimeout": 180,
+                "probe": {
+                  "id": "Microsoft.Network/applicationGateways/probes/[format('agw-{0}', variables('baseName'))]/apimgatewayprobe"
+                },
+                "trustedRootCertificates": "[if(parameters('useWellKnownCertificateAuthority'), null(), variables('applicationGatewayTrustedRootCertificateReferences'))]"
+              }
+            },
+            {
+              "name": "apimPoolPortalSetting",
+              "properties": {
+                "port": 443,
+                "protocol": "Https",
+                "cookieBasedAffinity": "Disabled",
+                "pickHostNameFromBackendAddress": true,
+                "requestTimeout": 180,
+                "probe": {
+                  "id": "Microsoft.Network/applicationGateways/probes/[format('agw-{0}', variables('baseName'))]/apimportalprobe"
+                },
+                "trustedRootCertificates": "[if(parameters('useWellKnownCertificateAuthority'), null(), variables('applicationGatewayTrustedRootCertificateReferences'))]"
+              }
+            },
+            {
+              "name": "apimPoolManagementSetting",
+              "properties": {
+                "port": 443,
+                "protocol": "Https",
+                "cookieBasedAffinity": "Disabled",
+                "pickHostNameFromBackendAddress": true,
+                "requestTimeout": 180,
+                "probe": {
+                  "id": "Microsoft.Network/applicationGateways/probes/[format('agw-{0}', variables('baseName'))]/apimmanagementprobe"
+                },
+                "trustedRootCertificates": "[if(parameters('useWellKnownCertificateAuthority'), null(), variables('applicationGatewayTrustedRootCertificateReferences'))]"
+              }
+            }
+          ],
+          "httpListeners": [
+            {
+              "name": "gatewaylistener",
+              "properties": {
+                "frontendIPConfiguration": {
+                  "id": "Microsoft.Network/applicationGateways/frontendIPConfigurations/[format('agw-{0}', variables('baseName'))]/frontend1"
+                },
+                "frontendPort": {
+                  "id": "Microsoft.Network/applicationGateways/frontendPorts/[format('agw-{0}', variables('baseName'))]/port01"
+                },
+                "protocol": "Https",
+                "sslCertificate": {
+                  "id": "Microsoft.Network/applicationGateways/sslCertificates/[format('agw-{0}', variables('baseName'))]/gatewaycert"
+                },
+                "hostName": "api.azurequickstarts.net",
+                "requireServerNameIndication": true
+              }
+            },
+            {
+              "name": "portallistener",
+              "properties": {
+                "frontendIPConfiguration": {
+                  "id": "Microsoft.Network/applicationGateways/frontendIPConfigurations/[format('agw-{0}', variables('baseName'))]/frontend1"
+                },
+                "frontendPort": {
+                  "id": "Microsoft.Network/applicationGateways/frontendPorts/[format('agw-{0}', variables('baseName'))]/port01"
+                },
+                "protocol": "Https",
+                "sslCertificate": {
+                  "id": "Microsoft.Network/applicationGateways/sslCertificates/[format('agw-{0}', variables('baseName'))]/portalcert"
+                },
+                "hostName": "portal.azurequickstarts.net",
+                "requireServerNameIndication": true
+              }
+            },
+            {
+              "name": "managementlistener",
+              "properties": {
+                "frontendIPConfiguration": {
+                  "id": "Microsoft.Network/applicationGateways/frontendIPConfigurations/[format('agw-{0}', variables('baseName'))]/frontend1"
+                },
+                "frontendPort": {
+                  "id": "Microsoft.Network/applicationGateways/frontendPorts/[format('agw-{0}', variables('baseName'))]/port01"
+                },
+                "protocol": "Https",
+                "sslCertificate": {
+                  "id": "Microsoft.Network/applicationGateways/sslCertificates/[format('agw-{0}', variables('baseName'))]/managementcert"
+                },
+                "hostName": "management.azurequickstarts.net",
+                "requireServerNameIndication": true
+              }
+            }
+          ],
+          "requestRoutingRules": [
+            {
+              "name": "gatewayrule",
+              "properties": {
+                "ruleType": "Basic",
+                "httpListener": {
+                  "id": "Microsoft.Network/applicationGateways/httpListeners/[format('agw-{0}', variables('baseName'))]/gatewaylistener"
+                },
+                "backendAddressPool": {
+                  "id": "Microsoft.Network/applicationGateways/backendAddressPools/[format('agw-{0}', variables('baseName'))]/gatewaybackend"
+                },
+                "backendHttpSettings": {
+                  "id": "Microsoft.Network/applicationGateways/backendHttpSettingsCollection/[format('agw-{0}', variables('baseName'))]/apimPoolGatewaySetting"
+                }
+              }
+            },
+            {
+              "name": "portalrule",
+              "properties": {
+                "ruleType": "Basic",
+                "httpListener": {
+                  "id": "Microsoft.Network/applicationGateways/httpListeners/[format('agw-{0}', variables('baseName'))]/portallistener"
+                },
+                "backendAddressPool": {
+                  "id": "Microsoft.Network/applicationGateways/backendAddressPools/[format('agw-{0}', variables('baseName'))]/portalbackend"
+                },
+                "backendHttpSettings": {
+                  "id": "Microsoft.Network/applicationGateways/backendHttpSettingsCollection/[format('agw-{0}', variables('baseName'))]/apimPoolPortalSetting"
+                }
+              }
+            },
+            {
+              "name": "managementrule",
+              "properties": {
+                "ruleType": "Basic",
+                "httpListener": {
+                  "id": "Microsoft.Network/applicationGateways/httpListeners/[format('agw-{0}', variables('baseName'))]/managementlistener"
+                },
+                "backendAddressPool": {
+                  "id": "Microsoft.Network/applicationGateways/backendAddressPools/[format('agw-{0}', variables('baseName'))]/managementbackend"
+                },
+                "backendHttpSettings": {
+                  "id": "Microsoft.Network/applicationGateways/backendHttpSettingsCollection/[format('agw-{0}', variables('baseName'))]/apimPoolManagementSetting"
+                }
+              }
+            }
+          ],
+          "probes": [
+            {
+              "name": "apimgatewayprobe",
+              "properties": {
+                "protocol": "Https",
+                "host": "api.azurequickstarts.net",
+                "path": "/status-0123456789abcdef",
+                "interval": 30,
+                "timeout": 120,
+                "unhealthyThreshold": 8,
+                "pickHostNameFromBackendHttpSettings": false,
+                "minServers": 0
+              }
+            },
+            {
+              "name": "apimportalprobe",
+              "properties": {
+                "protocol": "Https",
+                "host": "portal.azurequickstarts.net",
+                "path": "/signin",
+                "interval": 60,
+                "timeout": 300,
+                "unhealthyThreshold": 8,
+                "pickHostNameFromBackendHttpSettings": false,
+                "minServers": 0
+              }
+            },
+            {
+              "name": "apimmanagementprobe",
+              "properties": {
+                "protocol": "Https",
+                "host": "management.azurequickstarts.net",
+                "path": "/ServiceStatus",
+                "interval": 60,
+                "timeout": 300,
+                "unhealthyThreshold": 8,
+                "pickHostNameFromBackendHttpSettings": false,
+                "minServers": 0
+              }
+            }
+          ],
+          "sslPolicy": {
+            "policyType": "Predefined",
+            "policyName": "AppGwSslPolicy20170401S"
+          },
+          "webApplicationFirewallConfiguration": {
+            "enabled": true,
+            "firewallMode": "Detection",
+            "ruleSetType": "OWASP",
+            "ruleSetVersion": "3.2",
+            "requestBodyCheck": true,
+            "maxRequestBodySizeInKb": 128,
+            "fileUploadLimitInMb": 100
+          }
+        },
+        "dependsOn": [
+          "Microsoft.ApiManagement/service/[format('apim-{0}', variables('baseName'))]",
+          "Microsoft.Network/privateDnsZones/GEN-SELFSIGNED-CERT-DNSNAME",
+          "Microsoft.Network/publicIPAddresses/[format('pip-{0}-agw', variables('baseName'))]",
+          "Microsoft.Network/virtualNetworks/[format('vnet-{0}', variables('baseName'))]"
+        ]
+      },
+      {
+        "type": "Microsoft.Insights/diagnosticSettings",
+        "apiVersion": "2021-05-01-preview",
+        "scope": "[format('Microsoft.Network/applicationGateways/{0}', variables('applicationGatewayName'))]",
+        "name": "diagnosticSettings",
+        "properties": {
+          "workspaceId": "[resourceId('Microsoft.OperationalInsights/workspaces', format('log-{0}', variables('baseName')))]",
+          "logs": [
+            {
+              "category": "ApplicationGatewayAccessLog",
+              "enabled": true
+            },
+            {
+              "category": "ApplicationGatewayPerformanceLog",
+              "enabled": true
+            },
+            {
+              "category": "ApplicationGatewayFirewallLog",
+              "enabled": true
+            }
+          ],
+          "metrics": [
+            {
+              "category": "AllMetrics",
+              "enabled": true
+            }
+          ]
+        },
+        "dependsOn": [
+          "[resourceId('Microsoft.Network/applicationGateways', variables('applicationGatewayName'))]",
+          "[resourceId('Microsoft.OperationalInsights/workspaces', format('log-{0}', variables('baseName')))]"
+        ]
+      },
+      {
+        "type": "Microsoft.KeyVault/vaults",
+        "apiVersion": "2021-04-01-preview",
+        "name": "[format('kv-{0}', variables('baseName'))]",
+        "location": "[resourceGroup().location]",
+        "properties": {
+          "sku": {
+            "family": "A",
+            "name": "standard"
+          },
+          "tenantId": "[subscription().tenantId]",
+          "accessPolicies": [
+            {
+              "tenantId": "[reference(resourceId('Microsoft.Web/sites', variables('webAppName')), '2020-12-01', 'full').identity.tenantId]",
+              "objectId": "[reference(resourceId('Microsoft.Web/sites', variables('webAppName')), '2020-12-01', 'full').identity.principalId]",
+              "permissions": {
+                "secrets": [
+                  "get"
+                ]
+              }
+            }
+          ],
+          "networkAcls": {
+            "bypass": "None",
+            "defaultAction": "Deny"
+          }
+        },
+        "dependsOn": [
+          "Microsoft.Web/sites/[format('web-{0}', variables('baseName'))]"
+        ]
+      }
+    ],
+    "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+  }
+}

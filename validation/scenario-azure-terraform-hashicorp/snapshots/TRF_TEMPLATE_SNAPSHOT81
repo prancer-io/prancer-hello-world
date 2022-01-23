@@ -1,0 +1,127 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "main",
+  "contentType": "json",
+  "source": "gitConnectorAzureTerraHashicorp",
+  "paths": [
+    "/examples/netapp/volume_dual_protocol/variables.tf",
+    "/examples/netapp/volume_dual_protocol/main.tf"
+  ],
+  "timestamp": 1642943279844,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "TRF_TEMPLATE_SNAPSHOT",
+    "type": "terraform",
+    "collection": "terraformtemplate",
+    "paths": [
+      "/examples/netapp/volume_dual_protocol/variables.tf",
+      "/examples/netapp/volume_dual_protocol/main.tf"
+    ],
+    "snapshotId": "TRF_TEMPLATE_SNAPSHOT81",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "azurerm_netapp_account",
+      "azurerm_resource_group",
+      "azurerm_netapp_pool",
+      "azurerm_netapp_volume"
+    ]
+  },
+  "snapshotId": "TRF_TEMPLATE_SNAPSHOT81",
+  "collection": "terraformtemplate",
+  "json": {
+    "provider": [
+      {
+        "azurerm": {
+          "features": [
+            {}
+          ]
+        }
+      }
+    ],
+    "resources": [
+      {
+        "type": "azurerm_resource_group",
+        "name": "example",
+        "properties": {
+          "name": "${var.prefix}-resources",
+          "location": "${var.location}",
+          "compiletime_identity": "azurerm_resource_group.example"
+        }
+      },
+      {
+        "type": "azurerm_netapp_account",
+        "name": "example",
+        "properties": {
+          "name": "${var.prefix}-netappaccount",
+          "location": "${azurerm_resource_group.example.location}",
+          "resource_group_name": "${azurerm_resource_group.example.name}",
+          "active_directory": [
+            {
+              "username": "pmcadmin",
+              "password": "${var.password}",
+              "smb_server_name": "SMBSERVER",
+              "dns_servers": [
+                "10.2.0.4"
+              ],
+              "domain": "anf.local"
+            }
+          ],
+          "compiletime_identity": "azurerm_netapp_account.example"
+        }
+      },
+      {
+        "type": "azurerm_netapp_pool",
+        "name": "example",
+        "properties": {
+          "name": "${var.prefix}-netapppool",
+          "location": "${azurerm_resource_group.example.location}",
+          "resource_group_name": "${azurerm_resource_group.example.name}",
+          "account_name": "${azurerm_netapp_account.example.name}",
+          "service_level": "Standard",
+          "size_in_tb": 4,
+          "compiletime_identity": "azurerm_netapp_pool.example"
+        }
+      },
+      {
+        "type": "azurerm_netapp_volume",
+        "name": "example",
+        "properties": {
+          "lifecycle": [
+            {
+              "prevent_destroy": true
+            }
+          ],
+          "name": "${var.prefix}-netappvolume",
+          "location": "${azurerm_resource_group.example.location}",
+          "resource_group_name": "${azurerm_resource_group.example.name}",
+          "account_name": "${azurerm_netapp_account.example.name}",
+          "pool_name": "${azurerm_netapp_pool.example.name}",
+          "volume_path": "${var.prefix}-netappvolume",
+          "service_level": "Standard",
+          "protocols": [
+            "CIFS",
+            "NFSv3"
+          ],
+          "subnet_id": "${var.subnet_id}",
+          "storage_quota_in_gb": 100,
+          "export_policy_rule": [
+            {
+              "rule_index": 1,
+              "allowed_clients": [
+                "0.0.0.0/0"
+              ],
+              "cifs_enabled": true,
+              "nfsv3_enabled": true,
+              "nfsv4_enabled": false,
+              "unix_read_write": true
+            }
+          ],
+          "compiletime_identity": "azurerm_netapp_volume.example"
+        }
+      }
+    ]
+  }
+}

@@ -1,0 +1,210 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAzureQuickStart",
+  "paths": [
+    "/quickstarts/microsoft.web/webapp-custom-deployment-slots/azuredeploy.json",
+    "/quickstarts/microsoft.web/webapp-custom-deployment-slots/azuredeploy.parameters.json"
+  ],
+  "timestamp": 1642962911449,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/quickstarts/microsoft.web/webapp-custom-deployment-slots/azuredeploy.json",
+      "/quickstarts/microsoft.web/webapp-custom-deployment-slots/azuredeploy.parameters.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT1802",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "microsoft.web/sites",
+      "microsoft.web/sites/config",
+      "microsoft.web/serverfarms",
+      "microsoft.web/sites/slots"
+    ]
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT1802",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "baseResourceName": {
+        "type": "string",
+        "metadata": {
+          "description": "Name of the resource"
+        },
+        "maxLength": 15,
+        "value": "GEN-UNIQUE-12"
+      },
+      "appSettingName": {
+        "type": "string",
+        "metadata": {
+          "description": "Name of the app setting"
+        },
+        "maxLength": 24,
+        "value": "GEN-UNIQUE-13"
+      },
+      "environments": {
+        "defaultValue": [
+          "Dev",
+          "QA",
+          "UAT",
+          "Preview"
+        ],
+        "type": "array",
+        "metadata": {
+          "description": "Array with the names for the environment slots"
+        },
+        "maxLength": 19
+      },
+      "location": {
+        "type": "string",
+        "defaultValue": "[resourceGroup().location]",
+        "metadata": {
+          "description": "Location for all resources."
+        }
+      }
+    },
+    "variables": {
+      "standardPlanMaxAdditionalSlots": 4,
+      "webAppPortalName": "GEN-UNIQUE-12Portal",
+      "appServicePlanName": "AppServicePlan-GEN-UNIQUE-12",
+      "stickyAppSettingName": "GEN-UNIQUE-13-sticky"
+    },
+    "resources": [
+      {
+        "apiVersion": "2020-06-01",
+        "type": "Microsoft.Web/serverfarms",
+        "kind": "app",
+        "name": "AppServicePlan-GEN-UNIQUE-12",
+        "location": "[resourceGroup().location]",
+        "comments": "This app service plan is used for the web app and slots.",
+        "tags": {
+          "displayName": "AppServicePlan"
+        },
+        "properties": {},
+        "sku": {
+          "name": "[if(lessOrEquals(length(parameters('environments')), variables('standardPlanMaxAdditionalSlots')), 'S1', 'P1')]"
+        }
+      },
+      {
+        "apiVersion": "2020-06-01",
+        "type": "Microsoft.Web/sites",
+        "kind": "app",
+        "name": "GEN-UNIQUE-12Portal",
+        "location": "[resourceGroup().location]",
+        "comments": "This is the web app, also the default 'nameless' slot.",
+        "tags": {
+          "displayName": "WebApp"
+        },
+        "properties": {
+          "serverFarmId": "Microsoft.Web/serverfarms/AppServicePlan-GEN-UNIQUE-12",
+          "siteConfig": {
+            "appSettings": [
+              {
+                "name": "GEN-UNIQUE-13",
+                "value": "value"
+              },
+              {
+                "name": "GEN-UNIQUE-13-sticky",
+                "value": "value"
+              }
+            ]
+          }
+        },
+        "dependsOn": [
+          "Microsoft.Web/serverfarms/AppServicePlan-GEN-UNIQUE-12"
+        ]
+      },
+      {
+        "apiVersion": "2020-06-01",
+        "type": "Microsoft.Web/sites/slots",
+        "name": "[concat(variables('webAppPortalName'), '/', parameters('environments')[copyIndex()])]",
+        "kind": "app",
+        "location": "[resourceGroup().location]",
+        "comments": "This specifies the web app slots.",
+        "tags": {
+          "displayName": "WebAppSlots"
+        },
+        "properties": {
+          "serverFarmId": "Microsoft.Web/serverfarms/AppServicePlan-GEN-UNIQUE-12"
+        },
+        "dependsOn": [
+          "Microsoft.Web/Sites/GEN-UNIQUE-12Portal"
+        ]
+      },
+      {
+        "apiVersion": "2020-06-01",
+        "type": "Microsoft.Web/sites/slots",
+        "name": "[concat(variables('webAppPortalName'), '/', parameters('environments')[copyIndex()])]",
+        "kind": "app",
+        "location": "[resourceGroup().location]",
+        "comments": "This specifies the web app slots.",
+        "tags": {
+          "displayName": "WebAppSlots"
+        },
+        "properties": {
+          "serverFarmId": "Microsoft.Web/serverfarms/AppServicePlan-GEN-UNIQUE-12"
+        },
+        "dependsOn": [
+          "Microsoft.Web/Sites/GEN-UNIQUE-12Portal"
+        ]
+      },
+      {
+        "apiVersion": "2020-06-01",
+        "type": "Microsoft.Web/sites/slots",
+        "name": "[concat(variables('webAppPortalName'), '/', parameters('environments')[copyIndex()])]",
+        "kind": "app",
+        "location": "[resourceGroup().location]",
+        "comments": "This specifies the web app slots.",
+        "tags": {
+          "displayName": "WebAppSlots"
+        },
+        "properties": {
+          "serverFarmId": "Microsoft.Web/serverfarms/AppServicePlan-GEN-UNIQUE-12"
+        },
+        "dependsOn": [
+          "Microsoft.Web/Sites/GEN-UNIQUE-12Portal"
+        ]
+      },
+      {
+        "apiVersion": "2020-06-01",
+        "type": "Microsoft.Web/sites/slots",
+        "name": "[concat(variables('webAppPortalName'), '/', parameters('environments')[copyIndex()])]",
+        "kind": "app",
+        "location": "[resourceGroup().location]",
+        "comments": "This specifies the web app slots.",
+        "tags": {
+          "displayName": "WebAppSlots"
+        },
+        "properties": {
+          "serverFarmId": "Microsoft.Web/serverfarms/AppServicePlan-GEN-UNIQUE-12"
+        },
+        "dependsOn": [
+          "Microsoft.Web/Sites/GEN-UNIQUE-12Portal"
+        ]
+      },
+      {
+        "apiVersion": "2020-06-01",
+        "name": "GEN-UNIQUE-12Portal/slotconfignames",
+        "type": "Microsoft.Web/sites/config",
+        "comments": "This specifies the sticky (slot setting) application settings.",
+        "dependsOn": [
+          "Microsoft.Web/Sites/GEN-UNIQUE-12Portal"
+        ],
+        "properties": {
+          "appSettingNames": [
+            "GEN-UNIQUE-13-sticky"
+          ]
+        }
+      }
+    ],
+    "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+  }
+}

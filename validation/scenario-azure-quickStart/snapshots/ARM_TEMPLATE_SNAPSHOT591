@@ -1,0 +1,86 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAzureQuickStart",
+  "paths": [
+    "/application-workloads/wordpress/wordpress-mysql-replication/nested/vnet-new.json"
+  ],
+  "timestamp": 1642962897489,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/application-workloads/wordpress/wordpress-mysql-replication/nested/vnet-new.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT591",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "microsoft.network/virtualnetworks"
+    ]
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT591",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "virtualNetworkName": {
+        "type": "string"
+      },
+      "virtualNetworkAddressPrefix": {
+        "type": "string"
+      },
+      "dbSubnetName": {
+        "type": "string"
+      },
+      "dbSubnetAddressPrefix": {
+        "type": "string"
+      },
+      "location": {
+        "type": "string",
+        "metadata": {
+          "description": "Location for all resources."
+        }
+      }
+    },
+    "variables": {
+      "vnetID": "Microsoft.Network/virtualNetworks/virtualNetworkName",
+      "dbSubnet": "Microsoft.Network/virtualNetworks/virtualNetworkName/subnets/dbSubnetName"
+    },
+    "resources": [
+      {
+        "apiVersion": "2020-08-01",
+        "type": "Microsoft.Network/virtualNetworks",
+        "name": "virtualNetworkName",
+        "location": "location",
+        "properties": {
+          "addressSpace": {
+            "addressPrefixes": [
+              "virtualNetworkAddressPrefix"
+            ]
+          },
+          "subnets": [
+            {
+              "name": "dbSubnetName",
+              "properties": {
+                "addressPrefix": "dbSubnetAddressPrefix"
+              }
+            }
+          ]
+        }
+      }
+    ],
+    "outputs": {
+      "dbSubnetRef": {
+        "value": "[variables('dbSubnet')]",
+        "type": "string"
+      }
+    },
+    "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+  }
+}

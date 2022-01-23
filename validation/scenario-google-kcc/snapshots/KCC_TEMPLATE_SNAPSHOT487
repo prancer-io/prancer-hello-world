@@ -2,12 +2,12 @@
   "structure": "filesystem",
   "error": null,
   "reference": "master",
-  "contentType": "yaml",
+  "contentType": "json",
   "source": "gitConnectorGoogleKcc",
   "paths": [
-    "/samples/resources/redisinstance/redis_v1beta1_redisinstance.yaml"
+    "/samples/resources/iamworkloadidentitypoolprovider/oidc-workload-identity-pool-provider/iam_v1beta1_iamworkloadidentitypool.yaml"
   ],
-  "timestamp": 1628765150204,
+  "timestamp": 1642973304412,
   "queryuser": null,
   "checksum": "99914b932bd37a50b983c5e7c90ae93b",
   "node": {
@@ -15,28 +15,31 @@
     "type": "kcc",
     "collection": "kcctemplate",
     "paths": [
-      "/samples/resources/redisinstance/redis_v1beta1_redisinstance.yaml"
+      "/samples/resources/iamworkloadidentitypoolprovider/oidc-workload-identity-pool-provider/iam_v1beta1_iamworkloadidentitypool.yaml"
     ],
     "snapshotId": "KCC_TEMPLATE_SNAPSHOT487",
     "status": "active",
-    "validate": true
+    "validate": true,
+    "resourceTypes": [
+      "iamworkloadidentitypool"
+    ]
   },
   "snapshotId": "KCC_TEMPLATE_SNAPSHOT487",
   "collection": "kcctemplate",
   "json": {
-    "apiVersion": "redis.cnrm.cloud.google.com/v1beta1",
-    "kind": "RedisInstance",
+    "apiVersion": "iam.cnrm.cloud.google.com/v1beta1",
+    "kind": "IAMWorkloadIdentityPool",
     "metadata": {
-      "labels": {
-        "label-one": "value-one"
-      },
-      "name": "redisinstance-sample"
+      "name": "iamwipp-dep-oidc"
     },
     "spec": {
-      "displayName": "Sample Redis Instance",
-      "region": "us-central1",
-      "tier": "BASIC",
-      "memorySizeGb": 16
+      "projectRef": {
+        "external": "projects/${PROJECT_ID?}"
+      },
+      "location": "global",
+      "displayName": "sample-pool",
+      "description": "A sample workload identity pool using a newly created project",
+      "disabled": false
     }
   }
 }

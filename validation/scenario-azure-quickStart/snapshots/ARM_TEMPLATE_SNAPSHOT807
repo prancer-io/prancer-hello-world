@@ -1,0 +1,89 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAzureQuickStart",
+  "paths": [
+    "/demos/sql-injection-attack-prevention/nested/microsoft.sql/servers.v12.0.json"
+  ],
+  "timestamp": 1642962901747,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/demos/sql-injection-attack-prevention/nested/microsoft.sql/servers.v12.0.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT807",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "microsoft.sql/servers"
+    ]
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT807",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "sqlServerName": {
+        "type": "string"
+      },
+      "location": {
+        "type": "string"
+      },
+      "administratorLogin": {
+        "type": "string"
+      },
+      "administratorLoginPassword": {
+        "type": "securestring"
+      },
+      "tags": {
+        "type": "object"
+      }
+    },
+    "resources": [
+      {
+        "name": "sqlServerName",
+        "type": "Microsoft.Sql/servers",
+        "apiVersion": "2020-02-02-preview",
+        "location": "location",
+        "tags": "tags",
+        "properties": {
+          "administratorLogin": "administratorLogin",
+          "administratorLoginPassword": "administratorLoginPassword",
+          "version": "12.0"
+        },
+        "resources": [
+          {
+            "name": "AllowAllWindowsAzureIps",
+            "type": "firewallRules",
+            "location": "location",
+            "apiVersion": "2020-02-02-preview",
+            "dependsOn": [
+              "Microsoft.Sql/servers/sqlServerName"
+            ],
+            "properties": {
+              "startIpAddress": "0.0.0.0",
+              "endIpAddress": "0.0.0.0"
+            }
+          }
+        ]
+      }
+    ],
+    "outputs": {
+      "name": {
+        "type": "string",
+        "value": "[parameters('sqlServerName')]"
+      },
+      "fqdn": {
+        "type": "string",
+        "value": "[reference(resourceId('Microsoft.Sql/servers', parameters('sqlServerName')),'2020-02-02-preview').fullyQualifiedDomainName]"
+      }
+    },
+    "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+  }
+}

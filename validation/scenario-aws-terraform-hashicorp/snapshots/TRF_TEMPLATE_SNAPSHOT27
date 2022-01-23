@@ -1,0 +1,70 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "main",
+  "contentType": "json",
+  "source": "gitConnectorAwsTerraHashicorp",
+  "paths": [
+    "/examples/networking/subnet/outputs.tf",
+    "/examples/networking/subnet/terraform.template.tfvars",
+    "/examples/networking/subnet/variables.tf",
+    "/examples/networking/subnet/versions.tf",
+    "/examples/networking/subnet/subnet.tf"
+  ],
+  "timestamp": 1642967657711,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "TRF_TEMPLATE_SNAPSHOT",
+    "type": "terraform",
+    "collection": "terraformtemplate",
+    "paths": [
+      "/examples/networking/subnet/outputs.tf",
+      "/examples/networking/subnet/terraform.template.tfvars",
+      "/examples/networking/subnet/variables.tf",
+      "/examples/networking/subnet/versions.tf",
+      "/examples/networking/subnet/subnet.tf"
+    ],
+    "snapshotId": "TRF_TEMPLATE_SNAPSHOT27",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "aws_route_table_association",
+      "aws_subnet",
+      "aws_route_table"
+    ]
+  },
+  "snapshotId": "TRF_TEMPLATE_SNAPSHOT27",
+  "collection": "terraformtemplate",
+  "json": {
+    "resources": [
+      {
+        "type": "aws_subnet",
+        "name": "main",
+        "properties": {
+          "cidr_block": "${cidrsubnet(data.aws_vpc.target.cidr_block,2,var.az_numbers[data.aws_availability_zone.target.name_suffix])}",
+          "vpc_id": "vpc-12345678",
+          "availability_zone": "us-west-2a",
+          "compiletime_identity": "aws_subnet.main"
+        }
+      },
+      {
+        "type": "aws_route_table",
+        "name": "main",
+        "properties": {
+          "vpc_id": "vpc-12345678",
+          "compiletime_identity": "aws_route_table.main"
+        }
+      },
+      {
+        "type": "aws_route_table_association",
+        "name": "main",
+        "properties": {
+          "subnet_id": "${aws_subnet.main.id}",
+          "route_table_id": "${aws_route_table.main.id}",
+          "compiletime_identity": "aws_route_table_association.main"
+        }
+      }
+    ]
+  }
+}

@@ -1,0 +1,257 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAzureQuickStart",
+  "paths": [
+    "/demos/vm-cse-msi/azuredeploy.json",
+    "/demos/vm-cse-msi/azuredeploy.parameters.json"
+  ],
+  "timestamp": 1642962902201,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/demos/vm-cse-msi/azuredeploy.json",
+      "/demos/vm-cse-msi/azuredeploy.parameters.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT848",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "microsoft.network/publicipaddresses",
+      "microsoft.network/virtualnetworks",
+      "microsoft.network/networkinterfaces",
+      "microsoft.compute/virtualmachines/extensions",
+      "microsoft.compute/virtualmachines"
+    ]
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT848",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.0.0.0",
+    "metadata": {
+      "_generator": {
+        "name": "bicep",
+        "version": "0.4.451.19169",
+        "templateHash": "4363912042809833013"
+      }
+    },
+    "parameters": {
+      "adminUsername": {
+        "type": "string",
+        "minLength": 1,
+        "metadata": {
+          "description": "Username for the Virtual Machine."
+        },
+        "value": "GEN-UNIQUE"
+      },
+      "adminPassword": {
+        "type": "secureString",
+        "metadata": {
+          "description": "Password for the Virtual Machine."
+        },
+        "value": "GEN-PASSWORD"
+      },
+      "vmSize": {
+        "type": "string",
+        "defaultValue": "Standard_A4_v2",
+        "metadata": {
+          "description": "Size of the virtual machine"
+        }
+      },
+      "location": {
+        "type": "string",
+        "defaultValue": "[resourceGroup().location]",
+        "metadata": {
+          "description": "Location for all resources."
+        }
+      },
+      "fileUris": {
+        "type": "array",
+        "metadata": {
+          "description": "An array of fileUris to download via the custom script extension"
+        },
+        "value": "GEN-PRIVATE-STORAGE-ARTIFACTS"
+      },
+      "identityName": {
+        "type": "string",
+        "metadata": {
+          "description": "name for the managedIdenity to use for custom script download, the principal must have at least storage blob reader permission on the storage account, roleDef: 2a2b9908-6ea1-4ae2-8e65-a410df84e7d1"
+        },
+        "value": "GEN-USER-ASSIGNED-IDENTITY-NAME"
+      },
+      "identityResourceGroup": {
+        "type": "string",
+        "metadata": {
+          "description": "resourceGroup for the managedIdenity to use for custom script download"
+        },
+        "value": "GEN-USER-ASSIGNED-IDENTITY-RESOURCEGROUP-NAME"
+      },
+      "alwaysRun": {
+        "type": "string",
+        "defaultValue": "[newGuid()]",
+        "metadata": {
+          "description": "For the sample, use this to ensure the extension will always execute."
+        }
+      }
+    },
+    "functions": [],
+    "variables": {
+      "imagePublisher": "MicrosoftWindowsServer",
+      "imageOffer": "WindowsServer",
+      "windowsOSVersion": "2019-Datacenter",
+      "nicName": "myVMNic",
+      "addressPrefix": "10.0.0.0/16",
+      "subnetName": "Subnet",
+      "subnetPrefix": "10.0.0.0/24",
+      "publicIPAddressName": "myPublicIP",
+      "publicIPAddressType": "Dynamic",
+      "vmName": "MyWindowsVM",
+      "virtualNetworkName": "MyVNET"
+    },
+    "resources": [
+      {
+        "type": "Microsoft.Network/publicIPAddresses",
+        "apiVersion": "2021-02-01",
+        "name": "myPublicIP",
+        "location": "[resourceGroup().location]",
+        "properties": {
+          "publicIPAllocationMethod": "Dynamic"
+        }
+      },
+      {
+        "type": "Microsoft.Network/virtualNetworks",
+        "apiVersion": "2021-02-01",
+        "name": "MyVNET",
+        "location": "[resourceGroup().location]",
+        "properties": {
+          "addressSpace": {
+            "addressPrefixes": [
+              "10.0.0.0/16"
+            ]
+          },
+          "subnets": [
+            {
+              "name": "Subnet",
+              "properties": {
+                "addressPrefix": "10.0.0.0/24"
+              }
+            }
+          ]
+        }
+      },
+      {
+        "type": "Microsoft.Network/networkInterfaces",
+        "apiVersion": "2021-02-01",
+        "name": "myVMNic",
+        "location": "[resourceGroup().location]",
+        "properties": {
+          "ipConfigurations": [
+            {
+              "name": "ipconfig1",
+              "properties": {
+                "privateIPAllocationMethod": "Dynamic",
+                "publicIPAddress": {
+                  "id": "Microsoft.Network/publicIPAddresses/myPublicIP"
+                },
+                "subnet": {
+                  "id": "Microsoft.Network/virtualNetworks/subnets/MyVNET/Subnet"
+                }
+              }
+            }
+          ]
+        },
+        "dependsOn": [
+          "Microsoft.Network/publicIPAddresses/myPublicIP"
+        ]
+      },
+      {
+        "type": "Microsoft.Compute/virtualMachines",
+        "apiVersion": "2021-04-01",
+        "name": "MyWindowsVM",
+        "location": "[resourceGroup().location]",
+        "identity": {
+          "type": "UserAssigned",
+          "userAssignedIdentities": {
+            "[extensionResourceId(format('/subscriptions/{0}/resourceGroups/{1}', subscription().subscriptionId, parameters('identityResourceGroup')), 'Microsoft.ManagedIdentity/userAssignedIdentities', parameters('identityName'))]": {}
+          }
+        },
+        "properties": {
+          "hardwareProfile": {
+            "vmSize": "Standard_A4_v2"
+          },
+          "osProfile": {
+            "computerName": "MyWindowsVM",
+            "adminUsername": "GEN-UNIQUE",
+            "adminPassword": "GEN-PASSWORD"
+          },
+          "storageProfile": {
+            "imageReference": {
+              "publisher": "MicrosoftWindowsServer",
+              "offer": "WindowsServer",
+              "sku": "2019-Datacenter",
+              "version": "latest"
+            },
+            "osDisk": {
+              "createOption": "FromImage",
+              "managedDisk": {
+                "storageAccountType": "StandardSSD_LRS"
+              }
+            }
+          },
+          "networkProfile": {
+            "networkInterfaces": [
+              {
+                "id": "Microsoft.Network/networkInterfaces/myVMNic"
+              }
+            ]
+          }
+        },
+        "dependsOn": [
+          "Microsoft.Network/networkInterfaces/myVMNic"
+        ]
+      },
+      {
+        "type": "Microsoft.Compute/virtualMachines/extensions",
+        "apiVersion": "2021-04-01",
+        "name": "[format('{0}/{1}', variables('vmName'), 'cse')]",
+        "location": "[resourceGroup().location]",
+        "properties": {
+          "publisher": "Microsoft.Compute",
+          "type": "CustomScriptExtension",
+          "typeHandlerVersion": "1.10",
+          "autoUpgradeMinorVersion": true,
+          "forceUpdateTag": "[newGuid()]",
+          "settings": {
+            "fileUris": "GEN-PRIVATE-STORAGE-ARTIFACTS",
+            "commandToExecute": "powershell -Command \"ls\""
+          },
+          "protectedSettings": {
+            "managedIdentity": {
+              "object": "[reference(extensionResourceId(format('/subscriptions/{0}/resourceGroups/{1}', subscription().subscriptionId, parameters('identityResourceGroup')), 'Microsoft.ManagedIdentity/userAssignedIdentities', parameters('identityName')), '2018-11-30').principalId]"
+            }
+          }
+        },
+        "dependsOn": [
+          "Microsoft.Compute/virtualMachines/MyWindowsVM"
+        ]
+      }
+    ],
+    "outputs": {
+      "msiObjectId": {
+        "type": "string",
+        "value": "[reference(extensionResourceId(format('/subscriptions/{0}/resourceGroups/{1}', subscription().subscriptionId, parameters('identityResourceGroup')), 'Microsoft.ManagedIdentity/userAssignedIdentities', parameters('identityName')), '2018-11-30').principalId]"
+      },
+      "instanceView": {
+        "type": "object",
+        "value": "[reference(resourceId('Microsoft.Compute/virtualMachines/extensions', variables('vmName'), 'cse')).instanceView]"
+      }
+    },
+    "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+  }
+}

@@ -1,0 +1,383 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAzureQuickStart",
+  "paths": [
+    "/application-workloads/umbraco/umbraco-webapp-simple/azuredeploy.json",
+    "/application-workloads/umbraco/umbraco-webapp-simple/azuredeploy.parameters.json"
+  ],
+  "timestamp": 1642962896938,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/application-workloads/umbraco/umbraco-webapp-simple/azuredeploy.json",
+      "/application-workloads/umbraco/umbraco-webapp-simple/azuredeploy.parameters.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT567",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "microsoft.web/sites",
+      "microsoft.sql/servers",
+      "microsoft.insights/autoscalesettings",
+      "microsoft.storage/storageaccounts",
+      "microsoft.web/serverfarms",
+      "microsoft.insights/components"
+    ]
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT567",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "appName": {
+        "type": "string",
+        "defaultValue": "[concat('umbraco', uniqueString(resourceGroup().id))]",
+        "metadata": {
+          "description": "Name of azure web app"
+        }
+      },
+      "servicePlanTier": {
+        "type": "string",
+        "allowedValues": [
+          "Standard",
+          "Premium",
+          "PremiumV2"
+        ],
+        "defaultValue": "PremiumV2",
+        "metadata": {
+          "description": "Tier for Service Plan"
+        }
+      },
+      "servicePlanSku": {
+        "type": "string",
+        "allowedValues": [
+          "S1",
+          "S2",
+          "S3",
+          "P1",
+          "P2",
+          "P3",
+          "P1V2",
+          "P2V2",
+          "P3V3"
+        ],
+        "defaultValue": "P1V2",
+        "metadata": {
+          "description": "Size for Service Plan"
+        }
+      },
+      "dbServerName": {
+        "type": "string",
+        "defaultValue": "[concat('umbraco', uniqueString(resourceGroup().id))]",
+        "metadata": {
+          "description": "SQL Azure DB Server name"
+        }
+      },
+      "dbAdministratorLogin": {
+        "type": "string",
+        "metadata": {
+          "description": "SQL Azure DB administrator  user login"
+        },
+        "value": "GEN-UNIQUE"
+      },
+      "dbAdministratorLoginPassword": {
+        "type": "securestring",
+        "metadata": {
+          "description": "Database admin user password"
+        },
+        "value": "GEN-PASSWORD"
+      },
+      "dbName": {
+        "type": "string",
+        "defaultValue": "umbraco-db",
+        "metadata": {
+          "description": "Database Name"
+        }
+      },
+      "nonAdminDatabaseUserName": {
+        "type": "string",
+        "metadata": {
+          "description": "Non-admin Database User. Must be Unique"
+        },
+        "value": "GEN-UNIQUE-8"
+      },
+      "nonAdminDatabasePassword": {
+        "type": "securestring",
+        "metadata": {
+          "description": "Non-admin Database User password"
+        },
+        "value": "GEN-PASSWORD"
+      },
+      "storageAccountType": {
+        "type": "string",
+        "allowedValues": [
+          "Standard_LRS",
+          "Standard_GRS",
+          "Standard_RAGRS",
+          "Standard_ZRS"
+        ],
+        "defaultValue": "Standard_LRS",
+        "metadata": {
+          "description": "Storage Account Type : Standard-LRS, Standard-GRS,Standard-RAGRS,Standard-ZRS"
+        }
+      },
+      "location": {
+        "type": "string",
+        "defaultValue": "[resourceGroup().location]",
+        "metadata": {
+          "description": "Location for all resources."
+        }
+      },
+      "_artifactsLocation": {
+        "type": "string",
+        "metadata": {
+          "description": "The base URI where artifacts required by this template are located. When the template is deployed using the accompanying scripts, a private location in the subscription will be used and this value will be automatically generated."
+        },
+        "defaultValue": "[deployment().properties.templateLink.uri]"
+      },
+      "_artifactsLocationSasToken": {
+        "type": "securestring",
+        "metadata": {
+          "description": "The sasToken required to access _artifactsLocation.  When the template is deployed using the accompanying scripts, a sasToken will be automatically generated."
+        },
+        "defaultValue": ""
+      }
+    },
+    "variables": {
+      "storageAccountName": "[concat(uniquestring(resourceGroup().id), 'standardsa')]",
+      "appServicePlanName": "[concat('umbraco', uniqueString(resourceGroup().id))]serviceplan"
+    },
+    "resources": [
+      {
+        "type": "Microsoft.Sql/servers",
+        "apiVersion": "2020-02-02-preview",
+        "name": "[concat('umbraco', uniqueString(resourceGroup().id))]",
+        "location": "[resourceGroup().location]",
+        "properties": {
+          "administratorLogin": "GEN-UNIQUE",
+          "administratorLoginPassword": "GEN-PASSWORD",
+          "version": "12.0"
+        },
+        "resources": [
+          {
+            "type": "databases",
+            "apiVersion": "2020-02-02-preview",
+            "name": "umbraco-db",
+            "location": "[resourceGroup().location]",
+            "sku": {
+              "name": "S0",
+              "tier": "Standard"
+            },
+            "kind": "v12.0,user",
+            "dependsOn": [
+              "Microsoft.SQL/Servers/[concat('umbraco', uniqueString(resourceGroup().id))]"
+            ],
+            "properties": {
+              "collation": "SQL_Latin1_General_CP1_CI_AS"
+            }
+          },
+          {
+            "apiVersion": "2020-02-02-preview",
+            "name": "AllowAllWindowsAzureIps",
+            "type": "firewallrules",
+            "location": "[resourceGroup().location]",
+            "dependsOn": [
+              "Microsoft.SQL/Servers/[concat('umbraco', uniqueString(resourceGroup().id))]"
+            ],
+            "properties": {
+              "endIpAddress": "0.0.0.0",
+              "startIpAddress": "0.0.0.0"
+            }
+          }
+        ]
+      },
+      {
+        "type": "Microsoft.Storage/storageAccounts",
+        "apiVersion": "2019-06-01",
+        "name": "[variables('storageAccountName')]",
+        "location": "[resourceGroup().location]",
+        "sku": {
+          "name": "Standard_LRS"
+        },
+        "kind": "StorageV2"
+      },
+      {
+        "type": "Microsoft.Web/serverFarms",
+        "apiVersion": "2020-06-01",
+        "name": "[variables('appServicePlanName')]",
+        "location": "[resourceGroup().location]",
+        "sku": {
+          "Tier": "PremiumV2",
+          "Name": "P1V2"
+        },
+        "kind": "linux",
+        "properties": {}
+      },
+      {
+        "type": "Microsoft.Web/Sites",
+        "apiVersion": "2020-06-01",
+        "name": "[concat('umbraco', uniqueString(resourceGroup().id))]",
+        "location": "[resourceGroup().location]",
+        "tags": {
+          "[concat('hidden-related:', resourceId('Microsoft.Web/serverfarms', variables('appServicePlanName')))]": "empty"
+        },
+        "dependsOn": [
+          "[resourceId('Microsoft.Web/serverFarms', variables('appServicePlanName'))]"
+        ],
+        "properties": {
+          "name": "[concat('umbraco', uniqueString(resourceGroup().id))]",
+          "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', variables('appServicePlanName'))]"
+        },
+        "resources": [
+          {
+            "type": "Extensions",
+            "apiVersion": "2020-06-01",
+            "name": "MSDeploy",
+            "dependsOn": [
+              "[resourceId('Microsoft.Web/sites', parameters('appName'))]",
+              "[resourceId('Microsoft.Web/Sites/config', parameters('appName'), 'web')]",
+              "[resourceId('Microsoft.SQL/Servers/databases', parameters('dbServerName'), parameters('dbName'))]",
+              "[variables('storageAccountName')]"
+            ],
+            "properties": {
+              "packageUri": "[uri(parameters('_artifactsLocation'), concat('UmbracoCms.WebPI.7.4.3.zip', parameters('_artifactsLocationSasToken')))]",
+              "dbType": "SQL",
+              "connectionString": "[concat('Data Source=tcp:', reference(resourceId('Microsoft.SQL/servers', parameters('dbServerName'))).fullyQualifiedDomainName, ',1433;Initial Catalog=', parameters('dbName'), ';User Id=', parameters('dbAdministratorLogin'), '@', parameters('dbServerName'), ';Password=', parameters('dbAdministratorLoginPassword'), ';')]",
+              "setParameters": {
+                "Application Path": "[concat('umbraco', uniqueString(resourceGroup().id))]",
+                "Database Server": "[reference(resourceId('Microsoft.SQL/servers', parameters('dbServerName'))).fullyQualifiedDomainName]",
+                "Database Name": "umbraco-db",
+                "Database Username": "GEN-UNIQUE-8",
+                "Database Password": "GEN-PASSWORD",
+                "Database Administrator": "GEN-UNIQUE",
+                "Database Administrator Password": "GEN-PASSWORD"
+              }
+            }
+          },
+          {
+            "type": "config",
+            "apiVersion": "2020-06-01",
+            "name": "connectionstrings",
+            "dependsOn": [
+              "Microsoft.Web/Sites/[concat('umbraco', uniqueString(resourceGroup().id))]",
+              "Microsoft.SQL/Servers/databases/[concat('umbraco', uniqueString(resourceGroup().id))]/umbraco-db",
+              "Microsoft.Web/Sites/extensions/[concat('umbraco', uniqueString(resourceGroup().id))]/MSDeploy"
+            ],
+            "properties": {
+              "defaultConnection": {
+                "value": "[concat('Data Source=tcp:', reference(resourceId('Microsoft.SQL/servers', parameters('dbServerName'))).fullyQualifiedDomainName, ',1433;Initial Catalog=', parameters('dbName'), ';User Id=', parameters('dbAdministratorLogin'), '@', parameters('dbServerName'), ';Password=', parameters('dbAdministratorLoginPassword'), ';')]",
+                "type": "SQLAzure"
+              }
+            }
+          },
+          {
+            "apiVersion": "2020-06-01",
+            "name": "web",
+            "type": "config",
+            "dependsOn": [
+              "Microsoft.Web/sites/[concat('umbraco', uniqueString(resourceGroup().id))]"
+            ],
+            "properties": {
+              "phpVersion": "off",
+              "netFrameworkVersion": "v4.5",
+              "use32BitWorkerProcess": "true",
+              "webSocketsEnabled": true,
+              "alwaysOn": "true",
+              "httpLoggingEnabled": true,
+              "logsDirectorySizeLimit": 40
+            }
+          }
+        ]
+      },
+      {
+        "type": "microsoft.insights/autoscalesettings",
+        "apiVersion": "2015-04-01",
+        "name": "[concat(variables('appServicePlanName'), '-scaleset')]",
+        "location": "[resourceGroup().location]",
+        "tags": {
+          "[concat('hidden-link:', resourceId('Microsoft.Web/serverfarms', variables('appServicePlanName')))]": "Resource"
+        },
+        "dependsOn": [
+          "[variables('appServicePlanName')]"
+        ],
+        "properties": {
+          "profiles": [
+            {
+              "name": "Default",
+              "capacity": {
+                "minimum": "1",
+                "maximum": "2",
+                "default": "1"
+              },
+              "rules": [
+                {
+                  "metricTrigger": {
+                    "metricName": "CpuPercentage",
+                    "metricResourceUri": "[resourceId('Microsoft.Web/serverfarms', variables('appServicePlanName'))]",
+                    "timeGrain": "PT1M",
+                    "statistic": "Average",
+                    "timeWindow": "PT10M",
+                    "timeAggregation": "Average",
+                    "operator": "GreaterThan",
+                    "threshold": 80
+                  },
+                  "scaleAction": {
+                    "direction": "Increase",
+                    "type": "ChangeCount",
+                    "value": "1",
+                    "cooldown": "PT10M"
+                  }
+                },
+                {
+                  "metricTrigger": {
+                    "metricName": "CpuPercentage",
+                    "metricResourceUri": "[resourceId('Microsoft.Web/serverfarms', variables('appServicePlanName'))]",
+                    "timeGrain": "PT1M",
+                    "statistic": "Average",
+                    "timeWindow": "PT1H",
+                    "timeAggregation": "Average",
+                    "operator": "LessThan",
+                    "threshold": 60
+                  },
+                  "scaleAction": {
+                    "direction": "Decrease",
+                    "type": "ChangeCount",
+                    "value": "1",
+                    "cooldown": "PT1H"
+                  }
+                }
+              ]
+            }
+          ],
+          "enabled": false,
+          "name": "[concat(variables('appServicePlanName'), '-scaleset')]",
+          "targetResourceUri": "[resourceId('Microsoft.Web/serverfarms', variables('appServicePlanName'))]"
+        }
+      },
+      {
+        "type": "microsoft.insights/components",
+        "apiVersion": "2020-02-02-preview",
+        "name": "[concat('umbraco', uniqueString(resourceGroup().id))]-appin",
+        "location": "[resourceGroup().location]",
+        "tags": {
+          "[concat('hidden-link:', resourceId('Microsoft.Web/sites', parameters('appName')))]": "Resource"
+        },
+        "dependsOn": [
+          "Microsoft.Web/sites/[concat('umbraco', uniqueString(resourceGroup().id))]"
+        ],
+        "properties": {
+          "applicationId": "[concat('umbraco', uniqueString(resourceGroup().id))]",
+          "Application_Type": "web"
+        }
+      }
+    ],
+    "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+  }
+}

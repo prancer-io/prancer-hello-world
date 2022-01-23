@@ -1,0 +1,129 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAzureQuickStart",
+  "paths": [
+    "/quickstarts/microsoft.network/front-door-rate-limiting/azuredeploy.json",
+    "/quickstarts/microsoft.network/front-door-rate-limiting/azuredeploy.parameters.json"
+  ],
+  "timestamp": 1642962908949,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/quickstarts/microsoft.network/front-door-rate-limiting/azuredeploy.json",
+      "/quickstarts/microsoft.network/front-door-rate-limiting/azuredeploy.parameters.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT1541",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "microsoft.network/frontdoorwebapplicationfirewallpolicies"
+    ]
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT1541",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "wafPolicyName": {
+        "type": "string",
+        "metadata": {
+          "description": "The name of the WAF policy"
+        },
+        "value": "GEN-UNIQUE"
+      },
+      "wafMode": {
+        "type": "string",
+        "allowedValues": [
+          "Detection",
+          "Prevention"
+        ],
+        "defaultValue": "Detection",
+        "metadata": {
+          "description": "Describes if it is in detection mode or prevention mode at policy level."
+        }
+      },
+      "rateLimitDurationInMinutes": {
+        "type": "int",
+        "defaultValue": 1,
+        "metadata": {
+          "description": "Defines rate limit duration. Default - 1 minute."
+        },
+        "value": 1
+      },
+      "rateLimitThreshold": {
+        "type": "int",
+        "metadata": {
+          "description": "Defines rate limit thresold."
+        },
+        "value": 1000
+      },
+      "rateLimitAction": {
+        "type": "string",
+        "allowedValues": [
+          "Allow",
+          "Block",
+          "Log"
+        ],
+        "defaultValue": "Log",
+        "metadata": {
+          "description": "Type of Action based on the match filter. Must be Allow, Block or Log."
+        }
+      },
+      "ipMatch": {
+        "type": "string",
+        "metadata": {
+          "description": "The operator to be matched."
+        },
+        "value": "192.168.0.10"
+      }
+    },
+    "variables": {
+      "wafLocation": "global"
+    },
+    "resources": [
+      {
+        "apiVersion": "2019-03-01",
+        "type": "Microsoft.Network/FrontDoorWebApplicationFirewallPolicies",
+        "name": "GEN-UNIQUE",
+        "location": "global",
+        "properties": {
+          "policySettings": {
+            "mode": "Detection",
+            "enabledState": "Enabled"
+          },
+          "customRules": {
+            "rules": [
+              {
+                "name": "Rule1",
+                "enabledState": "Enabled",
+                "priority": 1,
+                "ruleType": "RateLimitRule",
+                "rateLimitThreshold": 1000,
+                "rateLimitDurationInMinutes": 1,
+                "matchConditions": [
+                  {
+                    "matchVariable": "RemoteAddr",
+                    "operator": "IPMatch",
+                    "matchValue": [
+                      "192.168.0.10"
+                    ]
+                  }
+                ],
+                "action": "Log"
+              }
+            ]
+          }
+        }
+      }
+    ],
+    "outputs": {},
+    "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+  }
+}

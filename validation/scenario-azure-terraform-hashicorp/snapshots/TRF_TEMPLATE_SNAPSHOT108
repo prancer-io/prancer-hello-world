@@ -1,0 +1,132 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "main",
+  "contentType": "json",
+  "source": "gitConnectorAzureTerraHashicorp",
+  "paths": [
+    "/examples/sql-azure/failover_group/variables.tf",
+    "/examples/sql-azure/failover_group/main.tf"
+  ],
+  "timestamp": 1642943279950,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "TRF_TEMPLATE_SNAPSHOT",
+    "type": "terraform",
+    "collection": "terraformtemplate",
+    "paths": [
+      "/examples/sql-azure/failover_group/variables.tf",
+      "/examples/sql-azure/failover_group/main.tf"
+    ],
+    "snapshotId": "TRF_TEMPLATE_SNAPSHOT108",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "azurerm_mssql_server",
+      "azurerm_resource_group",
+      "azurerm_sql_failover_group",
+      "azurerm_mssql_database"
+    ]
+  },
+  "snapshotId": "TRF_TEMPLATE_SNAPSHOT108",
+  "collection": "terraformtemplate",
+  "json": {
+    "provider": [
+      {
+        "azurerm": {
+          "features": [
+            {}
+          ]
+        }
+      }
+    ],
+    "resources": [
+      {
+        "type": "azurerm_resource_group",
+        "name": "example",
+        "properties": {
+          "name": "${var.prefix}-resources",
+          "location": "${var.location}",
+          "compiletime_identity": "azurerm_resource_group.example"
+        }
+      },
+      {
+        "type": "azurerm_mssql_server",
+        "name": "example",
+        "properties": {
+          "name": "${var.prefix}-server-primary",
+          "resource_group_name": "${azurerm_resource_group.example.name}",
+          "location": "${var.location}",
+          "version": 12.0,
+          "administrator_login": "mradministrator",
+          "administrator_login_password": "thisIsDog11",
+          "compiletime_identity": "azurerm_mssql_server.example"
+        }
+      },
+      {
+        "type": "azurerm_mssql_server",
+        "name": "secondary",
+        "properties": {
+          "name": "${var.prefix}-server-secondary",
+          "resource_group_name": "${azurerm_resource_group.example.name}",
+          "location": "${var.location_alt}",
+          "version": 12.0,
+          "administrator_login": "mradministrator",
+          "administrator_login_password": "thisIsDog11",
+          "compiletime_identity": "azurerm_mssql_server.secondary"
+        }
+      },
+      {
+        "type": "azurerm_mssql_database",
+        "name": "example",
+        "properties": {
+          "name": "${var.prefix}-db-primary",
+          "server_id": "${azurerm_mssql_server.example.id}",
+          "collation": "SQL_AltDiction_CP850_CI_AI",
+          "license_type": "BasePrice",
+          "sku_name": "GP_Gen5_2",
+          "compiletime_identity": "azurerm_mssql_database.example"
+        }
+      },
+      {
+        "type": "azurerm_mssql_database",
+        "name": "secondary",
+        "properties": {
+          "name": "${var.prefix}-db-secondary",
+          "server_id": "${azurerm_mssql_server.secondary.id}",
+          "create_mode": "Secondary",
+          "creation_source_database_id": "${azurerm_mssql_database.example.id}",
+          "compiletime_identity": "azurerm_mssql_database.secondary"
+        }
+      },
+      {
+        "type": "azurerm_sql_failover_group",
+        "name": "example",
+        "properties": {
+          "name": "${var.prefix}-failover-group",
+          "resource_group_name": "${azurerm_resource_group.example.name}",
+          "server_name": "${azurerm_mssql_server.example.name}",
+          "databases": [
+            "${azurerm_mssql_database.example.id}"
+          ],
+          "partner_servers": [
+            {
+              "id": "${azurerm_mssql_server.secondary.id}"
+            }
+          ],
+          "read_write_endpoint_failover_policy": [
+            {
+              "mode": "Automatic",
+              "grace_minutes": 60
+            }
+          ],
+          "depends_on": [
+            "${azurerm_mssql_database.secondary}"
+          ],
+          "compiletime_identity": "azurerm_sql_failover_group.example"
+        }
+      }
+    ]
+  }
+}

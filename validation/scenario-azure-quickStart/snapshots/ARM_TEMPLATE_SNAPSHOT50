@@ -1,0 +1,606 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAzureQuickStart",
+  "paths": [
+    "/application-workloads/chef/chef-automate-ha/nested/fe-be-virtualmachines-with-extensions1.json"
+  ],
+  "timestamp": 1642962883898,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/application-workloads/chef/chef-automate-ha/nested/fe-be-virtualmachines-with-extensions1.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT50",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "microsoft.compute/virtualmachines"
+    ]
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT50",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "computeSettings": {
+        "type": "object"
+      },
+      "networkSettings": {
+        "type": "object"
+      },
+      "keyvaultSettings": {
+        "type": "object"
+      },
+      "location": {
+        "type": "string",
+        "defaultValue": "[resourceGroup().location]",
+        "metadata": {
+          "description": "Location for all resources."
+        }
+      }
+    },
+    "variables": {
+      "provider": "[toUpper('33194f91-eb5f-4110-827a-e95f640a9e46')]"
+    },
+    "resources": [
+      {
+        "apiVersion": "computeSettings",
+        "type": "Microsoft.Compute/virtualMachines",
+        "name": "computeSettings",
+        "location": "[resourceGroup().location]",
+        "properties": {
+          "hardwareProfile": {
+            "vmSize": "computeSettings"
+          },
+          "osProfile": {
+            "computerName": "computeSettings",
+            "adminUsername": "computeSettings",
+            "adminPassword": "computeSettings",
+            "customData": "computeSettings"
+          },
+          "storageProfile": {
+            "imageReference": {
+              "publisher": "computeSettings",
+              "offer": "computeSettings",
+              "sku": "computeSettings",
+              "version": "computeSettings"
+            },
+            "osDisk": {
+              "createOption": "FromImage"
+            },
+            "dataDisks": [
+              {
+                "name": "computeSettings0",
+                "lun": 0,
+                "caching": "None",
+                "createOption": "Attach",
+                "managedDisk": {
+                  "id": "Microsoft.Compute/disks/computeSettings0"
+                }
+              }
+            ]
+          },
+          "networkProfile": {
+            "networkInterfaces": [
+              {
+                "id": "Microsoft.Network/networkInterfaces/networkSettings"
+              }
+            ]
+          },
+          "availabilitySet": {
+            "id": "Microsoft.Compute/availabilitySets/computeSettings"
+          },
+          "diagnosticsProfile": {
+            "bootDiagnostics": {
+              "enabled": true,
+              "storageUri": "http://networkSettings.blob.core.windows.net"
+            }
+          }
+        },
+        "resources": [
+          {
+            "name": "computeSettings",
+            "type": "extensions",
+            "location": "[resourceGroup().location]",
+            "apiVersion": "computeSettings",
+            "dependsOn": [
+              "Microsoft.Compute/virtualMachines/computeSettings"
+            ],
+            "properties": {
+              "publisher": "Microsoft.Azure.Extensions",
+              "type": "CustomScript",
+              "typeHandlerVersion": "2.0",
+              "autoUpgradeMinorVersion": true,
+              "settings": {
+                "commandToExecute": "bash /etc/chef-backend/chef-backend-install.sh keyvaultSettings keyvaultSettings keyvaultSettings keyvaultSettings"
+              }
+            }
+          }
+        ],
+        "tags": {
+          "provider": "[toUpper('33194f91-eb5f-4110-827a-e95f640a9e46')]"
+        }
+      },
+      {
+        "apiVersion": "computeSettings",
+        "type": "Microsoft.Compute/virtualMachines",
+        "name": "computeSettings",
+        "location": "[resourceGroup().location]",
+        "properties": {
+          "hardwareProfile": {
+            "vmSize": "computeSettings"
+          },
+          "osProfile": {
+            "computerName": "computeSettings",
+            "adminUsername": "computeSettings",
+            "adminPassword": "computeSettings",
+            "customData": "computeSettings"
+          },
+          "storageProfile": {
+            "imageReference": {
+              "publisher": "computeSettings",
+              "offer": "computeSettings",
+              "sku": "computeSettings",
+              "version": "computeSettings"
+            },
+            "osDisk": {
+              "createOption": "FromImage"
+            },
+            "dataDisks": [
+              {
+                "name": "computeSettings1",
+                "lun": 0,
+                "caching": "None",
+                "createOption": "Attach",
+                "managedDisk": {
+                  "id": "Microsoft.Compute/disks/computeSettings1"
+                }
+              }
+            ]
+          },
+          "networkProfile": {
+            "networkInterfaces": [
+              {
+                "id": "Microsoft.Network/networkInterfaces/networkSettings"
+              }
+            ]
+          },
+          "availabilitySet": {
+            "id": "Microsoft.Compute/availabilitySets/computeSettings"
+          },
+          "diagnosticsProfile": {
+            "bootDiagnostics": {
+              "enabled": true,
+              "storageUri": "http://networkSettings.blob.core.windows.net"
+            }
+          }
+        },
+        "resources": [
+          {
+            "name": "computeSettings",
+            "type": "extensions",
+            "location": "[resourceGroup().location]",
+            "apiVersion": "computeSettings",
+            "dependsOn": [
+              "Microsoft.Compute/virtualMachines/computeSettings",
+              "Microsoft.Compute/virtualMachines/computeSettings/extensions/computeSettings"
+            ],
+            "properties": {
+              "publisher": "Microsoft.Azure.Extensions",
+              "type": "CustomScript",
+              "typeHandlerVersion": "2.0",
+              "autoUpgradeMinorVersion": true,
+              "settings": {
+                "commandToExecute": "bash /etc/chef-backend/chef-backend-install.sh keyvaultSettings keyvaultSettings keyvaultSettings keyvaultSettings"
+              }
+            }
+          }
+        ],
+        "tags": {
+          "provider": "[toUpper('33194f91-eb5f-4110-827a-e95f640a9e46')]"
+        }
+      },
+      {
+        "apiVersion": "computeSettings",
+        "type": "Microsoft.Compute/virtualMachines",
+        "name": "computeSettings",
+        "location": "[resourceGroup().location]",
+        "properties": {
+          "hardwareProfile": {
+            "vmSize": "computeSettings"
+          },
+          "osProfile": {
+            "computerName": "computeSettings",
+            "adminUsername": "computeSettings",
+            "adminPassword": "computeSettings",
+            "customData": "computeSettings"
+          },
+          "storageProfile": {
+            "imageReference": {
+              "publisher": "computeSettings",
+              "offer": "computeSettings",
+              "sku": "computeSettings",
+              "version": "computeSettings"
+            },
+            "osDisk": {
+              "createOption": "FromImage"
+            },
+            "dataDisks": [
+              {
+                "name": "computeSettings2",
+                "lun": 0,
+                "caching": "None",
+                "createOption": "Attach",
+                "managedDisk": {
+                  "id": "Microsoft.Compute/disks/computeSettings2"
+                }
+              }
+            ]
+          },
+          "networkProfile": {
+            "networkInterfaces": [
+              {
+                "id": "Microsoft.Network/networkInterfaces/networkSettings"
+              }
+            ]
+          },
+          "availabilitySet": {
+            "id": "Microsoft.Compute/availabilitySets/computeSettings"
+          },
+          "diagnosticsProfile": {
+            "bootDiagnostics": {
+              "enabled": true,
+              "storageUri": "http://networkSettings.blob.core.windows.net"
+            }
+          }
+        },
+        "resources": [
+          {
+            "name": "computeSettings",
+            "type": "extensions",
+            "location": "[resourceGroup().location]",
+            "apiVersion": "computeSettings",
+            "dependsOn": [
+              "Microsoft.Compute/virtualMachines/computeSettings",
+              "Microsoft.Compute/virtualMachines/computeSettings/extensions/computeSettings"
+            ],
+            "properties": {
+              "publisher": "Microsoft.Azure.Extensions",
+              "type": "CustomScript",
+              "typeHandlerVersion": "2.0",
+              "autoUpgradeMinorVersion": true,
+              "settings": {
+                "commandToExecute": "bash /etc/chef-backend/chef-backend-install.sh keyvaultSettings keyvaultSettings keyvaultSettings keyvaultSettings"
+              }
+            }
+          }
+        ],
+        "tags": {
+          "provider": "[toUpper('33194f91-eb5f-4110-827a-e95f640a9e46')]"
+        }
+      },
+      {
+        "apiVersion": "computeSettings",
+        "type": "Microsoft.Compute/virtualMachines",
+        "name": "computeSettings",
+        "location": "[resourceGroup().location]",
+        "properties": {
+          "hardwareProfile": {
+            "vmSize": "computeSettings"
+          },
+          "osProfile": {
+            "computerName": "computeSettings",
+            "adminUsername": "computeSettings",
+            "adminPassword": "computeSettings",
+            "customData": "computeSettings"
+          },
+          "storageProfile": {
+            "imageReference": {
+              "publisher": "computeSettings",
+              "offer": "computeSettings",
+              "sku": "computeSettings",
+              "version": "computeSettings"
+            },
+            "osDisk": {
+              "createOption": "FromImage"
+            },
+            "dataDisks": [
+              {
+                "name": "computeSettings3",
+                "lun": 0,
+                "caching": "None",
+                "createOption": "Attach",
+                "managedDisk": {
+                  "id": "Microsoft.Compute/disks/computeSettings3"
+                }
+              }
+            ]
+          },
+          "networkProfile": {
+            "networkInterfaces": [
+              {
+                "id": "Microsoft.Network/networkInterfaces/networkSettings"
+              }
+            ]
+          },
+          "availabilitySet": {
+            "id": "Microsoft.Compute/availabilitySets/computeSettings"
+          },
+          "diagnosticsProfile": {
+            "bootDiagnostics": {
+              "enabled": true,
+              "storageUri": "http://networkSettings.blob.core.windows.net"
+            }
+          }
+        },
+        "resources": [
+          {
+            "name": "computeSettings",
+            "type": "extensions",
+            "location": "[resourceGroup().location]",
+            "apiVersion": "computeSettings",
+            "dependsOn": [
+              "Microsoft.Compute/virtualMachines/computeSettings",
+              "Microsoft.Compute/virtualMachines/extensions/computeSettings/computeSettings",
+              "Microsoft.Compute/virtualMachines/extensions/computeSettings/computeSettings",
+              "Microsoft.Compute/virtualMachines/extensions/computeSettings/computeSettings"
+            ],
+            "properties": {
+              "publisher": "Microsoft.Azure.Extensions",
+              "type": "CustomScript",
+              "typeHandlerVersion": "2.0",
+              "autoUpgradeMinorVersion": true,
+              "settings": {
+                "commandToExecute": "bash /etc/opscode/chef-frontend-install.sh keyvaultSettings computeSettings computeSettings computeSettings computeSettings computeSettings keyvaultSettings keyvaultSettings keyvaultSettings keyvaultSettings keyvaultSettings"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "apiVersion": "computeSettings",
+        "type": "Microsoft.Compute/virtualMachines",
+        "name": "computeSettings",
+        "location": "[resourceGroup().location]",
+        "properties": {
+          "hardwareProfile": {
+            "vmSize": "computeSettings"
+          },
+          "osProfile": {
+            "computerName": "computeSettings",
+            "adminUsername": "computeSettings",
+            "adminPassword": "computeSettings",
+            "customData": "computeSettings"
+          },
+          "storageProfile": {
+            "imageReference": {
+              "publisher": "computeSettings",
+              "offer": "computeSettings",
+              "sku": "computeSettings",
+              "version": "computeSettings"
+            },
+            "osDisk": {
+              "createOption": "FromImage"
+            },
+            "dataDisks": [
+              {
+                "name": "computeSettings4",
+                "lun": 0,
+                "caching": "None",
+                "createOption": "Attach",
+                "managedDisk": {
+                  "id": "Microsoft.Compute/disks/computeSettings4"
+                }
+              }
+            ]
+          },
+          "networkProfile": {
+            "networkInterfaces": [
+              {
+                "id": "Microsoft.Network/networkInterfaces/networkSettings"
+              }
+            ]
+          },
+          "availabilitySet": {
+            "id": "Microsoft.Compute/availabilitySets/computeSettings"
+          },
+          "diagnosticsProfile": {
+            "bootDiagnostics": {
+              "enabled": true,
+              "storageUri": "http://networkSettings.blob.core.windows.net"
+            }
+          }
+        },
+        "resources": [
+          {
+            "name": "computeSettings",
+            "type": "extensions",
+            "location": "[resourceGroup().location]",
+            "dependsOn": [
+              "Microsoft.Compute/virtualMachines/computeSettings",
+              "Microsoft.Compute/virtualMachines/extensions/computeSettings/computeSettings"
+            ],
+            "apiVersion": "computeSettings",
+            "properties": {
+              "publisher": "Microsoft.Azure.Extensions",
+              "type": "CustomScript",
+              "typeHandlerVersion": "2.0",
+              "autoUpgradeMinorVersion": true,
+              "settings": {
+                "commandToExecute": "bash /etc/opscode/chef-frontend-install.sh keyvaultSettings computeSettings computeSettings computeSettings computeSettings computeSettings keyvaultSettings keyvaultSettings keyvaultSettings keyvaultSettings keyvaultSettings"
+              }
+            }
+          }
+        ],
+        "tags": {
+          "provider": "[toUpper('33194f91-eb5f-4110-827a-e95f640a9e46')]"
+        }
+      },
+      {
+        "apiVersion": "computeSettings",
+        "type": "Microsoft.Compute/virtualMachines",
+        "name": "computeSettings",
+        "location": "[resourceGroup().location]",
+        "properties": {
+          "hardwareProfile": {
+            "vmSize": "computeSettings"
+          },
+          "osProfile": {
+            "computerName": "computeSettings",
+            "adminUsername": "computeSettings",
+            "adminPassword": "computeSettings",
+            "customData": "computeSettings"
+          },
+          "storageProfile": {
+            "imageReference": {
+              "publisher": "computeSettings",
+              "offer": "computeSettings",
+              "sku": "computeSettings",
+              "version": "computeSettings"
+            },
+            "osDisk": {
+              "createOption": "FromImage"
+            },
+            "dataDisks": [
+              {
+                "name": "computeSettings5",
+                "lun": 0,
+                "caching": "None",
+                "createOption": "Attach",
+                "managedDisk": {
+                  "id": "Microsoft.Compute/disks/computeSettings5"
+                }
+              }
+            ]
+          },
+          "networkProfile": {
+            "networkInterfaces": [
+              {
+                "id": "Microsoft.Network/networkInterfaces/networkSettings"
+              }
+            ]
+          },
+          "availabilitySet": {
+            "id": "Microsoft.Compute/availabilitySets/computeSettings"
+          },
+          "diagnosticsProfile": {
+            "bootDiagnostics": {
+              "enabled": true,
+              "storageUri": "http://networkSettings.blob.core.windows.net"
+            }
+          }
+        },
+        "resources": [
+          {
+            "name": "computeSettings",
+            "type": "extensions",
+            "location": "[resourceGroup().location]",
+            "dependsOn": [
+              "Microsoft.Compute/virtualMachines/computeSettings",
+              "Microsoft.Compute/virtualMachines/extensions/computeSettings/computeSettings"
+            ],
+            "apiVersion": "computeSettings",
+            "properties": {
+              "publisher": "Microsoft.Azure.Extensions",
+              "type": "CustomScript",
+              "typeHandlerVersion": "2.0",
+              "autoUpgradeMinorVersion": true,
+              "settings": {
+                "commandToExecute": "bash /etc/opscode/chef-frontend-install.sh keyvaultSettings computeSettings computeSettings computeSettings computeSettings computeSettings keyvaultSettings keyvaultSettings keyvaultSettings keyvaultSettings keyvaultSettings"
+              }
+            }
+          }
+        ],
+        "tags": {
+          "provider": "[toUpper('33194f91-eb5f-4110-827a-e95f640a9e46')]"
+        }
+      },
+      {
+        "apiVersion": "computeSettings",
+        "type": "Microsoft.Compute/virtualMachines",
+        "name": "computeSettings",
+        "location": "[resourceGroup().location]",
+        "properties": {
+          "hardwareProfile": {
+            "vmSize": "computeSettings"
+          },
+          "osProfile": {
+            "computerName": "computeSettings",
+            "adminUsername": "computeSettings",
+            "adminPassword": "computeSettings",
+            "customData": "computeSettings"
+          },
+          "storageProfile": {
+            "imageReference": {
+              "publisher": "computeSettings",
+              "offer": "computeSettings",
+              "sku": "computeSettings",
+              "version": "computeSettings"
+            },
+            "osDisk": {
+              "createOption": "FromImage"
+            },
+            "dataDisks": [
+              {
+                "name": "computeSettings6",
+                "lun": 0,
+                "caching": "None",
+                "createOption": "Attach",
+                "managedDisk": {
+                  "id": "Microsoft.Compute/disks/computeSettings6"
+                }
+              }
+            ]
+          },
+          "networkProfile": {
+            "networkInterfaces": [
+              {
+                "id": "Microsoft.Network/networkInterfaces/networkSettings"
+              }
+            ]
+          },
+          "diagnosticsProfile": {
+            "bootDiagnostics": {
+              "enabled": true,
+              "storageUri": "http://networkSettings.blob.core.windows.net"
+            }
+          }
+        },
+        "resources": [
+          {
+            "name": "computeSettings",
+            "type": "extensions",
+            "location": "[resourceGroup().location]",
+            "dependsOn": [
+              "Microsoft.Compute/virtualMachines/computeSettings",
+              "Microsoft.Compute/virtualMachines/extensions/computeSettings/computeSettings",
+              "Microsoft.Compute/virtualMachines/extensions/computeSettings/computeSettings",
+              "Microsoft.Compute/virtualMachines/extensions/computeSettings/computeSettings"
+            ],
+            "apiVersion": "computeSettings",
+            "properties": {
+              "publisher": "Microsoft.Azure.Extensions",
+              "type": "CustomScript",
+              "typeHandlerVersion": "2.0",
+              "autoUpgradeMinorVersion": true,
+              "settings": {
+                "commandToExecute": "bash /etc/delivery/chef-automate-install.sh keyvaultSettings keyvaultSettings keyvaultSettings keyvaultSettings keyvaultSettings"
+              }
+            }
+          }
+        ],
+        "tags": {
+          "provider": "[toUpper('33194f91-eb5f-4110-827a-e95f640a9e46')]"
+        }
+      }
+    ],
+    "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+  }
+}

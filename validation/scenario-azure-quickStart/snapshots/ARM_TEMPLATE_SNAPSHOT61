@@ -1,0 +1,159 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAzureQuickStart",
+  "paths": [
+    "/application-workloads/chef/datameer-trend-chef-riskanalysis/nested/database-new.json",
+    "/application-workloads/chef/datameer-trend-chef-riskanalysis/nested/datameer-hdinsight.parameters.json"
+  ],
+  "timestamp": 1642962884419,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/application-workloads/chef/datameer-trend-chef-riskanalysis/nested/database-new.json",
+      "/application-workloads/chef/datameer-trend-chef-riskanalysis/nested/datameer-hdinsight.parameters.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT61",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "microsoft.sql/servers"
+    ]
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT61",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "location": {
+        "type": "string",
+        "value": "westus"
+      },
+      "newsqlServerName": {
+        "type": "string"
+      },
+      "existingSQLServerName": {
+        "type": "string"
+      },
+      "dbAdminName": {
+        "type": "string"
+      },
+      "dbAdminPassword": {
+        "type": "securestring"
+      },
+      "sqlDBName": {
+        "type": "string"
+      },
+      "datameerTags": {
+        "type": "object"
+      },
+      "trendmicroTags": {
+        "type": "object"
+      },
+      "chefSoftwareTags": {
+        "type": "object"
+      },
+      "quickstartTags": {
+        "type": "object"
+      },
+      "clusterName": {
+        "value": "hdi-datameer-avyan-cluster"
+      },
+      "clusterType": {
+        "value": "hadoop"
+      },
+      "clusterLoginUserName": {
+        "value": "hdiadmin"
+      },
+      "clusterLoginPassword": {
+        "value": "GEN-PASSWORD"
+      },
+      "sshUserName": {
+        "value": "hdiuser"
+      },
+      "sshPassword": {
+        "value": "GEN-PASSWORD"
+      },
+      "storageAccount": {
+        "value": "stgmsignite2016"
+      },
+      "clusterVNetName": {
+        "value": "datameerP2PVnet"
+      },
+      "clusterVnetAddressSpace": {
+        "value": "10.7.0.0/16"
+      },
+      "clusterVNetSubnetAddressRange": {
+        "value": "10.7.4.0/24"
+      },
+      "clusterVNetSubnetName": {
+        "value": "hdi-datameer-avyan-clustersubnet"
+      }
+    },
+    "variables": {
+      "sql-api-version": "2014-04-01",
+      "sqldb-api-version": "2015-05-01-preview",
+      "sqlfirewallrules-api-version": "2014-04-01"
+    },
+    "resources": [
+      {
+        "name": "newsqlServerName",
+        "type": "Microsoft.Sql/servers",
+        "location": "westus",
+        "apiVersion": "2014-04-01",
+        "properties": {
+          "administratorLogin": "dbAdminName",
+          "administratorLoginPassword": "dbAdminPassword",
+          "version": "12.0"
+        },
+        "tags": {
+          "quickstartName": "quickstartTags",
+          "provider": "trendmicroTags"
+        },
+        "resources": [
+          {
+            "name": "sqlDBName",
+            "type": "databases",
+            "location": "westus",
+            "apiVersion": "2015-05-01-preview",
+            "dependsOn": [
+              "Microsoft.Sql/servers/newsqlServerName"
+            ],
+            "properties": {
+              "edition": "Standard",
+              "collation": "SQL_Latin1_General_CP1_CI_AS",
+              "maxSizeBytes": "21474836480",
+              "requestedServiceObjectiveName": "S3"
+            }
+          },
+          {
+            "apiVersion": "2014-04-01",
+            "dependsOn": [
+              "Microsoft.Sql/servers/newsqlServerName"
+            ],
+            "location": "westus",
+            "name": "AllowAllAzureIps",
+            "properties": {
+              "endIpAddress": "0.0.0.0",
+              "startIpAddress": "0.0.0.0"
+            },
+            "type": "firewallrules"
+          }
+        ]
+      }
+    ],
+    "outputs": {
+      "sqlServerFQDN": {
+        "type": "string",
+        "value": "[reference(concat('Microsoft.Sql/servers/', parameters('newsqlServerName'))).fullyQualifiedDomainName]"
+      }
+    },
+    "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+  }
+}

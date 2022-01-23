@@ -1,0 +1,300 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAzureQuickStart",
+  "paths": [
+    "/quickstarts/microsoft.compute/vmss-windows-nat/azuredeploy.json",
+    "/quickstarts/microsoft.compute/vmss-windows-nat/azuredeploy.parameters.json"
+  ],
+  "timestamp": 1642962905263,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/quickstarts/microsoft.compute/vmss-windows-nat/azuredeploy.json",
+      "/quickstarts/microsoft.compute/vmss-windows-nat/azuredeploy.parameters.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT1176",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "microsoft.network/publicipaddresses",
+      "microsoft.network/virtualnetworks",
+      "microsoft.network/loadbalancers",
+      "microsoft.compute/virtualmachinescalesets",
+      "microsoft.storage/storageaccounts"
+    ]
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT1176",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "vmSku": {
+        "type": "string",
+        "defaultValue": "Standard_A1",
+        "metadata": {
+          "description": "Size of VMs in the VM Scale Set."
+        },
+        "value": "Standard_A1"
+      },
+      "windowsOSVersion": {
+        "type": "string",
+        "defaultValue": "2012-R2-Datacenter",
+        "allowedValues": [
+          "2008-R2-SP1",
+          "2012-Datacenter",
+          "2012-R2-Datacenter"
+        ],
+        "metadata": {
+          "description": "The Windows version for the VM. This will pick a fully patched image of this given Windows version. Allowed values: 2008-R2-SP1, 2012-Datacenter, 2012-R2-Datacenter."
+        },
+        "value": "2012-R2-Datacenter"
+      },
+      "vmssName": {
+        "type": "string",
+        "metadata": {
+          "description": "String used as a base for naming resources. Must be 3-61 characters in length and globally unique across Azure. A hash is prepended to this string for some resources, and resource-specific information is appended."
+        },
+        "maxLength": 61,
+        "value": "GEN-UNIQUE-32"
+      },
+      "instanceCount": {
+        "type": "int",
+        "metadata": {
+          "description": "Number of VM instances (100 or less)."
+        },
+        "maxValue": 100,
+        "value": 5
+      },
+      "adminUsername": {
+        "type": "string",
+        "metadata": {
+          "description": "Admin username on all VMs."
+        },
+        "value": "windows"
+      },
+      "adminPassword": {
+        "type": "securestring",
+        "metadata": {
+          "description": "Admin password on all VMs."
+        },
+        "value": "GEN-PASSWORD"
+      }
+    },
+    "variables": {
+      "storageAccountType": "Standard_LRS",
+      "namingInfix": "[toLower(substring(concat(parameters('vmssName'), uniqueString(resourceGroup().id)), 0, 9))]",
+      "longNamingInfix": "[toLower(parameters('vmssName'))]",
+      "newStorageAccountSuffix": "[toLower(substring(concat(parameters('vmssName'), uniqueString(resourceGroup().id)), 0, 9))]sa",
+      "uniqueStringArray": [
+        "[concat(uniqueString(concat(resourceGroup().id, variables('newStorageAccountSuffix'), '0')))]",
+        "[concat(uniqueString(concat(resourceGroup().id, variables('newStorageAccountSuffix'), '1')))]",
+        "[concat(uniqueString(concat(resourceGroup().id, variables('newStorageAccountSuffix'), '2')))]",
+        "[concat(uniqueString(concat(resourceGroup().id, variables('newStorageAccountSuffix'), '3')))]",
+        "[concat(uniqueString(concat(resourceGroup().id, variables('newStorageAccountSuffix'), '4')))]"
+      ],
+      "saCount": 30,
+      "vhdContainerName": "[toLower(substring(concat(parameters('vmssName'), uniqueString(resourceGroup().id)), 0, 9))]vhd",
+      "osDiskName": "[toLower(substring(concat(parameters('vmssName'), uniqueString(resourceGroup().id)), 0, 9))]osdisk",
+      "addressPrefix": "10.0.0.0/16",
+      "subnetPrefix": "10.0.0.0/24",
+      "virtualNetworkName": "[toLower(substring(concat(parameters('vmssName'), uniqueString(resourceGroup().id)), 0, 9))]vnet",
+      "publicIPAddressName": "[toLower(substring(concat(parameters('vmssName'), uniqueString(resourceGroup().id)), 0, 9))]pip",
+      "subnetName": "[toLower(substring(concat(parameters('vmssName'), uniqueString(resourceGroup().id)), 0, 9))]subnet",
+      "loadBalancerName": "[toLower(substring(concat(parameters('vmssName'), uniqueString(resourceGroup().id)), 0, 9))]lb",
+      "publicIPAddressID": "Microsoft.Network/publicIPAddresses/[toLower(substring(concat(parameters('vmssName'), uniqueString(resourceGroup().id)), 0, 9))]pip",
+      "lbID": "Microsoft.Network/loadBalancers/[toLower(substring(concat(parameters('vmssName'), uniqueString(resourceGroup().id)), 0, 9))]lb",
+      "natPoolName": "[toLower(substring(concat(parameters('vmssName'), uniqueString(resourceGroup().id)), 0, 9))]natpool",
+      "bePoolName": "[toLower(substring(concat(parameters('vmssName'), uniqueString(resourceGroup().id)), 0, 9))]bepool",
+      "natStartPort": 50000,
+      "natEndPort": 50119,
+      "natBackendPort": 3389,
+      "nicName": "[toLower(substring(concat(parameters('vmssName'), uniqueString(resourceGroup().id)), 0, 9))]nic",
+      "ipConfigName": "[toLower(substring(concat(parameters('vmssName'), uniqueString(resourceGroup().id)), 0, 9))]ipconfig",
+      "frontEndIPConfigID": "Microsoft.Network/loadBalancers/[toLower(substring(concat(parameters('vmssName'), uniqueString(resourceGroup().id)), 0, 9))]lb/frontendIPConfigurations/loadBalancerFrontEnd",
+      "osType": {
+        "publisher": "MicrosoftWindowsServer",
+        "offer": "WindowsServer",
+        "sku": "2012-R2-Datacenter",
+        "version": "latest"
+      },
+      "imageReference": {
+        "publisher": "MicrosoftWindowsServer",
+        "offer": "WindowsServer",
+        "sku": "2012-R2-Datacenter",
+        "version": "latest"
+      },
+      "networkApiVersion": "2017-04-01",
+      "storageApiVersion": "2016-01-01",
+      "computeApiVersion": "2017-03-30"
+    },
+    "resources": [
+      {
+        "type": "Microsoft.Network/virtualNetworks",
+        "name": "[toLower(substring(concat(parameters('vmssName'), uniqueString(resourceGroup().id)), 0, 9))]vnet",
+        "location": "[resourceGroup().location]",
+        "apiVersion": "2017-04-01",
+        "properties": {
+          "addressSpace": {
+            "addressPrefixes": [
+              "10.0.0.0/16"
+            ]
+          },
+          "subnets": [
+            {
+              "name": "[toLower(substring(concat(parameters('vmssName'), uniqueString(resourceGroup().id)), 0, 9))]subnet",
+              "properties": {
+                "addressPrefix": "10.0.0.0/24"
+              }
+            }
+          ]
+        }
+      },
+      {
+        "type": "Microsoft.Storage/storageAccounts",
+        "name": "[concat(variables('uniqueStringArray')[copyIndex()], variables('newStorageAccountSuffix'))]",
+        "location": "[resourceGroup().location]",
+        "apiVersion": "2016-01-01",
+        "copy": {
+          "name": "storageLoop",
+          "count": 30
+        },
+        "properties": {},
+        "kind": "Storage",
+        "sku": {
+          "name": "Standard_LRS"
+        }
+      },
+      {
+        "type": "Microsoft.Network/publicIPAddresses",
+        "name": "[toLower(substring(concat(parameters('vmssName'), uniqueString(resourceGroup().id)), 0, 9))]pip",
+        "location": "[resourceGroup().location]",
+        "apiVersion": "2017-04-01",
+        "properties": {
+          "publicIPAllocationMethod": "Dynamic",
+          "dnsSettings": {
+            "domainNameLabel": "[toLower(parameters('vmssName'))]"
+          }
+        }
+      },
+      {
+        "type": "Microsoft.Network/loadBalancers",
+        "name": "[toLower(substring(concat(parameters('vmssName'), uniqueString(resourceGroup().id)), 0, 9))]lb",
+        "location": "[resourceGroup().location]",
+        "apiVersion": "2017-04-01",
+        "dependsOn": [
+          "Microsoft.Network/publicIPAddresses/[toLower(substring(concat(parameters('vmssName'), uniqueString(resourceGroup().id)), 0, 9))]pip"
+        ],
+        "properties": {
+          "frontendIPConfigurations": [
+            {
+              "name": "LoadBalancerFrontEnd",
+              "properties": {
+                "publicIPAddress": {
+                  "id": "Microsoft.Network/publicIPAddresses/[toLower(substring(concat(parameters('vmssName'), uniqueString(resourceGroup().id)), 0, 9))]pip"
+                }
+              }
+            }
+          ],
+          "backendAddressPools": [
+            {
+              "name": "[toLower(substring(concat(parameters('vmssName'), uniqueString(resourceGroup().id)), 0, 9))]bepool"
+            }
+          ],
+          "inboundNatPools": [
+            {
+              "name": "[toLower(substring(concat(parameters('vmssName'), uniqueString(resourceGroup().id)), 0, 9))]natpool",
+              "properties": {
+                "frontendIPConfiguration": {
+                  "id": "Microsoft.Network/loadBalancers/[toLower(substring(concat(parameters('vmssName'), uniqueString(resourceGroup().id)), 0, 9))]lb/frontendIPConfigurations/loadBalancerFrontEnd"
+                },
+                "protocol": "Tcp",
+                "frontendPortRangeStart": 50000,
+                "frontendPortRangeEnd": 50119,
+                "backendPort": 3389
+              }
+            }
+          ]
+        }
+      },
+      {
+        "type": "Microsoft.Compute/virtualMachineScaleSets",
+        "name": "[toLower(substring(concat(parameters('vmssName'), uniqueString(resourceGroup().id)), 0, 9))]",
+        "location": "[resourceGroup().location]",
+        "apiVersion": "2017-03-30",
+        "dependsOn": [
+          "storageLoop",
+          "Microsoft.Network/loadBalancers/[toLower(substring(concat(parameters('vmssName'), uniqueString(resourceGroup().id)), 0, 9))]lb",
+          "Microsoft.Network/virtualNetworks/[toLower(substring(concat(parameters('vmssName'), uniqueString(resourceGroup().id)), 0, 9))]vnet"
+        ],
+        "sku": {
+          "name": "Standard_A1",
+          "tier": "Standard",
+          "capacity": 5
+        },
+        "properties": {
+          "overprovision": "true",
+          "upgradePolicy": {
+            "mode": "Manual"
+          },
+          "virtualMachineProfile": {
+            "storageProfile": {
+              "osDisk": {
+                "caching": "ReadWrite",
+                "createOption": "FromImage"
+              },
+              "imageReference": {
+                "publisher": "MicrosoftWindowsServer",
+                "offer": "WindowsServer",
+                "sku": "2012-R2-Datacenter",
+                "version": "latest"
+              }
+            },
+            "osProfile": {
+              "computerNamePrefix": "[toLower(substring(concat(parameters('vmssName'), uniqueString(resourceGroup().id)), 0, 9))]",
+              "adminUsername": "windows",
+              "adminPassword": "GEN-PASSWORD"
+            },
+            "networkProfile": {
+              "networkInterfaceConfigurations": [
+                {
+                  "name": "[toLower(substring(concat(parameters('vmssName'), uniqueString(resourceGroup().id)), 0, 9))]nic",
+                  "properties": {
+                    "primary": true,
+                    "ipConfigurations": [
+                      {
+                        "name": "[toLower(substring(concat(parameters('vmssName'), uniqueString(resourceGroup().id)), 0, 9))]ipconfig",
+                        "properties": {
+                          "subnet": {
+                            "id": "[concat('/subscriptions/', subscription().subscriptionId,'/resourceGroups/', resourceGroup().name, '/providers/Microsoft.Network/virtualNetworks/', variables('virtualNetworkName'), '/subnets/', variables('subnetName'))]"
+                          },
+                          "loadBalancerBackendAddressPools": [
+                            {
+                              "id": "[concat('/subscriptions/', subscription().subscriptionId,'/resourceGroups/', resourceGroup().name, '/providers/Microsoft.Network/loadBalancers/', variables('loadBalancerName'), '/backendAddressPools/', variables('bePoolName'))]"
+                            }
+                          ],
+                          "loadBalancerInboundNatPools": [
+                            {
+                              "id": "[concat('/subscriptions/', subscription().subscriptionId,'/resourceGroups/', resourceGroup().name, '/providers/Microsoft.Network/loadBalancers/', variables('loadBalancerName'), '/inboundNatPools/', variables('natPoolName'))]"
+                            }
+                          ]
+                        }
+                      }
+                    ]
+                  }
+                }
+              ]
+            }
+          }
+        }
+      }
+    ],
+    "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+  }
+}

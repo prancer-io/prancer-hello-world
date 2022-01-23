@@ -1,0 +1,1265 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAzureQuickStart",
+  "paths": [
+    "/application-workloads/sap/sap-3-tier-marketplace-image-multi-sid-db-md/azuredeploy.json",
+    "/application-workloads/sap/sap-3-tier-marketplace-image-multi-sid-db-md/azuredeploy.parameters.json"
+  ],
+  "timestamp": 1642962895257,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/application-workloads/sap/sap-3-tier-marketplace-image-multi-sid-db-md/azuredeploy.json",
+      "/application-workloads/sap/sap-3-tier-marketplace-image-multi-sid-db-md/azuredeploy.parameters.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT458",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "microsoft.network/publicipaddresses",
+      "microsoft.network/virtualnetworks",
+      "microsoft.network/loadbalancers",
+      "microsoft.network/networkinterfaces",
+      "microsoft.compute/virtualmachines/extensions",
+      "microsoft.compute/virtualmachines",
+      "microsoft.network/networksecuritygroups",
+      "microsoft.compute/availabilitysets"
+    ]
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT458",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "sapSystemId": {
+        "type": "string",
+        "defaultValue": "DEV",
+        "maxLength": 3,
+        "minLength": 3,
+        "metadata": {
+          "description": "SAP System ID."
+        }
+      },
+      "osType": {
+        "type": "string",
+        "allowedValues": [
+          "Windows Server 2012 Datacenter",
+          "Windows Server 2012 R2 Datacenter",
+          "Windows Server 2016 Datacenter",
+          "SLES 12",
+          "SLES 12 BYOS",
+          "RHEL 7",
+          "Oracle Linux 7"
+        ],
+        "defaultValue": "Windows Server 2012 R2 Datacenter",
+        "metadata": {
+          "description": "The type of the operating system you want to deploy."
+        }
+      },
+      "dbtype": {
+        "type": "string",
+        "allowedValues": [
+          "SQL",
+          "HANA"
+        ],
+        "defaultValue": "SQL",
+        "metadata": {
+          "description": "The type of the database"
+        }
+      },
+      "sapSystemSize": {
+        "type": "string",
+        "allowedValues": [
+          "Demo",
+          "Small",
+          "Medium",
+          "Large",
+          "X-Large"
+        ],
+        "defaultValue": "Small",
+        "metadata": {
+          "description": "The size of the SAP System you want to deploy."
+        }
+      },
+      "systemAvailability": {
+        "type": "string",
+        "allowedValues": [
+          "HA",
+          "Not HA"
+        ],
+        "defaultValue": "Not HA",
+        "metadata": {
+          "description": "Determines whether this is a high available deployment or not. A HA deployment contains multiple instances of single point of failures."
+        }
+      },
+      "adminUsername": {
+        "type": "string",
+        "metadata": {
+          "description": "Username for the Virtual Machine."
+        },
+        "value": "GEN-UNIQUE"
+      },
+      "authenticationType": {
+        "type": "string",
+        "defaultValue": "password",
+        "allowedValues": [
+          "password",
+          "sshPublicKey"
+        ],
+        "metadata": {
+          "description": "Type of authentication to use on the Virtual Machine."
+        }
+      },
+      "adminPasswordOrKey": {
+        "type": "securestring",
+        "metadata": {
+          "description": "Password or ssh key for the Virtual Machine."
+        },
+        "value": "GEN-PASSWORD"
+      },
+      "subnetId": {
+        "type": "string",
+        "defaultValue": "",
+        "metadata": {
+          "description": "The id of the subnet you want to use."
+        }
+      },
+      "location": {
+        "type": "string",
+        "defaultValue": "[resourceGroup().location]",
+        "metadata": {
+          "description": "Location for all resources."
+        }
+      },
+      "_artifactsLocation": {
+        "type": "string",
+        "metadata": {
+          "description": "The base URI where artifacts required by this template are located. When the template is deployed using the accompanying scripts, a private location in the subscription will be used and this value will be automatically generated."
+        },
+        "defaultValue": "[deployment().properties.templateLink.uri]"
+      },
+      "_artifactsLocationSasToken": {
+        "type": "securestring",
+        "metadata": {
+          "description": "The sasToken required to access _artifactsLocation.  When the template is deployed using the accompanying scripts, a sasToken will be automatically generated."
+        },
+        "defaultValue": ""
+      }
+    },
+    "variables": {
+      "images": {
+        "Windows Server 2012 Datacenter": {
+          "sku": "2012-Datacenter",
+          "offer": "WindowsServer",
+          "publisher": "MicrosoftWindowsServer",
+          "version": "latest",
+          "OSType": "Windows",
+          "UsePlan": false,
+          "osDiskSize": 128
+        },
+        "Windows Server 2012 R2 Datacenter": {
+          "sku": "2012-R2-Datacenter",
+          "offer": "WindowsServer",
+          "publisher": "MicrosoftWindowsServer",
+          "version": "latest",
+          "OSType": "Windows",
+          "UsePlan": false,
+          "osDiskSize": 128
+        },
+        "Windows Server 2016 Datacenter": {
+          "sku": "2016-Datacenter",
+          "offer": "WindowsServer",
+          "publisher": "MicrosoftWindowsServer",
+          "version": "latest",
+          "OSType": "Windows",
+          "UsePlan": false,
+          "osDiskSize": 128
+        },
+        "SLES 12": {
+          "sku": "12-SP3",
+          "offer": "SLES-SAP",
+          "publisher": "SUSE",
+          "version": "latest",
+          "OSType": "Linux",
+          "UsePlan": false,
+          "osDiskSize": 64
+        },
+        "SLES 12 BYOS": {
+          "sku": "12-SP3",
+          "offer": "SLES-SAP-BYOS",
+          "publisher": "SUSE",
+          "version": "latest",
+          "OSType": "Linux",
+          "UsePlan": false,
+          "osDiskSize": 64
+        },
+        "RHEL 7": {
+          "sku": "7.4",
+          "offer": "RHEL",
+          "publisher": "RedHat",
+          "version": "latest",
+          "OSType": "Linux",
+          "UsePlan": false,
+          "osDiskSize": 64
+        },
+        "Oracle Linux 7": {
+          "sku": "7.3",
+          "offer": "Oracle-Linux",
+          "publisher": "Oracle",
+          "version": "latest",
+          "OSType": "Linux",
+          "UsePlan": false,
+          "osDiskSize": 64
+        }
+      },
+      "internalOSType": "(images)[parameters(osType)].OSType",
+      "linuxConfiguration": {
+        "disablePasswordAuthentication": true,
+        "ssh": {
+          "publicKeys": [
+            {
+              "path": "/home/GEN-UNIQUE/.ssh/authorized_keys",
+              "keyData": "GEN-PASSWORD"
+            }
+          ]
+        }
+      },
+      "csExtension": {
+        "Windows": {
+          "Publisher": "Microsoft.Compute",
+          "Name": "CustomScriptExtension",
+          "Version": "1.7",
+          "script": "[uri(parameters('_artifactsLocation'), concat('scripts/diskConfig.ps1', parameters('_artifactsLocationSasToken')))]",
+          "scriptCall": "powershell.exe -ExecutionPolicy bypass -File scripts/diskConfig.ps1"
+        },
+        "Linux": {
+          "Publisher": "Microsoft.Azure.Extensions",
+          "Name": "CustomScript",
+          "Version": "2.0",
+          "script": "[uri(parameters('_artifactsLocation'), concat('scripts/diskConfig.sh', parameters('_artifactsLocationSasToken')))]",
+          "scriptCall": "sh diskConfig.sh"
+        }
+      },
+      "cseExtPublisher": "(csExtension)[variables(internalOSType)].Publisher",
+      "cseExtName": "(csExtension)[variables(internalOSType)].Name",
+      "cseExtVersion": "(csExtension)[variables(internalOSType)].Version",
+      "csExtensionScript": "(csExtension)[variables(internalOSType)].script",
+      "csExtensionscriptCall": "(csExtension)[variables(internalOSType)].scriptCall",
+      "sizes": {
+        "Demo": {
+          "HANA": {
+            "vmSize": "Standard_E8s_v3",
+            "disks": [
+              {
+                "lun": 0,
+                "caching": "ReadOnly",
+                "createOption": "Empty",
+                "diskSizeGB": 128
+              },
+              {
+                "lun": 1,
+                "caching": "ReadOnly",
+                "createOption": "Empty",
+                "diskSizeGB": 128
+              },
+              {
+                "lun": 2,
+                "caching": "None",
+                "createOption": "Empty",
+                "diskSizeGB": 128
+              },
+              {
+                "lun": 3,
+                "caching": "None",
+                "createOption": "Empty",
+                "diskSizeGB": 128
+              },
+              {
+                "lun": 4,
+                "caching": "ReadOnly",
+                "createOption": "Empty",
+                "diskSizeGB": 128
+              },
+              {
+                "lun": 5,
+                "caching": "ReadOnly",
+                "createOption": "Empty",
+                "diskSizeGB": 128
+              },
+              {
+                "lun": 6,
+                "caching": "ReadOnly",
+                "createOption": "Empty",
+                "diskSizeGB": 128
+              },
+              {
+                "lun": 7,
+                "caching": "ReadOnly",
+                "createOption": "Empty",
+                "diskSizeGB": 128
+              }
+            ],
+            "scriptArguments": {
+              "Linux": "-luns '0,1#2,3#4#5#6,7' -names 'data#log#shared#usrsap#backup' -paths '/hana/data#/hana/log#/hana/shared#/usr/sap#/hana/backup'  -sizes '100#100#100#100#100'"
+            },
+            "useFastNetwork": false
+          },
+          "SQL": {
+            "vmSize": "Standard_D4s_v3",
+            "disks": [
+              {
+                "lun": 0,
+                "caching": "ReadOnly",
+                "createOption": "Empty",
+                "diskSizeGB": 128
+              }
+            ],
+            "scriptArguments": {
+              "Windows": "-luns \"0\" -names \"data\" -paths \"C:\\sql\\data,C:\\sql\\log\"  -sizes \"70,100\""
+            },
+            "useFastNetwork": false
+          }
+        },
+        "Small": {
+          "HANA": {
+            "vmSize": "Standard_E32s_v3",
+            "disks": [
+              {
+                "lun": 0,
+                "caching": "ReadOnly",
+                "createOption": "Empty",
+                "diskSizeGB": 512
+              },
+              {
+                "lun": 1,
+                "caching": "ReadOnly",
+                "createOption": "Empty",
+                "diskSizeGB": 512
+              },
+              {
+                "lun": 2,
+                "caching": "ReadOnly",
+                "createOption": "Empty",
+                "diskSizeGB": 512
+              },
+              {
+                "lun": 3,
+                "caching": "ReadOnly",
+                "createOption": "Empty",
+                "diskSizeGB": 512
+              },
+              {
+                "lun": 4,
+                "caching": "ReadOnly",
+                "createOption": "Empty",
+                "diskSizeGB": 64
+              },
+              {
+                "lun": 5,
+                "caching": "None",
+                "createOption": "Empty",
+                "diskSizeGB": 512
+              }
+            ],
+            "scriptArguments": {
+              "Linux": "-luns '0,1,2#3#4#5' -names 'datalog#shared#usrsap#backup' -paths '/hana/data,/hana/log#/hana/shared#/usr/sap#/hana/backup' -sizes '70,100#100#100#100'"
+            },
+            "useFastNetwork": true
+          },
+          "SQL": {
+            "vmSize": "Standard_D8s_v3",
+            "disks": [
+              {
+                "lun": 0,
+                "caching": "None",
+                "createOption": "Empty",
+                "diskSizeGB": 512
+              },
+              {
+                "lun": 1,
+                "caching": "None",
+                "createOption": "Empty",
+                "diskSizeGB": 512
+              },
+              {
+                "lun": 2,
+                "caching": "None",
+                "createOption": "Empty",
+                "diskSizeGB": 512
+              },
+              {
+                "lun": 3,
+                "caching": "None",
+                "createOption": "Empty",
+                "diskSizeGB": 512
+              },
+              {
+                "lun": 4,
+                "caching": "None",
+                "createOption": "Empty",
+                "diskSizeGB": 512
+              }
+            ],
+            "scriptArguments": {
+              "Windows": "-luns '0,1,2,3#4' -names 'data#log' -paths 'C:\\sql\\data#C:\\sql\\log'  -sizes '100#100'"
+            },
+            "useFastNetwork": true
+          }
+        },
+        "Medium": {
+          "HANA": {
+            "vmSize": "Standard_E64s_v3",
+            "disks": [
+              {
+                "lun": 0,
+                "caching": "ReadOnly",
+                "createOption": "Empty",
+                "diskSizeGB": 512
+              },
+              {
+                "lun": 1,
+                "caching": "ReadOnly",
+                "createOption": "Empty",
+                "diskSizeGB": 512
+              },
+              {
+                "lun": 2,
+                "caching": "ReadOnly",
+                "createOption": "Empty",
+                "diskSizeGB": 512
+              },
+              {
+                "lun": 3,
+                "caching": "ReadOnly",
+                "createOption": "Empty",
+                "diskSizeGB": 512
+              },
+              {
+                "lun": 4,
+                "caching": "ReadOnly",
+                "createOption": "Empty",
+                "diskSizeGB": 64
+              },
+              {
+                "lun": 5,
+                "caching": "None",
+                "createOption": "Empty",
+                "diskSizeGB": 1024
+              }
+            ],
+            "scriptArguments": {
+              "Linux": "-luns '0,1,2#3#4#5' -names 'datalog#shared#usrsap#backup' -paths '/hana/data,/hana/log#/hana/shared#/usr/sap#/hana/backup' -sizes '70,100#100#100#100'"
+            },
+            "useFastNetwork": true
+          },
+          "SQL": {
+            "vmSize": "Standard_D16s_v3",
+            "disks": [
+              {
+                "lun": 0,
+                "caching": "None",
+                "createOption": "Empty",
+                "diskSizeGB": 512
+              },
+              {
+                "lun": 1,
+                "caching": "None",
+                "createOption": "Empty",
+                "diskSizeGB": 512
+              },
+              {
+                "lun": 2,
+                "caching": "None",
+                "createOption": "Empty",
+                "diskSizeGB": 512
+              },
+              {
+                "lun": 3,
+                "caching": "None",
+                "createOption": "Empty",
+                "diskSizeGB": 512
+              },
+              {
+                "lun": 4,
+                "caching": "None",
+                "createOption": "Empty",
+                "diskSizeGB": 512
+              },
+              {
+                "lun": 5,
+                "caching": "None",
+                "createOption": "Empty",
+                "diskSizeGB": 512
+              },
+              {
+                "lun": 6,
+                "caching": "None",
+                "createOption": "Empty",
+                "diskSizeGB": 512
+              },
+              {
+                "lun": 7,
+                "caching": "None",
+                "createOption": "Empty",
+                "diskSizeGB": 512
+              }
+            ],
+            "scriptArguments": {
+              "Windows": "-luns '0,1,2,3,4,5,6#7' -names 'data#log' -paths 'C:\\sql\\data#C:\\sql\\log'  -sizes '100#100'"
+            },
+            "useFastNetwork": true
+          }
+        },
+        "Large": {
+          "HANA": {
+            "vmSize": "Standard_M64s",
+            "disks": [
+              {
+                "lun": 0,
+                "caching": "ReadOnly",
+                "createOption": "Empty",
+                "diskSizeGB": 512
+              },
+              {
+                "lun": 1,
+                "caching": "ReadOnly",
+                "createOption": "Empty",
+                "diskSizeGB": 512
+              },
+              {
+                "lun": 2,
+                "caching": "ReadOnly",
+                "createOption": "Empty",
+                "diskSizeGB": 512
+              },
+              {
+                "lun": 3,
+                "caching": "ReadOnly",
+                "createOption": "Empty",
+                "diskSizeGB": 512
+              },
+              {
+                "lun": 4,
+                "caching": "None",
+                "writeAcceleratorEnabled": "true",
+                "createOption": "Empty",
+                "diskSizeGB": 512
+              },
+              {
+                "lun": 5,
+                "caching": "None",
+                "writeAcceleratorEnabled": "true",
+                "createOption": "Empty",
+                "diskSizeGB": 512
+              },
+              {
+                "lun": 6,
+                "caching": "ReadOnly",
+                "createOption": "Empty",
+                "diskSizeGB": 1024
+              },
+              {
+                "lun": 7,
+                "caching": "ReadOnly",
+                "createOption": "Empty",
+                "diskSizeGB": 64
+              },
+              {
+                "lun": 8,
+                "caching": "ReadOnly",
+                "createOption": "Empty",
+                "diskSizeGB": 1024
+              },
+              {
+                "lun": 9,
+                "caching": "ReadOnly",
+                "createOption": "Empty",
+                "diskSizeGB": 1024
+              }
+            ],
+            "scriptArguments": {
+              "Linux": "-luns '0,1,2,3#4,5#6#7#8,9' -names 'data#log#shared#usrsap#backup' -paths '/hana/data#/hana/log#/hana/shared#/usr/sap#/hana/backup' -sizes '100#100#100#100#100'"
+            },
+            "useFastNetwork": true
+          },
+          "SQL": {
+            "vmSize": "Standard_GS4",
+            "disks": [
+              {
+                "lun": 0,
+                "caching": "None",
+                "createOption": "Empty",
+                "diskSizeGB": 1024
+              },
+              {
+                "lun": 1,
+                "caching": "None",
+                "createOption": "Empty",
+                "diskSizeGB": 1024
+              },
+              {
+                "lun": 2,
+                "caching": "None",
+                "createOption": "Empty",
+                "diskSizeGB": 1024
+              },
+              {
+                "lun": 3,
+                "caching": "None",
+                "createOption": "Empty",
+                "diskSizeGB": 1024
+              },
+              {
+                "lun": 4,
+                "caching": "None",
+                "createOption": "Empty",
+                "diskSizeGB": 1024
+              },
+              {
+                "lun": 5,
+                "caching": "None",
+                "createOption": "Empty",
+                "diskSizeGB": 512
+              }
+            ],
+            "scriptArguments": {
+              "Windows": "-luns '0,1,2,3,4#5' -names 'data#log' -paths 'C:\\sql\\data#C:\\sql\\log'  -sizes '100#100'"
+            },
+            "useFastNetwork": false
+          }
+        },
+        "X-Large": {
+          "HANA": {
+            "vmSize": "Standard_M128s",
+            "disks": [
+              {
+                "lun": 0,
+                "caching": "ReadOnly",
+                "createOption": "Empty",
+                "diskSizeGB": 1024
+              },
+              {
+                "lun": 1,
+                "caching": "ReadOnly",
+                "createOption": "Empty",
+                "diskSizeGB": 1024
+              },
+              {
+                "lun": 2,
+                "caching": "ReadOnly",
+                "createOption": "Empty",
+                "diskSizeGB": 1024
+              },
+              {
+                "lun": 3,
+                "caching": "None",
+                "writeAcceleratorEnabled": "true",
+                "createOption": "Empty",
+                "diskSizeGB": 512
+              },
+              {
+                "lun": 4,
+                "caching": "None",
+                "writeAcceleratorEnabled": "true",
+                "createOption": "Empty",
+                "diskSizeGB": 512
+              },
+              {
+                "lun": 5,
+                "caching": "ReadOnly",
+                "createOption": "Empty",
+                "diskSizeGB": 1024
+              },
+              {
+                "lun": 6,
+                "caching": "ReadOnly",
+                "createOption": "Empty",
+                "diskSizeGB": 64
+              },
+              {
+                "lun": 7,
+                "caching": "ReadOnly",
+                "createOption": "Empty",
+                "diskSizeGB": 2048
+              },
+              {
+                "lun": 8,
+                "caching": "ReadOnly",
+                "createOption": "Empty",
+                "diskSizeGB": 2048
+              }
+            ],
+            "scriptArguments": {
+              "Linux": "-luns '0,1,2#3,4#5#6#7,8' -names 'data#log#shared#usrsap#backup' -paths '/hana/data#/hana/log#/hana/shared#/usr/sap#/hana/backup' -sizes '100#100#100#100#100'"
+            },
+            "useFastNetwork": true
+          },
+          "SQL": {
+            "vmSize": "Standard_GS5",
+            "disks": [
+              {
+                "lun": 0,
+                "caching": "None",
+                "createOption": "Empty",
+                "diskSizeGB": 1024
+              },
+              {
+                "lun": 1,
+                "caching": "None",
+                "createOption": "Empty",
+                "diskSizeGB": 1024
+              },
+              {
+                "lun": 2,
+                "caching": "None",
+                "createOption": "Empty",
+                "diskSizeGB": 1024
+              },
+              {
+                "lun": 3,
+                "caching": "None",
+                "createOption": "Empty",
+                "diskSizeGB": 1024
+              },
+              {
+                "lun": 4,
+                "caching": "None",
+                "createOption": "Empty",
+                "diskSizeGB": 1024
+              },
+              {
+                "lun": 5,
+                "caching": "None",
+                "createOption": "Empty",
+                "diskSizeGB": 1024
+              },
+              {
+                "lun": 6,
+                "caching": "None",
+                "createOption": "Empty",
+                "diskSizeGB": 1024
+              },
+              {
+                "lun": 7,
+                "caching": "None",
+                "createOption": "Empty",
+                "diskSizeGB": 1024
+              }
+            ],
+            "scriptArguments": {
+              "Windows": "-luns '0,1,2,3,4,5,6#7' -names 'data#log' -paths 'C:\\sql\\data#C:\\sql\\log'  -sizes '100#100'"
+            },
+            "useFastNetwork": false
+          }
+        }
+      },
+      "dbvmCount": "[if(equals(parameters('systemAvailability'), 'HA'), 2, 1)]",
+      "sidlower": "[toLower(parameters('sapSystemId'))]",
+      "publicIpNameDB": "[toLower(parameters('sapSystemId'))]-pip-db",
+      "vnetName": "[toLower(parameters('sapSystemId'))]-vnet",
+      "subnetName": "Subnet",
+      "subnets": {
+        "true": "Microsoft.Network/virtualNetworks/subnets/[toLower(parameters('sapSystemId'))]-vnet/Subnet",
+        "false": ""
+      },
+      "selectedSubnetId": "(subnets)[string(equals(length(parameters(subnetId)), 0))]",
+      "nsgName": "[toLower(parameters('sapSystemId'))]-nsg",
+      "avSetNameDB": "[toLower(parameters('sapSystemId'))]-avset-db",
+      "loadBalancerNameDB": "[toLower(parameters('sapSystemId'))]-lb-db",
+      "nicNameDB": "[toLower(parameters('sapSystemId'))]-nic-db",
+      "vmNameDB": "[toLower(parameters('sapSystemId'))]-db",
+      "osSecurityRules": {
+        "Windows": [
+          {
+            "name": "RDP",
+            "properties": {
+              "description": "Allow RDP Subnet",
+              "protocol": "Tcp",
+              "sourcePortRange": "*",
+              "destinationPortRange": "3389",
+              "sourceAddressPrefix": "*",
+              "destinationAddressPrefix": "*",
+              "access": "Allow",
+              "priority": 100,
+              "direction": "Inbound"
+            }
+          }
+        ],
+        "Linux": [
+          {
+            "name": "SSH",
+            "properties": {
+              "description": "Allow SSH Subnet",
+              "protocol": "Tcp",
+              "sourcePortRange": "*",
+              "destinationPortRange": "22",
+              "sourceAddressPrefix": "*",
+              "destinationAddressPrefix": "*",
+              "access": "Allow",
+              "priority": 100,
+              "direction": "Inbound"
+            }
+          }
+        ]
+      },
+      "selectedSecurityRules": "(osSecurityRules)[variables(internalOSType)]",
+      "loadBalancerFrontendHANADB": "frontend",
+      "backendPoolHANADB": "backend",
+      "probePortHANADB": "probe",
+      "dbInstanceNumberHANA": 3,
+      "lbPrefixHANADB": "[concat('lb', padLeft(variables('dbInstanceNumberHANA'), 2, '0'))]",
+      "probePortInternalHANADB": "[add(62500, variables('dbInstanceNumberHANA'))]",
+      "lbRulePrefixHANADB": "[concat(variables('lbPrefixHANADB'), 'Rule')]",
+      "loadBalancerFrontendSQLDB": "frontend",
+      "loadBalancerFrontendSQLCL": "frontendcl",
+      "backendPoolSQLDB": "backend",
+      "backendPoolSQLCL": "backendcl",
+      "probePortSQLDB": "probe",
+      "probePortSQLCL": "probecl",
+      "lbPrefixSQLDB": "lbsql",
+      "probePortInternalSQLDB": 62500,
+      "probePortInternalSQLCL": 63500,
+      "lbRulePrefixSQLDB": "lbsqlRule",
+      "idleTimeoutInMinutes": 30,
+      "lbFrontendConfigs": {
+        "HANA": {
+          "Linux": [
+            {
+              "properties": {
+                "subnet": {
+                  "id": "(subnets)[string(equals(length(parameters(subnetId)), 0))]"
+                },
+                "privateIPAllocationMethod": "Dynamic"
+              },
+              "name": "frontend"
+            }
+          ]
+        },
+        "SQL": {
+          "Windows": [
+            {
+              "properties": {
+                "subnet": {
+                  "id": "(subnets)[string(equals(length(parameters(subnetId)), 0))]"
+                },
+                "privateIPAllocationMethod": "Dynamic"
+              },
+              "name": "frontend"
+            },
+            {
+              "properties": {
+                "subnet": {
+                  "id": "(subnets)[string(equals(length(parameters(subnetId)), 0))]"
+                },
+                "privateIPAllocationMethod": "Dynamic"
+              },
+              "name": "frontendcl"
+            }
+          ]
+        }
+      },
+      "lbBackendPools": {
+        "HANA": {
+          "Linux": [
+            {
+              "name": "backend"
+            }
+          ]
+        },
+        "SQL": {
+          "Windows": [
+            {
+              "name": "backend"
+            },
+            {
+              "name": "backendcl"
+            }
+          ]
+        }
+      },
+      "lbRules": {
+        "HANA": {
+          "Linux": [
+            {
+              "properties": {
+                "frontendIPConfiguration": {
+                  "id": "Microsoft.Network/loadBalancers/frontendIpConfigurations/[toLower(parameters('sapSystemId'))]-lb-db/frontend"
+                },
+                "backendAddressPool": {
+                  "id": "Microsoft.Network/loadBalancers/backendAddressPools/[toLower(parameters('sapSystemId'))]-lb-db/backend"
+                },
+                "probe": {
+                  "id": "Microsoft.Network/loadBalancers/probes/[toLower(parameters('sapSystemId'))]-lb-db/probe"
+                },
+                "protocol": "Tcp",
+                "frontendPort": "[add(30013, mul(variables('dbInstanceNumberHANA'), 100))]",
+                "backendPort": "[add(30013, mul(variables('dbInstanceNumberHANA'), 100))]",
+                "enableFloatingIP": true,
+                "idleTimeoutInMinutes": 30
+              },
+              "name": "[concat(variables('lbRulePrefixHANADB'), '3', padLeft(variables('dbInstanceNumberHANA'), 2, '0'), '13')]"
+            },
+            {
+              "properties": {
+                "frontendIPConfiguration": {
+                  "id": "Microsoft.Network/loadBalancers/frontendIpConfigurations/[toLower(parameters('sapSystemId'))]-lb-db/frontend"
+                },
+                "backendAddressPool": {
+                  "id": "Microsoft.Network/loadBalancers/backendAddressPools/[toLower(parameters('sapSystemId'))]-lb-db/backend"
+                },
+                "probe": {
+                  "id": "Microsoft.Network/loadBalancers/probes/[toLower(parameters('sapSystemId'))]-lb-db/probe"
+                },
+                "protocol": "Tcp",
+                "frontendPort": "[add(30015, mul(variables('dbInstanceNumberHANA'), 100))]",
+                "backendPort": "[add(30015, mul(variables('dbInstanceNumberHANA'), 100))]",
+                "enableFloatingIP": true,
+                "idleTimeoutInMinutes": 30
+              },
+              "name": "[concat(variables('lbRulePrefixHANADB'), '3', padLeft(variables('dbInstanceNumberHANA'), 2, '0'), '15')]"
+            },
+            {
+              "properties": {
+                "frontendIPConfiguration": {
+                  "id": "Microsoft.Network/loadBalancers/frontendIpConfigurations/[toLower(parameters('sapSystemId'))]-lb-db/frontend"
+                },
+                "backendAddressPool": {
+                  "id": "Microsoft.Network/loadBalancers/backendAddressPools/[toLower(parameters('sapSystemId'))]-lb-db/backend"
+                },
+                "probe": {
+                  "id": "Microsoft.Network/loadBalancers/probes/[toLower(parameters('sapSystemId'))]-lb-db/probe"
+                },
+                "protocol": "Tcp",
+                "frontendPort": "[add(30040, mul(variables('dbInstanceNumberHANA'), 100))]",
+                "backendPort": "[add(30040, mul(variables('dbInstanceNumberHANA'), 100))]",
+                "enableFloatingIP": true,
+                "idleTimeoutInMinutes": 30
+              },
+              "name": "[concat(variables('lbRulePrefixHANADB'), '3', padLeft(variables('dbInstanceNumberHANA'), 2, '0'), '40')]"
+            },
+            {
+              "properties": {
+                "frontendIPConfiguration": {
+                  "id": "Microsoft.Network/loadBalancers/frontendIpConfigurations/[toLower(parameters('sapSystemId'))]-lb-db/frontend"
+                },
+                "backendAddressPool": {
+                  "id": "Microsoft.Network/loadBalancers/backendAddressPools/[toLower(parameters('sapSystemId'))]-lb-db/backend"
+                },
+                "probe": {
+                  "id": "Microsoft.Network/loadBalancers/probes/[toLower(parameters('sapSystemId'))]-lb-db/probe"
+                },
+                "protocol": "Tcp",
+                "frontendPort": "[add(30041, mul(variables('dbInstanceNumberHANA'), 100))]",
+                "backendPort": "[add(30041, mul(variables('dbInstanceNumberHANA'), 100))]",
+                "enableFloatingIP": true,
+                "idleTimeoutInMinutes": 30
+              },
+              "name": "[concat(variables('lbRulePrefixHANADB'), '3', padLeft(variables('dbInstanceNumberHANA'), 2, '0'), '41')]"
+            },
+            {
+              "properties": {
+                "frontendIPConfiguration": {
+                  "id": "Microsoft.Network/loadBalancers/frontendIpConfigurations/[toLower(parameters('sapSystemId'))]-lb-db/frontend"
+                },
+                "backendAddressPool": {
+                  "id": "Microsoft.Network/loadBalancers/backendAddressPools/[toLower(parameters('sapSystemId'))]-lb-db/backend"
+                },
+                "probe": {
+                  "id": "Microsoft.Network/loadBalancers/probes/[toLower(parameters('sapSystemId'))]-lb-db/probe"
+                },
+                "protocol": "Tcp",
+                "frontendPort": "[add(30042, mul(variables('dbInstanceNumberHANA'), 100))]",
+                "backendPort": "[add(30042, mul(variables('dbInstanceNumberHANA'), 100))]",
+                "enableFloatingIP": true,
+                "idleTimeoutInMinutes": 30
+              },
+              "name": "[concat(variables('lbRulePrefixHANADB'), '3', padLeft(variables('dbInstanceNumberHANA'), 2, '0'), '42')]"
+            }
+          ]
+        },
+        "SQL": {
+          "Windows": [
+            {
+              "properties": {
+                "frontendIPConfiguration": {
+                  "id": "Microsoft.Network/loadBalancers/frontendIpConfigurations/[toLower(parameters('sapSystemId'))]-lb-db/frontend"
+                },
+                "backendAddressPool": {
+                  "id": "Microsoft.Network/loadBalancers/backendAddressPools/[toLower(parameters('sapSystemId'))]-lb-db/backend"
+                },
+                "probe": {
+                  "id": "Microsoft.Network/loadBalancers/probes/[toLower(parameters('sapSystemId'))]-lb-db/probe"
+                },
+                "protocol": "Tcp",
+                "frontendPort": 1433,
+                "backendPort": 1433,
+                "enableFloatingIP": true,
+                "idleTimeoutInMinutes": 30
+              },
+              "name": "lbsqlRule1433"
+            }
+          ]
+        }
+      },
+      "lbProbes": {
+        "HANA": {
+          "Linux": [
+            {
+              "properties": {
+                "protocol": "Tcp",
+                "port": "[add(62500, variables('dbInstanceNumberHANA'))]",
+                "intervalInSeconds": 5,
+                "numberOfProbes": 2
+              },
+              "name": "probe"
+            }
+          ]
+        },
+        "SQL": {
+          "Windows": [
+            {
+              "properties": {
+                "protocol": "Tcp",
+                "port": 62500,
+                "intervalInSeconds": 5,
+                "numberOfProbes": 2
+              },
+              "name": "probe"
+            },
+            {
+              "properties": {
+                "protocol": "Tcp",
+                "port": 63500,
+                "intervalInSeconds": 5,
+                "numberOfProbes": 2
+              },
+              "name": "probecl"
+            }
+          ]
+        }
+      },
+      "nicBackAddressPools": {
+        "HANA": {
+          "Linux": [
+            {
+              "id": "Microsoft.Network/loadBalancers/backendAddressPools/[toLower(parameters('sapSystemId'))]-lb-db/backend"
+            }
+          ]
+        },
+        "SQL": {
+          "Windows": [
+            {
+              "id": "Microsoft.Network/loadBalancers/backendAddressPools/[toLower(parameters('sapSystemId'))]-lb-db/backend"
+            },
+            {
+              "id": "Microsoft.Network/loadBalancers/backendAddressPools/[toLower(parameters('sapSystemId'))]-lb-db/backendcl"
+            }
+          ]
+        }
+      }
+    },
+    "resources": [
+      {
+        "type": "Microsoft.Network/networkSecurityGroups",
+        "name": "[toLower(parameters('sapSystemId'))]-nsg",
+        "apiVersion": "2020-07-01",
+        "location": "[resourceGroup().location]",
+        "condition": false,
+        "properties": {
+          "securityRules": "(osSecurityRules)[variables(internalOSType)]"
+        }
+      },
+      {
+        "type": "Microsoft.Network/virtualNetworks",
+        "name": "[toLower(parameters('sapSystemId'))]-vnet",
+        "apiVersion": "2020-07-01",
+        "location": "[resourceGroup().location]",
+        "dependsOn": [
+          "Microsoft.Network/networkSecurityGroups//[toLower(parameters('sapSystemId'))]-nsg"
+        ],
+        "condition": false,
+        "properties": {
+          "addressSpace": {
+            "addressPrefixes": [
+              "10.0.0.0/16"
+            ]
+          },
+          "subnets": [
+            {
+              "name": "Subnet",
+              "properties": {
+                "addressPrefix": "10.0.0.0/24",
+                "networkSecurityGroup": {
+                  "id": "Microsoft.Network/networkSecurityGroups/[toLower(parameters('sapSystemId'))]-nsg"
+                }
+              }
+            }
+          ]
+        }
+      },
+      {
+        "type": "Microsoft.Compute/availabilitySets",
+        "name": "[toLower(parameters('sapSystemId'))]-avset-db",
+        "apiVersion": "2020-12-01",
+        "location": "[resourceGroup().location]",
+        "sku": {
+          "name": "Aligned"
+        },
+        "properties": {
+          "platformFaultDomainCount": 2,
+          "platformUpdateDomainCount": 20
+        }
+      },
+      {
+        "type": "Microsoft.Network/publicIPAddresses",
+        "name": "[toLower(parameters('sapSystemId'))]-pip-db-copyIndex()",
+        "apiVersion": "2020-07-01",
+        "condition": false,
+        "dependsOn": [
+          "Microsoft.Network/virtualNetworks//[toLower(parameters('sapSystemId'))]-vnet"
+        ],
+        "location": "[resourceGroup().location]",
+        "copy": {
+          "name": "dbpipLoop",
+          "count": "[if(equals(parameters('systemAvailability'), 'HA'), 2, 1)]"
+        },
+        "properties": {
+          "publicIPAllocationMethod": "Dynamic"
+        }
+      },
+      {
+        "type": "Microsoft.Network/loadBalancers",
+        "name": "[toLower(parameters('sapSystemId'))]-lb-db",
+        "apiVersion": "2020-07-01",
+        "location": "[resourceGroup().location]",
+        "condition": "[greater(variables('dbvmCount') , 1)]",
+        "dependsOn": [
+          "Microsoft.Network/virtualNetworks//[toLower(parameters('sapSystemId'))]-vnet"
+        ],
+        "properties": {
+          "frontendIPConfigurations": "(lbFrontendConfigs)[parameters(dbtype)][variables(internalOSType)]",
+          "backendAddressPools": "(lbBackendPools)[parameters(dbtype)][variables(internalOSType)]",
+          "loadBalancingRules": "(lbRules)[parameters(dbtype)][variables(internalOSType)]",
+          "probes": "(lbProbes)[parameters(dbtype)][variables(internalOSType)]"
+        }
+      },
+      {
+        "type": "Microsoft.Network/networkInterfaces",
+        "name": "[toLower(parameters('sapSystemId'))]-nic-db-copyIndex()",
+        "apiVersion": "2020-07-01",
+        "copy": {
+          "name": "dbNICLoop",
+          "count": "[if(equals(parameters('systemAvailability'), 'HA'), 2, 1)]"
+        },
+        "dependsOn": [
+          "dbpipLoop",
+          "Microsoft.Network/virtualNetworks//[toLower(parameters('sapSystemId'))]-vnet",
+          "Microsoft.Network/loadBalancers//[toLower(parameters('sapSystemId'))]-lb-db"
+        ],
+        "location": "[resourceGroup().location]",
+        "properties": {
+          "ipConfigurations": [
+            {
+              "name": "ipconfig1",
+              "properties": {
+                "privateIPAllocationMethod": "Dynamic",
+                "publicIPAddress": "[if(equals(length(parameters('subnetId')), 0), json(concat('{\"id\": \"', resourceId('Microsoft.Network/publicIPAddresses', concat(variables('publicIpNameDB'), '-', copyIndex())) ,'\"}')), json('null'))]",
+                "subnet": {
+                  "id": "(subnets)[string(equals(length(parameters(subnetId)), 0))]"
+                },
+                "loadBalancerBackendAddressPools": "[if(greater(variables('dbvmCount') , 1), variables('nicBackAddressPools')[parameters('dbtype')][variables('internalOSType')], json('null'))]"
+              }
+            }
+          ],
+          "enableAcceleratedNetworking": "(sizes)[parameters(sapSystemSize)][parameters(dbType)].useFastNetwork"
+        }
+      },
+      {
+        "type": "Microsoft.Compute/virtualMachines",
+        "name": "[toLower(parameters('sapSystemId'))]-db-copyIndex()",
+        "copy": {
+          "name": "dbVMLoop",
+          "count": "[if(equals(parameters('systemAvailability'), 'HA'), 2, 1)]"
+        },
+        "dependsOn": [
+          "dbNICLoop",
+          "Microsoft.Compute/availabilitySets//[toLower(parameters('sapSystemId'))]-avset-db"
+        ],
+        "apiVersion": "2020-12-01",
+        "location": "[resourceGroup().location]",
+        "properties": {
+          "availabilitySet": {
+            "id": "Microsoft.Compute/availabilitySets/[toLower(parameters('sapSystemId'))]-avset-db"
+          },
+          "hardwareProfile": {
+            "vmSize": "(sizes)[parameters(sapSystemSize)][parameters(dbType)].vmSize"
+          },
+          "osProfile": {
+            "computerName": "[toLower(parameters('sapSystemId'))]-db-copyIndex()",
+            "adminUsername": "GEN-UNIQUE",
+            "adminPassword": "GEN-PASSWORD",
+            "linuxConfiguration": "[if(equals(parameters('authenticationType'), 'password'), json('null'), variables('linuxConfiguration'))]"
+          },
+          "storageProfile": {
+            "imageReference": {
+              "publisher": "(images)[parameters(osType)].publisher",
+              "offer": "(images)[parameters(osType)].offer",
+              "sku": "(images)[parameters(osType)].sku",
+              "version": "latest"
+            },
+            "osDisk": {
+              "name": "[toLower(parameters('sapSystemId'))]-db-copyIndex()-osdisk",
+              "caching": "ReadWrite",
+              "createOption": "FromImage",
+              "diskSizeGB": "(images)[parameters(osType)].osDiskSize",
+              "managedDisk": {
+                "storageAccountType": "Premium_LRS"
+              }
+            },
+            "dataDisks": "(sizes)[parameters(sapSystemSize)][parameters(dbType)].disks"
+          },
+          "networkProfile": {
+            "networkInterfaces": [
+              {
+                "id": "Microsoft.Network/networkInterfaces/[toLower(parameters('sapSystemId'))]-nic-db-copyIndex()"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "type": "Microsoft.Compute/virtualMachines/extensions",
+        "name": "[toLower(parameters('sapSystemId'))]-db-copyIndex()/(csExtension)[variables(internalOSType)].Name",
+        "apiVersion": "2020-12-01",
+        "copy": {
+          "name": "dbCSELoop",
+          "count": "[if(equals(parameters('systemAvailability'), 'HA'), 2, 1)]"
+        },
+        "location": "[resourceGroup().location]",
+        "dependsOn": [
+          "dbVMLoop"
+        ],
+        "properties": {
+          "publisher": "(csExtension)[variables(internalOSType)].Publisher",
+          "type": "(csExtension)[variables(internalOSType)].Name",
+          "typeHandlerVersion": "(csExtension)[variables(internalOSType)].Version",
+          "autoUpgradeMinorVersion": true,
+          "settings": {
+            "fileUris": [
+              "(csExtension)[variables(internalOSType)].script"
+            ],
+            "commandToExecute": "[concat(variables('csExtensionscriptCall'), ' ', variables('sizes')[parameters('sapSystemSize')][parameters('dbType')].scriptArguments[variables('internalOSType')])]"
+          }
+        }
+      }
+    ],
+    "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+  }
+}

@@ -1,0 +1,425 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAzureQuickStart",
+  "paths": [
+    "/quickstarts/microsoft.compute/vm-trustedlaunch-linux/azuredeploy.json",
+    "/quickstarts/microsoft.compute/vm-trustedlaunch-linux/azuredeploy.parameters.json"
+  ],
+  "timestamp": 1642962904593,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/quickstarts/microsoft.compute/vm-trustedlaunch-linux/azuredeploy.json",
+      "/quickstarts/microsoft.compute/vm-trustedlaunch-linux/azuredeploy.parameters.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT1122",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "microsoft.network/publicipaddresses",
+      "microsoft.network/virtualnetworks",
+      "microsoft.network/networkinterfaces",
+      "microsoft.compute/virtualmachines/extensions",
+      "microsoft.compute/virtualmachines",
+      "microsoft.network/networksecuritygroups"
+    ]
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT1122",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "vmName": {
+        "type": "string",
+        "defaultValue": "myTVM",
+        "metadata": {
+          "description": "The name of you virtual machine."
+        }
+      },
+      "os": {
+        "type": "string",
+        "defaultValue": "Ubuntu-1804",
+        "allowedValues": [
+          "Ubuntu-1804",
+          "Ubuntu-2004",
+          "RHEL-83",
+          "SUSE-15-SP2"
+        ],
+        "metadata": {
+          "description": "The OS for the virtual machine. This will pick the latest fully patched image of the given OS."
+        }
+      },
+      "vmSize": {
+        "type": "string",
+        "defaultValue": "Standard_D2s_v3",
+        "metadata": {
+          "description": "The size of the virtual machine"
+        }
+      },
+      "adminUsername": {
+        "type": "string",
+        "metadata": {
+          "description": "Username for the virtual machine."
+        },
+        "value": "GEN-UNIQUE"
+      },
+      "authenticationType": {
+        "type": "string",
+        "defaultValue": "password",
+        "allowedValues": [
+          "sshPublicKey",
+          "password"
+        ],
+        "metadata": {
+          "description": "Type of authentication to use on the virtual machine. SSH Public key is recommended."
+        }
+      },
+      "adminPasswordOrKey": {
+        "type": "securestring",
+        "metadata": {
+          "description": "SSH Public Key or password for the virtual machine. SSH Public key is recommended."
+        },
+        "value": "GEN-PASSWORD"
+      },
+      "secureBoot": {
+        "type": "string",
+        "defaultValue": "true",
+        "allowedValues": [
+          "true",
+          "false"
+        ],
+        "metadata": {
+          "description": "Secure Boot setting of the virtual machine."
+        }
+      },
+      "vTPM": {
+        "type": "string",
+        "defaultValue": "true",
+        "allowedValues": [
+          "true",
+          "false"
+        ],
+        "metadata": {
+          "description": "vTPM setting of the virtual machine."
+        }
+      },
+      "location": {
+        "type": "string",
+        "metadata": {
+          "description": "Location for all resources."
+        },
+        "value": "southcentralus"
+      },
+      "dnsLabelPrefix": {
+        "type": "string",
+        "defaultValue": "[toLower(concat(parameters('vmName'), '-', uniqueString(resourceGroup().id)))]",
+        "metadata": {
+          "description": "Unique DNS Name for the Public IP used to access the virtual machine."
+        },
+        "value": "GEN-UNIQUE"
+      },
+      "publicIpName": {
+        "type": "string",
+        "defaultValue": "myPublicIP",
+        "metadata": {
+          "description": "Name for the Public IP used to access the virtual machine."
+        }
+      },
+      "publicIPAllocationMethod": {
+        "type": "string",
+        "defaultValue": "Dynamic",
+        "allowedValues": [
+          "Dynamic",
+          "Static"
+        ],
+        "metadata": {
+          "description": "Allocation method for the Public IP used to access the virtual machine."
+        }
+      },
+      "publicIpSku": {
+        "type": "string",
+        "defaultValue": "Basic",
+        "allowedValues": [
+          "Basic",
+          "Standard"
+        ],
+        "metadata": {
+          "description": "SKU for the Public IP used to access the virtual machine."
+        }
+      },
+      "nicName": {
+        "type": "string",
+        "defaultValue": "nic",
+        "metadata": {
+          "description": "Name of the network interface"
+        }
+      },
+      "virtualNetworkName": {
+        "type": "string",
+        "defaultValue": "vnet",
+        "metadata": {
+          "description": "Name of the virtual network"
+        }
+      },
+      "networkSecurityGroupName": {
+        "type": "string",
+        "defaultValue": "nsg",
+        "metadata": {
+          "description": "Name of the network security group"
+        }
+      },
+      "maaEndpoint": {
+        "type": "string",
+        "defaultValue": "https://sharedeus2.eus2.attest.azure.net/",
+        "allowedValues": [
+          "https://sharedcus.cus.attest.azure.net/",
+          "https://sharedcae.cae.attest.azure.net/",
+          "https://sharedeus2.eus2.attest.azure.net/",
+          "https://shareduks.uks.attest.azure.net/",
+          "https://sharedcac.cac.attest.azure.net/",
+          "https://sharedukw.ukw.attest.azure.net/",
+          "https://sharedneu.neu.attest.azure.net/",
+          "https://sharedeus.eus.attest.azure.net/",
+          "https://sharedeau.eau.attest.azure.net/",
+          "https://sharedncus.ncus.attest.azure.net/",
+          "https://sharedwus.wus.attest.azure.net/",
+          "https://sharedweu.weu.attest.azure.net/",
+          "https://sharedscus.scus.attest.azure.net/",
+          "https://sharedsasia.sasia.attest.azure.net/",
+          "https://sharedsau.sau.attest.azure.net/"
+        ],
+        "metadata": {
+          "description": "MAA Endpoint to attest to."
+        }
+      }
+    },
+    "variables": {
+      "imageReference": {
+        "Ubuntu-1804": {
+          "publisher": "Canonical",
+          "offer": "UbuntuServer",
+          "sku": "18_04-lts-gen2",
+          "version": "latest"
+        },
+        "Ubuntu-2004": {
+          "publisher": "Canonical",
+          "offer": "0001-com-ubuntu-server-focal",
+          "sku": "20_04-lts-gen2",
+          "version": "latest"
+        },
+        "RHEL-83": {
+          "publisher": "RedHat",
+          "offer": "RHEL",
+          "sku": "83-gen2",
+          "version": "latest"
+        },
+        "SUSE-15-SP2": {
+          "publisher": "SUSE",
+          "offer": "SLES-15-SP2",
+          "sku": "gen2",
+          "version": "latest"
+        }
+      },
+      "addressPrefix": "10.0.0.0/16",
+      "ascReportingEndpoint": "https://sharedeus2.eus2.attest.azure.net/",
+      "disableAlerts": "false",
+      "extensionName": "GuestAttestation",
+      "extensionPublisher": "Microsoft.Azure.Security.LinuxAttestation",
+      "extensionVersion": "1.0",
+      "maaTenantName": "GuestAttestation",
+      "subnetName": "Subnet",
+      "subnetPrefix": "10.0.0.0/24",
+      "subnetRef": "Microsoft.Network/virtualNetworks/subnets/vnet/Subnet",
+      "useAlternateToken": "false",
+      "linuxConfiguration": {
+        "disablePasswordAuthentication": true,
+        "ssh": {
+          "publicKeys": [
+            {
+              "path": "/home/GEN-UNIQUE/.ssh/authorized_keys",
+              "keyData": "GEN-PASSWORD"
+            }
+          ]
+        }
+      }
+    },
+    "resources": [
+      {
+        "type": "Microsoft.Network/publicIpAddresses",
+        "apiVersion": "2020-06-01",
+        "name": "publicIPName",
+        "location": "southcentralus",
+        "sku": {
+          "name": "Basic"
+        },
+        "properties": {
+          "publicIPAllocationMethod": "Dynamic",
+          "dnsSettings": {
+            "domainNameLabel": "GEN-UNIQUE"
+          }
+        }
+      },
+      {
+        "type": "Microsoft.Network/networkSecurityGroups",
+        "apiVersion": "2020-06-01",
+        "name": "nsg",
+        "location": "southcentralus",
+        "properties": {
+          "securityRules": [
+            {
+              "name": "SSH",
+              "properties": {
+                "priority": 1000,
+                "access": "Allow",
+                "direction": "Inbound",
+                "destinationPortRange": "22",
+                "protocol": "TCP",
+                "sourcePortRange": "*",
+                "sourceAddressPrefix": "*",
+                "destinationAddressPrefix": "*"
+              }
+            }
+          ]
+        }
+      },
+      {
+        "type": "Microsoft.Network/virtualNetworks",
+        "apiVersion": "2020-06-01",
+        "name": "vnet",
+        "location": "southcentralus",
+        "dependsOn": [
+          "Microsoft.Network/networkSecurityGroups/nsg"
+        ],
+        "properties": {
+          "addressSpace": {
+            "addressPrefixes": [
+              "10.0.0.0/16"
+            ]
+          },
+          "subnets": [
+            {
+              "name": "Subnet",
+              "properties": {
+                "addressPrefix": "10.0.0.0/24",
+                "networkSecurityGroup": {
+                  "id": "Microsoft.Network/networkSecurityGroups/nsg"
+                }
+              }
+            }
+          ]
+        }
+      },
+      {
+        "type": "Microsoft.Network/networkInterfaces",
+        "apiVersion": "2020-06-01",
+        "name": "nic",
+        "location": "southcentralus",
+        "dependsOn": [
+          "Microsoft.Network/publicIPAddresses/publicIPName",
+          "Microsoft.Network/virtualNetworks/vnet"
+        ],
+        "properties": {
+          "ipConfigurations": [
+            {
+              "name": "ipconfig1",
+              "properties": {
+                "privateIPAllocationMethod": "Dynamic",
+                "publicIPAddress": {
+                  "id": "Microsoft.Network/publicIPAddresses/publicIPName"
+                },
+                "subnet": {
+                  "id": "Microsoft.Network/virtualNetworks/subnets/vnet/Subnet"
+                }
+              }
+            }
+          ]
+        }
+      },
+      {
+        "type": "Microsoft.Compute/virtualMachines",
+        "apiVersion": "2020-12-01",
+        "name": "myTVM",
+        "location": "southcentralus",
+        "identity": {
+          "type": "SystemAssigned"
+        },
+        "dependsOn": [
+          "Microsoft.Network/networkInterfaces//nic"
+        ],
+        "properties": {
+          "hardwareProfile": {
+            "vmSize": "VmSize"
+          },
+          "osProfile": {
+            "computerName": "myTVM",
+            "adminUsername": "GEN-UNIQUE",
+            "adminPassword": "GEN-PASSWORD",
+            "linuxConfiguration": "[if(equals(parameters('authenticationType'), 'password'), json('null'), variables('linuxConfiguration'))]"
+          },
+          "storageProfile": {
+            "osDisk": {
+              "createOption": "fromImage",
+              "managedDisk": {
+                "storageAccountType": "StandardSSD_LRS"
+              }
+            },
+            "imageReference": "(imageReference)[parameters(os)]"
+          },
+          "networkProfile": {
+            "networkInterfaces": [
+              {
+                "id": "Microsoft.Network/networkInterfaces/nic"
+              }
+            ]
+          },
+          "securityProfile": {
+            "uefiSettings": {
+              "secureBootEnabled": "true",
+              "vTPMEnabled": "VTPM"
+            },
+            "securityType": "TrustedLaunch"
+          }
+        }
+      },
+      {
+        "condition": "[and(equals(parameters('VTPM'), 'true'), equals(parameters('secureBoot'), 'true'))]",
+        "type": "Microsoft.Compute/virtualMachines/extensions",
+        "name": "myTVM/GuestAttestation",
+        "location": "southcentralus",
+        "dependsOn": [
+          "Microsoft.Compute/virtualMachines/myTVM"
+        ],
+        "apiVersion": "2020-06-01",
+        "properties": {
+          "publisher": "Microsoft.Azure.Security.LinuxAttestation",
+          "type": "GuestAttestation",
+          "typeHandlerVersion": "1.0",
+          "autoUpgradeMinorVersion": true,
+          "settings": {
+            "AttestationEndpointCfg": {
+              "maaEndpoint": "https://sharedeus2.eus2.attest.azure.net/",
+              "maaTenantName": "GuestAttestation",
+              "ascReportingEndpoint": "https://sharedeus2.eus2.attest.azure.net/",
+              "useAlternateToken": "false",
+              "disableAlerts": "false"
+            }
+          }
+        }
+      }
+    ],
+    "outputs": {
+      "hostname": {
+        "type": "string",
+        "value": "[reference(parameters('publicIPName')).dnsSettings.fqdn]"
+      }
+    },
+    "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+  }
+}

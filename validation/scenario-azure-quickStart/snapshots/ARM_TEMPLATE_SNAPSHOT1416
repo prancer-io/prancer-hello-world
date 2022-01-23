@@ -1,0 +1,235 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAzureQuickStart",
+  "paths": [
+    "/quickstarts/microsoft.machinelearningservices/machine-learning-compute-create-computeinstance/azuredeploy.json",
+    "/quickstarts/microsoft.machinelearningservices/machine-learning-compute-create-computeinstance/azuredeploy.parameters.json"
+  ],
+  "timestamp": 1642962907604,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/quickstarts/microsoft.machinelearningservices/machine-learning-compute-create-computeinstance/azuredeploy.json",
+      "/quickstarts/microsoft.machinelearningservices/machine-learning-compute-create-computeinstance/azuredeploy.parameters.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT1416",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "microsoft.machinelearningservices/workspaces/computes"
+    ]
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT1416",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "workspaceName": {
+        "type": "string",
+        "metadata": {
+          "description": "Specifies the name of the Azure Machine Learning workspace to which compute instance will be deployed"
+        },
+        "value": "GET-PREREQ-workspaceName"
+      },
+      "computeName": {
+        "type": "string",
+        "metadata": {
+          "description": "Specifies the name of the Azure Machine Learning compute instance to be deployed"
+        },
+        "value": "GEN-UNIQUE-8"
+      },
+      "location": {
+        "defaultValue": "[resourceGroup().location]",
+        "type": "string",
+        "metadata": {
+          "description": "Location of the Azure Machine Learning workspace."
+        }
+      },
+      "vmSize": {
+        "defaultValue": "Standard_DS3_v2",
+        "type": "string",
+        "metadata": {
+          "description": "The VM size for compute instance"
+        }
+      },
+      "vnetResourceGroupName": {
+        "defaultValue": "",
+        "type": "string",
+        "metadata": {
+          "description": "Name of the resource group which holds the VNET to which you want to inject your compute instance in."
+        }
+      },
+      "vnetName": {
+        "defaultValue": "",
+        "type": "string",
+        "metadata": {
+          "description": "Name of the vnet which you want to inject your compute instance in."
+        }
+      },
+      "subnetName": {
+        "defaultValue": "",
+        "type": "string",
+        "metadata": {
+          "description": "Name of the subnet inside the VNET which you want to inject your compute instance in."
+        }
+      },
+      "tenantId": {
+        "defaultValue": "[subscription().tenantId]",
+        "type": "string",
+        "metadata": {
+          "description": "AAD tenant id of the user to which compute instance is assigned to"
+        }
+      },
+      "objectId": {
+        "type": "string",
+        "metadata": {
+          "description": "AAD object id of the user to which compute instance is assigned to"
+        },
+        "value": "GEN-AZUREAD-OBJECTID"
+      },
+      "inlineCommand": {
+        "type": "string",
+        "defaultValue": "ls",
+        "metadata": {
+          "description": "inline command"
+        }
+      },
+      "creationScript.cmdArguments": {
+        "type": "string",
+        "defaultValue": "",
+        "metadata": {
+          "description": "Specifies the cmd arguments of the creation script in the storage volume of the Compute Instance."
+        }
+      },
+      "schedules": {
+        "type": "object",
+        "metadata": {
+          "description": "Specifies the schedule policies for the compute instance"
+        },
+        "value": {
+          "computeStartStop": [
+            {
+              "triggerType": "Cron",
+              "cron": {
+                "timeZone": "UTC",
+                "expression": "0 18 * * *"
+              },
+              "action": "Stop",
+              "status": "Enabled"
+            },
+            {
+              "triggerType": "Cron",
+              "cron": {
+                "timeZone": "UTC",
+                "expression": "0 8 * * *"
+              },
+              "action": "Start",
+              "status": "Enabled"
+            },
+            {
+              "triggerType": "Recurrence",
+              "recurrence": {
+                "frequency": "Day",
+                "interval": 1,
+                "timeZone": "UTC",
+                "schedule": {
+                  "hours": [
+                    17
+                  ],
+                  "minutes": [
+                    0
+                  ]
+                }
+              },
+              "action": "Stop",
+              "status": "Enabled"
+            }
+          ]
+        }
+      }
+    },
+    "variables": {
+      "subnet": {
+        "id": "parameters('vnetResourceGroupName')/Microsoft.Network/virtualNetworks/subnets/ parameters('vnetName')/ parameters('subnetName')"
+      }
+    },
+    "resources": [
+      {
+        "type": "Microsoft.MachineLearningServices/workspaces/computes",
+        "name": "GET-PREREQ-workspaceName/GEN-UNIQUE-8",
+        "apiVersion": "2021-07-01",
+        "location": "[resourceGroup().location]",
+        "properties": {
+          "computeType": "ComputeInstance",
+          "properties": {
+            "vmSize": "Standard_DS3_v2",
+            "subnet": "[if(and(not(empty(parameters('vnetResourceGroupName'))),not(empty(parameters('vnetName'))),not(empty(parameters('subnetName')))), variables('subnet'), json('null'))]",
+            "personalComputeInstanceSettings": {
+              "assignedUser": {
+                "objectId": "GEN-AZUREAD-OBJECTID",
+                "tenantId": "[subscription().tenantId]"
+              }
+            },
+            "setupScripts": {
+              "scripts": {
+                "creationScript": {
+                  "scriptSource": "inline",
+                  "scriptData": "[base64(parameters('inlineCommand'))]",
+                  "scriptArguments": ""
+                }
+              }
+            },
+            "schedules": {
+              "computeStartStop": [
+                {
+                  "triggerType": "Cron",
+                  "cron": {
+                    "timeZone": "UTC",
+                    "expression": "0 18 * * *"
+                  },
+                  "action": "Stop",
+                  "status": "Enabled"
+                },
+                {
+                  "triggerType": "Cron",
+                  "cron": {
+                    "timeZone": "UTC",
+                    "expression": "0 8 * * *"
+                  },
+                  "action": "Start",
+                  "status": "Enabled"
+                },
+                {
+                  "triggerType": "Recurrence",
+                  "recurrence": {
+                    "frequency": "Day",
+                    "interval": 1,
+                    "timeZone": "UTC",
+                    "schedule": {
+                      "hours": [
+                        17
+                      ],
+                      "minutes": [
+                        0
+                      ]
+                    }
+                  },
+                  "action": "Stop",
+                  "status": "Enabled"
+                }
+              ]
+            }
+          }
+        }
+      }
+    ],
+    "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+  }
+}

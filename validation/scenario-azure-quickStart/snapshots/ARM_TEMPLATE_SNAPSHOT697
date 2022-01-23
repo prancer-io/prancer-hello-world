@@ -1,0 +1,331 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAzureQuickStart",
+  "paths": [
+    "/demos/dns-forwarder/azuredeploy.json",
+    "/demos/dns-forwarder/azuredeploy.parameters.json"
+  ],
+  "timestamp": 1642962899188,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/demos/dns-forwarder/azuredeploy.json",
+      "/demos/dns-forwarder/azuredeploy.parameters.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT697",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "microsoft.network/publicipaddresses",
+      "microsoft.network/virtualnetworks",
+      "microsoft.network/networkinterfaces",
+      "microsoft.compute/virtualmachines/extensions",
+      "microsoft.compute/virtualmachines",
+      "microsoft.network/networksecuritygroups",
+      "microsoft.storage/storageaccounts",
+      "microsoft.compute/availabilitysets"
+    ]
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT697",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "vmName": {
+        "type": "string",
+        "defaultValue": "dnsproxy",
+        "metadata": {
+          "description": "Name of the Virtual Machine."
+        }
+      },
+      "adminUsername": {
+        "type": "string",
+        "metadata": {
+          "description": "User name for the Virtual Machine."
+        },
+        "value": "GEN-UNIQUE"
+      },
+      "storageAccountName": {
+        "type": "string",
+        "metadata": {
+          "description": "The name of the storage account for diagnostics.  Storage account names must be globally unique."
+        },
+        "value": "GEN-UNIQUE"
+      },
+      "forwardIP": {
+        "type": "string",
+        "defaultValue": "168.63.129.16",
+        "metadata": {
+          "description": "This is the IP address to forward DNS queries to. The default value represents Azure's internal DNS recursive resolvers."
+        }
+      },
+      "location": {
+        "type": "string",
+        "defaultValue": "[resourceGroup().location]",
+        "metadata": {
+          "description": "Location for all resources."
+        }
+      },
+      "authenticationType": {
+        "type": "string",
+        "defaultValue": "sshPublicKey",
+        "allowedValues": [
+          "sshPublicKey",
+          "password"
+        ],
+        "metadata": {
+          "description": "Type of authentication to use on the Virtual Machine. SSH key is recommended."
+        }
+      },
+      "adminPasswordOrKey": {
+        "type": "securestring",
+        "metadata": {
+          "description": "SSH Key or password for the Virtual Machine. SSH key is recommended."
+        },
+        "value": "GEN-SSH-PUB-KEY"
+      },
+      "vmSize": {
+        "type": "string",
+        "metadata": {
+          "description": "Virtual machine size"
+        },
+        "defaultValue": "Standard_A1_v2"
+      },
+      "_artifactsLocation": {
+        "type": "string",
+        "defaultValue": "[deployment().properties.templatelink.uri]",
+        "metadata": {
+          "description": "The base URI where artifacts required by this template are located."
+        }
+      },
+      "_artifactsLocationSasToken": {
+        "type": "securestring",
+        "defaultValue": "",
+        "metadata": {
+          "description": "The sasToken required to access _artifactsLocation.  When the template is deployed using the accompanying scripts, a sasToken will be automatically generated."
+        }
+      }
+    },
+    "variables": {
+      "ubuntuOSVersion": "18.04-LTS",
+      "asetName": "dnsproxy-avail",
+      "nsgName": "dnsproxy-nsg",
+      "vnetName": "dnsproxy-vnet",
+      "vnetAddressPrefix": "10.0.0.0/8",
+      "subNet1Name": "subnet1",
+      "subNet1Prefix": "10.1.0.0/16",
+      "storType": "Standard_LRS",
+      "location": "[resourceGroup().location]",
+      "nicName": "dnsproxy-nic",
+      "pipName": "dnsproxy-pip",
+      "scriptUrl": "[uri(parameters('_artifactsLocation'), concat('forwarderSetup.sh', parameters('_artifactsLocationSasToken')))]",
+      "linuxConfiguration": {
+        "disablePasswordAuthentication": true,
+        "ssh": {
+          "publicKeys": [
+            {
+              "path": "/home/GEN-UNIQUE/.ssh/authorized_keys",
+              "keyData": "GEN-SSH-PUB-KEY"
+            }
+          ]
+        }
+      }
+    },
+    "resources": [
+      {
+        "type": "Microsoft.Storage/StorageAccounts",
+        "comments": "Storage account for the VHD files for the VMs",
+        "name": "GEN-UNIQUE",
+        "apiVersion": "2019-06-01",
+        "location": "[resourceGroup().location]",
+        "sku": {
+          "name": "Standard_LRS"
+        },
+        "kind": "StorageV2"
+      },
+      {
+        "type": "Microsoft.Compute/availabilitySets",
+        "comments": "availability set for creating a HA cluster, run the template multiple times to get multiple DNS servers",
+        "name": "dnsproxy-avail",
+        "apiVersion": "2019-12-01",
+        "location": "[resourceGroup().location]",
+        "sku": {
+          "name": "Aligned"
+        },
+        "properties": {
+          "platformFaultDomainCount": 2,
+          "platformUpdateDomainCount": 2
+        }
+      },
+      {
+        "type": "Microsoft.Network/networkSecurityGroups",
+        "comments": "An NSG to prevent inbound traffic other than SSH, set sourceAddressPrefix to restrict access further or block all together (or remove the public ip) and ssh in from another vm",
+        "name": "dnsproxy-nsg",
+        "apiVersion": "2020-05-01",
+        "location": "[resourceGroup().location]",
+        "properties": {
+          "securityRules": [
+            {
+              "name": "allow_ssh_in",
+              "properties": {
+                "description": "The only thing allowed is SSH",
+                "protocol": "Tcp",
+                "sourcePortRange": "*",
+                "destinationPortRange": "22",
+                "sourceAddressPrefix": "*",
+                "destinationAddressPrefix": "*",
+                "access": "Allow",
+                "priority": 100,
+                "direction": "Inbound"
+              }
+            }
+          ]
+        }
+      },
+      {
+        "type": "Microsoft.Network/virtualNetworks",
+        "comments": "An example virtual network, for real scenarios add the DNS forwarder to your own vnet",
+        "name": "dnsproxy-vnet",
+        "apiVersion": "2020-05-01",
+        "location": "[resourceGroup().location]",
+        "properties": {
+          "addressSpace": {
+            "addressPrefixes": [
+              "10.0.0.0/8"
+            ]
+          },
+          "subnets": [
+            {
+              "name": "subnet1Name",
+              "properties": {
+                "addressPrefix": "10.1.0.0/16"
+              }
+            }
+          ]
+        }
+      },
+      {
+        "type": "Microsoft.Network/publicIPAddresses",
+        "comments": "A public IP to allow us to SSH into the VM, not recommended for production DNS servers",
+        "name": "dnsproxy-pip",
+        "apiVersion": "2020-05-01",
+        "location": "[resourceGroup().location]",
+        "properties": {
+          "publicIPAllocationMethod": "Dynamic"
+        }
+      },
+      {
+        "type": "Microsoft.Network/networkInterfaces",
+        "comments": "A single network interface on each DNS server",
+        "name": "dnsproxy-nic",
+        "apiVersion": "2020-05-01",
+        "location": "[resourceGroup().location]",
+        "dependsOn": [
+          "Microsoft.Network/publicIPAddresses//dnsproxy-pip",
+          "Microsoft.Network/virtualNetworks//dnsproxy-vnet",
+          "Microsoft.Network/networkSecurityGroups//dnsproxy-nsg"
+        ],
+        "properties": {
+          "networkSecurityGroup": {
+            "id": "Microsoft.Network/networkSecurityGroups/dnsproxy-nsg"
+          },
+          "ipConfigurations": [
+            {
+              "name": "ipconfig1",
+              "properties": {
+                "privateIPAllocationMethod": "Dynamic",
+                "publicIPAddress": {
+                  "id": "Microsoft.Network/publicIPAddresses/dnsproxy-pip"
+                },
+                "subnet": {
+                  "id": "Microsoft.Network/virtualNetworks/subnets/dnsproxy-vnet/subnet1Name"
+                }
+              }
+            }
+          ]
+        }
+      },
+      {
+        "type": "Microsoft.Compute/virtualMachines",
+        "comments": "A stock Ubuntu server, a VM extension will add the DNS server to it later",
+        "name": "dnsproxy",
+        "apiVersion": "2019-12-01",
+        "location": "[resourceGroup().location]",
+        "dependsOn": [
+          "Microsoft.Network/networkInterfaces//dnsproxy-nic",
+          "Microsoft.Storage/StorageAccounts//GEN-UNIQUE",
+          "Microsoft.Compute/availabilitySets//dnsproxy-avail"
+        ],
+        "properties": {
+          "availabilitySet": {
+            "id": "Microsoft.Compute/availabilitySets/dnsproxy-avail"
+          },
+          "hardwareProfile": {
+            "vmSize": "Standard_A1_v2"
+          },
+          "osProfile": {
+            "computerName": "dnsproxy",
+            "adminUsername": "GEN-UNIQUE",
+            "adminPassword": "GEN-SSH-PUB-KEY",
+            "linuxConfiguration": "[if(equals(parameters('authenticationType'), 'password'), json('null'), variables('linuxConfiguration'))]"
+          },
+          "storageProfile": {
+            "imageReference": {
+              "publisher": "Canonical",
+              "offer": "UbuntuServer",
+              "sku": "18.04-LTS",
+              "version": "latest"
+            },
+            "osDisk": {
+              "caching": "ReadWrite",
+              "createOption": "FromImage"
+            }
+          },
+          "networkProfile": {
+            "networkInterfaces": [
+              {
+                "id": "Microsoft.Network/networkInterfaces/dnsproxy-nic"
+              }
+            ]
+          },
+          "diagnosticsProfile": {
+            "bootDiagnostics": {
+              "enabled": true,
+              "storageUri": "[reference(resourceId('Microsoft.Storage/storageAccounts', toLower(parameters('storageAccountName')))).primaryEndpoints.blob]"
+            }
+          }
+        }
+      },
+      {
+        "type": "Microsoft.Compute/virtualMachines/extensions",
+        "comments": "The shell script to install Bind9 and setup the ACL and forwarders.  If this step fails, check the logs in /var/log/waagent.log and /var/log/azure/* for details",
+        "name": "dnsproxy/setupdnsfirewall",
+        "apiVersion": "2019-12-01",
+        "location": "[resourceGroup().location]",
+        "dependsOn": [
+          "Microsoft.Compute/virtualMachines//dnsproxy"
+        ],
+        "properties": {
+          "publisher": "Microsoft.Azure.Extensions",
+          "type": "CustomScript",
+          "typeHandlerVersion": "2.0",
+          "autoUpgradeMinorVersion": true,
+          "settings": {
+            "fileUris": [
+              "[uri(parameters('_artifactsLocation'), concat('forwarderSetup.sh', parameters('_artifactsLocationSasToken')))]"
+            ],
+            "commandToExecute": "sh forwarderSetup.sh 168.63.129.16 10.0.0.0/8"
+          }
+        }
+      }
+    ],
+    "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+  }
+}

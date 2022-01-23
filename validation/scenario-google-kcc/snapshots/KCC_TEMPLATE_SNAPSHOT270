@@ -2,12 +2,12 @@
   "structure": "filesystem",
   "error": null,
   "reference": "master",
-  "contentType": "yaml",
+  "contentType": "json",
   "source": "gitConnectorGoogleKcc",
   "paths": [
-    "/samples/resources/computetargettcpproxy/compute_v1beta1_computebackendservice.yaml"
+    "/samples/resources/computesslcertificate/global-compute-ssl-certificate/compute_v1beta1_computesslcertificate.yaml"
   ],
-  "timestamp": 1628765144306,
+  "timestamp": 1642973303216,
   "queryuser": null,
   "checksum": "99914b932bd37a50b983c5e7c90ae93b",
   "node": {
@@ -15,30 +15,42 @@
     "type": "kcc",
     "collection": "kcctemplate",
     "paths": [
-      "/samples/resources/computetargettcpproxy/compute_v1beta1_computebackendservice.yaml"
+      "/samples/resources/computesslcertificate/global-compute-ssl-certificate/compute_v1beta1_computesslcertificate.yaml"
     ],
     "snapshotId": "KCC_TEMPLATE_SNAPSHOT270",
     "status": "active",
-    "validate": true
+    "validate": true,
+    "resourceTypes": [
+      "computesslcertificate"
+    ]
   },
   "snapshotId": "KCC_TEMPLATE_SNAPSHOT270",
   "collection": "kcctemplate",
   "json": {
     "apiVersion": "compute.cnrm.cloud.google.com/v1beta1",
-    "kind": "ComputeBackendService",
+    "kind": "ComputeSSLCertificate",
     "metadata": {
-      "name": "computetargettcpproxy-dep"
+      "name": "computesslcertificate-sample"
     },
     "spec": {
-      "healthChecks": [
-        {
-          "healthCheckRef": {
-            "name": "computetargettcpproxy-dep"
+      "location": "global",
+      "description": "example compute SSL certificate",
+      "certificate": {
+        "valueFrom": {
+          "secretKeyRef": {
+            "name": "computesslcertificate-dep",
+            "key": "certificate"
           }
         }
-      ],
-      "location": "global",
-      "protocol": "TCP"
+      },
+      "privateKey": {
+        "valueFrom": {
+          "secretKeyRef": {
+            "name": "computesslcertificate-dep",
+            "key": "privateKey"
+          }
+        }
+      }
     }
   }
 }

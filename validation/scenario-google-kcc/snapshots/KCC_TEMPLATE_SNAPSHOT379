@@ -2,12 +2,12 @@
   "structure": "filesystem",
   "error": null,
   "reference": "master",
-  "contentType": "yaml",
+  "contentType": "json",
   "source": "gitConnectorGoogleKcc",
   "paths": [
-    "/samples/resources/gkehubfeaturemembership/serviceusage_v1beta1_service_multiple_yaml_1.yaml"
+    "/samples/resources/dnspolicy/dns_v1beta1_dnspolicy.yaml"
   ],
-  "timestamp": 1628765147219,
+  "timestamp": 1642973303935,
   "queryuser": null,
   "checksum": "99914b932bd37a50b983c5e7c90ae93b",
   "node": {
@@ -15,26 +15,41 @@
     "type": "kcc",
     "collection": "kcctemplate",
     "paths": [
-      "/samples/resources/gkehubfeaturemembership/serviceusage_v1beta1_service_multiple_yaml_1.yaml"
+      "/samples/resources/dnspolicy/dns_v1beta1_dnspolicy.yaml"
     ],
     "snapshotId": "KCC_TEMPLATE_SNAPSHOT379",
     "status": "active",
-    "validate": true
+    "validate": true,
+    "resourceTypes": [
+      "dnspolicy"
+    ]
   },
   "snapshotId": "KCC_TEMPLATE_SNAPSHOT379",
   "collection": "kcctemplate",
   "json": {
-    "apiVersion": "serviceusage.cnrm.cloud.google.com/v1beta1",
-    "kind": "Service",
+    "apiVersion": "dns.cnrm.cloud.google.com/v1beta1",
+    "kind": "DNSPolicy",
     "metadata": {
-      "annotations": {
-        "cnrm.cloud.google.com/disable-dependent-services": "false",
-        "cnrm.cloud.google.com/project-id": "gkehubfeaturemembership-dep"
-      },
-      "name": "gkehubfeaturemembership-dep-2"
+      "name": "dnspolicy-sample"
     },
     "spec": {
-      "resourceID": "gkehub.googleapis.com"
+      "alternativeNameServerConfig": {
+        "targetNameServers": [
+          {
+            "ipv4Address": "104.132.166.92"
+          }
+        ]
+      },
+      "description": "Example DNS policy",
+      "enableInboundForwarding": true,
+      "enableLogging": true,
+      "networks": [
+        {
+          "networkRef": {
+            "name": "dnspolicy-dep"
+          }
+        }
+      ]
     }
   }
 }

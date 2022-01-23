@@ -1,0 +1,201 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "main",
+  "contentType": "json",
+  "source": "gitConnectorAzureTerraHashicorp",
+  "paths": [
+    "/examples/vm-scale-set/windows/auto-scaling/variables.tf",
+    "/examples/vm-scale-set/windows/auto-scaling/main.tf"
+  ],
+  "timestamp": 1642943280300,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "TRF_TEMPLATE_SNAPSHOT",
+    "type": "terraform",
+    "collection": "terraformtemplate",
+    "paths": [
+      "/examples/vm-scale-set/windows/auto-scaling/variables.tf",
+      "/examples/vm-scale-set/windows/auto-scaling/main.tf"
+    ],
+    "snapshotId": "TRF_TEMPLATE_SNAPSHOT194",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "azurerm_windows_virtual_machine_scale_set",
+      "azurerm_subnet",
+      "azurerm_virtual_network",
+      "azurerm_resource_group",
+      "azurerm_monitor_autoscale_setting"
+    ]
+  },
+  "snapshotId": "TRF_TEMPLATE_SNAPSHOT194",
+  "collection": "terraformtemplate",
+  "json": {
+    "provider": [
+      {
+        "azurerm": {
+          "features": [
+            {}
+          ]
+        }
+      }
+    ],
+    "resources": [
+      {
+        "type": "azurerm_resource_group",
+        "name": "main",
+        "properties": {
+          "name": "${var.prefix}-resources",
+          "location": "${var.location}",
+          "compiletime_identity": "azurerm_resource_group.main"
+        }
+      },
+      {
+        "type": "azurerm_virtual_network",
+        "name": "main",
+        "properties": {
+          "name": "${var.prefix}-network",
+          "address_space": [
+            "10.0.0.0/16"
+          ],
+          "location": "${azurerm_resource_group.main.location}",
+          "resource_group_name": "${azurerm_resource_group.main.name}",
+          "compiletime_identity": "azurerm_virtual_network.main"
+        }
+      },
+      {
+        "type": "azurerm_subnet",
+        "name": "internal",
+        "properties": {
+          "name": "internal",
+          "resource_group_name": "${azurerm_resource_group.main.name}",
+          "virtual_network_name": "${azurerm_virtual_network.main.name}",
+          "address_prefixes": [
+            "10.0.2.0/24"
+          ],
+          "compiletime_identity": "azurerm_subnet.internal"
+        }
+      },
+      {
+        "type": "azurerm_windows_virtual_machine_scale_set",
+        "name": "main",
+        "properties": {
+          "name": "${var.prefix}-vmss",
+          "resource_group_name": "${azurerm_resource_group.main.name}",
+          "location": "${azurerm_resource_group.main.location}",
+          "sku": "Standard_F2",
+          "instances": 3,
+          "admin_username": "adminuser",
+          "admin_password": "P@ssw0rd1234!",
+          "computer_name_prefix": "${var.prefix}",
+          "source_image_reference": [
+            {
+              "publisher": "MicrosoftWindowsServer",
+              "offer": "WindowsServer",
+              "sku": "2019-Datacenter",
+              "version": "latest"
+            }
+          ],
+          "network_interface": [
+            {
+              "name": "example",
+              "primary": true,
+              "ip_configuration": [
+                {
+                  "name": "internal",
+                  "primary": true,
+                  "subnet_id": "${azurerm_subnet.internal.id}"
+                }
+              ]
+            }
+          ],
+          "os_disk": [
+            {
+              "storage_account_type": "Standard_LRS",
+              "caching": "ReadWrite"
+            }
+          ],
+          "lifecycle": [
+            {
+              "ignore_changes": [
+                "instances"
+              ]
+            }
+          ],
+          "compiletime_identity": "azurerm_windows_virtual_machine_scale_set.main"
+        }
+      },
+      {
+        "type": "azurerm_monitor_autoscale_setting",
+        "name": "main",
+        "properties": {
+          "name": "autoscale-config",
+          "resource_group_name": "${azurerm_resource_group.main.name}",
+          "location": "${azurerm_resource_group.main.location}",
+          "target_resource_id": "${azurerm_windows_virtual_machine_scale_set.main.id}",
+          "profile": [
+            {
+              "name": "AutoScale",
+              "capacity": [
+                {
+                  "default": 3,
+                  "minimum": 1,
+                  "maximum": 5
+                }
+              ],
+              "rule": [
+                {
+                  "metric_trigger": [
+                    {
+                      "metric_name": "Percentage CPU",
+                      "metric_resource_id": "${azurerm_windows_virtual_machine_scale_set.main.id}",
+                      "time_grain": "PT1M",
+                      "statistic": "Average",
+                      "time_window": "PT5M",
+                      "time_aggregation": "Average",
+                      "operator": "GreaterThan",
+                      "threshold": 75
+                    }
+                  ],
+                  "scale_action": [
+                    {
+                      "direction": "Increase",
+                      "type": "ChangeCount",
+                      "value": 1,
+                      "cooldown": "PT1M"
+                    }
+                  ]
+                },
+                {
+                  "metric_trigger": [
+                    {
+                      "metric_name": "Percentage CPU",
+                      "metric_resource_id": "${azurerm_windows_virtual_machine_scale_set.main.id}",
+                      "time_grain": "PT1M",
+                      "statistic": "Average",
+                      "time_window": "PT5M",
+                      "time_aggregation": "Average",
+                      "operator": "LessThan",
+                      "threshold": 25
+                    }
+                  ],
+                  "scale_action": [
+                    {
+                      "direction": "Decrease",
+                      "type": "ChangeCount",
+                      "value": 1,
+                      "cooldown": "PT1M"
+                    }
+                  ]
+                }
+              ]
+            }
+          ],
+          "compiletime_identity": "azurerm_monitor_autoscale_setting.main"
+        }
+      }
+    ]
+  }
+}

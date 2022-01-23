@@ -1,0 +1,97 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "main",
+  "contentType": "json",
+  "source": "gitConnectorAzureTerraHashicorp",
+  "paths": [
+    "/examples/bot-channel/variables.tf",
+    "/examples/bot-channel/main.tf"
+  ],
+  "timestamp": 1642943279652,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "TRF_TEMPLATE_SNAPSHOT",
+    "type": "terraform",
+    "collection": "terraformtemplate",
+    "paths": [
+      "/examples/bot-channel/variables.tf",
+      "/examples/bot-channel/main.tf"
+    ],
+    "snapshotId": "TRF_TEMPLATE_SNAPSHOT28",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "azurerm_bot_channels_registration",
+      "azurerm_resource_group",
+      "azurerm_bot_channel_directline"
+    ]
+  },
+  "snapshotId": "TRF_TEMPLATE_SNAPSHOT28",
+  "collection": "terraformtemplate",
+  "json": {
+    "provider": [
+      {
+        "azurerm": {
+          "features": [
+            {}
+          ]
+        }
+      }
+    ],
+    "data": {
+      "azurerm_client_config": {
+        "current": {
+          "compiletime_identity": "data.azurerm_client_config.current"
+        }
+      }
+    },
+    "resources": [
+      {
+        "type": "azurerm_resource_group",
+        "name": "example",
+        "properties": {
+          "name": "${var.prefix}-resources",
+          "location": "${var.location}",
+          "compiletime_identity": "azurerm_resource_group.example"
+        }
+      },
+      {
+        "type": "azurerm_bot_channels_registration",
+        "name": "example",
+        "properties": {
+          "name": "${var.prefix}-registration",
+          "location": "global",
+          "resource_group_name": "${azurerm_resource_group.example.name}",
+          "sku": "F0",
+          "microsoft_app_id": "${data.azurerm_client_config.current.client_id}",
+          "compiletime_identity": "azurerm_bot_channels_registration.example"
+        }
+      },
+      {
+        "type": "azurerm_bot_channel_directline",
+        "name": "example",
+        "properties": {
+          "bot_name": "${azurerm_bot_channels_registration.example.name}",
+          "location": "${azurerm_bot_channels_registration.example.location}",
+          "resource_group_name": "${azurerm_resource_group.example.name}",
+          "site": [
+            {
+              "name": "Default Site",
+              "enabled": true
+            }
+          ],
+          "lifecycle": [
+            {
+              "ignore_changes": [
+                "site"
+              ]
+            }
+          ],
+          "compiletime_identity": "azurerm_bot_channel_directline.example"
+        }
+      }
+    ]
+  }
+}

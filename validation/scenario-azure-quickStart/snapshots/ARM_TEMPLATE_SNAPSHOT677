@@ -1,0 +1,82 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAzureQuickStart",
+  "paths": [
+    "/demos/create-hpc-cluster/publicip-existing.json",
+    "/demos/create-hpc-cluster/azuredeploy.parameters.json"
+  ],
+  "timestamp": 1642962898936,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/demos/create-hpc-cluster/publicip-existing.json",
+      "/demos/create-hpc-cluster/azuredeploy.parameters.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT677",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": []
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT677",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "publicIPAddressName": {
+        "type": "string"
+      },
+      "publicIpRGName": {
+        "type": "string"
+      },
+      "clusterName": {
+        "value": "GEN-UNIQUE-12"
+      },
+      "privateDomainName": {
+        "value": "hpc.local"
+      },
+      "headNodeVMSize": {
+        "value": "Standard_D8_v3"
+      },
+      "computeNodeImage": {
+        "value": "ComputeNode"
+      },
+      "computeNodeNamePrefix": {
+        "value": "IaaSCN-"
+      },
+      "computeNodeNumber": {
+        "value": 2
+      },
+      "computeNodeVMSize": {
+        "value": "Standard_D4_v3"
+      },
+      "adminUsername": {
+        "value": "azureuser"
+      },
+      "adminPassword": {
+        "value": "GEN-PASSWORD"
+      }
+    },
+    "variables": {
+      "publicIpId": "publicIpRGName/Microsoft.Network/publicIPAddresses/publicIPAddressName"
+    },
+    "resources": [],
+    "outputs": {
+      "resourceId": {
+        "type": "string",
+        "value": "[variables('publicIpId')]"
+      },
+      "fqdn": {
+        "value": "[reference(variables('publicIpId'),'2017-10-01').dnsSettings.fqdn]",
+        "type": "string"
+      }
+    },
+    "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+  }
+}

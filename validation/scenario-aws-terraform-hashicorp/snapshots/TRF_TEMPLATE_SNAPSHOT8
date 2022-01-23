@@ -1,0 +1,128 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "main",
+  "contentType": "json",
+  "source": "gitConnectorAwsTerraHashicorp",
+  "paths": [
+    "/examples/cloudhsm/outputs.tf",
+    "/examples/cloudhsm/variables.tf",
+    "/examples/cloudhsm/main.tf"
+  ],
+  "timestamp": 1642967657635,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "TRF_TEMPLATE_SNAPSHOT",
+    "type": "terraform",
+    "collection": "terraformtemplate",
+    "paths": [
+      "/examples/cloudhsm/outputs.tf",
+      "/examples/cloudhsm/variables.tf",
+      "/examples/cloudhsm/main.tf"
+    ],
+    "snapshotId": "TRF_TEMPLATE_SNAPSHOT8",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "aws_cloudhsm_v2_cluster",
+      "aws_subnet",
+      "aws_vpc",
+      "aws_cloudhsm_v2_hsm"
+    ]
+  },
+  "snapshotId": "TRF_TEMPLATE_SNAPSHOT8",
+  "collection": "terraformtemplate",
+  "json": {
+    "terraform": [
+      {
+        "required_version": ">= 0.12"
+      }
+    ],
+    "provider": [
+      {
+        "aws": {
+          "region": "${var.aws_region}"
+        }
+      }
+    ],
+    "data": {
+      "aws_availability_zones": {
+        "available": {
+          "compiletime_identity": "data.aws_availability_zones.available"
+        }
+      },
+      "aws_cloudhsm_v2_cluster": {
+        "cluster": {
+          "cluster_id": "${aws_cloudhsm_v2_cluster.cloudhsm_v2_cluster.cluster_id}",
+          "depends_on": [
+            "${aws_cloudhsm_v2_hsm.cloudhsm_v2_hsm}"
+          ],
+          "compiletime_identity": "data.aws_cloudhsm_v2_cluster.cluster"
+        }
+      }
+    },
+    "resources": [
+      {
+        "type": "aws_vpc",
+        "name": "cloudhsm_v2_vpc",
+        "properties": {
+          "cidr_block": "10.0.0.0/16",
+          "tags": {
+            "Name": "example-aws_cloudhsm_v2_cluster"
+          },
+          "compiletime_identity": "aws_vpc.cloudhsm_v2_vpc"
+        }
+      },
+      {
+        "type": "aws_subnet",
+        "name": "cloudhsm_v2_subnets",
+        "properties": {
+          "vpc_id": "${aws_vpc.cloudhsm_v2_vpc.id}",
+          "cidr_block": "10.0.1.0/24",
+          "map_public_ip_on_launch": false,
+          "availability_zone": "element(data.aws_availability_zones.available.names,0)",
+          "tags": {
+            "Name": "example-aws_cloudhsm_v2_cluster"
+          },
+          "compiletime_identity": "aws_subnet.cloudhsm_v2_subnets"
+        }
+      },
+      {
+        "type": "aws_subnet",
+        "name": "cloudhsm_v2_subnets",
+        "properties": {
+          "vpc_id": "${aws_vpc.cloudhsm_v2_vpc.id}",
+          "cidr_block": "10.0.2.0/24",
+          "map_public_ip_on_launch": false,
+          "availability_zone": "element(data.aws_availability_zones.available.names,1)",
+          "tags": {
+            "Name": "example-aws_cloudhsm_v2_cluster"
+          },
+          "compiletime_identity": "aws_subnet.cloudhsm_v2_subnets"
+        }
+      },
+      {
+        "type": "aws_cloudhsm_v2_cluster",
+        "name": "cloudhsm_v2_cluster",
+        "properties": {
+          "hsm_type": "hsm1.medium",
+          "subnet_ids": "${aws_subnet.cloudhsm_v2_subnets.*.id}",
+          "tags": {
+            "Name": "example-aws_cloudhsm_v2_cluster"
+          },
+          "compiletime_identity": "aws_cloudhsm_v2_cluster.cloudhsm_v2_cluster"
+        }
+      },
+      {
+        "type": "aws_cloudhsm_v2_hsm",
+        "name": "cloudhsm_v2_hsm",
+        "properties": {
+          "subnet_id": "${aws_subnet.cloudhsm_v2_subnets[0].id}",
+          "cluster_id": "${aws_cloudhsm_v2_cluster.cloudhsm_v2_cluster.cluster_id}",
+          "compiletime_identity": "aws_cloudhsm_v2_hsm.cloudhsm_v2_hsm"
+        }
+      }
+    ]
+  }
+}

@@ -1,0 +1,178 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAzureQuickStart",
+  "paths": [
+    "/quickstarts/microsoft.logic/logic-app-sql-proc/azuredeploy.json",
+    "/quickstarts/microsoft.logic/logic-app-sql-proc/azuredeploy.parameters.json"
+  ],
+  "timestamp": 1642962907484,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/quickstarts/microsoft.logic/logic-app-sql-proc/azuredeploy.json",
+      "/quickstarts/microsoft.logic/logic-app-sql-proc/azuredeploy.parameters.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT1401",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "microsoft.web/connections",
+      "microsoft.logic/workflows"
+    ]
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT1401",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "logicAppName": {
+        "type": "string",
+        "metadata": {
+          "description": "The name of the logic app."
+        },
+        "value": "LogicAppName"
+      },
+      "sqlConnectionName": {
+        "type": "string",
+        "metadata": {
+          "description": "The name of the SQL connection being created."
+        },
+        "value": "MySQLConnection"
+      },
+      "sqlServer": {
+        "type": "string",
+        "metadata": {
+          "description": "The URI of the SQL Server"
+        },
+        "value": "myserver.database.windows.net"
+      },
+      "sqlDatabase": {
+        "type": "string",
+        "metadata": {
+          "description": "The name of the SQL database."
+        },
+        "value": "mydatabase"
+      },
+      "sqlUser": {
+        "type": "string",
+        "metadata": {
+          "description": "The username for the SQL server."
+        },
+        "value": "user"
+      },
+      "sqlPassword": {
+        "type": "securestring",
+        "metadata": {
+          "description": "The password for the SQL server."
+        },
+        "value": "GEN-PASSWORD"
+      },
+      "sqlProcedure": {
+        "type": "string",
+        "metadata": {
+          "description": "The procedure to run."
+        },
+        "value": "[dbo].[uspMyProcedure]"
+      },
+      "location": {
+        "type": "string",
+        "defaultValue": "[resourceGroup().location]",
+        "metadata": {
+          "description": "Location for all resources."
+        }
+      }
+    },
+    "variables": {
+      "singleQuote": "'"
+    },
+    "resources": [
+      {
+        "type": "Microsoft.Web/connections",
+        "apiVersion": "2018-07-01-preview",
+        "location": "[resourceGroup().location]",
+        "name": "MySQLConnection",
+        "properties": {
+          "api": {
+            "id": "[subscriptionResourceId('Microsoft.Web/locations/managedApis', parameters('location'), 'sql')]"
+          },
+          "displayName": "sql_connection",
+          "parameterValues": {
+            "server": "myserver.database.windows.net",
+            "database": "mydatabase",
+            "authType": "windows",
+            "username": "user",
+            "password": "GEN-PASSWORD"
+          }
+        }
+      },
+      {
+        "type": "Microsoft.Logic/workflows",
+        "apiVersion": "2019-05-01",
+        "name": "LogicAppName",
+        "location": "[resourceGroup().location]",
+        "dependsOn": [
+          "Microsoft.Web/connections/MySQLConnection"
+        ],
+        "properties": {
+          "definition": {
+            "contentVersion": "1.0.0.0",
+            "parameters": {
+              "$connections": {
+                "defaultValue": {},
+                "type": "Object"
+              }
+            },
+            "triggers": {
+              "Recurrence": {
+                "recurrence": {
+                  "frequency": "Hour",
+                  "interval": 1
+                },
+                "type": "Recurrence"
+              }
+            },
+            "actions": {
+              "Execute_stored_procedure": {
+                "type": "ApiConnection",
+                "inputs": {
+                  "host": {
+                    "api": {
+                      "runtimeUrl": "https://logic-apis-[resourceGroup().location].azure-apim.net/apim/sql"
+                    },
+                    "connection": {
+                      "name": "@parameters('$connections')['sql']['connectionId']"
+                    }
+                  },
+                  "method": "post",
+                  "path": "/datasets/default/procedures/@{encodeURIComponent(encodeURIComponent(, variables(singleQuote), parameters(sqlProcedure), variables(singleQuote), ))}"
+                }
+              }
+            },
+            "outputs": {},
+            "\uff04schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#"
+          },
+          "parameters": {
+            "$connections": {
+              "value": {
+                "sql": {
+                  "connectionId": "Microsoft.Web/connections/MySQLConnection",
+                  "connectionName": "MySQLConnection",
+                  "id": "[subscriptionResourceId('Microsoft.Web/locations/managedApis', parameters('location'), 'sql')]"
+                }
+              }
+            }
+          }
+        },
+        "resources": []
+      }
+    ],
+    "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+  }
+}

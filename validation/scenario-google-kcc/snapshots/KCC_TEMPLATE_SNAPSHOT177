@@ -2,12 +2,12 @@
   "structure": "filesystem",
   "error": null,
   "reference": "master",
-  "contentType": "yaml",
+  "contentType": "json",
   "source": "gitConnectorGoogleKcc",
   "paths": [
-    "/samples/resources/computenetworkendpointgroup/compute_v1beta1_computesubnetwork.yaml"
+    "/samples/resources/computeinstancegroup/compute_v1beta1_computeinstancetemplate.yaml"
   ],
-  "timestamp": 1628765141951,
+  "timestamp": 1642973302856,
   "queryuser": null,
   "checksum": "99914b932bd37a50b983c5e7c90ae93b",
   "node": {
@@ -15,26 +15,43 @@
     "type": "kcc",
     "collection": "kcctemplate",
     "paths": [
-      "/samples/resources/computenetworkendpointgroup/compute_v1beta1_computesubnetwork.yaml"
+      "/samples/resources/computeinstancegroup/compute_v1beta1_computeinstancetemplate.yaml"
     ],
     "snapshotId": "KCC_TEMPLATE_SNAPSHOT177",
     "status": "active",
-    "validate": true
+    "validate": true,
+    "resourceTypes": [
+      "computeinstancetemplate"
+    ]
   },
   "snapshotId": "KCC_TEMPLATE_SNAPSHOT177",
   "collection": "kcctemplate",
   "json": {
     "apiVersion": "compute.cnrm.cloud.google.com/v1beta1",
-    "kind": "ComputeSubnetwork",
+    "kind": "ComputeInstanceTemplate",
     "metadata": {
-      "name": "computenetworkendpointgroup-dep"
+      "name": "computeinstancegroup-dep"
     },
     "spec": {
-      "ipCidrRange": "10.2.0.0/16",
-      "region": "us-west1",
-      "networkRef": {
-        "name": "computenetworkendpointgroup-dep"
-      }
+      "machineType": "n1-standard-1",
+      "disk": [
+        {
+          "sourceImageRef": {
+            "external": "debian-cloud/debian-9"
+          },
+          "boot": true
+        }
+      ],
+      "networkInterface": [
+        {
+          "networkRef": {
+            "name": "computeinstancegroup-dep"
+          },
+          "subnetworkRef": {
+            "name": "computeinstancegroup-dep"
+          }
+        }
+      ]
     }
   }
 }

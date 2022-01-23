@@ -1,0 +1,252 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAzureQuickStart",
+  "paths": [
+    "/application-workloads/spark/hdinsight-genomics-adam/azuredeploy.json",
+    "/application-workloads/spark/hdinsight-genomics-adam/azuredeploy.parameters.json"
+  ],
+  "timestamp": 1642962896340,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/application-workloads/spark/hdinsight-genomics-adam/azuredeploy.json",
+      "/application-workloads/spark/hdinsight-genomics-adam/azuredeploy.parameters.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT525",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "microsoft.network/virtualnetworks",
+      "microsoft.storage/storageaccounts",
+      "microsoft.hdinsight/clusters"
+    ]
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT525",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "clusterName": {
+        "type": "string",
+        "metadata": {
+          "description": "The name of the HDInsight cluster to create."
+        },
+        "value": "GEN-UNIQUE-10"
+      },
+      "loginUsername": {
+        "type": "string",
+        "metadata": {
+          "description": "These credentials can be used to submit jobs to the cluster, log into cluster dashboards, log into Ambari, and SSH into the cluster. "
+        },
+        "value": "GEN-UNIQUE"
+      },
+      "loginPassword": {
+        "type": "securestring",
+        "metadata": {
+          "description": "The password must be at least 10 characters in length and must contain at least one digit, one non-alphanumeric character, and one upper or lower case letter."
+        },
+        "value": "GEN-PASSWORD"
+      },
+      "clusterNodeSize": {
+        "type": "string",
+        "defaultValue": "Standard_D4_v3",
+        "allowedValues": [
+          "Standard_D4_v3",
+          "Standard_D8_v3",
+          "Standard_D16_v3"
+        ],
+        "metadata": {
+          "description": "All nodes will be deployed using the specified hardware profile: D12(4 CPU Cores, 28GB of RAM), D13(8 CPU Cores, 56GB of RAM), D14(16 CPU Cores, 112 GB of RAM)."
+        }
+      },
+      "clusterWorkerNodeCount": {
+        "type": "int",
+        "defaultValue": 2,
+        "metadata": {
+          "description": "The number of worker nodes in the HDInsight cluster."
+        }
+      },
+      "location": {
+        "type": "string",
+        "defaultValue": "[resourceGroup().location]",
+        "metadata": {
+          "description": "Location for all resources."
+        }
+      },
+      "_artifactsLocation": {
+        "type": "string",
+        "metadata": {
+          "description": "The base URI where artifacts required by this template are located including a trailing '/'"
+        },
+        "defaultValue": "[deployment().properties.templateLink.uri]"
+      },
+      "_artifactsLocationSasToken": {
+        "type": "securestring",
+        "metadata": {
+          "description": "The sasToken required to access _artifactsLocation.  When the template is deployed using the accompanying scripts, a sasToken will be automatically generated. Use the defaultValue if the staging location is not secured."
+        },
+        "defaultValue": ""
+      }
+    },
+    "variables": {
+      "defaultApiVersion": "2015-06-15",
+      "clusterType": "hadoop",
+      "clusterVnetSubnetName": "GEN-UNIQUE-10-subnet",
+      "clusterVnetAddressSpace": "172.16.228.0/23",
+      "clusterVNetSubnetAddressRange": "172.16.229.0/24",
+      "clusterStorageAccountName": "GEN-UNIQUE-10storeacc",
+      "clusterVNetName": "GEN-UNIQUE-10-vnet"
+    },
+    "resources": [
+      {
+        "name": "GEN-UNIQUE-10-vnet",
+        "type": "Microsoft.Network/virtualNetworks",
+        "location": "[resourceGroup().location]",
+        "apiVersion": "2020-07-01",
+        "properties": {
+          "addressSpace": {
+            "addressPrefixes": [
+              "clusterVNetAddressSpace"
+            ]
+          },
+          "subnets": [
+            {
+              "name": "clusterVNetSubnetName",
+              "properties": {
+                "addressPrefix": "172.16.229.0/24"
+              }
+            }
+          ]
+        }
+      },
+      {
+        "name": "GEN-UNIQUE-10storeacc",
+        "type": "Microsoft.Storage/storageAccounts",
+        "location": "[resourceGroup().location]",
+        "apiVersion": "2021-02-01",
+        "sku": {
+          "name": "Standard_LRS"
+        }
+      },
+      {
+        "name": "GEN-UNIQUE-10",
+        "type": "Microsoft.HDInsight/clusters",
+        "location": "[resourceGroup().location]",
+        "apiVersion": "2018-06-01-preview",
+        "dependsOn": [
+          "Microsoft.Storage/storageAccounts//GEN-UNIQUE-10storeacc",
+          "Microsoft.Network/virtualNetworks//GEN-UNIQUE-10-vnet"
+        ],
+        "properties": {
+          "clusterVersion": "3.6",
+          "osType": "Linux",
+          "clusterDefinition": {
+            "kind": "hadoop",
+            "configurations": {
+              "gateway": {
+                "restAuthCredential.isEnabled": true,
+                "restAuthCredential.username": "GEN-UNIQUE",
+                "restAuthCredential.password": "GEN-PASSWORD"
+              },
+              "hive-site": {
+                "hive.metastore.client.connect.retry.delay": "5",
+                "hive.execution.engine": "mr",
+                "hive.security.authorization.manager": "org.apache.hadoop.hive.ql.security.authorization.DefaultHiveAuthorizationProvider"
+              }
+            }
+          },
+          "storageProfile": {
+            "storageaccounts": [
+              {
+                "name": "[replace(replace(concat(reference(resourceId('Microsoft.Storage/storageAccounts/', variables('clusterStorageAccountName')), '2020-08-01-preview').primaryEndpoints.blob),'https:',''),'/','')]",
+                "isDefault": true,
+                "container": "GEN-UNIQUE-10",
+                "key": "[listKeys(resourceId('Microsoft.Storage/storageAccounts', variables('clusterStorageAccountName')), variables('defaultApiVersion')).key1]"
+              }
+            ]
+          },
+          "computeProfile": {
+            "roles": [
+              {
+                "name": "headnode",
+                "targetInstanceCount": 2,
+                "hardwareProfile": {
+                  "vmSize": "Standard_D4_v3"
+                },
+                "osProfile": {
+                  "linuxOperatingSystemProfile": {
+                    "username": "GEN-UNIQUE",
+                    "password": "GEN-PASSWORD"
+                  }
+                },
+                "virtualNetworkProfile": {
+                  "id": "Microsoft.Network/virtualNetworks/GEN-UNIQUE-10-vnet",
+                  "subnet": "Microsoft.Network/virtualNetworks/GEN-UNIQUE-10-vnet/subnets/clusterVNetSubnetName"
+                },
+                "scriptActions": [
+                  {
+                    "name": "Genome Analysis Platform -- ADAM",
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('adam-installer-v03.sh', parameters('_artifactsLocationSasToken')))]",
+                    "parameters": ""
+                  }
+                ]
+              },
+              {
+                "name": "workernode",
+                "targetInstanceCount": 2,
+                "hardwareProfile": {
+                  "vmSize": "Standard_D4_v3"
+                },
+                "osProfile": {
+                  "linuxOperatingSystemProfile": {
+                    "username": "GEN-UNIQUE",
+                    "password": "GEN-PASSWORD"
+                  }
+                },
+                "virtualNetworkProfile": {
+                  "id": "Microsoft.Network/virtualNetworks/GEN-UNIQUE-10-vnet",
+                  "subnet": "Microsoft.Network/virtualNetworks/GEN-UNIQUE-10-vnet/subnets/clusterVNetSubnetName"
+                }
+              },
+              {
+                "name": "zookeepernode",
+                "targetInstanceCount": 3,
+                "hardwareProfile": {
+                  "vmSize": "Standard_D4_v3"
+                },
+                "osProfile": {
+                  "linuxOperatingSystemProfile": {
+                    "username": "GEN-UNIQUE",
+                    "password": "GEN-PASSWORD"
+                  }
+                },
+                "virtualNetworkProfile": {
+                  "id": "Microsoft.Network/virtualNetworks/GEN-UNIQUE-10-vnet",
+                  "subnet": "Microsoft.Network/virtualNetworks/GEN-UNIQUE-10-vnet/subnets/clusterVNetSubnetName"
+                }
+              }
+            ]
+          }
+        }
+      }
+    ],
+    "outputs": {
+      "vnet": {
+        "type": "object",
+        "value": "[reference(resourceId('Microsoft.Network/virtualNetworks',variables('clusterVNetName')))]"
+      },
+      "cluster": {
+        "type": "object",
+        "value": "[reference(resourceId('Microsoft.HDInsight/clusters',parameters('clusterName')))]"
+      }
+    },
+    "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+  }
+}

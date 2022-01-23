@@ -1,0 +1,306 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAzureQuickStart",
+  "paths": [
+    "/quickstarts/microsoft.datafactory/data-factory-blob-to-sql-copy-stored-proc/azuredeploy.json",
+    "/quickstarts/microsoft.datafactory/data-factory-blob-to-sql-copy-stored-proc/azuredeploy.parameters.json"
+  ],
+  "timestamp": 1642962905653,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/quickstarts/microsoft.datafactory/data-factory-blob-to-sql-copy-stored-proc/azuredeploy.json",
+      "/quickstarts/microsoft.datafactory/data-factory-blob-to-sql-copy-stored-proc/azuredeploy.parameters.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT1217",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "microsoft.datafactory/datafactories"
+    ]
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT1217",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "storageAccountName": {
+        "type": "string",
+        "metadata": {
+          "description": "Name of the Azure storage account that contains the data to be copied."
+        },
+        "value": "yourstorageaccountname"
+      },
+      "storageAccountKey": {
+        "type": "securestring",
+        "metadata": {
+          "description": "Key for the Azure storage account."
+        },
+        "value": "yourstorageaccountkey"
+      },
+      "sourceBlobContainer": {
+        "type": "string",
+        "metadata": {
+          "description": "Name of the blob container in the Azure Storage account."
+        },
+        "value": "adftutorial"
+      },
+      "sourceBlobName": {
+        "type": "string",
+        "metadata": {
+          "description": "Name of the blob in the container that has the data to be copied to Azure SQL Database table"
+        },
+        "value": "emp.txt"
+      },
+      "sqlServerName": {
+        "type": "string",
+        "metadata": {
+          "description": "Name of the Azure SQL Server that will hold the output/copied data."
+        },
+        "value": "yourazuresqlserver"
+      },
+      "sqlDatabaseName": {
+        "type": "string",
+        "metadata": {
+          "description": "Name of Azure SQL Database in Azure SQL server copying data to."
+        },
+        "value": "yourazuresqldb"
+      },
+      "sqlUserID": {
+        "type": "string",
+        "metadata": {
+          "description": "Username for access to Azure SQL Server."
+        },
+        "value": "yourazuresqluser"
+      },
+      "sqlPassword": {
+        "type": "securestring",
+        "metadata": {
+          "description": "Password for the user to Azure SQL Server."
+        },
+        "value": "yourazuresqlpassword"
+      },
+      "sqlTargetTable": {
+        "type": "string",
+        "metadata": {
+          "description": "Table in the Azure SQL Database that will hold the copied data."
+        },
+        "value": "emp"
+      },
+      "sqlWriterTableType": {
+        "type": "string",
+        "metadata": {
+          "description": "Specify a table type name to be used in the stored procedure. Copy activity makes the data being moved available in a temp table with this table type."
+        },
+        "value": "empType"
+      },
+      "sqlWriterStoredProcedureName": {
+        "type": "string",
+        "metadata": {
+          "description": "Name of the stored procedure that upserts (updates/inserts) data into the target table."
+        },
+        "value": "spWriteEmployee"
+      },
+      "location": {
+        "type": "string",
+        "defaultValue": "[resourceGroup().location]",
+        "metadata": {
+          "description": "Location for all resources."
+        }
+      }
+    },
+    "variables": {
+      "dataFactoryName": "[concat('CopyFromAzureBlobToAzureSQLDbSproc', uniqueString(resourceGroup().id))]",
+      "storageLinkedServiceName": "StorageLinkedService",
+      "sqlLinkedServiceName": "SqlLinkedService",
+      "storageDataset": "StorageDataset",
+      "intermediateDataset": "IntermediateDataset",
+      "sqlDataset": "SqlDataset",
+      "pipelineName": "BlobtoSqlDbCopyPipelineSproc"
+    },
+    "resources": [
+      {
+        "name": "[variables('dataFactoryName')]",
+        "apiVersion": "2015-10-01",
+        "type": "Microsoft.DataFactory/datafactories",
+        "location": "[resourceGroup().location]",
+        "resources": [
+          {
+            "type": "linkedservices",
+            "name": "StorageLinkedService",
+            "apiVersion": "2015-10-01",
+            "dependsOn": [
+              "[variables('dataFactoryName')]"
+            ],
+            "properties": {
+              "type": "AzureStorage",
+              "description": "Azure Storage Linked Service",
+              "typeProperties": {
+                "connectionString": "DefaultEndpointsProtocol=https;AccountName=yourstorageaccountname;AccountKey=yourstorageaccountkey"
+              }
+            }
+          },
+          {
+            "type": "linkedservices",
+            "name": "SqlLinkedService",
+            "apiVersion": "2015-10-01",
+            "dependsOn": [
+              "[variables('dataFactoryName')]"
+            ],
+            "properties": {
+              "type": "AzureSqlDatabase",
+              "description": "Azure SQL linked service",
+              "typeProperties": {
+                "connectionString": "Data Source=tcp:yourazuresqlserver.database.windows.net1433;Initial Catalog=yourazuresqldb;Integrated Security=False;User ID=sqlUserId;Password=yourazuresqlpassword;Connect Timeout=30;Encrypt=True"
+              }
+            }
+          },
+          {
+            "type": "datasets",
+            "name": "StorageDataset",
+            "dependsOn": [
+              "[variables('dataFactoryName')]",
+              "[variables('storageLinkedServiceName')]"
+            ],
+            "apiVersion": "2015-10-01",
+            "properties": {
+              "type": "AzureBlob",
+              "linkedServiceName": "StorageLinkedService",
+              "typeProperties": {
+                "folderPath": "adftutorial/",
+                "fileName": "emp.txt",
+                "format": {
+                  "type": "TextFormat"
+                }
+              },
+              "availability": {
+                "frequency": "Hour",
+                "interval": 1
+              },
+              "external": true
+            }
+          },
+          {
+            "type": "datasets",
+            "name": "IntermediateDataset",
+            "dependsOn": [
+              "[variables('dataFactoryName')]",
+              "[variables('sqlLinkedServiceName')]"
+            ],
+            "apiVersion": "2015-10-01",
+            "properties": {
+              "type": "AzureSqlTable",
+              "linkedServiceName": "SqlLinkedService",
+              "typeProperties": {
+                "tableName": "IntermediateDataset"
+              },
+              "availability": {
+                "frequency": "Hour",
+                "interval": 1
+              }
+            }
+          },
+          {
+            "type": "datasets",
+            "name": "SqlDataset",
+            "dependsOn": [
+              "[variables('dataFactoryName')]",
+              "[variables('sqlLinkedServiceName')]"
+            ],
+            "apiVersion": "2015-10-01",
+            "properties": {
+              "type": "AzureSqlTable",
+              "linkedServiceName": "SqlLinkedService",
+              "typeProperties": {
+                "tableName": "emp"
+              },
+              "availability": {
+                "frequency": "Hour",
+                "interval": 1
+              }
+            }
+          },
+          {
+            "type": "dataPipelines",
+            "name": "BlobtoSqlDbCopyPipelineSproc",
+            "dependsOn": [
+              "[variables('dataFactoryName')]",
+              "[variables('storageLinkedServiceName')]",
+              "[variables('sqlLinkedServiceName')]",
+              "[variables('storageDataset')]",
+              "[variables('sqlDataset')]"
+            ],
+            "apiVersion": "2015-10-01",
+            "properties": {
+              "description": "Copies data from Azure Blob to Sql DB while invoking stored procedure",
+              "activities": [
+                {
+                  "name": "BlobtoSqlTableCopyActivity",
+                  "type": "Copy",
+                  "typeProperties": {
+                    "source": {
+                      "type": "BlobSource"
+                    },
+                    "sink": {
+                      "type": "SqlSink",
+                      "writeBatchSize": 0,
+                      "writeBatchTimeout": "00:00:00"
+                    }
+                  },
+                  "inputs": [
+                    {
+                      "name": "StorageDataset"
+                    }
+                  ],
+                  "outputs": [
+                    {
+                      "name": "IntermediateDataset"
+                    }
+                  ]
+                },
+                {
+                  "name": "SqlTabletoSqlDbSprocActivity",
+                  "type": "SqlServerStoredProcedure",
+                  "inputs": [
+                    {
+                      "name": "IntermediateDataset"
+                    }
+                  ],
+                  "outputs": [
+                    {
+                      "name": "SqlDataset"
+                    }
+                  ],
+                  "typeProperties": {
+                    "storedProcedureName": "spWriteEmployee"
+                  },
+                  "scheduler": {
+                    "frequency": "Hour",
+                    "interval": 1
+                  },
+                  "policy": {
+                    "timeout": "02:00:00",
+                    "concurrency": 1,
+                    "executionPriorityOrder": "NewestFirst",
+                    "retry": 3
+                  }
+                }
+              ],
+              "start": "2016-10-01T00:00:00Z",
+              "end": "2016-10-02T00:00:00Z"
+            }
+          }
+        ]
+      }
+    ],
+    "outputs": {},
+    "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+  }
+}

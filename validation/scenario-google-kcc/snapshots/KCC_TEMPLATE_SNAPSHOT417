@@ -2,12 +2,12 @@
   "structure": "filesystem",
   "error": null,
   "reference": "master",
-  "contentType": "yaml",
+  "contentType": "json",
   "source": "gitConnectorGoogleKcc",
   "paths": [
-    "/samples/resources/iampolicymember/kms-policy-member-with-condition/kms_v1beta1_kmskeyring.yaml"
+    "/samples/resources/gkehubfeature/multi-cluster-ingress-feature/gkehub_v1beta1_gkehubmembership.yaml"
   ],
-  "timestamp": 1628765148103,
+  "timestamp": 1642973304129,
   "queryuser": null,
   "checksum": "99914b932bd37a50b983c5e7c90ae93b",
   "node": {
@@ -15,22 +15,39 @@
     "type": "kcc",
     "collection": "kcctemplate",
     "paths": [
-      "/samples/resources/iampolicymember/kms-policy-member-with-condition/kms_v1beta1_kmskeyring.yaml"
+      "/samples/resources/gkehubfeature/multi-cluster-ingress-feature/gkehub_v1beta1_gkehubmembership.yaml"
     ],
     "snapshotId": "KCC_TEMPLATE_SNAPSHOT417",
     "status": "active",
-    "validate": true
+    "validate": true,
+    "resourceTypes": [
+      "gkehubmembership"
+    ]
   },
   "snapshotId": "KCC_TEMPLATE_SNAPSHOT417",
   "collection": "kcctemplate",
   "json": {
-    "apiVersion": "kms.cnrm.cloud.google.com/v1beta1",
-    "kind": "KMSKeyRing",
+    "apiVersion": "gkehub.cnrm.cloud.google.com/v1beta1",
+    "kind": "GKEHubMembership",
     "metadata": {
-      "name": "iampolicymember-dep-condition"
+      "annotations": {
+        "cnrm.cloud.google.com/project-id": "gkehubfeature-dep-mcifeature"
+      },
+      "name": "gkehubfeature-dep-mcifeature"
     },
     "spec": {
-      "location": "us-central1"
+      "location": "global",
+      "authority": {
+        "issuer": "https://container.googleapis.com/v1/projects/gkehubfeature-dep-mcifeature/locations/us-central1-a/clusters/gkehubfeature-dep-mcifeature"
+      },
+      "description": "A sample GKE Hub membership",
+      "endpoint": {
+        "gkeCluster": {
+          "resourceRef": {
+            "name": "gkehubfeature-dep-mcifeature"
+          }
+        }
+      }
     }
   }
 }

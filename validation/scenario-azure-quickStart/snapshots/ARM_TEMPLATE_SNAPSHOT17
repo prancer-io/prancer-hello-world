@@ -1,0 +1,100 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAzureQuickStart",
+  "paths": [
+    "/application-workloads/active-directory/create-ad-forest-with-subdomain/nested/createChildDomain.json"
+  ],
+  "timestamp": 1642962883451,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/application-workloads/active-directory/create-ad-forest-with-subdomain/nested/createChildDomain.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT17",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "microsoft.compute/virtualmachines/extensions"
+    ]
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT17",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "vmName": {
+        "type": "string"
+      },
+      "adminUsername": {
+        "type": "string"
+      },
+      "adminPassword": {
+        "type": "securestring"
+      },
+      "ParentDomainName": {
+        "type": "string"
+      },
+      "ChildDomainName": {
+        "type": "string"
+      },
+      "DnsForwarder": {
+        "type": "string"
+      },
+      "_artifactsLocation": {
+        "type": "string"
+      },
+      "_artifactsLocationSasToken": {
+        "type": "securestring",
+        "defaultValue": ""
+      },
+      "location": {
+        "type": "string"
+      }
+    },
+    "variables": {
+      "adChildDomainDC1ModulesURL": "[uri(parameters('_artifactsLocation'), concat('DSC/CreateADChildDomainDC1.ps1.zip',parameters('_artifactsLocationSasToken')))]",
+      "adChildDomainDC1ConfigurationFunction": "CreateADChildDomainDC1.ps1\\CreateADChildDomainDC1"
+    },
+    "resources": [
+      {
+        "name": "vmName/CreateADChildDomain1",
+        "type": "Microsoft.Compute/virtualMachines/extensions",
+        "apiVersion": "2019-12-01",
+        "location": "location",
+        "properties": {
+          "publisher": "Microsoft.Powershell",
+          "type": "DSC",
+          "typeHandlerVersion": "2.21",
+          "autoUpgradeMinorVersion": true,
+          "settings": {
+            "ModulesUrl": "[uri(parameters('_artifactsLocation'), concat('DSC/CreateADChildDomainDC1.ps1.zip',parameters('_artifactsLocationSasToken')))]",
+            "ConfigurationFunction": "CreateADChildDomainDC1.ps1\\CreateADChildDomainDC1",
+            "Properties": {
+              "ParentDomainName": "parentDomainName",
+              "ChildDomainName": "childDomainName",
+              "DnsForwarder": "DnsForwarder",
+              "AdminCreds": {
+                "UserName": "adminUserName",
+                "Password": "PrivateSettingsRef:AdminPassword"
+              }
+            }
+          },
+          "protectedSettings": {
+            "Items": {
+              "AdminPassword": "adminPassword"
+            }
+          }
+        }
+      }
+    ],
+    "outputs": {},
+    "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+  }
+}

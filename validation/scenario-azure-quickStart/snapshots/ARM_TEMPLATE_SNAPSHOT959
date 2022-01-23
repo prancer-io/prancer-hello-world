@@ -1,0 +1,83 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAzureQuickStart",
+  "paths": [
+    "/quickstarts/microsoft.batch/batch-with-keyvault-pfx-password/azuredeploy.json",
+    "/quickstarts/microsoft.batch/batch-with-keyvault-pfx-password/azuredeploy.parameters.json"
+  ],
+  "timestamp": 1642962903124,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/quickstarts/microsoft.batch/batch-with-keyvault-pfx-password/azuredeploy.json",
+      "/quickstarts/microsoft.batch/batch-with-keyvault-pfx-password/azuredeploy.parameters.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT959",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "microsoft.batch/batchaccounts/certificates"
+    ]
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT959",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "batchservice": {
+        "type": "string",
+        "metadata": {
+          "description": "batch acount name"
+        },
+        "value": "GET-PREREQ-batchservice"
+      },
+      "certdata": {
+        "type": "securestring",
+        "metadata": {
+          "description": "certificate securestring reference to keyvault"
+        },
+        "value": "GEN-SELFSIGNED-CERT-PFXDATA"
+      },
+      "certthumbprint": {
+        "type": "securestring",
+        "metadata": {
+          "description": "keyvault certificate thumbprint"
+        },
+        "value": "GET-PREREQ-certthumbprint"
+      },
+      "certpassword": {
+        "type": "securestring",
+        "metadata": {
+          "description": "keyvault certificate pfx password"
+        },
+        "value": "GEN-SELFSIGNED-CERT-PASSWORD"
+      }
+    },
+    "variables": {
+      "certname": "GET-PREREQ-batchservice/SHA1-GET-PREREQ-certthumbprint"
+    },
+    "resources": [
+      {
+        "name": "GET-PREREQ-batchservice/SHA1-GET-PREREQ-certthumbprint",
+        "type": "Microsoft.Batch/batchAccounts/certificates",
+        "apiVersion": "2021-01-01",
+        "properties": {
+          "format": "Pfx",
+          "thumbprint": "GET-PREREQ-certthumbprint",
+          "thumbprintAlgorithm": "SHA1",
+          "data": "GEN-SELFSIGNED-CERT-PFXDATA",
+          "password": "GEN-SELFSIGNED-CERT-PASSWORD"
+        }
+      }
+    ],
+    "outputs": {},
+    "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+  }
+}

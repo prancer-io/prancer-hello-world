@@ -1,0 +1,216 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "main",
+  "contentType": "json",
+  "source": "gitConnectorAzureTerraHashicorp",
+  "paths": [
+    "/examples/vm-scale-set/virtual_machine_scale_set/autoscale/variables.tf",
+    "/examples/vm-scale-set/virtual_machine_scale_set/autoscale/main.tf"
+  ],
+  "timestamp": 1642943280288,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "TRF_TEMPLATE_SNAPSHOT",
+    "type": "terraform",
+    "collection": "terraformtemplate",
+    "paths": [
+      "/examples/vm-scale-set/virtual_machine_scale_set/autoscale/variables.tf",
+      "/examples/vm-scale-set/virtual_machine_scale_set/autoscale/main.tf"
+    ],
+    "snapshotId": "TRF_TEMPLATE_SNAPSHOT191",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "azurerm_subnet",
+      "azurerm_virtual_network",
+      "azurerm_resource_group",
+      "azurerm_monitor_autoscale_setting",
+      "azurerm_virtual_machine_scale_set"
+    ]
+  },
+  "snapshotId": "TRF_TEMPLATE_SNAPSHOT191",
+  "collection": "terraformtemplate",
+  "json": {
+    "provider": [
+      {
+        "azurerm": {
+          "features": [
+            {}
+          ]
+        }
+      }
+    ],
+    "locals": [
+      {
+        "instance_count": 2
+      }
+    ],
+    "resources": [
+      {
+        "type": "azurerm_resource_group",
+        "name": "example",
+        "properties": {
+          "name": "${var.prefix}-resources",
+          "location": "${var.location}",
+          "compiletime_identity": "azurerm_resource_group.example"
+        }
+      },
+      {
+        "type": "azurerm_virtual_network",
+        "name": "example",
+        "properties": {
+          "name": "${var.prefix}-network",
+          "resource_group_name": "${azurerm_resource_group.example.name}",
+          "location": "${azurerm_resource_group.example.location}",
+          "address_space": [
+            "10.0.0.0/16"
+          ],
+          "compiletime_identity": "azurerm_virtual_network.example"
+        }
+      },
+      {
+        "type": "azurerm_subnet",
+        "name": "example",
+        "properties": {
+          "name": "internal",
+          "virtual_network_name": "${azurerm_virtual_network.example.name}",
+          "resource_group_name": "${azurerm_resource_group.example.name}",
+          "address_prefixes": [
+            "10.0.1.0/24"
+          ],
+          "compiletime_identity": "azurerm_subnet.example"
+        }
+      },
+      {
+        "type": "azurerm_virtual_machine_scale_set",
+        "name": "example",
+        "properties": {
+          "name": "${var.prefix}-vmss",
+          "location": "${azurerm_resource_group.example.location}",
+          "resource_group_name": "${azurerm_resource_group.example.name}",
+          "upgrade_policy_mode": "Manual",
+          "sku": [
+            {
+              "name": "Standard_D1_v2",
+              "tier": "Standard",
+              "capacity": "${local.instance_count}"
+            }
+          ],
+          "os_profile": [
+            {
+              "computer_name_prefix": "${var.prefix}-vm",
+              "admin_username": "myadmin",
+              "admin_password": "Passwword1234"
+            }
+          ],
+          "os_profile_linux_config": [
+            {
+              "disable_password_authentication": false
+            }
+          ],
+          "network_profile": [
+            {
+              "name": "web_ss_net_profile",
+              "primary": true,
+              "ip_configuration": [
+                {
+                  "name": "internal",
+                  "subnet_id": "${azurerm_subnet.example.id}",
+                  "primary": true
+                }
+              ]
+            }
+          ],
+          "storage_profile_os_disk": [
+            {
+              "name": "",
+              "caching": "ReadWrite",
+              "create_option": "FromImage",
+              "managed_disk_type": "Standard_LRS"
+            }
+          ],
+          "storage_profile_image_reference": [
+            {
+              "publisher": "Canonical",
+              "offer": "UbuntuServer",
+              "sku": "16.04-LTS",
+              "version": "latest"
+            }
+          ],
+          "compiletime_identity": "azurerm_virtual_machine_scale_set.example"
+        }
+      },
+      {
+        "type": "azurerm_monitor_autoscale_setting",
+        "name": "example",
+        "properties": {
+          "name": "autoscale-cpu",
+          "target_resource_id": "${azurerm_virtual_machine_scale_set.example.id}",
+          "location": "${azurerm_resource_group.example.location}",
+          "resource_group_name": "${azurerm_resource_group.example.name}",
+          "profile": [
+            {
+              "name": "autoscale-cpu",
+              "capacity": [
+                {
+                  "default": "${local.instance_count}",
+                  "minimum": 0,
+                  "maximum": 1000
+                }
+              ],
+              "rule": [
+                {
+                  "metric_trigger": [
+                    {
+                      "metric_name": "Percentage CPU",
+                      "metric_resource_id": "${azurerm_virtual_machine_scale_set.example.id}",
+                      "time_grain": "PT1M",
+                      "statistic": "Average",
+                      "time_window": "PT5M",
+                      "time_aggregation": "Average",
+                      "operator": "GreaterThan",
+                      "threshold": 75
+                    }
+                  ],
+                  "scale_action": [
+                    {
+                      "direction": "Increase",
+                      "type": "ChangeCount",
+                      "value": 1,
+                      "cooldown": "PT1M"
+                    }
+                  ]
+                },
+                {
+                  "metric_trigger": [
+                    {
+                      "metric_name": "Percentage CPU",
+                      "metric_resource_id": "${azurerm_virtual_machine_scale_set.example.id}",
+                      "time_grain": "PT1M",
+                      "statistic": "Average",
+                      "time_window": "PT5M",
+                      "time_aggregation": "Average",
+                      "operator": "LessThan",
+                      "threshold": 15
+                    }
+                  ],
+                  "scale_action": [
+                    {
+                      "direction": "Decrease",
+                      "type": "ChangeCount",
+                      "value": 1,
+                      "cooldown": "PT1M"
+                    }
+                  ]
+                }
+              ]
+            }
+          ],
+          "compiletime_identity": "azurerm_monitor_autoscale_setting.example"
+        }
+      }
+    ]
+  }
+}

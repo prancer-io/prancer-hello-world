@@ -1,0 +1,107 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "main",
+  "contentType": "json",
+  "source": "gitConnectorAwsTerraHashicorp",
+  "paths": [
+    "/examples/s3-cross-account-access/terraform.template.tfvars",
+    "/examples/s3-cross-account-access/variables.tf",
+    "/examples/s3-cross-account-access/main.tf"
+  ],
+  "timestamp": 1642967657730,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "TRF_TEMPLATE_SNAPSHOT",
+    "type": "terraform",
+    "collection": "terraformtemplate",
+    "paths": [
+      "/examples/s3-cross-account-access/terraform.template.tfvars",
+      "/examples/s3-cross-account-access/variables.tf",
+      "/examples/s3-cross-account-access/main.tf"
+    ],
+    "snapshotId": "TRF_TEMPLATE_SNAPSHOT33",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "aws_s3_bucket_object",
+      "aws_s3_bucket"
+    ]
+  },
+  "snapshotId": "TRF_TEMPLATE_SNAPSHOT33",
+  "collection": "terraformtemplate",
+  "json": {
+    "terraform": [
+      {
+        "required_version": ">= 0.12"
+      }
+    ],
+    "provider": [
+      {
+        "aws": {
+          "alias": "prod",
+          "region": "us-east-1",
+          "access_key": "${var.prod_access_key}",
+          "secret_key": "${var.prod_secret_key}"
+        }
+      },
+      {
+        "aws": {
+          "alias": "test",
+          "region": "us-east-1",
+          "access_key": "${var.test_access_key}",
+          "secret_key": "${var.test_secret_key}"
+        }
+      }
+    ],
+    "resources": [
+      {
+        "type": "aws_s3_bucket",
+        "name": "prod",
+        "properties": {
+          "provider": "${aws.prod}",
+          "bucket": "tf-test-bucket-in-prod",
+          "acl": "private",
+          "policy": {
+            "Version": "2012-10-17",
+            "Statement": [
+              {
+                "Sid": "AllowTest",
+                "Effect": "Allow",
+                "Principal": {
+                  "AWS": "arn:aws:iam::123456789012:root"
+                },
+                "Action": "s3:*",
+                "Resource": "arn:aws:s3:::tf-test-bucket-in-prod/*"
+              }
+            ]
+          },
+          "compiletime_identity": "aws_s3_bucket.prod"
+        }
+      },
+      {
+        "type": "aws_s3_bucket_object",
+        "name": "prod",
+        "properties": {
+          "provider": "${aws.prod}",
+          "bucket": "${aws_s3_bucket.prod.id}",
+          "key": "object-uploaded-via-prod-creds",
+          "source": "${path.module}/prod.txt",
+          "compiletime_identity": "aws_s3_bucket_object.prod"
+        }
+      },
+      {
+        "type": "aws_s3_bucket_object",
+        "name": "test",
+        "properties": {
+          "provider": "${aws.test}",
+          "bucket": "${aws_s3_bucket.prod.id}",
+          "key": "object-uploaded-via-test-creds",
+          "source": "${path.module}/test.txt",
+          "compiletime_identity": "aws_s3_bucket_object.test"
+        }
+      }
+    ]
+  }
+}

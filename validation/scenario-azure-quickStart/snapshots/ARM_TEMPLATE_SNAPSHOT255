@@ -1,0 +1,246 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAzureQuickStart",
+  "paths": [
+    "/application-workloads/mongo/mongodb-high-availability/member-resources-D12.json",
+    "/application-workloads/mongo/mongodb-high-availability/azuredeploy.parameters.json"
+  ],
+  "timestamp": 1642962891466,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/application-workloads/mongo/mongodb-high-availability/member-resources-D12.json",
+      "/application-workloads/mongo/mongodb-high-availability/azuredeploy.parameters.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT255",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "microsoft.network/networkinterfaces",
+      "microsoft.compute/virtualmachines",
+      "microsoft.compute/virtualmachines/extensions"
+    ]
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT255",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "commonSettings": {
+        "type": "object",
+        "metadata": {
+          "Description": "Common settings object"
+        }
+      },
+      "networkSettings": {
+        "type": "object",
+        "metadata": {
+          "Description": "Network settings object"
+        }
+      },
+      "machineSettings": {
+        "type": "object",
+        "metadata": {
+          "Description": "Machine settings object"
+        }
+      },
+      "location": {
+        "type": "string",
+        "metadata": {
+          "description": "Location for all resources."
+        }
+      },
+      "adminUsername": {
+        "value": "GEN-UNIQUE"
+      },
+      "adminPassword": {
+        "value": "GEN-PASSWORD"
+      },
+      "storageAccountNamePrefix": {
+        "value": "GEN-UNIQUE-8"
+      },
+      "storageAccountType": {
+        "value": "Standard_LRS"
+      },
+      "vmSeries": {
+        "value": "D"
+      },
+      "virtualNetworkName": {
+        "value": "GEN-VNET-NAME"
+      },
+      "subnetName": {
+        "value": "GEN-VNET-SUBNET1-NAME"
+      },
+      "addressPrefix": {
+        "value": "10.0.0.0/16"
+      },
+      "subnetPrefix": {
+        "value": "10.0.0.0/24"
+      },
+      "nodeAddressPrefix": {
+        "value": "10.0.0.1"
+      },
+      "jumpbox": {
+        "value": "Disabled"
+      },
+      "tshirtSize": {
+        "value": "XSmall"
+      },
+      "osFamily": {
+        "value": "Ubuntu"
+      },
+      "replicaSetName": {
+        "value": "rs0"
+      },
+      "replicaSetKey": {
+        "value": "GEN-UNIQUE-8"
+      }
+    },
+    "resources": [
+      {
+        "type": "Microsoft.Network/networkInterfaces",
+        "name": "nicMembermachineSettings",
+        "apiVersion": "2020-11-01",
+        "location": "location",
+        "properties": {
+          "ipConfigurations": [
+            {
+              "name": "ipconfig1",
+              "properties": {
+                "privateIPAllocationMethod": "Static",
+                "privateIPAddress": "networkSettingsmachineSettings",
+                "subnet": {
+                  "id": "networkSettings"
+                }
+              }
+            }
+          ]
+        }
+      },
+      {
+        "type": "Microsoft.Compute/virtualMachines",
+        "name": "vmMembermachineSettings",
+        "apiVersion": "2020-12-01",
+        "location": "location",
+        "dependsOn": [
+          "Microsoft.Network/networkInterfaces//nicMembermachineSettings"
+        ],
+        "properties": {
+          "availabilitySet": {
+            "id": "Microsoft.Compute/availabilitySets/commonSettings"
+          },
+          "hardwareProfile": {
+            "vmSize": "machineSettings"
+          },
+          "osProfile": {
+            "computerName": "machineSettingsmembermachineSettings",
+            "adminUsername": "machineSettings",
+            "adminPassword": "machineSettings"
+          },
+          "storageProfile": {
+            "imageReference": "machineSettings",
+            "osDisk": {
+              "name": "vmMembermachineSettings_OSDisk",
+              "caching": "ReadWrite",
+              "createOption": "FromImage"
+            },
+            "dataDisks": [
+              {
+                "name": "vmMembermachineSettings_DataDisk0",
+                "diskSizeGB": "machineSettings",
+                "lun": 0,
+                "caching": "ReadWrite",
+                "createOption": "Empty"
+              },
+              {
+                "name": "vmMembermachineSettings_DataDisk1",
+                "diskSizeGB": "machineSettings",
+                "lun": 1,
+                "caching": "ReadWrite",
+                "createOption": "Empty"
+              },
+              {
+                "name": "vmMembermachineSettings_DataDisk2",
+                "diskSizeGB": "machineSettings",
+                "lun": 2,
+                "caching": "ReadWrite",
+                "createOption": "Empty"
+              },
+              {
+                "name": "vmMembermachineSettings_DataDisk3",
+                "diskSizeGB": "machineSettings",
+                "lun": 3,
+                "caching": "ReadWrite",
+                "createOption": "Empty"
+              },
+              {
+                "name": "vmMembermachineSettings_DataDisk4",
+                "diskSizeGB": "machineSettings",
+                "lun": 4,
+                "caching": "ReadWrite",
+                "createOption": "Empty"
+              },
+              {
+                "name": "vmMembermachineSettings_DataDisk5",
+                "diskSizeGB": "machineSettings",
+                "lun": 5,
+                "caching": "ReadWrite",
+                "createOption": "Empty"
+              },
+              {
+                "name": "vmMembermachineSettings_DataDisk6",
+                "diskSizeGB": "machineSettings",
+                "lun": 6,
+                "caching": "ReadWrite",
+                "createOption": "Empty"
+              },
+              {
+                "name": "vmMembermachineSettings_DataDisk7",
+                "diskSizeGB": "machineSettings",
+                "lun": 7,
+                "caching": "ReadWrite",
+                "createOption": "Empty"
+              }
+            ]
+          },
+          "networkProfile": {
+            "networkInterfaces": [
+              {
+                "id": "Microsoft.Network/networkInterfaces/nicMembermachineSettings"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "type": "Microsoft.Compute/virtualMachines/extensions",
+        "name": "vmMembermachineSettings/installmongodb",
+        "apiVersion": "2020-12-01",
+        "location": "location",
+        "dependsOn": [
+          "Microsoft.Compute/virtualMachines//vmMembermachineSettings"
+        ],
+        "properties": {
+          "publisher": "Microsoft.Azure.Extensions",
+          "type": "CustomScript",
+          "typeHandlerVersion": "2.0",
+          "autoUpgradeMinorVersion": true,
+          "settings": {
+            "fileUris": "machineSettings"
+          },
+          "protectedSettings": {
+            "commandToExecute": "machineSettings"
+          }
+        }
+      }
+    ],
+    "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+  }
+}

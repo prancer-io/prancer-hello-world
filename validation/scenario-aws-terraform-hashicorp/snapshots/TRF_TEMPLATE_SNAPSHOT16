@@ -1,0 +1,121 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "main",
+  "contentType": "json",
+  "source": "gitConnectorAwsTerraHashicorp",
+  "paths": [
+    "/examples/eks-getting-started/outputs.tf",
+    "/examples/eks-getting-started/providers.tf",
+    "/examples/eks-getting-started/variables.tf",
+    "/examples/eks-getting-started/workstation-external-ip.tf",
+    "/examples/eks-getting-started/vpc.tf"
+  ],
+  "timestamp": 1642967657665,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "TRF_TEMPLATE_SNAPSHOT",
+    "type": "terraform",
+    "collection": "terraformtemplate",
+    "paths": [
+      "/examples/eks-getting-started/outputs.tf",
+      "/examples/eks-getting-started/providers.tf",
+      "/examples/eks-getting-started/variables.tf",
+      "/examples/eks-getting-started/workstation-external-ip.tf",
+      "/examples/eks-getting-started/vpc.tf"
+    ],
+    "snapshotId": "TRF_TEMPLATE_SNAPSHOT16",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "aws_vpc",
+      "aws_route_table",
+      "aws_route_table_association",
+      "aws_subnet",
+      "aws_internet_gateway"
+    ]
+  },
+  "snapshotId": "TRF_TEMPLATE_SNAPSHOT16",
+  "collection": "terraformtemplate",
+  "json": {
+    "resources": [
+      {
+        "type": "aws_vpc",
+        "name": "demo",
+        "properties": {
+          "cidr_block": "10.0.0.0/16",
+          "tags": "${tomap({'Name': 'terraform-eks-demo-node', 'kubernetes.io/cluster/terraform-eks-demo': 'shared'})}",
+          "compiletime_identity": "aws_vpc.demo"
+        }
+      },
+      {
+        "type": "aws_subnet",
+        "name": "demo",
+        "properties": {
+          "availability_zone": "${data.aws_availability_zones.available.names[count.index]}",
+          "cidr_block": "10.0.0.0/24",
+          "map_public_ip_on_launch": true,
+          "vpc_id": "${aws_vpc.demo.id}",
+          "tags": "${tomap({'Name': 'terraform-eks-demo-node', 'kubernetes.io/cluster/terraform-eks-demo': 'shared'})}",
+          "compiletime_identity": "aws_subnet.demo"
+        }
+      },
+      {
+        "type": "aws_subnet",
+        "name": "demo",
+        "properties": {
+          "availability_zone": "${data.aws_availability_zones.available.names[count.index]}",
+          "cidr_block": "10.0.1.0/24",
+          "map_public_ip_on_launch": true,
+          "vpc_id": "${aws_vpc.demo.id}",
+          "tags": "${tomap({'Name': 'terraform-eks-demo-node', 'kubernetes.io/cluster/terraform-eks-demo': 'shared'})}",
+          "compiletime_identity": "aws_subnet.demo"
+        }
+      },
+      {
+        "type": "aws_internet_gateway",
+        "name": "demo",
+        "properties": {
+          "vpc_id": "${aws_vpc.demo.id}",
+          "tags": {
+            "Name": "terraform-eks-demo"
+          },
+          "compiletime_identity": "aws_internet_gateway.demo"
+        }
+      },
+      {
+        "type": "aws_route_table",
+        "name": "demo",
+        "properties": {
+          "vpc_id": "${aws_vpc.demo.id}",
+          "route": [
+            {
+              "cidr_block": "0.0.0.0/0",
+              "gateway_id": "${aws_internet_gateway.demo.id}"
+            }
+          ],
+          "compiletime_identity": "aws_route_table.demo"
+        }
+      },
+      {
+        "type": "aws_route_table_association",
+        "name": "demo",
+        "properties": {
+          "subnet_id": "${aws_subnet.demo.*.id[count.index]}",
+          "route_table_id": "${aws_route_table.demo.id}",
+          "compiletime_identity": "aws_route_table_association.demo"
+        }
+      },
+      {
+        "type": "aws_route_table_association",
+        "name": "demo",
+        "properties": {
+          "subnet_id": "${aws_subnet.demo.*.id[count.index]}",
+          "route_table_id": "${aws_route_table.demo.id}",
+          "compiletime_identity": "aws_route_table_association.demo"
+        }
+      }
+    ]
+  }
+}

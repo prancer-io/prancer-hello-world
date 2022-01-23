@@ -1,0 +1,424 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAzureQuickStart",
+  "paths": [
+    "/quickstarts/microsoft.compute/vm-sql-existing-keyvault-update/prereqs/prereq.azuredeploy.json",
+    "/quickstarts/microsoft.compute/vm-sql-existing-keyvault-update/prereqs/prereq.azuredeploy.parameters.json"
+  ],
+  "timestamp": 1642962904514,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/quickstarts/microsoft.compute/vm-sql-existing-keyvault-update/prereqs/prereq.azuredeploy.json",
+      "/quickstarts/microsoft.compute/vm-sql-existing-keyvault-update/prereqs/prereq.azuredeploy.parameters.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT1112",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "microsoft.network/publicipaddresses",
+      "microsoft.resources/deployments",
+      "microsoft.network/virtualnetworks",
+      "microsoft.network/networkinterfaces",
+      "microsoft.compute/virtualmachines",
+      "microsoft.network/networksecuritygroups"
+    ]
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT1112",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "virtualMachineName": {
+        "type": "string",
+        "metadata": {
+          "description": "SQL Server Virtual Machine Name"
+        },
+        "value": "GEN-UNIQUE-8"
+      },
+      "virtualMachineSize": {
+        "type": "string",
+        "metadata": {
+          "description": "SQL Server Virtual Machine Size"
+        },
+        "defaultValue": "Standard_D2s_v3"
+      },
+      "adminUsername": {
+        "type": "string",
+        "metadata": {
+          "description": "SQL Server Virtual Machine Administrator User Name"
+        },
+        "value": "GEN-UNIQUE-8"
+      },
+      "adminPassword": {
+        "type": "securestring",
+        "metadata": {
+          "description": "SQL Server Virtual Machine Administrator Password"
+        },
+        "value": "GEN-PASSWORD"
+      },
+      "virtualNetworkName": {
+        "type": "string",
+        "metadata": {
+          "description": "SQL Server Virtual Machine Virtual Network Name"
+        },
+        "value": "GEN-UNIQUE-13"
+      },
+      "networkInterfaceName": {
+        "type": "string",
+        "metadata": {
+          "description": "SQL Server Virtual Machine Network Interface Name"
+        },
+        "value": "GEN-UNIQUE-13"
+      },
+      "networkSecurityGroupName": {
+        "type": "string",
+        "metadata": {
+          "description": "SQL Server Virtual Machine Network Security Group Name"
+        },
+        "value": "GEN-UNIQUE-13"
+      },
+      "addressPrefix": {
+        "type": "string",
+        "metadata": {
+          "description": "SQL Server Virtual Machine Subnet Name"
+        },
+        "defaultValue": "10.0.0.0/16",
+        "value": "10.0.0.0/16"
+      },
+      "subnetName": {
+        "type": "string",
+        "metadata": {
+          "description": "SQL Server Virtual Machine Subnet Name"
+        },
+        "defaultValue": "default",
+        "value": "default"
+      },
+      "subnetPrefix": {
+        "type": "string",
+        "metadata": {
+          "description": "SQL Server Virtual Machine Subnet Name"
+        },
+        "defaultValue": "10.0.0.0/24",
+        "value": "10.0.0.0/24"
+      },
+      "publicIpAddressName": {
+        "type": "string",
+        "metadata": {
+          "description": "SQL Server Virtual Machine Public IP Address Name"
+        },
+        "value": "GEN-UNIQUE-13"
+      },
+      "publicIpAddressType": {
+        "type": "string",
+        "metadata": {
+          "description": "SQL Server Virtual Machine Public IP Address Type"
+        },
+        "defaultValue": "Dynamic",
+        "value": "Dynamic"
+      },
+      "vaultName": {
+        "type": "string",
+        "defaultValue": "[concat('keyvault-', uniqueString(resourceGroup().id))]",
+        "metadata": {
+          "description": "Specifies the name of the KeyVault, this value must be globally unique."
+        }
+      },
+      "accessPolicies": {
+        "type": "array",
+        "metadata": {
+          "description": "Access policies of the Key Vault."
+        },
+        "value": [
+          {
+            "objectId": "GEN-AZUREAD-OBJECTID",
+            "tenantId": "GEN-AZUREAD-AKS-TENANTID",
+            "permissions": {
+              "secrets": [
+                "list",
+                "get",
+                "set"
+              ],
+              "keys": [
+                "list",
+                "get",
+                "decrypt",
+                "encrypt",
+                "unwrapkey",
+                "wrapkey"
+              ]
+            }
+          }
+        ]
+      },
+      "tenantId": {
+        "type": "string",
+        "metadata": {
+          "description": "Tenant ID for the Key Vault."
+        },
+        "value": "GEN-AZUREAD-AKS-TENANTID"
+      },
+      "storageAccountType": {
+        "type": "string",
+        "metadata": {
+          "description": "SQL Server Virtual Machine Storage Account Type"
+        },
+        "allowedValues": [
+          "Premium_LRS",
+          "StandardSSD_LRS",
+          "Standard_LRS"
+        ],
+        "defaultValue": "Premium_LRS",
+        "value": "Premium_LRS"
+      },
+      "location": {
+        "type": "string",
+        "defaultValue": "[resourceGroup().location]",
+        "metadata": {
+          "description": "Location for all resources."
+        }
+      }
+    },
+    "variables": {
+      "subnetRef": "Microsoft.Network/virtualNetworks/subnets/GEN-UNIQUE-13/default"
+    },
+    "resources": [
+      {
+        "name": "vault-prereq",
+        "type": "Microsoft.Resources/deployments",
+        "apiVersion": "2020-10-01",
+        "properties": {
+          "mode": "Incremental",
+          "templateLink": {
+            "uri": "https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/modules/Microsoft.KeyVault/vaults/1.0/azuredeploy.json",
+            "contentVersion": "1.0.0.0"
+          },
+          "parameters": {
+            "accessPolicies": {
+              "value": [
+                {
+                  "objectId": "GEN-AZUREAD-OBJECTID",
+                  "tenantId": "GEN-AZUREAD-AKS-TENANTID",
+                  "permissions": {
+                    "secrets": [
+                      "list",
+                      "get",
+                      "set"
+                    ],
+                    "keys": [
+                      "list",
+                      "get",
+                      "decrypt",
+                      "encrypt",
+                      "unwrapkey",
+                      "wrapkey"
+                    ]
+                  }
+                }
+              ]
+            },
+            "vaultName": {
+              "value": "[concat('keyvault-', uniqueString(resourceGroup().id))]"
+            },
+            "location": {
+              "value": "[resourceGroup().location]"
+            },
+            "enabledForDeployment": {
+              "value": true
+            },
+            "enabledForDiskEncryption": {
+              "value": true
+            },
+            "enabledForTemplateDeployment": {
+              "value": true
+            },
+            "tenantId": {
+              "value": "GEN-AZUREAD-AKS-TENANTID"
+            }
+          }
+        }
+      },
+      {
+        "name": "GEN-UNIQUE-8",
+        "type": "Microsoft.Compute/virtualMachines",
+        "apiVersion": "2020-12-01",
+        "location": "[resourceGroup().location]",
+        "dependsOn": [
+          "Microsoft.Network/networkInterfaces/GEN-UNIQUE-13"
+        ],
+        "properties": {
+          "osProfile": {
+            "computerName": "GEN-UNIQUE-8",
+            "adminUsername": "GEN-UNIQUE-8",
+            "adminPassword": "GEN-PASSWORD",
+            "windowsConfiguration": {
+              "provisionVmAgent": true
+            }
+          },
+          "hardwareProfile": {
+            "vmSize": "Standard_D2s_v3"
+          },
+          "storageProfile": {
+            "imageReference": {
+              "publisher": "MicrosoftSQLServer",
+              "offer": "sql2014sp3-ws2012r2",
+              "sku": "Enterprise",
+              "version": "latest"
+            },
+            "osDisk": {
+              "name": "GEN-UNIQUE-8_OSDisk",
+              "createOption": "FromImage",
+              "managedDisk": {
+                "storageAccountType": "Premium_LRS"
+              }
+            },
+            "dataDisks": [
+              {
+                "name": "GEN-UNIQUE-8_DataDisk-1",
+                "createOption": "Empty",
+                "lun": 0,
+                "diskSizeGB": 1023,
+                "caching": "ReadOnly"
+              },
+              {
+                "name": "GEN-UNIQUE-8_DataDisk-2",
+                "createOption": "Empty",
+                "lun": 1,
+                "diskSizeGB": 1023,
+                "caching": "ReadOnly"
+              }
+            ]
+          },
+          "networkProfile": {
+            "networkInterfaces": [
+              {
+                "id": "Microsoft.Network/networkInterfaces/GEN-UNIQUE-13"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "name": "GEN-UNIQUE-13",
+        "type": "Microsoft.Network/virtualNetworks",
+        "apiVersion": "2020-11-01",
+        "location": "[resourceGroup().location]",
+        "properties": {
+          "addressSpace": {
+            "addressPrefixes": [
+              "10.0.0.0/16"
+            ]
+          },
+          "subnets": [
+            {
+              "name": "default",
+              "properties": {
+                "addressPrefix": "10.0.0.0/24"
+              }
+            }
+          ]
+        }
+      },
+      {
+        "name": "GEN-UNIQUE-13",
+        "type": "Microsoft.Network/networkInterfaces",
+        "apiVersion": "2020-11-01",
+        "location": "[resourceGroup().location]",
+        "dependsOn": [
+          "Microsoft.Network/virtualNetworks/GEN-UNIQUE-13",
+          "Microsoft.Network/publicIpAddresses/GEN-UNIQUE-13",
+          "Microsoft.Network/networkSecurityGroups/GEN-UNIQUE-13"
+        ],
+        "properties": {
+          "ipConfigurations": [
+            {
+              "name": "ipconfig1",
+              "properties": {
+                "subnet": {
+                  "id": "Microsoft.Network/virtualNetworks/subnets/GEN-UNIQUE-13/default"
+                },
+                "privateIPAllocationMethod": "Dynamic",
+                "publicIpAddress": {
+                  "id": "Microsoft.Network/publicIpAddresses/GEN-UNIQUE-13"
+                }
+              }
+            }
+          ],
+          "networkSecurityGroup": {
+            "id": "Microsoft.Network/networkSecurityGroups/GEN-UNIQUE-13"
+          }
+        }
+      },
+      {
+        "name": "GEN-UNIQUE-13",
+        "type": "Microsoft.Network/publicIPAddresses",
+        "apiVersion": "2020-11-01",
+        "location": "[resourceGroup().location]",
+        "sku": {
+          "name": "Basic"
+        },
+        "properties": {
+          "publicIPAllocationMethod": "Dynamic"
+        }
+      },
+      {
+        "name": "GEN-UNIQUE-13",
+        "type": "Microsoft.Network/networkSecurityGroups",
+        "apiVersion": "2020-11-01",
+        "location": "[resourceGroup().location]",
+        "properties": {
+          "securityRules": [
+            {
+              "name": "default-allow-rdp",
+              "properties": {
+                "priority": 1000,
+                "sourceAddressPrefix": "*",
+                "protocol": "Tcp",
+                "destinationPortRange": "3389",
+                "access": "Allow",
+                "direction": "inbound",
+                "sourcePortRange": "*",
+                "destinationAddressPrefix": "*"
+              }
+            },
+            {
+              "name": "default-allow-sql",
+              "properties": {
+                "priority": 1500,
+                "sourceAddressPrefix": "*",
+                "protocol": "Tcp",
+                "destinationPortRange": "1433",
+                "access": "Allow",
+                "direction": "inbound",
+                "sourcePortRange": "*",
+                "destinationAddressPrefix": "*"
+              }
+            }
+          ]
+        }
+      }
+    ],
+    "outputs": {
+      "vmName": {
+        "type": "string",
+        "value": "[parameters('virtualMachineName')]"
+      },
+      "outKeyVaultName": {
+        "type": "string",
+        "value": "[parameters('vaultName')]"
+      },
+      "outKeyVaultResourceGroupName": {
+        "type": "string",
+        "value": "[resourceGroup().name]"
+      }
+    },
+    "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+  }
+}

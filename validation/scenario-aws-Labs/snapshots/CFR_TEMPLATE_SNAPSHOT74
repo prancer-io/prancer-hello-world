@@ -1,0 +1,1217 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAwsLabs",
+  "paths": [
+    "/aws/solutions/CloudFrontCustomOriginLambda@Edge/CloudFront.yaml"
+  ],
+  "timestamp": 1642972590586,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "CFR_TEMPLATE_SNAPSHOT",
+    "type": "cloudformation",
+    "collection": "cloudformationtemplate",
+    "paths": [
+      "/aws/solutions/CloudFrontCustomOriginLambda@Edge/CloudFront.yaml"
+    ],
+    "snapshotId": "CFR_TEMPLATE_SNAPSHOT74",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "aws::ec2::instance",
+      "aws::elasticloadbalancingv2::listenerrule",
+      "aws::cloudfront::distribution",
+      "aws::s3::bucket",
+      "aws::ec2::securitygroup",
+      "aws::elasticloadbalancingv2::targetgroup",
+      "aws::iam::role",
+      "aws::kms::alias",
+      "aws::ec2::securitygroupingress",
+      "aws::s3::bucketpolicy",
+      "aws::kms::key",
+      "aws::elasticloadbalancingv2::loadbalancer",
+      "custom::lambdaversion",
+      "aws::ec2::securitygroupegress",
+      "aws::elasticloadbalancingv2::listener",
+      "aws::lambda::function"
+    ]
+  },
+  "snapshotId": "CFR_TEMPLATE_SNAPSHOT74",
+  "collection": "cloudformationtemplate",
+  "json": {
+    "AWSTemplateFormatVersion": "2010-09-09",
+    "Description": "CI/CD optimized AWS CloudFormation Sample Template for AWS CloudFront Distribution with Custom Origin with an example of using the AWS Application Load Balancer (ALB) and a basic Amazon EC2 Instance. AWS CloudFront Distribution is associated with Lambda@Edge for Security Headers inspection. In addition, AWS CloudFormation Template will provision an Examples of necessary IAM, S3, KMS and Security Groups resources. ### Before deployment please make sure that all parameters are reviewed and updated according the specific use case. ### **WARNING** This template creates one Amazon EC2 instance and an Application Load Balancer, KMS Keys, S3 bucket, CloudFront Distribution resources. You will be billed for the AWS resources used if you create a stack from this template.",
+    "Parameters": {
+      "Environment": {
+        "Description": "Please specify the target environment.",
+        "Type": "String",
+        "Default": "dev",
+        "AllowedValues": [
+          "prod",
+          "staging",
+          "dev",
+          "qa"
+        ]
+      },
+      "AppName": {
+        "Description": "Application environment name.",
+        "Type": "String",
+        "Default": "example"
+      },
+      "AlternateDomainNames": {
+        "Description": "CNAMEs (alternate domain names), if any, for the distribution. Example. mydomain.com",
+        "Type": "String",
+        "Default": "name.domain.com"
+      },
+      "ACMCertificateIdentifier": {
+        "Description": "The AWS Certificate Manager (ACM) certificate identifier.",
+        "Type": "String",
+        "Default": "1234567890abcdefgh"
+      },
+      "LambdaEventType": {
+        "Description": "Please specify the event type that triggers a Lambda function invocation.",
+        "Type": "String",
+        "Default": "viewer-response",
+        "AllowedValues": [
+          "viewer-request",
+          "origin-request",
+          "origin-response",
+          "viewer-response"
+        ]
+      },
+      "IPV6Enabled": {
+        "Description": "Should CloudFront to respond to IPv6 DNS requests with an IPv6 address for your distribution.",
+        "Type": "String",
+        "Default": "true",
+        "AllowedValues": [
+          true,
+          false
+        ]
+      },
+      "EC2ImageId": {
+        "Description": "EC2 AMI Id",
+        "Type": "String",
+        "Default": "ami-xxx"
+      },
+      "EC2InstanceType": {
+        "Description": "Amazon EC2 instance type.",
+        "Type": "String",
+        "Default": "t2.small",
+        "AllowedValues": [
+          "t2.small",
+          "t2.medium",
+          "t2.large",
+          "t2.xlarge",
+          "t2.2xlarge",
+          "m4.large",
+          "m4.xlarge",
+          "m4.2xlarge",
+          "m4.4xlarge",
+          "m4.10xlarge",
+          "m4.16xlarge",
+          "m5.large",
+          "m5.xlarge",
+          "m5.2xlarge",
+          "m5.4xlarge",
+          "m5.12xlarge",
+          "m5.24xlarge",
+          "m5d.large",
+          "m5d.xlarge",
+          "m5d.2xlarge",
+          "m5d.4xlarge",
+          "m5d.12xlarge",
+          "m5d.24xlarge"
+        ]
+      },
+      "KeyPairName": {
+        "Description": "EC2 KeyPair.",
+        "Type": "AWS::EC2::KeyPair::KeyName",
+        "Default": "keypair"
+      },
+      "BootVolSize": {
+        "Description": "EC2 Instance Boot volume size.",
+        "Type": "String",
+        "Default": "100"
+      },
+      "BootVolType": {
+        "Description": "EC2 Instance Boot volume type.",
+        "Type": "String",
+        "Default": "gp2",
+        "AllowedValues": [
+          "gp2",
+          "io1",
+          "sc1",
+          "st1"
+        ]
+      },
+      "ALBType": {
+        "Description": "AWS Load Balancer Type.",
+        "Type": "String",
+        "Default": "application",
+        "AllowedValues": [
+          "application",
+          "network"
+        ]
+      },
+      "OriginALBTGPort": {
+        "Description": "Port number the application is running on, for Origin ALB Target Group and Health Check port.",
+        "Type": "String",
+        "Default": "8080"
+      },
+      "OriginProtocolPolicy": {
+        "Description": "CloudFront Origin Protocol Policy to apply to your origin.",
+        "Type": "String",
+        "Default": "http-only",
+        "AllowedValues": [
+          "http-only",
+          "match-viewer",
+          "https-only"
+        ]
+      },
+      "Compress": {
+        "Description": "CloudFront Origin Protocol Policy to apply to your origin.",
+        "Type": "String",
+        "Default": "false",
+        "AllowedValues": [
+          true,
+          false
+        ]
+      },
+      "DefaultTTL": {
+        "Description": "The default time in seconds that objects stay in CloudFront caches before CloudFront forwards another request to your custom origin. By default, AWS CloudFormation specifies 86400 seconds (one day).",
+        "Type": "String",
+        "Default": "0"
+      },
+      "MaxTTL": {
+        "Description": "The maximum time in seconds that objects stay in CloudFront caches before CloudFront forwards another request to your custom origin. By default, AWS CloudFormation specifies 31536000 seconds (one year).",
+        "Type": "String",
+        "Default": "0"
+      },
+      "MinTTL": {
+        "Description": "The minimum amount of time that you want objects to stay in the cache before CloudFront queries your origin to see whether the object has been updated.",
+        "Type": "String",
+        "Default": "0"
+      },
+      "SmoothStreaming": {
+        "Description": "Indicates whether to use the origin that is associated with this cache behavior to distribute media files in the Microsoft Smooth Streaming format.",
+        "Type": "String",
+        "Default": "false",
+        "AllowedValues": [
+          true,
+          false
+        ]
+      },
+      "QueryString": {
+        "Description": "CIndicates whether you want CloudFront to forward query strings to the origin that is associated with this cache behavior.",
+        "Type": "String",
+        "Default": "true",
+        "AllowedValues": [
+          true,
+          false
+        ]
+      },
+      "ForwardCookies": {
+        "Description": "Forwards specified cookies to the origin of the cache behavior.",
+        "Type": "String",
+        "Default": "all",
+        "AllowedValues": [
+          "all",
+          "whitelist",
+          "none"
+        ]
+      },
+      "ViewerProtocolPolicy": {
+        "Description": "The protocol that users can use to access the files in the origin that you specified in the TargetOriginId property when the default cache behavior is applied to a request.",
+        "Type": "String",
+        "Default": "redirect-to-https",
+        "AllowedValues": [
+          "redirect-to-https",
+          "allow-all",
+          "https-only"
+        ]
+      },
+      "PriceClass": {
+        "Description": "The price class that corresponds with the maximum price that you want to pay for CloudFront service. If you specify PriceClass_All, CloudFront responds to requests for your objects from all CloudFront edge locations.",
+        "Type": "String",
+        "Default": "PriceClass_All",
+        "AllowedValues": [
+          "PriceClass_All",
+          "PriceClass_100",
+          "PriceClass_200"
+        ]
+      },
+      "SslSupportMethod": {
+        "Description": "Specifies how CloudFront serves HTTPS requests.",
+        "Type": "String",
+        "Default": "sni-only",
+        "AllowedValues": [
+          "sni-only",
+          "vip"
+        ]
+      },
+      "MinimumProtocolVersion": {
+        "Description": "The minimum version of the SSL protocol that you want CloudFront to use for HTTPS connections.",
+        "Type": "String",
+        "Default": "TLSv1",
+        "AllowedValues": [
+          "TLSv1",
+          "TLSv1.2_2018",
+          "TLSv1.1_2016",
+          "TLSv1_2016",
+          "SSLv3"
+        ]
+      },
+      "OriginKeepaliveTimeout": {
+        "Description": "You can create a custom keep-alive timeout. All timeout units are in seconds. The default keep-alive timeout is 5 seconds, but you can configure custom timeout lengths. The minimum timeout length is 1 second; the maximum is 60 seconds.",
+        "Type": "String",
+        "Default": "60"
+      },
+      "OriginReadTimeout": {
+        "Description": "You can create a custom origin read timeout. All timeout units are in seconds. The default origin read timeout is 30 seconds, but you can configure custom timeout lengths. The minimum timeout length is 4 seconds; the maximum is 60 seconds.",
+        "Type": "String",
+        "Default": "30"
+      },
+      "ALBScheme": {
+        "Description": "Origin ALB scheme.",
+        "Type": "String",
+        "Default": "internet-facing",
+        "AllowedValues": [
+          "internet-facing",
+          "internal"
+        ]
+      },
+      "ALBTargetGroupHealthCheckIntervalSeconds": {
+        "Description": "Origin ALB Target Group Health Check Interval in Seconds.",
+        "Type": "String",
+        "Default": "30"
+      },
+      "ALBTargetGroupHealthCheckTimeoutSeconds": {
+        "Description": "Origin ALB Target Group Health Check Timeout in Seconds.",
+        "Type": "String",
+        "Default": "5"
+      },
+      "ALBTargetGroupHealthyThresholdCount": {
+        "Description": "Origin ALB Target Group Healthy Threshold Count.",
+        "Type": "String",
+        "Default": "5"
+      },
+      "ALBTargetGroupUnhealthyThresholdCount": {
+        "Description": "Origin ALB Target Group Unhealthy Threshold Count.",
+        "Type": "String",
+        "Default": "2"
+      },
+      "ALBAttributeIdleTimeOut": {
+        "Description": "Origin ALB Target Group Unhealthy Threshold Count.",
+        "Type": "String",
+        "Default": "60"
+      },
+      "ALBAttributeDeletionProtection": {
+        "Description": "Origin ALB Target Group Unhealthy Threshold Count.",
+        "Type": "String",
+        "Default": "false",
+        "AllowedValues": [
+          true,
+          false
+        ]
+      },
+      "ALBAttributeRoutingHttp2": {
+        "Description": "Origin ALB Target Group Unhealthy Threshold Count.",
+        "Type": "String",
+        "Default": "true",
+        "AllowedValues": [
+          true,
+          false
+        ]
+      },
+      "ALBTargetGroupAttributeDeregistration": {
+        "Description": "Origin ALB Target Group Deregistration Timeout.",
+        "Type": "String",
+        "Default": "300"
+      },
+      "HealthCheckProtocol": {
+        "Description": "Origin ALB Target Group Health Check Protocol.",
+        "Type": "String",
+        "Default": "HTTP",
+        "AllowedValues": [
+          "HTTPS",
+          "HTTP"
+        ]
+      },
+      "HealthCheckPath": {
+        "Description": "Origin ALB Target Group Health Check Path.",
+        "Type": "String",
+        "Default": "/health.html"
+      },
+      "LambdaFunctionVersion": {
+        "Description": "AWS Lambda@Edge function version.",
+        "Type": "String",
+        "Default": "1"
+      },
+      "LoggingBucketVersioning": {
+        "Description": "The versioning state of an Amazon S3 bucket. If you enable versioning, you must suspend versioning to disable it.",
+        "Type": "String",
+        "Default": "Suspended",
+        "AllowedValues": [
+          "Enabled",
+          "Suspended"
+        ]
+      }
+    },
+    "Resources": [
+      {
+        "Type": "AWS::IAM::Role",
+        "Description": "Administrator Access IAM Role",
+        "Properties": {
+          "RoleName": {
+            "Fn::Sub": "AdministratorAccess-${AppName}"
+          },
+          "ManagedPolicyArns": [
+            {
+              "Fn::Sub": "arn:aws:iam::aws:policy/AdministratorAccess"
+            }
+          ],
+          "AssumeRolePolicyDocument": {
+            "Version": "2012-10-17",
+            "Statement": [
+              {
+                "Effect": "Allow",
+                "Principal": {
+                  "Service": [
+                    "ec2.amazonaws.com"
+                  ]
+                },
+                "Action": [
+                  "sts:AssumeRole"
+                ]
+              }
+            ]
+          },
+          "Path": "/"
+        },
+        "Name": "AdministratorAccessIAMRole"
+      },
+      {
+        "Type": "AWS::IAM::Role",
+        "Description": "Lambda Edge IAM Role",
+        "Properties": {
+          "RoleName": {
+            "Fn::Sub": "${AppName}-iam-lambda-edge-role-${Environment}"
+          },
+          "AssumeRolePolicyDocument": {
+            "Version": "2012-10-17",
+            "Statement": [
+              {
+                "Sid": "AllowLambdaServiceToAssumeRole",
+                "Effect": "Allow",
+                "Principal": {
+                  "Service": [
+                    "edgelambda.amazonaws.com",
+                    "lambda.amazonaws.com"
+                  ]
+                },
+                "Action": [
+                  "sts:AssumeRole"
+                ]
+              }
+            ]
+          },
+          "ManagedPolicyArns": [
+            "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole",
+            "arn:aws:iam::aws:policy/AWSXrayWriteOnlyAccess"
+          ],
+          "Path": "/",
+          "Policies": [
+            {
+              "PolicyName": "PublishNewLambdaEdgeVersion",
+              "PolicyDocument": {
+                "Version": "2012-10-17",
+                "Statement": [
+                  {
+                    "Effect": "Allow",
+                    "Action": [
+                      "lambda:PublishVersion"
+                    ],
+                    "Resource": "*"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        "Name": "LambdaEdgeIAMRole"
+      },
+      {
+        "Type": "AWS::KMS::Key",
+        "DependsOn": "AdministratorAccessIAMRole",
+        "Properties": {
+          "Description": "Logging S3 Bucket KMS Key",
+          "Enabled": true,
+          "EnableKeyRotation": true,
+          "KeyPolicy": {
+            "Version": "2012-10-17",
+            "Statement": [
+              {
+                "Sid": "Enable IAM policies to allow access to the Key",
+                "Effect": "Allow",
+                "Principal": {
+                  "AWS": {
+                    "Fn::Sub": "arn:aws:iam::${AWS::AccountId}:root"
+                  }
+                },
+                "Action": [
+                  "kms:*"
+                ],
+                "Resource": "*"
+              },
+              {
+                "Sid": "Allow administration of the key",
+                "Effect": "Allow",
+                "Principal": {
+                  "AWS": [
+                    {
+                      "Fn::Sub": "arn:aws:iam::${AWS::AccountId}:role/AdministratorAccess-${AppName}"
+                    }
+                  ]
+                },
+                "Action": [
+                  "kms:Put*",
+                  "kms:ScheduleKeyDeletion",
+                  "kms:CancelKeyDeletion",
+                  "kms:Describe*",
+                  "kms:Revoke*",
+                  "kms:Disable*",
+                  "kms:Enable*",
+                  "kms:Delete*",
+                  "kms:List*",
+                  "kms:Update*",
+                  "kms:Create*"
+                ],
+                "Resource": "*"
+              }
+            ]
+          }
+        },
+        "Name": "LoggingBucketKMSKey"
+      },
+      {
+        "Type": "AWS::KMS::Alias",
+        "Properties": {
+          "AliasName": {
+            "Fn::Sub": "alias/${AppName}/${Environment}/s3-logging-kms"
+          },
+          "TargetKeyId": {
+            "Fn::Sub": "${LoggingBucketKMSKey}"
+          }
+        },
+        "Name": "LoggingBucketKMSKeyAlias"
+      },
+      {
+        "Type": "AWS::S3::Bucket",
+        "DeletionPolicy": "Retain",
+        "DependsOn": "LoggingBucketKMSKey",
+        "Properties": {
+          "BucketName": {
+            "Fn::Sub": "${AppName}-logging-${Environment}-${AWS::AccountId}-${AWS::Region}"
+          },
+          "BucketEncryption": {
+            "ServerSideEncryptionConfiguration": [
+              {
+                "ServerSideEncryptionByDefault": {
+                  "KMSMasterKeyID": {
+                    "Fn::GetAtt": [
+                      "LoggingBucketKMSKey",
+                      "Arn"
+                    ]
+                  },
+                  "SSEAlgorithm": "aws:kms"
+                }
+              }
+            ]
+          },
+          "VersioningConfiguration": {
+            "Status": "Suspended"
+          }
+        },
+        "Name": "LoggingBucket"
+      },
+      {
+        "Type": "AWS::S3::BucketPolicy",
+        "Properties": {
+          "Bucket": {
+            "Ref": "LoggingBucket"
+          },
+          "PolicyDocument": {
+            "Version": "2012-10-17",
+            "Statement": [
+              {
+                "Sid": "LoggingBucketPermissions",
+                "Effect": "Allow",
+                "Principal": {
+                  "AWS": {
+                    "Fn::Sub": "arn:aws:iam::${AWS::AccountId}:root"
+                  }
+                },
+                "Action": "s3:PutObject",
+                "Resource": [
+                  {
+                    "Fn::Sub": "arn:aws:s3:::${LoggingBucket}/AWSLogs/${AWS::AccountId}/*"
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        "Name": "LoggingBucketPolicy"
+      },
+      {
+        "Type": "AWS::EC2::Instance",
+        "Properties": {
+          "ImageId": "ami-xxx",
+          "AvailabilityZone": {
+            "Fn::Select": [
+              "0",
+              {
+                "Fn::GetAZs": {
+                  "Ref": "AWS::Region"
+                }
+              }
+            ]
+          },
+          "InstanceType": "t2.small",
+          "SubnetId": {
+            "Fn::ImportValue": {
+              "Fn::Sub": "${AppName}-vpc-${Environment}-PublicSubnet1ID"
+            }
+          },
+          "BlockDeviceMappings": [
+            {
+              "DeviceName": "/dev/sda1",
+              "Ebs": {
+                "VolumeSize": "100",
+                "VolumeType": "gp2"
+              }
+            }
+          ],
+          "SecurityGroupIds": [
+            {
+              "Ref": "EC2InstanceSG"
+            },
+            {
+              "Ref": "ALBExternalAccessSG"
+            }
+          ],
+          "KeyName": "keypair",
+          "Tags": [
+            {
+              "Key": "Name",
+              "Value": {
+                "Fn::Sub": "${AppName}-${Environment}-ec2-instance"
+              }
+            },
+            {
+              "Key": "Environment",
+              "Value": "dev"
+            }
+          ]
+        },
+        "Name": "EC2Instance"
+      },
+      {
+        "Type": "AWS::EC2::SecurityGroup",
+        "Properties": {
+          "GroupDescription": "EC2 Instance Security Group",
+          "VpcId": {
+            "Fn::ImportValue": {
+              "Fn::Sub": "${AppName}-vpc-${Environment}-VPC-ID"
+            }
+          },
+          "Tags": [
+            {
+              "Key": "Name",
+              "Value": {
+                "Fn::Sub": "${AppName}-${Environment}-ec2-instance-SG"
+              }
+            },
+            {
+              "Key": "Environment",
+              "Value": "dev"
+            }
+          ]
+        },
+        "Name": "EC2InstanceSG"
+      },
+      {
+        "Type": "AWS::EC2::SecurityGroupIngress",
+        "Properties": {
+          "GroupId": {
+            "Ref": "EC2InstanceSG"
+          },
+          "ToPort": "8080",
+          "IpProtocol": "tcp",
+          "FromPort": "8080",
+          "SourceSecurityGroupId": {
+            "Ref": "ALBExternalAccessSG"
+          }
+        },
+        "Name": "Tcp8080In"
+      },
+      {
+        "Type": "AWS::ElasticLoadBalancingV2::LoadBalancer",
+        "Properties": {
+          "Name": {
+            "Fn::Sub": "${AppName}-${Environment}-alb"
+          },
+          "Scheme": "internet-facing",
+          "Type": "application",
+          "LoadBalancerAttributes": [
+            {
+              "Key": "idle_timeout.timeout_seconds",
+              "Value": "60"
+            },
+            {
+              "Key": "deletion_protection.enabled",
+              "Value": "false"
+            },
+            {
+              "Key": "routing.http2.enabled",
+              "Value": "true"
+            }
+          ],
+          "Subnets": [
+            {
+              "Fn::ImportValue": {
+                "Fn::Sub": "${AppName}-vpc-${Environment}-PublicSubnet1ID"
+              }
+            },
+            {
+              "Fn::ImportValue": {
+                "Fn::Sub": "${AppName}-vpc-${Environment}-PublicSubnet2ID"
+              }
+            }
+          ],
+          "SecurityGroups": [
+            {
+              "Ref": "ALBExternalAccessSG"
+            }
+          ],
+          "Tags": [
+            {
+              "Key": "Name",
+              "Value": {
+                "Fn::Sub": "${AppName}-${Environment}-alb"
+              }
+            },
+            {
+              "Key": "Environment",
+              "Value": "dev"
+            }
+          ]
+        },
+        "Name": "OriginALB"
+      },
+      {
+        "Type": "AWS::ElasticLoadBalancingV2::TargetGroup",
+        "DependsOn": "OriginALB",
+        "Properties": {
+          "Name": {
+            "Fn::Sub": "${AppName}-${Environment}-alb-tg"
+          },
+          "HealthCheckProtocol": "HTTP",
+          "HealthCheckPath": "/health.html",
+          "HealthCheckPort": {
+            "Fn::Sub": "${OriginALBTGPort}"
+          },
+          "HealthCheckIntervalSeconds": "30",
+          "HealthCheckTimeoutSeconds": "5",
+          "HealthyThresholdCount": "5",
+          "UnhealthyThresholdCount": "2",
+          "TargetGroupAttributes": [
+            {
+              "Key": "deregistration_delay.timeout_seconds",
+              "Value": "300"
+            }
+          ],
+          "TargetType": "instance",
+          "Targets": [
+            {
+              "Id": {
+                "Ref": "EC2Instance"
+              },
+              "Port": {
+                "Fn::Sub": "${OriginALBTGPort}"
+              }
+            }
+          ],
+          "Port": {
+            "Fn::Sub": "${OriginALBTGPort}"
+          },
+          "Protocol": "HTTP",
+          "VpcId": {
+            "Fn::ImportValue": {
+              "Fn::Sub": "${AppName}-vpc-${Environment}-VPC-ID"
+            }
+          },
+          "Tags": [
+            {
+              "Key": "Name",
+              "Value": {
+                "Fn::Sub": "${AppName}-${Environment}-alb-tg"
+              }
+            },
+            {
+              "Key": "Environment",
+              "Value": "dev"
+            }
+          ]
+        },
+        "Name": "OriginALBTG"
+      },
+      {
+        "Type": "AWS::ElasticLoadBalancingV2::Listener",
+        "DependsOn": "OriginALBTG",
+        "Properties": {
+          "DefaultActions": [
+            {
+              "TargetGroupArn": {
+                "Ref": "OriginALBTG"
+              },
+              "Type": "forward"
+            }
+          ],
+          "LoadBalancerArn": {
+            "Ref": "OriginALB"
+          },
+          "Port": "443",
+          "Protocol": "HTTPS",
+          "Certificates": [
+            {
+              "CertificateArn": {
+                "Fn::Sub": "arn:aws:acm:${AWS::Region}:${AWS::AccountId}:certificate/${ACMCertificateIdentifier}"
+              }
+            }
+          ],
+          "SslPolicy": "ELBSecurityPolicy-FS-2018-06"
+        },
+        "Name": "OriginALBHttpsListener"
+      },
+      {
+        "Type": "AWS::ElasticLoadBalancingV2::ListenerRule",
+        "DependsOn": "OriginALBHttpsListener",
+        "Properties": {
+          "Actions": [
+            {
+              "Type": "forward",
+              "TargetGroupArn": {
+                "Ref": "OriginALBTG"
+              }
+            }
+          ],
+          "Conditions": [
+            {
+              "Field": "path-pattern",
+              "Values": [
+                "/*"
+              ]
+            }
+          ],
+          "ListenerArn": {
+            "Ref": "OriginALBHttpsListener"
+          },
+          "Priority": 1
+        },
+        "Name": "OriginALBHttpsListenerRule"
+      },
+      {
+        "Type": "AWS::EC2::SecurityGroup",
+        "Properties": {
+          "GroupDescription": "Allow external access to ALB",
+          "VpcId": {
+            "Fn::ImportValue": {
+              "Fn::Sub": "${AppName}-vpc-${Environment}-VPC-ID"
+            }
+          },
+          "Tags": [
+            {
+              "Key": "Name",
+              "Value": {
+                "Fn::Sub": "${AppName}-${Environment}-alb-external-access-ingrees-SG"
+              }
+            },
+            {
+              "Key": "Environment",
+              "Value": "dev"
+            }
+          ]
+        },
+        "Name": "ALBExternalAccessSG"
+      },
+      {
+        "Type": "AWS::EC2::SecurityGroupIngress",
+        "Properties": {
+          "GroupId": {
+            "Ref": "ALBExternalAccessSG"
+          },
+          "ToPort": "443",
+          "IpProtocol": "tcp",
+          "FromPort": "443",
+          "CidrIp": "0.0.0.0/0"
+        },
+        "Name": "HTTPSTcpIn"
+      },
+      {
+        "Type": "AWS::EC2::SecurityGroupIngress",
+        "Properties": {
+          "GroupId": {
+            "Ref": "ALBExternalAccessSG"
+          },
+          "ToPort": "80",
+          "IpProtocol": "tcp",
+          "FromPort": "80",
+          "CidrIp": "0.0.0.0/0"
+        },
+        "Name": "HTTPTcpIn"
+      },
+      {
+        "Type": "AWS::EC2::SecurityGroupEgress",
+        "Properties": {
+          "GroupId": {
+            "Ref": "ALBExternalAccessSG"
+          },
+          "ToPort": "8080",
+          "IpProtocol": "tcp",
+          "FromPort": "8080",
+          "DestinationSecurityGroupId": {
+            "Ref": "EC2InstanceSG"
+          }
+        },
+        "Name": "Tcp8080Out"
+      },
+      {
+        "Type": "AWS::CloudFront::Distribution",
+        "DependsOn": [
+          "LoggingBucket",
+          "LambdaEdgeFunction"
+        ],
+        "Properties": {
+          "DistributionConfig": {
+            "Comment": "Cloudfront Distribution pointing ALB Origin",
+            "Origins": [
+              {
+                "DomainName": {
+                  "Fn::GetAtt": [
+                    "OriginALB",
+                    "DNSName"
+                  ]
+                },
+                "Id": {
+                  "Ref": "OriginALB"
+                },
+                "CustomOriginConfig": {
+                  "HTTPPort": "80",
+                  "HTTPSPort": "443",
+                  "OriginProtocolPolicy": "http-only",
+                  "OriginKeepaliveTimeout": "60",
+                  "OriginReadTimeout": "30",
+                  "OriginSSLProtocols": [
+                    "TLSv1",
+                    "TLSv1.1",
+                    "TLSv1.2",
+                    "SSLv3"
+                  ]
+                }
+              }
+            ],
+            "Enabled": true,
+            "HttpVersion": "http2",
+            "Aliases": [
+              "name.domain.com"
+            ],
+            "DefaultCacheBehavior": {
+              "AllowedMethods": [
+                "GET",
+                "HEAD",
+                "DELETE",
+                "OPTIONS",
+                "PATCH",
+                "POST",
+                "PUT"
+              ],
+              "Compress": "false",
+              "DefaultTTL": "0",
+              "MaxTTL": "0",
+              "MinTTL": "0",
+              "SmoothStreaming": "false",
+              "TargetOriginId": {
+                "Ref": "OriginALB"
+              },
+              "ForwardedValues": {
+                "QueryString": "true",
+                "Cookies": {
+                  "Forward": "all"
+                }
+              },
+              "ViewerProtocolPolicy": "redirect-to-https",
+              "LambdaFunctionAssociations": [
+                {
+                  "EventType": "viewer-response",
+                  "LambdaFunctionARN": {
+                    "Ref": "LambdaEdgeVersion"
+                  }
+                }
+              ]
+            },
+            "PriceClass": "PriceClass_All",
+            "ViewerCertificate": {
+              "ACMCertificateIdentifier": {
+                "Fn::Sub": "arn:aws:acm:${AWS::Region}:${AWS::AccountId}:certificate/${ACMCertificateIdentifier}"
+              },
+              "SslSupportMethod": "sni-only",
+              "MinimumProtocolVersion": "TLSv1"
+            },
+            "IPV6Enabled": "true",
+            "Logging": {
+              "Bucket": {
+                "Fn::Sub": "${LoggingBucket}.s3.amazonaws.com"
+              }
+            }
+          }
+        },
+        "Name": "CloudFrontDistribution"
+      },
+      {
+        "Type": "AWS::Lambda::Function",
+        "Properties": {
+          "Description": {
+            "Fn::Sub": "A custom Lambda@Edge function for serving custom headers from CloudFront Distribution"
+          },
+          "FunctionName": {
+            "Fn::Sub": "${AppName}-lambda-edge-${Environment}"
+          },
+          "Handler": "index.handler",
+          "Role": {
+            "Fn::GetAtt": [
+              "LambdaEdgeIAMRole",
+              "Arn"
+            ]
+          },
+          "MemorySize": 128,
+          "Timeout": 5,
+          "Code": {
+            "ZipFile": {
+              "Fn::Sub": "'use strict';\n\n exports.handler = (event, context, callback) => {\n    console.log('Adding additional headers to CloudFront response.');\n\n    const response = event.Records[0].cf.response;\n    response.headers['strict-transport-security'] = [{\n    key: 'Strict-Transport-Security',\n    value: 'max-age=86400; includeSubdomains; preload',\n    }];\n    response.headers['x-content-type-options'] = [{\n    key: 'X-Content-Type-Options',\n    value: 'nosniff',\n    }];\n    response.headers['x-frame-options'] = [{\n        key:   'X-Frame-Options',\n        value: \"DENY\"\n    }];\n    response.headers['content-security-policy'] = [{\n        key:   'Content-Security-Policy',\n        value: \"default-src 'none'; img-src 'self'; script-src 'self'; style-src 'self'; object-src 'none'\"\n    }];\n    response.headers['x-xss-protection'] = [{\n        key:   'X-XSS-Protection',\n        value: \"1; mode=block\"\n    }];\n    response.headers['referrer-policy'] = [{\n        key:   'Referrer-Policy',\n        value: \"same-origin\"\n    }];\n    callback(null, response);\n  };\n"
+            }
+          },
+          "Runtime": "nodejs10.x"
+        },
+        "Name": "LambdaEdgeFunction"
+      },
+      {
+        "Type": "Custom::LambdaVersion",
+        "Properties": {
+          "ServiceToken": {
+            "Fn::GetAtt": [
+              "LambdaEdgeVersionFunction",
+              "Arn"
+            ]
+          },
+          "FunctionName": {
+            "Ref": "LambdaEdgeFunction"
+          },
+          "LambdaCodeVersion": "1"
+        },
+        "Name": "LambdaEdgeVersion"
+      },
+      {
+        "Type": "AWS::Lambda::Function",
+        "Properties": {
+          "Description": {
+            "Fn::Sub": "A custom Lambda@Edge Version function"
+          },
+          "FunctionName": {
+            "Fn::Sub": "${AppName}-lambda-edge-version-${Environment}"
+          },
+          "Handler": "index.handler",
+          "Role": {
+            "Fn::GetAtt": [
+              "LambdaEdgeIAMRole",
+              "Arn"
+            ]
+          },
+          "MemorySize": 128,
+          "Timeout": 30,
+          "Code": {
+            "ZipFile": {
+              "Fn::Sub": "var AWS = require('aws-sdk');\nvar response = require('cfn-response');\nexports.handler = (event, context) => {\n  console.log(\"Request received:\\n\", JSON.stringify(event));\n  if (event.RequestType == 'Delete') {\n    return response.send(event, context, response.SUCCESS);\n  }\n  var lambda = new AWS.Lambda();\n  lambda.publishVersion({FunctionName: event.ResourceProperties.FunctionName}).promise().then((data) => {\n    return response.send(event, context, response.SUCCESS, {Version: data.Version}, data.FunctionArn);\n  }).catch((e) => {\n    return response.send(event, context, response.FAILED, e);\n  });\n};\n"
+            }
+          },
+          "Runtime": "nodejs10.x"
+        },
+        "Name": "LambdaEdgeVersionFunction"
+      }
+    ],
+    "Outputs": {
+      "AdministratorAccessIAMRole": {
+        "Description": "Administrator Access IAM Role",
+        "Value": {
+          "Ref": "AdministratorAccessIAMRole"
+        },
+        "Export": {
+          "Name": {
+            "Fn::Sub": "${AppName}-iam-${Environment}-administrator-access-role"
+          }
+        }
+      },
+      "LoggingBucket": {
+        "Description": "Name of S3 Logging bucket",
+        "Value": {
+          "Ref": "LoggingBucket"
+        },
+        "Export": {
+          "Name": {
+            "Fn::Sub": "${AppName}-logging-${Environment}-${AWS::AccountId}-${AWS::Region}"
+          }
+        }
+      },
+      "LoggingBucketKMSKey": {
+        "Description": "Logging Bucket KMS Key",
+        "Value": {
+          "Ref": "LoggingBucketKMSKey"
+        },
+        "Export": {
+          "Name": {
+            "Fn::Sub": "${AppName}-${Environment}-s3-logging-kms"
+          }
+        }
+      },
+      "OriginALB": {
+        "Description": "The URL of the Origin ALB",
+        "Value": {
+          "Fn::GetAtt": [
+            "OriginALB",
+            "DNSName"
+          ]
+        },
+        "Export": {
+          "Name": {
+            "Fn::Sub": "${AppName}-${Environment}-origin-alb-dns"
+          }
+        }
+      },
+      "ALBExternalAccessSGID": {
+        "Description": "ALB External Access Security Group ID",
+        "Value": {
+          "Ref": "ALBExternalAccessSG"
+        },
+        "Export": {
+          "Name": {
+            "Fn::Sub": "${AppName}-${Environment}-alb-external-access-ingrees-sg"
+          }
+        }
+      },
+      "EC2InstanceSGID": {
+        "Description": "EC2 Instance Security Group ID",
+        "Value": {
+          "Ref": "EC2InstanceSG"
+        },
+        "Export": {
+          "Name": {
+            "Fn::Sub": "${AppName}-${Environment}-ec2-instance-sg"
+          }
+        }
+      },
+      "EC2InstanceDNS": {
+        "Description": "EC2 Instance DNS Name",
+        "Value": {
+          "Fn::GetAtt": [
+            "EC2Instance",
+            "PrivateDnsName"
+          ]
+        },
+        "Export": {
+          "Name": {
+            "Fn::Sub": "${AppName}-${Environment}-ec2-instance-dns"
+          }
+        }
+      },
+      "EC2InstanceIP": {
+        "Description": "EC2 Instance IP Address",
+        "Value": {
+          "Fn::GetAtt": [
+            "EC2Instance",
+            "PrivateIp"
+          ]
+        },
+        "Export": {
+          "Name": {
+            "Fn::Sub": "${AppName}-${Environment}-ec2-instance-ip-address"
+          }
+        }
+      },
+      "EC2InstanceID": {
+        "Description": "EC2 Instance Instance ID",
+        "Value": {
+          "Ref": "EC2Instance"
+        },
+        "Export": {
+          "Name": {
+            "Fn::Sub": "${AppName}-${Environment}-ec2-instance-id"
+          }
+        }
+      },
+      "CloudFrontEndpoint": {
+        "Description": "Endpoint for Cloudfront Distribution",
+        "Value": {
+          "Ref": "CloudFrontDistribution"
+        },
+        "Export": {
+          "Name": {
+            "Fn::Sub": "${AppName}-${Environment}-cloudfront-distribution"
+          }
+        }
+      },
+      "AlternateDomainNames": {
+        "Description": "Alternate Domain Names (CNAME)",
+        "Value": {
+          "Ref": "AlternateDomainNames"
+        }
+      },
+      "LambdaEdgeFunction": {
+        "Description": "The Name of the Lambda@Edge Function",
+        "Value": {
+          "Fn::Sub": "LambdaEdgeFunction"
+        },
+        "Export": {
+          "Name": {
+            "Fn::Sub": "${AppName}-${Environment}-lambda-edge-function-3"
+          }
+        }
+      },
+      "LambdaEdgeFunctionARN": {
+        "Description": "The ARN of the Lambda@Edge Function",
+        "Value": {
+          "Fn::GetAtt": [
+            "LambdaEdgeFunction",
+            "Arn"
+          ]
+        },
+        "Export": {
+          "Name": {
+            "Fn::Sub": "${AppName}-${Environment}-lambda-edge-function-arn-3"
+          }
+        }
+      },
+      "LambdaEdgeVersion": {
+        "Description": "Lambda@Edge Version Function",
+        "Value": {
+          "Fn::GetAtt": [
+            "LambdaEdgeVersion",
+            "Version"
+          ]
+        }
+      }
+    }
+  }
+}

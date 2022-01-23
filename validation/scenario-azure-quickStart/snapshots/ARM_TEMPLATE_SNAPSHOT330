@@ -1,0 +1,541 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAzureQuickStart",
+  "paths": [
+    "/application-workloads/nextflow/nextflow-genomics-cluster-ubuntu/azuredeploy.json",
+    "/application-workloads/nextflow/nextflow-genomics-cluster-ubuntu/azuredeploy.parameters.json"
+  ],
+  "timestamp": 1642962892527,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/application-workloads/nextflow/nextflow-genomics-cluster-ubuntu/azuredeploy.json",
+      "/application-workloads/nextflow/nextflow-genomics-cluster-ubuntu/azuredeploy.parameters.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT330",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "microsoft.network/publicipaddresses",
+      "microsoft.network/virtualnetworks",
+      "microsoft.network/networkinterfaces",
+      "microsoft.compute/virtualmachinescalesets",
+      "microsoft.compute/virtualmachines/extensions",
+      "microsoft.compute/virtualmachines",
+      "microsoft.network/networksecuritygroups",
+      "microsoft.storage/storageaccounts"
+    ]
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT330",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "location": {
+        "type": "string",
+        "defaultValue": "[resourceGroup().location]",
+        "metadata": {
+          "description": "Location for all resources"
+        }
+      },
+      "dnsNameForJumpBox": {
+        "type": "string",
+        "defaultValue": "[concat('jumpbox-', uniqueString(resourceGroup().id))]",
+        "metadata": {
+          "description": "Unique DNS Name for the Public IP used to access the Docker Virtual Machine (master node)."
+        },
+        "value": "GEN-UNIQUE"
+      },
+      "vmImageReference": {
+        "type": "object",
+        "defaultValue": {
+          "publisher": "Canonical",
+          "offer": "UbuntuServer",
+          "sku": "18.04-LTS",
+          "version": "latest"
+        },
+        "metadata": {
+          "description": "The image to use for VMs created. This can be marketplace or custom image",
+          "link": "https://docs.microsoft.com/en-us/nodejs/api/azure-arm-compute/imagereference?view=azure-node-2.2.0"
+        }
+      },
+      "vmNodeSku": {
+        "type": "string",
+        "defaultValue": "Standard_F8s_v2",
+        "metadata": {
+          "description": "Size of VMs in the VM Scale Set."
+        }
+      },
+      "vmMasterSku": {
+        "type": "string",
+        "defaultValue": "Standard_F16s_v2",
+        "metadata": {
+          "description": "Size of the master node."
+        }
+      },
+      "vmMasterDiskType": {
+        "type": "string",
+        "allowedValues": [
+          "Standard_LRS",
+          "StandardSSD_LRS",
+          "Premium_LRS"
+        ],
+        "defaultValue": "Premium_LRS",
+        "metadata": {
+          "description": "Choose between a standard disk for and SSD disk for the master node's NFS fileshare"
+        }
+      },
+      "vmMasterDiskSize": {
+        "type": "int",
+        "allowedValues": [
+          32,
+          64,
+          128,
+          256,
+          512,
+          1000,
+          2000,
+          4000,
+          10000
+        ],
+        "defaultValue": 256,
+        "metadata": {
+          "description": "The SSD Size to be used for the NFS file share. For pricing details see https://azure.microsoft.com/en-us/pricing/details/managed-disks/"
+        }
+      },
+      "vmAdditionalInstallScriptUrl": {
+        "type": "string",
+        "defaultValue": "",
+        "metadata": {
+          "description": "An additional installs script (bash run as root) to be run after nodes/master are configured. Can be used to mount additional storage or do additional setup"
+        }
+      },
+      "vmAdditionalInstallScriptArgument": {
+        "type": "string",
+        "defaultValue": "",
+        "metadata": {
+          "description": "An argument to be passed to the additional install script"
+        }
+      },
+      "nextflowInstallUrl": {
+        "type": "string",
+        "defaultValue": "https://get.nextflow.io",
+        "metadata": {
+          "description": "The install URL for nextflow, this can be used to pin nextflow versions"
+        }
+      },
+      "instanceCount": {
+        "type": "int",
+        "metadata": {
+          "description": "Number of cluster VM instances (100 or less)."
+        },
+        "defaultValue": 2,
+        "minValue": 1,
+        "maxValue": 100
+      },
+      "adminUsername": {
+        "type": "string",
+        "metadata": {
+          "description": "Admin username on all VMs."
+        },
+        "value": "GEN-UNIQUE"
+      },
+      "authenticationType": {
+        "type": "string",
+        "defaultValue": "password",
+        "allowedValues": [
+          "sshPublicKey",
+          "password"
+        ],
+        "metadata": {
+          "description": "Type of authentication to use on the Virtual Machine. SSH key is recommended."
+        }
+      },
+      "adminPasswordOrKey": {
+        "type": "securestring",
+        "metadata": {
+          "description": "SSH Key or password for the Virtual Machine. SSH key is recommended."
+        },
+        "value": "GEN-PASSWORD"
+      },
+      "vnetName": {
+        "type": "string",
+        "metadata": {
+          "description": "Name of the virtual network to deploy the scale set into."
+        },
+        "defaultValue": "nfvnet"
+      },
+      "subnetName": {
+        "type": "string",
+        "metadata": {
+          "description": "Name of the subnet to deploy the scale set into."
+        },
+        "defaultValue": "nfsubnet"
+      },
+      "shareName": {
+        "type": "string",
+        "metadata": {
+          "description": "Azure file share name."
+        },
+        "defaultValue": "sharedstorage"
+      },
+      "mountpointPath": {
+        "type": "string",
+        "defaultValue": "/datadisks/disk1",
+        "metadata": {
+          "description": "Path on VM to mount file shares. '/datadisks/disk1/' is a Premium Managed disk with high iops, this will suit most uses."
+        }
+      },
+      "nodeMaxCpus": {
+        "defaultValue": 2,
+        "type": "int",
+        "metadata": {
+          "description": "Sets the cluster.maxCpus setting on all cluster nodes"
+        }
+      },
+      "forceUpdateTag": {
+        "type": "string",
+        "defaultValue": "[newGuid()]",
+        "metadata": {
+          "description": "Determines whether to run the custom script extension on a subsequent deployment. Use the defaultValue."
+        }
+      },
+      "_artifactsLocation": {
+        "type": "string",
+        "metadata": {
+          "description": "*Advanced* This is best left as default unless you are an advanced user. The base URI where artifacts required by this template are located."
+        },
+        "defaultValue": "[deployment().properties.templateLink.uri]"
+      },
+      "_artifactsLocationSasToken": {
+        "type": "securestring",
+        "metadata": {
+          "description": "*Advanced* This should be left as default unless you are an advanced user. The sasToken required to access _artifactsLocation.  When the template is deployed using the accompanying scripts, a sasToken will be automatically generated."
+        },
+        "defaultValue": ""
+      },
+      "_diskInitScriptUri": {
+        "type": "string",
+        "metadata": {
+          "description": "*Advanced* This should be left as default unless you are an advanced user. The folder in the artifacts location were shared scripts are stored."
+        },
+        "defaultValue": "https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/shared_scripts/ubuntu/vm-disk-utils-0.1.sh"
+      },
+      "_artifactsNextflowFolder": {
+        "type": "string",
+        "metadata": {
+          "description": "*Advanced* This should be left as default unless you are an advanced user. The folder in the artifacts location were nextflow scripts are stored."
+        },
+        "defaultValue": "scripts"
+      }
+    },
+    "variables": {
+      "nextflowInitScript": "[uri(parameters('_artifactsLocation'), concat(parameters('_artifactsNextflowFolder'), '/init.sh', parameters('_artifactsLocationSasToken')))]",
+      "jumpboxNICName": "jumpboxNIC",
+      "addressPrefix": "10.0.0.0/16",
+      "subnetPrefix": "10.0.0.0/24",
+      "vmssName": "[concat('cluster', uniqueString(parameters('dnsNameForJumpBox')))]",
+      "storageAccountType": "Standard_LRS",
+      "storageAccountName": "[concat('nfstorage', uniqueString(resourceGroup().id))]",
+      "storageSuffix": "[environment().suffixes.storage]",
+      "publicIPAddressName": "jumpboxPublicIP",
+      "publicIPAddressType": "Dynamic",
+      "jumpboxVMName": "jumpboxVM",
+      "subnetRef": "Microsoft.Network/virtualNetworks/subnets/nfvnet/nfsubnet",
+      "linuxConfiguration": {
+        "disablePasswordAuthentication": true,
+        "ssh": {
+          "publicKeys": [
+            {
+              "path": "/home/GEN-UNIQUE/.ssh/authorized_keys",
+              "keyData": "GEN-PASSWORD"
+            }
+          ]
+        }
+      },
+      "networkSecurityGroupName": "default-NSG"
+    },
+    "resources": [
+      {
+        "type": "Microsoft.Storage/storageAccounts",
+        "name": "[variables('storageAccountName')]",
+        "apiVersion": "2019-06-01",
+        "location": "[resourceGroup().location]",
+        "kind": "Storage",
+        "sku": {
+          "name": "Standard_LRS"
+        }
+      },
+      {
+        "apiVersion": "2020-05-01",
+        "type": "Microsoft.Network/publicIPAddresses",
+        "name": "jumpboxPublicIP",
+        "location": "[resourceGroup().location]",
+        "properties": {
+          "publicIPAllocationMethod": "Dynamic",
+          "dnsSettings": {
+            "domainNameLabel": "GEN-UNIQUE"
+          }
+        }
+      },
+      {
+        "comments": "Default Network Security Group for template",
+        "type": "Microsoft.Network/networkSecurityGroups",
+        "apiVersion": "2020-05-01",
+        "name": "default-NSG",
+        "location": "[resourceGroup().location]",
+        "properties": {
+          "securityRules": [
+            {
+              "name": "default-allow-22",
+              "properties": {
+                "priority": 1000,
+                "access": "Allow",
+                "direction": "Inbound",
+                "destinationPortRange": "22",
+                "protocol": "Tcp",
+                "sourceAddressPrefix": "*",
+                "sourcePortRange": "*",
+                "destinationAddressPrefix": "*"
+              }
+            }
+          ]
+        }
+      },
+      {
+        "apiVersion": "2020-05-01",
+        "type": "Microsoft.Network/virtualNetworks",
+        "name": "nfvnet",
+        "location": "[resourceGroup().location]",
+        "dependsOn": [
+          "Microsoft.Network/networkSecurityGroups/default-NSG"
+        ],
+        "properties": {
+          "addressSpace": {
+            "addressPrefixes": [
+              "10.0.0.0/16"
+            ]
+          },
+          "subnets": [
+            {
+              "name": "nfsubnet",
+              "properties": {
+                "addressPrefix": "10.0.0.0/24",
+                "networkSecurityGroup": {
+                  "id": "Microsoft.Network/networkSecurityGroups/default-NSG"
+                }
+              }
+            }
+          ]
+        }
+      },
+      {
+        "apiVersion": "2020-05-01",
+        "type": "Microsoft.Network/networkInterfaces",
+        "name": "jumpboxNIC",
+        "location": "[resourceGroup().location]",
+        "dependsOn": [
+          "Microsoft.Network/publicIPAddresses/jumpboxPublicIP",
+          "Microsoft.Network/virtualNetworks/nfvnet"
+        ],
+        "properties": {
+          "ipConfigurations": [
+            {
+              "name": "ipconfig1",
+              "properties": {
+                "privateIPAllocationMethod": "Dynamic",
+                "publicIPAddress": {
+                  "id": "Microsoft.Network/publicIPAddresses/jumpboxPublicIP"
+                },
+                "subnet": {
+                  "id": "Microsoft.Network/virtualNetworks/subnets/nfvnet/nfsubnet"
+                }
+              }
+            }
+          ]
+        }
+      },
+      {
+        "apiVersion": "2019-12-01",
+        "type": "Microsoft.Compute/virtualMachines",
+        "name": "jumpboxVM",
+        "location": "[resourceGroup().location]",
+        "dependsOn": [
+          "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]",
+          "[resourceId('Microsoft.Network/networkInterfaces', variables('jumpboxNICName'))]"
+        ],
+        "properties": {
+          "hardwareProfile": {
+            "vmSize": "vmMasterSKU"
+          },
+          "osProfile": {
+            "computerName": "jumpboxVM",
+            "adminUsername": "GEN-UNIQUE",
+            "adminPassword": "GEN-PASSWORD",
+            "linuxConfiguration": "[if(equals(parameters('authenticationType'), 'password'), json('null'), variables('linuxConfiguration'))]"
+          },
+          "storageProfile": {
+            "imageReference": {
+              "publisher": "Canonical",
+              "offer": "UbuntuServer",
+              "sku": "18.04-LTS",
+              "version": "latest"
+            },
+            "osDisk": {
+              "createOption": "FromImage"
+            },
+            "dataDisks": [
+              {
+                "lun": 0,
+                "name": "jumpboxdatadisk",
+                "diskSizeGB": 256,
+                "caching": "None",
+                "createOption": "Empty",
+                "managedDisk": {
+                  "storageAccountType": "Premium_LRS"
+                }
+              }
+            ]
+          },
+          "networkProfile": {
+            "networkInterfaces": [
+              {
+                "id": "Microsoft.Network/networkInterfaces/jumpboxNIC"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "type": "Microsoft.Compute/virtualMachines/extensions",
+        "name": "jumpboxVM/nfinit",
+        "apiVersion": "2019-12-01",
+        "location": "[resourceGroup().location]",
+        "dependsOn": [
+          "Microsoft.Compute/virtualMachines/jumpboxVM"
+        ],
+        "properties": {
+          "publisher": "Microsoft.Azure.Extensions",
+          "type": "CustomScript",
+          "typeHandlerVersion": "2.0",
+          "autoUpgradeMinorVersion": true,
+          "forceUpdateTag": "[newGuid()]",
+          "settings": {
+            "fileUris": [
+              "[uri(parameters('_artifactsLocation'), concat(parameters('_artifactsNextflowFolder'), '/init.sh', parameters('_artifactsLocationSasToken')))]",
+              "https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/shared_scripts/ubuntu/vm-disk-utils-0.1.sh"
+            ]
+          },
+          "protectedSettings": {
+            "commandToExecute": "[format('bash init.sh {0} \"{1}\" {2} {3} {4} {5} {6} {7} {8} {9} {10}', variables('storageAccountName'), listKeys(resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName')), '2019-06-01').keys[0].value, parameters('shareName'), variables('storageSuffix'), parameters('mountpointPath'), 'false', parameters('adminUsername'), '0', parameters('nextflowInstallUrl'),  parameters('vmAdditionalInstallScriptUrl'), parameters('vmAdditionalInstallScriptArgument'))]"
+          }
+        }
+      },
+      {
+        "type": "Microsoft.Compute/virtualMachineScaleSets",
+        "name": "[variables('vmssName')]",
+        "location": "[resourceGroup().location]",
+        "apiVersion": "2019-12-01",
+        "sku": {
+          "name": "vmNodeSKU",
+          "capacity": 2
+        },
+        "dependsOn": [
+          "[resourceId('Microsoft.Network/virtualNetworks', parameters('vnetName'))]",
+          "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]"
+        ],
+        "properties": {
+          "overprovision": true,
+          "upgradePolicy": {
+            "mode": "Manual"
+          },
+          "virtualMachineProfile": {
+            "storageProfile": {
+              "osDisk": {
+                "createOption": "FromImage",
+                "caching": "ReadWrite"
+              },
+              "imageReference": {
+                "publisher": "Canonical",
+                "offer": "UbuntuServer",
+                "sku": "18.04-LTS",
+                "version": "latest"
+              }
+            },
+            "osProfile": {
+              "computerNamePrefix": "[variables('vmssName')]",
+              "adminUsername": "GEN-UNIQUE",
+              "adminPassword": "GEN-PASSWORD",
+              "linuxConfiguration": "[if(equals(parameters('authenticationType'), 'password'), json('null'), variables('linuxConfiguration'))]"
+            },
+            "networkProfile": {
+              "networkInterfaceConfigurations": [
+                {
+                  "name": "nic",
+                  "properties": {
+                    "primary": true,
+                    "ipConfigurations": [
+                      {
+                        "name": "ipconfig",
+                        "properties": {
+                          "subnet": {
+                            "id": "Microsoft.Network/virtualNetworks/subnets/nfvnet/nfsubnet"
+                          }
+                        }
+                      }
+                    ]
+                  }
+                }
+              ]
+            },
+            "extensionProfile": {
+              "extensions": [
+                {
+                  "name": "filesextension",
+                  "properties": {
+                    "publisher": "Microsoft.Azure.Extensions",
+                    "type": "CustomScript",
+                    "typeHandlerVersion": "2.0",
+                    "autoUpgradeMinorVersion": true,
+                    "forceUpdateTag": "[newGuid()]",
+                    "settings": {
+                      "fileUris": [
+                        "[uri(parameters('_artifactsLocation'), concat(parameters('_artifactsNextflowFolder'), '/init.sh', parameters('_artifactsLocationSasToken')))]",
+                        "https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/shared_scripts/ubuntu/vm-disk-utils-0.1.sh"
+                      ]
+                    },
+                    "protectedSettings": {
+                      "commandToExecute": "[format('bash init.sh {0} \"{1}\" {2} {3} {4} {5} {6} {7} {8} {9} {10}', variables('storageAccountName'), listKeys(resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName')), '2019-06-01').keys[0].value, parameters('shareName'), variables('storageSuffix'), parameters('mountpointPath'), 'true', parameters('adminUsername'), parameters('nodeMaxCpus'), parameters('nextflowInstallUrl'), parameters('vmAdditionalInstallScriptUrl'), parameters('vmAdditionalInstallScriptArgument'))]"
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        }
+      }
+    ],
+    "outputs": {
+      "JumpboxConnectionString": {
+        "type": "string",
+        "value": "[concat('ssh ', parameters('adminUsername'), '@', reference(variables('publicIPAddressName')).dnsSettings.fqdn)]"
+      },
+      "ExampleNextflowCommand": {
+        "type": "string",
+        "value": "[concat('nextflow run hello -process.executor ignite -cluster.join path:', parameters('mountpointPath'), '/cifs/cluster', ' -with-timeline runtimeline.html -with-trace -cluster.maxCpus 0')]"
+      },
+      "ExampleNextflowCommandWithDocker": {
+        "type": "string",
+        "value": "[concat('nextflow run nextflow-io/rnatoy -with-docker -process.executor ignite -cluster.join path:', parameters('mountpointPath'), '/cifs/cluster', ' -with-timeline runtimeline.html -with-trace -cluster.maxCpus 0')]"
+      }
+    },
+    "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+  }
+}

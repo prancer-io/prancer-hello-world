@@ -1,0 +1,426 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAzureQuickStart",
+  "paths": [
+    "/application-workloads/chef/datameer-trend-chef-riskanalysis/nested/trendp2p-chefserver.json",
+    "/application-workloads/chef/datameer-trend-chef-riskanalysis/nested/datameer-hdinsight.parameters.json"
+  ],
+  "timestamp": 1642962884588,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/application-workloads/chef/datameer-trend-chef-riskanalysis/nested/trendp2p-chefserver.json",
+      "/application-workloads/chef/datameer-trend-chef-riskanalysis/nested/datameer-hdinsight.parameters.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT66",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "microsoft.network/publicipaddresses",
+      "microsoft.network/networkinterfaces",
+      "microsoft.compute/virtualmachines/extensions",
+      "microsoft.compute/virtualmachines",
+      "microsoft.network/networksecuritygroups"
+    ]
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT66",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "publicIPAddressNameChefServer": {
+        "defaultValue": "",
+        "type": "string"
+      },
+      "publicIPDomainNameLabelChefServer": {
+        "defaultValue": "",
+        "type": "string"
+      },
+      "networkSecurityGroupNameChefServer": {
+        "defaultValue": "",
+        "type": "string"
+      },
+      "networkInterfaceNameChefServer": {
+        "defaultValue": "",
+        "type": "string"
+      },
+      "vmNameChefServer": {
+        "defaultValue": "",
+        "type": "string"
+      },
+      "vmAdminUsernameChefServer": {
+        "defaultValue": "",
+        "type": "string"
+      },
+      "vmAdminPasswordOrPublicKeyChefServer": {
+        "defaultValue": "",
+        "type": "SecureString"
+      },
+      "storageAccountName": {
+        "defaultValue": "",
+        "type": "string"
+      },
+      "vmStorageAccountContainerName": {
+        "defaultValue": "",
+        "type": "string"
+      },
+      "location": {
+        "type": "string",
+        "defaultValue": "[resourceGroup().location]",
+        "value": "westus"
+      },
+      "network-api-version": {
+        "type": "string",
+        "defaultValue": ""
+      },
+      "compute-api-version": {
+        "type": "string",
+        "defaultValue": ""
+      },
+      "tagvalues": {
+        "type": "object",
+        "defaultValue": {
+          "program": "PushToPilot",
+          "project": "DatameerTrendHDInsightChef"
+        }
+      },
+      "publisherChefServer": {
+        "type": "string",
+        "defaultValue": ""
+      },
+      "offerChoosedChefServer": {
+        "type": "object",
+        "defaultValue": ""
+      },
+      "subnet2Ref": {
+        "type": "string",
+        "defaultValue": ""
+      },
+      "publicIPAddressType": {
+        "type": "string",
+        "defaultValue": ""
+      },
+      "chefUserName": {
+        "type": "string",
+        "defaultValue": ""
+      },
+      "chefUserFirstName": {
+        "type": "string",
+        "defaultValue": ""
+      },
+      "chefUserLastName": {
+        "type": "string",
+        "defaultValue": ""
+      },
+      "chefUserEmail": {
+        "type": "string",
+        "defaultValue": ""
+      },
+      "chefUserPassword": {
+        "type": "securestring",
+        "defaultValue": ""
+      },
+      "chefOrgShortName": {
+        "type": "string",
+        "defaultValue": ""
+      },
+      "chefOrgFullName": {
+        "type": "string",
+        "defaultValue": ""
+      },
+      "chefServerScriptUrl": {
+        "type": "string",
+        "defaultValue": ""
+      },
+      "publicIPDomainNameLabelOrchServer": {
+        "type": "string",
+        "defaultValue": ""
+      },
+      "datameerTags": {
+        "type": "object"
+      },
+      "trendmicroTags": {
+        "type": "object"
+      },
+      "chefSoftwareTags": {
+        "type": "object"
+      },
+      "quickstartTags": {
+        "type": "object"
+      },
+      "authenticationType": {
+        "type": "string"
+      },
+      "clusterName": {
+        "value": "hdi-datameer-avyan-cluster"
+      },
+      "clusterType": {
+        "value": "hadoop"
+      },
+      "clusterLoginUserName": {
+        "value": "hdiadmin"
+      },
+      "clusterLoginPassword": {
+        "value": "GEN-PASSWORD"
+      },
+      "sshUserName": {
+        "value": "hdiuser"
+      },
+      "sshPassword": {
+        "value": "GEN-PASSWORD"
+      },
+      "storageAccount": {
+        "value": "stgmsignite2016"
+      },
+      "clusterVNetName": {
+        "value": "datameerP2PVnet"
+      },
+      "clusterVnetAddressSpace": {
+        "value": "10.7.0.0/16"
+      },
+      "clusterVNetSubnetAddressRange": {
+        "value": "10.7.4.0/24"
+      },
+      "clusterVNetSubnetName": {
+        "value": "hdi-datameer-avyan-clustersubnet"
+      }
+    },
+    "variables": {
+      "singleQuote": "'",
+      "publicIPDomainNameLabelOrchServer": "http://parameters('publicIPDomainNameLabelOrchServer').westus.cloudapp.azure.com:33001/key",
+      "linuxConfiguration": {
+        "disablePasswordAuthentication": true,
+        "ssh": {
+          "publicKeys": [
+            {
+              "path": "/home/ parameters('vmAdminUsernameChefServer')/.ssh/authorized_keys",
+              "keyData": ""
+            }
+          ]
+        }
+      }
+    },
+    "resources": [
+      {
+        "type": "Microsoft.Compute/virtualMachines",
+        "name": "",
+        "apiVersion": "2017-03-30",
+        "location": "westus",
+        "tags": {
+          "program": "PushToPilot",
+          "project": "DatameerTrendHDInsightChef",
+          "quickstartName": "quickstartTags",
+          "provider": "chefSoftwareTags"
+        },
+        "plan": {
+          "name": null,
+          "product": null,
+          "publisher": ""
+        },
+        "properties": {
+          "hardwareProfile": {
+            "vmSize": null
+          },
+          "storageProfile": {
+            "imageReference": {
+              "publisher": "",
+              "offer": null,
+              "sku": null,
+              "version": "latest"
+            },
+            "osDisk": {
+              "name": "parameters('vmNameChefServer')-osDisk",
+              "createOption": "FromImage",
+              "caching": "ReadWrite"
+            },
+            "dataDisks": []
+          },
+          "osProfile": {
+            "computerName": "",
+            "adminUsername": "",
+            "secrets": [],
+            "adminPassword": "",
+            "linuxConfiguration": "[if(equals(parameters('authenticationType'), 'password'), json('null'), variables('linuxConfiguration'))]"
+          },
+          "networkProfile": {
+            "networkInterfaces": [
+              {
+                "id": "Microsoft.Network/networkInterfaces/ parameters('networkInterfaceNameChefServer')"
+              }
+            ]
+          }
+        },
+        "dependsOn": [
+          "Microsoft.Network/networkInterfaces/ parameters('networkInterfaceNameChefServer')"
+        ]
+      },
+      {
+        "type": "Microsoft.Compute/virtualMachines/extensions",
+        "name": "parameters('vmNameChefServer')/chefServerSetup",
+        "apiVersion": "2015-05-01-preview",
+        "location": "westus",
+        "tags": {
+          "program": "PushToPilot",
+          "project": "DatameerTrendHDInsightChef",
+          "quickstartName": "quickstartTags",
+          "provider": "chefSoftwareTags"
+        },
+        "dependsOn": [
+          "Microsoft.Compute/virtualMachines/ parameters('vmNameChefServer')"
+        ],
+        "properties": {
+          "publisher": "Microsoft.Azure.Extensions",
+          "type": "CustomScript",
+          "typeHandlerVersion": "2.0",
+          "autoUpgradeMinorVersion": true,
+          "settings": {
+            "fileUris": [
+              ""
+            ],
+            "commandToExecute": "bash chefserver.sh  parameters('chefUserName') parameters('chefUserFirstName')  parameters('chefUserLastName')   parameters('chefUserEmail') ' parameters('chefUserPassword')' parameters('chefOrgShortName') 'parameters('chefOrgFullName')' http://parameters('publicIPDomainNameLabelOrchServer').westus.cloudapp.azure.com:33001/key"
+          }
+        }
+      },
+      {
+        "type": "Microsoft.Network/networkInterfaces",
+        "name": "",
+        "apiVersion": "2017-06-01",
+        "location": "westus",
+        "tags": {
+          "program": "PushToPilot",
+          "project": "DatameerTrendHDInsightChef"
+        },
+        "properties": {
+          "ipConfigurations": [
+            {
+              "name": "ipconfig1",
+              "properties": {
+                "privateIPAllocationMethod": "Dynamic",
+                "publicIPAddress": {
+                  "id": "Microsoft.Network/publicIPAddresses/ parameters('publicIPAddressNameChefServer')"
+                },
+                "subnet": {
+                  "id": ""
+                }
+              }
+            }
+          ],
+          "dnsSettings": {
+            "dnsServers": []
+          },
+          "enableIPForwarding": false,
+          "networkSecurityGroup": {
+            "id": "Microsoft.Network/networkSecurityGroups/ parameters('networkSecurityGroupNameChefServer')"
+          }
+        },
+        "dependsOn": [
+          "Microsoft.Network/publicIPAddresses/ parameters('publicIPAddressNameChefServer')",
+          "Microsoft.Network/networkSecurityGroups/ parameters('networkSecurityGroupNameChefServer')"
+        ]
+      },
+      {
+        "type": "Microsoft.Network/networkSecurityGroups",
+        "name": "",
+        "apiVersion": "2017-06-01",
+        "location": "westus",
+        "tags": {
+          "program": "PushToPilot",
+          "project": "DatameerTrendHDInsightChef",
+          "quickstartName": "quickstartTags",
+          "provider": "chefSoftwareTags"
+        },
+        "properties": {
+          "securityRules": [
+            {
+              "name": "ssh",
+              "properties": {
+                "protocol": "Tcp",
+                "sourcePortRange": "*",
+                "destinationPortRange": "22",
+                "sourceAddressPrefix": "*",
+                "destinationAddressPrefix": "*",
+                "access": "Allow",
+                "priority": 1010,
+                "direction": "Inbound"
+              }
+            },
+            {
+              "name": "http",
+              "properties": {
+                "protocol": "Tcp",
+                "sourcePortRange": "*",
+                "destinationPortRange": "80",
+                "sourceAddressPrefix": "*",
+                "destinationAddressPrefix": "*",
+                "access": "Allow",
+                "priority": 1020,
+                "direction": "Inbound"
+              }
+            },
+            {
+              "name": "https",
+              "properties": {
+                "protocol": "Tcp",
+                "sourcePortRange": "*",
+                "destinationPortRange": "443",
+                "sourceAddressPrefix": "*",
+                "destinationAddressPrefix": "*",
+                "access": "Allow",
+                "priority": 1030,
+                "direction": "Inbound"
+              }
+            },
+            {
+              "name": "https8443",
+              "properties": {
+                "protocol": "Tcp",
+                "sourcePortRange": "*",
+                "destinationPortRange": "8443",
+                "sourceAddressPrefix": "*",
+                "destinationAddressPrefix": "*",
+                "access": "Allow",
+                "priority": 1040,
+                "direction": "Inbound"
+              }
+            }
+          ]
+        },
+        "dependsOn": []
+      },
+      {
+        "type": "Microsoft.Network/publicIPAddresses",
+        "name": "",
+        "apiVersion": "2015-06-15",
+        "location": "westus",
+        "tags": {
+          "program": "PushToPilot",
+          "project": "DatameerTrendHDInsightChef",
+          "quickstartName": "quickstartTags",
+          "provider": "chefSoftwareTags"
+        },
+        "properties": {
+          "publicIPAllocationMethod": "",
+          "dnsSettings": {
+            "domainNameLabel": ""
+          },
+          "idleTimeoutInMinutes": 4
+        },
+        "dependsOn": []
+      }
+    ],
+    "outputs": {
+      "chefserverUri": {
+        "type": "string",
+        "value": "[concat('https://',reference(resourceId('Microsoft.Network/publicIPAddresses',parameters('publicIPAddressNameChefServer'))).dnsSettings.fqdn)]"
+      }
+    },
+    "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+  }
+}

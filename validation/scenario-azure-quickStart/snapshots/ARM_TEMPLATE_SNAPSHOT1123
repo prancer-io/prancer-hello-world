@@ -1,0 +1,648 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAzureQuickStart",
+  "paths": [
+    "/quickstarts/microsoft.compute/vm-trustedlaunch-windows/azuredeploy.json",
+    "/quickstarts/microsoft.compute/vm-trustedlaunch-windows/azuredeploy.parameters.json"
+  ],
+  "timestamp": 1642962904598,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/quickstarts/microsoft.compute/vm-trustedlaunch-windows/azuredeploy.json",
+      "/quickstarts/microsoft.compute/vm-trustedlaunch-windows/azuredeploy.parameters.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT1123",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "microsoft.network/publicipaddresses",
+      "microsoft.network/virtualnetworks",
+      "microsoft.network/networkinterfaces",
+      "microsoft.compute/virtualmachines/extensions",
+      "microsoft.compute/virtualmachines",
+      "microsoft.network/networksecuritygroups"
+    ]
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT1123",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "vmName": {
+        "type": "string",
+        "defaultValue": "myTVM",
+        "metadata": {
+          "description": "Name of the virtual machine."
+        }
+      },
+      "sku": {
+        "type": "string",
+        "defaultValue": "2019-DataCenter-GenSecond",
+        "allowedValues": [
+          "RS1-EnterpriseN-G2",
+          "RS5-EnterpriseN-Standard-G2",
+          "RS5-EnterpriseN-G2",
+          "19H2-Ent-G2",
+          "20H2-ProN-G2",
+          "20H1-ProN-G2",
+          "20H1-Pro-ZH-CN-G2",
+          "20H2-Pro-G2",
+          "20H2-Ent-G2",
+          "20H1-Pro-G2",
+          "19H2-Pro-G2",
+          "20H1-Ent-G2",
+          "20H2-Pro-ZH-CN-G2",
+          "19H2-EntN-G2",
+          "19H2-Pro-ZH-CN-G2",
+          "19H2-ProN-G2",
+          "20H2-EntN-G2",
+          "20H1-EntN-G2",
+          "RS5-Enterprise-Standard-G2",
+          "RS5-Enterprise-G2",
+          "RS1-Enterprise-G2",
+          "DataCenter-Core-1909-With-Containers-Smalldisk-G2",
+          "2016-DataCenter-With-Containers-G2",
+          "2019-DataCenter-GenSecond",
+          "DataCenter-Core-2004-With-Containers-Smalldisk-G2",
+          "2019-DataCenter-Core-G2",
+          "2019-DataCenter-Core-Smalldisk-G2",
+          "2016-DataCenter-ZHCN-G2",
+          "DataCenter-Core-20H2-With-Containers-Smalldisk-G2",
+          "2016-DataCenter-GenSecond",
+          "2016-DataCenter-Server-Core-Smalldisk-G2",
+          "2019-DataCenter-Smalldisk-G2",
+          "2016-DataCenter-Server-Core-G2",
+          "2016-DataCenter-Smalldisk-G2",
+          "2019-DataCenter-Core-With-Containers-Smalldisk-G2",
+          "2019-DataCenter-ZHCN-G2",
+          "2019-DataCenter-Core-With-Containers-G2",
+          "2019-DataCenter-With-Containers-Smalldisk-G2",
+          "2019-DataCenter-With-Containers-G2"
+        ],
+        "metadata": {
+          "description": "The OS SKU for the virtual machine. This will pick a fully patched image of the given OS SKU."
+        }
+      },
+      "vmSize": {
+        "type": "string",
+        "defaultValue": "Standard_D2s_v3",
+        "metadata": {
+          "description": "Size of the virtual machine."
+        }
+      },
+      "adminUsername": {
+        "type": "string",
+        "metadata": {
+          "description": "Username for the virtual machine."
+        },
+        "value": "GEN-UNIQUE"
+      },
+      "adminPassword": {
+        "type": "securestring",
+        "minLength": 12,
+        "metadata": {
+          "description": "Password for the virtual machine."
+        },
+        "value": "GEN-PASSWORD"
+      },
+      "secureBoot": {
+        "type": "string",
+        "defaultValue": "true",
+        "allowedValues": [
+          "true",
+          "false"
+        ],
+        "metadata": {
+          "description": "Secure Boot setting of the virtual machine."
+        }
+      },
+      "vTPM": {
+        "type": "string",
+        "defaultValue": "true",
+        "allowedValues": [
+          "true",
+          "false"
+        ],
+        "metadata": {
+          "description": "vTPM setting of the virtual machine."
+        }
+      },
+      "location": {
+        "type": "string",
+        "metadata": {
+          "description": "Location for all resources."
+        },
+        "value": "southcentralus"
+      },
+      "dnsLabelPrefix": {
+        "type": "string",
+        "defaultValue": "[toLower(concat(parameters('vmName'), '-', uniqueString(resourceGroup().id)))]",
+        "metadata": {
+          "description": "Unique DNS Name for the Public IP used to access the virtual machine."
+        },
+        "value": "GEN-UNIQUE"
+      },
+      "publicIpName": {
+        "type": "string",
+        "defaultValue": "myPublicIP",
+        "metadata": {
+          "description": "Name for the Public IP used to access the virtual machine."
+        }
+      },
+      "publicIPAllocationMethod": {
+        "type": "string",
+        "defaultValue": "Dynamic",
+        "allowedValues": [
+          "Dynamic",
+          "Static"
+        ],
+        "metadata": {
+          "description": "Allocation method for the Public IP used to access the virtual machine."
+        }
+      },
+      "publicIpSku": {
+        "type": "string",
+        "defaultValue": "Basic",
+        "allowedValues": [
+          "Basic",
+          "Standard"
+        ],
+        "metadata": {
+          "description": "SKU for the Public IP used to access the virtual machine."
+        }
+      },
+      "nicName": {
+        "type": "string",
+        "defaultValue": "nic",
+        "metadata": {
+          "description": "Name of the network interface"
+        }
+      },
+      "virtualNetworkName": {
+        "type": "string",
+        "defaultValue": "vnet",
+        "metadata": {
+          "description": "Name of the virtual network"
+        }
+      },
+      "networkSecurityGroupName": {
+        "type": "string",
+        "defaultValue": "nsg",
+        "metadata": {
+          "description": "Name of the network security group"
+        }
+      },
+      "maaEndpoint": {
+        "defaultValue": "https://sharedeus2.eus2.attest.azure.net/",
+        "type": "string",
+        "allowedValues": [
+          "https://sharedcus.cus.attest.azure.net/",
+          "https://sharedcae.cae.attest.azure.net/",
+          "https://sharedeus2.eus2.attest.azure.net/",
+          "https://shareduks.uks.attest.azure.net/",
+          "https://sharedcac.cac.attest.azure.net/",
+          "https://sharedukw.ukw.attest.azure.net/",
+          "https://sharedneu.neu.attest.azure.net/",
+          "https://sharedeus.eus.attest.azure.net/",
+          "https://sharedeau.eau.attest.azure.net/",
+          "https://sharedncus.ncus.attest.azure.net/",
+          "https://sharedwus.wus.attest.azure.net/",
+          "https://sharedweu.weu.attest.azure.net/",
+          "https://sharedscus.scus.attest.azure.net/",
+          "https://sharedsasia.sasia.attest.azure.net/",
+          "https://sharedsau.sau.attest.azure.net/"
+        ],
+        "metadata": {
+          "description": "MAA Endpoint to attest to."
+        }
+      }
+    },
+    "variables": {
+      "imageReference": {
+        "RS1-EnterpriseN-G2": {
+          "publisher": "MicrosoftWindowsDesktop",
+          "offer": "Windows-10",
+          "sku": "2019-DataCenter-GenSecond",
+          "version": "latest"
+        },
+        "RS5-EnterpriseN-Standard-G2": {
+          "publisher": "MicrosoftWindowsDesktop",
+          "offer": "Windows-10",
+          "sku": "2019-DataCenter-GenSecond",
+          "version": "latest"
+        },
+        "RS5-EnterpriseN-G2": {
+          "publisher": "MicrosoftWindowsDesktop",
+          "offer": "Windows-10",
+          "sku": "2019-DataCenter-GenSecond",
+          "version": "latest"
+        },
+        "19H2-Ent-G2": {
+          "publisher": "MicrosoftWindowsDesktop",
+          "offer": "Windows-10",
+          "sku": "2019-DataCenter-GenSecond",
+          "version": "latest"
+        },
+        "20H2-ProN-G2": {
+          "publisher": "MicrosoftWindowsDesktop",
+          "offer": "Windows-10",
+          "sku": "2019-DataCenter-GenSecond",
+          "version": "latest"
+        },
+        "20H1-ProN-G2": {
+          "publisher": "MicrosoftWindowsDesktop",
+          "offer": "Windows-10",
+          "sku": "2019-DataCenter-GenSecond",
+          "version": "latest"
+        },
+        "20H1-Pro-ZH-CN-G2": {
+          "publisher": "MicrosoftWindowsDesktop",
+          "offer": "Windows-10",
+          "sku": "2019-DataCenter-GenSecond",
+          "version": "latest"
+        },
+        "20H2-Pro-G2": {
+          "publisher": "MicrosoftWindowsDesktop",
+          "offer": "Windows-10",
+          "sku": "2019-DataCenter-GenSecond",
+          "version": "latest"
+        },
+        "20H2-Ent-G2": {
+          "publisher": "MicrosoftWindowsDesktop",
+          "offer": "Windows-10",
+          "sku": "2019-DataCenter-GenSecond",
+          "version": "latest"
+        },
+        "20H1-Pro-G2": {
+          "publisher": "MicrosoftWindowsDesktop",
+          "offer": "Windows-10",
+          "sku": "2019-DataCenter-GenSecond",
+          "version": "latest"
+        },
+        "19H2-Pro-G2": {
+          "publisher": "MicrosoftWindowsDesktop",
+          "offer": "Windows-10",
+          "sku": "2019-DataCenter-GenSecond",
+          "version": "latest"
+        },
+        "20H1-Ent-G2": {
+          "publisher": "MicrosoftWindowsDesktop",
+          "offer": "Windows-10",
+          "sku": "2019-DataCenter-GenSecond",
+          "version": "latest"
+        },
+        "20H2-Pro-ZH-CN-G2": {
+          "publisher": "MicrosoftWindowsDesktop",
+          "offer": "Windows-10",
+          "sku": "2019-DataCenter-GenSecond",
+          "version": "latest"
+        },
+        "19H2-EntN-G2": {
+          "publisher": "MicrosoftWindowsDesktop",
+          "offer": "Windows-10",
+          "sku": "2019-DataCenter-GenSecond",
+          "version": "latest"
+        },
+        "19H2-Pro-ZH-CN-G2": {
+          "publisher": "MicrosoftWindowsDesktop",
+          "offer": "Windows-10",
+          "sku": "2019-DataCenter-GenSecond",
+          "version": "latest"
+        },
+        "19H2-ProN-G2": {
+          "publisher": "MicrosoftWindowsDesktop",
+          "offer": "Windows-10",
+          "sku": "2019-DataCenter-GenSecond",
+          "version": "latest"
+        },
+        "20H2-EntN-G2": {
+          "publisher": "MicrosoftWindowsDesktop",
+          "offer": "Windows-10",
+          "sku": "2019-DataCenter-GenSecond",
+          "version": "latest"
+        },
+        "20H1-EntN-G2": {
+          "publisher": "MicrosoftWindowsDesktop",
+          "offer": "Windows-10",
+          "sku": "2019-DataCenter-GenSecond",
+          "version": "latest"
+        },
+        "RS5-Enterprise-Standard-G2": {
+          "publisher": "MicrosoftWindowsDesktop",
+          "offer": "Windows-10",
+          "sku": "2019-DataCenter-GenSecond",
+          "version": "latest"
+        },
+        "RS5-Enterprise-G2": {
+          "publisher": "MicrosoftWindowsDesktop",
+          "offer": "Windows-10",
+          "sku": "2019-DataCenter-GenSecond",
+          "version": "latest"
+        },
+        "RS1-Enterprise-G2": {
+          "publisher": "MicrosoftWindowsDesktop",
+          "offer": "Windows-10",
+          "sku": "2019-DataCenter-GenSecond",
+          "version": "latest"
+        },
+        "DataCenter-Core-1909-With-Containers-Smalldisk-G2": {
+          "publisher": "MicrosoftWindowsServer",
+          "offer": "WindowsServer",
+          "sku": "2019-DataCenter-GenSecond",
+          "version": "latest"
+        },
+        "2016-DataCenter-With-Containers-G2": {
+          "publisher": "MicrosoftWindowsServer",
+          "offer": "WindowsServer",
+          "sku": "2019-DataCenter-GenSecond",
+          "version": "latest"
+        },
+        "2019-DataCenter-GenSecond": {
+          "publisher": "MicrosoftWindowsServer",
+          "offer": "WindowsServer",
+          "sku": "2019-DataCenter-GenSecond",
+          "version": "latest"
+        },
+        "DataCenter-Core-2004-With-Containers-Smalldisk-G2": {
+          "publisher": "MicrosoftWindowsServer",
+          "offer": "WindowsServer",
+          "sku": "2019-DataCenter-GenSecond",
+          "version": "latest"
+        },
+        "2019-DataCenter-Core-G2": {
+          "publisher": "MicrosoftWindowsServer",
+          "offer": "WindowsServer",
+          "sku": "2019-DataCenter-GenSecond",
+          "version": "latest"
+        },
+        "2019-DataCenter-Core-Smalldisk-G2": {
+          "publisher": "MicrosoftWindowsServer",
+          "offer": "WindowsServer",
+          "sku": "2019-DataCenter-GenSecond",
+          "version": "latest"
+        },
+        "2016-DataCenter-ZHCN-G2": {
+          "publisher": "MicrosoftWindowsServer",
+          "offer": "WindowsServer",
+          "sku": "2019-DataCenter-GenSecond",
+          "version": "latest"
+        },
+        "DataCenter-Core-20H2-With-Containers-Smalldisk-G2": {
+          "publisher": "MicrosoftWindowsServer",
+          "offer": "WindowsServer",
+          "sku": "2019-DataCenter-GenSecond",
+          "version": "latest"
+        },
+        "2016-DataCenter-GenSecond": {
+          "publisher": "MicrosoftWindowsServer",
+          "offer": "WindowsServer",
+          "sku": "2019-DataCenter-GenSecond",
+          "version": "latest"
+        },
+        "2016-DataCenter-Server-Core-Smalldisk-G2": {
+          "publisher": "MicrosoftWindowsServer",
+          "offer": "WindowsServer",
+          "sku": "2019-DataCenter-GenSecond",
+          "version": "latest"
+        },
+        "2019-DataCenter-Smalldisk-G2": {
+          "publisher": "MicrosoftWindowsServer",
+          "offer": "WindowsServer",
+          "sku": "2019-DataCenter-GenSecond",
+          "version": "latest"
+        },
+        "2016-DataCenter-Server-Core-G2": {
+          "publisher": "MicrosoftWindowsServer",
+          "offer": "WindowsServer",
+          "sku": "2019-DataCenter-GenSecond",
+          "version": "latest"
+        },
+        "2016-DataCenter-Smalldisk-G2": {
+          "publisher": "MicrosoftWindowsServer",
+          "offer": "WindowsServer",
+          "sku": "2019-DataCenter-GenSecond",
+          "version": "latest"
+        },
+        "2019-DataCenter-Core-With-Containers-Smalldisk-G2": {
+          "publisher": "MicrosoftWindowsServer",
+          "offer": "WindowsServer",
+          "sku": "2019-DataCenter-GenSecond",
+          "version": "latest"
+        },
+        "2019-DataCenter-ZHCN-G2": {
+          "publisher": "MicrosoftWindowsServer",
+          "offer": "WindowsServer",
+          "sku": "2019-DataCenter-GenSecond",
+          "version": "latest"
+        },
+        "2019-DataCenter-Core-With-Containers-G2": {
+          "publisher": "MicrosoftWindowsServer",
+          "offer": "WindowsServer",
+          "sku": "2019-DataCenter-GenSecond",
+          "version": "latest"
+        },
+        "2019-DataCenter-With-Containers-Smalldisk-G2": {
+          "publisher": "MicrosoftWindowsServer",
+          "offer": "WindowsServer",
+          "sku": "2019-DataCenter-GenSecond",
+          "version": "latest"
+        },
+        "2019-DataCenter-With-Containers-G2": {
+          "publisher": "MicrosoftWindowsServer",
+          "offer": "WindowsServer",
+          "sku": "2019-DataCenter-GenSecond",
+          "version": "latest"
+        }
+      },
+      "addressPrefix": "10.0.0.0/16",
+      "ascReportingEndpoint": "https://sharedeus2.eus2.attest.azure.net/",
+      "disableAlerts": "false",
+      "extensionName": "GuestAttestation",
+      "extensionPublisher": "Microsoft.Azure.Security.WindowsAttestation",
+      "extensionVersion": "1.0",
+      "maaTenantName": "GuestAttestation",
+      "subnetName": "Subnet",
+      "subnetPrefix": "10.0.0.0/24",
+      "subnetRef": "Microsoft.Network/virtualNetworks/subnets/vnet/Subnet",
+      "useAlternateToken": "false"
+    },
+    "resources": [
+      {
+        "type": "Microsoft.Network/publicIPAddresses",
+        "apiVersion": "2020-06-01",
+        "name": "publicIPName",
+        "location": "southcentralus",
+        "sku": {
+          "name": "Basic"
+        },
+        "properties": {
+          "publicIPAllocationMethod": "Dynamic",
+          "dnsSettings": {
+            "domainNameLabel": "GEN-UNIQUE"
+          }
+        }
+      },
+      {
+        "type": "Microsoft.Network/networkSecurityGroups",
+        "apiVersion": "2020-06-01",
+        "name": "nsg",
+        "location": "southcentralus",
+        "properties": {
+          "securityRules": [
+            {
+              "name": "default-allow-3389",
+              "properties": {
+                "priority": 1000,
+                "access": "Allow",
+                "direction": "Inbound",
+                "destinationPortRange": "3389",
+                "protocol": "Tcp",
+                "sourcePortRange": "*",
+                "sourceAddressPrefix": "*",
+                "destinationAddressPrefix": "*"
+              }
+            }
+          ]
+        }
+      },
+      {
+        "type": "Microsoft.Network/virtualNetworks",
+        "apiVersion": "2020-06-01",
+        "name": "vnet",
+        "location": "southcentralus",
+        "dependsOn": [
+          "Microsoft.Network/networkSecurityGroups/nsg"
+        ],
+        "properties": {
+          "addressSpace": {
+            "addressPrefixes": [
+              "10.0.0.0/16"
+            ]
+          },
+          "subnets": [
+            {
+              "name": "Subnet",
+              "properties": {
+                "addressPrefix": "10.0.0.0/24",
+                "networkSecurityGroup": {
+                  "id": "Microsoft.Network/networkSecurityGroups/nsg"
+                }
+              }
+            }
+          ]
+        }
+      },
+      {
+        "type": "Microsoft.Network/networkInterfaces",
+        "apiVersion": "2020-06-01",
+        "name": "nic",
+        "location": "southcentralus",
+        "dependsOn": [
+          "Microsoft.Network/publicIPAddresses/publicIPName",
+          "Microsoft.Network/virtualNetworks/vnet"
+        ],
+        "properties": {
+          "ipConfigurations": [
+            {
+              "name": "ipconfig1",
+              "properties": {
+                "privateIPAllocationMethod": "Dynamic",
+                "publicIPAddress": {
+                  "id": "Microsoft.Network/publicIPAddresses/publicIPName"
+                },
+                "subnet": {
+                  "id": "Microsoft.Network/virtualNetworks/subnets/vnet/Subnet"
+                }
+              }
+            }
+          ]
+        }
+      },
+      {
+        "type": "Microsoft.Compute/virtualMachines",
+        "apiVersion": "2020-12-01",
+        "name": "myTVM",
+        "location": "southcentralus",
+        "identity": {
+          "type": "SystemAssigned"
+        },
+        "dependsOn": [
+          "Microsoft.Network/networkInterfaces/nic"
+        ],
+        "properties": {
+          "hardwareProfile": {
+            "vmSize": "Standard_D2s_v3"
+          },
+          "osProfile": {
+            "computerName": "myTVM",
+            "adminUsername": "GEN-UNIQUE",
+            "adminPassword": "GEN-PASSWORD"
+          },
+          "storageProfile": {
+            "imageReference": "(imageReference)[parameters(sku)]",
+            "osDisk": {
+              "createOption": "FromImage",
+              "managedDisk": {
+                "storageAccountType": "StandardSSD_LRS"
+              }
+            }
+          },
+          "networkProfile": {
+            "networkInterfaces": [
+              {
+                "id": "Microsoft.Network/networkInterfaces/nic"
+              }
+            ]
+          },
+          "securityProfile": {
+            "uefiSettings": {
+              "secureBootEnabled": "true",
+              "vTPMEnabled": "VTPM"
+            },
+            "securityType": "TrustedLaunch"
+          }
+        }
+      },
+      {
+        "condition": "[and(equals(parameters('VTPM'), 'true'), equals(parameters('secureBoot'), 'true'))]",
+        "type": "Microsoft.Compute/virtualMachines/extensions",
+        "name": "myTVM/GuestAttestation",
+        "location": "southcentralus",
+        "dependsOn": [
+          "Microsoft.Compute/virtualMachines/myTVM"
+        ],
+        "apiVersion": "2020-06-01",
+        "properties": {
+          "publisher": "Microsoft.Azure.Security.WindowsAttestation",
+          "type": "GuestAttestation",
+          "typeHandlerVersion": "1.0",
+          "autoUpgradeMinorVersion": true,
+          "settings": {
+            "AttestationEndpointCfg": {
+              "maaEndpoint": "https://sharedeus2.eus2.attest.azure.net/",
+              "maaTenantName": "GuestAttestation",
+              "ascReportingEndpoint": "https://sharedeus2.eus2.attest.azure.net/",
+              "useAlternateToken": "false",
+              "disableAlerts": "false"
+            }
+          }
+        }
+      }
+    ],
+    "outputs": {
+      "hostname": {
+        "type": "string",
+        "value": "[reference(parameters('publicIPName')).dnsSettings.fqdn]"
+      }
+    },
+    "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+  }
+}

@@ -1,0 +1,146 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAzureQuickStart",
+  "paths": [
+    "/application-workloads/postgre/postgresql-on-ubuntu/jumpbox-resources.json",
+    "/application-workloads/postgre/postgresql-on-ubuntu/azuredeploy.parameters.json"
+  ],
+  "timestamp": 1642962893118,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/application-workloads/postgre/postgresql-on-ubuntu/jumpbox-resources.json",
+      "/application-workloads/postgre/postgresql-on-ubuntu/azuredeploy.parameters.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT355",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "microsoft.network/publicipaddresses",
+      "microsoft.network/networkinterfaces",
+      "microsoft.compute/virtualmachines"
+    ]
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT355",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "commonSettings": {
+        "type": "object"
+      },
+      "osSettings": {
+        "type": "object"
+      },
+      "adminPassword": {
+        "type": "securestring",
+        "value": "GEN-PASSWORD"
+      },
+      "subnet": {
+        "type": "object"
+      },
+      "dnsName": {
+        "type": "string"
+      },
+      "location": {
+        "type": "string"
+      },
+      "vmSize": {
+        "type": "string"
+      },
+      "adminUsername": {
+        "value": "GEN-UNQIUE"
+      },
+      "replicatorPassword": {
+        "value": "GEN-PASSWORD"
+      }
+    },
+    "variables": {
+      "subnetRef": "Microsoft.Network/virtualNetworks/subnets/subnet/subnet",
+      "nicName": "commonSettingsnic",
+      "vmName": "commonSettingsvm",
+      "publicIpName": "commonSettingspublicIp"
+    },
+    "resources": [
+      {
+        "apiVersion": "2019-11-01",
+        "type": "Microsoft.Network/publicIPAddresses",
+        "name": "commonSettingspublicIp",
+        "location": "location",
+        "properties": {
+          "publicIPAllocationMethod": "Dynamic",
+          "dnsSettings": {
+            "domainNameLabel": "dnsName"
+          }
+        }
+      },
+      {
+        "apiVersion": "2019-11-01",
+        "type": "Microsoft.Network/networkInterfaces",
+        "name": "commonSettingsnic",
+        "location": "location",
+        "dependsOn": [
+          "Microsoft.Network/publicIPAddresses/commonSettingspublicIp"
+        ],
+        "properties": {
+          "ipConfigurations": [
+            {
+              "name": "ipconfig1",
+              "properties": {
+                "privateIPAllocationMethod": "Dynamic",
+                "publicIPAddress": {
+                  "id": "Microsoft.Network/publicIPAddresses/commonSettingspublicIp"
+                },
+                "subnet": {
+                  "id": "Microsoft.Network/virtualNetworks/subnets/subnet/subnet"
+                }
+              }
+            }
+          ]
+        }
+      },
+      {
+        "apiVersion": "2019-12-01",
+        "type": "Microsoft.Compute/virtualMachines",
+        "name": "commonSettingsvm",
+        "location": "location",
+        "dependsOn": [
+          "Microsoft.Network/networkInterfaces/commonSettingsnic"
+        ],
+        "properties": {
+          "hardwareProfile": {
+            "vmSize": "vmSize"
+          },
+          "osProfile": {
+            "computerName": "commonSettingsvm",
+            "adminUsername": "commonSettings",
+            "adminPassword": "GEN-PASSWORD"
+          },
+          "storageProfile": {
+            "imageReference": "osSettings",
+            "osDisk": {
+              "caching": "ReadWrite",
+              "createOption": "FromImage"
+            }
+          },
+          "networkProfile": {
+            "networkInterfaces": [
+              {
+                "id": "Microsoft.Network/networkInterfaces/commonSettingsnic"
+              }
+            ]
+          }
+        }
+      }
+    ],
+    "outputs": {},
+    "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+  }
+}

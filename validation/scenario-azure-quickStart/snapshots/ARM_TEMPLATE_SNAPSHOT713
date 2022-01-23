@@ -1,0 +1,769 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAzureQuickStart",
+  "paths": [
+    "/demos/hub-and-spoke-sandbox/azuredeploy.json",
+    "/demos/hub-and-spoke-sandbox/azuredeploy.parameters.json"
+  ],
+  "timestamp": 1642962899399,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/demos/hub-and-spoke-sandbox/azuredeploy.json",
+      "/demos/hub-and-spoke-sandbox/azuredeploy.parameters.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT713",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "microsoft.network/publicipaddresses",
+      "microsoft.network/virtualnetworks",
+      "microsoft.network/networkinterfaces",
+      "microsoft.network/virtualnetworkgateways",
+      "microsoft.network/virtualnetworks/virtualnetworkpeerings",
+      "microsoft.compute/virtualmachines",
+      "microsoft.network/networksecuritygroups",
+      "microsoft.storage/storageaccounts",
+      "microsoft.network/virtualnetworks/subnets"
+    ]
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT713",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "windowsOSVersion": {
+        "type": "string",
+        "defaultValue": "2016-Datacenter",
+        "metadata": {
+          "description": "The Windows version for Windows Jump-host VM."
+        }
+      },
+      "winVmSize": {
+        "type": "string",
+        "defaultValue": "Standard_D4_v3",
+        "metadata": {
+          "description": "Size for Windows jump-host VM"
+        }
+      },
+      "winVmUser": {
+        "type": "string",
+        "metadata": {
+          "description": "Username for Windows jump-host VM"
+        },
+        "value": "GEN-UNIQUE"
+      },
+      "winVmPassword": {
+        "type": "securestring",
+        "metadata": {
+          "description": "Password for Windows jump-host VM. The password must be between 6-72 characters long and must satisfy at least 3 of password complexity requirements from the following: 1) Contains an uppercase character 2) Contains a lowercase character 3) Contains a numeric digit 4) Contains a special character 5) Control characters are not allowed"
+        },
+        "value": "GEN-PASSWORD"
+      },
+      "winVmDnsPrefix": {
+        "type": "string",
+        "metadata": {
+          "description": "DNS Label for Windows jump-host VM."
+        },
+        "value": "GEN-UNIQUE-13"
+      },
+      "deployVpnGateway": {
+        "type": "string",
+        "defaultValue": "No",
+        "allowedValues": [
+          "Yes",
+          "No"
+        ],
+        "metadata": {
+          "description": "Whether or not to deploy a VPN Gateway in the Hub"
+        },
+        "value": "Yes"
+      },
+      "gatewaySku": {
+        "type": "string",
+        "defaultValue": "Basic",
+        "allowedValues": [
+          "Basic",
+          "VpnGw1",
+          "VpnGw2",
+          "VpnGw3"
+        ],
+        "metadata": {
+          "description": "The SKU of the Gateway, if deployed"
+        }
+      },
+      "location": {
+        "type": "string",
+        "defaultValue": "[resourceGroup().location]",
+        "metadata": {
+          "description": "Location for all resources."
+        }
+      }
+    },
+    "variables": {
+      "hubVnetName": "hubVnet",
+      "hubVnetPrefix": "192.168.0.0/20",
+      "dmzSubnetName": "DMZSubnet",
+      "dmzSubnetPrefix": "192.168.0.0/25",
+      "mgmtSubnetName": "ManagementSubnet",
+      "mgmtSubnetPrefix": "192.168.1.0/24",
+      "sharedSubnetName": "SharedSubnet",
+      "sharedSubnetPrefix": "192.168.4.0/22",
+      "gatewaySubnetName": "GatewaySubnet",
+      "gatewaySubnetPrefix": "192.168.15.224/27",
+      "gatewayName": "hubVpnGateway",
+      "gatewayPIPName": "hubVpnGatewayPublicIp",
+      "subnetGatewayId": "Microsoft.Network/virtualNetworks/subnets/hubVnet/GatewaySubnet",
+      "winJmphostName": "winJmphostVm",
+      "devSpokeVnetName": "spokeDevVnet",
+      "devSpokeVnetPrefix": "10.10.0.0/16",
+      "prodSpokeVnetName": "spokeProdVnet",
+      "prodSpokeVnetPrefix": "10.100.0.0/16",
+      "spokeWorkloadSubnetName": "WorkloadSubnet",
+      "devSpokeWorkloadSubnetPrefix": "10.10.0.0/16",
+      "prodSpokeWorkloadSubnetPrefix": "10.100.0.0/16",
+      "hubID": "Microsoft.Network/virtualNetworks//hubVnet",
+      "devSpokeID": "Microsoft.Network/virtualNetworks//spokeDevVnet",
+      "prodSpokeID": "Microsoft.Network/virtualNetworks//spokeProdVnet",
+      "winVmNicName": "winJmphostVmNIC",
+      "winVmStorageName": "[concat('hubwinvm',uniquestring(resourceGroup().id))]",
+      "winNsgName": "winJmpHostNsg",
+      "winJmphostPublicIpName": "winJmphostVmPublicIp"
+    },
+    "resources": [
+      {
+        "comments": "HUB Virtual Network (VNet)",
+        "type": "Microsoft.Network/virtualNetworks",
+        "name": "hubVnet",
+        "apiVersion": "2019-11-01",
+        "location": "[resourceGroup().location]",
+        "properties": {
+          "addressSpace": {
+            "addressPrefixes": [
+              "192.168.0.0/20"
+            ]
+          },
+          "enableDdosProtection": false,
+          "enableVmProtection": false
+        }
+      },
+      {
+        "comments": "Management Subnet",
+        "type": "Microsoft.Network/virtualNetworks/subnets",
+        "name": "hubVnet/ManagementSubnet",
+        "apiVersion": "2019-11-01",
+        "dependsOn": [
+          "Microsoft.Network/virtualNetworks/hubVnet"
+        ],
+        "properties": {
+          "addressPrefix": "192.168.1.0/24"
+        }
+      },
+      {
+        "comments": "Shared Subnet",
+        "type": "Microsoft.Network/virtualNetworks/subnets",
+        "name": "hubVnet/SharedSubnet",
+        "apiVersion": "2019-11-01",
+        "dependsOn": [
+          "Microsoft.Network/virtualNetworks/hubVnet",
+          "Microsoft.Network/virtualNetworks/subnets/hubVnet/ManagementSubnet"
+        ],
+        "properties": {
+          "addressPrefix": "192.168.4.0/22"
+        }
+      },
+      {
+        "comments": "DMZ Subnet",
+        "type": "Microsoft.Network/virtualNetworks/subnets",
+        "name": "hubVnet/DMZSubnet",
+        "apiVersion": "2019-11-01",
+        "dependsOn": [
+          "Microsoft.Network/virtualNetworks/hubVnet",
+          "Microsoft.Network/virtualNetworks/subnets/hubVnet/ManagementSubnet",
+          "Microsoft.Network/virtualNetworks/subnets/hubVnet/SharedSubnet"
+        ],
+        "properties": {
+          "addressPrefix": "192.168.0.0/25"
+        }
+      },
+      {
+        "condition": false,
+        "comments": "Gateway Subnet",
+        "type": "Microsoft.Network/virtualNetworks/subnets",
+        "name": "hubVnet/GatewaySubnet",
+        "apiVersion": "2019-11-01",
+        "dependsOn": [
+          "Microsoft.Network/virtualNetworks/hubVnet",
+          "Microsoft.Network/virtualNetworks/subnets/hubVnet/ManagementSubnet",
+          "Microsoft.Network/virtualNetworks/subnets/hubVnet/SharedSubnet",
+          "Microsoft.Network/virtualNetworks/subnets/hubVnet/DMZSubnet"
+        ],
+        "properties": {
+          "addressPrefix": "192.168.15.224/27"
+        }
+      },
+      {
+        "comments": "Development Spoke Virtual Network (VNet)",
+        "type": "Microsoft.Network/virtualNetworks",
+        "name": "spokeDevVnet",
+        "apiVersion": "2019-11-01",
+        "location": "[resourceGroup().location]",
+        "properties": {
+          "addressSpace": {
+            "addressPrefixes": [
+              "10.10.0.0/16"
+            ]
+          },
+          "enableDdosProtection": false,
+          "enableVmProtection": false
+        }
+      },
+      {
+        "comments": "Development Workload Subnet",
+        "type": "Microsoft.Network/virtualNetworks/subnets",
+        "name": "spokeDevVnet/WorkloadSubnet",
+        "apiVersion": "2019-11-01",
+        "dependsOn": [
+          "Microsoft.Network/virtualNetworks/spokeDevVnet"
+        ],
+        "properties": {
+          "addressPrefix": "10.10.0.0/16"
+        }
+      },
+      {
+        "comments": "Production Spoke Virtual Network (VNet)",
+        "type": "Microsoft.Network/virtualNetworks",
+        "name": "spokeProdVnet",
+        "apiVersion": "2019-11-01",
+        "location": "[resourceGroup().location]",
+        "properties": {
+          "addressSpace": {
+            "addressPrefixes": [
+              "10.100.0.0/16"
+            ]
+          },
+          "enableDdosProtection": false,
+          "enableVmProtection": false
+        }
+      },
+      {
+        "comments": "Production Workload Subnet",
+        "type": "Microsoft.Network/virtualNetworks/subnets",
+        "name": "spokeProdVnet/WorkloadSubnet",
+        "apiVersion": "2019-11-01",
+        "dependsOn": [
+          "Microsoft.Network/virtualNetworks/spokeProdVnet"
+        ],
+        "properties": {
+          "addressPrefix": "10.100.0.0/16"
+        }
+      },
+      {
+        "condition": false,
+        "apiVersion": "2019-11-01",
+        "type": "Microsoft.Network/virtualNetworks/virtualNetworkPeerings",
+        "name": "hubVnet/gwPeering_hubVnet_spokeDevVnet",
+        "location": "[resourceGroup().location]",
+        "dependsOn": [
+          "Microsoft.Network/virtualNetworks/hubVnet",
+          "Microsoft.Network/virtualNetworks/subnets/hubVnet/ManagementSubnet",
+          "Microsoft.Network/virtualNetworks/subnets/hubVnet/SharedSubnet",
+          "Microsoft.Network/virtualNetworks/subnets/hubVnet/DMZSubnet",
+          "Microsoft.Network/virtualNetworks/subnets/hubVnet/GatewaySubnet",
+          "Microsoft.Network/virtualNetworks/spokeDevVnet",
+          "Microsoft.Network/virtualNetworks/subnets/spokeDevVnet/WorkloadSubnet"
+        ],
+        "properties": {
+          "allowVirtualNetworkAccess": true,
+          "allowForwardedTraffic": true,
+          "allowGatewayTransit": true,
+          "useRemoteGateways": false,
+          "remoteVirtualNetwork": {
+            "id": "Microsoft.Network/virtualNetworks//spokeDevVnet"
+          }
+        }
+      },
+      {
+        "condition": false,
+        "apiVersion": "2019-11-01",
+        "type": "Microsoft.Network/virtualNetworks/virtualNetworkPeerings",
+        "name": "hubVnet/peering_hubVnet_spokeDevVnet",
+        "location": "[resourceGroup().location]",
+        "dependsOn": [
+          "Microsoft.Network/virtualNetworks/hubVnet",
+          "Microsoft.Network/virtualNetworks/subnets/hubVnet/ManagementSubnet",
+          "Microsoft.Network/virtualNetworks/subnets/hubVnet/SharedSubnet",
+          "Microsoft.Network/virtualNetworks/subnets/hubVnet/DMZSubnet",
+          "Microsoft.Network/virtualNetworks/spokeDevVnet",
+          "Microsoft.Network/virtualNetworks/subnets/spokeDevVnet/WorkloadSubnet"
+        ],
+        "properties": {
+          "allowVirtualNetworkAccess": true,
+          "allowForwardedTraffic": true,
+          "allowGatewayTransit": false,
+          "useRemoteGateways": false,
+          "remoteVirtualNetwork": {
+            "id": "Microsoft.Network/virtualNetworks//spokeDevVnet"
+          }
+        }
+      },
+      {
+        "condition": false,
+        "apiVersion": "2019-11-01",
+        "type": "Microsoft.Network/virtualNetworks/virtualNetworkPeerings",
+        "name": "hubVnet/gwPeering_hubVnet_spokeProdVnet",
+        "location": "[resourceGroup().location]",
+        "dependsOn": [
+          "Microsoft.Network/virtualNetworks/hubVnet",
+          "Microsoft.Network/virtualNetworks/subnets/hubVnet/ManagementSubnet",
+          "Microsoft.Network/virtualNetworks/subnets/hubVnet/SharedSubnet",
+          "Microsoft.Network/virtualNetworks/subnets/hubVnet/DMZSubnet",
+          "Microsoft.Network/virtualNetworks/subnets/hubVnet/GatewaySubnet",
+          "Microsoft.Network/virtualNetworks/spokeProdVnet",
+          "Microsoft.Network/virtualNetworks/subnets/spokeProdVnet/WorkloadSubnet"
+        ],
+        "properties": {
+          "allowVirtualNetworkAccess": true,
+          "allowForwardedTraffic": true,
+          "allowGatewayTransit": true,
+          "useRemoteGateways": false,
+          "remoteVirtualNetwork": {
+            "id": "Microsoft.Network/virtualNetworks//spokeProdVnet"
+          }
+        }
+      },
+      {
+        "condition": false,
+        "apiVersion": "2019-11-01",
+        "type": "Microsoft.Network/virtualNetworks/virtualNetworkPeerings",
+        "name": "hubVnet/peering_hubVnet_spokeProdVnet",
+        "location": "[resourceGroup().location]",
+        "dependsOn": [
+          "Microsoft.Network/virtualNetworks/hubVnet",
+          "Microsoft.Network/virtualNetworks/subnets/hubVnet/ManagementSubnet",
+          "Microsoft.Network/virtualNetworks/subnets/hubVnet/SharedSubnet",
+          "Microsoft.Network/virtualNetworks/subnets/hubVnet/DMZSubnet",
+          "Microsoft.Network/virtualNetworks/spokeProdVnet",
+          "Microsoft.Network/virtualNetworks/subnets/spokeProdVnet/WorkloadSubnet"
+        ],
+        "properties": {
+          "allowVirtualNetworkAccess": true,
+          "allowForwardedTraffic": true,
+          "allowGatewayTransit": false,
+          "useRemoteGateways": false,
+          "remoteVirtualNetwork": {
+            "id": "Microsoft.Network/virtualNetworks//spokeProdVnet"
+          }
+        }
+      },
+      {
+        "condition": false,
+        "apiVersion": "2019-11-01",
+        "type": "Microsoft.Network/virtualNetworks/virtualNetworkPeerings",
+        "name": "spokeDevVnet/gwPeering_spokeDevVnet_hubVnet",
+        "location": "[resourceGroup().location]",
+        "dependsOn": [
+          "Microsoft.Network/virtualNetworks/hubVnet",
+          "Microsoft.Network/virtualNetworks/subnets/hubVnet/ManagementSubnet",
+          "Microsoft.Network/virtualNetworks/subnets/hubVnet/SharedSubnet",
+          "Microsoft.Network/virtualNetworks/subnets/hubVnet/DMZSubnet",
+          "Microsoft.Network/virtualNetworks/subnets/hubVnet/GatewaySubnet",
+          "Microsoft.Network/virtualNetworks/spokeDevVnet",
+          "Microsoft.Network/virtualNetworks/subnets/spokeDevVnet/WorkloadSubnet",
+          "Microsoft.Network/virtualNetworkGateways/hubVpnGateway"
+        ],
+        "properties": {
+          "allowVirtualNetworkAccess": true,
+          "allowForwardedTraffic": true,
+          "allowGatewayTransit": false,
+          "useRemoteGateways": true,
+          "remoteVirtualNetwork": {
+            "id": "Microsoft.Network/virtualNetworks//hubVnet"
+          }
+        }
+      },
+      {
+        "condition": false,
+        "apiVersion": "2019-11-01",
+        "type": "Microsoft.Network/virtualNetworks/virtualNetworkPeerings",
+        "name": "spokeDevVnet/peering_spokeDevVnet_hubVnet",
+        "location": "[resourceGroup().location]",
+        "dependsOn": [
+          "Microsoft.Network/virtualNetworks/hubVnet",
+          "Microsoft.Network/virtualNetworks/subnets/hubVnet/ManagementSubnet",
+          "Microsoft.Network/virtualNetworks/subnets/hubVnet/SharedSubnet",
+          "Microsoft.Network/virtualNetworks/subnets/hubVnet/DMZSubnet",
+          "Microsoft.Network/virtualNetworks/spokeDevVnet",
+          "Microsoft.Network/virtualNetworks/subnets/spokeDevVnet/WorkloadSubnet"
+        ],
+        "properties": {
+          "allowVirtualNetworkAccess": true,
+          "allowForwardedTraffic": true,
+          "allowGatewayTransit": false,
+          "useRemoteGateways": false,
+          "remoteVirtualNetwork": {
+            "id": "Microsoft.Network/virtualNetworks//hubVnet"
+          }
+        }
+      },
+      {
+        "condition": false,
+        "apiVersion": "2019-11-01",
+        "type": "Microsoft.Network/virtualNetworks/virtualNetworkPeerings",
+        "name": "spokeProdVnet/gwPeering_spokeProdVnet_hubVnet",
+        "location": "[resourceGroup().location]",
+        "dependsOn": [
+          "Microsoft.Network/virtualNetworks/hubVnet",
+          "Microsoft.Network/virtualNetworks/subnets/hubVnet/ManagementSubnet",
+          "Microsoft.Network/virtualNetworks/subnets/hubVnet/SharedSubnet",
+          "Microsoft.Network/virtualNetworks/subnets/hubVnet/DMZSubnet",
+          "Microsoft.Network/virtualNetworks/subnets/hubVnet/GatewaySubnet",
+          "Microsoft.Network/virtualNetworks/spokeProdVnet",
+          "Microsoft.Network/virtualNetworks/subnets/spokeProdVnet/WorkloadSubnet",
+          "Microsoft.Network/virtualNetworkGateways/hubVpnGateway"
+        ],
+        "properties": {
+          "allowVirtualNetworkAccess": true,
+          "allowForwardedTraffic": true,
+          "allowGatewayTransit": false,
+          "useRemoteGateways": true,
+          "remoteVirtualNetwork": {
+            "id": "Microsoft.Network/virtualNetworks//hubVnet"
+          }
+        }
+      },
+      {
+        "condition": false,
+        "apiVersion": "2019-11-01",
+        "type": "Microsoft.Network/virtualNetworks/virtualNetworkPeerings",
+        "name": "spokeProdVnet/peering_spokeProdVnet_hubVnet",
+        "location": "[resourceGroup().location]",
+        "dependsOn": [
+          "Microsoft.Network/virtualNetworks/hubVnet",
+          "Microsoft.Network/virtualNetworks/subnets/hubVnet/ManagementSubnet",
+          "Microsoft.Network/virtualNetworks/subnets/hubVnet/SharedSubnet",
+          "Microsoft.Network/virtualNetworks/subnets/hubVnet/DMZSubnet",
+          "Microsoft.Network/virtualNetworks/spokeProdVnet",
+          "Microsoft.Network/virtualNetworks/subnets/spokeProdVnet/WorkloadSubnet"
+        ],
+        "properties": {
+          "allowVirtualNetworkAccess": true,
+          "allowForwardedTraffic": true,
+          "allowGatewayTransit": false,
+          "useRemoteGateways": false,
+          "remoteVirtualNetwork": {
+            "id": "Microsoft.Network/virtualNetworks//hubVnet"
+          }
+        }
+      },
+      {
+        "comments": "Windows Jump-Hosts",
+        "type": "Microsoft.Compute/virtualMachines",
+        "name": "winJmphostVm",
+        "apiVersion": "2019-12-01",
+        "location": "[resourceGroup().location]",
+        "dependsOn": [
+          "[resourceId('Microsoft.Network/networkInterfaces', variables('winVmNicName'))]",
+          "[resourceId('Microsoft.Storage/storageAccounts', variables('winVmStorageName'))]"
+        ],
+        "properties": {
+          "hardwareProfile": {
+            "vmSize": "Standard_D4_v3"
+          },
+          "storageProfile": {
+            "imageReference": {
+              "publisher": "MicrosoftWindowsServer",
+              "offer": "WindowsServer",
+              "sku": "2016-Datacenter",
+              "version": "latest"
+            },
+            "osDisk": {
+              "createOption": "FromImage"
+            },
+            "dataDisks": [
+              {
+                "diskSizeGB": 20,
+                "lun": 0,
+                "createOption": "Empty"
+              }
+            ]
+          },
+          "osProfile": {
+            "computerName": "winJmphostVm",
+            "adminUsername": "GEN-UNIQUE",
+            "adminPassword": "GEN-PASSWORD",
+            "windowsConfiguration": {
+              "provisionVMAgent": true
+            }
+          },
+          "networkProfile": {
+            "networkInterfaces": [
+              {
+                "id": "Microsoft.Network/networkInterfaces/winJmphostVmNIC"
+              }
+            ]
+          },
+          "diagnosticsProfile": {
+            "bootDiagnostics": {
+              "enabled": true,
+              "storageUri": "[reference(variables('winVmStorageName'), '2019-06-01').primaryEndpoints['blob']]"
+            }
+          }
+        }
+      },
+      {
+        "comments": "Network Interface Card (NIC) for Win Jump-Host",
+        "type": "Microsoft.Network/networkInterfaces",
+        "name": "winJmphostVmNIC",
+        "apiVersion": "2019-11-01",
+        "location": "[resourceGroup().location]",
+        "dependsOn": [
+          "Microsoft.Network/publicIPAddresses/winJmphostVmPublicIp",
+          "Microsoft.Network/networkSecurityGroups/winJmpHostNsg",
+          "Microsoft.Network/virtualNetworks/subnets/hubVnet/ManagementSubnet"
+        ],
+        "properties": {
+          "ipConfigurations": [
+            {
+              "name": "winJmpHostIpConfig",
+              "properties": {
+                "privateIPAllocationMethod": "Dynamic",
+                "publicIPAddress": {
+                  "id": "Microsoft.Network/publicIPAddresses/winJmphostVmPublicIp"
+                },
+                "subnet": {
+                  "id": "Microsoft.Network/virtualNetworks/subnets/hubVnet/ManagementSubnet"
+                },
+                "primary": true,
+                "privateIPAddressVersion": "IPv4"
+              }
+            }
+          ],
+          "enableAcceleratedNetworking": false,
+          "enableIPForwarding": false,
+          "networkSecurityGroup": {
+            "id": "Microsoft.Network/networkSecurityGroups/winJmpHostNsg"
+          },
+          "primary": true
+        }
+      },
+      {
+        "comments": "NSG For Windows Jump Host",
+        "type": "Microsoft.Network/networkSecurityGroups",
+        "name": "winJmpHostNsg",
+        "apiVersion": "2019-11-01",
+        "location": "[resourceGroup().location]",
+        "properties": {
+          "securityRules": [
+            {
+              "name": "NSG_RULE_INBOUND_RDP",
+              "properties": {
+                "description": "Allow inbound RDP",
+                "protocol": "Tcp",
+                "sourcePortRange": "*",
+                "destinationPortRange": "3389",
+                "sourceAddressPrefix": "*",
+                "destinationAddressPrefix": "*",
+                "access": "Allow",
+                "priority": 1000,
+                "direction": "Inbound"
+              }
+            }
+          ],
+          "defaultSecurityRules": [
+            {
+              "name": "AllowVnetInBound",
+              "properties": {
+                "description": "Allow inbound traffic from all VMs in VNET",
+                "protocol": "*",
+                "sourcePortRange": "*",
+                "destinationPortRange": "*",
+                "sourceAddressPrefix": "VirtualNetwork",
+                "destinationAddressPrefix": "VirtualNetwork",
+                "access": "Allow",
+                "priority": 65000,
+                "direction": "Inbound"
+              }
+            },
+            {
+              "name": "AllowAzureLoadBalancerInBound",
+              "properties": {
+                "description": "Allow inbound traffic from azure load balancer",
+                "protocol": "*",
+                "sourcePortRange": "*",
+                "destinationPortRange": "*",
+                "sourceAddressPrefix": "AzureLoadBalancer",
+                "destinationAddressPrefix": "*",
+                "access": "Allow",
+                "priority": 65001,
+                "direction": "Inbound"
+              }
+            },
+            {
+              "name": "DenyAllInBound",
+              "properties": {
+                "description": "Deny all inbound traffic",
+                "protocol": "*",
+                "sourcePortRange": "*",
+                "destinationPortRange": "*",
+                "sourceAddressPrefix": "*",
+                "destinationAddressPrefix": "*",
+                "access": "Deny",
+                "priority": 65500,
+                "direction": "Inbound"
+              }
+            },
+            {
+              "name": "AllowVnetOutBound",
+              "properties": {
+                "description": "Allow outbound traffic from all VMs to all VMs in VNET",
+                "protocol": "*",
+                "sourcePortRange": "*",
+                "destinationPortRange": "*",
+                "sourceAddressPrefix": "VirtualNetwork",
+                "destinationAddressPrefix": "VirtualNetwork",
+                "access": "Allow",
+                "priority": 65000,
+                "direction": "Outbound"
+              }
+            },
+            {
+              "name": "AllowInternetOutBound",
+              "properties": {
+                "description": "Allow outbound traffic from all VMs to Internet",
+                "protocol": "*",
+                "sourcePortRange": "*",
+                "destinationPortRange": "*",
+                "sourceAddressPrefix": "*",
+                "destinationAddressPrefix": "Internet",
+                "access": "Allow",
+                "priority": 65001,
+                "direction": "Outbound"
+              }
+            },
+            {
+              "name": "DenyAllOutBound",
+              "properties": {
+                "description": "Deny all outbound traffic",
+                "protocol": "*",
+                "sourcePortRange": "*",
+                "destinationPortRange": "*",
+                "sourceAddressPrefix": "*",
+                "destinationAddressPrefix": "*",
+                "access": "Deny",
+                "priority": 65500,
+                "direction": "Outbound"
+              }
+            }
+          ]
+        }
+      },
+      {
+        "comments": "Public IP (PIP) for Windows JumpHost",
+        "type": "Microsoft.Network/publicIPAddresses",
+        "sku": {
+          "name": "Basic",
+          "tier": "Regional"
+        },
+        "name": "winJmphostVmPublicIp",
+        "apiVersion": "2019-11-01",
+        "location": "[resourceGroup().location]",
+        "properties": {
+          "publicIPAddressVersion": "IPv4",
+          "publicIPAllocationMethod": "Static",
+          "idleTimeoutInMinutes": 4,
+          "dnsSettings": {
+            "domainNameLabel": "[toLower(parameters('winVmDnsPrefix'))]"
+          }
+        }
+      },
+      {
+        "comments": "Storage account for WIN VM",
+        "type": "Microsoft.Storage/storageAccounts",
+        "sku": {
+          "name": "Standard_GRS",
+          "tier": "Standard"
+        },
+        "kind": "Storage",
+        "name": "[variables('winVmStorageName')]",
+        "apiVersion": "2019-06-01",
+        "location": "[resourceGroup().location]",
+        "properties": {
+          "networkAcls": {
+            "bypass": "AzureServices",
+            "defaultAction": "Allow"
+          },
+          "supportsHttpsTrafficOnly": false,
+          "encryption": {
+            "services": {
+              "file": {
+                "enabled": true
+              },
+              "blob": {
+                "enabled": true
+              }
+            },
+            "keySource": "Microsoft.Storage"
+          }
+        }
+      },
+      {
+        "apiVersion": "2019-11-01",
+        "type": "Microsoft.Network/publicIPAddresses",
+        "name": "hubVpnGatewayPublicIp",
+        "location": "[resourceGroup().location]",
+        "properties": {
+          "publicIPAllocationMethod": "Dynamic"
+        }
+      },
+      {
+        "condition": false,
+        "apiVersion": "2019-11-01",
+        "type": "Microsoft.Network/virtualNetworkGateways",
+        "name": "hubVpnGateway",
+        "location": "[resourceGroup().location]",
+        "dependsOn": [
+          "Microsoft.Network/publicIPAddresses/hubVpnGatewayPublicIp",
+          "Microsoft.Network/virtualNetworks/subnets/hubVnet/GatewaySubnet"
+        ],
+        "properties": {
+          "ipConfigurations": [
+            {
+              "properties": {
+                "privateIPAllocationMethod": "Dynamic",
+                "subnet": {
+                  "id": "Microsoft.Network/virtualNetworks/subnets/hubVnet/GatewaySubnet"
+                },
+                "publicIPAddress": {
+                  "id": "Microsoft.Network/publicIPAddresses/hubVpnGatewayPublicIp"
+                }
+              },
+              "name": "vnetGatewayConfig"
+            }
+          ],
+          "sku": {
+            "name": "Basic",
+            "tier": "Basic"
+          },
+          "gatewayType": "Vpn",
+          "vpnType": "RouteBased",
+          "enableBgp": false
+        }
+      }
+    ],
+    "outputs": {
+      "Jumphost VM IP address": {
+        "type": "string",
+        "value": "[reference(resourceId('Microsoft.Network/publicIPAddresses',variables('winJmphostPublicIpName'))).IpAddress]"
+      }
+    },
+    "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+  }
+}

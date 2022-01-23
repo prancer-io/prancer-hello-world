@@ -2,12 +2,12 @@
   "structure": "filesystem",
   "error": null,
   "reference": "master",
-  "contentType": "yaml",
+  "contentType": "json",
   "source": "gitConnectorGoogleKcc",
   "paths": [
-    "/samples/resources/dataproccluster/dataproc_v1beta1_dataprocautoscalingpolicy.yaml"
+    "/samples/resources/computeurlmap/global-compute-url-map/compute_v1beta1_computeurlmap.yaml"
   ],
-  "timestamp": 1628765145718,
+  "timestamp": 1642973303470,
   "queryuser": null,
   "checksum": "99914b932bd37a50b983c5e7c90ae93b",
   "node": {
@@ -15,36 +15,70 @@
     "type": "kcc",
     "collection": "kcctemplate",
     "paths": [
-      "/samples/resources/dataproccluster/dataproc_v1beta1_dataprocautoscalingpolicy.yaml"
+      "/samples/resources/computeurlmap/global-compute-url-map/compute_v1beta1_computeurlmap.yaml"
     ],
     "snapshotId": "KCC_TEMPLATE_SNAPSHOT322",
     "status": "active",
-    "validate": true
+    "validate": true,
+    "resourceTypes": [
+      "computeurlmap"
+    ]
   },
   "snapshotId": "KCC_TEMPLATE_SNAPSHOT322",
   "collection": "kcctemplate",
   "json": {
-    "apiVersion": "dataproc.cnrm.cloud.google.com/v1beta1",
-    "kind": "DataprocAutoscalingPolicy",
+    "apiVersion": "compute.cnrm.cloud.google.com/v1beta1",
+    "kind": "ComputeURLMap",
     "metadata": {
-      "annotations": null,
-      "name": "dataproccluster-dep"
+      "name": "computeurlmap-sample"
     },
     "spec": {
-      "location": "us-central1",
-      "workerConfig": {
-        "maxInstances": 5
-      },
-      "secondaryWorkerConfig": {
-        "maxInstances": 2
-      },
-      "basicAlgorithm": {
-        "yarnConfig": {
-          "gracefulDecommissionTimeout": "30s",
-          "scaleDownFactor": 0.5,
-          "scaleUpFactor": 0.5
+      "location": "global",
+      "defaultService": {
+        "backendServiceRef": {
+          "name": "computeurlmap-dep1"
         }
-      }
+      },
+      "pathMatcher": [
+        {
+          "name": "allpaths",
+          "defaultService": {
+            "backendServiceRef": {
+              "name": "computeurlmap-dep2"
+            }
+          },
+          "pathRule": [
+            {
+              "paths": [
+                "/home"
+              ],
+              "service": {
+                "backendServiceRef": {
+                  "name": "computeurlmap-dep3"
+                }
+              }
+            },
+            {
+              "paths": [
+                "/foo"
+              ],
+              "service": {
+                "backendBucketRef": {
+                  "name": "computeurlmap-dep"
+                }
+              }
+            }
+          ]
+        }
+      ],
+      "hostRule": [
+        {
+          "hosts": [
+            "example.com"
+          ],
+          "pathMatcher": "allpaths"
+        }
+      ]
     }
   }
 }

@@ -1,0 +1,113 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "main",
+  "contentType": "json",
+  "source": "gitConnectorAwsTerraHashicorp",
+  "paths": [
+    "/examples/eks-getting-started/outputs.tf",
+    "/examples/eks-getting-started/providers.tf",
+    "/examples/eks-getting-started/variables.tf",
+    "/examples/eks-getting-started/workstation-external-ip.tf",
+    "/examples/eks-getting-started/eks-worker-nodes.tf"
+  ],
+  "timestamp": 1642967657662,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "TRF_TEMPLATE_SNAPSHOT",
+    "type": "terraform",
+    "collection": "terraformtemplate",
+    "paths": [
+      "/examples/eks-getting-started/outputs.tf",
+      "/examples/eks-getting-started/providers.tf",
+      "/examples/eks-getting-started/variables.tf",
+      "/examples/eks-getting-started/workstation-external-ip.tf",
+      "/examples/eks-getting-started/eks-worker-nodes.tf"
+    ],
+    "snapshotId": "TRF_TEMPLATE_SNAPSHOT15",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "aws_iam_role",
+      "aws_iam_role_policy_attachment",
+      "aws_eks_node_group"
+    ]
+  },
+  "snapshotId": "TRF_TEMPLATE_SNAPSHOT15",
+  "collection": "terraformtemplate",
+  "json": {
+    "resources": [
+      {
+        "type": "aws_iam_role",
+        "name": "demo-node",
+        "properties": {
+          "name": "terraform-eks-demo-node",
+          "assume_role_policy": {
+            "Version": "2012-10-17",
+            "Statement": [
+              {
+                "Effect": "Allow",
+                "Principal": {
+                  "Service": "ec2.amazonaws.com"
+                },
+                "Action": "sts:AssumeRole"
+              }
+            ]
+          },
+          "compiletime_identity": "aws_iam_role.demo-node"
+        }
+      },
+      {
+        "type": "aws_iam_role_policy_attachment",
+        "name": "demo-node-AmazonEKSWorkerNodePolicy",
+        "properties": {
+          "policy_arn": "arn:aws:iam::aws:policy/AmazonEKSWorkerNodePolicy",
+          "role": "${aws_iam_role.demo-node.name}",
+          "compiletime_identity": "aws_iam_role_policy_attachment.demo-node-AmazonEKSWorkerNodePolicy"
+        }
+      },
+      {
+        "type": "aws_iam_role_policy_attachment",
+        "name": "demo-node-AmazonEKS_CNI_Policy",
+        "properties": {
+          "policy_arn": "arn:aws:iam::aws:policy/AmazonEKS_CNI_Policy",
+          "role": "${aws_iam_role.demo-node.name}",
+          "compiletime_identity": "aws_iam_role_policy_attachment.demo-node-AmazonEKS_CNI_Policy"
+        }
+      },
+      {
+        "type": "aws_iam_role_policy_attachment",
+        "name": "demo-node-AmazonEC2ContainerRegistryReadOnly",
+        "properties": {
+          "policy_arn": "arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly",
+          "role": "${aws_iam_role.demo-node.name}",
+          "compiletime_identity": "aws_iam_role_policy_attachment.demo-node-AmazonEC2ContainerRegistryReadOnly"
+        }
+      },
+      {
+        "type": "aws_eks_node_group",
+        "name": "demo",
+        "properties": {
+          "cluster_name": "${aws_eks_cluster.demo.name}",
+          "node_group_name": "demo",
+          "node_role_arn": "${aws_iam_role.demo-node.arn}",
+          "subnet_ids": "${aws_subnet.demo[*].id}",
+          "scaling_config": [
+            {
+              "desired_size": 1,
+              "max_size": 1,
+              "min_size": 1
+            }
+          ],
+          "depends_on": [
+            "${aws_iam_role_policy_attachment.demo-node-AmazonEKSWorkerNodePolicy}",
+            "${aws_iam_role_policy_attachment.demo-node-AmazonEKS_CNI_Policy}",
+            "${aws_iam_role_policy_attachment.demo-node-AmazonEC2ContainerRegistryReadOnly}"
+          ],
+          "compiletime_identity": "aws_eks_node_group.demo"
+        }
+      }
+    ]
+  }
+}

@@ -1,0 +1,315 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAzureQuickStart",
+  "paths": [
+    "/application-workloads/trailbot/stampery-trailbot-ubuntu/azuredeploy.json",
+    "/application-workloads/trailbot/stampery-trailbot-ubuntu/azuredeploy.parameters.json"
+  ],
+  "timestamp": 1642962896885,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/application-workloads/trailbot/stampery-trailbot-ubuntu/azuredeploy.json",
+      "/application-workloads/trailbot/stampery-trailbot-ubuntu/azuredeploy.parameters.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT564",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "microsoft.network/publicipaddresses",
+      "microsoft.network/virtualnetworks",
+      "microsoft.network/networkinterfaces",
+      "microsoft.compute/virtualmachines/extensions",
+      "microsoft.compute/virtualmachines",
+      "microsoft.network/networksecuritygroups",
+      "microsoft.storage/storageaccounts"
+    ]
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT564",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "adminUsername": {
+        "type": "string",
+        "metadata": {
+          "description": "Username for the Virtual Machine."
+        },
+        "value": "GEN-UNIQUE"
+      },
+      "adminEmail": {
+        "type": "string",
+        "metadata": {
+          "description": "Your email address."
+        },
+        "value": "abc@xyz.com"
+      },
+      "dnsLabelPrefix": {
+        "type": "string",
+        "metadata": {
+          "description": "Hostname assigned to the Public IP, also used as the VM Name. Must be lowercase. It should match with the following regular expression: ^[a-z][a-z0-9-]{1,61}[a-z0-9]$ or it will raise an error."
+        },
+        "value": "GEN-UNIQUE-11"
+      },
+      "clientPubKey": {
+        "type": "string",
+        "metadata": {
+          "description": "Client public key. Please install Trailbot Client in your personal computer, open it and it will generate a key you must paste here."
+        },
+        "value": "GEN-SSH-PUB-KEY"
+      },
+      "_artifactsLocation": {
+        "type": "string",
+        "metadata": {
+          "description": "The base URI where artifacts required by this template are located. When the template is deployed using the accompanying scripts, a private location in the subscription will be used and this value will be automatically generated."
+        },
+        "defaultValue": "[deployment().properties.templateLink.uri]"
+      },
+      "_artifactsLocationSasToken": {
+        "type": "securestring",
+        "metadata": {
+          "description": "The sasToken required to access _artifactsLocation.  When the template is deployed using the accompanying scripts, a sasToken will be automatically generated."
+        },
+        "defaultValue": ""
+      },
+      "location": {
+        "type": "string",
+        "defaultValue": "[resourceGroup().location]",
+        "metadata": {
+          "description": "Location for all resources."
+        }
+      },
+      "authenticationType": {
+        "type": "string",
+        "defaultValue": "sshPublicKey",
+        "allowedValues": [
+          "sshPublicKey",
+          "password"
+        ],
+        "metadata": {
+          "description": "Type of authentication to use on the Virtual Machine. SSH key is recommended."
+        }
+      },
+      "adminPasswordOrKey": {
+        "type": "securestring",
+        "metadata": {
+          "description": "SSH Key or password for the Virtual Machine. SSH key is recommended."
+        },
+        "value": "GEN-SSH-PUB-KEY"
+      },
+      "vmSize": {
+        "type": "string",
+        "defaultValue": "Standard_A1",
+        "metadata": {
+          "description": "Default VM Size"
+        }
+      }
+    },
+    "variables": {
+      "imagePublisher": "Canonical",
+      "imageOffer": "UbuntuServer",
+      "imageSKU": "14.04.4-LTS",
+      "nicName": "TrailbotNic",
+      "addressPrefix": "10.0.0.0/16",
+      "subnetName": "TrailbotSubnet",
+      "subnetPrefix": "10.0.0.0/24",
+      "storageAccountType": "Standard_LRS",
+      "storageAccountName": "[concat(uniquestring(resourceGroup().id, 'trailbot'))]",
+      "publicIPAddressName": "TrailbotPublicIP",
+      "publicIPAddressType": "Dynamic",
+      "vmName": "GEN-UNIQUE-11",
+      "virtualNetworkName": "TrailbotVNET",
+      "scriptFolder": "scripts",
+      "scriptFileName": "install.sh",
+      "subnetRef": "Microsoft.Network/virtualNetworks/subnets/TrailbotVNET/TrailbotSubnet",
+      "linuxConfiguration": {
+        "disablePasswordAuthentication": true,
+        "ssh": {
+          "publicKeys": [
+            {
+              "path": "/home/GEN-UNIQUE/.ssh/authorized_keys",
+              "keyData": "GEN-SSH-PUB-KEY"
+            }
+          ]
+        }
+      },
+      "networkSecurityGroupName": "default-NSG"
+    },
+    "resources": [
+      {
+        "type": "Microsoft.Storage/storageAccounts",
+        "name": "[variables('storageAccountName')]",
+        "apiVersion": "2021-01-01",
+        "location": "[resourceGroup().location]",
+        "sku": {
+          "name": "Standard_LRS"
+        }
+      },
+      {
+        "apiVersion": "2020-07-01",
+        "type": "Microsoft.Network/publicIPAddresses",
+        "name": "TrailbotPublicIP",
+        "location": "[resourceGroup().location]",
+        "properties": {
+          "publicIPAllocationMethod": "Dynamic",
+          "dnsSettings": {
+            "domainNameLabel": "GEN-UNIQUE-11"
+          }
+        }
+      },
+      {
+        "comments": "Default Network Security Group for template",
+        "type": "Microsoft.Network/networkSecurityGroups",
+        "apiVersion": "2020-07-01",
+        "name": "default-NSG",
+        "location": "[resourceGroup().location]",
+        "properties": {
+          "securityRules": [
+            {
+              "name": "default-allow-22",
+              "properties": {
+                "priority": 1000,
+                "access": "Allow",
+                "direction": "Inbound",
+                "destinationPortRange": "22",
+                "protocol": "Tcp",
+                "sourceAddressPrefix": "*",
+                "sourcePortRange": "*",
+                "destinationAddressPrefix": "*"
+              }
+            }
+          ]
+        }
+      },
+      {
+        "apiVersion": "2020-07-01",
+        "type": "Microsoft.Network/virtualNetworks",
+        "name": "TrailbotVNET",
+        "location": "[resourceGroup().location]",
+        "dependsOn": [
+          "Microsoft.Network/networkSecurityGroups/default-NSG"
+        ],
+        "properties": {
+          "addressSpace": {
+            "addressPrefixes": [
+              "10.0.0.0/16"
+            ]
+          },
+          "subnets": [
+            {
+              "name": "TrailbotSubnet",
+              "properties": {
+                "addressPrefix": "10.0.0.0/24",
+                "networkSecurityGroup": {
+                  "id": "Microsoft.Network/networkSecurityGroups/default-NSG"
+                }
+              }
+            }
+          ]
+        }
+      },
+      {
+        "apiVersion": "2020-07-01",
+        "type": "Microsoft.Network/networkInterfaces",
+        "name": "TrailbotNic",
+        "location": "[resourceGroup().location]",
+        "dependsOn": [
+          "Microsoft.Network/publicIPAddresses//TrailbotPublicIP",
+          "Microsoft.Network/virtualNetworks//TrailbotVNET"
+        ],
+        "properties": {
+          "ipConfigurations": [
+            {
+              "name": "ipconfig1",
+              "properties": {
+                "privateIPAllocationMethod": "Dynamic",
+                "publicIPAddress": {
+                  "id": "Microsoft.Network/publicIPAddresses/TrailbotPublicIP"
+                },
+                "subnet": {
+                  "id": "Microsoft.Network/virtualNetworks/subnets/TrailbotVNET/TrailbotSubnet"
+                }
+              }
+            }
+          ]
+        }
+      },
+      {
+        "apiVersion": "2020-12-01",
+        "type": "Microsoft.Compute/virtualMachines",
+        "name": "GEN-UNIQUE-11",
+        "location": "[resourceGroup().location]",
+        "dependsOn": [
+          "[resourceId('Microsoft.Storage/storageAccounts/', variables('storageAccountName'))]",
+          "[resourceId('Microsoft.Network/networkInterfaces/', variables('nicName'))]"
+        ],
+        "properties": {
+          "hardwareProfile": {
+            "vmSize": "Standard_A1"
+          },
+          "osProfile": {
+            "computerName": "GEN-UNIQUE-11",
+            "adminUsername": "GEN-UNIQUE",
+            "adminPassword": "GEN-SSH-PUB-KEY",
+            "linuxConfiguration": "[if(equals(parameters('authenticationType'), 'password'), json('null'), variables('linuxConfiguration'))]"
+          },
+          "storageProfile": {
+            "imageReference": {
+              "publisher": "Canonical",
+              "offer": "UbuntuServer",
+              "sku": "14.04.4-LTS",
+              "version": "latest"
+            },
+            "osDisk": {
+              "name": "GEN-UNIQUE-11_OSDisk",
+              "caching": "ReadWrite",
+              "createOption": "FromImage"
+            }
+          },
+          "networkProfile": {
+            "networkInterfaces": [
+              {
+                "id": "Microsoft.Network/networkInterfaces/TrailbotNic"
+              }
+            ]
+          },
+          "diagnosticsProfile": {
+            "bootDiagnostics": {
+              "enabled": true,
+              "storageUri": "[reference(variables('storageAccountName'), '2021-01-01').primaryEndpoints['blob']]"
+            }
+          }
+        }
+      },
+      {
+        "type": "Microsoft.Compute/virtualMachines/extensions",
+        "name": "GEN-UNIQUE-11/newuserscript",
+        "location": "[resourceGroup().location]",
+        "apiVersion": "2020-12-01",
+        "dependsOn": [
+          "Microsoft.Compute/virtualMachines//GEN-UNIQUE-11"
+        ],
+        "properties": {
+          "publisher": "Microsoft.Azure.Extensions",
+          "type": "CustomScript",
+          "typeHandlerVersion": "2.0",
+          "autoUpgradeMinorVersion": true,
+          "settings": {
+            "fileUris": [
+              "[uri(parameters('_artifactsLocation'), concat(variables('ScriptFolder'), '/', variables('ScriptFileName'), parameters('_artifactsLocationSasToken')))]"
+            ],
+            "commandToExecute": "sh install.sh \"abc@xyz.com\" GEN-SSH-PUB-KEY"
+          }
+        }
+      }
+    ],
+    "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+  }
+}

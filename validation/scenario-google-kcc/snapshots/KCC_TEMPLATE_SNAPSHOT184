@@ -2,12 +2,12 @@
   "structure": "filesystem",
   "error": null,
   "reference": "master",
-  "contentType": "yaml",
+  "contentType": "json",
   "source": "gitConnectorGoogleKcc",
   "paths": [
-    "/samples/resources/computenodetemplate/flexible-node-template/compute_v1beta1_computenodetemplate.yaml"
+    "/samples/resources/computeinstancegroupmanager/regional-compute-instance-group-manager/compute_v1beta1_computesubnetwork.yaml"
   ],
-  "timestamp": 1628765142132,
+  "timestamp": 1642973302883,
   "queryuser": null,
   "checksum": "99914b932bd37a50b983c5e7c90ae93b",
   "node": {
@@ -15,30 +15,29 @@
     "type": "kcc",
     "collection": "kcctemplate",
     "paths": [
-      "/samples/resources/computenodetemplate/flexible-node-template/compute_v1beta1_computenodetemplate.yaml"
+      "/samples/resources/computeinstancegroupmanager/regional-compute-instance-group-manager/compute_v1beta1_computesubnetwork.yaml"
     ],
     "snapshotId": "KCC_TEMPLATE_SNAPSHOT184",
     "status": "active",
-    "validate": true
+    "validate": true,
+    "resourceTypes": [
+      "computesubnetwork"
+    ]
   },
   "snapshotId": "KCC_TEMPLATE_SNAPSHOT184",
   "collection": "kcctemplate",
   "json": {
     "apiVersion": "compute.cnrm.cloud.google.com/v1beta1",
-    "kind": "ComputeNodeTemplate",
+    "kind": "ComputeSubnetwork",
     "metadata": {
-      "name": "computenodetemplate-sample-flexible",
-      "labels": {
-        "memory_guarantee": "false",
-        "desired_workload": "high-cpu"
-      }
+      "name": "computeinstancegroupmanager-dep-regional"
     },
     "spec": {
-      "description": "Node template for sole tenant nodes running in us-central1, with 96vCPUs and any amount of memory on any machine type.",
+      "ipCidrRange": "10.2.0.0/16",
       "region": "us-central1",
-      "nodeTypeFlexibility": {
-        "cpus": "96",
-        "memory": "any"
+      "privateIpGoogleAccess": false,
+      "networkRef": {
+        "name": "computeinstancegroupmanager-dep-regional"
       }
     }
   }

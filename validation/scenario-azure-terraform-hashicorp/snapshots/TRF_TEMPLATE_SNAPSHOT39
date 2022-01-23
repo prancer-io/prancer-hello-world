@@ -1,0 +1,173 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "main",
+  "contentType": "json",
+  "source": "gitConnectorAzureTerraHashicorp",
+  "paths": [
+    "/examples/databricks/customer-managed-key/dbfs/variables.tf",
+    "/examples/databricks/customer-managed-key/dbfs/main.tf"
+  ],
+  "timestamp": 1642943279692,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "TRF_TEMPLATE_SNAPSHOT",
+    "type": "terraform",
+    "collection": "terraformtemplate",
+    "paths": [
+      "/examples/databricks/customer-managed-key/dbfs/variables.tf",
+      "/examples/databricks/customer-managed-key/dbfs/main.tf"
+    ],
+    "snapshotId": "TRF_TEMPLATE_SNAPSHOT39",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "azurerm_key_vault",
+      "azurerm_key_vault_key",
+      "azurerm_resource_group",
+      "azurerm_databricks_workspace",
+      "azurerm_key_vault_access_policy",
+      "azurerm_databricks_workspace_customer_managed_key"
+    ]
+  },
+  "snapshotId": "TRF_TEMPLATE_SNAPSHOT39",
+  "collection": "terraformtemplate",
+  "json": {
+    "provider": [
+      {
+        "azurerm": {
+          "features": [
+            {}
+          ]
+        }
+      }
+    ],
+    "data": {
+      "azurerm_client_config": {
+        "current": {
+          "compiletime_identity": "data.azurerm_client_config.current"
+        }
+      }
+    },
+    "resources": [
+      {
+        "type": "azurerm_resource_group",
+        "name": "example",
+        "properties": {
+          "name": "${var.prefix}-databricks-cmk",
+          "location": "West Europe",
+          "compiletime_identity": "azurerm_resource_group.example"
+        }
+      },
+      {
+        "type": "azurerm_databricks_workspace",
+        "name": "example",
+        "properties": {
+          "name": "${var.prefix}-DBW",
+          "resource_group_name": "${azurerm_resource_group.example.name}",
+          "location": "${azurerm_resource_group.example.location}",
+          "sku": "premium",
+          "managed_resource_group_name": "${var.prefix}-DBW-managed-dbfs",
+          "customer_managed_key_enabled": true,
+          "tags": {
+            "Environment": "Production"
+          },
+          "compiletime_identity": "azurerm_databricks_workspace.example"
+        }
+      },
+      {
+        "type": "azurerm_databricks_workspace_customer_managed_key",
+        "name": "example",
+        "properties": {
+          "depends_on": [
+            "${azurerm_key_vault_access_policy.databricks}"
+          ],
+          "workspace_id": "${azurerm_databricks_workspace.example.id}",
+          "key_vault_key_id": "${azurerm_key_vault_key.example.id}",
+          "compiletime_identity": "azurerm_databricks_workspace_customer_managed_key.example"
+        }
+      },
+      {
+        "type": "azurerm_key_vault",
+        "name": "example",
+        "properties": {
+          "name": "${var.prefix}-keyvault",
+          "location": "${azurerm_resource_group.example.location}",
+          "resource_group_name": "${azurerm_resource_group.example.name}",
+          "tenant_id": "${data.azurerm_client_config.current.tenant_id}",
+          "sku_name": "premium",
+          "purge_protection_enabled": true,
+          "soft_delete_retention_days": 7,
+          "compiletime_identity": "azurerm_key_vault.example"
+        }
+      },
+      {
+        "type": "azurerm_key_vault_key",
+        "name": "example",
+        "properties": {
+          "depends_on": [
+            "${azurerm_key_vault_access_policy.terraform}"
+          ],
+          "name": "${var.prefix}-certificate",
+          "key_vault_id": "${azurerm_key_vault.example.id}",
+          "key_type": "RSA",
+          "key_size": 2048,
+          "key_opts": [
+            "decrypt",
+            "encrypt",
+            "sign",
+            "unwrapKey",
+            "verify",
+            "wrapKey"
+          ],
+          "compiletime_identity": "azurerm_key_vault_key.example"
+        }
+      },
+      {
+        "type": "azurerm_key_vault_access_policy",
+        "name": "terraform",
+        "properties": {
+          "key_vault_id": "${azurerm_key_vault.example.id}",
+          "tenant_id": "${azurerm_key_vault.example.tenant_id}",
+          "object_id": "${data.azurerm_client_config.current.object_id}",
+          "key_permissions": [
+            "get",
+            "list",
+            "create",
+            "decrypt",
+            "encrypt",
+            "sign",
+            "unwrapKey",
+            "verify",
+            "wrapKey",
+            "delete",
+            "restore",
+            "recover",
+            "update",
+            "purge"
+          ],
+          "compiletime_identity": "azurerm_key_vault_access_policy.terraform"
+        }
+      },
+      {
+        "type": "azurerm_key_vault_access_policy",
+        "name": "databricks",
+        "properties": {
+          "depends_on": [
+            "${azurerm_databricks_workspace.example}"
+          ],
+          "key_vault_id": "${azurerm_key_vault.example.id}",
+          "tenant_id": "${azurerm_databricks_workspace.example.storage_account_identity[0].tenant_id}",
+          "object_id": "${azurerm_databricks_workspace.example.storage_account_identity[0].principal_id}",
+          "key_permissions": [
+            "get",
+            "unwrapKey",
+            "wrapKey"
+          ],
+          "compiletime_identity": "azurerm_key_vault_access_policy.databricks"
+        }
+      }
+    ]
+  }
+}

@@ -1,0 +1,107 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "main",
+  "contentType": "json",
+  "source": "gitConnectorAzureTerraHashicorp",
+  "paths": [
+    "/examples/storage/storage-container/variables.tf",
+    "/examples/storage/storage-container/main.tf"
+  ],
+  "timestamp": 1642943279973,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "TRF_TEMPLATE_SNAPSHOT",
+    "type": "terraform",
+    "collection": "terraformtemplate",
+    "paths": [
+      "/examples/storage/storage-container/variables.tf",
+      "/examples/storage/storage-container/main.tf"
+    ],
+    "snapshotId": "TRF_TEMPLATE_SNAPSHOT113",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "azurerm_storage_account",
+      "azurerm_storage_container",
+      "azurerm_resource_group"
+    ]
+  },
+  "snapshotId": "TRF_TEMPLATE_SNAPSHOT113",
+  "collection": "terraformtemplate",
+  "json": {
+    "provider": [
+      {
+        "azurerm": {
+          "features": [
+            {}
+          ]
+        }
+      }
+    ],
+    "resources": [
+      {
+        "type": "azurerm_resource_group",
+        "name": "example",
+        "properties": {
+          "name": "${var.prefix}-resources",
+          "location": "${var.location}",
+          "compiletime_identity": "azurerm_resource_group.example"
+        }
+      },
+      {
+        "type": "azurerm_storage_account",
+        "name": "example",
+        "properties": {
+          "name": "${var.prefix}storageacct",
+          "resource_group_name": "${azurerm_resource_group.example.name}",
+          "location": "${azurerm_resource_group.example.location}",
+          "account_tier": "Standard",
+          "account_kind": "StorageV2",
+          "account_replication_type": "LRS",
+          "enable_https_traffic_only": true,
+          "access_tier": "Hot",
+          "allow_blob_public_access": true,
+          "compiletime_identity": "azurerm_storage_account.example"
+        }
+      },
+      {
+        "type": "azurerm_storage_account",
+        "name": "example2",
+        "properties": {
+          "name": "${var.prefix}storageacct2",
+          "resource_group_name": "${azurerm_resource_group.example.name}",
+          "location": "${azurerm_resource_group.example.location}",
+          "account_tier": "Standard",
+          "account_kind": "StorageV2",
+          "account_replication_type": "LRS",
+          "enable_https_traffic_only": true,
+          "access_tier": "Hot",
+          "allow_blob_public_access": true,
+          "compiletime_identity": "azurerm_storage_account.example2"
+        }
+      },
+      {
+        "type": "azurerm_storage_container",
+        "name": "example",
+        "properties": {
+          "name": "${var.prefix}storagecontainer",
+          "storage_account_name": "${azurerm_storage_account.example.name}",
+          "container_access_type": "blob",
+          "compiletime_identity": "azurerm_storage_container.example"
+        }
+      },
+      {
+        "type": "azurerm_storage_container",
+        "name": "example2",
+        "properties": {
+          "name": "${var.prefix}storagecontainer2",
+          "storage_account_name": "${azurerm_storage_account.example2.name}",
+          "container_access_type": "blob",
+          "compiletime_identity": "azurerm_storage_container.example2"
+        }
+      }
+    ]
+  }
+}

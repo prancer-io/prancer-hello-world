@@ -1,0 +1,294 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAzureQuickStart",
+  "paths": [
+    "/quickstarts/microsoft.compute/vm-simple-freebsd/azuredeploy.json",
+    "/quickstarts/microsoft.compute/vm-simple-freebsd/azuredeploy.parameters.json"
+  ],
+  "timestamp": 1642962904395,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/quickstarts/microsoft.compute/vm-simple-freebsd/azuredeploy.json",
+      "/quickstarts/microsoft.compute/vm-simple-freebsd/azuredeploy.parameters.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT1098",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "microsoft.network/publicipaddresses",
+      "microsoft.network/virtualnetworks",
+      "microsoft.network/networkinterfaces",
+      "microsoft.compute/virtualmachines",
+      "microsoft.network/networksecuritygroups",
+      "microsoft.storage/storageaccounts"
+    ]
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT1098",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "adminUsername": {
+        "type": "string",
+        "metadata": {
+          "description": "User name for the Virtual Machine."
+        },
+        "value": "GEN-UNIQUE"
+      },
+      "dnsLabelPrefix": {
+        "type": "string",
+        "metadata": {
+          "description": "Unique DNS Name for the Public IP used to access the Virtual Machine."
+        },
+        "value": "GEN-UNIQUE"
+      },
+      "freeBSDOSVersion": {
+        "type": "string",
+        "defaultValue": "12.0",
+        "allowedValues": [
+          "12.0",
+          "11.2",
+          "11.1",
+          "11.0",
+          "10.4",
+          "10.3"
+        ],
+        "metadata": {
+          "description": "The FreeBSD version for the VM. This will pick a fully patched image of this given FreeBSD version."
+        }
+      },
+      "location": {
+        "type": "string",
+        "defaultValue": "[resourceGroup().location]",
+        "metadata": {
+          "description": "Location for all resources."
+        }
+      },
+      "authenticationType": {
+        "type": "string",
+        "defaultValue": "sshPublicKey",
+        "allowedValues": [
+          "sshPublicKey",
+          "password"
+        ],
+        "metadata": {
+          "description": "Type of authentication to use on the Virtual Machine. SSH key is recommended."
+        }
+      },
+      "adminPasswordOrKey": {
+        "type": "securestring",
+        "metadata": {
+          "description": "SSH Key or password for the Virtual Machine. SSH key is recommended."
+        },
+        "value": "GEN-SSH-PUB-KEY"
+      },
+      "vmSize": {
+        "type": "string",
+        "defaultValue": "Standard_A1_v2",
+        "metadata": {
+          "description": "Size of the virtual machine."
+        }
+      }
+    },
+    "variables": {
+      "storageAccountName": "[concat(uniquestring(resourceGroup().id), 'safreebsdvm')]",
+      "imagePublisher": "MicrosoftOSTC",
+      "imageOffer": "FreeBSD",
+      "nicName": "myVMNic",
+      "addressPrefix": "10.0.0.0/16",
+      "subnetName": "Subnet",
+      "subnetPrefix": "10.0.0.0/24",
+      "storageAccountType": "Standard_LRS",
+      "publicIPAddressName": "myPublicIP",
+      "publicIPAddressType": "Dynamic",
+      "vmName": "MyFreeBSDVM",
+      "virtualNetworkName": "MyVNET",
+      "subnetRef": "Microsoft.Network/virtualNetworks/subnets/MyVNET/Subnet",
+      "linuxConfiguration": {
+        "disablePasswordAuthentication": true,
+        "ssh": {
+          "publicKeys": [
+            {
+              "path": "/home/GEN-UNIQUE/.ssh/authorized_keys",
+              "keyData": "GEN-SSH-PUB-KEY"
+            }
+          ]
+        }
+      },
+      "networkSecurityGroupName": "Subnet-nsg"
+    },
+    "resources": [
+      {
+        "type": "Microsoft.Storage/storageAccounts",
+        "name": "[variables('storageAccountName')]",
+        "apiVersion": "2020-08-01-preview",
+        "location": "[resourceGroup().location]",
+        "sku": {
+          "name": "Standard_LRS"
+        },
+        "kind": "StorageV2",
+        "properties": {}
+      },
+      {
+        "apiVersion": "2020-05-01",
+        "type": "Microsoft.Network/publicIPAddresses",
+        "name": "myPublicIP",
+        "location": "[resourceGroup().location]",
+        "properties": {
+          "publicIPAllocationMethod": "Dynamic",
+          "dnsSettings": {
+            "domainNameLabel": "GEN-UNIQUE"
+          }
+        }
+      },
+      {
+        "comments": "Simple Network Security Group for subnet [variables('subnetName')]",
+        "type": "Microsoft.Network/networkSecurityGroups",
+        "apiVersion": "2020-05-01",
+        "name": "Subnet-nsg",
+        "location": "[resourceGroup().location]",
+        "properties": {
+          "securityRules": [
+            {
+              "name": "default-allow-22",
+              "properties": {
+                "priority": 1000,
+                "access": "Allow",
+                "direction": "Inbound",
+                "destinationPortRange": "22",
+                "protocol": "Tcp",
+                "sourceAddressPrefix": "*",
+                "sourcePortRange": "*",
+                "destinationAddressPrefix": "*"
+              }
+            }
+          ]
+        }
+      },
+      {
+        "apiVersion": "2020-05-01",
+        "type": "Microsoft.Network/virtualNetworks",
+        "name": "MyVNET",
+        "location": "[resourceGroup().location]",
+        "dependsOn": [
+          "Microsoft.Network/networkSecurityGroups/Subnet-nsg"
+        ],
+        "properties": {
+          "addressSpace": {
+            "addressPrefixes": [
+              "10.0.0.0/16"
+            ]
+          },
+          "subnets": [
+            {
+              "name": "Subnet",
+              "properties": {
+                "addressPrefix": "10.0.0.0/24",
+                "networkSecurityGroup": {
+                  "id": "Microsoft.Network/networkSecurityGroups/Subnet-nsg"
+                }
+              }
+            }
+          ]
+        }
+      },
+      {
+        "apiVersion": "2020-05-01",
+        "type": "Microsoft.Network/networkInterfaces",
+        "name": "myVMNic",
+        "location": "[resourceGroup().location]",
+        "dependsOn": [
+          "Microsoft.Network/publicIPAddresses//myPublicIP",
+          "Microsoft.Network/virtualNetworks//MyVNET"
+        ],
+        "properties": {
+          "ipConfigurations": [
+            {
+              "name": "ipconfig1",
+              "properties": {
+                "privateIPAllocationMethod": "Dynamic",
+                "publicIPAddress": {
+                  "id": "Microsoft.Network/publicIPAddresses/myPublicIP"
+                },
+                "subnet": {
+                  "id": "Microsoft.Network/virtualNetworks/subnets/MyVNET/Subnet"
+                }
+              }
+            }
+          ]
+        }
+      },
+      {
+        "apiVersion": "2020-06-01",
+        "type": "Microsoft.Compute/virtualMachines",
+        "name": "MyFreeBSDVM",
+        "location": "[resourceGroup().location]",
+        "dependsOn": [
+          "[resourceId('Microsoft.Storage/storageAccounts/', variables('storageAccountName'))]",
+          "[resourceId('Microsoft.Network/networkInterfaces/', variables('nicName'))]"
+        ],
+        "properties": {
+          "hardwareProfile": {
+            "vmSize": "Standard_A1_v2"
+          },
+          "osProfile": {
+            "computerName": "MyFreeBSDVM",
+            "adminUsername": "GEN-UNIQUE",
+            "adminPassword": "GEN-SSH-PUB-KEY",
+            "linuxConfiguration": "[if(equals(parameters('authenticationType'), 'password'), json('null'), variables('linuxConfiguration'))]"
+          },
+          "storageProfile": {
+            "imageReference": {
+              "publisher": "MicrosoftOSTC",
+              "offer": "FreeBSD",
+              "sku": "12.0",
+              "version": "latest"
+            },
+            "osDisk": {
+              "createOption": "FromImage"
+            },
+            "dataDisks": [
+              {
+                "diskSizeGB": 1023,
+                "lun": 0,
+                "createOption": "Empty"
+              }
+            ]
+          },
+          "networkProfile": {
+            "networkInterfaces": [
+              {
+                "id": "Microsoft.Network/networkInterfaces/myVMNic"
+              }
+            ]
+          },
+          "diagnosticsProfile": {
+            "bootDiagnostics": {
+              "enabled": true,
+              "storageUri": "[reference(resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName')), '2020-08-01-preview').primaryEndpoints['blob']]"
+            }
+          }
+        }
+      }
+    ],
+    "outputs": {
+      "hostname": {
+        "type": "string",
+        "value": "[reference(variables('publicIPAddressName')).dnsSettings.fqdn]"
+      },
+      "sshCommand": {
+        "type": "string",
+        "value": "[concat('ssh ', parameters('adminUsername'), '@', reference(variables('publicIPAddressName')).dnsSettings.fqdn)]"
+      }
+    },
+    "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+  }
+}

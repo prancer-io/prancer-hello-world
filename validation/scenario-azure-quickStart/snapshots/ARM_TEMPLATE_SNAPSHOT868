@@ -1,0 +1,80 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAzureQuickStart",
+  "paths": [
+    "/demos/web-app-regional-vnet-private-endpoint-sql-storage/nestedtemplates/private_dns.json"
+  ],
+  "timestamp": 1642962902369,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/demos/web-app-regional-vnet-private-endpoint-sql-storage/nestedtemplates/private_dns.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT868",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "microsoft.network/privatednszones",
+      "microsoft.network/privatednszones/virtualnetworklinks"
+    ]
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT868",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "privateDnsZoneName": {
+        "type": "string",
+        "metadata": {
+          "description": "private dns zone name"
+        }
+      },
+      "virtualNetworkName": {
+        "type": "string",
+        "metadata": {
+          "description": "virtual network name"
+        }
+      },
+      "enableVmRegistration": {
+        "type": "bool",
+        "defaultValue": false,
+        "metadata": {
+          "description": "controls whether the dns zone will automatically register DNS records for resources in the virtual network"
+        }
+      }
+    },
+    "variables": {},
+    "resources": [
+      {
+        "type": "Microsoft.Network/privateDnsZones",
+        "apiVersion": "2020-01-01",
+        "name": "privateDnsZoneName",
+        "location": "global"
+      },
+      {
+        "type": "Microsoft.Network/privateDnsZones/virtualNetworkLinks",
+        "apiVersion": "2020-01-01",
+        "name": "privateDnsZoneName/privateDnsZoneName-virtualNetworkName-link",
+        "location": "global",
+        "dependsOn": [
+          "Microsoft.Network/privateDnsZones/privateDnsZoneName"
+        ],
+        "properties": {
+          "registrationEnabled": false,
+          "virtualNetwork": {
+            "id": "Microsoft.Network/virtualNetworks/virtualNetworkName"
+          }
+        }
+      }
+    ],
+    "outputs": {},
+    "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+  }
+}

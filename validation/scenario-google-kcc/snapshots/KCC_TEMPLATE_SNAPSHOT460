@@ -2,12 +2,12 @@
   "structure": "filesystem",
   "error": null,
   "reference": "master",
-  "contentType": "yaml",
+  "contentType": "json",
   "source": "gitConnectorGoogleKcc",
   "paths": [
-    "/samples/resources/monitoringalertpolicy/instance-performance-alert-policy/monitoring_v1beta1_monitoringalertpolicy.yaml"
+    "/samples/resources/iampolicy/pubsub-admin-policy/iam_v1beta1_iamserviceaccount.yaml"
   ],
-  "timestamp": 1628765149212,
+  "timestamp": 1642973304302,
   "queryuser": null,
   "checksum": "99914b932bd37a50b983c5e7c90ae93b",
   "node": {
@@ -15,89 +15,22 @@
     "type": "kcc",
     "collection": "kcctemplate",
     "paths": [
-      "/samples/resources/monitoringalertpolicy/instance-performance-alert-policy/monitoring_v1beta1_monitoringalertpolicy.yaml"
+      "/samples/resources/iampolicy/pubsub-admin-policy/iam_v1beta1_iamserviceaccount.yaml"
     ],
     "snapshotId": "KCC_TEMPLATE_SNAPSHOT460",
     "status": "active",
-    "validate": true
+    "validate": true,
+    "resourceTypes": [
+      "iamserviceaccount"
+    ]
   },
   "snapshotId": "KCC_TEMPLATE_SNAPSHOT460",
   "collection": "kcctemplate",
   "json": {
-    "apiVersion": "monitoring.cnrm.cloud.google.com/v1beta1",
-    "kind": "MonitoringAlertPolicy",
+    "apiVersion": "iam.cnrm.cloud.google.com/v1beta1",
+    "kind": "IAMServiceAccount",
     "metadata": {
-      "labels": {
-        "checking": "instance-performance-bug",
-        "oncall-treatment": "urgent-meltdown"
-      },
-      "name": "monitoringalertpolicy-sample-instanceperformance"
-    },
-    "spec": {
-      "displayName": "Sample Computing Instance Performance Alert Policy",
-      "enabled": true,
-      "notificationChannels": [
-        {
-          "name": "monitoringalertpolicy-dep-instanceperformance"
-        }
-      ],
-      "combiner": "AND_WITH_MATCHING_RESOURCE",
-      "conditions": [
-        {
-          "displayName": "CPU usage is extremely high",
-          "conditionThreshold": {
-            "filter": "metric.type=\"compute.googleapis.com/instance/cpu/utilization\" AND resource.type=\"gce_instance\"",
-            "aggregations": [
-              {
-                "perSeriesAligner": "ALIGN_MAX",
-                "alignmentPeriod": "60s",
-                "crossSeriesReducer": "REDUCE_MEAN",
-                "groupByFields": [
-                  "project",
-                  "resource.label.instance_id",
-                  "resource.label.zone"
-                ]
-              }
-            ],
-            "comparison": "COMPARISON_GT",
-            "thresholdValue": 0.9,
-            "duration": "900s",
-            "trigger": {
-              "count": 1
-            }
-          }
-        },
-        {
-          "displayName": "CPU usage is increasing at a high rate",
-          "conditionThreshold": {
-            "filter": "metric.type=\"compute.googleapis.com/instance/cpu/utilization\" AND resource.type=\"gce_instance\"",
-            "aggregations": [
-              {
-                "alignmentPeriod": "900s",
-                "perSeriesAligner": "ALIGN_PERCENT_CHANGE"
-              }
-            ],
-            "comparison": "COMPARISON_GT",
-            "thresholdValue": 0.5,
-            "duration": "180s",
-            "trigger": {
-              "count": 1
-            }
-          }
-        },
-        {
-          "displayName": "Process 'nginx' is not running",
-          "conditionThreshold": {
-            "filter": "select_process_count(\"has_substring(\\\"nginx\\\")\", \"www\") AND resource.type=\"gce_instance\"",
-            "comparison": "COMPARISON_LT",
-            "thresholdValue": 1,
-            "duration": "300s"
-          }
-        }
-      ],
-      "documentation": {
-        "content": "This sample is an amalgamation of policy samples found at https://cloud.google.com/monitoring/alerts/policies-in-json. It is meant to give an idea of what is possible rather than be a completely realistic alerting policy in and of itself.\n\nCombiner AND_WITH_MATCHING_RESOURCE\nWhile more general policies will use an OR combiner, triggering an incident when any of their conditions are met, AND combiners only trigger when all of their conditions are met, allowing for specification of very specific circumstances.\nAND_WITH_MATCHING_RESOURCE combiners go one step further and only trigger when all conditions are met for the same resource, in this case, a GCE instance.\n\nMetric-threshold condition\nThe first condition in this policy, \"CPU usage is extremely high\", tests average CPU usage in a group of VMs.\n\nRate-of-change condition\nThe second condition in this policy, \"CPU usage is increasing at a high rate\" tests if the rate of CPU utilization is increasing rapidly.\n\nProcess-health condition\nThe third condition in this policy, \"Process 'nginx' is not running\", tests if there is no process matching the string nginx and running as user www available for more than 5 minutes.\n\nAll together, this policy would monitor for a situation where the lack of an 'nginx' process caused a spike in CPU usage in the same instance and elevated CPU usage across all instances in its group."
-      }
+      "name": "iampolicy-dep-pubsubadmin"
     }
   }
 }

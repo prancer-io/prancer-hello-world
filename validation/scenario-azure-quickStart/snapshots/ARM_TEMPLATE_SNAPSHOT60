@@ -1,0 +1,420 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAzureQuickStart",
+  "paths": [
+    "/application-workloads/chef/chef-json-parameters-linux-vm/azuredeploy.json",
+    "/application-workloads/chef/chef-json-parameters-linux-vm/azuredeploy.parameters.json"
+  ],
+  "timestamp": 1642962884410,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/application-workloads/chef/chef-json-parameters-linux-vm/azuredeploy.json",
+      "/application-workloads/chef/chef-json-parameters-linux-vm/azuredeploy.parameters.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT60",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "microsoft.network/publicipaddresses",
+      "microsoft.network/virtualnetworks",
+      "microsoft.network/networkinterfaces",
+      "microsoft.compute/virtualmachines/extensions",
+      "microsoft.compute/virtualmachines",
+      "microsoft.network/networksecuritygroups",
+      "microsoft.storage/storageaccounts"
+    ]
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT60",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "vmDnsName": {
+        "type": "string",
+        "metadata": {
+          "description": "DNS name for the VM"
+        },
+        "value": "GET-PREREQ-vmdnsName"
+      },
+      "adminUsername": {
+        "type": "string",
+        "metadata": {
+          "description": "Admin user name for the Virtual Machines"
+        },
+        "value": "GEN-UNIQUE"
+      },
+      "osType": {
+        "type": "string",
+        "allowedValues": [
+          "Ubuntu-18.04-LTS",
+          "Ubuntu-12.04.5-LTS",
+          "Centos-7.1",
+          "Centos-7"
+        ],
+        "defaultValue": "Ubuntu-18.04-LTS",
+        "metadata": {
+          "description": "The type of the operating system you want to deploy."
+        },
+        "value": "Ubuntu-18.04-LTS"
+      },
+      "vmSize": {
+        "type": "string",
+        "defaultValue": "Standard_A0",
+        "metadata": {
+          "description": "VM Size"
+        },
+        "value": "Standard_A0"
+      },
+      "chef_node_name": {
+        "type": "string",
+        "metadata": {
+          "description": "The name for the node (VM) in the Chef Organization"
+        },
+        "value": "GEN-UNIQUE"
+      },
+      "chef_server_url": {
+        "type": "string",
+        "metadata": {
+          "description": "Organization URL for the Chef Server. Example https://ChefServerDnsName.cloudapp.net/organizations/Orgname"
+        },
+        "value": "GET-PREREQ-chefserverurl"
+      },
+      "validation_client_name": {
+        "type": "string",
+        "metadata": {
+          "description": "Validator key name for the organization. Example : MyOrg-validator"
+        },
+        "value": "GEN-UNIQUE"
+      },
+      "runlist": {
+        "type": "string",
+        "defaultValue": "recipe[getting-started]",
+        "metadata": {
+          "description": "Optional Run List to Execute"
+        },
+        "value": "recipe[getting-started]"
+      },
+      "validation_key": {
+        "type": "string",
+        "metadata": {
+          "description": "JSON Escaped Validation Key"
+        },
+        "value": "GEN-UNIQUE"
+      },
+      "validation_key_format": {
+        "type": "string",
+        "allowedValues": [
+          "plaintext",
+          "base64encoded"
+        ],
+        "defaultValue": "plaintext",
+        "metadata": {
+          "description": "Format in which Validation Key is given. e.g. plaintext, base64encoded"
+        },
+        "value": "plaintext"
+      },
+      "secret": {
+        "type": "securestring",
+        "defaultValue": "[uniqueString(newGuid())]",
+        "metadata": {
+          "description": "Encrypted Data bag secret"
+        },
+        "value": "GEN-UNIQUE"
+      },
+      "chef_service_interval": {
+        "type": "string",
+        "defaultValue": "30",
+        "metadata": {
+          "description": "Frequency(in minutes) at which the chef-service runs."
+        },
+        "value": "60"
+      },
+      "bootstrap_version": {
+        "type": "string",
+        "defaultValue": "latest",
+        "metadata": {
+          "description": "Chef Client Version"
+        },
+        "value": "12.15.19"
+      },
+      "bootstrap_channel": {
+        "type": "string",
+        "defaultValue": "stable",
+        "metadata": {
+          "description": "Release channel for Chef Client Version"
+        },
+        "value": "stable"
+      },
+      "daemon": {
+        "type": "string",
+        "defaultValue": "service",
+        "metadata": {
+          "description": "Daemon option is only for Windows. Allowed values: none/service/task"
+        },
+        "value": "none"
+      },
+      "location": {
+        "type": "string",
+        "defaultValue": "[resourceGroup().location]",
+        "metadata": {
+          "description": "Location for all resources."
+        }
+      },
+      "authenticationType": {
+        "type": "string",
+        "defaultValue": "sshPublicKey",
+        "allowedValues": [
+          "sshPublicKey",
+          "password"
+        ],
+        "metadata": {
+          "description": "Type of authentication to use on the Virtual Machine. SSH key is recommended."
+        }
+      },
+      "adminPasswordOrKey": {
+        "type": "securestring",
+        "metadata": {
+          "description": "SSH Key or password for the Virtual Machine. SSH key is recommended."
+        },
+        "value": "GEN-SSH-PUB-KEY"
+      }
+    },
+    "variables": {
+      "images": {
+        "Ubuntu-18.04-LTS": {
+          "sku": "18.04-LTS",
+          "offer": "UbuntuServer",
+          "publisher": "Canonical"
+        },
+        "Ubuntu-12.04.5-LTS": {
+          "sku": "12.04.5-LTS",
+          "offer": "UbuntuServer",
+          "publisher": "Canonical"
+        },
+        "Centos-7.1": {
+          "sku": "7.1",
+          "offer": "CentOS",
+          "publisher": "OpenLogic"
+        },
+        "Centos-7": {
+          "sku": "7",
+          "offer": "CentOS",
+          "publisher": "OpenLogic"
+        }
+      },
+      "vmExtensionName": "LinuxChefExtension",
+      "vmName": "GET-PREREQ-vmdnsName",
+      "storageAccountType": "Standard_LRS",
+      "newStorageAccountName": "[concat(uniquestring(resourceGroup().id), 'cheflinuxvm')]",
+      "publicIPAddressName": "myPublicIP1",
+      "publicIPAddressType": "Dynamic",
+      "virtualNetworkName": "MyVNET1",
+      "addressPrefix": "10.0.0.0/16",
+      "subnet1Name": "subnet-1",
+      "subnet2Name": "subnet-2",
+      "subnet1Prefix": "10.0.0.0/24",
+      "subnet2Prefix": "10.0.1.0/24",
+      "nicName": "myVMNic",
+      "linuxConfiguration": {
+        "disablePasswordAuthentication": true,
+        "ssh": {
+          "publicKeys": [
+            {
+              "path": "/home/GEN-UNIQUE/.ssh/authorized_keys",
+              "keyData": "GEN-SSH-PUB-KEY"
+            }
+          ]
+        }
+      },
+      "networkSecurityGroupName": "default-NSG"
+    },
+    "resources": [
+      {
+        "type": "Microsoft.Storage/storageAccounts",
+        "name": "[variables('newStorageAccountName')]",
+        "apiVersion": "2021-02-01",
+        "location": "[resourceGroup().location]",
+        "sku": {
+          "name": "Standard_LRS"
+        }
+      },
+      {
+        "apiVersion": "2020-07-01",
+        "type": "Microsoft.Network/publicIPAddresses",
+        "name": "myPublicIP1",
+        "location": "[resourceGroup().location]",
+        "properties": {
+          "publicIPAllocationMethod": "Dynamic",
+          "dnsSettings": {
+            "domainNameLabel": "GET-PREREQ-vmdnsName"
+          }
+        }
+      },
+      {
+        "comments": "Default Network Security Group for template",
+        "type": "Microsoft.Network/networkSecurityGroups",
+        "apiVersion": "2019-08-01",
+        "name": "default-NSG",
+        "location": "[resourceGroup().location]",
+        "properties": {
+          "securityRules": [
+            {
+              "name": "default-allow-22",
+              "properties": {
+                "priority": 1000,
+                "access": "Allow",
+                "direction": "Inbound",
+                "destinationPortRange": "22",
+                "protocol": "Tcp",
+                "sourceAddressPrefix": "*",
+                "sourcePortRange": "*",
+                "destinationAddressPrefix": "*"
+              }
+            }
+          ]
+        }
+      },
+      {
+        "apiVersion": "2020-07-01",
+        "type": "Microsoft.Network/virtualNetworks",
+        "name": "MyVNET1",
+        "location": "[resourceGroup().location]",
+        "dependsOn": [
+          "Microsoft.Network/networkSecurityGroups/default-NSG"
+        ],
+        "properties": {
+          "addressSpace": {
+            "addressPrefixes": [
+              "10.0.0.0/16"
+            ]
+          },
+          "subnets": [
+            {
+              "name": "subnet-1",
+              "properties": {
+                "addressPrefix": "10.0.0.0/24",
+                "networkSecurityGroup": {
+                  "id": "Microsoft.Network/networkSecurityGroups/default-NSG"
+                }
+              }
+            },
+            {
+              "name": "subnet-2",
+              "properties": {
+                "addressPrefix": "10.0.1.0/24"
+              }
+            }
+          ]
+        }
+      },
+      {
+        "apiVersion": "2020-07-01",
+        "type": "Microsoft.Network/networkInterfaces",
+        "name": "myVMNic",
+        "location": "[resourceGroup().location]",
+        "dependsOn": [
+          "Microsoft.Network/publicIPAddresses//myPublicIP1",
+          "Microsoft.Network/virtualNetworks//MyVNET1"
+        ],
+        "properties": {
+          "ipConfigurations": [
+            {
+              "name": "ipconfig1",
+              "properties": {
+                "privateIPAllocationMethod": "Dynamic",
+                "publicIPAddress": {
+                  "id": "Microsoft.Network/publicIPAddresses/myPublicIP1"
+                },
+                "subnet": {
+                  "id": "Microsoft.Network/virtualNetworks/subnets/MyVNET1/subnet-1"
+                }
+              }
+            }
+          ]
+        }
+      },
+      {
+        "apiVersion": "2020-12-01",
+        "type": "Microsoft.Compute/virtualMachines",
+        "name": "GET-PREREQ-vmdnsName",
+        "location": "[resourceGroup().location]",
+        "dependsOn": [
+          "[resourceId('Microsoft.Storage/storageAccounts/', variables('newStorageAccountName'))]",
+          "[resourceId('Microsoft.Network/networkInterfaces/', variables('nicName'))]"
+        ],
+        "properties": {
+          "hardwareProfile": {
+            "vmSize": "Standard_A0"
+          },
+          "osProfile": {
+            "computerName": "GET-PREREQ-vmdnsName",
+            "adminUsername": "GEN-UNIQUE",
+            "adminPassword": "GEN-SSH-PUB-KEY",
+            "linuxConfiguration": "[if(equals(parameters('authenticationType'), 'password'), json('null'), variables('linuxConfiguration'))]"
+          },
+          "storageProfile": {
+            "imageReference": {
+              "publisher": "(images)[parameters(osType)].publisher",
+              "offer": "(images)[parameters(osType)].offer",
+              "sku": "(images)[parameters(osType)].sku",
+              "version": "latest"
+            },
+            "osDisk": {
+              "name": "GET-PREREQ-vmdnsName_OSDisk",
+              "caching": "ReadWrite",
+              "createOption": "FromImage"
+            }
+          },
+          "networkProfile": {
+            "networkInterfaces": [
+              {
+                "id": "Microsoft.Network/networkInterfaces/myVMNic"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "type": "Microsoft.Compute/virtualMachines/extensions",
+        "name": "GET-PREREQ-vmdnsName/LinuxChefExtension",
+        "apiVersion": "2020-12-01",
+        "location": "[resourceGroup().location]",
+        "dependsOn": [
+          "Microsoft.Compute/virtualMachines//GET-PREREQ-vmdnsName"
+        ],
+        "properties": {
+          "publisher": "Chef.Bootstrap.WindowsAzure",
+          "type": "LinuxChefClient",
+          "typeHandlerVersion": "1210.12",
+          "autoUpgradeMinorVersion": true,
+          "settings": {
+            "bootstrap_options": {
+              "chef_node_name": "GEN-UNIQUE",
+              "chef_server_url": "GET-PREREQ-chefserverurl",
+              "validation_client_name": "GEN-UNIQUE"
+            },
+            "runlist": "recipe[getting-started]",
+            "validation_key_format": "plaintext",
+            "chef_service_interval": "60",
+            "bootstrap_version": "12.15.19",
+            "bootstrap_channel": "stable",
+            "daemon": "none"
+          },
+          "protectedSettings": {
+            "validation_key": "GEN-UNIQUE",
+            "secret": "GEN-UNIQUE"
+          }
+        }
+      }
+    ],
+    "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+  }
+}

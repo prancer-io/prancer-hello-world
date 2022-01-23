@@ -1,0 +1,98 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAzureQuickStart",
+  "paths": [
+    "/quickstarts/microsoft.apimanagement/api-management-logs-to-moesif-using-eventhub-webapp/nested/microsoft.apimanagement/service/loggers.json"
+  ],
+  "timestamp": 1642962902832,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/quickstarts/microsoft.apimanagement/api-management-logs-to-moesif-using-eventhub-webapp/nested/microsoft.apimanagement/service/loggers.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT928",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "microsoft.apimanagement/service/loggers"
+    ]
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT928",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "existingApiMgmtName": {
+        "type": "string",
+        "metadata": {
+          "description": "Name of existing Api Management service. eg: 'blue-api-mgmt-v2'"
+        }
+      },
+      "logToEventhubLoggerName": {
+        "type": "string",
+        "metadata": {
+          "description": "The name of log-to-eventhub 'logger-id' referred to in policy xml"
+        }
+      },
+      "eventHubNS": {
+        "type": "string",
+        "metadata": {
+          "description": "Name of Eventhub Namespace"
+        }
+      },
+      "eventHubName": {
+        "type": "string",
+        "metadata": {
+          "description": "Name of the Eventhub"
+        }
+      },
+      "eventHubSendPolicyName": {
+        "type": "string",
+        "metadata": {
+          "description": "Name of Eventhub Send Policy"
+        }
+      },
+      "tags": {
+        "type": "Object"
+      }
+    },
+    "functions": [],
+    "variables": {
+      "credentialsName": "credentials-logToEventhubLoggerName"
+    },
+    "resources": [
+      {
+        "type": "Microsoft.ApiManagement/service/loggers",
+        "apiVersion": "2020-12-01",
+        "name": "existingApiMgmtName/logToEventhubLoggerName",
+        "tags": "tags",
+        "properties": {
+          "loggerType": "azureEventHub",
+          "description": "This logger logs to event hub",
+          "credentials": {
+            "name": "credentials-logToEventhubLoggerName",
+            "connectionString": "[listKeys(resourceId('Microsoft.EventHub/namespaces/eventhubs/authorizationRules', parameters('eventHubNS'), parameters('eventHubName'), parameters('eventHubSendPolicyName')), '2021-01-01-preview').primaryConnectionString]"
+          }
+        }
+      }
+    ],
+    "outputs": {
+      "logToEventhubLoggerName": {
+        "type": "string",
+        "value": "[parameters('logToEventhubLoggerName')]"
+      },
+      "resourceId": {
+        "type": "string",
+        "value": "[resourceId('Microsoft.ApiManagement/service/loggers', parameters('existingApiMgmtName'), parameters('logToEventhubLoggerName'))]"
+      }
+    },
+    "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+  }
+}

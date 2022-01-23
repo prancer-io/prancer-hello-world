@@ -1,0 +1,312 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAzureQuickStart",
+  "paths": [
+    "/quickstarts/microsoft.compute/1-vm-loadbalancer-2-nics/azuredeploy.json",
+    "/quickstarts/microsoft.compute/1-vm-loadbalancer-2-nics/azuredeploy.parameters.json"
+  ],
+  "timestamp": 1642962903358,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/quickstarts/microsoft.compute/1-vm-loadbalancer-2-nics/azuredeploy.json",
+      "/quickstarts/microsoft.compute/1-vm-loadbalancer-2-nics/azuredeploy.parameters.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT992",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "microsoft.network/publicipaddresses",
+      "microsoft.network/virtualnetworks",
+      "microsoft.network/loadbalancers",
+      "microsoft.network/networkinterfaces",
+      "microsoft.compute/virtualmachines",
+      "microsoft.network/networksecuritygroups",
+      "microsoft.storage/storageaccounts"
+    ]
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT992",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "adminPassword": {
+        "type": "securestring",
+        "metadata": {
+          "description": "Admin password."
+        },
+        "value": "GEN-PASSWORD"
+      },
+      "adminUsername": {
+        "type": "string",
+        "metadata": {
+          "description": "Admin username."
+        },
+        "value": "GEN-UNIQUE"
+      },
+      "dnsNameforLBIP": {
+        "type": "string",
+        "metadata": {
+          "description": "DNS for Load Balancer IP."
+        },
+        "value": "GEN-UNIQUE"
+      },
+      "location": {
+        "type": "string",
+        "metadata": {
+          "description": "Location for all resources."
+        },
+        "defaultValue": "[resourceGroup().location]"
+      },
+      "storageAccountName": {
+        "type": "string",
+        "defaultValue": "[concat('storage', uniqueString(resourceGroup().id))]",
+        "metadata": {
+          "description": "Name of storage account."
+        },
+        "value": "GEN-UNIQUE"
+      },
+      "vmSize": {
+        "type": "string",
+        "defaultValue": "Standard_D2_v3",
+        "metadata": {
+          "description": "Size of the virtual machine."
+        },
+        "value": "Standard_D2_v3"
+      }
+    },
+    "variables": {
+      "addressPrefix": "10.0.0.0/16",
+      "imageOffer": "WindowsServer",
+      "imagePublisher": "MicrosoftWindowsServer",
+      "imageSKU": "2019-Datacenter",
+      "lbName": "myLB",
+      "networkSecurityGroupName": "Subnet-1-nsg",
+      "nic1NamePrefix": "nic1",
+      "nic2NamePrefix": "nic2",
+      "publicIPAddressName": "myPublicIP",
+      "publicIPAddressType": "Dynamic",
+      "storageAccountType": "Standard_LRS",
+      "subnetName": "Subnet-1",
+      "subnetPrefix": "10.0.0.0/24",
+      "vmNamePrefix": "myVM",
+      "vnetName": "myVNET"
+    },
+    "resources": [
+      {
+        "type": "Microsoft.Storage/storageAccounts",
+        "name": "GEN-UNIQUE",
+        "apiVersion": "2019-06-01",
+        "location": "[resourceGroup().location]",
+        "sku": {
+          "name": "Standard_LRS"
+        },
+        "kind": "StorageV2"
+      },
+      {
+        "apiVersion": "2020-05-01",
+        "name": "myLB",
+        "type": "Microsoft.Network/loadBalancers",
+        "location": "[resourceGroup().location]",
+        "dependsOn": [
+          "Microsoft.Network/publicIPAddresses//myPublicIP"
+        ],
+        "properties": {
+          "frontendIPConfigurations": [
+            {
+              "name": "LoadBalancerFrontEnd",
+              "properties": {
+                "publicIPAddress": {
+                  "id": "Microsoft.Network/publicIPAddresses/myPublicIP"
+                }
+              }
+            }
+          ],
+          "backendAddressPools": [
+            {
+              "name": "BackendPool1"
+            }
+          ],
+          "inboundNatRules": [
+            {
+              "name": "RDP-VM0",
+              "properties": {
+                "frontendIPConfiguration": {
+                  "id": "Microsoft.Network/loadBalancers/frontendIPConfigurations/myLB/LoadBalancerFrontEnd"
+                },
+                "protocol": "Tcp",
+                "frontendPort": 50001,
+                "backendPort": 3389,
+                "enableFloatingIP": false
+              }
+            }
+          ]
+        }
+      },
+      {
+        "comments": "Simple Network Security Group for subnet [variables('subnetName')]",
+        "type": "Microsoft.Network/networkSecurityGroups",
+        "apiVersion": "2020-05-01",
+        "name": "Subnet-1-nsg",
+        "location": "[resourceGroup().location]",
+        "properties": {}
+      },
+      {
+        "apiVersion": "2020-05-01",
+        "type": "Microsoft.Network/networkInterfaces",
+        "name": "nic1",
+        "location": "[resourceGroup().location]",
+        "dependsOn": [
+          "Microsoft.Network/virtualNetworks//myVNET",
+          "Microsoft.Network/loadBalancers//myLB"
+        ],
+        "properties": {
+          "ipConfigurations": [
+            {
+              "name": "ipconfig1",
+              "properties": {
+                "privateIPAllocationMethod": "Dynamic",
+                "subnet": {
+                  "id": "Microsoft.Network/virtualNetworks/subnets/myVNET/Subnet-1"
+                },
+                "loadBalancerBackendAddressPools": [
+                  {
+                    "id": "Microsoft.Network/loadBalancers/backendAddressPools/myLB/BackendPool1"
+                  }
+                ],
+                "loadBalancerInboundNatRules": [
+                  {
+                    "id": "Microsoft.Network/loadBalancers/inboundNatRules/myLB/RDP-VM0"
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      },
+      {
+        "apiVersion": "2020-05-01",
+        "type": "Microsoft.Network/networkInterfaces",
+        "name": "nic2",
+        "location": "[resourceGroup().location]",
+        "dependsOn": [
+          "Microsoft.Network/virtualNetworks//myVNET"
+        ],
+        "properties": {
+          "ipConfigurations": [
+            {
+              "name": "ipconfig1",
+              "properties": {
+                "privateIPAllocationMethod": "Dynamic",
+                "subnet": {
+                  "id": "Microsoft.Network/virtualNetworks/subnets/myVNET/Subnet-1"
+                }
+              }
+            }
+          ]
+        }
+      },
+      {
+        "apiVersion": "2020-05-01",
+        "type": "Microsoft.Network/publicIPAddresses",
+        "name": "myPublicIP",
+        "location": "[resourceGroup().location]",
+        "properties": {
+          "publicIPAllocationMethod": "Dynamic",
+          "dnsSettings": {
+            "domainNameLabel": "GEN-UNIQUE"
+          }
+        }
+      },
+      {
+        "apiVersion": "2019-12-01",
+        "type": "Microsoft.Compute/virtualMachines",
+        "name": "myVM",
+        "location": "[resourceGroup().location]",
+        "dependsOn": [
+          "Microsoft.Storage/storageAccounts//GEN-UNIQUE",
+          "Microsoft.Network/networkInterfaces//nic1",
+          "Microsoft.Network/networkInterfaces//nic2"
+        ],
+        "properties": {
+          "hardwareProfile": {
+            "vmSize": "Standard_D2_v3"
+          },
+          "osProfile": {
+            "computerName": "myVM",
+            "adminUsername": "GEN-UNIQUE",
+            "adminPassword": "GEN-PASSWORD"
+          },
+          "storageProfile": {
+            "imageReference": {
+              "publisher": "MicrosoftWindowsServer",
+              "offer": "WindowsServer",
+              "sku": "2019-Datacenter",
+              "version": "latest"
+            },
+            "osDisk": {
+              "createOption": "FromImage"
+            }
+          },
+          "networkProfile": {
+            "networkInterfaces": [
+              {
+                "properties": {
+                  "primary": true
+                },
+                "id": "Microsoft.Network/networkInterfaces/nic1"
+              },
+              {
+                "properties": {
+                  "primary": false
+                },
+                "id": "Microsoft.Network/networkInterfaces/nic2"
+              }
+            ]
+          },
+          "diagnosticsProfile": {
+            "bootDiagnostics": {
+              "enabled": true,
+              "storageUri": "[reference(parameters('storageAccountName'), '2019-06-01').primaryEndpoints.blob]"
+            }
+          }
+        }
+      },
+      {
+        "apiVersion": "2020-05-01",
+        "type": "Microsoft.Network/virtualNetworks",
+        "name": "myVNET",
+        "location": "[resourceGroup().location]",
+        "dependsOn": [
+          "Microsoft.Network/networkSecurityGroups/Subnet-1-nsg"
+        ],
+        "properties": {
+          "addressSpace": {
+            "addressPrefixes": [
+              "10.0.0.0/16"
+            ]
+          },
+          "subnets": [
+            {
+              "name": "Subnet-1",
+              "properties": {
+                "addressPrefix": "10.0.0.0/24",
+                "networkSecurityGroup": {
+                  "id": "Microsoft.Network/networkSecurityGroups/Subnet-1-nsg"
+                }
+              }
+            }
+          ]
+        }
+      }
+    ],
+    "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+  }
+}

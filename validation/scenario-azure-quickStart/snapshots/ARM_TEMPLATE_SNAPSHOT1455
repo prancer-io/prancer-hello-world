@@ -1,0 +1,313 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAzureQuickStart",
+  "paths": [
+    "/quickstarts/microsoft.machinelearningservices/machine-learning-service-create-aks/azuredeploy.json",
+    "/quickstarts/microsoft.machinelearningservices/machine-learning-service-create-aks/azuredeploy.parameters.json"
+  ],
+  "timestamp": 1642962907931,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/quickstarts/microsoft.machinelearningservices/machine-learning-service-create-aks/azuredeploy.json",
+      "/quickstarts/microsoft.machinelearningservices/machine-learning-service-create-aks/azuredeploy.parameters.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT1455",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "microsoft.machinelearningservices/workspaces/services"
+    ]
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT1455",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "webserviceName": {
+        "type": "string",
+        "metadata": {
+          "description": "The name of the Azure Machine Learning Web Service. This resource will be created in the same resource group as the workspace."
+        },
+        "value": "GEN-UNIQUE-8"
+      },
+      "workspaceName": {
+        "type": "string",
+        "defaultValue": "mlworkspace",
+        "metadata": {
+          "description": "The name of the Azure Machine Learning Workspace."
+        },
+        "value": "GET-PREREQ-workspaceName"
+      },
+      "location": {
+        "type": "string",
+        "defaultValue": "[resourceGroup().location]",
+        "metadata": {
+          "description": "The location of the Azure Machine Learning Workspace."
+        }
+      },
+      "environmentName": {
+        "type": "string",
+        "metadata": {
+          "description": "Name of Azure Machine Learning Environment for deployment. See https://docs.microsoft.com/en-us/azure/machine-learning/how-to-use-environments and https://docs.microsoft.com/en-us/azure/machine-learning/resource-curated-environments ."
+        },
+        "value": "AzureML-Scikit-learn-0.20.3"
+      },
+      "environmentVersion": {
+        "type": "string",
+        "metadata": {
+          "description": "Version of Azure Machine Learning Environment for deployment."
+        },
+        "value": "3"
+      },
+      "cpu": {
+        "type": "string",
+        "metadata": {
+          "description": "The default number of CPU cores to allocate for this Webservice. Can be a decimal."
+        },
+        "value": "0.5"
+      },
+      "cpuLimit": {
+        "type": "string",
+        "metadata": {
+          "description": "The max number of CPU cores this Webservice is allowed to use. Can be a decimal."
+        },
+        "value": "1"
+      },
+      "gpu": {
+        "type": "int",
+        "metadata": {
+          "description": "The number of gpu cores to allocate for this Webservice"
+        },
+        "value": 0
+      },
+      "memoryInGB": {
+        "type": "string",
+        "metadata": {
+          "description": "The amount of memory (in GB) to allocate for this Webservice. Can be a decimal."
+        },
+        "value": "1.0"
+      },
+      "driverProgram": {
+        "type": "string",
+        "metadata": {
+          "description": "Relative path of a file from storage account that contains the code to run for service."
+        },
+        "value": "mlassets/Driver.py"
+      },
+      "models": {
+        "type": "array",
+        "metadata": {
+          "description": "Details of the models to be deployed. Each model must have the following properties: 'name'(name of the model), 'path'(relative path of a file from storage account linked to Workspace), 'mimeType'(MIME type of Model content. For more details about MIME type, please open https://www.iana.org/assignments/media-types/media-types.xhtml), 'framework'(framework of the model, use Custom if unsure) and 'frameworkVersion'(framework version of the model)."
+        },
+        "value": [
+          {
+            "name": "sklearn_regression_model.pkl",
+            "path": "mlassets/sklearn_regression_model.pkl",
+            "mimeType": "application/x-python",
+            "framework": "ScikitLearn",
+            "frameworkVersion": "0.20.3"
+          }
+        ]
+      },
+      "authEnabled": {
+        "type": "bool",
+        "metadata": {
+          "description": "Whether or not to enable key auth for this Webservice."
+        },
+        "value": true
+      },
+      "tokenAuthEnabled": {
+        "type": "bool",
+        "metadata": {
+          "description": "Whether or not to enable token auth for this Webservice. "
+        },
+        "value": false
+      },
+      "primaryKey": {
+        "type": "securestring",
+        "metadata": {
+          "description": "A primary auth key to use for this Webservice."
+        },
+        "value": "primary-key"
+      },
+      "secondaryKey": {
+        "type": "securestring",
+        "metadata": {
+          "description": "A secondary auth key to use for this Webservice."
+        },
+        "value": "secondary-key"
+      },
+      "scoringTimeoutMilliSeconds": {
+        "type": "int",
+        "metadata": {
+          "description": "A timeout to enforce for scoring calls to this Webservice."
+        },
+        "value": 60000
+      },
+      "appInsightsEnabled": {
+        "type": "bool",
+        "metadata": {
+          "description": "Whether or not to enable AppInsights for this Webservice."
+        },
+        "value": false
+      },
+      "computeTarget": {
+        "type": "string",
+        "metadata": {
+          "description": "Name of compute target."
+        },
+        "value": "GET-PREREQ-computeName"
+      },
+      "namespace": {
+        "type": "string",
+        "metadata": {
+          "description": "Kubernetes namespace in which to deploy the service: up to 63 lowercase alphanumeric ('a'-'z', '0'-'9') and hyphen ('-') characters. The first and last characters cannot be hyphens."
+        },
+        "value": "default"
+      },
+      "numReplicas": {
+        "type": "int",
+        "metadata": {
+          "description": "The number of containers to allocate for this Webservice. No default, if this parameter is not set then the autoscaler is enabled by default."
+        },
+        "value": 1
+      },
+      "autoScaleEnabled": {
+        "type": "bool",
+        "metadata": {
+          "description": "Whether or not to enable autoscaling for this Webservice. Defaults to True if num_replicas is None."
+        },
+        "value": false
+      },
+      "autoScaleMinReplicas": {
+        "type": "int",
+        "metadata": {
+          "description": "The minimum number of containers to use when autoscaling this Webservice."
+        },
+        "value": 1
+      },
+      "autoScaleMaxReplicas": {
+        "type": "int",
+        "metadata": {
+          "description": "The maximum number of containers to use when autoscaling this Webservice."
+        },
+        "value": 2
+      },
+      "autoscaleTargetUtilization": {
+        "type": "int",
+        "metadata": {
+          "description": "The target utilization (in percent out of 100) the autoscaler should attempt to maintain for this Webservice."
+        },
+        "value": 70
+      },
+      "autoscaleRefreshSeconds": {
+        "type": "int",
+        "metadata": {
+          "description": "How often the autoscaler should attempt to scale this Webservice."
+        },
+        "value": 1
+      },
+      "periodSeconds": {
+        "type": "int",
+        "metadata": {
+          "description": "How often (in seconds) to perform the liveness probe."
+        },
+        "value": 10
+      },
+      "initialDelaySeconds": {
+        "type": "int",
+        "metadata": {
+          "description": "Number of seconds after the container has started before liveness probes are initiated."
+        },
+        "value": 310
+      },
+      "timeoutSeconds": {
+        "type": "int",
+        "metadata": {
+          "description": "Number of seconds after which the liveness probe times out."
+        },
+        "value": 2
+      },
+      "failureThreshold": {
+        "type": "int",
+        "metadata": {
+          "description": "When a pod starts and the liveness probe fails, Kubernetes will try --failure-threshold times before giving up."
+        },
+        "value": 2
+      },
+      "successThreshold": {
+        "type": "int",
+        "metadata": {
+          "description": "Minimum consecutive successes for the liveness probe to be considered successful after having failed."
+        },
+        "value": 1
+      }
+    },
+    "variables": {
+      "driverProgram": "[trim(parameters('driverProgram'))]",
+      "driverProgramFileName": "[last(split(trim(parameters('driverProgram')), '/'))]",
+      "assets": [
+        {
+          "mimeType": "application/x-python",
+          "url": "[if(startsWith(variables('driverProgram'), '/'), concat('aml://storage', variables('driverProgram')), concat('aml://storage/', variables('driverProgram')))]"
+        }
+      ],
+      "copy": [
+        {
+          "name": "models",
+          "count": 20,
+          "mode": "serial",
+          "input": {
+            "name": "models)[copyIndex(models",
+            "url": "[if(startsWith(parameters('models')[copyIndex('models')].path, '/'), concat('aml://storage', parameters('models')[copyIndex('models')].path), concat('aml://storage/', parameters('models')[copyIndex('models')].path))]",
+            "mimeType": "models)[copyIndex(models",
+            "framework": "models)[copyIndex(models",
+            "frameworkVersion": "models)[copyIndex(models"
+          }
+        }
+      ]
+    },
+    "resources": [
+      {
+        "type": "Microsoft.MachineLearningServices/workspaces/services",
+        "apiVersion": "2020-05-01-preview",
+        "name": "GET-PREREQ-workspaceName/GEN-UNIQUE-8",
+        "location": "[resourceGroup().location]",
+        "properties": {
+          "environmentImageRequest": {
+            "models": "[ variables('models')]",
+            "driverProgram": "[if(empty(variables('driverProgramFileName')), json('null'), variables('driverProgramFileName'))]",
+            "assets": "[if(empty(variables('driverProgramFileName')), json('null'), variables('assets'))]",
+            "environmentReference": "[if(not(or(empty(parameters('environmentName')), empty(parameters('environmentVersion')))), createObject('name', parameters('environmentName'), 'version', parameters('environmentVersion')), json('null'))]"
+          },
+          "scoringTimeoutMs": 60000,
+          "appInsightsEnabled": false,
+          "authEnabled": true,
+          "aadAuthEnabled": false,
+          "keys": "[if(not(or(empty(parameters('primaryKey')), empty(parameters('secondaryKey')))), createObject('primaryKey', parameters('primaryKey'), 'secondaryKey', parameters('secondaryKey')), json('null'))]",
+          "ContainerResourceRequirements": {
+            "cpu": "0.5",
+            "cpuLimit": "1",
+            "gpu": 0,
+            "memoryInGB": "1.0"
+          },
+          "computeType": "AKS",
+          "computeName": "GET-PREREQ-computeName",
+          "numReplicas": 1,
+          "autoScaler": "[if(parameters('autoScaleEnabled'), createObject('autoscaleEnabled', parameters('autoScaleEnabled'), 'minReplicas', int(parameters('autoScaleMinReplicas')), 'maxReplicas', int(parameters('autoScaleMaxReplicas')), 'targetUtilization', int(parameters('autoscaleTargetUtilization')), 'refreshPeriodInSeconds', int(parameters('autoscaleRefreshSeconds'))), json('null'))]",
+          "namespace": "default",
+          "livenessProbeRequirements": "[createObject('periodSeconds', parameters('periodSeconds'), 'initialDelaySeconds', parameters('initialDelaySeconds'), 'timeoutSeconds' , parameters('timeoutSeconds'), 'failureThreshold', parameters('failureThreshold'), 'successThreshold', parameters('successThreshold'))]"
+        }
+      }
+    ],
+    "\uff04schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#"
+  }
+}

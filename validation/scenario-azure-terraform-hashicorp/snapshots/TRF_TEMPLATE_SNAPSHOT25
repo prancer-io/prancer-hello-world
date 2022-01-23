@@ -1,0 +1,187 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "main",
+  "contentType": "json",
+  "source": "gitConnectorAzureTerraHashicorp",
+  "paths": [
+    "/examples/azure-monitoring/redis-cache-monitor/variables.tf",
+    "/examples/azure-monitoring/redis-cache-monitor/main.tf"
+  ],
+  "timestamp": 1642943279642,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "TRF_TEMPLATE_SNAPSHOT",
+    "type": "terraform",
+    "collection": "terraformtemplate",
+    "paths": [
+      "/examples/azure-monitoring/redis-cache-monitor/variables.tf",
+      "/examples/azure-monitoring/redis-cache-monitor/main.tf"
+    ],
+    "snapshotId": "TRF_TEMPLATE_SNAPSHOT25",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "azurerm_monitor_action_group",
+      "azurerm_monitor_metric_alert",
+      "azurerm_resource_group"
+    ]
+  },
+  "snapshotId": "TRF_TEMPLATE_SNAPSHOT25",
+  "collection": "terraformtemplate",
+  "json": {
+    "provider": [
+      {
+        "azurerm": {
+          "version": "=2.0.0",
+          "features": [
+            {}
+          ]
+        }
+      }
+    ],
+    "resources": [
+      {
+        "type": "azurerm_resource_group",
+        "name": "main",
+        "properties": {
+          "name": "example_rg_rediscache",
+          "location": "east us",
+          "compiletime_identity": "azurerm_resource_group.main"
+        }
+      },
+      {
+        "type": "azurerm_monitor_action_group",
+        "name": "main",
+        "properties": {
+          "name": "example-actiongroup",
+          "resource_group_name": "${azurerm_resource_group.main.name}",
+          "short_name": "exampleact",
+          "email_receiver": [
+            {
+              "name": "ishantdevops",
+              "email_address": "devops@example.com",
+              "use_common_alert_schema": true
+            }
+          ],
+          "webhook_receiver": [
+            {
+              "name": "callmyapi",
+              "service_uri": "http://example.com/alert"
+            }
+          ],
+          "compiletime_identity": "azurerm_monitor_action_group.main"
+        }
+      },
+      {
+        "type": "azurerm_monitor_metric_alert",
+        "name": "cache_hit_alert",
+        "properties": {
+          "name": "<replace this project name> <Stage/Production> - Cache Hits Alert",
+          "resource_group_name": "<replace this with cache name>",
+          "scopes": [
+            "/subscriptions/<subscription_id>/resourceGroups/<resource_group_name>/providers/Microsoft.Cache/Redis/<azure_redis_cache_name>"
+          ],
+          "description": "<replace this project name> Cache Hits Alert",
+          "criteria": [
+            {
+              "metric_namespace": "Microsoft.Cache/redis",
+              "metric_name": "cachehits",
+              "aggregation": "Total",
+              "operator": "GreaterThan",
+              "threshold": 5000
+            }
+          ],
+          "action": [
+            {
+              "action_group_id": "${azurerm_monitor_action_group.main.id}"
+            }
+          ],
+          "compiletime_identity": "azurerm_monitor_metric_alert.cache_hit_alert"
+        }
+      },
+      {
+        "type": "azurerm_monitor_metric_alert",
+        "name": "cache_miss_alert",
+        "properties": {
+          "name": "<replace this project name> <Stage/Production> - Cache Miss Alert",
+          "resource_group_name": "<replace this with cache name>",
+          "scopes": [
+            "/subscriptions/<subscription_id>/resourceGroups/<resource_group_name>/providers/Microsoft.Cache/Redis/<azure_redis_cache_name>"
+          ],
+          "description": "<replace this project name> - Cache Miss Alert",
+          "criteria": [
+            {
+              "metric_namespace": "Microsoft.Cache/redis",
+              "metric_name": "cachemisses",
+              "aggregation": "Total",
+              "operator": "GreaterThan",
+              "threshold": 5000
+            }
+          ],
+          "action": [
+            {
+              "action_group_id": "${azurerm_monitor_action_group.main.id}"
+            }
+          ],
+          "compiletime_identity": "azurerm_monitor_metric_alert.cache_miss_alert"
+        }
+      },
+      {
+        "type": "azurerm_monitor_metric_alert",
+        "name": "cache_connected_clients",
+        "properties": {
+          "name": "<replace this project name> <Stage/Production> - Cache Connected Clients",
+          "resource_group_name": "<replace this with cache name>",
+          "scopes": [
+            "/subscriptions/<subscription_id>/resourceGroups/<resource_group_name>/providers/Microsoft.Cache/Redis/<azure_redis_cache_name>"
+          ],
+          "description": "<replace this project name> - Cache Connected Clients",
+          "criteria": [
+            {
+              "metric_namespace": "Microsoft.Cache/redis",
+              "metric_name": "connectedclients",
+              "aggregation": "Total",
+              "operator": "GreaterThan",
+              "threshold": 5000
+            }
+          ],
+          "action": [
+            {
+              "action_group_id": "${azurerm_monitor_action_group.main.id}"
+            }
+          ],
+          "compiletime_identity": "azurerm_monitor_metric_alert.cache_connected_clients"
+        }
+      },
+      {
+        "type": "azurerm_monitor_metric_alert",
+        "name": "cache_cpu",
+        "properties": {
+          "name": "<replace this project name> <Stage/Production> - Cache CPU",
+          "resource_group_name": "<replace this with cache name>",
+          "scopes": [
+            "/subscriptions/<subscription_id>/resourceGroups/<resource_group_name>/providers/Microsoft.Cache/Redis/<azure_redis_cache_name>"
+          ],
+          "description": "<replace this project name> - Cache CPU",
+          "criteria": [
+            {
+              "metric_namespace": "Microsoft.Cache/redis",
+              "metric_name": "percentProcessorTime",
+              "aggregation": "Total",
+              "operator": "GreaterThan",
+              "threshold": 50
+            }
+          ],
+          "action": [
+            {
+              "action_group_id": "${azurerm_monitor_action_group.main.id}"
+            }
+          ],
+          "compiletime_identity": "azurerm_monitor_metric_alert.cache_cpu"
+        }
+      }
+    ]
+  }
+}

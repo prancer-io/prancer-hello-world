@@ -1,0 +1,172 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAzureQuickStart",
+  "paths": [
+    "/application-workloads/bosh/bosh-setup/nestedtemplates/load-balancer-standard.json"
+  ],
+  "timestamp": 1642962883654,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/application-workloads/bosh/bosh-setup/nestedtemplates/load-balancer-standard.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT40",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "microsoft.network/publicipaddresses",
+      "microsoft.network/loadbalancers"
+    ]
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT40",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "loadBalancerName": {
+        "type": "string",
+        "defaultValue": "cf-lb"
+      },
+      "loadBalancerPublicIPAddressName": {
+        "type": "string"
+      },
+      "location": {
+        "type": "string"
+      }
+    },
+    "variables": {
+      "publicIPAddressID": "Microsoft.Network/publicIPAddresses/loadBalancerPublicIPAddressName",
+      "frontEndIPConfigID": "Microsoft.Network/loadBalancers/frontendIPConfigurations/cf-lb/LoadBalancerFrontEnd",
+      "lbPoolID": "Microsoft.Network/loadBalancers/backendAddressPools/cf-lb/BackendPool",
+      "lbProbeID": "Microsoft.Network/loadBalancers/probes/cf-lb/healthProbe"
+    },
+    "resources": [
+      {
+        "apiVersion": "2020-11-01",
+        "type": "Microsoft.Network/publicIPAddresses",
+        "name": "loadBalancerPublicIPAddressName",
+        "location": "location",
+        "sku": {
+          "name": "Standard"
+        },
+        "properties": {
+          "publicIPAllocationMethod": "static"
+        }
+      },
+      {
+        "apiVersion": "2020-11-01",
+        "name": "cf-lb",
+        "type": "Microsoft.Network/loadBalancers",
+        "location": "location",
+        "sku": {
+          "name": "Standard"
+        },
+        "dependsOn": [
+          "Microsoft.Network/publicIPAddresses//loadBalancerPublicIPAddressName"
+        ],
+        "properties": {
+          "frontendIPConfigurations": [
+            {
+              "name": "LoadBalancerFrontEnd",
+              "properties": {
+                "publicIPAddress": {
+                  "id": "Microsoft.Network/publicIPAddresses/loadBalancerPublicIPAddressName"
+                }
+              }
+            }
+          ],
+          "backendAddressPools": [
+            {
+              "name": "BackendPool"
+            }
+          ],
+          "loadBalancingRules": [
+            {
+              "name": "https",
+              "properties": {
+                "frontendIPConfiguration": {
+                  "id": "Microsoft.Network/loadBalancers/frontendIPConfigurations/cf-lb/LoadBalancerFrontEnd"
+                },
+                "backendAddressPool": {
+                  "id": "Microsoft.Network/loadBalancers/backendAddressPools/cf-lb/BackendPool"
+                },
+                "protocol": "Tcp",
+                "frontendPort": 443,
+                "backendPort": 443,
+                "enableFloatingIP": false,
+                "idleTimeoutInMinutes": 15,
+                "probe": {
+                  "id": "Microsoft.Network/loadBalancers/probes/cf-lb/healthProbe"
+                }
+              }
+            },
+            {
+              "name": "http",
+              "properties": {
+                "frontendIPConfiguration": {
+                  "id": "Microsoft.Network/loadBalancers/frontendIPConfigurations/cf-lb/LoadBalancerFrontEnd"
+                },
+                "backendAddressPool": {
+                  "id": "Microsoft.Network/loadBalancers/backendAddressPools/cf-lb/BackendPool"
+                },
+                "protocol": "Tcp",
+                "frontendPort": 80,
+                "backendPort": 80,
+                "enableFloatingIP": false,
+                "idleTimeoutInMinutes": 15,
+                "probe": {
+                  "id": "Microsoft.Network/loadBalancers/probes/cf-lb/healthProbe"
+                }
+              }
+            },
+            {
+              "name": "ntp",
+              "properties": {
+                "frontendIPConfiguration": {
+                  "id": "Microsoft.Network/loadBalancers/frontendIPConfigurations/cf-lb/LoadBalancerFrontEnd"
+                },
+                "backendAddressPool": {
+                  "id": "Microsoft.Network/loadBalancers/backendAddressPools/cf-lb/BackendPool"
+                },
+                "protocol": "udp",
+                "frontendPort": 123,
+                "backendPort": 123,
+                "enableFloatingIP": false,
+                "idleTimeoutInMinutes": 15,
+                "probe": {
+                  "id": "Microsoft.Network/loadBalancers/probes/cf-lb/healthProbe"
+                }
+              }
+            }
+          ],
+          "probes": [
+            {
+              "name": "healthProbe",
+              "properties": {
+                "protocol": "HTTP",
+                "port": 8080,
+                "intervalInSeconds": 5,
+                "numberOfProbes": 2,
+                "requestPath": "/health"
+              }
+            }
+          ]
+        }
+      }
+    ],
+    "outputs": {
+      "loadBalancerPublicIPAddress": {
+        "type": "string",
+        "value": "[reference(parameters('loadBalancerPublicIPAddressName')).ipAddress]"
+      }
+    },
+    "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+  }
+}

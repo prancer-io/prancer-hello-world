@@ -1,0 +1,111 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAzureQuickStart",
+  "paths": [
+    "/quickstarts/microsoft.network/front-door-geo-filtering/azuredeploy.json",
+    "/quickstarts/microsoft.network/front-door-geo-filtering/azuredeploy.parameters.json"
+  ],
+  "timestamp": 1642962908839,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/quickstarts/microsoft.network/front-door-geo-filtering/azuredeploy.json",
+      "/quickstarts/microsoft.network/front-door-geo-filtering/azuredeploy.parameters.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT1531",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "microsoft.network/frontdoorwebapplicationfirewallpolicies"
+    ]
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT1531",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "wafPolicyName": {
+        "type": "string",
+        "metadata": {
+          "description": "The name of the WAF policy"
+        },
+        "value": "GEN-UNIQUE"
+      },
+      "GeofilteringAction": {
+        "type": "string",
+        "allowedValues": [
+          "Allow",
+          "Block",
+          "Log"
+        ],
+        "metadata": {
+          "description": "Type of Action based on the match filter. Must be Allow, Block or Log."
+        },
+        "value": "Block"
+      },
+      "GeoMatch": {
+        "type": "string",
+        "metadata": {
+          "description": "The geographical region to be matched based on ISO 3166-1 alpha-2"
+        },
+        "value": "CH"
+      },
+      "wafMode": {
+        "type": "string",
+        "allowedValues": [
+          "Detection",
+          "Prevention"
+        ],
+        "defaultValue": "Detection",
+        "metadata": {
+          "description": "Describes if it is in detection mode or prevention mode at policy level."
+        }
+      }
+    },
+    "variables": {
+      "wafLocation": "global"
+    },
+    "resources": [
+      {
+        "apiVersion": "2020-11-01",
+        "type": "Microsoft.Network/FrontDoorWebApplicationFirewallPolicies",
+        "name": "GEN-UNIQUE",
+        "location": "global",
+        "properties": {
+          "policySettings": {
+            "mode": "Detection",
+            "enabledState": "Enabled"
+          },
+          "customRules": {
+            "rules": [
+              {
+                "name": "Rule1",
+                "priority": 1,
+                "ruleType": "MatchRule",
+                "matchConditions": [
+                  {
+                    "matchVariable": "RemoteAddr",
+                    "operator": "GeoMatch",
+                    "matchValue": [
+                      "CH"
+                    ]
+                  }
+                ],
+                "action": "Block"
+              }
+            ]
+          }
+        }
+      }
+    ],
+    "outputs": {},
+    "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+  }
+}

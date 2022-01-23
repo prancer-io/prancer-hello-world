@@ -1,0 +1,413 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAzureQuickStart",
+  "paths": [
+    "/quickstarts/microsoft.network/vnet-transitive-bgp/azuredeploy.json",
+    "/quickstarts/microsoft.network/vnet-transitive-bgp/azuredeploy.parameters.json"
+  ],
+  "timestamp": 1642962909682,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/quickstarts/microsoft.network/vnet-transitive-bgp/azuredeploy.json",
+      "/quickstarts/microsoft.network/vnet-transitive-bgp/azuredeploy.parameters.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT1612",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "microsoft.network/publicipaddresses",
+      "microsoft.network/virtualnetworks",
+      "microsoft.network/connections",
+      "microsoft.network/virtualnetworkgateways"
+    ]
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT1612",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "sharedKey": {
+        "type": "securestring",
+        "metadata": {
+          "description": "The shared key used to establish connection between the two vNet Gateways."
+        },
+        "value": "GEN-UNIQUE"
+      },
+      "location": {
+        "type": "string",
+        "metadata": {
+          "description": "Location of the resources"
+        },
+        "defaultValue": "[resourceGroup().location]"
+      }
+    },
+    "variables": {
+      "vNet1": {
+        "name": "vNet1-[resourceGroup().location]",
+        "addressSpacePrefix": "10.0.0.0/23",
+        "subnetName": "subnet1",
+        "subnetPrefix": "10.0.0.0/24",
+        "gatewayName": "vNet1-Gateway",
+        "gatewaySubnetPrefix": "10.0.1.224/27",
+        "gatewayPublicIPName": "[concat('gw1pip', uniqueString(resourceGroup().id))]",
+        "connectionName": "vNet1-to-vNet2",
+        "asn": 65010
+      },
+      "vNet2": {
+        "name": "vNet2-[resourceGroup().location]",
+        "addressSpacePrefix": "10.0.2.0/23",
+        "subnetName": "subnet1",
+        "subnetPrefix": "10.0.2.0/24",
+        "gatewayName": "vNet2-Gateway",
+        "gatewaySubnetPrefix": "10.0.3.224/27",
+        "gatewayPublicIPName": "[concat('gw2pip', uniqueString(resourceGroup().id))]",
+        "connection1Name": "vNet2-to-vNet1",
+        "connection2Name": "vNet2-to-vNet3",
+        "asn": 65020
+      },
+      "vNet3": {
+        "name": "vNet3-[resourceGroup().location]",
+        "addressSpacePrefix": "10.0.4.0/23",
+        "subnetName": "subnet1",
+        "subnetPrefix": "10.0.4.0/24",
+        "gatewayName": "vNet3-Gateway",
+        "gatewaySubnetPrefix": "10.0.5.224/27",
+        "gatewayPublicIPName": "[concat('gw3pip', uniqueString(resourceGroup().id))]",
+        "connectionName": "vNet3-to-vNet2",
+        "asn": 65030
+      },
+      "gateway1SubnetRef": "Microsoft.Network/virtualNetworks/subnets/(vNet1).name/GatewaySubnet",
+      "gateway2SubnetRef": "Microsoft.Network/virtualNetworks/subnets/(vNet2).name/GatewaySubnet",
+      "gateway3SubnetRef": "Microsoft.Network/virtualNetworks/subnets/(vNet3).name/GatewaySubnet",
+      "gatewaySku": "Standard"
+    },
+    "resources": [
+      {
+        "apiVersion": "2020-05-01",
+        "type": "Microsoft.Network/virtualNetworks",
+        "name": "(vNet1).name",
+        "location": "[resourceGroup().location]",
+        "comments": "This is the first vNet",
+        "properties": {
+          "addressSpace": {
+            "addressPrefixes": [
+              "(vNet1).addressSpacePrefix"
+            ]
+          },
+          "subnets": [
+            {
+              "name": "(vNet1).subnetName",
+              "properties": {
+                "addressPrefix": "(vNet1).subnetPrefix"
+              }
+            },
+            {
+              "name": "GatewaySubnet",
+              "properties": {
+                "addressPrefix": "(vNet1).gatewaySubnetPrefix"
+              }
+            }
+          ]
+        }
+      },
+      {
+        "apiVersion": "2020-05-01",
+        "type": "Microsoft.Network/virtualNetworks",
+        "name": "(vNet2).name",
+        "location": "[resourceGroup().location]",
+        "comments": "This is the second vNet",
+        "properties": {
+          "addressSpace": {
+            "addressPrefixes": [
+              "(vNet2).addressSpacePrefix"
+            ]
+          },
+          "subnets": [
+            {
+              "name": "(vNet2).subnetName",
+              "properties": {
+                "addressPrefix": "(vNet2).subnetPrefix"
+              }
+            },
+            {
+              "name": "GatewaySubnet",
+              "properties": {
+                "addressPrefix": "(vNet2).gatewaySubnetPrefix"
+              }
+            }
+          ]
+        }
+      },
+      {
+        "apiVersion": "2020-05-01",
+        "type": "Microsoft.Network/virtualNetworks",
+        "name": "(vNet3).name",
+        "location": "[resourceGroup().location]",
+        "comments": "This is the third vNet",
+        "properties": {
+          "addressSpace": {
+            "addressPrefixes": [
+              "(vNet3).addressSpacePrefix"
+            ]
+          },
+          "subnets": [
+            {
+              "name": "(vNet3).subnetName",
+              "properties": {
+                "addressPrefix": "(vNet3).subnetPrefix"
+              }
+            },
+            {
+              "name": "GatewaySubnet",
+              "properties": {
+                "addressPrefix": "(vNet3).gatewaySubnetPrefix"
+              }
+            }
+          ]
+        }
+      },
+      {
+        "apiVersion": "2020-05-01",
+        "type": "Microsoft.Network/publicIPAddresses",
+        "name": "(vNet1).gatewayPublicIPName",
+        "location": "[resourceGroup().location]",
+        "comments": "This is the public IP for vNet Gateway 1",
+        "properties": {
+          "publicIPAllocationMethod": "Dynamic"
+        }
+      },
+      {
+        "apiVersion": "2020-05-01",
+        "type": "Microsoft.Network/publicIPAddresses",
+        "name": "(vNet2).gatewayPublicIPName",
+        "location": "[resourceGroup().location]",
+        "comments": "This is the public IP for vNet Gateway 2",
+        "properties": {
+          "publicIPAllocationMethod": "Dynamic"
+        }
+      },
+      {
+        "apiVersion": "2020-05-01",
+        "type": "Microsoft.Network/publicIPAddresses",
+        "name": "(vNet3).gatewayPublicIPName",
+        "location": "[resourceGroup().location]",
+        "comments": "This is the public IP for vNet Gateway 3",
+        "properties": {
+          "publicIPAllocationMethod": "Dynamic"
+        }
+      },
+      {
+        "apiVersion": "2020-05-01",
+        "type": "Microsoft.Network/virtualNetworkGateways",
+        "name": "(vNet1).gatewayName",
+        "location": "[resourceGroup().location]",
+        "dependsOn": [
+          "Microsoft.Network/publicIPAddresses//(vNet1).gatewayPublicIPName",
+          "Microsoft.Network/virtualNetworks//(vNet1).name"
+        ],
+        "comments": "This is the vNet Gateway for vNet 1",
+        "properties": {
+          "ipConfigurations": [
+            {
+              "properties": {
+                "privateIPAllocationMethod": "Dynamic",
+                "subnet": {
+                  "id": "Microsoft.Network/virtualNetworks/subnets/(vNet1).name/GatewaySubnet"
+                },
+                "publicIPAddress": {
+                  "id": "Microsoft.Network/publicIPAddresses/(vNet1).gatewayPublicIPName"
+                }
+              },
+              "name": "vNet1GatewayConfig"
+            }
+          ],
+          "gatewayType": "Vpn",
+          "sku": {
+            "name": "Standard",
+            "tier": "Standard"
+          },
+          "vpnType": "RouteBased",
+          "enableBgp": true,
+          "bgpSettings": {
+            "asn": "(vNet1).asn"
+          }
+        }
+      },
+      {
+        "apiVersion": "2020-05-01",
+        "type": "Microsoft.Network/virtualNetworkGateways",
+        "name": "(vNet2).gatewayName",
+        "location": "[resourceGroup().location]",
+        "dependsOn": [
+          "Microsoft.Network/publicIPAddresses//(vNet2).gatewayPublicIPName",
+          "Microsoft.Network/virtualNetworks//(vNet2).name"
+        ],
+        "comments": "This is the vNet Gateway for vNet 2",
+        "properties": {
+          "ipConfigurations": [
+            {
+              "properties": {
+                "privateIPAllocationMethod": "Dynamic",
+                "subnet": {
+                  "id": "Microsoft.Network/virtualNetworks/subnets/(vNet2).name/GatewaySubnet"
+                },
+                "publicIPAddress": {
+                  "id": "Microsoft.Network/publicIPAddresses/(vNet2).gatewayPublicIPName"
+                }
+              },
+              "name": "vNet2GatewayConfig"
+            }
+          ],
+          "gatewayType": "Vpn",
+          "sku": {
+            "name": "Standard",
+            "tier": "Standard"
+          },
+          "vpnType": "RouteBased",
+          "enableBgp": true,
+          "bgpSettings": {
+            "asn": "(vNet2).asn"
+          }
+        }
+      },
+      {
+        "apiVersion": "2020-05-01",
+        "type": "Microsoft.Network/virtualNetworkGateways",
+        "name": "(vNet3).gatewayName",
+        "location": "[resourceGroup().location]",
+        "dependsOn": [
+          "Microsoft.Network/publicIPAddresses//(vNet3).gatewayPublicIPName",
+          "Microsoft.Network/virtualNetworks//(vNet3).name"
+        ],
+        "comments": "This is the vNet Gateway for vNet 3",
+        "properties": {
+          "ipConfigurations": [
+            {
+              "properties": {
+                "privateIPAllocationMethod": "Dynamic",
+                "subnet": {
+                  "id": "Microsoft.Network/virtualNetworks/subnets/(vNet3).name/GatewaySubnet"
+                },
+                "publicIPAddress": {
+                  "id": "Microsoft.Network/publicIPAddresses/(vNet3).gatewayPublicIPName"
+                }
+              },
+              "name": "vNet3GatewayConfig"
+            }
+          ],
+          "gatewayType": "Vpn",
+          "sku": {
+            "name": "Standard",
+            "tier": "Standard"
+          },
+          "vpnType": "RouteBased",
+          "enableBgp": true,
+          "bgpSettings": {
+            "asn": "(vNet3).asn"
+          }
+        }
+      },
+      {
+        "apiVersion": "2020-05-01",
+        "type": "Microsoft.Network/connections",
+        "name": "(vNet1).connectionName",
+        "location": "[resourceGroup().location]",
+        "dependsOn": [
+          "Microsoft.Network/virtualNetworkGateways//(vNet1).gatewayName",
+          "Microsoft.Network/virtualNetworkGateways//(vNet2).gatewayName"
+        ],
+        "comments": "This is the VPN connection from Gateway 1 to Gateway 2",
+        "properties": {
+          "virtualNetworkGateway1": {
+            "id": "Microsoft.Network/virtualNetworkGateways/(vNet1).gatewayName"
+          },
+          "virtualNetworkGateway2": {
+            "id": "Microsoft.Network/virtualNetworkGateways/(vNet2).gatewayName"
+          },
+          "connectionType": "Vnet2Vnet",
+          "routingWeight": 3,
+          "sharedKey": "GEN-UNIQUE",
+          "enableBGP": true
+        }
+      },
+      {
+        "apiVersion": "2020-05-01",
+        "type": "Microsoft.Network/connections",
+        "name": "(vNet2).connection1Name",
+        "location": "[resourceGroup().location]",
+        "dependsOn": [
+          "Microsoft.Network/virtualNetworkGateways//(vNet1).gatewayName",
+          "Microsoft.Network/virtualNetworkGateways//(vNet2).gatewayName"
+        ],
+        "comments": "This is the VPN connection from Gateway 2 to Gateway 1",
+        "properties": {
+          "virtualNetworkGateway1": {
+            "id": "Microsoft.Network/virtualNetworkGateways/(vNet2).gatewayName"
+          },
+          "virtualNetworkGateway2": {
+            "id": "Microsoft.Network/virtualNetworkGateways/(vNet1).gatewayName"
+          },
+          "connectionType": "Vnet2Vnet",
+          "routingWeight": 3,
+          "sharedKey": "GEN-UNIQUE",
+          "enableBGP": true
+        }
+      },
+      {
+        "apiVersion": "2020-05-01",
+        "type": "Microsoft.Network/connections",
+        "name": "(vNet2).connection2Name",
+        "location": "[resourceGroup().location]",
+        "dependsOn": [
+          "Microsoft.Network/virtualNetworkGateways//(vNet2).gatewayName",
+          "Microsoft.Network/virtualNetworkGateways//(vNet3).gatewayName"
+        ],
+        "comments": "This is the VPN connection from Gateway 2 to Gateway 3",
+        "properties": {
+          "virtualNetworkGateway1": {
+            "id": "Microsoft.Network/virtualNetworkGateways/(vNet2).gatewayName"
+          },
+          "virtualNetworkGateway2": {
+            "id": "Microsoft.Network/virtualNetworkGateways/(vNet3).gatewayName"
+          },
+          "connectionType": "Vnet2Vnet",
+          "routingWeight": 3,
+          "sharedKey": "GEN-UNIQUE",
+          "enableBGP": true
+        }
+      },
+      {
+        "apiVersion": "2020-05-01",
+        "type": "Microsoft.Network/connections",
+        "name": "(vNet3).connectionName",
+        "location": "[resourceGroup().location]",
+        "dependsOn": [
+          "Microsoft.Network/virtualNetworkGateways//(vNet2).gatewayName",
+          "Microsoft.Network/virtualNetworkGateways//(vNet3).gatewayName"
+        ],
+        "comments": "This is the VPN connection from Gateway 3 to Gateway 2",
+        "properties": {
+          "virtualNetworkGateway1": {
+            "id": "Microsoft.Network/virtualNetworkGateways/(vNet3).gatewayName"
+          },
+          "virtualNetworkGateway2": {
+            "id": "Microsoft.Network/virtualNetworkGateways/(vNet2).gatewayName"
+          },
+          "connectionType": "Vnet2Vnet",
+          "routingWeight": 3,
+          "sharedKey": "GEN-UNIQUE",
+          "enableBGP": true
+        }
+      }
+    ],
+    "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+  }
+}

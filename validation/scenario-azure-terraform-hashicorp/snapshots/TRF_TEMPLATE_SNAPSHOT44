@@ -1,0 +1,105 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "main",
+  "contentType": "json",
+  "source": "gitConnectorAzureTerraHashicorp",
+  "paths": [
+    "/examples/desktopvirtualization/variables.tf",
+    "/examples/desktopvirtualization/main.tf"
+  ],
+  "timestamp": 1642943279711,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "TRF_TEMPLATE_SNAPSHOT",
+    "type": "terraform",
+    "collection": "terraformtemplate",
+    "paths": [
+      "/examples/desktopvirtualization/variables.tf",
+      "/examples/desktopvirtualization/main.tf"
+    ],
+    "snapshotId": "TRF_TEMPLATE_SNAPSHOT44",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "azurerm_virtual_desktop_application_group",
+      "azurerm_virtual_desktop_host_pool",
+      "azurerm_virtual_desktop_workspace_application_group_association",
+      "azurerm_resource_group",
+      "azurerm_virtual_desktop_workspace"
+    ]
+  },
+  "snapshotId": "TRF_TEMPLATE_SNAPSHOT44",
+  "collection": "terraformtemplate",
+  "json": {
+    "provider": [
+      {
+        "azurerm": {
+          "features": [
+            {}
+          ]
+        }
+      }
+    ],
+    "resources": [
+      {
+        "type": "azurerm_resource_group",
+        "name": "example",
+        "properties": {
+          "name": "${var.prefix}-resources",
+          "location": "${var.location}",
+          "compiletime_identity": "azurerm_resource_group.example"
+        }
+      },
+      {
+        "type": "azurerm_virtual_desktop_workspace",
+        "name": "example",
+        "properties": {
+          "name": "${var.prefix}workspace",
+          "resource_group_name": "${azurerm_resource_group.example.name}",
+          "location": "${azurerm_resource_group.example.location}",
+          "compiletime_identity": "azurerm_virtual_desktop_workspace.example"
+        }
+      },
+      {
+        "type": "azurerm_virtual_desktop_host_pool",
+        "name": "example",
+        "properties": {
+          "resource_group_name": "${azurerm_resource_group.example.name}",
+          "name": "${var.prefix}hostpool",
+          "location": "${azurerm_resource_group.example.location}",
+          "validate_environment": false,
+          "type": "Pooled",
+          "maximum_sessions_allowed": 16,
+          "load_balancer_type": "BreadthFirst",
+          "compiletime_identity": "azurerm_virtual_desktop_host_pool.example"
+        }
+      },
+      {
+        "type": "azurerm_virtual_desktop_application_group",
+        "name": "example",
+        "properties": {
+          "resource_group_name": "${azurerm_resource_group.example.name}",
+          "host_pool_id": "${azurerm_virtual_desktop_host_pool.example.id}",
+          "location": "${azurerm_resource_group.example.location}",
+          "type": "Desktop",
+          "name": "${var.prefix}dag",
+          "depends_on": [
+            "${azurerm_virtual_desktop_host_pool.example}"
+          ],
+          "compiletime_identity": "azurerm_virtual_desktop_application_group.example"
+        }
+      },
+      {
+        "type": "azurerm_virtual_desktop_workspace_application_group_association",
+        "name": "example",
+        "properties": {
+          "application_group_id": "${azurerm_virtual_desktop_application_group.example.id}",
+          "workspace_id": "${azurerm_virtual_desktop_workspace.example.id}",
+          "compiletime_identity": "azurerm_virtual_desktop_workspace_application_group_association.example"
+        }
+      }
+    ]
+  }
+}

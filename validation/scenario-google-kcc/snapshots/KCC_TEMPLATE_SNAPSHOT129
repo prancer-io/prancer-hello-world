@@ -2,12 +2,12 @@
   "structure": "filesystem",
   "error": null,
   "reference": "master",
-  "contentType": "yaml",
+  "contentType": "json",
   "source": "gitConnectorGoogleKcc",
   "paths": [
-    "/samples/resources/computeimage/image-from-existing-disk/compute_v1beta1_computedisk.yaml"
+    "/samples/resources/computeforwardingrule/global-forwarding-rule-with-target-grpc-proxy/compute_v1beta1_computetargetgrpcproxy.yaml"
   ],
-  "timestamp": 1628765140930,
+  "timestamp": 1642973302528,
   "queryuser": null,
   "checksum": "99914b932bd37a50b983c5e7c90ae93b",
   "node": {
@@ -15,22 +15,29 @@
     "type": "kcc",
     "collection": "kcctemplate",
     "paths": [
-      "/samples/resources/computeimage/image-from-existing-disk/compute_v1beta1_computedisk.yaml"
+      "/samples/resources/computeforwardingrule/global-forwarding-rule-with-target-grpc-proxy/compute_v1beta1_computetargetgrpcproxy.yaml"
     ],
     "snapshotId": "KCC_TEMPLATE_SNAPSHOT129",
     "status": "active",
-    "validate": true
+    "validate": true,
+    "resourceTypes": [
+      "computetargetgrpcproxy"
+    ]
   },
   "snapshotId": "KCC_TEMPLATE_SNAPSHOT129",
   "collection": "kcctemplate",
   "json": {
     "apiVersion": "compute.cnrm.cloud.google.com/v1beta1",
-    "kind": "ComputeDisk",
+    "kind": "ComputeTargetGRPCProxy",
     "metadata": {
-      "name": "computeimage-dep-fromexistingdisk"
+      "name": "computeforwardingrule-dep-global-with-grpc-proxy"
     },
     "spec": {
-      "location": "us-central1-a"
+      "description": "A target gRPC proxy intended for load balancing gRPC traffic, referenced by global forwarding rules. References a URL map which specifies how traffic routes to gRPC backend services.",
+      "urlMapRef": {
+        "name": "computeforwardingrule-dep-global-with-grpc-proxy"
+      },
+      "validateForProxyless": true
     }
   }
 }

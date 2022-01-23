@@ -2,12 +2,12 @@
   "structure": "filesystem",
   "error": null,
   "reference": "master",
-  "contentType": "yaml",
+  "contentType": "json",
   "source": "gitConnectorGoogleKcc",
   "paths": [
-    "/samples/resources/sqlinstance/mysql-sql-instance-high-availability/sql_v1beta1_sqlinstance.yaml"
+    "/samples/resources/logginglogsink/organization-sink/logging_v1beta1_logginglogsink.yaml"
   ],
-  "timestamp": 1628765150882,
+  "timestamp": 1642973304534,
   "queryuser": null,
   "checksum": "99914b932bd37a50b983c5e7c90ae93b",
   "node": {
@@ -15,33 +15,33 @@
     "type": "kcc",
     "collection": "kcctemplate",
     "paths": [
-      "/samples/resources/sqlinstance/mysql-sql-instance-high-availability/sql_v1beta1_sqlinstance.yaml"
+      "/samples/resources/logginglogsink/organization-sink/logging_v1beta1_logginglogsink.yaml"
     ],
     "snapshotId": "KCC_TEMPLATE_SNAPSHOT514",
     "status": "active",
-    "validate": true
+    "validate": true,
+    "resourceTypes": [
+      "logginglogsink"
+    ]
   },
   "snapshotId": "KCC_TEMPLATE_SNAPSHOT514",
   "collection": "kcctemplate",
   "json": {
-    "apiVersion": "sql.cnrm.cloud.google.com/v1beta1",
-    "kind": "SQLInstance",
+    "apiVersion": "logging.cnrm.cloud.google.com/v1beta1",
+    "kind": "LoggingLogSink",
     "metadata": {
-      "name": "sqlinstance-sample-mysqlhighavailability"
+      "name": "logginglogsink-sample-org"
     },
     "spec": {
-      "databaseVersion": "MYSQL_5_7",
-      "region": "us-central1",
-      "settings": {
-        "tier": "db-g1-small",
-        "diskSize": 25,
-        "diskType": "PD_SSD",
-        "availabilityType": "REGIONAL",
-        "backupConfiguration": {
-          "binaryLogEnabled": true,
-          "enabled": true
+      "organizationRef": {
+        "external": "${ORG_ID?}"
+      },
+      "destination": {
+        "storageBucketRef": {
+          "name": "${PROJECT_ID?}-logginglogsink-dep-org"
         }
-      }
+      },
+      "filter": "resource.type=\"bigquery_project\" AND logName:\"cloudaudit.googleapis.com\""
     }
   }
 }

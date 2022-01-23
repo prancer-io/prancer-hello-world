@@ -1,0 +1,76 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "main",
+  "contentType": "json",
+  "source": "gitConnectorAzureTerraHashicorp",
+  "paths": [
+    "/examples/policy-definition/variables.tf",
+    "/examples/policy-definition/main.tf"
+  ],
+  "timestamp": 1642943279851,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "TRF_TEMPLATE_SNAPSHOT",
+    "type": "terraform",
+    "collection": "terraformtemplate",
+    "paths": [
+      "/examples/policy-definition/variables.tf",
+      "/examples/policy-definition/main.tf"
+    ],
+    "snapshotId": "TRF_TEMPLATE_SNAPSHOT83",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "azurerm_policy_definition"
+    ]
+  },
+  "snapshotId": "TRF_TEMPLATE_SNAPSHOT83",
+  "collection": "terraformtemplate",
+  "json": {
+    "provider": [
+      {
+        "azurerm": {
+          "features": [
+            {}
+          ]
+        }
+      }
+    ],
+    "resources": [
+      {
+        "type": "azurerm_policy_definition",
+        "name": "example",
+        "properties": {
+          "name": "${var.prefix}-policy",
+          "policy_type": "Custom",
+          "mode": "All",
+          "display_name": "${var.prefix}-policy",
+          "policy_rule": {
+            "if": {
+              "not": {
+                "field": "location",
+                "in": "[parameters('allowedLocations')]"
+              }
+            },
+            "then": {
+              "effect": "audit"
+            }
+          },
+          "parameters": {
+            "allowedLocations": {
+              "type": "Array",
+              "metadata": {
+                "description": "The list of allowed locations for resources.",
+                "displayName": "Allowed locations",
+                "strongType": "location"
+              }
+            }
+          },
+          "compiletime_identity": "azurerm_policy_definition.example"
+        }
+      }
+    ]
+  }
+}

@@ -1,0 +1,235 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAzureQuickStart",
+  "paths": [
+    "/quickstarts/microsoft.containerinstance/aci-vnet/azuredeploy.json",
+    "/quickstarts/microsoft.containerinstance/aci-vnet/azuredeploy.parameters.json"
+  ],
+  "timestamp": 1642962905438,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/quickstarts/microsoft.containerinstance/aci-vnet/azuredeploy.json",
+      "/quickstarts/microsoft.containerinstance/aci-vnet/azuredeploy.parameters.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT1191",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "microsoft.network/virtualnetworks",
+      "microsoft.containerinstance/containergroups",
+      "microsoft.network/networkprofiles",
+      "microsoft.network/virtualnetworks/subnets"
+    ]
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT1191",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.0.0.0",
+    "metadata": {
+      "_generator": {
+        "name": "bicep",
+        "version": "0.4.1008.15138",
+        "templateHash": "13861811123027096653"
+      }
+    },
+    "parameters": {
+      "vnetName": {
+        "type": "string",
+        "defaultValue": "aci-vnet",
+        "metadata": {
+          "description": "VNet name"
+        }
+      },
+      "vnetAddressPrefix": {
+        "type": "string",
+        "defaultValue": "10.0.0.0/16",
+        "metadata": {
+          "description": "Address prefix"
+        }
+      },
+      "subnetAddressPrefix": {
+        "type": "string",
+        "defaultValue": "10.0.0.0/24",
+        "metadata": {
+          "description": "Subnet prefix"
+        }
+      },
+      "subnetName": {
+        "type": "string",
+        "defaultValue": "aci-subnet",
+        "metadata": {
+          "description": "Subnet name"
+        }
+      },
+      "location": {
+        "type": "string",
+        "defaultValue": "[resourceGroup().location]",
+        "metadata": {
+          "description": "Location for all resources."
+        }
+      },
+      "containerGroupName": {
+        "type": "string",
+        "defaultValue": "aci-containergroup",
+        "metadata": {
+          "description": "Container group name"
+        },
+        "value": "GEN-UNIQUE"
+      },
+      "containerName": {
+        "type": "string",
+        "defaultValue": "aci-container",
+        "metadata": {
+          "description": "Container name"
+        }
+      },
+      "image": {
+        "type": "string",
+        "defaultValue": "mcr.microsoft.com/azuredocs/aci-helloworld",
+        "metadata": {
+          "description": "Container image to deploy. Should be of the form accountName/imagename:tag for images stored in Docker Hub or a fully qualified URI for a private registry like the Azure Container Registry."
+        }
+      },
+      "port": {
+        "type": "int",
+        "defaultValue": 80,
+        "metadata": {
+          "description": "Port to open on the container."
+        }
+      },
+      "cpuCores": {
+        "type": "int",
+        "defaultValue": 1,
+        "metadata": {
+          "description": "The number of CPU cores to allocate to the container. Must be an integer."
+        }
+      },
+      "memoryInGb": {
+        "type": "int",
+        "defaultValue": 2,
+        "metadata": {
+          "description": "The amount of memory to allocate to the container in gigabytes."
+        }
+      }
+    },
+    "functions": [],
+    "variables": {
+      "networkProfileName": "aci-networkProfile",
+      "interfaceConfigName": "eth0",
+      "interfaceIpConfig": "ipconfigprofile1"
+    },
+    "resources": [
+      {
+        "type": "Microsoft.Network/virtualNetworks",
+        "apiVersion": "2020-11-01",
+        "name": "aci-vnet",
+        "location": "[resourceGroup().location]",
+        "properties": {
+          "addressSpace": {
+            "addressPrefixes": [
+              "10.0.0.0/16"
+            ]
+          }
+        }
+      },
+      {
+        "type": "Microsoft.Network/virtualNetworks/subnets",
+        "apiVersion": "2020-11-01",
+        "name": "[format('{0}/{1}', parameters('vnetName'), parameters('subnetName'))]",
+        "properties": {
+          "addressPrefix": "10.0.0.0/24",
+          "delegations": [
+            {
+              "name": "DelegationService",
+              "properties": {
+                "serviceName": "Microsoft.ContainerInstance/containerGroups"
+              }
+            }
+          ]
+        },
+        "dependsOn": [
+          "Microsoft.Network/virtualNetworks/aci-vnet"
+        ]
+      },
+      {
+        "type": "Microsoft.Network/networkProfiles",
+        "apiVersion": "2020-11-01",
+        "name": "aci-networkProfile",
+        "location": "[resourceGroup().location]",
+        "properties": {
+          "containerNetworkInterfaceConfigurations": [
+            {
+              "name": "eth0",
+              "properties": {
+                "ipConfigurations": [
+                  {
+                    "name": "ipconfigprofile1",
+                    "properties": {
+                      "subnet": {
+                        "id": "Microsoft.Network/virtualNetworks/subnets/aci-vnet/aci-subnet"
+                      }
+                    }
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        "dependsOn": [
+          "Microsoft.Network/virtualNetworks/subnets/aci-vnet/aci-subnet"
+        ]
+      },
+      {
+        "type": "Microsoft.ContainerInstance/containerGroups",
+        "apiVersion": "2019-12-01",
+        "name": "GEN-UNIQUE",
+        "location": "[resourceGroup().location]",
+        "properties": {
+          "containers": [
+            {
+              "name": "aci-container",
+              "properties": {
+                "image": "mcr.microsoft.com/azuredocs/aci-helloworld",
+                "ports": [
+                  {
+                    "port": 80,
+                    "protocol": "TCP"
+                  }
+                ],
+                "resources": {
+                  "requests": {
+                    "cpu": 1,
+                    "memoryInGB": 2
+                  }
+                }
+              }
+            }
+          ],
+          "osType": "Linux",
+          "networkProfile": {
+            "id": "Microsoft.Network/networkProfiles/aci-networkProfile"
+          },
+          "restartPolicy": "Always"
+        },
+        "dependsOn": [
+          "Microsoft.Network/networkProfiles/aci-networkProfile"
+        ]
+      }
+    ],
+    "outputs": {
+      "containerIPv4Address": {
+        "type": "string",
+        "value": "[reference(resourceId('Microsoft.ContainerInstance/containerGroups', parameters('containerGroupName'))).ipAddress.ip]"
+      }
+    },
+    "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+  }
+}

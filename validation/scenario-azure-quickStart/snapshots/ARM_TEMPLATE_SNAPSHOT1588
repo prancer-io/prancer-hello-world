@@ -1,0 +1,133 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAzureQuickStart",
+  "paths": [
+    "/quickstarts/microsoft.network/route-table-create/azuredeploy.json",
+    "/quickstarts/microsoft.network/route-table-create/azuredeploy.parameters.json"
+  ],
+  "timestamp": 1642962909431,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/quickstarts/microsoft.network/route-table-create/azuredeploy.json",
+      "/quickstarts/microsoft.network/route-table-create/azuredeploy.parameters.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT1588",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "microsoft.authorization/locks",
+      "microsoft.network/routetables"
+    ]
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT1588",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.0.0.0",
+    "metadata": {
+      "_generator": {
+        "name": "bicep",
+        "version": "0.4.613.9944",
+        "templateHash": "12468313532454153179"
+      }
+    },
+    "parameters": {
+      "routeTableName": {
+        "type": "string",
+        "defaultValue": "[uniqueString(resourceGroup().id)]",
+        "metadata": {
+          "description": "Route table name"
+        }
+      },
+      "location": {
+        "type": "string",
+        "defaultValue": "[resourceGroup().location]",
+        "metadata": {
+          "description": "Route table location"
+        }
+      },
+      "disableBgpRoutePropagation": {
+        "type": "bool",
+        "defaultValue": false,
+        "metadata": {
+          "description": "Disable the routes learned by BGP on the route table"
+        }
+      },
+      "routes": {
+        "type": "array",
+        "defaultValue": [],
+        "metadata": {
+          "description": "Array containing routes. For properties format refer to https://docs.microsoft.com/en-us/azure/templates/microsoft.network/routetables?tabs=bicep#routepropertiesformat"
+        }
+      },
+      "enableDeleteLock": {
+        "type": "bool",
+        "defaultValue": false,
+        "metadata": {
+          "description": "Enable delete lock"
+        }
+      }
+    },
+    "functions": [],
+    "variables": {
+      "lockName": "[format('{0}-lck', parameters('routeTableName'))]"
+    },
+    "resources": [
+      {
+        "type": "Microsoft.Network/routeTables",
+        "apiVersion": "2021-02-01",
+        "name": "[uniqueString(resourceGroup().id)]",
+        "location": "[resourceGroup().location]",
+        "properties": {
+          "copy": [
+            {
+              "name": "routes",
+              "count": 20,
+              "input": {
+                "name": "routes)[copyIndex(routes",
+                "properties": {
+                  "addressPrefix": "routes)[copyIndex(routes",
+                  "hasBgpOverride": "[if(contains(parameters('routes')[copyIndex('routes')], 'hasBgpOverride'), parameters('routes')[copyIndex('routes')].hasBgpOverride, null())]",
+                  "nextHopIpAddress": "[if(contains(parameters('routes')[copyIndex('routes')], 'nextHopIpAddress'), parameters('routes')[copyIndex('routes')].nextHopIpAddress, null())]",
+                  "nextHopType": "routes)[copyIndex(routes"
+                }
+              }
+            }
+          ],
+          "disableBgpRoutePropagation": false
+        }
+      },
+      {
+        "condition": false,
+        "type": "Microsoft.Authorization/locks",
+        "apiVersion": "2017-04-01",
+        "scope": "[format('Microsoft.Network/routeTables/{0}', parameters('routeTableName'))]",
+        "name": "[format('{0}-lck', parameters('routeTableName'))]",
+        "properties": {
+          "level": "CanNotDelete"
+        },
+        "dependsOn": [
+          "Microsoft.Network/routeTables/[uniqueString(resourceGroup().id)]"
+        ]
+      }
+    ],
+    "outputs": {
+      "name": {
+        "type": "string",
+        "value": "[parameters('routeTableName')]"
+      },
+      "id": {
+        "type": "string",
+        "value": "[resourceId('Microsoft.Network/routeTables', parameters('routeTableName'))]"
+      }
+    },
+    "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+  }
+}

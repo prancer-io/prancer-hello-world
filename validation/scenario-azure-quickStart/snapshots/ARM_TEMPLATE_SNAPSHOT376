@@ -1,0 +1,537 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAzureQuickStart",
+  "paths": [
+    "/application-workloads/ros/ros-vm-windows/azuredeploy.json",
+    "/application-workloads/ros/ros-vm-windows/azuredeploy.parameters.json"
+  ],
+  "timestamp": 1642962893427,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/application-workloads/ros/ros-vm-windows/azuredeploy.json",
+      "/application-workloads/ros/ros-vm-windows/azuredeploy.parameters.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT376",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "microsoft.network/publicipaddresses",
+      "microsoft.network/virtualnetworks",
+      "microsoft.resources/deployments",
+      "microsoft.network/networkinterfaces",
+      "microsoft.compute/virtualmachines",
+      "microsoft.network/networksecuritygroups",
+      "microsoft.storage/storageaccounts"
+    ]
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT376",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "location": {
+        "type": "string",
+        "defaultValue": "[resourceGroup().location]",
+        "metadata": {
+          "description": "Location for all resources."
+        }
+      },
+      "projectName": {
+        "type": "string",
+        "maxLength": 12,
+        "metadata": {
+          "description": "Specifies a name for generating resource names."
+        },
+        "value": "GEN-UNIQUE-8"
+      },
+      "virtualMachineSize": {
+        "type": "string",
+        "defaultValue": "Standard_D2_v3",
+        "allowedValues": [
+          "Standard_D2_v3",
+          "Standard_D2_v3",
+          "Standard_NV6",
+          "Standard_NV12",
+          "Standard_NV24"
+        ],
+        "metadata": {
+          "description": "The virtual machine size."
+        }
+      },
+      "vmImage": {
+        "type": "string",
+        "defaultValue": "Windows10",
+        "allowedValues": [
+          "Windows10",
+          "VisualStudio2019"
+        ],
+        "metadata": {
+          "description": "The virutal machine image base."
+        }
+      },
+      "adminUsername": {
+        "type": "string",
+        "metadata": {
+          "description": "User name for the Virtual Machine."
+        },
+        "value": "GEN-UNIQUE"
+      },
+      "adminPassword": {
+        "type": "securestring",
+        "metadata": {
+          "description": "Password for the Virtual Machine."
+        },
+        "value": "GEN-PASSWORD"
+      },
+      "pipelineProvider": {
+        "type": "string",
+        "defaultValue": "None",
+        "allowedValues": [
+          "None",
+          "AzurePipelines",
+          "GitHubRunner"
+        ],
+        "metadata": {
+          "description": "The continuous integration provider to register."
+        }
+      },
+      "vstsAccount": {
+        "type": "string",
+        "metadata": {
+          "description": "The Visual Studio Team Services account name, that is, the first part of your VSTSAccount.visualstudio.com"
+        },
+        "defaultValue": "",
+        "value": "GEN-UNIQUE"
+      },
+      "vstsPersonalAccessToken": {
+        "type": "securestring",
+        "metadata": {
+          "description": "The personal access token to connect to VSTS"
+        },
+        "defaultValue": "",
+        "value": "GEN-UNIQUE"
+      },
+      "vstsPoolName": {
+        "type": "string",
+        "defaultValue": "Default",
+        "metadata": {
+          "description": "The Visual Studio Team Services build agent pool for this build agent to join. Use 'Default' if you don't have a separate pool."
+        },
+        "value": "GEN-UNIQUE"
+      },
+      "enableAutologon": {
+        "type": "bool",
+        "defaultValue": false,
+        "metadata": {
+          "description": "Enable autologon to run the build agent in interactive mode that can sustain machine reboots.<br>Set this to true if the agents will be used to run UI tests."
+        },
+        "value": false
+      },
+      "githubRepo": {
+        "type": "string",
+        "metadata": {
+          "description": "The github account and repo alias."
+        },
+        "defaultValue": ""
+      },
+      "githubPersonalAccessToken": {
+        "type": "securestring",
+        "metadata": {
+          "description": "The personal access token to connect to GitHub."
+        },
+        "defaultValue": ""
+      },
+      "_artifactsLocation": {
+        "type": "string",
+        "metadata": {
+          "description": "The base URI where artifacts required by this template are located including a trailing '/'"
+        },
+        "defaultValue": "[deployment().properties.templatelink.uri]"
+      },
+      "_artifactsLocationSasToken": {
+        "type": "securestring",
+        "metadata": {
+          "description": "The sasToken required to access _artifactsLocation.  When the template is deployed using the accompanying scripts, a sasToken will be automatically generated. Use the defaultValue if the staging location is not secured."
+        },
+        "defaultValue": ""
+      }
+    },
+    "variables": {
+      "location": "[resourceGroup().location]",
+      "networkInterfaceName": "GEN-UNIQUE-8-nic",
+      "networkSecurityGroupName": "GEN-UNIQUE-8-nsg",
+      "virtualNetworkName": "GEN-UNIQUE-8-vnet",
+      "publicIpAddressName": "GEN-UNIQUE-8-ip",
+      "virtualMachineName": "GEN-UNIQUE-8-vm",
+      "diagnosticsStorageAccountName": "[concat(uniqueString(resourceGroup().id),'diag')]",
+      "nsgId": "Microsoft.Network/networkSecurityGroups/GEN-UNIQUE-8-nsg",
+      "subnetRef": "Microsoft.Network/virtualNetworks/subnets/GEN-UNIQUE-8-vnet/default",
+      "networkSecurityGroupRules": [
+        {
+          "name": "AllowRDP",
+          "properties": {
+            "priority": 300,
+            "protocol": "TCP",
+            "access": "Allow",
+            "direction": "Inbound",
+            "sourceAddressPrefix": "*",
+            "sourcePortRange": "*",
+            "destinationAddressPrefix": "*",
+            "destinationPortRange": "3389"
+          }
+        },
+        {
+          "name": "AllowPSRemoting",
+          "properties": {
+            "priority": 301,
+            "protocol": "Tcp",
+            "access": "Allow",
+            "direction": "Inbound",
+            "sourceAddressPrefix": "*",
+            "sourcePortRange": "*",
+            "destinationAddressPrefix": "*",
+            "destinationPortRange": "5986"
+          }
+        }
+      ],
+      "diagnosticsStorageAccountType": "Standard_LRS",
+      "diagnosticsStorageAccountKind": "Storage",
+      "addressPrefixes": [
+        "10.0.0.0/24"
+      ],
+      "subnets": [
+        {
+          "name": "default",
+          "properties": {
+            "addressPrefix": "10.0.0.0/24"
+          }
+        }
+      ],
+      "publicIpAddressType": "Dynamic",
+      "publicIpAddressSku": "Basic",
+      "vmImageReferences": {
+        "VisualStudio2019": {
+          "publisher": "MicrosoftVisualStudio",
+          "offer": "visualstudio2019latest",
+          "sku": "vs-2019-comm-latest-ws2019",
+          "version": "latest"
+        },
+        "Windows10": {
+          "publisher": "MicrosoftWindowsDesktop",
+          "offer": "Windows-10",
+          "sku": "rs5-enterprise",
+          "version": "latest"
+        }
+      },
+      "osDiskType": "StandardSSD_LRS",
+      "rosScriptFileUri": "[uri(parameters('_artifactsLocation'), concat('InstallROS.ps1', parameters('_artifactsLocationSasToken')))]",
+      "vstsScriptFileUri": "[uri(parameters('_artifactsLocation'), concat('InstallVstsAgent.ps1', parameters('_artifactsLocationSasToken')))]",
+      "githubScriptFileUri": "[uri(parameters('_artifactsLocation'), concat('InstallGitHubAgent.ps1', parameters('_artifactsLocationSasToken')))]",
+      "nvidiaGpuDriverWindowsUri": "[uri(parameters('_artifactsLocation'), concat('nestedtemplates/nvidiaGpuDriverWindows.json', parameters('_artifactsLocationSasToken')))]",
+      "extensionUrl": "[uri(parameters('_artifactsLocation'), concat('nestedtemplates/customScriptExtension.json', parameters('_artifactsLocationSasToken')))]",
+      "vstsParameters": "-vstsAccount GEN-UNIQUE -personalAccessToken GEN-UNIQUE -AgentName GEN-UNIQUE-8-vsts -PoolName GEN-UNIQUE -runAsAutoLogon  parameters('enableAutologon') -vmAdminUserName GEN-UNIQUE -vmAdminPassword GEN-PASSWORD",
+      "githubParameters": "-GitHubRepo  parameters('githubRepo') -GitHubPAT  parameters('githubPersonalAccessToken') -AgentName GEN-UNIQUE-8-github"
+    },
+    "resources": [
+      {
+        "name": "GEN-UNIQUE-8-nic",
+        "type": "Microsoft.Network/networkInterfaces",
+        "apiVersion": "2020-07-01",
+        "location": "[resourceGroup().location]",
+        "dependsOn": [
+          "Microsoft.Network/networkSecurityGroups//GEN-UNIQUE-8-nsg",
+          "Microsoft.Network/virtualNetworks//GEN-UNIQUE-8-vnet",
+          "Microsoft.Network/publicIpAddresses//GEN-UNIQUE-8-ip"
+        ],
+        "properties": {
+          "ipConfigurations": [
+            {
+              "name": "ipconfig1",
+              "properties": {
+                "subnet": {
+                  "id": "Microsoft.Network/virtualNetworks/subnets/GEN-UNIQUE-8-vnet/default"
+                },
+                "privateIPAllocationMethod": "Dynamic",
+                "publicIpAddress": {
+                  "id": "Microsoft.Network/publicIpAddresses/GEN-UNIQUE-8-ip"
+                }
+              }
+            }
+          ],
+          "networkSecurityGroup": {
+            "id": "Microsoft.Network/networkSecurityGroups/GEN-UNIQUE-8-nsg"
+          }
+        }
+      },
+      {
+        "name": "GEN-UNIQUE-8-nsg",
+        "type": "Microsoft.Network/networkSecurityGroups",
+        "apiVersion": "2019-02-01",
+        "location": "[resourceGroup().location]",
+        "properties": {
+          "securityRules": [
+            {
+              "name": "AllowRDP",
+              "properties": {
+                "priority": 300,
+                "protocol": "TCP",
+                "access": "Allow",
+                "direction": "Inbound",
+                "sourceAddressPrefix": "*",
+                "sourcePortRange": "*",
+                "destinationAddressPrefix": "*",
+                "destinationPortRange": "3389"
+              }
+            },
+            {
+              "name": "AllowPSRemoting",
+              "properties": {
+                "priority": 301,
+                "protocol": "Tcp",
+                "access": "Allow",
+                "direction": "Inbound",
+                "sourceAddressPrefix": "*",
+                "sourcePortRange": "*",
+                "destinationAddressPrefix": "*",
+                "destinationPortRange": "5986"
+              }
+            }
+          ]
+        }
+      },
+      {
+        "name": "GEN-UNIQUE-8-vnet",
+        "type": "Microsoft.Network/virtualNetworks",
+        "apiVersion": "2019-04-01",
+        "location": "[resourceGroup().location]",
+        "properties": {
+          "addressSpace": {
+            "addressPrefixes": [
+              "10.0.0.0/24"
+            ]
+          },
+          "subnets": [
+            {
+              "name": "default",
+              "properties": {
+                "addressPrefix": "10.0.0.0/24"
+              }
+            }
+          ]
+        }
+      },
+      {
+        "name": "GEN-UNIQUE-8-ip",
+        "type": "Microsoft.Network/publicIpAddresses",
+        "apiVersion": "2019-02-01",
+        "location": "[resourceGroup().location]",
+        "properties": {
+          "publicIpAllocationMethod": "Dynamic"
+        },
+        "sku": {
+          "name": "Basic"
+        }
+      },
+      {
+        "name": "GEN-UNIQUE-8-vm",
+        "type": "Microsoft.Compute/virtualMachines",
+        "apiVersion": "2019-03-01",
+        "location": "[resourceGroup().location]",
+        "dependsOn": [
+          "[resourceId('Microsoft.Network/networkInterfaces/', variables('networkInterfaceName'))]",
+          "[resourceId('Microsoft.Storage/storageAccounts/', variables('diagnosticsStorageAccountName'))]"
+        ],
+        "properties": {
+          "hardwareProfile": {
+            "vmSize": "Standard_D2_v3"
+          },
+          "storageProfile": {
+            "osDisk": {
+              "createOption": "FromImage",
+              "managedDisk": {
+                "storageAccountType": "StandardSSD_LRS"
+              }
+            },
+            "imageReference": "(vmImageReferences)[parameters(vmImage)]"
+          },
+          "networkProfile": {
+            "networkInterfaces": [
+              {
+                "id": "Microsoft.Network/networkInterfaces/GEN-UNIQUE-8-nic"
+              }
+            ]
+          },
+          "osProfile": {
+            "computerName": "GEN-UNIQUE-8-vm",
+            "adminUsername": "GEN-UNIQUE",
+            "adminPassword": "GEN-PASSWORD",
+            "windowsConfiguration": {
+              "enableAutomaticUpdates": true,
+              "provisionVmAgent": true
+            }
+          },
+          "licenseType": "Windows_Client",
+          "diagnosticsProfile": {
+            "bootDiagnostics": {
+              "enabled": true,
+              "storageUri": "[reference(resourceId('Microsoft.Storage/storageAccounts', variables('diagnosticsStorageAccountName')), '2021-01-01').primaryEndpoints['blob']]"
+            }
+          }
+        }
+      },
+      {
+        "name": "[variables('diagnosticsStorageAccountName')]",
+        "type": "Microsoft.Storage/storageAccounts",
+        "apiVersion": "2019-04-01",
+        "location": "[resourceGroup().location]",
+        "properties": {},
+        "kind": "Storage",
+        "sku": {
+          "name": "Standard_LRS"
+        }
+      },
+      {
+        "name": "GEN-UNIQUE-8-vm-ROSInstall",
+        "type": "Microsoft.Resources/deployments",
+        "apiVersion": "2020-06-01",
+        "dependsOn": [
+          "Microsoft.Compute/virtualMachines//GEN-UNIQUE-8-vm"
+        ],
+        "properties": {
+          "mode": "Incremental",
+          "templateLink": {
+            "uri": "[uri(parameters('_artifactsLocation'), concat('nestedtemplates/customScriptExtension.json', parameters('_artifactsLocationSasToken')))]",
+            "contentVersion": "1.0.0.0"
+          },
+          "parameters": {
+            "location": {
+              "value": "[resourceGroup().location]"
+            },
+            "extensionName": {
+              "value": "cse"
+            },
+            "vmName": {
+              "value": "GEN-UNIQUE-8-vm"
+            },
+            "fileUris": {
+              "value": [
+                "[uri(parameters('_artifactsLocation'), concat('InstallROS.ps1', parameters('_artifactsLocationSasToken')))]"
+              ]
+            },
+            "commandToExecute": {
+              "value": "powershell -ExecutionPolicy Unrestricted -file InstallROS.ps1"
+            }
+          }
+        }
+      },
+      {
+        "condition": "[contains(parameters('pipelineProvider'), 'AzurePipelines')]",
+        "name": "GEN-UNIQUE-8-vm-VSTSAgentInstall",
+        "type": "Microsoft.Resources/deployments",
+        "apiVersion": "2020-06-01",
+        "dependsOn": [
+          "Microsoft.Resources/deployments/GEN-UNIQUE-8-vm-ROSInstall"
+        ],
+        "properties": {
+          "mode": "Incremental",
+          "templateLink": {
+            "uri": "[uri(parameters('_artifactsLocation'), concat('nestedtemplates/customScriptExtension.json', parameters('_artifactsLocationSasToken')))]",
+            "contentVersion": "1.0.0.0"
+          },
+          "parameters": {
+            "location": {
+              "value": "[resourceGroup().location]"
+            },
+            "extensionName": {
+              "value": "cse"
+            },
+            "vmName": {
+              "value": "GEN-UNIQUE-8-vm"
+            },
+            "fileUris": {
+              "value": [
+                "[uri(parameters('_artifactsLocation'), concat('InstallVstsAgent.ps1', parameters('_artifactsLocationSasToken')))]"
+              ]
+            },
+            "commandToExecute": {
+              "value": "powershell.exe -ExecutionPolicy Unrestricted -Command \"& {./InstallVstsAgent.ps1 -vstsAccount GEN-UNIQUE -personalAccessToken GEN-UNIQUE -AgentName GEN-UNIQUE-8-vsts -PoolName GEN-UNIQUE -runAsAutoLogon  parameters('enableAutologon') -vmAdminUserName GEN-UNIQUE -vmAdminPassword GEN-PASSWORD}\""
+            }
+          }
+        }
+      },
+      {
+        "condition": "[contains(parameters('pipelineProvider'), 'GitHubRunner')]",
+        "name": "GEN-UNIQUE-8-vm-GitHubAgentInstall",
+        "type": "Microsoft.Resources/deployments",
+        "apiVersion": "2020-06-01",
+        "dependsOn": [
+          "Microsoft.Resources/deployments/GEN-UNIQUE-8-vm-ROSInstall"
+        ],
+        "properties": {
+          "mode": "Incremental",
+          "templateLink": {
+            "uri": "[uri(parameters('_artifactsLocation'), concat('nestedtemplates/customScriptExtension.json', parameters('_artifactsLocationSasToken')))]",
+            "contentVersion": "1.0.0.0"
+          },
+          "parameters": {
+            "location": {
+              "value": "[resourceGroup().location]"
+            },
+            "extensionName": {
+              "value": "cse"
+            },
+            "vmName": {
+              "value": "GEN-UNIQUE-8-vm"
+            },
+            "fileUris": {
+              "value": [
+                "[uri(parameters('_artifactsLocation'), concat('InstallGitHubAgent.ps1', parameters('_artifactsLocationSasToken')))]"
+              ]
+            },
+            "commandToExecute": {
+              "value": "powershell.exe -ExecutionPolicy Unrestricted -Command \"& {./InstallGitHubAgent.ps1 -GitHubRepo  parameters('githubRepo') -GitHubPAT  parameters('githubPersonalAccessToken') -AgentName GEN-UNIQUE-8-github}\""
+            }
+          }
+        }
+      },
+      {
+        "condition": "[contains(parameters('virtualMachineSize'), 'Standard_NV')]",
+        "name": "nvidia-gpu-driver-windows",
+        "apiVersion": "2019-05-01",
+        "type": "Microsoft.Resources/deployments",
+        "dependsOn": [
+          "Microsoft.Resources/deployments/GEN-UNIQUE-8-vm-ROSInstall"
+        ],
+        "properties": {
+          "mode": "Incremental",
+          "templateLink": {
+            "uri": "[uri(parameters('_artifactsLocation'), concat('nestedtemplates/nvidiaGpuDriverWindows.json', parameters('_artifactsLocationSasToken')))]"
+          },
+          "parameters": {
+            "vmName": {
+              "value": "GEN-UNIQUE-8-vm"
+            },
+            "location": {
+              "value": "[resourceGroup().location]"
+            }
+          }
+        }
+      }
+    ],
+    "outputs": {
+      "adminUsername": {
+        "type": "string",
+        "value": "[parameters('adminUsername')]"
+      }
+    },
+    "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+  }
+}

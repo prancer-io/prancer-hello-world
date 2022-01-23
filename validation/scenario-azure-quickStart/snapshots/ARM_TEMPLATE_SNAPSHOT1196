@@ -1,0 +1,210 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAzureQuickStart",
+  "paths": [
+    "/quickstarts/microsoft.containerinstance/aks-azml-targetcompute/azuredeploy.json",
+    "/quickstarts/microsoft.containerinstance/aks-azml-targetcompute/azuredeploy.parameters.json"
+  ],
+  "timestamp": 1642962905480,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/quickstarts/microsoft.containerinstance/aks-azml-targetcompute/azuredeploy.json",
+      "/quickstarts/microsoft.containerinstance/aks-azml-targetcompute/azuredeploy.parameters.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT1196",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "microsoft.containerservice/managedclusters",
+      "microsoft.containerservice/managedclusters/agentpools"
+    ]
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT1196",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "clusterName": {
+        "type": "string",
+        "metadata": {
+          "description": "The name of the Managed Cluster resource."
+        },
+        "value": "GEN-UNIQUE"
+      },
+      "location": {
+        "type": "string",
+        "defaultValue": "[resourceGroup().location]",
+        "metadata": {
+          "description": "The location of the Managed Cluster resource."
+        }
+      },
+      "osDiskSizeGB": {
+        "type": "int",
+        "defaultValue": 100,
+        "metadata": {
+          "description": "Disk size (in GB) to provision for each of the agent pool nodes. This value minimun 30 to 1023. Specifying 100 is the default value required to be attached to Azure ML."
+        },
+        "minValue": 30,
+        "maxValue": 1023,
+        "value": 100
+      },
+      "agentCount": {
+        "type": "int",
+        "defaultValue": 3,
+        "metadata": {
+          "description": "The number of nodes for the cluster."
+        },
+        "minValue": 1,
+        "maxValue": 50,
+        "value": 3
+      },
+      "podCidr": {
+        "type": "string",
+        "defaultValue": "10.244.0.0/16",
+        "metadata": {
+          "description": "A CIDR notation IP range from which to assign pod IPs when kubenet is used"
+        },
+        "value": "10.244.0.0/16"
+      },
+      "serviceCidr": {
+        "type": "string",
+        "defaultValue": "10.0.0.0/16",
+        "metadata": {
+          "description": "A CIDR notation IP range from which to assign service cluster IPs."
+        },
+        "value": "10.0.0.0/16"
+      },
+      "dnsServiceIP": {
+        "type": "string",
+        "defaultValue": "10.0.0.10",
+        "metadata": {
+          "description": "An IP address assigned to the Kubernetes DNS service"
+        },
+        "value": "10.0.0.10"
+      },
+      "dockerBridgeCidr": {
+        "type": "string",
+        "defaultValue": "172.17.0.1/16",
+        "metadata": {
+          "description": "A specific IP address and netmask for the Docker bridge, using standard CIDR notation."
+        },
+        "value": "172.17.0.1/16"
+      },
+      "agentVMSize": {
+        "type": "string",
+        "defaultValue": "Standard_D4_v3",
+        "metadata": {
+          "description": "The size of the VM instances"
+        },
+        "value": "Standard_D4_v3"
+      },
+      "kubernetesVersion": {
+        "type": "string",
+        "metadata": {
+          "description": "Supported Azure Kubernetes version"
+        },
+        "value": "1.18.14"
+      },
+      "linuxAdminUsername": {
+        "type": "string",
+        "metadata": {
+          "description": "User name for the Linux Virtual Machines."
+        },
+        "value": "GEN-UNIQUE"
+      },
+      "sshRSAPublicKey": {
+        "type": "string",
+        "metadata": {
+          "description": "Configure all linux machines with the SSH RSA public key string. Your key should include three parts, for example 'ssh-rsa AAAAB...snip...UcyupgH azureuser@linuxvm'"
+        },
+        "value": "GEN-SSH-PUB-KEY"
+      }
+    },
+    "variables": {
+      "dnsPrefix": "GEN-UNIQUE"
+    },
+    "resources": [
+      {
+        "type": "Microsoft.ContainerService/managedClusters",
+        "apiVersion": "2020-03-01",
+        "name": "GEN-UNIQUE",
+        "location": "[resourceGroup().location]",
+        "sku": {
+          "name": "Basic",
+          "tier": "Free"
+        },
+        "identity": {
+          "type": "SystemAssigned"
+        },
+        "properties": {
+          "kubernetesVersion": "1.18.14",
+          "dnsPrefix": "GEN-UNIQUE",
+          "agentPoolProfiles": [
+            {
+              "name": "agentpool",
+              "count": 3,
+              "vmSize": "Standard_D4_v3",
+              "osDiskSizeGB": 100,
+              "maxPods": 110,
+              "type": "VirtualMachineScaleSets",
+              "orchestratorVersion": "1.18.14",
+              "mode": "System",
+              "osType": "Linux"
+            }
+          ],
+          "linuxProfile": {
+            "adminUsername": "GEN-UNIQUE",
+            "ssh": {
+              "publicKeys": [
+                {
+                  "keyData": "GEN-SSH-PUB-KEY"
+                }
+              ]
+            }
+          },
+          "servicePrincipalProfile": {
+            "clientId": "msi"
+          },
+          "nodeResourceGroup": "[concat('MC_', resourceGroup().name,'_', parameters('clusterName'), '_',parameters('location'))]",
+          "enableRBAC": true,
+          "networkProfile": {
+            "networkPlugin": "kubenet",
+            "loadBalancerSku": "Basic",
+            "podCidr": "10.244.0.0/16",
+            "serviceCidr": "10.0.0.0/16",
+            "dnsServiceIP": "10.0.0.10",
+            "dockerBridgeCidr": "172.17.0.1/16",
+            "outboundType": "loadBalancer"
+          }
+        }
+      },
+      {
+        "type": "Microsoft.ContainerService/managedClusters/agentPools",
+        "apiVersion": "2020-03-01",
+        "name": "GEN-UNIQUE/agentpool",
+        "dependsOn": [
+          "Microsoft.ContainerService/managedClusters/GEN-UNIQUE"
+        ],
+        "properties": {
+          "count": 3,
+          "vmSize": "Standard_D4_v3",
+          "osDiskSizeGB": 100,
+          "maxPods": 110,
+          "type": "VirtualMachineScaleSets",
+          "orchestratorVersion": "1.18.14",
+          "mode": "System",
+          "osType": "Linux"
+        }
+      }
+    ],
+    "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+  }
+}

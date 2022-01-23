@@ -2,12 +2,12 @@
   "structure": "filesystem",
   "error": null,
   "reference": "master",
-  "contentType": "yaml",
+  "contentType": "json",
   "source": "gitConnectorGoogleKcc",
   "paths": [
-    "/samples/resources/bigtablegcpolicy/bigtable_v1beta1_bigtableinstance.yaml"
+    "/samples/resources/bigtablegcpolicy/bigtable_v1beta1_bigtablegcpolicy.yaml"
   ],
-  "timestamp": 1628765139077,
+  "timestamp": 1642973301849,
   "queryuser": null,
   "checksum": "99914b932bd37a50b983c5e7c90ae93b",
   "node": {
@@ -15,27 +15,40 @@
     "type": "kcc",
     "collection": "kcctemplate",
     "paths": [
-      "/samples/resources/bigtablegcpolicy/bigtable_v1beta1_bigtableinstance.yaml"
+      "/samples/resources/bigtablegcpolicy/bigtable_v1beta1_bigtablegcpolicy.yaml"
     ],
     "snapshotId": "KCC_TEMPLATE_SNAPSHOT39",
     "status": "active",
-    "validate": true
+    "validate": true,
+    "resourceTypes": [
+      "bigtablegcpolicy"
+    ]
   },
   "snapshotId": "KCC_TEMPLATE_SNAPSHOT39",
   "collection": "kcctemplate",
   "json": {
     "apiVersion": "bigtable.cnrm.cloud.google.com/v1beta1",
-    "kind": "BigtableInstance",
+    "kind": "BigtableGCPolicy",
     "metadata": {
-      "name": "bigtablegcpolicy-dep"
+      "name": "bigtablegcpolicy-sample"
     },
     "spec": {
-      "displayName": "BigtableSample",
-      "cluster": [
+      "tableRef": {
+        "name": "bigtablegcpolicy-dep"
+      },
+      "columnFamily": "family1",
+      "instanceRef": {
+        "name": "bigtablegcpolicy-dep"
+      },
+      "mode": "INTERSECTION",
+      "maxAge": [
         {
-          "clusterId": "cluster",
-          "zone": "us-central1-a",
-          "numNodes": 3
+          "duration": "24h"
+        }
+      ],
+      "maxVersion": [
+        {
+          "number": 10
         }
       ]
     }

@@ -1,0 +1,185 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "main",
+  "contentType": "json",
+  "source": "gitConnectorAwsTerraHashicorp",
+  "paths": [
+    "/examples/transit-gateway-cross-account-vpc-attachment/terraform.template.tfvars",
+    "/examples/transit-gateway-cross-account-vpc-attachment/variables.tf",
+    "/examples/transit-gateway-cross-account-vpc-attachment/main.tf"
+  ],
+  "timestamp": 1642967657739,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "TRF_TEMPLATE_SNAPSHOT",
+    "type": "terraform",
+    "collection": "terraformtemplate",
+    "paths": [
+      "/examples/transit-gateway-cross-account-vpc-attachment/terraform.template.tfvars",
+      "/examples/transit-gateway-cross-account-vpc-attachment/variables.tf",
+      "/examples/transit-gateway-cross-account-vpc-attachment/main.tf"
+    ],
+    "snapshotId": "TRF_TEMPLATE_SNAPSHOT36",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "aws_vpc",
+      "aws_ec2_transit_gateway_vpc_attachment",
+      "aws_ec2_transit_gateway_vpc_attachment_accepter",
+      "aws_ec2_transit_gateway",
+      "aws_subnet",
+      "aws_ram_principal_association",
+      "aws_ram_resource_share",
+      "aws_ram_resource_association"
+    ]
+  },
+  "snapshotId": "TRF_TEMPLATE_SNAPSHOT36",
+  "collection": "terraformtemplate",
+  "json": {
+    "terraform": [
+      {
+        "required_version": ">= 0.12"
+      }
+    ],
+    "provider": [
+      {
+        "aws": {
+          "alias": "first",
+          "region": "${var.aws_region}",
+          "access_key": "${var.aws_first_access_key}",
+          "secret_key": "${var.aws_first_secret_key}"
+        }
+      },
+      {
+        "aws": {
+          "alias": "second",
+          "region": "${var.aws_region}",
+          "access_key": "${var.aws_second_access_key}",
+          "secret_key": "${var.aws_second_secret_key}"
+        }
+      }
+    ],
+    "data": {
+      "aws_availability_zones": {
+        "available": {
+          "provider": "${aws.second}",
+          "state": "available",
+          "compiletime_identity": "data.aws_availability_zones.available"
+        }
+      },
+      "aws_caller_identity": {
+        "second": {
+          "provider": "${aws.second}",
+          "compiletime_identity": "data.aws_caller_identity.second"
+        }
+      }
+    },
+    "resources": [
+      {
+        "type": "aws_ec2_transit_gateway",
+        "name": "example",
+        "properties": {
+          "provider": "${aws.first}",
+          "tags": {
+            "Name": "terraform-example"
+          },
+          "compiletime_identity": "aws_ec2_transit_gateway.example"
+        }
+      },
+      {
+        "type": "aws_ram_resource_share",
+        "name": "example",
+        "properties": {
+          "provider": "${aws.first}",
+          "name": "terraform-example",
+          "tags": {
+            "Name": "terraform-example"
+          },
+          "compiletime_identity": "aws_ram_resource_share.example"
+        }
+      },
+      {
+        "type": "aws_ram_resource_association",
+        "name": "example",
+        "properties": {
+          "provider": "${aws.first}",
+          "resource_arn": "${aws_ec2_transit_gateway.example.arn}",
+          "resource_share_arn": "${aws_ram_resource_share.example.id}",
+          "compiletime_identity": "aws_ram_resource_association.example"
+        }
+      },
+      {
+        "type": "aws_ram_principal_association",
+        "name": "example",
+        "properties": {
+          "provider": "${aws.first}",
+          "principal": "${data.aws_caller_identity.second.account_id}",
+          "resource_share_arn": "${aws_ram_resource_share.example.id}",
+          "compiletime_identity": "aws_ram_principal_association.example"
+        }
+      },
+      {
+        "type": "aws_vpc",
+        "name": "example",
+        "properties": {
+          "provider": "${aws.second}",
+          "cidr_block": "10.0.0.0/16",
+          "tags": {
+            "Name": "terraform-example"
+          },
+          "compiletime_identity": "aws_vpc.example"
+        }
+      },
+      {
+        "type": "aws_subnet",
+        "name": "example",
+        "properties": {
+          "provider": "${aws.second}",
+          "availability_zone": "${data.aws_availability_zones.available.names[0]}",
+          "cidr_block": "10.0.0.0/24",
+          "vpc_id": "${aws_vpc.example.id}",
+          "tags": {
+            "Name": "terraform-example"
+          },
+          "compiletime_identity": "aws_subnet.example"
+        }
+      },
+      {
+        "type": "aws_ec2_transit_gateway_vpc_attachment",
+        "name": "example",
+        "properties": {
+          "provider": "${aws.second}",
+          "depends_on": [
+            "${aws_ram_principal_association.example}",
+            "${aws_ram_resource_association.example}"
+          ],
+          "subnet_ids": [
+            "${aws_subnet.example.id}"
+          ],
+          "transit_gateway_id": "${aws_ec2_transit_gateway.example.id}",
+          "vpc_id": "${aws_vpc.example.id}",
+          "tags": {
+            "Name": "terraform-example",
+            "Side": "Creator"
+          },
+          "compiletime_identity": "aws_ec2_transit_gateway_vpc_attachment.example"
+        }
+      },
+      {
+        "type": "aws_ec2_transit_gateway_vpc_attachment_accepter",
+        "name": "example",
+        "properties": {
+          "provider": "${aws.first}",
+          "transit_gateway_attachment_id": "${aws_ec2_transit_gateway_vpc_attachment.example.id}",
+          "tags": {
+            "Name": "terraform-example",
+            "Side": "Accepter"
+          },
+          "compiletime_identity": "aws_ec2_transit_gateway_vpc_attachment_accepter.example"
+        }
+      }
+    ]
+  }
+}

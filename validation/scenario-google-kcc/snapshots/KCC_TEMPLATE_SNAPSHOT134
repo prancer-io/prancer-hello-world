@@ -2,12 +2,12 @@
   "structure": "filesystem",
   "error": null,
   "reference": "master",
-  "contentType": "yaml",
+  "contentType": "json",
   "source": "gitConnectorGoogleKcc",
   "paths": [
-    "/samples/resources/computeinstance/cloud-machine-instance/compute_v1beta1_computeinstance.yaml"
+    "/samples/resources/computeforwardingrule/global-forwarding-rule-with-target-http-proxy/compute_v1beta1_computetargethttpproxy.yaml"
   ],
-  "timestamp": 1628765141054,
+  "timestamp": 1642973302572,
   "queryuser": null,
   "checksum": "99914b932bd37a50b983c5e7c90ae93b",
   "node": {
@@ -15,86 +15,28 @@
     "type": "kcc",
     "collection": "kcctemplate",
     "paths": [
-      "/samples/resources/computeinstance/cloud-machine-instance/compute_v1beta1_computeinstance.yaml"
+      "/samples/resources/computeforwardingrule/global-forwarding-rule-with-target-http-proxy/compute_v1beta1_computetargethttpproxy.yaml"
     ],
     "snapshotId": "KCC_TEMPLATE_SNAPSHOT134",
     "status": "active",
-    "validate": true
+    "validate": true,
+    "resourceTypes": [
+      "computetargethttpproxy"
+    ]
   },
   "snapshotId": "KCC_TEMPLATE_SNAPSHOT134",
   "collection": "kcctemplate",
   "json": {
     "apiVersion": "compute.cnrm.cloud.google.com/v1beta1",
-    "kind": "ComputeInstance",
+    "kind": "ComputeTargetHTTPProxy",
     "metadata": {
-      "annotations": {
-        "cnrm.cloud.google.com/allow-stopping-for-update": "true"
-      },
-      "name": "computeinstance-sample-cloudmachine",
-      "labels": {
-        "created-from": "image",
-        "network-type": "subnetwork"
-      }
+      "name": "computeforwardingrule-dep-global-with-target-http-proxy"
     },
     "spec": {
-      "machineType": "n1-standard-1",
-      "zone": "us-west1-a",
-      "bootDisk": {
-        "initializeParams": {
-          "size": 24,
-          "type": "pd-ssd",
-          "sourceImageRef": {
-            "external": "debian-cloud/debian-9"
-          }
-        }
+      "urlMapRef": {
+        "name": "computeforwardingrule-dep-global-with-target-http-proxy"
       },
-      "networkInterface": [
-        {
-          "subnetworkRef": {
-            "name": "computeinstance-dep-cloudmachine"
-          },
-          "aliasIpRange": [
-            {
-              "ipCidrRange": "/24",
-              "subnetworkRangeName": "cloudrange"
-            }
-          ]
-        }
-      ],
-      "attachedDisk": [
-        {
-          "sourceDiskRef": {
-            "name": "computeinstance-dep1-cloudmachine"
-          },
-          "mode": "READ_ONLY",
-          "deviceName": "proxycontroldisk",
-          "diskEncryptionKeyRaw": {
-            "valueFrom": {
-              "secretKeyRef": {
-                "name": "computeinstance-dep-cloudmachine",
-                "key": "diskEncryptionKey"
-              }
-            }
-          }
-        },
-        {
-          "sourceDiskRef": {
-            "name": "computeinstance-dep2-cloudmachine"
-          },
-          "mode": "READ_WRITE",
-          "deviceName": "persistentdisk"
-        }
-      ],
-      "minCpuPlatform": "Intel Skylake",
-      "serviceAccount": {
-        "serviceAccountRef": {
-          "name": "inst-dep-cloudmachine"
-        },
-        "scopes": [
-          "compute-rw",
-          "logging-write"
-        ]
-      }
+      "location": "global"
     }
   }
 }

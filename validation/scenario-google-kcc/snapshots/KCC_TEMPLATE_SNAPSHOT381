@@ -2,12 +2,12 @@
   "structure": "filesystem",
   "error": null,
   "reference": "master",
-  "contentType": "yaml",
+  "contentType": "json",
   "source": "gitConnectorGoogleKcc",
   "paths": [
-    "/samples/resources/gkehubmembership/container_v1beta1_containercluster.yaml"
+    "/samples/resources/dnsrecordset/dns-a-record-set/dns_v1beta1_dnsrecordset.yaml"
   ],
-  "timestamp": 1628765147278,
+  "timestamp": 1642973303944,
   "queryuser": null,
   "checksum": "99914b932bd37a50b983c5e7c90ae93b",
   "node": {
@@ -15,26 +15,33 @@
     "type": "kcc",
     "collection": "kcctemplate",
     "paths": [
-      "/samples/resources/gkehubmembership/container_v1beta1_containercluster.yaml"
+      "/samples/resources/dnsrecordset/dns-a-record-set/dns_v1beta1_dnsrecordset.yaml"
     ],
     "snapshotId": "KCC_TEMPLATE_SNAPSHOT381",
     "status": "active",
-    "validate": true
+    "validate": true,
+    "resourceTypes": [
+      "dnsrecordset"
+    ]
   },
   "snapshotId": "KCC_TEMPLATE_SNAPSHOT381",
   "collection": "kcctemplate",
   "json": {
-    "apiVersion": "container.cnrm.cloud.google.com/v1beta1",
-    "kind": "ContainerCluster",
+    "apiVersion": "dns.cnrm.cloud.google.com/v1beta1",
+    "kind": "DNSRecordSet",
     "metadata": {
-      "name": "gkehubmembership-dep"
+      "name": "dnsrecordset-sample-a"
     },
     "spec": {
-      "location": "us-central1-a",
-      "initialNodeCount": 1,
-      "workloadIdentityConfig": {
-        "identityNamespace": "${PROJECT_ID?}.svc.id.goog"
-      }
+      "name": "www.example.com.",
+      "type": "A",
+      "ttl": 300,
+      "managedZoneRef": {
+        "name": "dnsrecordset-dep-a"
+      },
+      "rrdatas": [
+        "8.8.8.8"
+      ]
     }
   }
 }

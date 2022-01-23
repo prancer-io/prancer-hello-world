@@ -1,0 +1,1051 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAzureQuickStart",
+  "paths": [
+    "/demos/custom-private-dns/nested/linux-client/setuplinuxclient.json"
+  ],
+  "timestamp": 1642962898996,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/demos/custom-private-dns/nested/linux-client/setuplinuxclient.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT682",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "microsoft.compute/virtualmachines/extensions"
+    ]
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT682",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "vmList": {
+        "type": "string",
+        "minLength": 1,
+        "metadata": {
+          "description": "List of virtual machines to be configured.  If using multiple VMs, make their names comma separate, e.g. VM01,VM02,VM03."
+        }
+      },
+      "dnsZone": {
+        "type": "string",
+        "metadata": {
+          "description": "Name of the dnsZone to use as the suffix on the clients and to register records in"
+        }
+      },
+      "_artifactsLocation": {
+        "type": "string",
+        "metadata": {
+          "description": "The location of resources, such as templates and scripts, that this script depends on"
+        }
+      },
+      "_artifactsLocationSasToken": {
+        "type": "securestring",
+        "metadata": {
+          "description": "The sasToken required to access _artifactsLocation.  When the template is deployed using the accompanying scripts, a sasToken will be automatically generated."
+        }
+      },
+      "location": {
+        "type": "string",
+        "metadata": {
+          "description": "Location for all resources."
+        }
+      }
+    },
+    "variables": {
+      "vmListArray": "[split(replace(parameters('vmList'),' ',''),',')]"
+    },
+    "resources": [
+      {
+        "comments": "DNS client setup - set suffix and enable DDNS",
+        "apiVersion": "2020-12-01",
+        "type": "Microsoft.Compute/virtualMachines/extensions",
+        "name": "[concat(variables('vmListArray')[copyIndex()],'/SetupDnsClient')]",
+        "location": "location",
+        "properties": {
+          "publisher": "Microsoft.Azure.Extensions",
+          "type": "CustomScript",
+          "typeHandlerVersion": "2.0",
+          "autoUpgradeMinorVersion": true,
+          "settings": {
+            "fileUris": [
+              "[uri(parameters('_artifactsLocation'), concat('nested/linux-client/setuplinuxclient.sh', parameters('_artifactsLocationSasToken')))]",
+              "[uri(parameters('_artifactsLocation'), concat('nested/linux-client/ddns-dhcphook', parameters('_artifactsLocationSasToken')))]"
+            ],
+            "commandToExecute": "sh setuplinuxclient.sh dnsZone"
+          }
+        }
+      },
+      {
+        "comments": "DNS client setup - set suffix and enable DDNS",
+        "apiVersion": "2020-12-01",
+        "type": "Microsoft.Compute/virtualMachines/extensions",
+        "name": "[concat(variables('vmListArray')[copyIndex()],'/SetupDnsClient')]",
+        "location": "location",
+        "properties": {
+          "publisher": "Microsoft.Azure.Extensions",
+          "type": "CustomScript",
+          "typeHandlerVersion": "2.0",
+          "autoUpgradeMinorVersion": true,
+          "settings": {
+            "fileUris": [
+              "[uri(parameters('_artifactsLocation'), concat('nested/linux-client/setuplinuxclient.sh', parameters('_artifactsLocationSasToken')))]",
+              "[uri(parameters('_artifactsLocation'), concat('nested/linux-client/ddns-dhcphook', parameters('_artifactsLocationSasToken')))]"
+            ],
+            "commandToExecute": "sh setuplinuxclient.sh dnsZone"
+          }
+        }
+      },
+      {
+        "comments": "DNS client setup - set suffix and enable DDNS",
+        "apiVersion": "2020-12-01",
+        "type": "Microsoft.Compute/virtualMachines/extensions",
+        "name": "[concat(variables('vmListArray')[copyIndex()],'/SetupDnsClient')]",
+        "location": "location",
+        "properties": {
+          "publisher": "Microsoft.Azure.Extensions",
+          "type": "CustomScript",
+          "typeHandlerVersion": "2.0",
+          "autoUpgradeMinorVersion": true,
+          "settings": {
+            "fileUris": [
+              "[uri(parameters('_artifactsLocation'), concat('nested/linux-client/setuplinuxclient.sh', parameters('_artifactsLocationSasToken')))]",
+              "[uri(parameters('_artifactsLocation'), concat('nested/linux-client/ddns-dhcphook', parameters('_artifactsLocationSasToken')))]"
+            ],
+            "commandToExecute": "sh setuplinuxclient.sh dnsZone"
+          }
+        }
+      },
+      {
+        "comments": "DNS client setup - set suffix and enable DDNS",
+        "apiVersion": "2020-12-01",
+        "type": "Microsoft.Compute/virtualMachines/extensions",
+        "name": "[concat(variables('vmListArray')[copyIndex()],'/SetupDnsClient')]",
+        "location": "location",
+        "properties": {
+          "publisher": "Microsoft.Azure.Extensions",
+          "type": "CustomScript",
+          "typeHandlerVersion": "2.0",
+          "autoUpgradeMinorVersion": true,
+          "settings": {
+            "fileUris": [
+              "[uri(parameters('_artifactsLocation'), concat('nested/linux-client/setuplinuxclient.sh', parameters('_artifactsLocationSasToken')))]",
+              "[uri(parameters('_artifactsLocation'), concat('nested/linux-client/ddns-dhcphook', parameters('_artifactsLocationSasToken')))]"
+            ],
+            "commandToExecute": "sh setuplinuxclient.sh dnsZone"
+          }
+        }
+      },
+      {
+        "comments": "DNS client setup - set suffix and enable DDNS",
+        "apiVersion": "2020-12-01",
+        "type": "Microsoft.Compute/virtualMachines/extensions",
+        "name": "[concat(variables('vmListArray')[copyIndex()],'/SetupDnsClient')]",
+        "location": "location",
+        "properties": {
+          "publisher": "Microsoft.Azure.Extensions",
+          "type": "CustomScript",
+          "typeHandlerVersion": "2.0",
+          "autoUpgradeMinorVersion": true,
+          "settings": {
+            "fileUris": [
+              "[uri(parameters('_artifactsLocation'), concat('nested/linux-client/setuplinuxclient.sh', parameters('_artifactsLocationSasToken')))]",
+              "[uri(parameters('_artifactsLocation'), concat('nested/linux-client/ddns-dhcphook', parameters('_artifactsLocationSasToken')))]"
+            ],
+            "commandToExecute": "sh setuplinuxclient.sh dnsZone"
+          }
+        }
+      },
+      {
+        "comments": "DNS client setup - set suffix and enable DDNS",
+        "apiVersion": "2020-12-01",
+        "type": "Microsoft.Compute/virtualMachines/extensions",
+        "name": "[concat(variables('vmListArray')[copyIndex()],'/SetupDnsClient')]",
+        "location": "location",
+        "properties": {
+          "publisher": "Microsoft.Azure.Extensions",
+          "type": "CustomScript",
+          "typeHandlerVersion": "2.0",
+          "autoUpgradeMinorVersion": true,
+          "settings": {
+            "fileUris": [
+              "[uri(parameters('_artifactsLocation'), concat('nested/linux-client/setuplinuxclient.sh', parameters('_artifactsLocationSasToken')))]",
+              "[uri(parameters('_artifactsLocation'), concat('nested/linux-client/ddns-dhcphook', parameters('_artifactsLocationSasToken')))]"
+            ],
+            "commandToExecute": "sh setuplinuxclient.sh dnsZone"
+          }
+        }
+      },
+      {
+        "comments": "DNS client setup - set suffix and enable DDNS",
+        "apiVersion": "2020-12-01",
+        "type": "Microsoft.Compute/virtualMachines/extensions",
+        "name": "[concat(variables('vmListArray')[copyIndex()],'/SetupDnsClient')]",
+        "location": "location",
+        "properties": {
+          "publisher": "Microsoft.Azure.Extensions",
+          "type": "CustomScript",
+          "typeHandlerVersion": "2.0",
+          "autoUpgradeMinorVersion": true,
+          "settings": {
+            "fileUris": [
+              "[uri(parameters('_artifactsLocation'), concat('nested/linux-client/setuplinuxclient.sh', parameters('_artifactsLocationSasToken')))]",
+              "[uri(parameters('_artifactsLocation'), concat('nested/linux-client/ddns-dhcphook', parameters('_artifactsLocationSasToken')))]"
+            ],
+            "commandToExecute": "sh setuplinuxclient.sh dnsZone"
+          }
+        }
+      },
+      {
+        "comments": "DNS client setup - set suffix and enable DDNS",
+        "apiVersion": "2020-12-01",
+        "type": "Microsoft.Compute/virtualMachines/extensions",
+        "name": "[concat(variables('vmListArray')[copyIndex()],'/SetupDnsClient')]",
+        "location": "location",
+        "properties": {
+          "publisher": "Microsoft.Azure.Extensions",
+          "type": "CustomScript",
+          "typeHandlerVersion": "2.0",
+          "autoUpgradeMinorVersion": true,
+          "settings": {
+            "fileUris": [
+              "[uri(parameters('_artifactsLocation'), concat('nested/linux-client/setuplinuxclient.sh', parameters('_artifactsLocationSasToken')))]",
+              "[uri(parameters('_artifactsLocation'), concat('nested/linux-client/ddns-dhcphook', parameters('_artifactsLocationSasToken')))]"
+            ],
+            "commandToExecute": "sh setuplinuxclient.sh dnsZone"
+          }
+        }
+      },
+      {
+        "comments": "DNS client setup - set suffix and enable DDNS",
+        "apiVersion": "2020-12-01",
+        "type": "Microsoft.Compute/virtualMachines/extensions",
+        "name": "[concat(variables('vmListArray')[copyIndex()],'/SetupDnsClient')]",
+        "location": "location",
+        "properties": {
+          "publisher": "Microsoft.Azure.Extensions",
+          "type": "CustomScript",
+          "typeHandlerVersion": "2.0",
+          "autoUpgradeMinorVersion": true,
+          "settings": {
+            "fileUris": [
+              "[uri(parameters('_artifactsLocation'), concat('nested/linux-client/setuplinuxclient.sh', parameters('_artifactsLocationSasToken')))]",
+              "[uri(parameters('_artifactsLocation'), concat('nested/linux-client/ddns-dhcphook', parameters('_artifactsLocationSasToken')))]"
+            ],
+            "commandToExecute": "sh setuplinuxclient.sh dnsZone"
+          }
+        }
+      },
+      {
+        "comments": "DNS client setup - set suffix and enable DDNS",
+        "apiVersion": "2020-12-01",
+        "type": "Microsoft.Compute/virtualMachines/extensions",
+        "name": "[concat(variables('vmListArray')[copyIndex()],'/SetupDnsClient')]",
+        "location": "location",
+        "properties": {
+          "publisher": "Microsoft.Azure.Extensions",
+          "type": "CustomScript",
+          "typeHandlerVersion": "2.0",
+          "autoUpgradeMinorVersion": true,
+          "settings": {
+            "fileUris": [
+              "[uri(parameters('_artifactsLocation'), concat('nested/linux-client/setuplinuxclient.sh', parameters('_artifactsLocationSasToken')))]",
+              "[uri(parameters('_artifactsLocation'), concat('nested/linux-client/ddns-dhcphook', parameters('_artifactsLocationSasToken')))]"
+            ],
+            "commandToExecute": "sh setuplinuxclient.sh dnsZone"
+          }
+        }
+      },
+      {
+        "comments": "DNS client setup - set suffix and enable DDNS",
+        "apiVersion": "2020-12-01",
+        "type": "Microsoft.Compute/virtualMachines/extensions",
+        "name": "[concat(variables('vmListArray')[copyIndex()],'/SetupDnsClient')]",
+        "location": "location",
+        "properties": {
+          "publisher": "Microsoft.Azure.Extensions",
+          "type": "CustomScript",
+          "typeHandlerVersion": "2.0",
+          "autoUpgradeMinorVersion": true,
+          "settings": {
+            "fileUris": [
+              "[uri(parameters('_artifactsLocation'), concat('nested/linux-client/setuplinuxclient.sh', parameters('_artifactsLocationSasToken')))]",
+              "[uri(parameters('_artifactsLocation'), concat('nested/linux-client/ddns-dhcphook', parameters('_artifactsLocationSasToken')))]"
+            ],
+            "commandToExecute": "sh setuplinuxclient.sh dnsZone"
+          }
+        }
+      },
+      {
+        "comments": "DNS client setup - set suffix and enable DDNS",
+        "apiVersion": "2020-12-01",
+        "type": "Microsoft.Compute/virtualMachines/extensions",
+        "name": "[concat(variables('vmListArray')[copyIndex()],'/SetupDnsClient')]",
+        "location": "location",
+        "properties": {
+          "publisher": "Microsoft.Azure.Extensions",
+          "type": "CustomScript",
+          "typeHandlerVersion": "2.0",
+          "autoUpgradeMinorVersion": true,
+          "settings": {
+            "fileUris": [
+              "[uri(parameters('_artifactsLocation'), concat('nested/linux-client/setuplinuxclient.sh', parameters('_artifactsLocationSasToken')))]",
+              "[uri(parameters('_artifactsLocation'), concat('nested/linux-client/ddns-dhcphook', parameters('_artifactsLocationSasToken')))]"
+            ],
+            "commandToExecute": "sh setuplinuxclient.sh dnsZone"
+          }
+        }
+      },
+      {
+        "comments": "DNS client setup - set suffix and enable DDNS",
+        "apiVersion": "2020-12-01",
+        "type": "Microsoft.Compute/virtualMachines/extensions",
+        "name": "[concat(variables('vmListArray')[copyIndex()],'/SetupDnsClient')]",
+        "location": "location",
+        "properties": {
+          "publisher": "Microsoft.Azure.Extensions",
+          "type": "CustomScript",
+          "typeHandlerVersion": "2.0",
+          "autoUpgradeMinorVersion": true,
+          "settings": {
+            "fileUris": [
+              "[uri(parameters('_artifactsLocation'), concat('nested/linux-client/setuplinuxclient.sh', parameters('_artifactsLocationSasToken')))]",
+              "[uri(parameters('_artifactsLocation'), concat('nested/linux-client/ddns-dhcphook', parameters('_artifactsLocationSasToken')))]"
+            ],
+            "commandToExecute": "sh setuplinuxclient.sh dnsZone"
+          }
+        }
+      },
+      {
+        "comments": "DNS client setup - set suffix and enable DDNS",
+        "apiVersion": "2020-12-01",
+        "type": "Microsoft.Compute/virtualMachines/extensions",
+        "name": "[concat(variables('vmListArray')[copyIndex()],'/SetupDnsClient')]",
+        "location": "location",
+        "properties": {
+          "publisher": "Microsoft.Azure.Extensions",
+          "type": "CustomScript",
+          "typeHandlerVersion": "2.0",
+          "autoUpgradeMinorVersion": true,
+          "settings": {
+            "fileUris": [
+              "[uri(parameters('_artifactsLocation'), concat('nested/linux-client/setuplinuxclient.sh', parameters('_artifactsLocationSasToken')))]",
+              "[uri(parameters('_artifactsLocation'), concat('nested/linux-client/ddns-dhcphook', parameters('_artifactsLocationSasToken')))]"
+            ],
+            "commandToExecute": "sh setuplinuxclient.sh dnsZone"
+          }
+        }
+      },
+      {
+        "comments": "DNS client setup - set suffix and enable DDNS",
+        "apiVersion": "2020-12-01",
+        "type": "Microsoft.Compute/virtualMachines/extensions",
+        "name": "[concat(variables('vmListArray')[copyIndex()],'/SetupDnsClient')]",
+        "location": "location",
+        "properties": {
+          "publisher": "Microsoft.Azure.Extensions",
+          "type": "CustomScript",
+          "typeHandlerVersion": "2.0",
+          "autoUpgradeMinorVersion": true,
+          "settings": {
+            "fileUris": [
+              "[uri(parameters('_artifactsLocation'), concat('nested/linux-client/setuplinuxclient.sh', parameters('_artifactsLocationSasToken')))]",
+              "[uri(parameters('_artifactsLocation'), concat('nested/linux-client/ddns-dhcphook', parameters('_artifactsLocationSasToken')))]"
+            ],
+            "commandToExecute": "sh setuplinuxclient.sh dnsZone"
+          }
+        }
+      },
+      {
+        "comments": "DNS client setup - set suffix and enable DDNS",
+        "apiVersion": "2020-12-01",
+        "type": "Microsoft.Compute/virtualMachines/extensions",
+        "name": "[concat(variables('vmListArray')[copyIndex()],'/SetupDnsClient')]",
+        "location": "location",
+        "properties": {
+          "publisher": "Microsoft.Azure.Extensions",
+          "type": "CustomScript",
+          "typeHandlerVersion": "2.0",
+          "autoUpgradeMinorVersion": true,
+          "settings": {
+            "fileUris": [
+              "[uri(parameters('_artifactsLocation'), concat('nested/linux-client/setuplinuxclient.sh', parameters('_artifactsLocationSasToken')))]",
+              "[uri(parameters('_artifactsLocation'), concat('nested/linux-client/ddns-dhcphook', parameters('_artifactsLocationSasToken')))]"
+            ],
+            "commandToExecute": "sh setuplinuxclient.sh dnsZone"
+          }
+        }
+      },
+      {
+        "comments": "DNS client setup - set suffix and enable DDNS",
+        "apiVersion": "2020-12-01",
+        "type": "Microsoft.Compute/virtualMachines/extensions",
+        "name": "[concat(variables('vmListArray')[copyIndex()],'/SetupDnsClient')]",
+        "location": "location",
+        "properties": {
+          "publisher": "Microsoft.Azure.Extensions",
+          "type": "CustomScript",
+          "typeHandlerVersion": "2.0",
+          "autoUpgradeMinorVersion": true,
+          "settings": {
+            "fileUris": [
+              "[uri(parameters('_artifactsLocation'), concat('nested/linux-client/setuplinuxclient.sh', parameters('_artifactsLocationSasToken')))]",
+              "[uri(parameters('_artifactsLocation'), concat('nested/linux-client/ddns-dhcphook', parameters('_artifactsLocationSasToken')))]"
+            ],
+            "commandToExecute": "sh setuplinuxclient.sh dnsZone"
+          }
+        }
+      },
+      {
+        "comments": "DNS client setup - set suffix and enable DDNS",
+        "apiVersion": "2020-12-01",
+        "type": "Microsoft.Compute/virtualMachines/extensions",
+        "name": "[concat(variables('vmListArray')[copyIndex()],'/SetupDnsClient')]",
+        "location": "location",
+        "properties": {
+          "publisher": "Microsoft.Azure.Extensions",
+          "type": "CustomScript",
+          "typeHandlerVersion": "2.0",
+          "autoUpgradeMinorVersion": true,
+          "settings": {
+            "fileUris": [
+              "[uri(parameters('_artifactsLocation'), concat('nested/linux-client/setuplinuxclient.sh', parameters('_artifactsLocationSasToken')))]",
+              "[uri(parameters('_artifactsLocation'), concat('nested/linux-client/ddns-dhcphook', parameters('_artifactsLocationSasToken')))]"
+            ],
+            "commandToExecute": "sh setuplinuxclient.sh dnsZone"
+          }
+        }
+      },
+      {
+        "comments": "DNS client setup - set suffix and enable DDNS",
+        "apiVersion": "2020-12-01",
+        "type": "Microsoft.Compute/virtualMachines/extensions",
+        "name": "[concat(variables('vmListArray')[copyIndex()],'/SetupDnsClient')]",
+        "location": "location",
+        "properties": {
+          "publisher": "Microsoft.Azure.Extensions",
+          "type": "CustomScript",
+          "typeHandlerVersion": "2.0",
+          "autoUpgradeMinorVersion": true,
+          "settings": {
+            "fileUris": [
+              "[uri(parameters('_artifactsLocation'), concat('nested/linux-client/setuplinuxclient.sh', parameters('_artifactsLocationSasToken')))]",
+              "[uri(parameters('_artifactsLocation'), concat('nested/linux-client/ddns-dhcphook', parameters('_artifactsLocationSasToken')))]"
+            ],
+            "commandToExecute": "sh setuplinuxclient.sh dnsZone"
+          }
+        }
+      },
+      {
+        "comments": "DNS client setup - set suffix and enable DDNS",
+        "apiVersion": "2020-12-01",
+        "type": "Microsoft.Compute/virtualMachines/extensions",
+        "name": "[concat(variables('vmListArray')[copyIndex()],'/SetupDnsClient')]",
+        "location": "location",
+        "properties": {
+          "publisher": "Microsoft.Azure.Extensions",
+          "type": "CustomScript",
+          "typeHandlerVersion": "2.0",
+          "autoUpgradeMinorVersion": true,
+          "settings": {
+            "fileUris": [
+              "[uri(parameters('_artifactsLocation'), concat('nested/linux-client/setuplinuxclient.sh', parameters('_artifactsLocationSasToken')))]",
+              "[uri(parameters('_artifactsLocation'), concat('nested/linux-client/ddns-dhcphook', parameters('_artifactsLocationSasToken')))]"
+            ],
+            "commandToExecute": "sh setuplinuxclient.sh dnsZone"
+          }
+        }
+      },
+      {
+        "comments": "DNS client setup - set suffix and enable DDNS",
+        "apiVersion": "2020-12-01",
+        "type": "Microsoft.Compute/virtualMachines/extensions",
+        "name": "[concat(variables('vmListArray')[copyIndex()],'/SetupDnsClient')]",
+        "location": "location",
+        "properties": {
+          "publisher": "Microsoft.Azure.Extensions",
+          "type": "CustomScript",
+          "typeHandlerVersion": "2.0",
+          "autoUpgradeMinorVersion": true,
+          "settings": {
+            "fileUris": [
+              "[uri(parameters('_artifactsLocation'), concat('nested/linux-client/setuplinuxclient.sh', parameters('_artifactsLocationSasToken')))]",
+              "[uri(parameters('_artifactsLocation'), concat('nested/linux-client/ddns-dhcphook', parameters('_artifactsLocationSasToken')))]"
+            ],
+            "commandToExecute": "sh setuplinuxclient.sh dnsZone"
+          }
+        }
+      },
+      {
+        "comments": "DNS client setup - set suffix and enable DDNS",
+        "apiVersion": "2020-12-01",
+        "type": "Microsoft.Compute/virtualMachines/extensions",
+        "name": "[concat(variables('vmListArray')[copyIndex()],'/SetupDnsClient')]",
+        "location": "location",
+        "properties": {
+          "publisher": "Microsoft.Azure.Extensions",
+          "type": "CustomScript",
+          "typeHandlerVersion": "2.0",
+          "autoUpgradeMinorVersion": true,
+          "settings": {
+            "fileUris": [
+              "[uri(parameters('_artifactsLocation'), concat('nested/linux-client/setuplinuxclient.sh', parameters('_artifactsLocationSasToken')))]",
+              "[uri(parameters('_artifactsLocation'), concat('nested/linux-client/ddns-dhcphook', parameters('_artifactsLocationSasToken')))]"
+            ],
+            "commandToExecute": "sh setuplinuxclient.sh dnsZone"
+          }
+        }
+      },
+      {
+        "comments": "DNS client setup - set suffix and enable DDNS",
+        "apiVersion": "2020-12-01",
+        "type": "Microsoft.Compute/virtualMachines/extensions",
+        "name": "[concat(variables('vmListArray')[copyIndex()],'/SetupDnsClient')]",
+        "location": "location",
+        "properties": {
+          "publisher": "Microsoft.Azure.Extensions",
+          "type": "CustomScript",
+          "typeHandlerVersion": "2.0",
+          "autoUpgradeMinorVersion": true,
+          "settings": {
+            "fileUris": [
+              "[uri(parameters('_artifactsLocation'), concat('nested/linux-client/setuplinuxclient.sh', parameters('_artifactsLocationSasToken')))]",
+              "[uri(parameters('_artifactsLocation'), concat('nested/linux-client/ddns-dhcphook', parameters('_artifactsLocationSasToken')))]"
+            ],
+            "commandToExecute": "sh setuplinuxclient.sh dnsZone"
+          }
+        }
+      },
+      {
+        "comments": "DNS client setup - set suffix and enable DDNS",
+        "apiVersion": "2020-12-01",
+        "type": "Microsoft.Compute/virtualMachines/extensions",
+        "name": "[concat(variables('vmListArray')[copyIndex()],'/SetupDnsClient')]",
+        "location": "location",
+        "properties": {
+          "publisher": "Microsoft.Azure.Extensions",
+          "type": "CustomScript",
+          "typeHandlerVersion": "2.0",
+          "autoUpgradeMinorVersion": true,
+          "settings": {
+            "fileUris": [
+              "[uri(parameters('_artifactsLocation'), concat('nested/linux-client/setuplinuxclient.sh', parameters('_artifactsLocationSasToken')))]",
+              "[uri(parameters('_artifactsLocation'), concat('nested/linux-client/ddns-dhcphook', parameters('_artifactsLocationSasToken')))]"
+            ],
+            "commandToExecute": "sh setuplinuxclient.sh dnsZone"
+          }
+        }
+      },
+      {
+        "comments": "DNS client setup - set suffix and enable DDNS",
+        "apiVersion": "2020-12-01",
+        "type": "Microsoft.Compute/virtualMachines/extensions",
+        "name": "[concat(variables('vmListArray')[copyIndex()],'/SetupDnsClient')]",
+        "location": "location",
+        "properties": {
+          "publisher": "Microsoft.Azure.Extensions",
+          "type": "CustomScript",
+          "typeHandlerVersion": "2.0",
+          "autoUpgradeMinorVersion": true,
+          "settings": {
+            "fileUris": [
+              "[uri(parameters('_artifactsLocation'), concat('nested/linux-client/setuplinuxclient.sh', parameters('_artifactsLocationSasToken')))]",
+              "[uri(parameters('_artifactsLocation'), concat('nested/linux-client/ddns-dhcphook', parameters('_artifactsLocationSasToken')))]"
+            ],
+            "commandToExecute": "sh setuplinuxclient.sh dnsZone"
+          }
+        }
+      },
+      {
+        "comments": "DNS client setup - set suffix and enable DDNS",
+        "apiVersion": "2020-12-01",
+        "type": "Microsoft.Compute/virtualMachines/extensions",
+        "name": "[concat(variables('vmListArray')[copyIndex()],'/SetupDnsClient')]",
+        "location": "location",
+        "properties": {
+          "publisher": "Microsoft.Azure.Extensions",
+          "type": "CustomScript",
+          "typeHandlerVersion": "2.0",
+          "autoUpgradeMinorVersion": true,
+          "settings": {
+            "fileUris": [
+              "[uri(parameters('_artifactsLocation'), concat('nested/linux-client/setuplinuxclient.sh', parameters('_artifactsLocationSasToken')))]",
+              "[uri(parameters('_artifactsLocation'), concat('nested/linux-client/ddns-dhcphook', parameters('_artifactsLocationSasToken')))]"
+            ],
+            "commandToExecute": "sh setuplinuxclient.sh dnsZone"
+          }
+        }
+      },
+      {
+        "comments": "DNS client setup - set suffix and enable DDNS",
+        "apiVersion": "2020-12-01",
+        "type": "Microsoft.Compute/virtualMachines/extensions",
+        "name": "[concat(variables('vmListArray')[copyIndex()],'/SetupDnsClient')]",
+        "location": "location",
+        "properties": {
+          "publisher": "Microsoft.Azure.Extensions",
+          "type": "CustomScript",
+          "typeHandlerVersion": "2.0",
+          "autoUpgradeMinorVersion": true,
+          "settings": {
+            "fileUris": [
+              "[uri(parameters('_artifactsLocation'), concat('nested/linux-client/setuplinuxclient.sh', parameters('_artifactsLocationSasToken')))]",
+              "[uri(parameters('_artifactsLocation'), concat('nested/linux-client/ddns-dhcphook', parameters('_artifactsLocationSasToken')))]"
+            ],
+            "commandToExecute": "sh setuplinuxclient.sh dnsZone"
+          }
+        }
+      },
+      {
+        "comments": "DNS client setup - set suffix and enable DDNS",
+        "apiVersion": "2020-12-01",
+        "type": "Microsoft.Compute/virtualMachines/extensions",
+        "name": "[concat(variables('vmListArray')[copyIndex()],'/SetupDnsClient')]",
+        "location": "location",
+        "properties": {
+          "publisher": "Microsoft.Azure.Extensions",
+          "type": "CustomScript",
+          "typeHandlerVersion": "2.0",
+          "autoUpgradeMinorVersion": true,
+          "settings": {
+            "fileUris": [
+              "[uri(parameters('_artifactsLocation'), concat('nested/linux-client/setuplinuxclient.sh', parameters('_artifactsLocationSasToken')))]",
+              "[uri(parameters('_artifactsLocation'), concat('nested/linux-client/ddns-dhcphook', parameters('_artifactsLocationSasToken')))]"
+            ],
+            "commandToExecute": "sh setuplinuxclient.sh dnsZone"
+          }
+        }
+      },
+      {
+        "comments": "DNS client setup - set suffix and enable DDNS",
+        "apiVersion": "2020-12-01",
+        "type": "Microsoft.Compute/virtualMachines/extensions",
+        "name": "[concat(variables('vmListArray')[copyIndex()],'/SetupDnsClient')]",
+        "location": "location",
+        "properties": {
+          "publisher": "Microsoft.Azure.Extensions",
+          "type": "CustomScript",
+          "typeHandlerVersion": "2.0",
+          "autoUpgradeMinorVersion": true,
+          "settings": {
+            "fileUris": [
+              "[uri(parameters('_artifactsLocation'), concat('nested/linux-client/setuplinuxclient.sh', parameters('_artifactsLocationSasToken')))]",
+              "[uri(parameters('_artifactsLocation'), concat('nested/linux-client/ddns-dhcphook', parameters('_artifactsLocationSasToken')))]"
+            ],
+            "commandToExecute": "sh setuplinuxclient.sh dnsZone"
+          }
+        }
+      },
+      {
+        "comments": "DNS client setup - set suffix and enable DDNS",
+        "apiVersion": "2020-12-01",
+        "type": "Microsoft.Compute/virtualMachines/extensions",
+        "name": "[concat(variables('vmListArray')[copyIndex()],'/SetupDnsClient')]",
+        "location": "location",
+        "properties": {
+          "publisher": "Microsoft.Azure.Extensions",
+          "type": "CustomScript",
+          "typeHandlerVersion": "2.0",
+          "autoUpgradeMinorVersion": true,
+          "settings": {
+            "fileUris": [
+              "[uri(parameters('_artifactsLocation'), concat('nested/linux-client/setuplinuxclient.sh', parameters('_artifactsLocationSasToken')))]",
+              "[uri(parameters('_artifactsLocation'), concat('nested/linux-client/ddns-dhcphook', parameters('_artifactsLocationSasToken')))]"
+            ],
+            "commandToExecute": "sh setuplinuxclient.sh dnsZone"
+          }
+        }
+      },
+      {
+        "comments": "DNS client setup - set suffix and enable DDNS",
+        "apiVersion": "2020-12-01",
+        "type": "Microsoft.Compute/virtualMachines/extensions",
+        "name": "[concat(variables('vmListArray')[copyIndex()],'/SetupDnsClient')]",
+        "location": "location",
+        "properties": {
+          "publisher": "Microsoft.Azure.Extensions",
+          "type": "CustomScript",
+          "typeHandlerVersion": "2.0",
+          "autoUpgradeMinorVersion": true,
+          "settings": {
+            "fileUris": [
+              "[uri(parameters('_artifactsLocation'), concat('nested/linux-client/setuplinuxclient.sh', parameters('_artifactsLocationSasToken')))]",
+              "[uri(parameters('_artifactsLocation'), concat('nested/linux-client/ddns-dhcphook', parameters('_artifactsLocationSasToken')))]"
+            ],
+            "commandToExecute": "sh setuplinuxclient.sh dnsZone"
+          }
+        }
+      },
+      {
+        "comments": "DNS client setup - set suffix and enable DDNS",
+        "apiVersion": "2020-12-01",
+        "type": "Microsoft.Compute/virtualMachines/extensions",
+        "name": "[concat(variables('vmListArray')[copyIndex()],'/SetupDnsClient')]",
+        "location": "location",
+        "properties": {
+          "publisher": "Microsoft.Azure.Extensions",
+          "type": "CustomScript",
+          "typeHandlerVersion": "2.0",
+          "autoUpgradeMinorVersion": true,
+          "settings": {
+            "fileUris": [
+              "[uri(parameters('_artifactsLocation'), concat('nested/linux-client/setuplinuxclient.sh', parameters('_artifactsLocationSasToken')))]",
+              "[uri(parameters('_artifactsLocation'), concat('nested/linux-client/ddns-dhcphook', parameters('_artifactsLocationSasToken')))]"
+            ],
+            "commandToExecute": "sh setuplinuxclient.sh dnsZone"
+          }
+        }
+      },
+      {
+        "comments": "DNS client setup - set suffix and enable DDNS",
+        "apiVersion": "2020-12-01",
+        "type": "Microsoft.Compute/virtualMachines/extensions",
+        "name": "[concat(variables('vmListArray')[copyIndex()],'/SetupDnsClient')]",
+        "location": "location",
+        "properties": {
+          "publisher": "Microsoft.Azure.Extensions",
+          "type": "CustomScript",
+          "typeHandlerVersion": "2.0",
+          "autoUpgradeMinorVersion": true,
+          "settings": {
+            "fileUris": [
+              "[uri(parameters('_artifactsLocation'), concat('nested/linux-client/setuplinuxclient.sh', parameters('_artifactsLocationSasToken')))]",
+              "[uri(parameters('_artifactsLocation'), concat('nested/linux-client/ddns-dhcphook', parameters('_artifactsLocationSasToken')))]"
+            ],
+            "commandToExecute": "sh setuplinuxclient.sh dnsZone"
+          }
+        }
+      },
+      {
+        "comments": "DNS client setup - set suffix and enable DDNS",
+        "apiVersion": "2020-12-01",
+        "type": "Microsoft.Compute/virtualMachines/extensions",
+        "name": "[concat(variables('vmListArray')[copyIndex()],'/SetupDnsClient')]",
+        "location": "location",
+        "properties": {
+          "publisher": "Microsoft.Azure.Extensions",
+          "type": "CustomScript",
+          "typeHandlerVersion": "2.0",
+          "autoUpgradeMinorVersion": true,
+          "settings": {
+            "fileUris": [
+              "[uri(parameters('_artifactsLocation'), concat('nested/linux-client/setuplinuxclient.sh', parameters('_artifactsLocationSasToken')))]",
+              "[uri(parameters('_artifactsLocation'), concat('nested/linux-client/ddns-dhcphook', parameters('_artifactsLocationSasToken')))]"
+            ],
+            "commandToExecute": "sh setuplinuxclient.sh dnsZone"
+          }
+        }
+      },
+      {
+        "comments": "DNS client setup - set suffix and enable DDNS",
+        "apiVersion": "2020-12-01",
+        "type": "Microsoft.Compute/virtualMachines/extensions",
+        "name": "[concat(variables('vmListArray')[copyIndex()],'/SetupDnsClient')]",
+        "location": "location",
+        "properties": {
+          "publisher": "Microsoft.Azure.Extensions",
+          "type": "CustomScript",
+          "typeHandlerVersion": "2.0",
+          "autoUpgradeMinorVersion": true,
+          "settings": {
+            "fileUris": [
+              "[uri(parameters('_artifactsLocation'), concat('nested/linux-client/setuplinuxclient.sh', parameters('_artifactsLocationSasToken')))]",
+              "[uri(parameters('_artifactsLocation'), concat('nested/linux-client/ddns-dhcphook', parameters('_artifactsLocationSasToken')))]"
+            ],
+            "commandToExecute": "sh setuplinuxclient.sh dnsZone"
+          }
+        }
+      },
+      {
+        "comments": "DNS client setup - set suffix and enable DDNS",
+        "apiVersion": "2020-12-01",
+        "type": "Microsoft.Compute/virtualMachines/extensions",
+        "name": "[concat(variables('vmListArray')[copyIndex()],'/SetupDnsClient')]",
+        "location": "location",
+        "properties": {
+          "publisher": "Microsoft.Azure.Extensions",
+          "type": "CustomScript",
+          "typeHandlerVersion": "2.0",
+          "autoUpgradeMinorVersion": true,
+          "settings": {
+            "fileUris": [
+              "[uri(parameters('_artifactsLocation'), concat('nested/linux-client/setuplinuxclient.sh', parameters('_artifactsLocationSasToken')))]",
+              "[uri(parameters('_artifactsLocation'), concat('nested/linux-client/ddns-dhcphook', parameters('_artifactsLocationSasToken')))]"
+            ],
+            "commandToExecute": "sh setuplinuxclient.sh dnsZone"
+          }
+        }
+      },
+      {
+        "comments": "DNS client setup - set suffix and enable DDNS",
+        "apiVersion": "2020-12-01",
+        "type": "Microsoft.Compute/virtualMachines/extensions",
+        "name": "[concat(variables('vmListArray')[copyIndex()],'/SetupDnsClient')]",
+        "location": "location",
+        "properties": {
+          "publisher": "Microsoft.Azure.Extensions",
+          "type": "CustomScript",
+          "typeHandlerVersion": "2.0",
+          "autoUpgradeMinorVersion": true,
+          "settings": {
+            "fileUris": [
+              "[uri(parameters('_artifactsLocation'), concat('nested/linux-client/setuplinuxclient.sh', parameters('_artifactsLocationSasToken')))]",
+              "[uri(parameters('_artifactsLocation'), concat('nested/linux-client/ddns-dhcphook', parameters('_artifactsLocationSasToken')))]"
+            ],
+            "commandToExecute": "sh setuplinuxclient.sh dnsZone"
+          }
+        }
+      },
+      {
+        "comments": "DNS client setup - set suffix and enable DDNS",
+        "apiVersion": "2020-12-01",
+        "type": "Microsoft.Compute/virtualMachines/extensions",
+        "name": "[concat(variables('vmListArray')[copyIndex()],'/SetupDnsClient')]",
+        "location": "location",
+        "properties": {
+          "publisher": "Microsoft.Azure.Extensions",
+          "type": "CustomScript",
+          "typeHandlerVersion": "2.0",
+          "autoUpgradeMinorVersion": true,
+          "settings": {
+            "fileUris": [
+              "[uri(parameters('_artifactsLocation'), concat('nested/linux-client/setuplinuxclient.sh', parameters('_artifactsLocationSasToken')))]",
+              "[uri(parameters('_artifactsLocation'), concat('nested/linux-client/ddns-dhcphook', parameters('_artifactsLocationSasToken')))]"
+            ],
+            "commandToExecute": "sh setuplinuxclient.sh dnsZone"
+          }
+        }
+      },
+      {
+        "comments": "DNS client setup - set suffix and enable DDNS",
+        "apiVersion": "2020-12-01",
+        "type": "Microsoft.Compute/virtualMachines/extensions",
+        "name": "[concat(variables('vmListArray')[copyIndex()],'/SetupDnsClient')]",
+        "location": "location",
+        "properties": {
+          "publisher": "Microsoft.Azure.Extensions",
+          "type": "CustomScript",
+          "typeHandlerVersion": "2.0",
+          "autoUpgradeMinorVersion": true,
+          "settings": {
+            "fileUris": [
+              "[uri(parameters('_artifactsLocation'), concat('nested/linux-client/setuplinuxclient.sh', parameters('_artifactsLocationSasToken')))]",
+              "[uri(parameters('_artifactsLocation'), concat('nested/linux-client/ddns-dhcphook', parameters('_artifactsLocationSasToken')))]"
+            ],
+            "commandToExecute": "sh setuplinuxclient.sh dnsZone"
+          }
+        }
+      },
+      {
+        "comments": "DNS client setup - set suffix and enable DDNS",
+        "apiVersion": "2020-12-01",
+        "type": "Microsoft.Compute/virtualMachines/extensions",
+        "name": "[concat(variables('vmListArray')[copyIndex()],'/SetupDnsClient')]",
+        "location": "location",
+        "properties": {
+          "publisher": "Microsoft.Azure.Extensions",
+          "type": "CustomScript",
+          "typeHandlerVersion": "2.0",
+          "autoUpgradeMinorVersion": true,
+          "settings": {
+            "fileUris": [
+              "[uri(parameters('_artifactsLocation'), concat('nested/linux-client/setuplinuxclient.sh', parameters('_artifactsLocationSasToken')))]",
+              "[uri(parameters('_artifactsLocation'), concat('nested/linux-client/ddns-dhcphook', parameters('_artifactsLocationSasToken')))]"
+            ],
+            "commandToExecute": "sh setuplinuxclient.sh dnsZone"
+          }
+        }
+      },
+      {
+        "comments": "DNS client setup - set suffix and enable DDNS",
+        "apiVersion": "2020-12-01",
+        "type": "Microsoft.Compute/virtualMachines/extensions",
+        "name": "[concat(variables('vmListArray')[copyIndex()],'/SetupDnsClient')]",
+        "location": "location",
+        "properties": {
+          "publisher": "Microsoft.Azure.Extensions",
+          "type": "CustomScript",
+          "typeHandlerVersion": "2.0",
+          "autoUpgradeMinorVersion": true,
+          "settings": {
+            "fileUris": [
+              "[uri(parameters('_artifactsLocation'), concat('nested/linux-client/setuplinuxclient.sh', parameters('_artifactsLocationSasToken')))]",
+              "[uri(parameters('_artifactsLocation'), concat('nested/linux-client/ddns-dhcphook', parameters('_artifactsLocationSasToken')))]"
+            ],
+            "commandToExecute": "sh setuplinuxclient.sh dnsZone"
+          }
+        }
+      },
+      {
+        "comments": "DNS client setup - set suffix and enable DDNS",
+        "apiVersion": "2020-12-01",
+        "type": "Microsoft.Compute/virtualMachines/extensions",
+        "name": "[concat(variables('vmListArray')[copyIndex()],'/SetupDnsClient')]",
+        "location": "location",
+        "properties": {
+          "publisher": "Microsoft.Azure.Extensions",
+          "type": "CustomScript",
+          "typeHandlerVersion": "2.0",
+          "autoUpgradeMinorVersion": true,
+          "settings": {
+            "fileUris": [
+              "[uri(parameters('_artifactsLocation'), concat('nested/linux-client/setuplinuxclient.sh', parameters('_artifactsLocationSasToken')))]",
+              "[uri(parameters('_artifactsLocation'), concat('nested/linux-client/ddns-dhcphook', parameters('_artifactsLocationSasToken')))]"
+            ],
+            "commandToExecute": "sh setuplinuxclient.sh dnsZone"
+          }
+        }
+      },
+      {
+        "comments": "DNS client setup - set suffix and enable DDNS",
+        "apiVersion": "2020-12-01",
+        "type": "Microsoft.Compute/virtualMachines/extensions",
+        "name": "[concat(variables('vmListArray')[copyIndex()],'/SetupDnsClient')]",
+        "location": "location",
+        "properties": {
+          "publisher": "Microsoft.Azure.Extensions",
+          "type": "CustomScript",
+          "typeHandlerVersion": "2.0",
+          "autoUpgradeMinorVersion": true,
+          "settings": {
+            "fileUris": [
+              "[uri(parameters('_artifactsLocation'), concat('nested/linux-client/setuplinuxclient.sh', parameters('_artifactsLocationSasToken')))]",
+              "[uri(parameters('_artifactsLocation'), concat('nested/linux-client/ddns-dhcphook', parameters('_artifactsLocationSasToken')))]"
+            ],
+            "commandToExecute": "sh setuplinuxclient.sh dnsZone"
+          }
+        }
+      },
+      {
+        "comments": "DNS client setup - set suffix and enable DDNS",
+        "apiVersion": "2020-12-01",
+        "type": "Microsoft.Compute/virtualMachines/extensions",
+        "name": "[concat(variables('vmListArray')[copyIndex()],'/SetupDnsClient')]",
+        "location": "location",
+        "properties": {
+          "publisher": "Microsoft.Azure.Extensions",
+          "type": "CustomScript",
+          "typeHandlerVersion": "2.0",
+          "autoUpgradeMinorVersion": true,
+          "settings": {
+            "fileUris": [
+              "[uri(parameters('_artifactsLocation'), concat('nested/linux-client/setuplinuxclient.sh', parameters('_artifactsLocationSasToken')))]",
+              "[uri(parameters('_artifactsLocation'), concat('nested/linux-client/ddns-dhcphook', parameters('_artifactsLocationSasToken')))]"
+            ],
+            "commandToExecute": "sh setuplinuxclient.sh dnsZone"
+          }
+        }
+      },
+      {
+        "comments": "DNS client setup - set suffix and enable DDNS",
+        "apiVersion": "2020-12-01",
+        "type": "Microsoft.Compute/virtualMachines/extensions",
+        "name": "[concat(variables('vmListArray')[copyIndex()],'/SetupDnsClient')]",
+        "location": "location",
+        "properties": {
+          "publisher": "Microsoft.Azure.Extensions",
+          "type": "CustomScript",
+          "typeHandlerVersion": "2.0",
+          "autoUpgradeMinorVersion": true,
+          "settings": {
+            "fileUris": [
+              "[uri(parameters('_artifactsLocation'), concat('nested/linux-client/setuplinuxclient.sh', parameters('_artifactsLocationSasToken')))]",
+              "[uri(parameters('_artifactsLocation'), concat('nested/linux-client/ddns-dhcphook', parameters('_artifactsLocationSasToken')))]"
+            ],
+            "commandToExecute": "sh setuplinuxclient.sh dnsZone"
+          }
+        }
+      },
+      {
+        "comments": "DNS client setup - set suffix and enable DDNS",
+        "apiVersion": "2020-12-01",
+        "type": "Microsoft.Compute/virtualMachines/extensions",
+        "name": "[concat(variables('vmListArray')[copyIndex()],'/SetupDnsClient')]",
+        "location": "location",
+        "properties": {
+          "publisher": "Microsoft.Azure.Extensions",
+          "type": "CustomScript",
+          "typeHandlerVersion": "2.0",
+          "autoUpgradeMinorVersion": true,
+          "settings": {
+            "fileUris": [
+              "[uri(parameters('_artifactsLocation'), concat('nested/linux-client/setuplinuxclient.sh', parameters('_artifactsLocationSasToken')))]",
+              "[uri(parameters('_artifactsLocation'), concat('nested/linux-client/ddns-dhcphook', parameters('_artifactsLocationSasToken')))]"
+            ],
+            "commandToExecute": "sh setuplinuxclient.sh dnsZone"
+          }
+        }
+      },
+      {
+        "comments": "DNS client setup - set suffix and enable DDNS",
+        "apiVersion": "2020-12-01",
+        "type": "Microsoft.Compute/virtualMachines/extensions",
+        "name": "[concat(variables('vmListArray')[copyIndex()],'/SetupDnsClient')]",
+        "location": "location",
+        "properties": {
+          "publisher": "Microsoft.Azure.Extensions",
+          "type": "CustomScript",
+          "typeHandlerVersion": "2.0",
+          "autoUpgradeMinorVersion": true,
+          "settings": {
+            "fileUris": [
+              "[uri(parameters('_artifactsLocation'), concat('nested/linux-client/setuplinuxclient.sh', parameters('_artifactsLocationSasToken')))]",
+              "[uri(parameters('_artifactsLocation'), concat('nested/linux-client/ddns-dhcphook', parameters('_artifactsLocationSasToken')))]"
+            ],
+            "commandToExecute": "sh setuplinuxclient.sh dnsZone"
+          }
+        }
+      },
+      {
+        "comments": "DNS client setup - set suffix and enable DDNS",
+        "apiVersion": "2020-12-01",
+        "type": "Microsoft.Compute/virtualMachines/extensions",
+        "name": "[concat(variables('vmListArray')[copyIndex()],'/SetupDnsClient')]",
+        "location": "location",
+        "properties": {
+          "publisher": "Microsoft.Azure.Extensions",
+          "type": "CustomScript",
+          "typeHandlerVersion": "2.0",
+          "autoUpgradeMinorVersion": true,
+          "settings": {
+            "fileUris": [
+              "[uri(parameters('_artifactsLocation'), concat('nested/linux-client/setuplinuxclient.sh', parameters('_artifactsLocationSasToken')))]",
+              "[uri(parameters('_artifactsLocation'), concat('nested/linux-client/ddns-dhcphook', parameters('_artifactsLocationSasToken')))]"
+            ],
+            "commandToExecute": "sh setuplinuxclient.sh dnsZone"
+          }
+        }
+      },
+      {
+        "comments": "DNS client setup - set suffix and enable DDNS",
+        "apiVersion": "2020-12-01",
+        "type": "Microsoft.Compute/virtualMachines/extensions",
+        "name": "[concat(variables('vmListArray')[copyIndex()],'/SetupDnsClient')]",
+        "location": "location",
+        "properties": {
+          "publisher": "Microsoft.Azure.Extensions",
+          "type": "CustomScript",
+          "typeHandlerVersion": "2.0",
+          "autoUpgradeMinorVersion": true,
+          "settings": {
+            "fileUris": [
+              "[uri(parameters('_artifactsLocation'), concat('nested/linux-client/setuplinuxclient.sh', parameters('_artifactsLocationSasToken')))]",
+              "[uri(parameters('_artifactsLocation'), concat('nested/linux-client/ddns-dhcphook', parameters('_artifactsLocationSasToken')))]"
+            ],
+            "commandToExecute": "sh setuplinuxclient.sh dnsZone"
+          }
+        }
+      }
+    ],
+    "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+  }
+}

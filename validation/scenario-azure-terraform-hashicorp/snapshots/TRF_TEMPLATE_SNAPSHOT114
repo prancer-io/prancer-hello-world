@@ -1,0 +1,77 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "main",
+  "contentType": "json",
+  "source": "gitConnectorAzureTerraHashicorp",
+  "paths": [
+    "/examples/storage/storage-share/variables.tf",
+    "/examples/storage/storage-share/main.tf"
+  ],
+  "timestamp": 1642943279977,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "TRF_TEMPLATE_SNAPSHOT",
+    "type": "terraform",
+    "collection": "terraformtemplate",
+    "paths": [
+      "/examples/storage/storage-share/variables.tf",
+      "/examples/storage/storage-share/main.tf"
+    ],
+    "snapshotId": "TRF_TEMPLATE_SNAPSHOT114",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "azurerm_storage_account",
+      "azurerm_resource_group",
+      "azurerm_storage_share"
+    ]
+  },
+  "snapshotId": "TRF_TEMPLATE_SNAPSHOT114",
+  "collection": "terraformtemplate",
+  "json": {
+    "provider": [
+      {
+        "azurerm": {
+          "features": [
+            {}
+          ]
+        }
+      }
+    ],
+    "resources": [
+      {
+        "type": "azurerm_resource_group",
+        "name": "example",
+        "properties": {
+          "name": "${var.prefix}-resources",
+          "location": "${var.location}",
+          "compiletime_identity": "azurerm_resource_group.example"
+        }
+      },
+      {
+        "type": "azurerm_storage_account",
+        "name": "example",
+        "properties": {
+          "name": "${var.prefix}storageacct",
+          "resource_group_name": "${azurerm_resource_group.example.name}",
+          "location": "${azurerm_resource_group.example.location}",
+          "account_tier": "Premium",
+          "account_replication_type": "LRS",
+          "account_kind": "FileStorage",
+          "compiletime_identity": "azurerm_storage_account.example"
+        }
+      },
+      {
+        "type": "azurerm_storage_share",
+        "name": "example",
+        "properties": {
+          "name": "${var.prefix}storageshare",
+          "storage_account_name": "${azurerm_storage_account.example.name}",
+          "compiletime_identity": "azurerm_storage_share.example"
+        }
+      }
+    ]
+  }
+}

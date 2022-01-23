@@ -1,0 +1,154 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAzureQuickStart",
+  "paths": [
+    "/demos/ddos-attack-prevention/nested/microsoft.compute/vm.windows.json"
+  ],
+  "timestamp": 1642962899091,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/demos/ddos-attack-prevention/nested/microsoft.compute/vm.windows.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT687",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "microsoft.compute/virtualmachines"
+    ]
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT687",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "vmName": {
+        "type": "string",
+        "metadata": {
+          "description": "Name of the virtual machine"
+        }
+      },
+      "adminUsername": {
+        "type": "string",
+        "metadata": {
+          "description": "Admin user name for the virtual machine"
+        }
+      },
+      "adminPassword": {
+        "type": "securestring",
+        "metadata": {
+          "description": "Admin user password for virtual machine"
+        }
+      },
+      "vmSize": {
+        "type": "string",
+        "defaultValue": "Standard_D2s_v3",
+        "metadata": {
+          "description": "Size of VM"
+        }
+      },
+      "imagePublisher": {
+        "type": "string",
+        "defaultValue": "MicrosoftWindowsServer"
+      },
+      "imageOffer": {
+        "type": "string",
+        "defaultValue": "WindowsServer"
+      },
+      "osSku": {
+        "type": "string",
+        "defaultValue": "2012-R2-Datacenter",
+        "metadata": {
+          "description": "OS sku for VM"
+        }
+      },
+      "nicId": {
+        "type": "string",
+        "metadata": {
+          "description": "Network interface id."
+        }
+      },
+      "location": {
+        "type": "string",
+        "metadata": {
+          "description": "VM deployment location."
+        }
+      },
+      "dataDiskSizeInGB": {
+        "type": "int",
+        "defaultValue": 128,
+        "metadata": {
+          "description": "Size for Data Disks."
+        }
+      },
+      "numberOfDataDisks": {
+        "type": "int",
+        "minValue": 0,
+        "maxValue": 16,
+        "defaultValue": 1,
+        "metadata": {
+          "description": "The number of dataDisks to be returned in the output array."
+        }
+      },
+      "tags": {
+        "type": "object"
+      }
+    },
+    "resources": [
+      {
+        "apiVersion": "2018-06-01",
+        "type": "Microsoft.Compute/virtualMachines",
+        "name": "vmName",
+        "location": "location",
+        "tags": "tags",
+        "properties": {
+          "hardwareProfile": {
+            "vmSize": "Standard_D2s_v3"
+          },
+          "osProfile": {
+            "computerName": "vmName",
+            "adminUsername": "adminUsername",
+            "adminPassword": "adminPassword"
+          },
+          "storageProfile": {
+            "imageReference": {
+              "publisher": "MicrosoftWindowsServer",
+              "offer": "WindowsServer",
+              "sku": "2012-R2-Datacenter",
+              "version": "latest"
+            },
+            "osDisk": {
+              "createOption": "FromImage"
+            },
+            "copy": [
+              {
+                "name": "dataDisks",
+                "count": 1,
+                "input": {
+                  "diskSizeGB": 128,
+                  "lun": "[copyIndex('dataDisks')]",
+                  "createOption": "Empty"
+                }
+              }
+            ]
+          },
+          "networkProfile": {
+            "networkInterfaces": [
+              {
+                "id": "nicId"
+              }
+            ]
+          }
+        }
+      }
+    ],
+    "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+  }
+}

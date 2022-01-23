@@ -1,0 +1,187 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAzureQuickStart",
+  "paths": [
+    "/quickstarts/microsoft.web/web-app-ase-create/azuredeploy.json",
+    "/quickstarts/microsoft.web/web-app-ase-create/azuredeploy.parameters.json"
+  ],
+  "timestamp": 1642962911058,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/quickstarts/microsoft.web/web-app-ase-create/azuredeploy.json",
+      "/quickstarts/microsoft.web/web-app-ase-create/azuredeploy.parameters.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT1769",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "microsoft.web/hostingenvironments"
+    ]
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT1769",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "aseName": {
+        "type": "string",
+        "metadata": {
+          "description": "Name of the App Service Environment"
+        },
+        "value": "GEN-UNIQUE"
+      },
+      "location": {
+        "type": "string",
+        "metadata": {
+          "description": "Location of the App Service Environment"
+        },
+        "defaultValue": "[resourceGroup().location]"
+      },
+      "ipSslAddressCount": {
+        "type": "int",
+        "defaultValue": 1,
+        "metadata": {
+          "description": "Number of IP addresses for the IP-SSL address pool."
+        }
+      },
+      "subnetName": {
+        "type": "string",
+        "metadata": {
+          "description": "Subnet name that will contain the App Service Environment"
+        },
+        "value": "GET-PREREQ-subnetName"
+      },
+      "subnetId": {
+        "type": "string",
+        "metadata": {
+          "description": "Subnet Id that will contain the App Service Environment"
+        },
+        "value": "GET-PREREQ-subnetId"
+      },
+      "frontEndSize": {
+        "type": "string",
+        "allowedValues": [
+          "Medium",
+          "Large",
+          "ExtraLarge"
+        ],
+        "defaultValue": "Medium",
+        "metadata": {
+          "description": "Instance size for the front-end pool.  Maps to P2,P3,P4."
+        }
+      },
+      "frontEndCount": {
+        "type": "int",
+        "defaultValue": 2,
+        "metadata": {
+          "description": "Number of instances in the front-end pool.  Minimum of two."
+        }
+      },
+      "workerPoolOneInstanceSize": {
+        "type": "string",
+        "allowedValues": [
+          "Small",
+          "Medium",
+          "Large",
+          "ExtraLarge"
+        ],
+        "defaultValue": "Small",
+        "metadata": {
+          "description": "Instance size for worker pool one.  Maps to P1,P2,P3,P4."
+        }
+      },
+      "workerPoolOneInstanceCount": {
+        "type": "int",
+        "defaultValue": 2,
+        "metadata": {
+          "description": "Number of instances in worker pool one.  Minimum of two."
+        }
+      },
+      "workerPoolTwoInstanceSize": {
+        "type": "string",
+        "allowedValues": [
+          "Small",
+          "Medium",
+          "Large",
+          "ExtraLarge"
+        ],
+        "defaultValue": "Small",
+        "metadata": {
+          "description": "Instance size for worker pool two.  Maps to P1,P2,P3,P4."
+        }
+      },
+      "workerPoolTwoInstanceCount": {
+        "type": "int",
+        "defaultValue": 0,
+        "metadata": {
+          "description": "Number of instances in worker pool two.  Can be zero if not using worker pool two."
+        }
+      },
+      "workerPoolThreeInstanceSize": {
+        "type": "string",
+        "allowedValues": [
+          "Small",
+          "Medium",
+          "Large",
+          "ExtraLarge"
+        ],
+        "defaultValue": "Small",
+        "metadata": {
+          "description": "Instance size for worker pool three.  Maps to P1,P2,P3,P4."
+        }
+      },
+      "workerPoolThreeInstanceCount": {
+        "type": "int",
+        "defaultValue": 0,
+        "metadata": {
+          "description": "Number of instances in worker pool three.  Can be zero if not using worker pool three."
+        }
+      }
+    },
+    "resources": [
+      {
+        "apiVersion": "2020-06-01",
+        "type": "Microsoft.Web/hostingEnvironments",
+        "name": "GEN-UNIQUE",
+        "location": "[resourceGroup().location]",
+        "properties": {
+          "name": "GEN-UNIQUE",
+          "location": "[resourceGroup().location]",
+          "ipSslAddressCount": 1,
+          "virtualNetwork": {
+            "Id": "GET-PREREQ-subnetId",
+            "Subnet": "GET-PREREQ-subnetName"
+          },
+          "multiSize": "Medium",
+          "multiRoleCount": 2,
+          "workerPools": [
+            {
+              "workerSizeId": 0,
+              "workerSize": "Small",
+              "workerCount": 2
+            },
+            {
+              "workerSizeId": 1,
+              "workerSize": "Small",
+              "workerCount": 0
+            },
+            {
+              "workerSizeId": 2,
+              "workerSize": "Small",
+              "workerCount": 0
+            }
+          ]
+        }
+      }
+    ],
+    "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+  }
+}

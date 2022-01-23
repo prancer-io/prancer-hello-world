@@ -1,0 +1,306 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAzureQuickStart",
+  "paths": [
+    "/application-workloads/kafka/kafka-ubuntu-multidisks/datastore-16disk-resources.json",
+    "/application-workloads/kafka/kafka-ubuntu-multidisks/azuredeploy.parameters.json"
+  ],
+  "timestamp": 1642962890622,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/application-workloads/kafka/kafka-ubuntu-multidisks/datastore-16disk-resources.json",
+      "/application-workloads/kafka/kafka-ubuntu-multidisks/azuredeploy.parameters.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT211",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "microsoft.network/networkinterfaces",
+      "microsoft.compute/virtualmachines",
+      "microsoft.compute/virtualmachines/extensions"
+    ]
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT211",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "commonSettings": {
+        "type": "object"
+      },
+      "osSettings": {
+        "type": "object"
+      },
+      "adminPasswordOrKey": {
+        "type": "securestring",
+        "value": "GEN-SSH-PUB-KEY"
+      },
+      "authenticationType": {
+        "type": "string"
+      },
+      "machineSettingsbroker": {
+        "type": "object"
+      },
+      "subnet": {
+        "type": "object"
+      },
+      "location": {
+        "type": "string",
+        "metadata": {
+          "description": "Location for all resources."
+        }
+      },
+      "storageAccountNamePrefix": {
+        "value": "GEN-UNIQUE-8"
+      },
+      "adminUsername": {
+        "value": "GEN-UNIQUE-8"
+      },
+      "domainName": {
+        "value": "GEN-UNIQUE-10"
+      }
+    },
+    "variables": {
+      "namespace": "commonSettings",
+      "subnetRef": "Microsoft.Network/virtualNetworks/subnets//subnet/subnet",
+      "vmName": "commonSettingsvm",
+      "nicName": "commonSettingsnic",
+      "adminUsername": "commonSettings",
+      "vmCount": "machineSettingsbroker",
+      "zCount": "machineSettingsbroker",
+      "zSubnet": "machineSettingsbroker",
+      "addprefix": "machineSettingsbroker",
+      "linuxConfiguration": {
+        "disablePasswordAuthentication": true,
+        "ssh": {
+          "publicKeys": [
+            {
+              "path": "/home/commonSettings/.ssh/authorized_keys",
+              "keyData": "GEN-SSH-PUB-KEY"
+            }
+          ]
+        }
+      }
+    },
+    "resources": [
+      {
+        "apiVersion": "2020-08-01",
+        "type": "Microsoft.Network/networkInterfaces",
+        "name": "commonSettingsniccopyindex()",
+        "location": "location",
+        "copy": {
+          "name": "nicCopyLoop",
+          "count": "machineSettingsbroker"
+        },
+        "properties": {
+          "ipConfigurations": [
+            {
+              "name": "ipconfig1",
+              "properties": {
+                "privateIPAllocationMethod": "Static",
+                "privateIPAddress": "machineSettingsbrokercopyindex()",
+                "subnet": {
+                  "id": "Microsoft.Network/virtualNetworks/subnets//subnet/subnet"
+                }
+              }
+            }
+          ]
+        }
+      },
+      {
+        "apiVersion": "2020-12-01",
+        "type": "Microsoft.Compute/virtualMachines",
+        "name": "commonSettingsvmcopyindex()",
+        "location": "location",
+        "dependsOn": [
+          "Microsoft.Network/networkInterfaces/commonSettingsniccopyindex()"
+        ],
+        "copy": {
+          "name": "vmCopyLoop",
+          "count": "machineSettingsbroker"
+        },
+        "properties": {
+          "availabilitySet": {
+            "id": "Microsoft.Compute/availabilitySets/machineSettingsbroker"
+          },
+          "hardwareProfile": {
+            "vmSize": "machineSettingsbroker"
+          },
+          "osProfile": {
+            "computerName": "commonSettingsvmcopyindex()",
+            "adminUsername": "commonSettings",
+            "adminPassword": "GEN-SSH-PUB-KEY",
+            "linuxConfiguration": "[if(equals(parameters('authenticationType'), 'password'), json('null'), variables('linuxConfiguration'))]"
+          },
+          "storageProfile": {
+            "imageReference": "osSettings",
+            "osDisk": {
+              "name": "commonSettingsvmcopyindex()_OSDisk",
+              "caching": "ReadWrite",
+              "createOption": "FromImage"
+            },
+            "dataDisks": [
+              {
+                "name": "commonSettingsvmcopyindex()_DataDisk1",
+                "diskSizeGB": "machineSettingsbroker",
+                "lun": 0,
+                "caching": "None",
+                "createOption": "Empty"
+              },
+              {
+                "name": "commonSettingsvmcopyindex()_DataDisk2",
+                "diskSizeGB": "machineSettingsbroker",
+                "lun": 1,
+                "caching": "None",
+                "createOption": "Empty"
+              },
+              {
+                "name": "commonSettingsvmcopyindex()_DataDisk3",
+                "diskSizeGB": "machineSettingsbroker",
+                "lun": 2,
+                "caching": "None",
+                "createOption": "Empty"
+              },
+              {
+                "name": "commonSettingsvmcopyindex()_DataDisk4",
+                "diskSizeGB": "machineSettingsbroker",
+                "lun": 3,
+                "caching": "None",
+                "createOption": "Empty"
+              },
+              {
+                "name": "commonSettingsvmcopyindex()_DataDisk5",
+                "diskSizeGB": "machineSettingsbroker",
+                "lun": 4,
+                "caching": "None",
+                "createOption": "Empty"
+              },
+              {
+                "name": "commonSettingsvmcopyindex()_DataDisk6",
+                "diskSizeGB": "machineSettingsbroker",
+                "lun": 5,
+                "caching": "None",
+                "createOption": "Empty"
+              },
+              {
+                "name": "commonSettingsvmcopyindex()_DataDisk7",
+                "diskSizeGB": "machineSettingsbroker",
+                "lun": 6,
+                "caching": "None",
+                "createOption": "Empty"
+              },
+              {
+                "name": "commonSettingsvmcopyindex()_DataDisk8",
+                "diskSizeGB": "machineSettingsbroker",
+                "lun": 7,
+                "caching": "None",
+                "createOption": "Empty"
+              },
+              {
+                "name": "commonSettingsvmcopyindex()_DataDisk9",
+                "diskSizeGB": "machineSettingsbroker",
+                "lun": 8,
+                "caching": "None",
+                "createOption": "Empty"
+              },
+              {
+                "name": "commonSettingsvmcopyindex()_DataDisk10",
+                "diskSizeGB": "machineSettingsbroker",
+                "lun": 9,
+                "caching": "None",
+                "createOption": "Empty"
+              },
+              {
+                "name": "commonSettingsvmcopyindex()_DataDisk11",
+                "diskSizeGB": "machineSettingsbroker",
+                "lun": 10,
+                "caching": "None",
+                "createOption": "Empty"
+              },
+              {
+                "name": "commonSettingsvmcopyindex()_DataDisk12",
+                "diskSizeGB": "machineSettingsbroker",
+                "lun": 11,
+                "caching": "None",
+                "createOption": "Empty"
+              },
+              {
+                "name": "commonSettingsvmcopyindex()_DataDisk13",
+                "diskSizeGB": "machineSettingsbroker",
+                "lun": 12,
+                "caching": "None",
+                "createOption": "Empty"
+              },
+              {
+                "name": "commonSettingsvmcopyindex()_DataDisk14",
+                "diskSizeGB": "machineSettingsbroker",
+                "lun": 13,
+                "caching": "None",
+                "createOption": "Empty"
+              },
+              {
+                "name": "commonSettingsvmcopyindex()_DataDisk15",
+                "diskSizeGB": "machineSettingsbroker",
+                "lun": 14,
+                "caching": "None",
+                "createOption": "Empty"
+              },
+              {
+                "name": "commonSettingsvmcopyindex()_DataDisk16",
+                "diskSizeGB": "machineSettingsbroker",
+                "lun": 15,
+                "caching": "None",
+                "createOption": "Empty"
+              }
+            ]
+          },
+          "networkProfile": {
+            "networkInterfaces": [
+              {
+                "id": "Microsoft.Network/networkInterfaces/commonSettingsniccopyindex()"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "type": "Microsoft.Compute/virtualMachines/extensions",
+        "name": "commonSettingsvmcopyindex()/install_kafka",
+        "apiVersion": "2020-12-01",
+        "location": "location",
+        "dependsOn": [
+          "Microsoft.Compute/virtualMachines/commonSettingsvmcopyindex()"
+        ],
+        "copy": {
+          "name": "scriptCopyLoop",
+          "count": "machineSettingsbroker"
+        },
+        "properties": {
+          "publisher": "Microsoft.Azure.Extensions",
+          "type": "CustomScript",
+          "typeHandlerVersion": "2.0",
+          "autoUpgradeMinorVersion": true,
+          "settings": {
+            "fileUris": "osSettings",
+            "commandToExecute": "bash kafka-cluster-install.sh -b copyindex() -c machineSettingsbroker -i machineSettingsbroker"
+          }
+        }
+      }
+    ],
+    "outputs": {
+      "brokerip": {
+        "value": "[reference(resourceId('Microsoft.Network/networkInterfaces/',concat(variables('nicName'),0))).ipConfigurations[0].properties.privateIPAddress]",
+        "type": "string"
+      }
+    },
+    "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+  }
+}

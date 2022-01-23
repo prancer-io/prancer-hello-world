@@ -2,12 +2,12 @@
   "structure": "filesystem",
   "error": null,
   "reference": "master",
-  "contentType": "yaml",
+  "contentType": "json",
   "source": "gitConnectorGoogleKcc",
   "paths": [
-    "/samples/resources/computeforwardingrule/regional-forwarding-rule/compute_v1beta1_computenetwork.yaml"
+    "/samples/resources/computefirewallpolicyrule/compute_v1beta1_computefirewallpolicy.yaml"
   ],
-  "timestamp": 1628765140810,
+  "timestamp": 1642973302466,
   "queryuser": null,
   "checksum": "99914b932bd37a50b983c5e7c90ae93b",
   "node": {
@@ -15,23 +15,29 @@
     "type": "kcc",
     "collection": "kcctemplate",
     "paths": [
-      "/samples/resources/computeforwardingrule/regional-forwarding-rule/compute_v1beta1_computenetwork.yaml"
+      "/samples/resources/computefirewallpolicyrule/compute_v1beta1_computefirewallpolicy.yaml"
     ],
     "snapshotId": "KCC_TEMPLATE_SNAPSHOT123",
     "status": "active",
-    "validate": true
+    "validate": true,
+    "resourceTypes": [
+      "computefirewallpolicy"
+    ]
   },
   "snapshotId": "KCC_TEMPLATE_SNAPSHOT123",
   "collection": "kcctemplate",
   "json": {
     "apiVersion": "compute.cnrm.cloud.google.com/v1beta1",
-    "kind": "ComputeNetwork",
+    "kind": "ComputeFirewallPolicy",
     "metadata": {
-      "name": "computeforwardingrule-dep-regional"
+      "name": "firewallpolicyrule-dep"
     },
     "spec": {
-      "routingMode": "REGIONAL",
-      "autoCreateSubnetworks": false
+      "organizationRef": {
+        "external": "organizations/${ORG_ID?}"
+      },
+      "shortName": "${PROJECT_ID?}-short",
+      "description": "A basic organization firewall policy"
     }
   }
 }

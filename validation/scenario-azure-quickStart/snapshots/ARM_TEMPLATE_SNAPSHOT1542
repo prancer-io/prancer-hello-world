@@ -1,0 +1,164 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAzureQuickStart",
+  "paths": [
+    "/quickstarts/microsoft.network/front-door-session-affinity/azuredeploy.json",
+    "/quickstarts/microsoft.network/front-door-session-affinity/azuredeploy.parameters.json"
+  ],
+  "timestamp": 1642962908974,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/quickstarts/microsoft.network/front-door-session-affinity/azuredeploy.json",
+      "/quickstarts/microsoft.network/front-door-session-affinity/azuredeploy.parameters.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT1542",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "microsoft.network/frontdoors"
+    ]
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT1542",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "frontDoorName": {
+        "type": "string",
+        "metadata": {
+          "description": "The name of the frontdoor resource."
+        },
+        "value": "GEN-UNIQUE"
+      },
+      "backendAddress": {
+        "type": "string",
+        "metadata": {
+          "description": "The hostname of the backend. Must be an IP address or FQDN."
+        },
+        "value": "GEN-CUSTOM-FQDN-NAME"
+      },
+      "sessionAffinityEnabledState": {
+        "type": "string",
+        "allowedValues": [
+          "Enabled",
+          "Disabled"
+        ],
+        "metadata": {
+          "description": "Whether to allow session affinity on this host. Valid options are 'Enabled' or 'Disabled'."
+        },
+        "value": "Enabled"
+      },
+      "sessionAffinityTtlSeconds": {
+        "type": "int",
+        "metadata": {
+          "description": "The TTL to use in seconds for session affinity, if applicable."
+        },
+        "value": 60
+      }
+    },
+    "variables": {
+      "frontdoorLocation": "global",
+      "frontDoorSuffix": "[if(equals(toLower(environment().name), 'azureusgovernment'), 'azurefd.us', environment().suffixes.azureFrontDoorEndpointSuffix)]",
+      "frontDoorHostName": "[concat(toLower(parameters('frontDoorName')), '.', variables('frontDoorSuffix'))]"
+    },
+    "resources": [
+      {
+        "apiVersion": "2020-07-01",
+        "type": "Microsoft.Network/frontDoors",
+        "name": "GEN-UNIQUE",
+        "location": "global",
+        "properties": {
+          "routingRules": [
+            {
+              "name": "routingRule1",
+              "properties": {
+                "frontendEndpoints": [
+                  {
+                    "id": "Microsoft.Network/frontDoors/frontendEndpoints/GEN-UNIQUE/frontendEndpoint1"
+                  }
+                ],
+                "acceptedProtocols": [
+                  "Http"
+                ],
+                "patternsToMatch": [
+                  "/*"
+                ],
+                "routeConfiguration": {
+                  "@odata.type": "#Microsoft.Azure.FrontDoor.Models.FrontdoorForwardingConfiguration",
+                  "forwardingProtocol": "MatchRequest",
+                  "backendPool": {
+                    "id": "Microsoft.Network/frontDoors/backendPools/GEN-UNIQUE/backendPool1"
+                  }
+                },
+                "enabledState": "Enabled"
+              }
+            }
+          ],
+          "healthProbeSettings": [
+            {
+              "name": "healthProbeSettings1",
+              "properties": {
+                "path": "/",
+                "protocol": "Http",
+                "intervalInSeconds": 120
+              }
+            }
+          ],
+          "loadBalancingSettings": [
+            {
+              "name": "loadBalancingSettings1",
+              "properties": {
+                "sampleSize": 4,
+                "successfulSamplesRequired": 2
+              }
+            }
+          ],
+          "backendPools": [
+            {
+              "name": "backendPool1",
+              "properties": {
+                "backends": [
+                  {
+                    "address": "GEN-CUSTOM-FQDN-NAME",
+                    "httpPort": 80,
+                    "httpsPort": 443,
+                    "weight": 50,
+                    "priority": 1,
+                    "enabledState": "Enabled"
+                  }
+                ],
+                "loadBalancingSettings": {
+                  "id": "Microsoft.Network/frontDoors/loadBalancingSettings/GEN-UNIQUE/loadBalancingSettings1"
+                },
+                "healthProbeSettings": {
+                  "id": "Microsoft.Network/frontDoors/healthProbeSettings/GEN-UNIQUE/healthProbeSettings1"
+                }
+              }
+            }
+          ],
+          "frontendEndpoints": [
+            {
+              "name": "frontendEndpoint1",
+              "properties": {
+                "hostName": "[variables('frontDoorHostName')]",
+                "sessionAffinityEnabledState": "Enabled",
+                "sessionAffinityTtlSeconds": 60
+              }
+            }
+          ],
+          "enabledState": "Enabled"
+        }
+      }
+    ],
+    "outputs": {},
+    "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+  }
+}

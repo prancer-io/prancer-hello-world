@@ -1,0 +1,119 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAzureQuickStart",
+  "paths": [
+    "/quickstarts/microsoft.automation/automation-configuration/nested/provisionNetwork.json"
+  ],
+  "timestamp": 1642962903092,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/quickstarts/microsoft.automation/automation-configuration/nested/provisionNetwork.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT955",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "microsoft.network/publicipaddresses",
+      "microsoft.network/virtualnetworks",
+      "microsoft.network/networkinterfaces"
+    ]
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT955",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "location": {
+        "type": "string"
+      },
+      "virtualNetworkName": {
+        "type": "string"
+      },
+      "virtualNetworkAddressRange": {
+        "type": "string"
+      },
+      "virtualNetworkSubnets": {
+        "type": "array"
+      },
+      "nicName": {
+        "type": "string"
+      },
+      "nicIPAddress": {
+        "type": "string"
+      },
+      "nicSubnetRef": {
+        "type": "string"
+      },
+      "publicIPAddressName": {
+        "type": "string"
+      },
+      "publicIPAddressType": {
+        "type": "string"
+      }
+    },
+    "resources": [
+      {
+        "name": "virtualNetworkName",
+        "type": "Microsoft.Network/virtualNetworks",
+        "location": "location",
+        "apiVersion": "2020-05-01",
+        "properties": {
+          "addressSpace": {
+            "addressPrefixes": [
+              "virtualNetworkAddressRange"
+            ]
+          },
+          "subnets": "virtualNetworkSubnets"
+        }
+      },
+      {
+        "apiVersion": "2020-05-01",
+        "type": "Microsoft.Network/publicIPAddresses",
+        "name": "publicIPAddressName",
+        "location": "location",
+        "dependsOn": [
+          "virtualNetworkName"
+        ],
+        "properties": {
+          "publicIPAllocationMethod": "publicIPAddressType"
+        }
+      },
+      {
+        "name": "nicName",
+        "type": "Microsoft.Network/networkInterfaces",
+        "location": "location",
+        "apiVersion": "2020-05-01",
+        "dependsOn": [
+          "virtualNetworkName",
+          "publicIPAddressName"
+        ],
+        "properties": {
+          "ipConfigurations": [
+            {
+              "name": "privateipconfig",
+              "properties": {
+                "privateIPAllocationMethod": "Static",
+                "privateIPAddress": "nicIPAddress",
+                "subnet": {
+                  "id": "nicSubnetRef"
+                },
+                "publicIPAddress": {
+                  "id": "[resourceId ('Microsoft.Network/publicIPAddresses/', parameters('publicIPAddressName'))]"
+                }
+              }
+            }
+          ]
+        }
+      }
+    ],
+    "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+  }
+}

@@ -1,0 +1,263 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAzureQuickStart",
+  "paths": [
+    "/quickstarts/microsoft.network/front-door-create-caching/azuredeploy.json",
+    "/quickstarts/microsoft.network/front-door-create-caching/azuredeploy.parameters.json"
+  ],
+  "timestamp": 1642962908766,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/quickstarts/microsoft.network/front-door-create-caching/azuredeploy.json",
+      "/quickstarts/microsoft.network/front-door-create-caching/azuredeploy.parameters.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT1526",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "microsoft.network/frontdoors"
+    ]
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT1526",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "frontDoorName": {
+        "type": "string",
+        "metadata": {
+          "description": "The name of the frontdoor resource."
+        },
+        "value": "GEN-UNIQUE"
+      },
+      "backendPools1": {
+        "type": "object",
+        "metadata": {
+          "description": "Details of the backend pool 1 for the Azure Front Door"
+        },
+        "value": {
+          "name": "backendPool1",
+          "backends": [
+            {
+              "address": "GEN-CUSTOM-FQDN-NAME",
+              "httpPort": 80,
+              "httpsPort": 443,
+              "weight": 50,
+              "priority": 1,
+              "enabledState": "Enabled"
+            },
+            {
+              "address": "GEN-CUSTOM-FQDN-NAME",
+              "httpPort": 80,
+              "httpsPort": 443,
+              "weight": 50,
+              "priority": 2,
+              "enabledState": "Enabled"
+            }
+          ]
+        }
+      },
+      "backendPools2": {
+        "type": "object",
+        "metadata": {
+          "description": "Details of the backend pool 2 for the Azure Front Door"
+        },
+        "value": {
+          "name": "backendPool2",
+          "backends": [
+            {
+              "address": "GEN-CUSTOM-FQDN-NAME",
+              "httpPort": 80,
+              "httpsPort": 443,
+              "weight": 50,
+              "priority": 1,
+              "enabledState": "Enabled"
+            },
+            {
+              "address": "GEN-CUSTOM-FQDN-NAME",
+              "httpPort": 80,
+              "httpsPort": 443,
+              "weight": 50,
+              "priority": 2,
+              "enabledState": "Enabled"
+            }
+          ]
+        }
+      }
+    },
+    "variables": {
+      "frontdoorLocation": "global",
+      "frontDoorSuffix": "[if(equals(toLower(environment().name), 'azureusgovernment'), 'azurefd.us', environment().suffixes.azureFrontDoorEndpointSuffix)]",
+      "frontDoorHostName": "[concat(toLower(parameters('frontDoorName')), '.', variables('frontDoorSuffix'))]"
+    },
+    "resources": [
+      {
+        "apiVersion": "2020-01-01",
+        "type": "Microsoft.Network/frontDoors",
+        "name": "GEN-UNIQUE",
+        "location": "global",
+        "properties": {
+          "routingRules": [
+            {
+              "name": "routingRule1",
+              "properties": {
+                "frontendEndpoints": [
+                  {
+                    "id": "Microsoft.Network/frontDoors/frontendEndpoints/GEN-UNIQUE/frontendEndpoint1"
+                  }
+                ],
+                "acceptedProtocols": [
+                  "Http",
+                  "Https"
+                ],
+                "patternsToMatch": [
+                  "/*",
+                  "/site1/*"
+                ],
+                "routeConfiguration": {
+                  "@odata.type": "#Microsoft.Azure.FrontDoor.Models.FrontdoorForwardingConfiguration",
+                  "forwardingProtocol": "MatchRequest",
+                  "backendPool": {
+                    "id": "Microsoft.Network/frontDoors/backendPools/GEN-UNIQUE/backendPool1"
+                  }
+                },
+                "enabledState": "Enabled"
+              }
+            },
+            {
+              "name": "routingRule2",
+              "properties": {
+                "frontendEndpoints": [
+                  {
+                    "id": "Microsoft.Network/frontDoors/frontendEndpoints/GEN-UNIQUE/frontendEndpoint1"
+                  }
+                ],
+                "acceptedProtocols": [
+                  "Https"
+                ],
+                "patternsToMatch": [
+                  "/site2/*"
+                ],
+                "routeConfiguration": {
+                  "@odata.type": "#Microsoft.Azure.FrontDoor.Models.FrontdoorForwardingConfiguration",
+                  "forwardingProtocol": "MatchRequest",
+                  "backendPool": {
+                    "id": "Microsoft.Network/frontDoors/backendPools/GEN-UNIQUE/backendPool2"
+                  }
+                },
+                "enabledState": "Enabled"
+              }
+            }
+          ],
+          "healthProbeSettings": [
+            {
+              "name": "healthProbeSettings1",
+              "properties": {
+                "path": "/",
+                "protocol": "Http",
+                "intervalInSeconds": 120
+              }
+            },
+            {
+              "name": "healthProbeSettings2",
+              "properties": {
+                "path": "/",
+                "protocol": "Https",
+                "intervalInSeconds": 60
+              }
+            }
+          ],
+          "loadBalancingSettings": [
+            {
+              "name": "loadBalancingSettings1",
+              "properties": {
+                "sampleSize": 4,
+                "successfulSamplesRequired": 2
+              }
+            },
+            {
+              "name": "loadBalancingSettings2",
+              "properties": {
+                "sampleSize": 2,
+                "successfulSamplesRequired": 1
+              }
+            }
+          ],
+          "backendPools": [
+            {
+              "name": "backendPool1",
+              "properties": {
+                "copy": [
+                  {
+                    "name": "backends",
+                    "count": 36,
+                    "input": {
+                      "address": "backendPools1).backends[copyIndex(backends",
+                      "httpPort": "backendPools1).backends[copyIndex(backends",
+                      "httpsPort": "backendPools1).backends[copyIndex(backends",
+                      "weight": "backendPools1).backends[copyIndex(backends",
+                      "priority": "backendPools1).backends[copyIndex(backends",
+                      "enabledState": "backendPools1).backends[copyIndex(backends"
+                    }
+                  }
+                ],
+                "loadBalancingSettings": {
+                  "id": "Microsoft.Network/frontDoors/loadBalancingSettings/GEN-UNIQUE/loadBalancingSettings1"
+                },
+                "healthProbeSettings": {
+                  "id": "Microsoft.Network/frontDoors/healthProbeSettings/GEN-UNIQUE/healthProbeSettings1"
+                }
+              }
+            },
+            {
+              "name": "backendPool2",
+              "properties": {
+                "copy": [
+                  {
+                    "name": "backends",
+                    "count": 36,
+                    "input": {
+                      "address": "backendPools2).backends[copyIndex(backends",
+                      "httpPort": "backendPools2).backends[copyIndex(backends",
+                      "httpsPort": "backendPools2).backends[copyIndex(backends",
+                      "weight": "backendPools2).backends[copyIndex(backends",
+                      "priority": "backendPools2).backends[copyIndex(backends",
+                      "enabledState": "backendPools2).backends[copyIndex(backends"
+                    }
+                  }
+                ],
+                "loadBalancingSettings": {
+                  "id": "Microsoft.Network/frontDoors/loadBalancingSettings/GEN-UNIQUE/loadBalancingSettings2"
+                },
+                "healthProbeSettings": {
+                  "id": "Microsoft.Network/frontDoors/healthProbeSettings/GEN-UNIQUE/healthProbeSettings2"
+                }
+              }
+            }
+          ],
+          "frontendEndpoints": [
+            {
+              "name": "frontendEndpoint1",
+              "properties": {
+                "hostName": "[variables('frontDoorHostName')]",
+                "sessionAffinityEnabledState": "Disabled",
+                "sessionAffinityTtlSeconds": 0
+              }
+            }
+          ],
+          "enabledState": "Enabled"
+        }
+      }
+    ],
+    "outputs": {},
+    "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+  }
+}

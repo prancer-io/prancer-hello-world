@@ -1,0 +1,198 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAzureQuickStart",
+  "paths": [
+    "/quickstarts/microsoft.web/web-app-blob-connection/azuredeploy.json",
+    "/quickstarts/microsoft.web/web-app-blob-connection/azuredeploy.parameters.json"
+  ],
+  "timestamp": 1642962911254,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/quickstarts/microsoft.web/web-app-blob-connection/azuredeploy.json",
+      "/quickstarts/microsoft.web/web-app-blob-connection/azuredeploy.parameters.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT1783",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "microsoft.web/sites",
+      "microsoft.web/serverfarms"
+    ]
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT1783",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "webAppSvcPlanName": {
+        "type": "string",
+        "minLength": 1,
+        "defaultValue": "AppSvcPlan",
+        "metadata": {
+          "description": "Name of AppSvc Plan."
+        },
+        "value": "GEN-UNIQUE-8"
+      },
+      "webAppSvcPlanSku": {
+        "type": "string",
+        "defaultValue": "S1",
+        "metadata": {
+          "description": "App Svc Plan SKU."
+        }
+      },
+      "webAppSvcPlanWorkerSize": {
+        "type": "string",
+        "allowedValues": [
+          "0",
+          "1",
+          "2"
+        ],
+        "defaultValue": "0",
+        "metadata": {
+          "description": "Size of AppSvc Worker."
+        }
+      },
+      "webAppName": {
+        "type": "string",
+        "minLength": 1,
+        "metadata": {
+          "description": "Name of web site."
+        },
+        "value": "GEN-UNIQUE"
+      },
+      "storageAccountName": {
+        "type": "string",
+        "metadata": {
+          "description": "Storage Account to access blob storage."
+        },
+        "value": "GET-PREREQ-storageAccountName"
+      },
+      "deployPackageUri": {
+        "type": "string",
+        "metadata": {
+          "description": "WebDeploy package location."
+        },
+        "value": "https://github.com/Azure-Samples/app-service-web-php-get-started/archive/master.zip"
+      },
+      "sasToken": {
+        "type": "string",
+        "defaultValue": "",
+        "metadata": {
+          "description": "Sas token to be appended to DeployPackageURI."
+        }
+      },
+      "location": {
+        "type": "string",
+        "defaultValue": "[resourceGroup().location]",
+        "metadata": {
+          "description": "Location for all resources."
+        }
+      }
+    },
+    "variables": {
+      "packageURI": "[uri(parameters('DeployPackageURI'), concat(parameters('SasToken')))]",
+      "storageAccountId": "[concat(resourceGroup().id,'/providers/Microsoft.Storage/storageAccounts/', parameters('storageAccountName'))]"
+    },
+    "resources": [
+      {
+        "name": "WebAppSvcPlanName",
+        "type": "Microsoft.Web/serverfarms",
+        "location": "[resourceGroup().location]",
+        "apiVersion": "2020-12-01",
+        "tags": {
+          "displayName": "AppSvcPlan"
+        },
+        "sku": {
+          "name": "S1"
+        },
+        "properties": {
+          "name": "WebAppSvcPlanName",
+          "workerSize": "WebAppSvcPlanWorkerSize",
+          "numberOfWorkers": 1
+        }
+      },
+      {
+        "name": "WebAppName",
+        "type": "Microsoft.Web/sites",
+        "location": "[resourceGroup().location]",
+        "apiVersion": "2020-12-01",
+        "dependsOn": [
+          "Microsoft.Web/serverfarms//WebAppSvcPlanName"
+        ],
+        "tags": {
+          "[concat('hidden-related:', resourceGroup().id, '/providers/Microsoft.Web/serverfarms/', parameters('WebAppSvcPlanName'))]": "Resource",
+          "displayName": "WebApp"
+        },
+        "properties": {
+          "name": "WebAppName",
+          "serverFarmId": "Microsoft.Web/serverfarms//WebAppSvcPlanName"
+        },
+        "resources": [
+          {
+            "apiVersion": "2020-12-01",
+            "name": "web",
+            "type": "config",
+            "dependsOn": [
+              "Microsoft.Web/sites//WebAppName"
+            ],
+            "tags": {
+              "displayName": "WebAppConfig"
+            },
+            "properties": {
+              "phpVersion": "5.6",
+              "netFrameworkVersion": "v4.6",
+              "use32BitWorkerProcess": false,
+              "webSocketsEnabled": true,
+              "alwaysOn": false,
+              "remoteDebuggingEnabled": true,
+              "remoteDebuggingVersion": "VS2017"
+            }
+          },
+          {
+            "name": "MSDeploy",
+            "type": "extensions",
+            "location": "[resourceGroup().location]",
+            "apiVersion": "2020-12-01",
+            "dependsOn": [
+              "Microsoft.Web/sites//WebAppName",
+              "Microsoft.Web/sites/config/GEN-UNIQUE/web"
+            ],
+            "tags": {
+              "displayName": "WebAppMSDeploy"
+            },
+            "properties": {
+              "packageUri": "[uri(parameters('DeployPackageURI'), concat(parameters('SasToken')))]"
+            }
+          },
+          {
+            "name": "connectionstrings",
+            "type": "config",
+            "apiVersion": "2020-12-01",
+            "dependsOn": [
+              "Microsoft.Web/sites//WebAppName",
+              "Microsoft.Web/sites/extensions/WebAppName/MSDeploy"
+            ],
+            "tags": {
+              "displayName": "WebAppConnectionStrings"
+            },
+            "properties": {
+              "BlobConnection": {
+                "value": "[concat('DefaultEndpointsProtocol=https;AccountName=',parameters('storageAccountName'),';AccountKey=',concat(listKeys(variables('storageAccountId'),'2015-05-01-preview').key1))]",
+                "type": "Custom"
+              }
+            }
+          }
+        ]
+      }
+    ],
+    "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+  }
+}

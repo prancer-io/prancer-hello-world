@@ -1,0 +1,182 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "main",
+  "contentType": "json",
+  "source": "gitConnectorAzureTerraHashicorp",
+  "paths": [
+    "/examples/kubernetes/aci_connector_linux/outputs.tf",
+    "/examples/kubernetes/aci_connector_linux/vars.tf",
+    "/examples/kubernetes/aci_connector_linux/main.tf"
+  ],
+  "timestamp": 1642943279731,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "TRF_TEMPLATE_SNAPSHOT",
+    "type": "terraform",
+    "collection": "terraformtemplate",
+    "paths": [
+      "/examples/kubernetes/aci_connector_linux/outputs.tf",
+      "/examples/kubernetes/aci_connector_linux/vars.tf",
+      "/examples/kubernetes/aci_connector_linux/main.tf"
+    ],
+    "snapshotId": "TRF_TEMPLATE_SNAPSHOT50",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "azurerm_subnet",
+      "azurerm_kubernetes_cluster",
+      "azurerm_resource_group",
+      "azurerm_virtual_network",
+      "azurerm_role_assignment"
+    ]
+  },
+  "snapshotId": "TRF_TEMPLATE_SNAPSHOT50",
+  "collection": "terraformtemplate",
+  "json": {
+    "provider": [
+      {
+        "azurerm": {
+          "features": [
+            {}
+          ]
+        }
+      }
+    ],
+    "resources": [
+      {
+        "type": "azurerm_resource_group",
+        "name": "example",
+        "properties": {
+          "name": "acisampleaks-k8s-rg",
+          "location": "West US",
+          "compiletime_identity": "azurerm_resource_group.example"
+        }
+      },
+      {
+        "type": "azurerm_virtual_network",
+        "name": "example",
+        "properties": {
+          "name": "acisampleaks-vnet",
+          "location": "${azurerm_resource_group.example.location}",
+          "resource_group_name": "${azurerm_resource_group.example.name}",
+          "address_space": [
+            "10.10.0.0/16"
+          ],
+          "compiletime_identity": "azurerm_virtual_network.example"
+        }
+      },
+      {
+        "type": "azurerm_subnet",
+        "name": "example-nodepool",
+        "properties": {
+          "name": "default",
+          "virtual_network_name": "${azurerm_virtual_network.example.name}",
+          "resource_group_name": "${azurerm_resource_group.example.name}",
+          "address_prefixes": [
+            "10.10.1.0/24"
+          ],
+          "compiletime_identity": "azurerm_subnet.example-nodepool"
+        }
+      },
+      {
+        "type": "azurerm_subnet",
+        "name": "example-aci",
+        "properties": {
+          "name": "aci",
+          "virtual_network_name": "${azurerm_virtual_network.example.name}",
+          "resource_group_name": "${azurerm_resource_group.example.name}",
+          "address_prefixes": [
+            "10.10.3.0/24"
+          ],
+          "delegation": [
+            {
+              "name": "aciDelegation",
+              "service_delegation": [
+                {
+                  "name": "Microsoft.ContainerInstance/containerGroups",
+                  "actions": [
+                    "Microsoft.Network/virtualNetworks/subnets/action"
+                  ]
+                }
+              ]
+            }
+          ],
+          "compiletime_identity": "azurerm_subnet.example-aci"
+        }
+      },
+      {
+        "type": "azurerm_kubernetes_cluster",
+        "name": "example",
+        "properties": {
+          "name": "acisampleaks-k8s",
+          "location": "${azurerm_resource_group.example.location}",
+          "resource_group_name": "${azurerm_resource_group.example.name}",
+          "dns_prefix": "acisampleaks-k8s",
+          "default_node_pool": [
+            {
+              "name": "default",
+              "node_count": 1,
+              "vm_size": "Standard_DS2_v2",
+              "vnet_subnet_id": "${azurerm_subnet.example-nodepool.id}"
+            }
+          ],
+          "network_profile": [
+            {
+              "network_plugin": "azure",
+              "network_policy": "azure",
+              "load_balancer_sku": "standard"
+            }
+          ],
+          "identity": [
+            {
+              "type": "SystemAssigned"
+            }
+          ],
+          "addon_profile": [
+            {
+              "aci_connector_linux": [
+                {
+                  "enabled": true,
+                  "subnet_name": "${azurerm_subnet.example-aci.name}"
+                }
+              ],
+              "azure_policy": [
+                {
+                  "enabled": false
+                }
+              ],
+              "http_application_routing": [
+                {
+                  "enabled": false
+                }
+              ],
+              "kube_dashboard": [
+                {
+                  "enabled": true
+                }
+              ],
+              "oms_agent": [
+                {
+                  "enabled": false
+                }
+              ]
+            }
+          ],
+          "compiletime_identity": "azurerm_kubernetes_cluster.example"
+        }
+      },
+      {
+        "type": "azurerm_role_assignment",
+        "name": "example",
+        "properties": {
+          "scope": "${azurerm_subnet.example-aci.id}",
+          "role_definition_name": "Network Contributor",
+          "principal_id": "${azurerm_kubernetes_cluster.example.identity[0].principal_id}",
+          "compiletime_identity": "azurerm_role_assignment.example"
+        }
+      }
+    ]
+  }
+}

@@ -1,0 +1,195 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAzureQuickStart",
+  "paths": [
+    "/application-workloads/mahara/mahara-autoscale-cache/nested/glustervm.json"
+  ],
+  "timestamp": 1642962891117,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/application-workloads/mahara/mahara-autoscale-cache/nested/glustervm.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT235",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "microsoft.resources/deployments",
+      "microsoft.network/networkinterfaces",
+      "microsoft.compute/virtualmachines"
+    ]
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT235",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "counter": {
+        "metadata": {
+          "description": "from the copyindex function of calling template"
+        },
+        "type": "int"
+      },
+      "maharaCommon": {
+        "metadata": {
+          "description": "Common Mahara values"
+        },
+        "type": "object"
+      }
+    },
+    "resources": [
+      {
+        "type": "Microsoft.Network/networkInterfaces",
+        "apiVersion": "2020-11-01",
+        "location": "maharaCommon",
+        "name": "maharaCommoncounter-nic",
+        "properties": {
+          "ipConfigurations": [
+            {
+              "name": "ipcfggfs",
+              "properties": {
+                "privateIPAllocationMethod": "Dynamic",
+                "subnet": {
+                  "id": "Microsoft.Network/virtualNetworks/subnets/maharaCommon/maharaCommon"
+                }
+              }
+            }
+          ]
+        },
+        "tags": {
+          "displayName": "Gluster VM NIC"
+        }
+      },
+      {
+        "type": "Microsoft.Compute/virtualMachines",
+        "apiVersion": "2020-12-01",
+        "dependsOn": [
+          "Microsoft.Network/networkInterfaces//maharaCommoncounter-nic"
+        ],
+        "location": "maharaCommon",
+        "name": "maharaCommoncounter",
+        "properties": {
+          "availabilitySet": {
+            "id": "Microsoft.Compute/availabilitySets/maharaCommon"
+          },
+          "hardwareProfile": {
+            "vmSize": "maharaCommon"
+          },
+          "networkProfile": {
+            "networkInterfaces": [
+              {
+                "id": "Microsoft.Network/networkInterfaces/maharaCommoncounter-nic"
+              }
+            ]
+          },
+          "osProfile": {
+            "adminUsername": "maharaCommon",
+            "computerName": "maharaCommoncounter",
+            "linuxConfiguration": {
+              "disablePasswordAuthentication": true,
+              "ssh": {
+                "publicKeys": [
+                  {
+                    "path": "/home/maharaCommon/.ssh/authorized_keys",
+                    "keyData": "maharaCommon"
+                  }
+                ]
+              }
+            }
+          },
+          "storageProfile": {
+            "imageReference": "maharaCommon",
+            "osDisk": {
+              "createOption": "FromImage",
+              "managedDisk": {
+                "storageAccountType": "Premium_LRS"
+              },
+              "name": "maharaCommoncounter"
+            },
+            "copy": [
+              {
+                "name": "dataDisks",
+                "count": "maharaCommon",
+                "input": {
+                  "managedDisk": {
+                    "storageAccountType": "Premium_LRS"
+                  },
+                  "diskSizeGB": "maharaCommon",
+                  "lun": "[copyIndex('dataDisks')]",
+                  "createOption": "Empty"
+                }
+              }
+            ]
+          }
+        },
+        "tags": {
+          "displayName": "Gluster Virtual Machine"
+        }
+      },
+      {
+        "condition": "maharaCommon",
+        "type": "Microsoft.Resources/deployments",
+        "apiVersion": "2020-10-01",
+        "dependsOn": [
+          "Microsoft.Compute/virtualMachines//maharaCommoncounter"
+        ],
+        "name": "maharaCommoncounter-ScriptProcessor",
+        "properties": {
+          "mode": "Incremental",
+          "parameters": {
+            "maharaCommon": {
+              "value": "maharaCommon"
+            },
+            "vmName": {
+              "value": "[ variables('vmName')]"
+            },
+            "vmNumber": {
+              "value": "counter"
+            }
+          },
+          "templateLink": {
+            "uri": "maharaCommonglustervmconfig.jsonmaharaCommon"
+          }
+        }
+      },
+      {
+        "condition": "maharaCommon",
+        "type": "Microsoft.Resources/deployments",
+        "apiVersion": "2020-10-01",
+        "dependsOn": [
+          "Microsoft.Compute/virtualMachines//maharaCommoncounter"
+        ],
+        "name": "maharaCommoncounter-Backup",
+        "properties": {
+          "mode": "Incremental",
+          "parameters": {
+            "maharaCommon": {
+              "value": "maharaCommon"
+            },
+            "vmName": {
+              "value": "maharaCommoncounter"
+            }
+          },
+          "templateLink": {
+            "uri": "maharaCommonrecoveryservicesEnlist.jsonmaharaCommon"
+          }
+        }
+      }
+    ],
+    "variables": {
+      "asRef": "Microsoft.Compute/availabilitySets/maharaCommon",
+      "nicName": "maharaCommoncounter-nic",
+      "nicRef": "Microsoft.Network/networkInterfaces/maharaCommoncounter-nic",
+      "subnetSanRef": "Microsoft.Network/virtualNetworks/subnets/maharaCommon/maharaCommon",
+      "vmName": "maharaCommoncounter"
+    },
+    "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+  }
+}

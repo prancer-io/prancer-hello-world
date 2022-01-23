@@ -1,0 +1,98 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAzureQuickStart",
+  "paths": [
+    "/demos/sql-alwayson-md-ilb-zones/nestedtemplates/albBEPool.json"
+  ],
+  "timestamp": 1642962901560,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/demos/sql-alwayson-md-ilb-zones/nestedtemplates/albBEPool.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT792",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "microsoft.network/networkinterfaces"
+    ]
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT792",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "location": {
+        "type": "string"
+      },
+      "vmNamePrefix": {
+        "type": "string"
+      },
+      "subnetId": {
+        "type": "string"
+      },
+      "vmCount": {
+        "type": "int"
+      },
+      "lbBEAddressPoolID": {
+        "type": "string"
+      },
+      "albBEAddressPoolID": {
+        "type": "string"
+      }
+    },
+    "variables": {},
+    "resources": [
+      {
+        "name": "vmNamePrefixcopyindex()-nic",
+        "type": "Microsoft.Network/networkInterfaces",
+        "location": "location",
+        "apiVersion": "2020-08-01",
+        "copy": {
+          "name": "lbBEPoolLoop",
+          "count": "vmCount"
+        },
+        "properties": {
+          "ipConfigurations": [
+            {
+              "name": "ipconfig1",
+              "properties": {
+                "privateIPAllocationMethod": "Dynamic",
+                "subnet": {
+                  "id": "subnetId"
+                },
+                "loadBalancerBackendAddressPools": [
+                  {
+                    "id": "lbBEAddressPoolID"
+                  },
+                  {
+                    "id": "albBEAddressPoolID"
+                  }
+                ],
+                "primary": true
+              }
+            },
+            {
+              "name": "ipconfig2",
+              "properties": {
+                "privateIPAllocationMethod": "Dynamic",
+                "subnet": {
+                  "id": "subnetId"
+                }
+              }
+            }
+          ]
+        }
+      }
+    ],
+    "outputs": {},
+    "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+  }
+}

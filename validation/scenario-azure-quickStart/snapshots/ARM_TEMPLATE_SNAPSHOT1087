@@ -1,0 +1,332 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAzureQuickStart",
+  "paths": [
+    "/quickstarts/microsoft.compute/vm-msi/azuredeploy.json",
+    "/quickstarts/microsoft.compute/vm-msi/azuredeploy.parameters.json"
+  ],
+  "timestamp": 1642962904303,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/quickstarts/microsoft.compute/vm-msi/azuredeploy.json",
+      "/quickstarts/microsoft.compute/vm-msi/azuredeploy.parameters.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT1087",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "microsoft.network/virtualnetworks",
+      "microsoft.storage/storageaccounts",
+      "microsoft.resources/deployments",
+      "microsoft.network/networksecuritygroups"
+    ]
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT1087",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "adminUsername": {
+        "type": "string",
+        "metadata": {
+          "description": "Username for the Virtual Machine."
+        },
+        "value": "GEN-UNIQUE"
+      },
+      "authenticationType": {
+        "type": "string",
+        "defaultValue": "sshPublicKey",
+        "allowedValues": [
+          "password",
+          "sshPublicKey"
+        ],
+        "metadata": {
+          "description": "Authentication type"
+        }
+      },
+      "adminPasswordOrKey": {
+        "type": "securestring",
+        "metadata": {
+          "description": "OS Admin password or SSH Key depending on value of authentication type"
+        },
+        "value": "GEN-SSH-PUB-KEY"
+      },
+      "location": {
+        "type": "string",
+        "metadata": {
+          "description": "The Location For the resources"
+        },
+        "defaultValue": "[resourceGroup().location]"
+      },
+      "vmSize": {
+        "type": "string",
+        "metadata": {
+          "description": "The size of the VM to create"
+        },
+        "defaultValue": "Standard_D2s_v3"
+      },
+      "_artifactsLocation": {
+        "type": "string",
+        "metadata": {
+          "description": "The base URI where artifacts required by this template are located. When the template is deployed using the accompanying scripts, a private location in the subscription will be used and this value will be automatically generated."
+        },
+        "defaultValue": "[deployment().properties.templateLink.uri]"
+      },
+      "_artifactsLocationSasToken": {
+        "type": "securestring",
+        "metadata": {
+          "description": "The sasToken required to access _artifactsLocation."
+        },
+        "defaultValue": ""
+      },
+      "operatingSystem": {
+        "type": "string",
+        "defaultValue": "UbuntuServer_18.04-LTS",
+        "metadata": {
+          "description": "Operating system to use for the virtual machine"
+        },
+        "allowedValues": [
+          "UbuntuServer_18.04-LTS",
+          "UbuntuServer_16.04-LTS",
+          "WindowsServer_2016-DataCenter"
+        ]
+      }
+    },
+    "variables": {
+      "azureCLI2DockerImage": "mcr.microsoft.com/azure-cli",
+      "vmPrefix": "vm",
+      "storageAccountName": "[concat(variables('vmPrefix'),uniquestring(resourceGroup().id))]",
+      "networkSecurityGroupName": "nsg",
+      "addressPrefix": "10.0.0.0/16",
+      "subnetName": "Subnet",
+      "subnetPrefix": "10.0.0.0/24",
+      "vmName": "[concat(variables('vmPrefix'), uniquestring(resourceGroup().id))]",
+      "virtualNetworkName": "vnet",
+      "subnetRef": "Microsoft.Network/virtualNetworks/subnets/vnet/Subnet",
+      "containerName": "msi",
+      "createVMUrl": "[uri(parameters('_artifactsLocation'), concat('nestedtemplates/createVM.json', parameters('_artifactsLocationSasToken')))]",
+      "createRBACUrl": "[uri(parameters('_artifactsLocation'), concat('nestedtemplates/setUpRBAC.json', parameters('_artifactsLocationSasToken')))]"
+    },
+    "resources": [
+      {
+        "type": "Microsoft.Storage/storageAccounts",
+        "name": "[variables('storageAccountName')]",
+        "apiVersion": "2019-06-01",
+        "location": "Location",
+        "sku": {
+          "name": "Standard_LRS"
+        },
+        "kind": "Storage",
+        "properties": {}
+      },
+      {
+        "apiVersion": "2019-11-01",
+        "type": "Microsoft.Network/virtualNetworks",
+        "name": "vnet",
+        "location": "Location",
+        "properties": {
+          "addressSpace": {
+            "addressPrefixes": [
+              "10.0.0.0/16"
+            ]
+          },
+          "subnets": [
+            {
+              "name": "Subnet",
+              "properties": {
+                "addressPrefix": "10.0.0.0/24"
+              }
+            }
+          ]
+        }
+      },
+      {
+        "name": "nsg",
+        "type": "Microsoft.Network/networkSecurityGroups",
+        "apiVersion": "2019-11-01",
+        "location": "[resourceGroup().location]",
+        "properties": {
+          "securityRules": [
+            {
+              "name": "allow-remote-access",
+              "properties": {
+                "priority": 1000,
+                "sourceAddressPrefix": "*",
+                "protocol": "Tcp",
+                "destinationPortRange": "[if(contains(toLower(parameters('operatingSystem')), 'windows'), 3389, 22)]",
+                "access": "Allow",
+                "direction": "Inbound",
+                "sourcePortRange": "*",
+                "destinationAddressPrefix": "*"
+              }
+            }
+          ]
+        }
+      },
+      {
+        "name": "creatingVM",
+        "type": "Microsoft.Resources/deployments",
+        "apiVersion": "2019-09-01",
+        "dependsOn": [
+          "[variables('virtualNetworkName')]",
+          "[variables('storageAccountName')]",
+          "[variables('networkSecurityGroupName')]"
+        ],
+        "properties": {
+          "mode": "Incremental",
+          "templateLink": {
+            "uri": "[uri(parameters('_artifactsLocation'), concat('nestedtemplates/createVM.json', parameters('_artifactsLocationSasToken')))]",
+            "contentVersion": "1.0.0.0"
+          },
+          "parameters": {
+            "_artifactsLocation": {
+              "value": "[deployment().properties.templateLink.uri]"
+            },
+            "_artifactsLocationSasToken": {
+              "value": ""
+            },
+            "adminPasswordOrKey": {
+              "value": "GEN-SSH-PUB-KEY"
+            },
+            "adminUsername": {
+              "value": "GEN-UNIQUE"
+            },
+            "authenticationType": {
+              "value": "sshPublicKey"
+            },
+            "azureCLI2DockerImage": {
+              "value": "mcr.microsoft.com/azure-cli"
+            },
+            "containerName": {
+              "value": "msi"
+            },
+            "operatingSystem": {
+              "value": "UbuntuServer_18.04-LTS"
+            },
+            "location": {
+              "value": "[resourceGroup().location]"
+            },
+            "nsgId": {
+              "value": "Microsoft.Network/networkSecurityGroups/nsg"
+            },
+            "provisionExtensions": {
+              "value": false
+            },
+            "storageAccountId": {
+              "value": "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]"
+            },
+            "storageAccountName": {
+              "value": "[variables('storageAccountName')]"
+            },
+            "subnetRef": {
+              "value": "Microsoft.Network/virtualNetworks/subnets/vnet/Subnet"
+            },
+            "vmSize": {
+              "value": "Standard_D2s_v3"
+            },
+            "vmName": {
+              "value": "[variables('vmName')]"
+            }
+          }
+        }
+      },
+      {
+        "name": "creatingRBAC",
+        "type": "Microsoft.Resources/deployments",
+        "apiVersion": "2019-09-01",
+        "dependsOn": [
+          "creatingVM"
+        ],
+        "properties": {
+          "mode": "Incremental",
+          "templateLink": {
+            "uri": "[uri(parameters('_artifactsLocation'), concat('nestedtemplates/setUpRBAC.json', parameters('_artifactsLocationSasToken')))]",
+            "contentVersion": "1.0.0.0"
+          },
+          "parameters": {
+            "principalId": {
+              "value": "[reference(resourceId('Microsoft.Resources/deployments', 'creatingVM'), '2019-09-01').outputs.principalId.value]"
+            },
+            "storageAccountName": {
+              "value": "[variables('storageAccountName')]"
+            }
+          }
+        }
+      },
+      {
+        "name": "updatingVM",
+        "type": "Microsoft.Resources/deployments",
+        "apiVersion": "2019-09-01",
+        "dependsOn": [
+          "creatingRBAC"
+        ],
+        "properties": {
+          "mode": "Incremental",
+          "templateLink": {
+            "uri": "[uri(parameters('_artifactsLocation'), concat('nestedtemplates/createVM.json', parameters('_artifactsLocationSasToken')))]",
+            "contentVersion": "1.0.0.0"
+          },
+          "parameters": {
+            "_artifactsLocation": {
+              "value": "[deployment().properties.templateLink.uri]"
+            },
+            "_artifactsLocationSasToken": {
+              "value": ""
+            },
+            "adminPasswordOrKey": {
+              "value": "GEN-SSH-PUB-KEY"
+            },
+            "adminUsername": {
+              "value": "GEN-UNIQUE"
+            },
+            "authenticationType": {
+              "value": "sshPublicKey"
+            },
+            "azureCLI2DockerImage": {
+              "value": "mcr.microsoft.com/azure-cli"
+            },
+            "containerName": {
+              "value": "msi"
+            },
+            "operatingSystem": {
+              "value": "UbuntuServer_18.04-LTS"
+            },
+            "location": {
+              "value": "[resourceGroup().location]"
+            },
+            "nsgId": {
+              "value": "Microsoft.Network/networkSecurityGroups/nsg"
+            },
+            "provisionExtensions": {
+              "value": true
+            },
+            "storageAccountId": {
+              "value": "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]"
+            },
+            "storageAccountName": {
+              "value": "[variables('storageAccountName')]"
+            },
+            "subnetRef": {
+              "value": "Microsoft.Network/virtualNetworks/subnets/vnet/Subnet"
+            },
+            "vmSize": {
+              "value": "Standard_D2s_v3"
+            },
+            "vmName": {
+              "value": "[variables('vmName')]"
+            }
+          }
+        }
+      }
+    ],
+    "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+  }
+}

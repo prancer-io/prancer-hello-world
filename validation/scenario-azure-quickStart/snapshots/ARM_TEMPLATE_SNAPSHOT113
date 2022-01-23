@@ -1,0 +1,587 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAzureQuickStart",
+  "paths": [
+    "/application-workloads/dlworkspace/dlworkspace-deployment/azuredeploy.json",
+    "/application-workloads/dlworkspace/dlworkspace-deployment/azuredeploy.parameters.json"
+  ],
+  "timestamp": 1642962886933,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/application-workloads/dlworkspace/dlworkspace-deployment/azuredeploy.json",
+      "/application-workloads/dlworkspace/dlworkspace-deployment/azuredeploy.parameters.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT113",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "microsoft.network/publicipaddresses",
+      "microsoft.network/virtualnetworks",
+      "microsoft.network/networkinterfaces",
+      "microsoft.compute/virtualmachines/extensions",
+      "microsoft.compute/virtualmachines",
+      "microsoft.network/networksecuritygroups"
+    ]
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT113",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "clusterNameDesired": {
+        "type": "string",
+        "defaultValue": "[uniqueString(resourceGroup().id)]",
+        "metadata": {
+          "description": "Name of cluster - should be lowercase, if it is not, a lowercase version will be used."
+        }
+      },
+      "location": {
+        "type": "string",
+        "defaultValue": "[resourceGroup().location]",
+        "metadata": {
+          "description": "Location of resources."
+        }
+      },
+      "adminUsername": {
+        "type": "string",
+        "metadata": {
+          "description": "Username on machines."
+        },
+        "value": "dlwsadmin"
+      },
+      "adminPassword": {
+        "type": "securestring",
+        "metadata": {
+          "description": "Password for the virtual machines ."
+        },
+        "value": "GEN-PASSWORD"
+      },
+      "dlwsAdmins": {
+        "type": "string",
+        "metadata": {
+          "description": "Comma separated list of users allowed to log into DLWorkspace webportal as administrator and manage the cluster"
+        },
+        "value": "GEN-UNIQUE"
+      },
+      "devSourceIP": {
+        "type": "array",
+        "defaultValue": [
+          "10.0.0.0/8"
+        ],
+        "metadata": {
+          "description": "Array of IP prefixes of machines which can be used to connect to the dev box."
+        }
+      },
+      "numberOfInfraVM": {
+        "type": "int",
+        "defaultValue": 1,
+        "metadata": {
+          "description": "Number of infra-VM to deploy."
+        }
+      },
+      "infraVMSize": {
+        "type": "string",
+        "defaultValue": "Standard_D2s_v3",
+        "metadata": {
+          "description": "Size of the infra-VM. Use a CPU VM for infra-VM."
+        }
+      },
+      "numberOfWorkerVM": {
+        "type": "int",
+        "defaultValue": 1,
+        "metadata": {
+          "description": "Number of worker-VM to deploy."
+        }
+      },
+      "workerVMSize": {
+        "type": "string",
+        "defaultValue": "Standard_D2s_v3",
+        "metadata": {
+          "description": "Size of the worker-VM. Use a GPU VM for worker-VM."
+        }
+      },
+      "openIDProvider": {
+        "type": "string",
+        "defaultValue": "",
+        "allowedValues": [
+          "",
+          "Google",
+          "MSFT"
+        ],
+        "metadata": {
+          "description": "Provider for OpenID Authentication - currently supports MSFT or Google, leave blank if not using."
+        }
+      },
+      "openIDTenant": {
+        "type": "string",
+        "defaultValue": "",
+        "metadata": {
+          "description": "Name of the web application registered with the authentication provider."
+        }
+      },
+      "openIDClientID": {
+        "type": "string",
+        "defaultValue": "",
+        "metadata": {
+          "description": "ClientID of the web application registered with the authentication provider."
+        }
+      },
+      "openIDClientSecret": {
+        "type": "securestring",
+        "defaultValue": "",
+        "metadata": {
+          "description": "Client Secret of the web application registered with the authentication provider."
+        }
+      },
+      "_artifactsLocation": {
+        "type": "string",
+        "metadata": {
+          "description": "The base URI where artifacts required by this template are located including a trailing '/'"
+        },
+        "defaultValue": "https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/application-workloads/dlworkspace/dlworkspace-deployment/"
+      },
+      "_artifactsLocationSasToken": {
+        "type": "securestring",
+        "metadata": {
+          "description": "The sasToken required to access _artifactsLocation.  When the template is deployed using the accompanying scripts, a sasToken will be automatically generated. Use the defaultValue if the staging location is not secured."
+        },
+        "defaultValue": ""
+      }
+    },
+    "variables": {
+      "clusterName": "[toLower(parameters('clusterNameDesired'))]",
+      "standardStorageAccountType": "StandardSSD_LRS",
+      "imagePublisher": "Canonical",
+      "imageOffer": "UbuntuServer",
+      "ubuntuOSVersion": "16.04.0-LTS",
+      "virtualNetworkName": "[concat(resourceGroup().name, '-VNet')]",
+      "subnetName": "VMSubnet",
+      "addressPrefix": "192.168.0.0/16",
+      "scriptFileUri": "[uri(parameters('_artifactsLocation'), concat('scripts/setupdevbox.sh', parameters('_artifactsLocationSasToken')))]",
+      "singleQuote": "'",
+      "adminPasswordQ": "'GEN-PASSWORD'",
+      "dlwsAdminsQ": "'GEN-UNIQUE'",
+      "openIDProviderQ": "' parameters('openIDProvider')'",
+      "openIDTenantQ": "' parameters('openIDTenant')'",
+      "openIDClientIDQ": "' parameters('openIDClientID')'",
+      "openIDClientSecretQ": "' parameters('openIDClientSecret')'"
+    },
+    "resources": [
+      {
+        "type": "Microsoft.Compute/virtualMachines",
+        "name": "[toLower(parameters('clusterNameDesired'))]-dev",
+        "apiVersion": "2017-12-01",
+        "location": "[resourceGroup().location]",
+        "dependsOn": [
+          "Microsoft.Network/networkInterfaces/[toLower(parameters('clusterNameDesired'))]-dev-VMNIC"
+        ],
+        "properties": {
+          "hardwareProfile": {
+            "vmSize": "Standard_D2s_v3"
+          },
+          "storageProfile": {
+            "imageReference": {
+              "publisher": "Canonical",
+              "offer": "UbuntuServer",
+              "sku": "16.04.0-LTS",
+              "version": "latest"
+            },
+            "osDisk": {
+              "createOption": "FromImage",
+              "caching": "ReadWrite",
+              "managedDisk": {
+                "storageAccountType": "StandardSSD_LRS"
+              }
+            }
+          },
+          "osProfile": {
+            "computerName": "[toLower(parameters('clusterNameDesired'))]-dev",
+            "adminUsername": "dlwsadmin",
+            "adminPassword": "GEN-PASSWORD"
+          },
+          "networkProfile": {
+            "networkInterfaces": [
+              {
+                "id": "Microsoft.Network/networkInterfaces/[toLower(parameters('clusterNameDesired'))]-dev-VMNic"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "apiVersion": "2017-12-01",
+        "type": "Microsoft.Compute/virtualMachines/extensions",
+        "name": "[toLower(parameters('clusterNameDesired'))]-dev/setupdevbox",
+        "location": "[resourceGroup().location]",
+        "dependsOn": [
+          "Microsoft.Compute/virtualMachines/[toLower(parameters('clusterNameDesired'))]-dev"
+        ],
+        "properties": {
+          "publisher": "Microsoft.Azure.Extensions",
+          "type": "CustomScript",
+          "typeHandlerVersion": "2.0",
+          "autoUpgradeMinorVersion": true,
+          "settings": {
+            "fileUris": [
+              "[uri(parameters('_artifactsLocation'), concat('scripts/setupdevbox.sh', parameters('_artifactsLocationSasToken')))]"
+            ]
+          },
+          "protectedSettings": {
+            "commandToExecute": "bash setupdevbox.sh dlwsadmin --cluster_name [toLower(parameters('clusterNameDesired'))] --cluster_location [resourceGroup().location] --worker_vm_size Standard_D2s_v3 --infra_vm_size Standard_D2s_v3  --worker_node_num 1 --infra_node_num 1 --password 'GEN-PASSWORD' --users 'GEN-UNIQUE' --openid_name ' parameters('openIDProvider')' --openid_tenant ' parameters('openIDTenant')' --openid_clientid ' parameters('openIDClientID')' --openid_clientsecret ' parameters('openIDClientSecret')'"
+          }
+        }
+      },
+      {
+        "type": "Microsoft.Compute/virtualMachines",
+        "name": "[concat(variables('clusterName'), '-infra0', copyIndex(1))]",
+        "apiVersion": "2017-12-01",
+        "location": "[resourceGroup().location]",
+        "copy": {
+          "name": "infraVMLoop",
+          "count": 1
+        },
+        "dependsOn": [
+          "[resourceId('Microsoft.Network/networkInterfaces', concat(variables('clusterName'), '-infra0', copyIndex(1), '-VMNic'))]"
+        ],
+        "properties": {
+          "hardwareProfile": {
+            "vmSize": "Standard_D2s_v3"
+          },
+          "storageProfile": {
+            "imageReference": {
+              "publisher": "Canonical",
+              "offer": "UbuntuServer",
+              "sku": "16.04.0-LTS",
+              "version": "latest"
+            },
+            "osDisk": {
+              "createOption": "FromImage",
+              "caching": "ReadWrite",
+              "managedDisk": {
+                "storageAccountType": "StandardSSD_LRS"
+              }
+            }
+          },
+          "osProfile": {
+            "computerName": "[concat(variables('clusterName'), '-infra0', copyIndex(1))]",
+            "adminUsername": "dlwsadmin",
+            "adminPassword": "GEN-PASSWORD"
+          },
+          "networkProfile": {
+            "networkInterfaces": [
+              {
+                "id": "[resourceId('Microsoft.Network/networkInterfaces', concat(variables('clusterName'), '-infra0', copyIndex(1), '-VMNic'))]"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "type": "Microsoft.Compute/virtualMachines",
+        "name": "[concat(variables('clusterName'), '-worker0', copyIndex(1))]",
+        "apiVersion": "2017-12-01",
+        "location": "[resourceGroup().location]",
+        "copy": {
+          "name": "workerVMLoop",
+          "count": 1
+        },
+        "dependsOn": [
+          "[resourceId('Microsoft.Network/networkInterfaces', concat(variables('clusterName'), '-worker0', copyIndex(1), '-VMNic'))]"
+        ],
+        "properties": {
+          "hardwareProfile": {
+            "vmSize": "Standard_D2s_v3"
+          },
+          "storageProfile": {
+            "imageReference": {
+              "publisher": "Canonical",
+              "offer": "UbuntuServer",
+              "sku": "16.04.0-LTS",
+              "version": "latest"
+            },
+            "osDisk": {
+              "createOption": "FromImage",
+              "caching": "ReadWrite",
+              "managedDisk": {
+                "storageAccountType": "StandardSSD_LRS"
+              }
+            }
+          },
+          "osProfile": {
+            "computerName": "[concat(variables('clusterName'), '-worker0', copyIndex(1))]",
+            "adminUsername": "dlwsadmin",
+            "adminPassword": "GEN-PASSWORD"
+          },
+          "networkProfile": {
+            "networkInterfaces": [
+              {
+                "id": "[resourceId('Microsoft.Network/networkInterfaces', concat(variables('clusterName'), '-worker0', copyIndex(1), '-VMNic'))]"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "type": "Microsoft.Network/publicIPAddresses",
+        "sku": {
+          "name": "Basic"
+        },
+        "name": "[toLower(parameters('clusterNameDesired'))]-dev-PublicIP",
+        "apiVersion": "2018-02-01",
+        "location": "[resourceGroup().location]",
+        "properties": {
+          "publicIPAllocationMethod": "Dynamic",
+          "dnsSettings": {
+            "domainNameLabel": "[toLower(concat(variables('clusterName'), '-dev'))]"
+          }
+        }
+      },
+      {
+        "type": "Microsoft.Network/publicIPAddresses",
+        "sku": {
+          "name": "Basic"
+        },
+        "name": "[concat(variables('clusterName'), '-infra0', copyIndex(1), '-PublicIP')]",
+        "apiVersion": "2018-02-01",
+        "location": "[resourceGroup().location]",
+        "copy": {
+          "name": "infraVMPublicIPLoop",
+          "count": 1
+        },
+        "properties": {
+          "publicIPAllocationMethod": "Dynamic",
+          "dnsSettings": {
+            "domainNameLabel": "[toLower(concat(variables('clusterName'), '-infra0', copyIndex(1)))]"
+          }
+        }
+      },
+      {
+        "type": "Microsoft.Network/publicIPAddresses",
+        "sku": {
+          "name": "Basic"
+        },
+        "name": "[concat(variables('clusterName'), '-worker0', copyIndex(1), '-PublicIP')]",
+        "apiVersion": "2018-02-01",
+        "location": "[resourceGroup().location]",
+        "copy": {
+          "name": "workerVMPublicIPLoop",
+          "count": 1
+        },
+        "properties": {
+          "publicIPAllocationMethod": "Dynamic",
+          "dnsSettings": {
+            "domainNameLabel": "[toLower(concat(variables('clusterName'), '-worker0', copyIndex(1)))]"
+          }
+        }
+      },
+      {
+        "type": "Microsoft.Network/networkInterfaces",
+        "name": "[toLower(parameters('clusterNameDesired'))]-dev-VMNic",
+        "apiVersion": "2018-02-01",
+        "location": "[resourceGroup().location]",
+        "dependsOn": [
+          "[resourceId('Microsoft.Network/publicIPAddresses', concat(variables('clusterName'), '-dev', '-PublicIP'))]",
+          "[resourceId('Microsoft.Network/virtualNetworks', variables('virtualNetworkName'))]",
+          "[resourceId('Microsoft.Network/networkSecurityGroups', concat(variables('clusterName'), '-NSG'))]"
+        ],
+        "properties": {
+          "ipConfigurations": [
+            {
+              "name": "[toLower(parameters('clusterNameDesired'))]-dev-IPConfig",
+              "properties": {
+                "privateIPAddress": "[concat('192.168.255.', add(parameters('numberOfInfraVM'), 1))]",
+                "privateIPAllocationMethod": "Static",
+                "privateIPAddressVersion": "IPv4",
+                "publicIPAddress": {
+                  "id": "Microsoft.Network/publicIPAddresses/[toLower(parameters('clusterNameDesired'))]-dev-PublicIP"
+                },
+                "subnet": {
+                  "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', variables('virtualNetworkName'), variables('subnetName'))]"
+                }
+              }
+            }
+          ],
+          "networkSecurityGroup": {
+            "id": "Microsoft.Network/networkSecurityGroups/[toLower(parameters('clusterNameDesired'))]-NSG"
+          }
+        }
+      },
+      {
+        "type": "Microsoft.Network/networkInterfaces",
+        "name": "[concat(variables('clusterName'), '-infra0', copyIndex(1), '-VMNic')]",
+        "apiVersion": "2018-02-01",
+        "location": "[resourceGroup().location]",
+        "copy": {
+          "name": "infraVMNICLoop",
+          "count": 1
+        },
+        "dependsOn": [
+          "[resourceId('Microsoft.Network/publicIPAddresses', concat(variables('clusterName'), '-infra0', copyIndex(1), '-PublicIP'))]",
+          "[resourceId('Microsoft.Network/virtualNetworks', variables('virtualNetworkName'))]",
+          "[resourceId('Microsoft.Network/networkSecurityGroups', concat(variables('clusterName'), '-NSG'))]"
+        ],
+        "properties": {
+          "ipConfigurations": [
+            {
+              "name": "[concat(variables('clusterName'), '-infra0', copyIndex(1), '-IPConfig')]",
+              "properties": {
+                "privateIPAddress": "[concat('192.168.255.', copyIndex(1))]",
+                "privateIPAllocationMethod": "Static",
+                "privateIPAddressVersion": "IPv4",
+                "publicIPAddress": {
+                  "id": "[resourceId('Microsoft.Network/publicIPAddresses', concat(variables('clusterName'), '-infra0', copyIndex(1), '-PublicIP'))]"
+                },
+                "subnet": {
+                  "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', variables('virtualNetworkName'), variables('subnetName'))]"
+                }
+              }
+            }
+          ],
+          "networkSecurityGroup": {
+            "id": "Microsoft.Network/networkSecurityGroups/[toLower(parameters('clusterNameDesired'))]-NSG"
+          }
+        }
+      },
+      {
+        "type": "Microsoft.Network/networkInterfaces",
+        "name": "[concat(variables('clusterName'), '-worker0', copyIndex(1), '-VMNic')]",
+        "apiVersion": "2018-02-01",
+        "location": "[resourceGroup().location]",
+        "copy": {
+          "name": "workerVMNICLoop",
+          "count": 1
+        },
+        "dependsOn": [
+          "[resourceId('Microsoft.Network/publicIPAddresses', concat(variables('clusterName'), '-worker0', copyIndex(1), '-PublicIP'))]",
+          "[resourceId('Microsoft.Network/virtualNetworks', variables('virtualNetworkName'))]",
+          "[resourceId('Microsoft.Network/networkSecurityGroups', concat(variables('clusterName'), '-NSG'))]"
+        ],
+        "properties": {
+          "ipConfigurations": [
+            {
+              "name": "[concat(variables('clusterName'), '-worker0', copyIndex(1), '-IPConfig')]",
+              "properties": {
+                "privateIPAddress": "[concat('192.168.1.', copyIndex(1))]",
+                "privateIPAllocationMethod": "Static",
+                "privateIPAddressVersion": "IPv4",
+                "publicIPAddress": {
+                  "id": "[resourceId('Microsoft.Network/publicIPAddresses', concat(variables('clusterName'), '-worker0', copyIndex(1), '-PublicIP'))]"
+                },
+                "subnet": {
+                  "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', variables('virtualNetworkName'), variables('subnetName'))]"
+                }
+              }
+            }
+          ],
+          "networkSecurityGroup": {
+            "id": "Microsoft.Network/networkSecurityGroups/[toLower(parameters('clusterNameDesired'))]-NSG"
+          }
+        }
+      },
+      {
+        "type": "Microsoft.Network/networkSecurityGroups",
+        "name": "[toLower(parameters('clusterNameDesired'))]-NSG",
+        "apiVersion": "2018-02-01",
+        "location": "[resourceGroup().location]",
+        "properties": {
+          "securityRules": [
+            {
+              "name": "allowalltcp",
+              "properties": {
+                "protocol": "Tcp",
+                "access": "Allow",
+                "priority": 1000,
+                "direction": "Inbound",
+                "sourceAddressPrefix": "*",
+                "sourcePortRange": "*",
+                "destinationAddressPrefix": "*",
+                "destinationPortRanges": [
+                  "80",
+                  "443",
+                  "30000-32767",
+                  "25826",
+                  "3080"
+                ]
+              }
+            },
+            {
+              "name": "allowalludp",
+              "properties": {
+                "protocol": "Udp",
+                "access": "Allow",
+                "priority": 1010,
+                "direction": "Inbound",
+                "sourceAddressPrefix": "*",
+                "sourcePortRange": "*",
+                "destinationAddressPrefix": "*",
+                "destinationPortRange": "25826"
+              }
+            },
+            {
+              "name": "allowdevtcp",
+              "properties": {
+                "protocol": "Tcp",
+                "access": "Allow",
+                "priority": 900,
+                "direction": "Inbound",
+                "sourceAddressPrefixes": [
+                  "10.0.0.0/8"
+                ],
+                "sourcePortRange": "*",
+                "destinationAddressPrefix": "*",
+                "destinationPortRanges": [
+                  "22",
+                  "1443",
+                  "2379",
+                  "3306",
+                  "5000",
+                  "8086"
+                ]
+              }
+            }
+          ]
+        }
+      },
+      {
+        "type": "Microsoft.Network/virtualNetworks",
+        "name": "[variables('virtualNetworkName')]",
+        "apiVersion": "2018-02-01",
+        "location": "[resourceGroup().location]",
+        "properties": {
+          "addressSpace": {
+            "addressPrefixes": [
+              "192.168.0.0/16"
+            ]
+          },
+          "subnets": [
+            {
+              "name": "VMSubnet",
+              "properties": {
+                "addressPrefix": "192.168.0.0/16"
+              }
+            }
+          ]
+        }
+      }
+    ],
+    "outputs": {
+      "devmachine": {
+        "type": "string",
+        "value": "[reference(concat(variables('clusterName'), '-dev', '-PublicIP')).dnsSettings.fqdn]"
+      },
+      "webportal": {
+        "type": "string",
+        "value": "[reference(concat(variables('clusterName'), '-infra01', '-PublicIP')).dnsSettings.fqdn]"
+      }
+    },
+    "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+  }
+}

@@ -1,0 +1,599 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAzureQuickStart",
+  "paths": [
+    "/application-workloads/mongo/mongodb-nodejs-high-availability/azuredeploy.json",
+    "/application-workloads/mongo/mongodb-nodejs-high-availability/azuredeploy.parameters.json"
+  ],
+  "timestamp": 1642962891561,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/application-workloads/mongo/mongodb-nodejs-high-availability/azuredeploy.json",
+      "/application-workloads/mongo/mongodb-nodejs-high-availability/azuredeploy.parameters.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT263",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "microsoft.resources/deployments"
+    ]
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT263",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "adminUsername": {
+        "type": "string",
+        "metadata": {
+          "description": "Administrator user name used when provisioning virtual machines (which also becomes a system user administrator in MongoDB)"
+        },
+        "value": "GEN-UNIQUE"
+      },
+      "adminPassword": {
+        "type": "securestring",
+        "metadata": {
+          "description": "Administrator password used when provisioning virtual machines (which is also a password for the system administrator in MongoDB)"
+        },
+        "value": "GEN-PASSWORD"
+      },
+      "virtualNetworkName": {
+        "type": "string",
+        "defaultValue": "mongodbVnet",
+        "metadata": {
+          "description": "The arbitrary name of the virtual network provisioned for the MongoDB deployment"
+        },
+        "value": "mongodbVnet"
+      },
+      "subnetName": {
+        "type": "string",
+        "defaultValue": "mongodbSubnet",
+        "metadata": {
+          "description": "Subnet name for the virtual network that resources will be provisioned in to"
+        },
+        "value": "mongodbSubnet"
+      },
+      "addressPrefix": {
+        "type": "string",
+        "defaultValue": "10.0.0.0/16",
+        "metadata": {
+          "description": "The network address space for the virtual network"
+        },
+        "value": "10.0.0.0/16"
+      },
+      "subnetPrefix": {
+        "type": "string",
+        "defaultValue": "10.0.0.0/24",
+        "metadata": {
+          "description": "The network address space for the virtual subnet"
+        },
+        "value": "10.0.0.0/24"
+      },
+      "nodeAddressPrefix": {
+        "type": "string",
+        "defaultValue": "10.0.0.1",
+        "metadata": {
+          "description": "The IP address prefix that will be used for constructing a static private IP address for each node in the cluster"
+        },
+        "value": "10.0.0.1"
+      },
+      "dnsNameForPublicIP": {
+        "type": "string",
+        "defaultValue": "",
+        "metadata": {
+          "description": "Unique DNS Name for the Public IP used to access the front end Virtual Machine."
+        },
+        "value": "GEN-UNIQUE-8"
+      },
+      "ubuntuOSVersion": {
+        "type": "string",
+        "defaultValue": "14.04.5-LTS",
+        "allowedValues": [
+          "12.04.2-LTS",
+          "12.04.3-LTS",
+          "12.04.4-LTS",
+          "12.04.5-LTS",
+          "12.10",
+          "14.04.5-LTS",
+          "14.10",
+          "15.10"
+        ],
+        "metadata": {
+          "description": "The Ubuntu version for the front end VM. This will pick a fully patched image of this given Ubuntu version. Allowed values: 12.04.2-LTS, 12.04.3-LTS, 12.04.4-LTS, 12.04.5-LTS, 12.10, 14.04.5-LTS, 14.10, 15.10."
+        },
+        "value": "14.04.5-LTS"
+      },
+      "jumpbox": {
+        "type": "string",
+        "defaultValue": "Enabled",
+        "allowedValues": [
+          "Enabled",
+          "Disabled"
+        ],
+        "metadata": {
+          "description": "The flag allowing to enable or disable provisioning of the jumpbox VM that can be used to access the MongoDB environment"
+        },
+        "value": "Disabled"
+      },
+      "tshirtSize": {
+        "type": "string",
+        "defaultValue": "XSmall",
+        "allowedValues": [
+          "XSmall",
+          "Small",
+          "Medium",
+          "Large",
+          "XLarge",
+          "XXLarge"
+        ],
+        "metadata": {
+          "description": "T-shirt size of the MongoDB deployment"
+        },
+        "value": "XSmall"
+      },
+      "replicaSetName": {
+        "type": "string",
+        "defaultValue": "rs0",
+        "metadata": {
+          "description": "The name of the MongoDB replica set"
+        },
+        "value": "rs0"
+      },
+      "replicaSetKey": {
+        "type": "securestring",
+        "metadata": {
+          "description": "The shared secret key for the MongoDB replica set"
+        },
+        "value": "GEN-UNIQUE"
+      },
+      "location": {
+        "type": "string",
+        "defaultValue": "[resourceGroup().location]",
+        "metadata": {
+          "description": "Location for all resources."
+        }
+      }
+    },
+    "variables": {
+      "_comment0": "/* T-shirt sizes may vary for different reasons, and some customers may want to modify these - so feel free to go ahead and define your favorite t-shirts */",
+      "tshirtSizeXSmall": {
+        "vmSizeMember": "Standard_D2_v3",
+        "vmSizeArbiter": "Standard_A1",
+        "numberOfMembers": 1,
+        "totalMemberCount": 2,
+        "arbiter": "Enabled",
+        "vmTemplate": "https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/application-workloads/mongo/mongodb-nodejs-high-availability/member-resources-D1.json",
+        "storageAccountCount": 1,
+        "dataDiskSize": 100
+      },
+      "tshirtSizeSmall": {
+        "vmSizeMember": "Standard_D2_v3",
+        "vmSizeArbiter": "Standard_A1",
+        "numberOfMembers": 2,
+        "totalMemberCount": 3,
+        "arbiter": "Disabled",
+        "vmTemplate": "https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/application-workloads/mongo/mongodb-nodejs-high-availability/member-resources-D1.json",
+        "storageAccountCount": 1,
+        "dataDiskSize": 100
+      },
+      "tshirtSizeMedium": {
+        "vmSizeMember": "Standard_D2_v3",
+        "vmSizeArbiter": "Standard_A1",
+        "numberOfMembers": 3,
+        "totalMemberCount": 4,
+        "arbiter": "Enabled",
+        "vmTemplate": "https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/application-workloads/mongo/mongodb-nodejs-high-availability/member-resources-D2.json",
+        "storageAccountCount": 2,
+        "dataDiskSize": 250
+      },
+      "tshirtSizeLarge": {
+        "vmSizeMember": "Standard_D2_v3",
+        "vmSizeArbiter": "Standard_A1",
+        "numberOfMembers": 7,
+        "totalMemberCount": 8,
+        "arbiter": "Enabled",
+        "vmTemplate": "https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/application-workloads/mongo/mongodb-nodejs-high-availability/member-resources-D2.json",
+        "storageAccountCount": 4,
+        "dataDiskSize": 250
+      },
+      "tshirtSizeXLarge": {
+        "vmSizeMember": "Standard_D4_v3",
+        "vmSizeArbiter": "Standard_A1",
+        "numberOfMembers": 7,
+        "totalMemberCount": 8,
+        "arbiter": "Enabled",
+        "vmTemplate": "https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/application-workloads/mongo/mongodb-nodejs-high-availability/member-resources-D3.json",
+        "storageAccountCount": 4,
+        "dataDiskSize": 500
+      },
+      "tshirtSizeXXLarge": {
+        "vmSizeMember": "Standard_D4_v3",
+        "vmSizeArbiter": "Standard_A1",
+        "numberOfMembers": 15,
+        "totalMemberCount": 16,
+        "arbiter": "Disabled",
+        "vmTemplate": "https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/application-workloads/mongo/mongodb-nodejs-high-availability/member-resources-D3.json",
+        "storageAccountCount": 8,
+        "dataDiskSize": 500
+      },
+      "osFamilyUbuntu": {
+        "osName": "ubuntu",
+        "installerBaseUrl": "http://repo.mongodb.org/apt/ubuntu",
+        "installerPackages": "mongodb-org",
+        "imagePublisher": "Canonical",
+        "imageOffer": "UbuntuServer",
+        "imageSKU": "14.04.5-LTS"
+      },
+      "vnetID": "Microsoft.Network/virtualNetworks/mongodbVnet",
+      "sharedScriptUrl": "https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/shared_scripts/(osFamilySpec).osName/",
+      "scriptUrl": "https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/application-workloads/mongo/mongodb-nodejs-high-availability/",
+      "templateBaseUrl": "https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/application-workloads/mongo/mongodb-nodejs-high-availability/",
+      "jumpboxTemplateEnabled": "jumpbox-resources.json",
+      "jumpboxTemplateDisabled": "empty-resources.json",
+      "arbiterTemplateEnabled": "arbiter-resources.json",
+      "arbiterTemplateDisabled": "empty-resources.json",
+      "sharedTemplateUrl": "https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/application-workloads/mongo/mongodb-nodejs-high-availability/shared-resources.json",
+      "jumpboxTemplateUrl": "https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/application-workloads/mongo/mongodb-nodejs-high-availability/concat(jumpboxTemplate, parameters(jumpbox))",
+      "arbiterTemplateUrl": "https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/application-workloads/mongo/mongodb-nodejs-high-availability/concat(arbiterTemplate, variables(clusterSpec).arbiter)",
+      "frontendnodeserverTemplateUrl": "https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/application-workloads/mongo/mongodb-nodejs-high-availability/frontend-resource.json",
+      "commonSettings": {
+        "availabilitySetName": "mongodbAvailSet"
+      },
+      "networkSettings": {
+        "virtualNetworkName": "mongodbVnet",
+        "addressPrefix": "10.0.0.0/16",
+        "subnetName": "mongodbSubnet",
+        "subnetPrefix": "10.0.0.0/24",
+        "subnetRef": "Microsoft.Network/virtualNetworks/subnets/mongodbVnet/mongodbSubnet",
+        "machineIpPrefix": "10.0.0.1",
+        "vnetID": "Microsoft.Network/virtualNetworks/mongodbVnet"
+      },
+      "machineSettings": {
+        "adminUsername": "GEN-UNIQUE",
+        "adminPassword": "GEN-PASSWORD",
+        "machineNamePrefix": "mongodb-",
+        "ubuntuOSVersion": "14.04.5-LTS",
+        "dnsNameForPublicIP": "GEN-UNIQUE-8",
+        "osImageReference": {
+          "publisher": "(osFamilySpec).imagePublisher",
+          "offer": "(osFamilySpec).imageOffer",
+          "sku": "(osFamilySpec).imageSKU",
+          "version": "latest"
+        }
+      },
+      "clusterSpec": "concat(tshirtSize, parameters(tshirtSize))",
+      "osFamily": "Ubuntu",
+      "osFamilySpec": "concat(osFamily, variables(osFamily))",
+      "installCommand": "bash mongodb-(osFamilySpec).osName-install.sh -i (osFamilySpec).installerBaseUrl -b (osFamilySpec).installerPackages -r rs0 -k GEN-UNIQUE -u GEN-UNIQUE -p GEN-PASSWORD -x (networkSettings).machineIpPrefix -n (clusterSpec).totalMemberCount",
+      "vmScripts": {
+        "scriptsToDownload": [
+          "https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/application-workloads/mongo/mongodb-nodejs-high-availability/mongodb-(osFamilySpec).osName-install.sh",
+          "https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/shared_scripts/(osFamilySpec).osName/vm-disk-utils-0.1.sh"
+        ],
+        "regularNodeInstallCommand": "bash mongodb-(osFamilySpec).osName-install.sh -i (osFamilySpec).installerBaseUrl -b (osFamilySpec).installerPackages -r rs0 -k GEN-UNIQUE -u GEN-UNIQUE -p GEN-PASSWORD -x (networkSettings).machineIpPrefix -n (clusterSpec).totalMemberCount",
+        "lastNodeInstallCommand": "bash mongodb-(osFamilySpec).osName-install.sh -i (osFamilySpec).installerBaseUrl -b (osFamilySpec).installerPackages -r rs0 -k GEN-UNIQUE -u GEN-UNIQUE -p GEN-PASSWORD -x (networkSettings).machineIpPrefix -n (clusterSpec).totalMemberCount -l",
+        "arbiterNodeInstallCommand": "bash mongodb-(osFamilySpec).osName-install.sh -i (osFamilySpec).installerBaseUrl -b (osFamilySpec).installerPackages -r rs0 -k GEN-UNIQUE -u GEN-UNIQUE -p GEN-PASSWORD -x (networkSettings).machineIpPrefix -n (clusterSpec).totalMemberCount -a"
+      },
+      "_comment1": "/* The weird list of values below helps partition VM disks across multiple storage accounts to achieve a better throughput */",
+      "_comment2": "/* Feel free to modify the default allocations if you are comfortable and understand what you are doing */",
+      "storageAccountForXSmall_0": "0",
+      "storageAccountForXSmall_1": "0",
+      "storageAccountForSmall_0": "0",
+      "storageAccountForSmall_1": "0",
+      "storageAccountForSmall_2": "0",
+      "storageAccountForMedium_0": "0",
+      "storageAccountForMedium_1": "0",
+      "storageAccountForMedium_2": "0",
+      "storageAccountForMedium_3": "0",
+      "storageAccountForLarge_0": "0",
+      "storageAccountForLarge_1": "1",
+      "storageAccountForLarge_2": "2",
+      "storageAccountForLarge_3": "3",
+      "storageAccountForLarge_4": "0",
+      "storageAccountForLarge_5": "1",
+      "storageAccountForLarge_6": "2",
+      "storageAccountForLarge_7": "3",
+      "storageAccountForXLarge_0": "0",
+      "storageAccountForXLarge_1": "1",
+      "storageAccountForXLarge_2": "2",
+      "storageAccountForXLarge_3": "3",
+      "storageAccountForXLarge_4": "0",
+      "storageAccountForXLarge_5": "1",
+      "storageAccountForXLarge_6": "2",
+      "storageAccountForXLarge_7": "3",
+      "storageAccountForXXLarge_0": "0",
+      "storageAccountForXXLarge_1": "1",
+      "storageAccountForXXLarge_2": "2",
+      "storageAccountForXXLarge_3": "3",
+      "storageAccountForXXLarge_4": "4",
+      "storageAccountForXXLarge_5": "5",
+      "storageAccountForXXLarge_6": "6",
+      "storageAccountForXXLarge_7": "7",
+      "storageAccountForXXLarge_8": "0",
+      "storageAccountForXXLarge_9": "1",
+      "storageAccountForXXLarge_10": "2",
+      "storageAccountForXXLarge_11": "3",
+      "storageAccountForXXLarge_12": "4",
+      "storageAccountForXXLarge_13": "5",
+      "storageAccountForXXLarge_14": "6",
+      "storageAccountForXXLarge_15": "7"
+    },
+    "resources": [
+      {
+        "name": "shared-resources",
+        "type": "Microsoft.Resources/deployments",
+        "apiVersion": "2015-01-01",
+        "properties": {
+          "mode": "Incremental",
+          "templateLink": {
+            "uri": "https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/application-workloads/mongo/mongodb-nodejs-high-availability/shared-resources.json",
+            "contentVersion": "1.0.0.0"
+          },
+          "parameters": {
+            "commonSettings": {
+              "value": {
+                "availabilitySetName": "mongodbAvailSet"
+              }
+            },
+            "networkSettings": {
+              "value": {
+                "virtualNetworkName": "mongodbVnet",
+                "addressPrefix": "10.0.0.0/16",
+                "subnetName": "mongodbSubnet",
+                "subnetPrefix": "10.0.0.0/24",
+                "subnetRef": "Microsoft.Network/virtualNetworks/subnets/mongodbVnet/mongodbSubnet",
+                "machineIpPrefix": "10.0.0.1",
+                "vnetID": "Microsoft.Network/virtualNetworks/mongodbVnet"
+              }
+            }
+          }
+        }
+      },
+      {
+        "name": "jumpbox-resources",
+        "type": "Microsoft.Resources/deployments",
+        "apiVersion": "2015-01-01",
+        "dependsOn": [
+          "Microsoft.Resources/deployments/shared-resources"
+        ],
+        "properties": {
+          "mode": "Incremental",
+          "templateLink": {
+            "uri": "https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/application-workloads/mongo/mongodb-nodejs-high-availability/concat(jumpboxTemplate, parameters(jumpbox))",
+            "contentVersion": "1.0.0.0"
+          },
+          "parameters": {
+            "commonSettings": {
+              "value": {
+                "availabilitySetName": "mongodbAvailSet"
+              }
+            },
+            "networkSettings": {
+              "value": {
+                "virtualNetworkName": "mongodbVnet",
+                "addressPrefix": "10.0.0.0/16",
+                "subnetName": "mongodbSubnet",
+                "subnetPrefix": "10.0.0.0/24",
+                "subnetRef": "Microsoft.Network/virtualNetworks/subnets/mongodbVnet/mongodbSubnet",
+                "machineIpPrefix": "10.0.0.1",
+                "vnetID": "Microsoft.Network/virtualNetworks/mongodbVnet"
+              }
+            },
+            "machineSettings": {
+              "value": {
+                "adminUsername": "GEN-UNIQUE",
+                "adminPassword": "GEN-PASSWORD",
+                "machineNamePrefix": "mongodb-",
+                "ubuntuOSVersion": "14.04.5-LTS",
+                "dnsNameForPublicIP": "GEN-UNIQUE-8",
+                "osImageReference": {
+                  "publisher": "(osFamilySpec).imagePublisher",
+                  "offer": "(osFamilySpec).imageOffer",
+                  "sku": "(osFamilySpec).imageSKU",
+                  "version": "latest"
+                }
+              }
+            }
+          }
+        }
+      },
+      {
+        "type": "Microsoft.Resources/deployments",
+        "name": "member-resourcescopyindex()",
+        "apiVersion": "2015-01-01",
+        "dependsOn": [
+          "Microsoft.Resources/deployments/shared-resources"
+        ],
+        "copy": {
+          "name": "memberNodesLoop",
+          "count": "(clusterSpec).numberOfMembers"
+        },
+        "properties": {
+          "mode": "Incremental",
+          "templateLink": {
+            "uri": "(clusterSpec).vmTemplate",
+            "contentVersion": "1.0.0.0"
+          },
+          "parameters": {
+            "commonSettings": {
+              "value": {
+                "availabilitySetName": "mongodbAvailSet"
+              }
+            },
+            "networkSettings": {
+              "value": {
+                "virtualNetworkName": "mongodbVnet",
+                "addressPrefix": "10.0.0.0/16",
+                "subnetName": "mongodbSubnet",
+                "subnetPrefix": "10.0.0.0/24",
+                "subnetRef": "Microsoft.Network/virtualNetworks/subnets/mongodbVnet/mongodbSubnet",
+                "machineIpPrefix": "10.0.0.1",
+                "vnetID": "Microsoft.Network/virtualNetworks/mongodbVnet"
+              }
+            },
+            "machineSettings": {
+              "value": {
+                "adminUsername": "(machineSettings).adminUsername",
+                "adminPassword": "(machineSettings).adminPassword",
+                "machineNamePrefix": "(machineSettings).machineNamePrefix",
+                "osImageReference": "(machineSettings).osImageReference",
+                "vmSize": "(clusterSpec).vmSizeMember",
+                "dataDiskSize": "(clusterSpec).dataDiskSize",
+                "machineIndex": "[copyindex()]",
+                "vmScripts": "(vmScripts).scriptsToDownload",
+                "commandToExecute": "(vmScripts).regularNodeInstallCommand"
+              }
+            }
+          }
+        }
+      },
+      {
+        "type": "Microsoft.Resources/deployments",
+        "name": "lastmember-resources",
+        "apiVersion": "2015-01-01",
+        "dependsOn": [
+          "memberNodesLoop"
+        ],
+        "properties": {
+          "mode": "Incremental",
+          "templateLink": {
+            "uri": "(clusterSpec).vmTemplate",
+            "contentVersion": "1.0.0.0"
+          },
+          "parameters": {
+            "commonSettings": {
+              "value": {
+                "availabilitySetName": "mongodbAvailSet"
+              }
+            },
+            "networkSettings": {
+              "value": {
+                "virtualNetworkName": "mongodbVnet",
+                "addressPrefix": "10.0.0.0/16",
+                "subnetName": "mongodbSubnet",
+                "subnetPrefix": "10.0.0.0/24",
+                "subnetRef": "Microsoft.Network/virtualNetworks/subnets/mongodbVnet/mongodbSubnet",
+                "machineIpPrefix": "10.0.0.1",
+                "vnetID": "Microsoft.Network/virtualNetworks/mongodbVnet"
+              }
+            },
+            "machineSettings": {
+              "value": {
+                "adminUsername": "(machineSettings).adminUsername",
+                "adminPassword": "(machineSettings).adminPassword",
+                "machineNamePrefix": "(machineSettings).machineNamePrefix",
+                "osImageReference": "(machineSettings).osImageReference",
+                "vmSize": "(clusterSpec).vmSizeMember",
+                "dataDiskSize": "(clusterSpec).dataDiskSize",
+                "machineIndex": "(clusterSpec).numberOfMembers",
+                "vmScripts": "(vmScripts).scriptsToDownload",
+                "commandToExecute": "(vmScripts).lastNodeInstallCommand"
+              }
+            }
+          }
+        }
+      },
+      {
+        "name": "arbiter-resources",
+        "type": "Microsoft.Resources/deployments",
+        "apiVersion": "2015-01-01",
+        "dependsOn": [
+          "Microsoft.Resources/deployments/lastmember-resources"
+        ],
+        "properties": {
+          "mode": "Incremental",
+          "templateLink": {
+            "uri": "https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/application-workloads/mongo/mongodb-nodejs-high-availability/concat(arbiterTemplate, variables(clusterSpec).arbiter)",
+            "contentVersion": "1.0.0.0"
+          },
+          "parameters": {
+            "commonSettings": {
+              "value": {
+                "availabilitySetName": "mongodbAvailSet"
+              }
+            },
+            "networkSettings": {
+              "value": {
+                "virtualNetworkName": "mongodbVnet",
+                "addressPrefix": "10.0.0.0/16",
+                "subnetName": "mongodbSubnet",
+                "subnetPrefix": "10.0.0.0/24",
+                "subnetRef": "Microsoft.Network/virtualNetworks/subnets/mongodbVnet/mongodbSubnet",
+                "machineIpPrefix": "10.0.0.1",
+                "vnetID": "Microsoft.Network/virtualNetworks/mongodbVnet"
+              }
+            },
+            "machineSettings": {
+              "value": {
+                "adminUsername": "(machineSettings).adminUsername",
+                "adminPassword": "(machineSettings).adminPassword",
+                "machineNamePrefix": "(machineSettings).machineNamePrefix",
+                "osImageReference": "(machineSettings).osImageReference",
+                "vmSize": "(clusterSpec).vmSizeArbiter",
+                "vmScripts": "(vmScripts).scriptsToDownload",
+                "commandToExecute": "(vmScripts).arbiterNodeInstallCommand"
+              }
+            }
+          }
+        }
+      },
+      {
+        "type": "Microsoft.Resources/deployments",
+        "name": "frontend-resource",
+        "apiVersion": "2015-01-01",
+        "dependsOn": [
+          "Microsoft.Resources/deployments/shared-resources"
+        ],
+        "properties": {
+          "mode": "Incremental",
+          "templateLink": {
+            "uri": "https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/application-workloads/mongo/mongodb-nodejs-high-availability/frontend-resource.json",
+            "contentVersion": "1.0.0.0"
+          },
+          "parameters": {
+            "commonSettings": {
+              "value": {
+                "availabilitySetName": "mongodbAvailSet"
+              }
+            },
+            "networkSettings": {
+              "value": {
+                "virtualNetworkName": "mongodbVnet",
+                "addressPrefix": "10.0.0.0/16",
+                "subnetName": "mongodbSubnet",
+                "subnetPrefix": "10.0.0.0/24",
+                "subnetRef": "Microsoft.Network/virtualNetworks/subnets/mongodbVnet/mongodbSubnet",
+                "machineIpPrefix": "10.0.0.1",
+                "vnetID": "Microsoft.Network/virtualNetworks/mongodbVnet"
+              }
+            },
+            "machineSettings": {
+              "value": {
+                "adminUsername": "GEN-UNIQUE",
+                "adminPassword": "GEN-PASSWORD",
+                "machineNamePrefix": "mongodb-",
+                "ubuntuOSVersion": "14.04.5-LTS",
+                "dnsNameForPublicIP": "GEN-UNIQUE-8",
+                "osImageReference": {
+                  "publisher": "(osFamilySpec).imagePublisher",
+                  "offer": "(osFamilySpec).imageOffer",
+                  "sku": "(osFamilySpec).imageSKU",
+                  "version": "latest"
+                }
+              }
+            }
+          }
+        }
+      }
+    ],
+    "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+  }
+}

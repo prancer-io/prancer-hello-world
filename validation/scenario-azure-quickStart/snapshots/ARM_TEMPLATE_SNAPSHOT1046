@@ -1,0 +1,136 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAzureQuickStart",
+  "paths": [
+    "/quickstarts/microsoft.compute/multi-vmss-linux/nestedtemplates/base.json"
+  ],
+  "timestamp": 1642962903923,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/quickstarts/microsoft.compute/multi-vmss-linux/nestedtemplates/base.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT1046",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "microsoft.compute/virtualmachinescalesets"
+    ]
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT1046",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "VMSSName": {
+        "type": "string"
+      },
+      "singlePlacementGroup": {
+        "type": "bool",
+        "defaultValue": true
+      },
+      "instanceCount": {
+        "type": "int"
+      },
+      "subnetId": {
+        "type": "string"
+      },
+      "adminUsername": {
+        "type": "string"
+      },
+      "authenticationType": {
+        "type": "string"
+      },
+      "adminPasswordOrKey": {
+        "type": "securestring"
+      },
+      "vmssSku": {
+        "type": "string"
+      },
+      "location": {
+        "type": "string"
+      }
+    },
+    "variables": {
+      "linuxConfiguration": {
+        "disablePasswordAuthentication": true,
+        "ssh": {
+          "publicKeys": [
+            {
+              "path": "/home/adminUsername/.ssh/authorized_keys",
+              "keyData": "adminPasswordOrKey"
+            }
+          ]
+        }
+      }
+    },
+    "resources": [
+      {
+        "type": "Microsoft.Compute/virtualMachineScaleSets",
+        "apiVersion": "2020-12-01",
+        "name": "vmSSName",
+        "location": "location",
+        "sku": {
+          "name": "vmssSku",
+          "tier": "Standard",
+          "capacity": "instanceCount"
+        },
+        "properties": {
+          "singlePlacementGroup": true,
+          "overprovision": true,
+          "upgradePolicy": {
+            "mode": "Manual"
+          },
+          "virtualMachineProfile": {
+            "storageProfile": {
+              "osDisk": {
+                "createOption": "FromImage",
+                "caching": "ReadWrite"
+              },
+              "imageReference": {
+                "publisher": "Canonical",
+                "offer": "UbuntuServer",
+                "sku": "16.04-LTS",
+                "version": "latest"
+              }
+            },
+            "osProfile": {
+              "computerNamePrefix": "vmSSName",
+              "adminUsername": "adminUsername",
+              "adminPassword": "adminPasswordOrKey",
+              "linuxConfiguration": "[if(equals(parameters('authenticationType'), 'password'), json('null'), variables('linuxConfiguration'))]"
+            },
+            "networkProfile": {
+              "networkInterfaceConfigurations": [
+                {
+                  "name": "nicvmSSName",
+                  "properties": {
+                    "primary": true,
+                    "ipConfigurations": [
+                      {
+                        "name": "ipconfigvmSSName",
+                        "properties": {
+                          "subnet": {
+                            "Id": "subnetId"
+                          }
+                        }
+                      }
+                    ]
+                  }
+                }
+              ]
+            }
+          }
+        }
+      }
+    ],
+    "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+  }
+}

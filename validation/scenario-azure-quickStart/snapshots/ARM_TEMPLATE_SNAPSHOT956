@@ -1,0 +1,177 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAzureQuickStart",
+  "paths": [
+    "/quickstarts/microsoft.automation/automation-configuration/nested/provisionServer.json"
+  ],
+  "timestamp": 1642962903099,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/quickstarts/microsoft.automation/automation-configuration/nested/provisionServer.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT956",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "microsoft.automation/automationaccounts",
+      "microsoft.compute/virtualmachines",
+      "microsoft.compute/virtualmachines/extensions"
+    ]
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT956",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "location": {
+        "type": "string"
+      },
+      "vmName": {
+        "type": "string"
+      },
+      "vmSize": {
+        "type": "string"
+      },
+      "adminUsername": {
+        "type": "string"
+      },
+      "adminPassword": {
+        "type": "securestring"
+      },
+      "nicName": {
+        "type": "string"
+      },
+      "automationAccountName": {
+        "type": "string"
+      },
+      "nodeConfigurationName": {
+        "type": "string",
+        "defaultValue": "DomainControllerConfig.localhost"
+      }
+    },
+    "resources": [
+      {
+        "name": "automationAccountName",
+        "type": "Microsoft.Automation/automationAccounts",
+        "apiVersion": "2020-01-13-preview",
+        "location": "location",
+        "comments": "Automation account for OMS",
+        "properties": {
+          "sku": {
+            "name": "OMS"
+          }
+        }
+      },
+      {
+        "name": "VMName",
+        "type": "Microsoft.Compute/virtualMachines",
+        "apiVersion": "2020-06-01",
+        "location": "location",
+        "dependsOn": [
+          "automationAccountName"
+        ],
+        "properties": {
+          "hardwareProfile": {
+            "vmSize": "VMSize"
+          },
+          "osProfile": {
+            "computerName": "VMName",
+            "adminUsername": "adminUsername",
+            "adminPassword": "adminPassword"
+          },
+          "storageProfile": {
+            "imageReference": {
+              "publisher": "MicrosoftWindowsServer",
+              "offer": "WindowsServer",
+              "sku": "2016-Datacenter-Server-Core",
+              "version": "latest"
+            },
+            "osDisk": {
+              "createOption": "FromImage"
+            },
+            "dataDisks": [
+              {
+                "createOption": "Empty",
+                "diskSizeGB": 100,
+                "lun": 0
+              }
+            ]
+          },
+          "networkProfile": {
+            "networkInterfaces": [
+              {
+                "id": "Microsoft.Network/networkInterfaces/NicName"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "type": "Microsoft.Compute/virtualMachines/extensions",
+        "name": "VMName/OnboardToDSC",
+        "apiVersion": "2020-06-01",
+        "location": "location",
+        "dependsOn": [
+          "Microsoft.Compute/virtualMachines//VMName"
+        ],
+        "properties": {
+          "publisher": "Microsoft.Powershell",
+          "type": "DSC",
+          "typeHandlerVersion": "2.75",
+          "autoUpgradeMinorVersion": true,
+          "protectedSettings": {
+            "Items": {
+              "registrationKeyPrivate": "[listKeys(resourceId('Microsoft.Automation/automationAccounts/', parameters('automationAccountName')), '2020-01-13-preview').Keys[0].value]"
+            }
+          },
+          "settings": {
+            "Properties": [
+              {
+                "Name": "RegistrationKey",
+                "Value": {
+                  "UserName": "PLACEHOLDER_DONOTUSE",
+                  "Password": "PrivateSettingsRef:registrationKeyPrivate"
+                },
+                "TypeName": "System.Management.Automation.PSCredential"
+              },
+              {
+                "Name": "RegistrationUrl",
+                "Value": "[reference(resourceId('Microsoft.Automation/automationAccounts/', parameters('automationAccountName'))).registrationUrl]",
+                "TypeName": "System.String"
+              },
+              {
+                "Name": "NodeConfigurationName",
+                "Value": "DomainControllerConfig.localhost",
+                "TypeName": "System.String"
+              },
+              {
+                "Name": "ConfigurationMode",
+                "Value": "ApplyandAutoCorrect",
+                "TypeName": "System.String"
+              },
+              {
+                "Name": "RebootNodeIfNeeded",
+                "Value": true,
+                "TypeName": "System.Boolean"
+              },
+              {
+                "Name": "ActionAfterReboot",
+                "Value": "ContinueConfiguration",
+                "TypeName": "System.String"
+              }
+            ]
+          }
+        }
+      }
+    ],
+    "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+  }
+}

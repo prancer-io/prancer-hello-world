@@ -1,0 +1,369 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAzureQuickStart",
+  "paths": [
+    "/quickstarts/microsoft.network/traffic-manager-vm-zones/azuredeploy.json",
+    "/quickstarts/microsoft.network/traffic-manager-vm-zones/azuredeploy.parameters.json"
+  ],
+  "timestamp": 1642962909537,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/quickstarts/microsoft.network/traffic-manager-vm-zones/azuredeploy.json",
+      "/quickstarts/microsoft.network/traffic-manager-vm-zones/azuredeploy.parameters.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT1599",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "microsoft.network/publicipaddresses",
+      "microsoft.network/virtualnetworks",
+      "microsoft.network/networkinterfaces",
+      "microsoft.compute/virtualmachines",
+      "microsoft.network/networksecuritygroups",
+      "microsoft.network/trafficmanagerprofiles"
+    ]
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT1599",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "location": {
+        "type": "string",
+        "metadata": {
+          "description": "Location for the VM, only certain regions support zones."
+        },
+        "value": "West US 2"
+      },
+      "trafficManagerDnsName": {
+        "type": "string",
+        "metadata": {
+          "description": "Relative DNS name for the traffic manager profile, must be globally unique."
+        },
+        "value": "GEN-UNIQUE"
+      },
+      "adminUsername": {
+        "type": "string",
+        "metadata": {
+          "description": "User name for the Virtual Machines."
+        },
+        "value": "GEN-UNIQUE"
+      },
+      "publicIpDnsName": {
+        "type": "string",
+        "metadata": {
+          "description": "Relative DNS Name for the Public IPs used to access the Virtual Machines, must be globally unique.  An index will be appended for each instance."
+        },
+        "value": "GEN-UNIQUE"
+      },
+      "numberOfVms": {
+        "type": "int",
+        "defaultValue": 3,
+        "minValue": 1,
+        "maxValue": 10,
+        "metadata": {
+          "description": "Number of VMs to provision"
+        }
+      },
+      "vmSize": {
+        "type": "string",
+        "defaultValue": "Standard_A2_v2",
+        "metadata": {
+          "description": "Size of the virtual machines"
+        }
+      },
+      "ubuntuOSVersion": {
+        "type": "string",
+        "defaultValue": "18.04-LTS",
+        "allowedValues": [
+          "18.04-LTS",
+          "16.04.0-LTS",
+          "14.04.5-LTS"
+        ],
+        "metadata": {
+          "description": "The Ubuntu version for the VM. This will pick a fully patched image of this given Ubuntu version. Allowed values: 18.04-LTS, 16.04.0-LTS, 14.04.5-LTS."
+        }
+      },
+      "authenticationType": {
+        "type": "string",
+        "defaultValue": "sshPublicKey",
+        "allowedValues": [
+          "sshPublicKey",
+          "password"
+        ],
+        "metadata": {
+          "description": "Type of authentication to use on the Virtual Machine. SSH key is recommended."
+        }
+      },
+      "adminPasswordOrKey": {
+        "type": "securestring",
+        "metadata": {
+          "description": "SSH Key or password for the Virtual Machine. SSH key is recommended."
+        },
+        "value": "GEN-SSH-PUB-KEY"
+      },
+      "_artifactsLocation": {
+        "type": "string",
+        "defaultValue": "[deployment().properties.templateLink.uri]",
+        "metadata": {
+          "description": "The base URI where artifacts required by this template are located. When the template is deployed using the accompanying scripts, a private location in the subscription will be used and this value will be automatically generated."
+        }
+      },
+      "_artifactsLocationSasToken": {
+        "type": "securestring",
+        "metadata": {
+          "description": "The sasToken required to access _artifactsLocation.  When the template is deployed using the accompanying scripts, a sasToken will be automatically generated."
+        },
+        "defaultValue": ""
+      }
+    },
+    "variables": {
+      "nicName": "myVMNic",
+      "subnetName": "Subnet-1",
+      "publicIPAddressName": "myPublicIP",
+      "vmName": "MyUbuntuVM",
+      "virtualNetworkName": "MyVNET",
+      "networkSecurityGroupName": "MyNSG",
+      "subnetRef": "Microsoft.Network/virtualNetworks/subnets//MyVNET/Subnet-1",
+      "linuxImage": {
+        "publisher": "Canonical",
+        "offer": "UbuntuServer",
+        "sku": "18.04-LTS",
+        "version": "latest"
+      },
+      "linuxConfiguration": {
+        "disablePasswordAuthentication": true,
+        "ssh": {
+          "publicKeys": [
+            {
+              "path": "/home/GEN-UNIQUE/.ssh/authorized_keys",
+              "keyData": "GEN-SSH-PUB-KEY"
+            }
+          ]
+        }
+      }
+    },
+    "resources": [
+      {
+        "type": "Microsoft.Network/publicIPAddresses",
+        "apiVersion": "2020-05-01",
+        "name": "myPublicIPcopyIndex()",
+        "zones": "[split(string(add(mod(copyIndex(),3),1)), ',')]",
+        "sku": {
+          "name": "Standard"
+        },
+        "copy": {
+          "name": "ipLoop",
+          "count": 3
+        },
+        "location": "West US 2",
+        "properties": {
+          "publicIPAllocationMethod": "Static",
+          "dnsSettings": {
+            "domainNameLabel": "GEN-UNIQUEcopyindex()"
+          }
+        }
+      },
+      {
+        "type": "Microsoft.Network/virtualNetworks",
+        "apiVersion": "2020-05-01",
+        "name": "MyVNET",
+        "location": "West US 2",
+        "properties": {
+          "addressSpace": {
+            "addressPrefixes": [
+              "10.0.0.0/16"
+            ]
+          },
+          "subnets": [
+            {
+              "name": "Subnet-1",
+              "properties": {
+                "addressPrefix": "10.0.0.0/24"
+              }
+            }
+          ]
+        }
+      },
+      {
+        "type": "Microsoft.Network/networkInterfaces",
+        "apiVersion": "2020-05-01",
+        "name": "myVMNiccopyIndex()",
+        "copy": {
+          "name": "nicLoop",
+          "count": 3
+        },
+        "location": "West US 2",
+        "dependsOn": [
+          "ipLoop",
+          "MyVNET",
+          "Microsoft.Network/networkSecurityGroups/MyNSG"
+        ],
+        "properties": {
+          "ipConfigurations": [
+            {
+              "name": "ipconfig1",
+              "properties": {
+                "privateIPAllocationMethod": "Dynamic",
+                "publicIPAddress": {
+                  "id": "Microsoft.Network/publicIPAddresses/myPublicIPcopyIndex()"
+                },
+                "subnet": {
+                  "id": "Microsoft.Network/virtualNetworks/subnets//MyVNET/Subnet-1"
+                }
+              }
+            }
+          ],
+          "networkSecurityGroup": {
+            "id": "Microsoft.Network/networkSecurityGroups/MyNSG"
+          }
+        }
+      },
+      {
+        "type": "Microsoft.Compute/virtualMachines",
+        "apiVersion": "2019-12-01",
+        "name": "MyUbuntuVMcopyIndex()",
+        "zones": "[split(string(add(mod(copyIndex(),3),1)), ',')]",
+        "location": "West US 2",
+        "copy": {
+          "name": "vmLoop",
+          "count": 3
+        },
+        "dependsOn": [
+          "nicLoop"
+        ],
+        "properties": {
+          "hardwareProfile": {
+            "vmSize": "Standard_A2_v2"
+          },
+          "osProfile": {
+            "computerName": "MyUbuntuVM",
+            "adminUsername": "GEN-UNIQUE",
+            "adminPassword": "GEN-SSH-PUB-KEY",
+            "linuxConfiguration": "[if(equals(parameters('authenticationType'), 'password'), json('null'), variables('linuxConfiguration'))]"
+          },
+          "storageProfile": {
+            "imageReference": {
+              "publisher": "Canonical",
+              "offer": "UbuntuServer",
+              "sku": "18.04-LTS",
+              "version": "latest"
+            },
+            "osDisk": {
+              "createOption": "FromImage"
+            }
+          },
+          "networkProfile": {
+            "networkInterfaces": [
+              {
+                "id": "Microsoft.Network/networkInterfaces/myVMNiccopyIndex()"
+              }
+            ]
+          }
+        },
+        "resources": [
+          {
+            "type": "extensions",
+            "apiVersion": "2019-12-01",
+            "name": "MyUbuntuVMcopyIndex()-installcustomscript",
+            "location": "West US 2",
+            "dependsOn": [
+              "Microsoft.Compute/virtualMachines//MyUbuntuVMcopyIndex()"
+            ],
+            "properties": {
+              "publisher": "Microsoft.Azure.Extensions",
+              "type": "CustomScript",
+              "typeHandlerVersion": "2.0",
+              "autoUpgradeMinorVersion": true,
+              "settings": {
+                "fileUris": [
+                  "[uri(parameters('_artifactsLocation'), concat('install_apache.sh', parameters('_artifactsLocationSasToken')))]"
+                ],
+                "commandToExecute": "sh install_apache.sh"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "apiVersion": "2018-08-01",
+        "type": "Microsoft.Network/trafficManagerProfiles",
+        "name": "VMEndpointExample",
+        "location": "global",
+        "dependsOn": [
+          "ipLoop"
+        ],
+        "properties": {
+          "profileStatus": "Enabled",
+          "trafficRoutingMethod": "Weighted",
+          "dnsConfig": {
+            "relativeName": "GEN-UNIQUE",
+            "ttl": 30
+          },
+          "monitorConfig": {
+            "protocol": "HTTP",
+            "port": 80,
+            "path": "/"
+          },
+          "copy": [
+            {
+              "name": "endpoints",
+              "count": 3,
+              "input": {
+                "name": "[concat('endpoint', copyIndex('endpoints'))]",
+                "type": "Microsoft.Network/trafficManagerProfiles/azureEndpoints",
+                "properties": {
+                  "targetResourceId": "[resourceId('Microsoft.Network/publicIPAddresses', concat(variables('publicIPAddressName'), copyIndex('endpoints')))]",
+                  "endpointStatus": "Enabled",
+                  "weight": 1
+                }
+              }
+            }
+          ]
+        }
+      },
+      {
+        "type": "Microsoft.Network/networkSecurityGroups",
+        "apiVersion": "2020-05-01",
+        "name": "MyNSG",
+        "location": "West US 2",
+        "properties": {
+          "securityRules": [
+            {
+              "name": "Port_80",
+              "properties": {
+                "protocol": "*",
+                "sourcePortRange": "*",
+                "destinationPortRange": "80",
+                "sourceAddressPrefix": "*",
+                "destinationAddressPrefix": "*",
+                "access": "Allow",
+                "priority": 100,
+                "direction": "Inbound"
+              }
+            }
+          ]
+        }
+      }
+    ],
+    "outputs": {
+      "trafficManagerFqdn": {
+        "type": "string",
+        "value": "[reference('VMEndpointExample', '2018-04-01').dnsConfig.fqdn]"
+      },
+      "trafficManagerEndpoints": {
+        "type": "array",
+        "value": "[reference('VMEndpointExample', '2018-04-01').endpoints]"
+      }
+    },
+    "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+  }
+}

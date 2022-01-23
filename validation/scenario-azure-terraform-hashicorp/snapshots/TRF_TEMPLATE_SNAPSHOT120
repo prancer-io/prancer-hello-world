@@ -1,0 +1,131 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "main",
+  "contentType": "json",
+  "source": "gitConnectorAzureTerraHashicorp",
+  "paths": [
+    "/examples/virtual-machines/linux/basic-password/variables.tf",
+    "/examples/virtual-machines/linux/basic-password/main.tf"
+  ],
+  "timestamp": 1642943280001,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "TRF_TEMPLATE_SNAPSHOT",
+    "type": "terraform",
+    "collection": "terraformtemplate",
+    "paths": [
+      "/examples/virtual-machines/linux/basic-password/variables.tf",
+      "/examples/virtual-machines/linux/basic-password/main.tf"
+    ],
+    "snapshotId": "TRF_TEMPLATE_SNAPSHOT120",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "azurerm_subnet",
+      "azurerm_virtual_network",
+      "azurerm_resource_group",
+      "azurerm_network_interface",
+      "azurerm_linux_virtual_machine"
+    ]
+  },
+  "snapshotId": "TRF_TEMPLATE_SNAPSHOT120",
+  "collection": "terraformtemplate",
+  "json": {
+    "provider": [
+      {
+        "azurerm": {
+          "features": [
+            {}
+          ]
+        }
+      }
+    ],
+    "resources": [
+      {
+        "type": "azurerm_resource_group",
+        "name": "main",
+        "properties": {
+          "name": "${var.prefix}-resources",
+          "location": "${var.location}",
+          "compiletime_identity": "azurerm_resource_group.main"
+        }
+      },
+      {
+        "type": "azurerm_virtual_network",
+        "name": "main",
+        "properties": {
+          "name": "${var.prefix}-network",
+          "address_space": [
+            "10.0.0.0/22"
+          ],
+          "location": "${azurerm_resource_group.main.location}",
+          "resource_group_name": "${azurerm_resource_group.main.name}",
+          "compiletime_identity": "azurerm_virtual_network.main"
+        }
+      },
+      {
+        "type": "azurerm_subnet",
+        "name": "internal",
+        "properties": {
+          "name": "internal",
+          "resource_group_name": "${azurerm_resource_group.main.name}",
+          "virtual_network_name": "${azurerm_virtual_network.main.name}",
+          "address_prefixes": [
+            "10.0.2.0/24"
+          ],
+          "compiletime_identity": "azurerm_subnet.internal"
+        }
+      },
+      {
+        "type": "azurerm_network_interface",
+        "name": "main",
+        "properties": {
+          "name": "${var.prefix}-nic",
+          "resource_group_name": "${azurerm_resource_group.main.name}",
+          "location": "${azurerm_resource_group.main.location}",
+          "ip_configuration": [
+            {
+              "name": "internal",
+              "subnet_id": "${azurerm_subnet.internal.id}",
+              "private_ip_address_allocation": "Dynamic"
+            }
+          ],
+          "compiletime_identity": "azurerm_network_interface.main"
+        }
+      },
+      {
+        "type": "azurerm_linux_virtual_machine",
+        "name": "main",
+        "properties": {
+          "name": "${var.prefix}-vm",
+          "resource_group_name": "${azurerm_resource_group.main.name}",
+          "location": "${azurerm_resource_group.main.location}",
+          "size": "Standard_D2s_v3",
+          "admin_username": "${var.username}",
+          "admin_password": "${var.password}",
+          "disable_password_authentication": false,
+          "network_interface_ids": [
+            "${azurerm_network_interface.main.id}"
+          ],
+          "source_image_reference": [
+            {
+              "publisher": "Canonical",
+              "offer": "UbuntuServer",
+              "sku": "18.04-LTS",
+              "version": "latest"
+            }
+          ],
+          "os_disk": [
+            {
+              "storage_account_type": "Standard_LRS",
+              "caching": "ReadWrite"
+            }
+          ],
+          "compiletime_identity": "azurerm_linux_virtual_machine.main"
+        }
+      }
+    ]
+  }
+}

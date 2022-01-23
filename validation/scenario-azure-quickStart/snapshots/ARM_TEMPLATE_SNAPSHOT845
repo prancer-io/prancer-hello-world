@@ -1,0 +1,323 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAzureQuickStart",
+  "paths": [
+    "/demos/ubuntu-netdisk-setup/azuredeploy.json",
+    "/demos/ubuntu-netdisk-setup/azuredeploy.parameters.json"
+  ],
+  "timestamp": 1642962902178,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/demos/ubuntu-netdisk-setup/azuredeploy.json",
+      "/demos/ubuntu-netdisk-setup/azuredeploy.parameters.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT845",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "microsoft.network/publicipaddresses",
+      "microsoft.network/virtualnetworks",
+      "microsoft.network/networkinterfaces",
+      "microsoft.compute/virtualmachines/extensions",
+      "microsoft.compute/virtualmachines",
+      "microsoft.network/networksecuritygroups"
+    ]
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT845",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "adminUsername": {
+        "type": "string",
+        "metadata": {
+          "description": "User name for the Virtual Machine."
+        },
+        "value": "GEN-UNIQUE"
+      },
+      "sshKeyData": {
+        "type": "string",
+        "metadata": {
+          "description": "Please copy the content of your SSH RSA public key and paste it here. You can use \"ssh-keygen -t rsa -b 2048\" to generate your SSH key pairs."
+        },
+        "value": "GEN-SSH-PUB-KEY"
+      },
+      "dnsLabelPrefix": {
+        "type": "string",
+        "metadata": {
+          "description": "Unique DNS Name for the Public IP used to access the Virtual Machine."
+        },
+        "value": "GEN-UNIQUE"
+      },
+      "ubuntuOSVersion": {
+        "type": "string",
+        "metadata": {
+          "description": "The Ubuntu version for the VM. This will pick a fully patched image of this given Ubuntu version."
+        },
+        "value": "16.04-LTS"
+      },
+      "vmSize": {
+        "type": "string",
+        "metadata": {
+          "description": "VM size."
+        },
+        "value": "Standard_D2s_v3"
+      },
+      "adminEmail": {
+        "type": "string",
+        "metadata": {
+          "description": "admin_email is used to login seafile server, i.e. admin@seafile.local"
+        },
+        "value": "test@email.com"
+      },
+      "adminPass": {
+        "type": "securestring",
+        "metadata": {
+          "description": "admin_pass is optional, if you do not specify it, a random string is generated"
+        },
+        "value": "GEN-UNIQUE"
+      },
+      "location": {
+        "type": "string",
+        "defaultValue": "[resourceGroup().location]",
+        "metadata": {
+          "description": "Location for all resources."
+        }
+      },
+      "_artifactsLocation": {
+        "type": "string",
+        "metadata": {
+          "description": "The location of resources, such as templates and DSC modules, that the template depends on"
+        },
+        "defaultValue": "[deployment().properties.templateLink.uri]"
+      },
+      "_artifactsLocationSasToken": {
+        "type": "securestring",
+        "metadata": {
+          "description": "Auto-generated token to access _artifactsLocation. Leave it blank unless you need to provide your own value."
+        },
+        "defaultValue": ""
+      }
+    },
+    "variables": {
+      "imagePublisher": "Canonical",
+      "imageOffer": "UbuntuServer",
+      "nicName": "myVMNic1",
+      "addressPrefix": "10.0.0.0/16",
+      "subnetName": "Subnet",
+      "subnetPrefix": "10.0.0.0/24",
+      "publicIPAddressName": "myPublicIP",
+      "publicIPAddressType": "Dynamic",
+      "vmName": "MyUbuntuVM",
+      "virtualNetworkName": "MyVNET",
+      "subnetRef": "Microsoft.Network/virtualNetworks/subnets/MyVNET/Subnet",
+      "sshKeyPath": "/home/GEN-UNIQUE/.ssh/authorized_keys"
+    },
+    "resources": [
+      {
+        "apiVersion": "2020-08-01",
+        "type": "Microsoft.Network/publicIPAddresses",
+        "name": "myPublicIP",
+        "location": "[resourceGroup().location]",
+        "properties": {
+          "publicIPAllocationMethod": "Dynamic",
+          "dnsSettings": {
+            "domainNameLabel": "GEN-UNIQUE"
+          }
+        }
+      },
+      {
+        "apiVersion": "2020-07-01",
+        "type": "Microsoft.Network/virtualNetworks",
+        "name": "MyVNET",
+        "location": "[resourceGroup().location]",
+        "properties": {
+          "addressSpace": {
+            "addressPrefixes": [
+              "10.0.0.0/16"
+            ]
+          },
+          "subnets": [
+            {
+              "name": "Subnet",
+              "properties": {
+                "addressPrefix": "10.0.0.0/24"
+              }
+            }
+          ]
+        }
+      },
+      {
+        "apiVersion": "2020-07-01",
+        "type": "Microsoft.Network/networkInterfaces",
+        "name": "myVMNic1",
+        "location": "[resourceGroup().location]",
+        "dependsOn": [
+          "Microsoft.Network/publicIPAddresses//myPublicIP",
+          "Microsoft.Network/virtualNetworks//MyVNET"
+        ],
+        "properties": {
+          "ipConfigurations": [
+            {
+              "name": "ipconfig1",
+              "properties": {
+                "privateIPAllocationMethod": "Dynamic",
+                "publicIPAddress": {
+                  "id": "Microsoft.Network/publicIPAddresses/myPublicIP"
+                },
+                "subnet": {
+                  "id": "Microsoft.Network/virtualNetworks/subnets/MyVNET/Subnet"
+                }
+              }
+            }
+          ],
+          "networkSecurityGroup": {
+            "id": "Microsoft.Network/networkSecurityGroups/mysg"
+          }
+        }
+      },
+      {
+        "apiVersion": "2020-07-01",
+        "type": "Microsoft.Network/networkSecurityGroups",
+        "name": "mysg",
+        "location": "[resourceGroup().location]",
+        "properties": {
+          "securityRules": [
+            {
+              "name": "port80",
+              "properties": {
+                "protocol": "Tcp",
+                "sourcePortRange": "*",
+                "destinationPortRange": "80",
+                "sourceAddressPrefix": "*",
+                "destinationAddressPrefix": "*",
+                "access": "Allow",
+                "priority": 101,
+                "direction": "Inbound"
+              }
+            },
+            {
+              "name": "SSH",
+              "properties": {
+                "description": "Allows SSH traffic",
+                "protocol": "Tcp",
+                "sourcePortRange": "*",
+                "destinationPortRange": "22",
+                "sourceAddressPrefix": "*",
+                "destinationAddressPrefix": "*",
+                "access": "Allow",
+                "priority": 100,
+                "direction": "Inbound"
+              }
+            }
+          ],
+          "networkInterfaces": [
+            {
+              "id": "Microsoft.Network/networkInterfaces/myVMNic1"
+            }
+          ]
+        }
+      },
+      {
+        "apiVersion": "2020-12-01",
+        "type": "Microsoft.Compute/virtualMachines",
+        "name": "MyUbuntuVM",
+        "location": "[resourceGroup().location]",
+        "dependsOn": [
+          "Microsoft.Network/networkInterfaces//myVMNic1"
+        ],
+        "properties": {
+          "hardwareProfile": {
+            "vmSize": "Standard_D2s_v3"
+          },
+          "osProfile": {
+            "computerName": "MyUbuntuVM",
+            "adminUsername": "GEN-UNIQUE",
+            "linuxConfiguration": {
+              "disablePasswordAuthentication": true,
+              "ssh": {
+                "publicKeys": [
+                  {
+                    "path": "/home/GEN-UNIQUE/.ssh/authorized_keys",
+                    "keyData": "GEN-SSH-PUB-KEY"
+                  }
+                ]
+              }
+            }
+          },
+          "storageProfile": {
+            "imageReference": {
+              "publisher": "Canonical",
+              "offer": "UbuntuServer",
+              "sku": "16.04-LTS",
+              "version": "latest"
+            },
+            "osDisk": {
+              "createOption": "FromImage"
+            },
+            "dataDisks": [
+              {
+                "diskSizeGB": 1023,
+                "lun": 0,
+                "createOption": "Empty",
+                "caching": "ReadWrite"
+              }
+            ]
+          },
+          "networkProfile": {
+            "networkInterfaces": [
+              {
+                "id": "Microsoft.Network/networkInterfaces/myVMNic1"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "apiVersion": "2020-12-01",
+        "type": "Microsoft.Compute/virtualMachines/extensions",
+        "name": "MyUbuntuVM/CustomScript",
+        "location": "[resourceGroup().location]",
+        "dependsOn": [
+          "Microsoft.Compute/virtualMachines/MyUbuntuVM"
+        ],
+        "properties": {
+          "publisher": "Microsoft.Azure.Extensions",
+          "type": "CustomScript",
+          "typeHandlerVersion": "2.0",
+          "settings": {
+            "fileUris": [
+              "[uri(parameters('_artifactsLocation'), concat('script/install.sh', parameters('_artifactsLocationSasToken')))]"
+            ]
+          },
+          "protectedSettings": {
+            "commandToExecute": "[concat('export TERM=xterm && bash ', 'install.sh -u ', parameters('adminEmail'), ' -d ', reference(variables('publicIPAddressName')).dnsSettings.fqdn, ' -p \"', parameters('adminPass'), '\"')]"
+          }
+        }
+      }
+    ],
+    "outputs": {
+      "hostname": {
+        "type": "string",
+        "value": "[reference(variables('publicIPAddressName')).dnsSettings.fqdn]"
+      },
+      "sshCommand": {
+        "type": "string",
+        "value": "[concat('ssh ', parameters('adminUsername'), '@', reference(variables('publicIPAddressName')).dnsSettings.fqdn)]"
+      },
+      "extensionOutput": {
+        "type": "string",
+        "value": "[reference('Microsoft.Compute/virtualMachines/MyUbuntuVM/extensions/CustomScript').instanceView.statuses[0].message]"
+      }
+    },
+    "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+  }
+}

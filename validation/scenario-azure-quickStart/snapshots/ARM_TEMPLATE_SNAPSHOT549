@@ -1,0 +1,123 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAzureQuickStart",
+  "paths": [
+    "/application-workloads/sql/sqlvm-alwayson-cluster/nested/setupLBs.json"
+  ],
+  "timestamp": 1642962896585,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/application-workloads/sql/sqlvm-alwayson-cluster/nested/setupLBs.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT549",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "microsoft.network/loadbalancers"
+    ]
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT549",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "location": {
+        "type": "string"
+      },
+      "sqlLBName": {
+        "type": "string"
+      },
+      "sqlLBFE": {
+        "type": "string"
+      },
+      "sqlLBIPAddress": {
+        "type": "string"
+      },
+      "staticSubnetRef": {
+        "type": "string"
+      },
+      "sqlLBBE": {
+        "type": "string"
+      },
+      "sqlLBBEID": {
+        "type": "string"
+      },
+      "sqllbFEConfigID": {
+        "type": "string"
+      },
+      "sqllbProbeID": {
+        "type": "string"
+      },
+      "SQLAOProbe": {
+        "type": "string"
+      }
+    },
+    "resources": [
+      {
+        "apiVersion": "2020-07-01",
+        "name": "sqlLBName",
+        "type": "Microsoft.Network/loadBalancers",
+        "location": "location",
+        "properties": {
+          "frontendIPConfigurations": [
+            {
+              "name": "sqlLBFE",
+              "properties": {
+                "privateIPAllocationMethod": "Static",
+                "privateIPAddress": "sqlLBIPAddress",
+                "subnet": {
+                  "id": "staticSubnetRef"
+                }
+              }
+            }
+          ],
+          "backendAddressPools": [
+            {
+              "name": "sqlLBBE"
+            }
+          ],
+          "loadBalancingRules": [
+            {
+              "name": "SQLAlwaysOnEndPointListener",
+              "properties": {
+                "backendAddressPool": {
+                  "id": "sqlLBBEID"
+                },
+                "frontendIPConfiguration": {
+                  "id": "sqllbFEConfigID"
+                },
+                "probe": {
+                  "id": "sqllbProbeID"
+                },
+                "protocol": "Tcp",
+                "frontendPort": 1433,
+                "backendPort": 1433,
+                "enableFloatingIP": true
+              }
+            }
+          ],
+          "probes": [
+            {
+              "name": "SQLAOProbe",
+              "properties": {
+                "protocol": "Tcp",
+                "port": 59999,
+                "intervalInSeconds": "5",
+                "numberOfProbes": "2"
+              }
+            }
+          ]
+        }
+      }
+    ],
+    "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+  }
+}

@@ -1,0 +1,680 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAzureQuickStart",
+  "paths": [
+    "/quickstarts/microsoft.servicefabric/5-vm-ubuntu-1-nodetypes-secure/azuredeploy.json",
+    "/quickstarts/microsoft.servicefabric/5-vm-ubuntu-1-nodetypes-secure/azuredeploy.parameters.json"
+  ],
+  "timestamp": 1642962910253,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/quickstarts/microsoft.servicefabric/5-vm-ubuntu-1-nodetypes-secure/azuredeploy.json",
+      "/quickstarts/microsoft.servicefabric/5-vm-ubuntu-1-nodetypes-secure/azuredeploy.parameters.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT1679",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "microsoft.network/publicipaddresses",
+      "microsoft.network/virtualnetworks",
+      "microsoft.network/loadbalancers",
+      "microsoft.compute/virtualmachinescalesets",
+      "microsoft.servicefabric/clusters",
+      "microsoft.storage/storageaccounts"
+    ]
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT1679",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "location": {
+        "type": "string",
+        "defaultValue": "[resourceGroup().location]",
+        "metadata": {
+          "description": "Location of the Cluster"
+        }
+      },
+      "clusterName": {
+        "type": "string",
+        "defaultValue": "[concat('sf-', uniqueString(resourceGroup().id))]",
+        "metadata": {
+          "description": "Name of your cluster - Between 3 and 23 characters. Letters and numbers only"
+        },
+        "value": "GEN-UNIQUE"
+      },
+      "adminUserName": {
+        "type": "string",
+        "metadata": {
+          "description": "Remote desktop user Id"
+        },
+        "value": "GEN-UNIQUE"
+      },
+      "adminPassword": {
+        "type": "securestring",
+        "metadata": {
+          "description": "Remote desktop user password. Must be a strong password"
+        },
+        "value": "GEN-PASSWORD"
+      },
+      "vmImagePublisher": {
+        "type": "string",
+        "defaultValue": "Canonical",
+        "metadata": {
+          "description": "VM image Publisher"
+        }
+      },
+      "vmImageOffer": {
+        "type": "string",
+        "defaultValue": "UbuntuServer",
+        "metadata": {
+          "description": "VM image offer"
+        }
+      },
+      "vmImageSku": {
+        "type": "string",
+        "defaultValue": "16.04-LTS",
+        "metadata": {
+          "description": "VM image SKU"
+        }
+      },
+      "vmImageVersion": {
+        "type": "string",
+        "defaultValue": "latest",
+        "metadata": {
+          "description": "VM image version"
+        }
+      },
+      "loadBalancedAppPort1": {
+        "type": "int",
+        "defaultValue": 80,
+        "metadata": {
+          "description": "Input endpoint1 for the application to use. Replace it with what your application uses"
+        }
+      },
+      "loadBalancedAppPort2": {
+        "type": "int",
+        "defaultValue": 8081,
+        "metadata": {
+          "description": "Input endpoint2 for the application to use. Replace it with what your application uses"
+        }
+      },
+      "clusterProtectionLevel": {
+        "type": "string",
+        "allowedValues": [
+          "None",
+          "Sign",
+          "EncryptAndSign"
+        ],
+        "defaultValue": "EncryptAndSign",
+        "metadata": {
+          "description": "Protection level.Three values are allowed - EncryptAndSign, Sign, None. It is best to keep the default of EncryptAndSign, unless you have a need not to"
+        }
+      },
+      "certificateStoreValue": {
+        "type": "string",
+        "allowedValues": [
+          "My"
+        ],
+        "defaultValue": "My",
+        "metadata": {
+          "description": "The store name where the cert will be deployed in the virtual machine"
+        }
+      },
+      "certificateThumbprint": {
+        "type": "string",
+        "metadata": {
+          "description": "Certificate Thumbprint"
+        },
+        "value": "GEN-SF-CERT-THUMBPRINT"
+      },
+      "sourceVaultValue": {
+        "type": "string",
+        "metadata": {
+          "description": "Resource Id of the key vault, is should be in the format of /subscriptions/<Sub ID>/resourceGroups/<Resource group name>/providers/Microsoft.KeyVault/vaults/<vault name>"
+        },
+        "value": "GEN-KEYVAULT-RESOURCE-ID"
+      },
+      "certificateUrlValue": {
+        "type": "string",
+        "metadata": {
+          "description": "Refers to the location URL in your key vault where the certificate was uploaded"
+        },
+        "value": "GEN-SF-CERT-URL"
+      },
+      "storageAccountType": {
+        "type": "string",
+        "allowedValues": [
+          "Standard_LRS",
+          "Standard_GRS"
+        ],
+        "defaultValue": "Standard_LRS",
+        "metadata": {
+          "description": "Replication option for the VM image storage account"
+        }
+      },
+      "supportLogStorageAccountType": {
+        "type": "string",
+        "allowedValues": [
+          "Standard_LRS",
+          "Standard_GRS"
+        ],
+        "defaultValue": "Standard_LRS",
+        "metadata": {
+          "description": "Replication option for the support log storage account"
+        }
+      },
+      "applicationDiagnosticsStorageAccountType": {
+        "type": "string",
+        "allowedValues": [
+          "Standard_LRS",
+          "Standard_GRS"
+        ],
+        "defaultValue": "Standard_LRS",
+        "metadata": {
+          "description": "Replication option for the application diagnostics storage account"
+        }
+      },
+      "nt0InstanceCount": {
+        "type": "int",
+        "defaultValue": 5,
+        "metadata": {
+          "description": "Instance count for node type"
+        }
+      },
+      "vmNodeType0Size": {
+        "type": "string",
+        "defaultValue": "Standard_D2_v3",
+        "metadata": {
+          "description": "VM Type"
+        }
+      },
+      "storageAccountEndPoint": {
+        "type": "string",
+        "metadata": {
+          "description": "Location of the Cluster"
+        },
+        "value": "https://core.windows.net/"
+      }
+    },
+    "variables": {
+      "computeLocation": "[resourceGroup().location]",
+      "dnsName": "GEN-UNIQUE",
+      "vmName": "vm",
+      "virtualNetworkName": "VNet",
+      "addressPrefix": "10.0.0.0/16",
+      "nicName": "NIC",
+      "lbIPName": "PublicIP-LB-FE",
+      "overProvision": "false",
+      "nt0applicationStartPort": "20000",
+      "nt0applicationEndPort": "30000",
+      "nt0ephemeralStartPort": "49152",
+      "nt0ephemeralEndPort": "65534",
+      "nt0fabricTcpGatewayPort": "19000",
+      "nt0fabricHttpGatewayPort": "19080",
+      "subnet0Name": "Subnet-0",
+      "subnet0Prefix": "10.0.0.0/24",
+      "subnet0Ref": "Microsoft.Network/virtualNetworks/subnets//VNet/Subnet-0",
+      "supportLogStorageAccountName": "[toLower( concat( uniqueString(resourceGroup().id),'2'))]",
+      "applicationDiagnosticsStorageAccountName": "[toLower(concat('wad',uniqueString(resourceGroup().id), '3' ))]",
+      "wadlogs": "<WadCfg><DiagnosticMonitorConfiguration>",
+      "wadperfcounters1": "<PerformanceCounters scheduledTransferPeriod=\"PT1M\"><PerformanceCounterConfiguration counterSpecifier=\"\\Memory\\AvailableMemory\" sampleRate=\"PT15S\" unit=\"Bytes\"><annotation displayName=\"Memory available\" locale=\"en-us\"/></PerformanceCounterConfiguration><PerformanceCounterConfiguration counterSpecifier=\"\\Memory\\PercentAvailableMemory\" sampleRate=\"PT15S\" unit=\"Percent\"><annotation displayName=\"Mem. percent available\" locale=\"en-us\"/></PerformanceCounterConfiguration><PerformanceCounterConfiguration counterSpecifier=\"\\Memory\\UsedMemory\" sampleRate=\"PT15S\" unit=\"Bytes\"><annotation displayName=\"Memory used\" locale=\"en-us\"/></PerformanceCounterConfiguration><PerformanceCounterConfiguration counterSpecifier=\"\\Memory\\PercentUsedMemory\" sampleRate=\"PT15S\" unit=\"Percent\"><annotation displayName=\"Memory percentage\" locale=\"en-us\"/></PerformanceCounterConfiguration><PerformanceCounterConfiguration counterSpecifier=\"\\Memory\\PercentUsedByCache\" sampleRate=\"PT15S\" unit=\"Percent\"><annotation displayName=\"Mem. used by cache\" locale=\"en-us\"/></PerformanceCounterConfiguration><PerformanceCounterConfiguration counterSpecifier=\"\\Processor\\PercentIdleTime\" sampleRate=\"PT15S\" unit=\"Percent\"><annotation displayName=\"CPU idle time\" locale=\"en-us\"/></PerformanceCounterConfiguration><PerformanceCounterConfiguration counterSpecifier=\"\\Processor\\PercentUserTime\" sampleRate=\"PT15S\" unit=\"Percent\"><annotation displayName=\"CPU user time\" locale=\"en-us\"/></PerformanceCounterConfiguration><PerformanceCounterConfiguration counterSpecifier=\"\\Processor\\PercentProcessorTime\" sampleRate=\"PT15S\" unit=\"Percent\"><annotation displayName=\"CPU percentage guest OS\" locale=\"en-us\"/></PerformanceCounterConfiguration><PerformanceCounterConfiguration counterSpecifier=\"\\Processor\\PercentIOWaitTime\" sampleRate=\"PT15S\" unit=\"Percent\"><annotation displayName=\"CPU IO wait time\" locale=\"en-us\"/></PerformanceCounterConfiguration>",
+      "wadperfcounters2": "<PerformanceCounterConfiguration counterSpecifier=\"\\PhysicalDisk\\BytesPerSecond\" sampleRate=\"PT15S\" unit=\"BytesPerSecond\"><annotation displayName=\"Disk total bytes\" locale=\"en-us\"/></PerformanceCounterConfiguration><PerformanceCounterConfiguration counterSpecifier=\"\\PhysicalDisk\\ReadBytesPerSecond\" sampleRate=\"PT15S\" unit=\"BytesPerSecond\"><annotation displayName=\"Disk read guest OS\" locale=\"en-us\"/></PerformanceCounterConfiguration><PerformanceCounterConfiguration counterSpecifier=\"\\PhysicalDisk\\WriteBytesPerSecond\" sampleRate=\"PT15S\" unit=\"BytesPerSecond\"><annotation displayName=\"Disk write guest OS\" locale=\"en-us\"/></PerformanceCounterConfiguration><PerformanceCounterConfiguration counterSpecifier=\"\\PhysicalDisk\\TransfersPerSecond\" sampleRate=\"PT15S\" unit=\"CountPerSecond\"><annotation displayName=\"Disk transfers\" locale=\"en-us\"/></PerformanceCounterConfiguration><PerformanceCounterConfiguration counterSpecifier=\"\\PhysicalDisk\\ReadsPerSecond\" sampleRate=\"PT15S\" unit=\"CountPerSecond\"><annotation displayName=\"Disk reads\" locale=\"en-us\"/></PerformanceCounterConfiguration><PerformanceCounterConfiguration counterSpecifier=\"\\PhysicalDisk\\WritesPerSecond\" sampleRate=\"PT15S\" unit=\"CountPerSecond\"><annotation displayName=\"Disk writes\" locale=\"en-us\"/></PerformanceCounterConfiguration><PerformanceCounterConfiguration counterSpecifier=\"\\PhysicalDisk\\AverageReadTime\" sampleRate=\"PT15S\" unit=\"Seconds\"><annotation displayName=\"Disk read time\" locale=\"en-us\"/></PerformanceCounterConfiguration><PerformanceCounterConfiguration counterSpecifier=\"\\PhysicalDisk\\AverageWriteTime\" sampleRate=\"PT15S\" unit=\"Seconds\"><annotation displayName=\"Disk write time\" locale=\"en-us\"/></PerformanceCounterConfiguration><PerformanceCounterConfiguration counterSpecifier=\"\\PhysicalDisk\\AverageTransferTime\" sampleRate=\"PT15S\" unit=\"Seconds\"><annotation displayName=\"Disk transfer time\" locale=\"en-us\"/></PerformanceCounterConfiguration><PerformanceCounterConfiguration counterSpecifier=\"\\PhysicalDisk\\AverageDiskQueueLength\" sampleRate=\"PT15S\" unit=\"Count\"><annotation displayName=\"Disk queue length\" locale=\"en-us\"/></PerformanceCounterConfiguration></PerformanceCounters>",
+      "wadcfgxstart": "<WadCfg><DiagnosticMonitorConfiguration><PerformanceCounters scheduledTransferPeriod=\"PT1M\"><PerformanceCounterConfiguration counterSpecifier=\"\\Memory\\AvailableMemory\" sampleRate=\"PT15S\" unit=\"Bytes\"><annotation displayName=\"Memory available\" locale=\"en-us\"/></PerformanceCounterConfiguration><PerformanceCounterConfiguration counterSpecifier=\"\\Memory\\PercentAvailableMemory\" sampleRate=\"PT15S\" unit=\"Percent\"><annotation displayName=\"Mem. percent available\" locale=\"en-us\"/></PerformanceCounterConfiguration><PerformanceCounterConfiguration counterSpecifier=\"\\Memory\\UsedMemory\" sampleRate=\"PT15S\" unit=\"Bytes\"><annotation displayName=\"Memory used\" locale=\"en-us\"/></PerformanceCounterConfiguration><PerformanceCounterConfiguration counterSpecifier=\"\\Memory\\PercentUsedMemory\" sampleRate=\"PT15S\" unit=\"Percent\"><annotation displayName=\"Memory percentage\" locale=\"en-us\"/></PerformanceCounterConfiguration><PerformanceCounterConfiguration counterSpecifier=\"\\Memory\\PercentUsedByCache\" sampleRate=\"PT15S\" unit=\"Percent\"><annotation displayName=\"Mem. used by cache\" locale=\"en-us\"/></PerformanceCounterConfiguration><PerformanceCounterConfiguration counterSpecifier=\"\\Processor\\PercentIdleTime\" sampleRate=\"PT15S\" unit=\"Percent\"><annotation displayName=\"CPU idle time\" locale=\"en-us\"/></PerformanceCounterConfiguration><PerformanceCounterConfiguration counterSpecifier=\"\\Processor\\PercentUserTime\" sampleRate=\"PT15S\" unit=\"Percent\"><annotation displayName=\"CPU user time\" locale=\"en-us\"/></PerformanceCounterConfiguration><PerformanceCounterConfiguration counterSpecifier=\"\\Processor\\PercentProcessorTime\" sampleRate=\"PT15S\" unit=\"Percent\"><annotation displayName=\"CPU percentage guest OS\" locale=\"en-us\"/></PerformanceCounterConfiguration><PerformanceCounterConfiguration counterSpecifier=\"\\Processor\\PercentIOWaitTime\" sampleRate=\"PT15S\" unit=\"Percent\"><annotation displayName=\"CPU IO wait time\" locale=\"en-us\"/></PerformanceCounterConfiguration><PerformanceCounterConfiguration counterSpecifier=\"\\PhysicalDisk\\BytesPerSecond\" sampleRate=\"PT15S\" unit=\"BytesPerSecond\"><annotation displayName=\"Disk total bytes\" locale=\"en-us\"/></PerformanceCounterConfiguration><PerformanceCounterConfiguration counterSpecifier=\"\\PhysicalDisk\\ReadBytesPerSecond\" sampleRate=\"PT15S\" unit=\"BytesPerSecond\"><annotation displayName=\"Disk read guest OS\" locale=\"en-us\"/></PerformanceCounterConfiguration><PerformanceCounterConfiguration counterSpecifier=\"\\PhysicalDisk\\WriteBytesPerSecond\" sampleRate=\"PT15S\" unit=\"BytesPerSecond\"><annotation displayName=\"Disk write guest OS\" locale=\"en-us\"/></PerformanceCounterConfiguration><PerformanceCounterConfiguration counterSpecifier=\"\\PhysicalDisk\\TransfersPerSecond\" sampleRate=\"PT15S\" unit=\"CountPerSecond\"><annotation displayName=\"Disk transfers\" locale=\"en-us\"/></PerformanceCounterConfiguration><PerformanceCounterConfiguration counterSpecifier=\"\\PhysicalDisk\\ReadsPerSecond\" sampleRate=\"PT15S\" unit=\"CountPerSecond\"><annotation displayName=\"Disk reads\" locale=\"en-us\"/></PerformanceCounterConfiguration><PerformanceCounterConfiguration counterSpecifier=\"\\PhysicalDisk\\WritesPerSecond\" sampleRate=\"PT15S\" unit=\"CountPerSecond\"><annotation displayName=\"Disk writes\" locale=\"en-us\"/></PerformanceCounterConfiguration><PerformanceCounterConfiguration counterSpecifier=\"\\PhysicalDisk\\AverageReadTime\" sampleRate=\"PT15S\" unit=\"Seconds\"><annotation displayName=\"Disk read time\" locale=\"en-us\"/></PerformanceCounterConfiguration><PerformanceCounterConfiguration counterSpecifier=\"\\PhysicalDisk\\AverageWriteTime\" sampleRate=\"PT15S\" unit=\"Seconds\"><annotation displayName=\"Disk write time\" locale=\"en-us\"/></PerformanceCounterConfiguration><PerformanceCounterConfiguration counterSpecifier=\"\\PhysicalDisk\\AverageTransferTime\" sampleRate=\"PT15S\" unit=\"Seconds\"><annotation displayName=\"Disk transfer time\" locale=\"en-us\"/></PerformanceCounterConfiguration><PerformanceCounterConfiguration counterSpecifier=\"\\PhysicalDisk\\AverageDiskQueueLength\" sampleRate=\"PT15S\" unit=\"Count\"><annotation displayName=\"Disk queue length\" locale=\"en-us\"/></PerformanceCounterConfiguration></PerformanceCounters><Metrics resourceId=\"",
+      "wadcfgxend": "\"><MetricAggregation scheduledTransferPeriod=\"PT1H\"/><MetricAggregation scheduledTransferPeriod=\"PT1M\"/></Metrics></DiagnosticMonitorConfiguration></WadCfg>",
+      "vmNodeType0Name": "[toLower(concat('NT1', variables('vmName')))]",
+      "wadmetricsresourceid0": "[concat('/subscriptions/',subscription().subscriptionId,'/resourceGroups/',resourceGroup().name ,'/providers/','Microsoft.Compute/virtualMachineScaleSets/', variables('vmNodeType0Name'))]"
+    },
+    "resources": [
+      {
+        "apiVersion": "2021-02-01",
+        "type": "Microsoft.Storage/storageAccounts",
+        "name": "[toLower( concat( uniqueString(resourceGroup().id),'2'))]",
+        "location": "[resourceGroup().location]",
+        "properties": {},
+        "kind": "Storage",
+        "sku": {
+          "name": "Standard_LRS"
+        },
+        "tags": {
+          "resourceType": "Service Fabric",
+          "clusterName": "GEN-UNIQUE"
+        }
+      },
+      {
+        "apiVersion": "2021-02-01",
+        "type": "Microsoft.Storage/storageAccounts",
+        "name": "[toLower(concat('wad',uniqueString(resourceGroup().id), '3' ))]",
+        "location": "[resourceGroup().location]",
+        "properties": {},
+        "kind": "Storage",
+        "sku": {
+          "name": "Standard_LRS"
+        },
+        "tags": {
+          "resourceType": "Service Fabric",
+          "clusterName": "GEN-UNIQUE"
+        }
+      },
+      {
+        "apiVersion": "2020-07-01",
+        "type": "Microsoft.Network/virtualNetworks",
+        "name": "VNet",
+        "location": "[resourceGroup().location]",
+        "properties": {
+          "addressSpace": {
+            "addressPrefixes": [
+              "10.0.0.0/16"
+            ]
+          },
+          "subnets": [
+            {
+              "name": "Subnet-0",
+              "properties": {
+                "addressPrefix": "10.0.0.0/24"
+              }
+            }
+          ]
+        },
+        "tags": {
+          "resourceType": "Service Fabric",
+          "clusterName": "GEN-UNIQUE"
+        }
+      },
+      {
+        "apiVersion": "2020-07-01",
+        "type": "Microsoft.Network/publicIPAddresses",
+        "name": "PublicIP-LB-FE-[toLower(concat('NT1', variables('vmName')))]",
+        "location": "[resourceGroup().location]",
+        "properties": {
+          "dnsSettings": {
+            "domainNameLabel": "GEN-UNIQUE"
+          },
+          "publicIPAllocationMethod": "Dynamic"
+        },
+        "tags": {
+          "resourceType": "Service Fabric",
+          "clusterName": "GEN-UNIQUE"
+        }
+      },
+      {
+        "apiVersion": "2020-07-01",
+        "type": "Microsoft.Network/loadBalancers",
+        "name": "LB-GEN-UNIQUE-[toLower(concat('NT1', variables('vmName')))]",
+        "location": "[resourceGroup().location]",
+        "dependsOn": [
+          "Microsoft.Network/publicIPAddresses/PublicIP-LB-FE-[toLower(concat('NT1', variables('vmName')))]"
+        ],
+        "properties": {
+          "frontendIPConfigurations": [
+            {
+              "name": "LoadBalancerIPConfig",
+              "properties": {
+                "publicIPAddress": {
+                  "id": "Microsoft.Network/publicIPAddresses/PublicIP-LB-FE-[toLower(concat('NT1', variables('vmName')))]"
+                }
+              }
+            }
+          ],
+          "backendAddressPools": [
+            {
+              "name": "LoadBalancerBEAddressPool",
+              "properties": {}
+            }
+          ],
+          "loadBalancingRules": [
+            {
+              "name": "LBRule",
+              "properties": {
+                "backendAddressPool": {
+                  "id": "Microsoft.Network/loadBalancers/backendAddressPools/LB-GEN-UNIQUE-[toLower(concat('NT1', variables('vmName')))]/LoadBalancerBEAddressPool"
+                },
+                "backendPort": "19000",
+                "enableFloatingIP": "false",
+                "frontendIPConfiguration": {
+                  "id": "Microsoft.Network/loadBalancers/frontendIPConfigurations/LB-GEN-UNIQUE-[toLower(concat('NT1', variables('vmName')))]/LoadBalancerIPConfig"
+                },
+                "frontendPort": "19000",
+                "idleTimeoutInMinutes": "5",
+                "probe": {
+                  "id": "Microsoft.Network/loadBalancers/probes/LB-GEN-UNIQUE-[toLower(concat('NT1', variables('vmName')))]/FabricGatewayProbe"
+                },
+                "protocol": "Tcp"
+              }
+            },
+            {
+              "name": "LBHttpRule",
+              "properties": {
+                "backendAddressPool": {
+                  "id": "Microsoft.Network/loadBalancers/backendAddressPools/LB-GEN-UNIQUE-[toLower(concat('NT1', variables('vmName')))]/LoadBalancerBEAddressPool"
+                },
+                "backendPort": "19080",
+                "enableFloatingIP": "false",
+                "frontendIPConfiguration": {
+                  "id": "Microsoft.Network/loadBalancers/frontendIPConfigurations/LB-GEN-UNIQUE-[toLower(concat('NT1', variables('vmName')))]/LoadBalancerIPConfig"
+                },
+                "frontendPort": "19080",
+                "idleTimeoutInMinutes": "5",
+                "probe": {
+                  "id": "Microsoft.Network/loadBalancers/probes/LB-GEN-UNIQUE-[toLower(concat('NT1', variables('vmName')))]/FabricHttpGatewayProbe"
+                },
+                "protocol": "Tcp"
+              }
+            },
+            {
+              "name": "AppPortLBRule1",
+              "properties": {
+                "backendAddressPool": {
+                  "id": "Microsoft.Network/loadBalancers/backendAddressPools/LB-GEN-UNIQUE-[toLower(concat('NT1', variables('vmName')))]/LoadBalancerBEAddressPool"
+                },
+                "backendPort": 80,
+                "enableFloatingIP": "false",
+                "frontendIPConfiguration": {
+                  "id": "Microsoft.Network/loadBalancers/frontendIPConfigurations/LB-GEN-UNIQUE-[toLower(concat('NT1', variables('vmName')))]/LoadBalancerIPConfig"
+                },
+                "frontendPort": 80,
+                "idleTimeoutInMinutes": "5",
+                "probe": {
+                  "id": "Microsoft.Network/loadBalancers/probes/LB-GEN-UNIQUE-[toLower(concat('NT1', variables('vmName')))]/AppPortProbe1"
+                },
+                "protocol": "Tcp"
+              }
+            },
+            {
+              "name": "AppPortLBRule2",
+              "properties": {
+                "backendAddressPool": {
+                  "id": "Microsoft.Network/loadBalancers/backendAddressPools/LB-GEN-UNIQUE-[toLower(concat('NT1', variables('vmName')))]/LoadBalancerBEAddressPool"
+                },
+                "backendPort": 8081,
+                "enableFloatingIP": "false",
+                "frontendIPConfiguration": {
+                  "id": "Microsoft.Network/loadBalancers/frontendIPConfigurations/LB-GEN-UNIQUE-[toLower(concat('NT1', variables('vmName')))]/LoadBalancerIPConfig"
+                },
+                "frontendPort": 8081,
+                "idleTimeoutInMinutes": "5",
+                "probe": {
+                  "id": "Microsoft.Network/loadBalancers/probes/LB-GEN-UNIQUE-[toLower(concat('NT1', variables('vmName')))]/AppPortProbe2"
+                },
+                "protocol": "Tcp"
+              }
+            }
+          ],
+          "probes": [
+            {
+              "name": "FabricGatewayProbe",
+              "properties": {
+                "intervalInSeconds": 5,
+                "numberOfProbes": 2,
+                "port": "19000",
+                "protocol": "Tcp"
+              }
+            },
+            {
+              "name": "FabricHttpGatewayProbe",
+              "properties": {
+                "intervalInSeconds": 5,
+                "numberOfProbes": 2,
+                "port": "19080",
+                "protocol": "Tcp"
+              }
+            },
+            {
+              "name": "AppPortProbe1",
+              "properties": {
+                "intervalInSeconds": 5,
+                "numberOfProbes": 2,
+                "port": 80,
+                "protocol": "Tcp"
+              }
+            },
+            {
+              "name": "AppPortProbe2",
+              "properties": {
+                "intervalInSeconds": 5,
+                "numberOfProbes": 2,
+                "port": 8081,
+                "protocol": "Tcp"
+              }
+            }
+          ],
+          "inboundNatPools": [
+            {
+              "name": "LoadBalancerBEAddressNatPool",
+              "properties": {
+                "backendPort": "22",
+                "frontendIPConfiguration": {
+                  "id": "Microsoft.Network/loadBalancers/frontendIPConfigurations/LB-GEN-UNIQUE-[toLower(concat('NT1', variables('vmName')))]/LoadBalancerIPConfig"
+                },
+                "frontendPortRangeEnd": "4500",
+                "frontendPortRangeStart": "3389",
+                "protocol": "Tcp"
+              }
+            }
+          ]
+        },
+        "tags": {
+          "resourceType": "Service Fabric",
+          "clusterName": "GEN-UNIQUE"
+        }
+      },
+      {
+        "apiVersion": "2020-12-01",
+        "type": "Microsoft.Compute/virtualMachineScaleSets",
+        "name": "[toLower(concat('NT1', variables('vmName')))]",
+        "location": "[resourceGroup().location]",
+        "dependsOn": [
+          "Microsoft.Network/virtualNetworks/VNet",
+          "Microsoft.Network/loadBalancers/LB-GEN-UNIQUE-[toLower(concat('NT1', variables('vmName')))]",
+          "Microsoft.Storage/storageAccounts/[toLower( concat( uniqueString(resourceGroup().id),'2'))]",
+          "Microsoft.Storage/storageAccounts/[toLower(concat('wad',uniqueString(resourceGroup().id), '3' ))]"
+        ],
+        "properties": {
+          "overprovision": "false",
+          "upgradePolicy": {
+            "mode": "Automatic"
+          },
+          "virtualMachineProfile": {
+            "extensionProfile": {
+              "extensions": [
+                {
+                  "name": "ServiceFabricNodeVmExt_vmNodeType0Name",
+                  "properties": {
+                    "type": "ServiceFabricLinuxNode",
+                    "autoUpgradeMinorVersion": true,
+                    "protectedSettings": {
+                      "StorageAccountKey1": "[listKeys(resourceId('Microsoft.Storage/storageAccounts', variables('supportLogStorageAccountName')),'2020-08-01-preview').keys[0]]",
+                      "StorageAccountKey2": "[listKeys(resourceId('Microsoft.Storage/storageAccounts', variables('supportLogStorageAccountName')),'2020-08-01-preview').keys[1]]"
+                    },
+                    "publisher": "Microsoft.Azure.ServiceFabric",
+                    "settings": {
+                      "clusterEndpoint": "[reference(parameters('clusterName')).clusterEndpoint]",
+                      "nodeTypeRef": "[toLower(concat('NT1', variables('vmName')))]",
+                      "durabilityLevel": "Bronze",
+                      "enableParallelJobs": true,
+                      "nicPrefixOverride": "10.0.0.0/24",
+                      "certificate": {
+                        "thumbprint": "GEN-SF-CERT-THUMBPRINT",
+                        "x509StoreName": "My"
+                      }
+                    },
+                    "typeHandlerVersion": "1.0"
+                  }
+                },
+                {
+                  "name": "VMDiagnosticsVmExt_vmNodeType0Name",
+                  "properties": {
+                    "type": "LinuxDiagnostic",
+                    "autoUpgradeMinorVersion": true,
+                    "protectedSettings": {
+                      "storageAccountName": "[toLower(concat('wad',uniqueString(resourceGroup().id), '3' ))]",
+                      "storageAccountKey": "[listKeys(resourceId('Microsoft.Storage/storageAccounts', variables('applicationDiagnosticsStorageAccountName')),'2020-08-01-preview').keys[0]]",
+                      "storageAccountEndPoint": "https://core.windows.net/"
+                    },
+                    "publisher": "Microsoft.OSTCExtensions",
+                    "settings": {
+                      "xmlCfg": "[base64(concat(variables('wadcfgxstart'),variables('wadmetricsresourceid0'),variables('wadcfgxend')))]",
+                      "StorageAccount": "[toLower(concat('wad',uniqueString(resourceGroup().id), '3' ))]"
+                    },
+                    "typeHandlerVersion": "2.3"
+                  }
+                }
+              ]
+            },
+            "networkProfile": {
+              "networkInterfaceConfigurations": [
+                {
+                  "name": "NIC-0",
+                  "properties": {
+                    "ipConfigurations": [
+                      {
+                        "name": "NIC-0",
+                        "properties": {
+                          "loadBalancerBackendAddressPools": [
+                            {
+                              "id": "Microsoft.Network/loadBalancers/backendAddressPools/LB-GEN-UNIQUE-[toLower(concat('NT1', variables('vmName')))]/LoadBalancerBEAddressPool"
+                            }
+                          ],
+                          "loadBalancerInboundNatPools": [
+                            {
+                              "id": "Microsoft.Network/loadBalancers/inboundNatPools/LB-GEN-UNIQUE-[toLower(concat('NT1', variables('vmName')))]/LoadBalancerBEAddressNatPool"
+                            }
+                          ],
+                          "subnet": {
+                            "id": "Microsoft.Network/virtualNetworks/subnets//VNet/Subnet-0"
+                          }
+                        }
+                      }
+                    ],
+                    "primary": true
+                  }
+                }
+              ]
+            },
+            "osProfile": {
+              "adminPassword": "GEN-PASSWORD",
+              "adminUsername": "adminUsername",
+              "computernamePrefix": "[toLower(concat('NT1', variables('vmName')))]",
+              "secrets": [
+                {
+                  "sourceVault": {
+                    "id": "GEN-KEYVAULT-RESOURCE-ID"
+                  },
+                  "vaultCertificates": [
+                    {
+                      "certificateUrl": "GEN-SF-CERT-URL"
+                    }
+                  ]
+                }
+              ]
+            },
+            "storageProfile": {
+              "imageReference": {
+                "publisher": "Canonical",
+                "offer": "UbuntuServer",
+                "sku": "16.04-LTS",
+                "version": "latest"
+              },
+              "osDisk": {
+                "caching": "ReadOnly",
+                "createOption": "FromImage",
+                "managedDisk": {
+                  "storageAccountType": "Standard_LRS"
+                }
+              }
+            }
+          }
+        },
+        "sku": {
+          "name": "Standard_D2_v3",
+          "capacity": 5,
+          "tier": "Standard"
+        },
+        "tags": {
+          "resourceType": "Service Fabric",
+          "clusterName": "GEN-UNIQUE"
+        }
+      },
+      {
+        "apiVersion": "2017-07-01-preview",
+        "type": "Microsoft.ServiceFabric/clusters",
+        "name": "GEN-UNIQUE",
+        "location": "[resourceGroup().location]",
+        "dependsOn": [
+          "Microsoft.Storage/storageAccounts//[toLower( concat( uniqueString(resourceGroup().id),'2'))]"
+        ],
+        "properties": {
+          "addonFeatures": [
+            "DnsService",
+            "RepairManager"
+          ],
+          "certificate": {
+            "thumbprint": "GEN-SF-CERT-THUMBPRINT",
+            "x509StoreName": "My"
+          },
+          "clusterState": "Default",
+          "diagnosticsStorageAccountConfig": {
+            "blobEndpoint": "[reference(variables('supportLogStorageAccountName'), '2020-08-01-preview').primaryEndpoints['blob']]",
+            "protectedAccountKeyName": "StorageAccountKey1",
+            "queueEndpoint": "[reference(variables('supportLogStorageAccountName'), '2020-08-01-preview').primaryEndpoints['queue']]",
+            "storageAccountName": "[toLower( concat( uniqueString(resourceGroup().id),'2'))]",
+            "tableEndpoint": "[reference(variables('supportLogStorageAccountName'), '2020-08-01-preview').primaryEndpoints['table']]"
+          },
+          "fabricSettings": [
+            {
+              "parameters": [
+                {
+                  "name": "ClusterProtectionLevel",
+                  "value": "EncryptAndSign"
+                }
+              ],
+              "name": "Security"
+            }
+          ],
+          "managementEndpoint": "[concat('https://',reference(resourceId('Microsoft.Network/publicIPAddresses',concat(variables('lbIPName'),'-',variables('vmNodeType0Name')))).dnsSettings.fqdn,':',variables('nt0fabricHttpGatewayPort'))]",
+          "nodeTypes": [
+            {
+              "name": "[toLower(concat('NT1', variables('vmName')))]",
+              "applicationPorts": {
+                "endPort": "30000",
+                "startPort": "20000"
+              },
+              "clientConnectionEndpointPort": "19000",
+              "durabilityLevel": "Bronze",
+              "ephemeralPorts": {
+                "endPort": "65534",
+                "startPort": "49152"
+              },
+              "httpGatewayEndpointPort": "19080",
+              "isPrimary": true,
+              "vmInstanceCount": 5
+            }
+          ],
+          "provisioningState": "Default",
+          "reliabilityLevel": "Silver",
+          "upgradeMode": "Automatic",
+          "vmImage": "Linux"
+        },
+        "tags": {
+          "resourceType": "Service Fabric",
+          "clusterName": "GEN-UNIQUE"
+        }
+      }
+    ],
+    "outputs": {
+      "clusterProperties": {
+        "value": "[reference(parameters('clusterName'))]",
+        "type": "object"
+      }
+    },
+    "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+  }
+}

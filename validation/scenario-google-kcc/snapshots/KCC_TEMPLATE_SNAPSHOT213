@@ -2,12 +2,12 @@
   "structure": "filesystem",
   "error": null,
   "reference": "master",
-  "contentType": "yaml",
+  "contentType": "json",
   "source": "gitConnectorGoogleKcc",
   "paths": [
-    "/samples/resources/computerouternat/router-nat-with-manual-nat-ips/compute_v1beta1_computeaddress.yaml"
+    "/samples/resources/computepacketmirroring/compute_v1beta1_computeinstance.yaml"
   ],
-  "timestamp": 1628765142758,
+  "timestamp": 1642973302995,
   "queryuser": null,
   "checksum": "99914b932bd37a50b983c5e7c90ae93b",
   "node": {
@@ -15,22 +15,47 @@
     "type": "kcc",
     "collection": "kcctemplate",
     "paths": [
-      "/samples/resources/computerouternat/router-nat-with-manual-nat-ips/compute_v1beta1_computeaddress.yaml"
+      "/samples/resources/computepacketmirroring/compute_v1beta1_computeinstance.yaml"
     ],
     "snapshotId": "KCC_TEMPLATE_SNAPSHOT213",
     "status": "active",
-    "validate": true
+    "validate": true,
+    "resourceTypes": [
+      "computeinstance"
+    ]
   },
   "snapshotId": "KCC_TEMPLATE_SNAPSHOT213",
   "collection": "kcctemplate",
   "json": {
     "apiVersion": "compute.cnrm.cloud.google.com/v1beta1",
-    "kind": "ComputeAddress",
+    "kind": "ComputeInstance",
     "metadata": {
-      "name": "computerouternat-dep-withmanualnatips"
+      "annotations": {
+        "cnrm.cloud.google.com/allow-stopping-for-update": "true"
+      },
+      "name": "computepacketmirroring-dep"
     },
     "spec": {
-      "location": "us-west1"
+      "zone": "us-west2-a",
+      "machineType": "zones/us-west2-a/machineTypes/e2-medium",
+      "bootDisk": {
+        "autoDelete": true,
+        "initializeParams": {
+          "sourceImageRef": {
+            "external": "projects/debian-cloud/global/images/debian-10-buster-v20210817"
+          }
+        }
+      },
+      "networkInterface": [
+        {
+          "networkRef": {
+            "name": "computepacketmirroring-dep"
+          },
+          "subnetworkRef": {
+            "name": "computepacketmirroring-dep"
+          }
+        }
+      ]
     }
   }
 }

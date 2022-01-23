@@ -1,0 +1,186 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAzureQuickStart",
+  "paths": [
+    "/application-workloads/ibm-cloud-pak/ibm-cloud-pak-for-data/nested/clusternode.json"
+  ],
+  "timestamp": 1642962888972,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/application-workloads/ibm-cloud-pak/ibm-cloud-pak-for-data/nested/clusternode.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT161",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "microsoft.compute/virtualmachines"
+    ]
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT161",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "location": {
+        "type": "string",
+        "minLength": 1,
+        "metadata": {
+          "description": "Datacenter Region Location"
+        }
+      },
+      "sshKeyPath": {
+        "type": "string",
+        "minLength": 1,
+        "metadata": {
+          "description": "SSH Public Key Path"
+        }
+      },
+      "sshPublicKey": {
+        "type": "string",
+        "minLength": 1,
+        "metadata": {
+          "description": "SSH Public Key"
+        }
+      },
+      "adminUsername": {
+        "type": "string",
+        "minLength": 1,
+        "metadata": {
+          "description": "Admin Username"
+        }
+      },
+      "dataDiskSize": {
+        "type": "int",
+        "metadata": {
+          "description": "Size of Data Disk"
+        }
+      },
+      "vmSize": {
+        "type": "string",
+        "metadata": {
+          "description": "VM Size"
+        }
+      },
+      "hostname": {
+        "type": "string",
+        "minLength": 1,
+        "metadata": {
+          "description": "VM Hostname"
+        }
+      },
+      "role": {
+        "type": "string",
+        "metadata": {
+          "description": "VM Role for tag"
+        }
+      },
+      "vmStorageType": {
+        "type": "string",
+        "metadata": {
+          "description": "VM Storage Type"
+        }
+      },
+      "diagStorageAccount": {
+        "type": "string",
+        "metadata": {
+          "description": "Diagnostics Storage Account"
+        }
+      },
+      "imageReference": {
+        "type": "object",
+        "metadata": {
+          "description": "Image Reference"
+        }
+      },
+      "redHatTags": {
+        "type": "object",
+        "metadata": {
+          "description": "Red Hat Tags"
+        }
+      }
+    },
+    "variables": {
+      "dataDisks": [
+        {
+          "name": "hostName-dataDisk",
+          "diskSizeGB": "dataDiskSize",
+          "lun": 0,
+          "managedDisk": {
+            "storageAccountType": "vmStorageType"
+          },
+          "createOption": "Empty"
+        }
+      ]
+    },
+    "resources": [
+      {
+        "type": "Microsoft.Compute/virtualMachines",
+        "name": "hostname",
+        "location": "location",
+        "apiVersion": "2021-07-01",
+        "tags": {
+          "Role": "role",
+          "app": "redHatTags",
+          "version": "redHatTags"
+        },
+        "properties": {
+          "hardwareProfile": {
+            "vmSize": "vmSize"
+          },
+          "osProfile": {
+            "computerName": "hostname",
+            "adminUsername": "adminUsername",
+            "linuxConfiguration": {
+              "disablePasswordAuthentication": true,
+              "ssh": {
+                "publicKeys": [
+                  {
+                    "path": "sshKeyPath",
+                    "keyData": "sshPublicKey"
+                  }
+                ]
+              }
+            }
+          },
+          "storageProfile": {
+            "imageReference": "imageReference",
+            "osDisk": {
+              "name": "hostName-osdisk",
+              "managedDisk": {
+                "storageAccountType": "vmStorageType"
+              },
+              "caching": "ReadWrite",
+              "createOption": "FromImage",
+              "diskSizeGB": 256,
+              "osType": "Linux"
+            },
+            "dataDisks": "[if(equals(parameters('hostName'), 'bastionNode'), json('null'), variables('dataDisks'))]"
+          },
+          "networkProfile": {
+            "networkInterfaces": [
+              {
+                "id": "Microsoft.Network/networkInterfaces/hostname-nic"
+              }
+            ]
+          },
+          "diagnosticsProfile": {
+            "bootDiagnostics": {
+              "enabled": true,
+              "storageUri": "[reference(resourceId('Microsoft.Storage/storageAccounts', parameters('diagStorageAccount')), '2021-06-01').primaryEndpoints['blob']]"
+            }
+          }
+        }
+      }
+    ],
+    "outputs": {},
+    "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+  }
+}

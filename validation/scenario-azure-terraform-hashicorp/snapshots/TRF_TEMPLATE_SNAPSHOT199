@@ -1,0 +1,132 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "main",
+  "contentType": "json",
+  "source": "gitConnectorAzureTerraHashicorp",
+  "paths": [
+    "/examples/vm-scale-set/windows/data-disks/variables.tf",
+    "/examples/vm-scale-set/windows/data-disks/main.tf"
+  ],
+  "timestamp": 1642943280322,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "TRF_TEMPLATE_SNAPSHOT",
+    "type": "terraform",
+    "collection": "terraformtemplate",
+    "paths": [
+      "/examples/vm-scale-set/windows/data-disks/variables.tf",
+      "/examples/vm-scale-set/windows/data-disks/main.tf"
+    ],
+    "snapshotId": "TRF_TEMPLATE_SNAPSHOT199",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "azurerm_windows_virtual_machine_scale_set",
+      "azurerm_subnet",
+      "azurerm_virtual_network",
+      "azurerm_resource_group"
+    ]
+  },
+  "snapshotId": "TRF_TEMPLATE_SNAPSHOT199",
+  "collection": "terraformtemplate",
+  "json": {
+    "provider": [
+      {
+        "azurerm": {
+          "features": [
+            {}
+          ]
+        }
+      }
+    ],
+    "resources": [
+      {
+        "type": "azurerm_resource_group",
+        "name": "main",
+        "properties": {
+          "name": "${var.prefix}-resources",
+          "location": "${var.location}",
+          "compiletime_identity": "azurerm_resource_group.main"
+        }
+      },
+      {
+        "type": "azurerm_virtual_network",
+        "name": "main",
+        "properties": {
+          "name": "${var.prefix}-network",
+          "address_space": [
+            "10.0.0.0/16"
+          ],
+          "location": "${azurerm_resource_group.main.location}",
+          "resource_group_name": "${azurerm_resource_group.main.name}",
+          "compiletime_identity": "azurerm_virtual_network.main"
+        }
+      },
+      {
+        "type": "azurerm_subnet",
+        "name": "internal",
+        "properties": {
+          "name": "internal",
+          "resource_group_name": "${azurerm_resource_group.main.name}",
+          "virtual_network_name": "${azurerm_virtual_network.main.name}",
+          "address_prefixes": [
+            "10.0.2.0/24"
+          ],
+          "compiletime_identity": "azurerm_subnet.internal"
+        }
+      },
+      {
+        "type": "azurerm_windows_virtual_machine_scale_set",
+        "name": "main",
+        "properties": {
+          "name": "${var.prefix}vmss",
+          "resource_group_name": "${azurerm_resource_group.main.name}",
+          "location": "${azurerm_resource_group.main.location}",
+          "sku": "Standard_F2",
+          "instances": 3,
+          "admin_username": "adminuser",
+          "admin_password": "P@ssw0rd1234!",
+          "computer_name_prefix": "${var.prefix}",
+          "source_image_reference": [
+            {
+              "publisher": "MicrosoftWindowsServer",
+              "offer": "WindowsServer",
+              "sku": "2019-Datacenter",
+              "version": "latest"
+            }
+          ],
+          "network_interface": [
+            {
+              "name": "example",
+              "primary": true,
+              "ip_configuration": [
+                {
+                  "name": "internal",
+                  "primary": true,
+                  "subnet_id": "${azurerm_subnet.internal.id}"
+                }
+              ]
+            }
+          ],
+          "os_disk": [
+            {
+              "storage_account_type": "Standard_LRS",
+              "caching": "ReadWrite"
+            }
+          ],
+          "data_disk": [
+            {
+              "storage_account_type": "Standard_LRS",
+              "caching": "ReadWrite",
+              "disk_size_gb": 10,
+              "lun": 10
+            }
+          ],
+          "compiletime_identity": "azurerm_windows_virtual_machine_scale_set.main"
+        }
+      }
+    ]
+  }
+}

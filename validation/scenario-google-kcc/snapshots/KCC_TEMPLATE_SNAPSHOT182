@@ -2,12 +2,12 @@
   "structure": "filesystem",
   "error": null,
   "reference": "master",
-  "contentType": "yaml",
+  "contentType": "json",
   "source": "gitConnectorGoogleKcc",
   "paths": [
-    "/samples/resources/computenodegroup/compute_v1beta1_computenodegroup.yaml"
+    "/samples/resources/computeinstancegroupmanager/regional-compute-instance-group-manager/compute_v1beta1_computeinstancetemplate.yaml"
   ],
-  "timestamp": 1628765142077,
+  "timestamp": 1642973302875,
   "queryuser": null,
   "checksum": "99914b932bd37a50b983c5e7c90ae93b",
   "node": {
@@ -15,27 +15,43 @@
     "type": "kcc",
     "collection": "kcctemplate",
     "paths": [
-      "/samples/resources/computenodegroup/compute_v1beta1_computenodegroup.yaml"
+      "/samples/resources/computeinstancegroupmanager/regional-compute-instance-group-manager/compute_v1beta1_computeinstancetemplate.yaml"
     ],
     "snapshotId": "KCC_TEMPLATE_SNAPSHOT182",
     "status": "active",
-    "validate": true
+    "validate": true,
+    "resourceTypes": [
+      "computeinstancetemplate"
+    ]
   },
   "snapshotId": "KCC_TEMPLATE_SNAPSHOT182",
   "collection": "kcctemplate",
   "json": {
     "apiVersion": "compute.cnrm.cloud.google.com/v1beta1",
-    "kind": "ComputeNodeGroup",
+    "kind": "ComputeInstanceTemplate",
     "metadata": {
-      "name": "computenodegroup-sample"
+      "name": "computeinstancegroupmanager-dep-regional"
     },
     "spec": {
-      "description": "A single sole-tenant node in the us-central1-b zone.",
-      "size": 1,
-      "nodeTemplateRef": {
-        "name": "computenodegroup-dep"
-      },
-      "zone": "us-central1-b"
+      "machineType": "n1-standard-1",
+      "disk": [
+        {
+          "sourceImageRef": {
+            "external": "debian-cloud/debian-9"
+          },
+          "boot": true
+        }
+      ],
+      "networkInterface": [
+        {
+          "networkRef": {
+            "name": "computeinstancegroupmanager-dep-regional"
+          },
+          "subnetworkRef": {
+            "name": "computeinstancegroupmanager-dep-regional"
+          }
+        }
+      ]
     }
   }
 }

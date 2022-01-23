@@ -1,0 +1,308 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAzureQuickStart",
+  "paths": [
+    "/application-workloads/blockchain/blockchain/azuredeploy.json",
+    "/application-workloads/blockchain/blockchain/azuredeploy.parameters.json"
+  ],
+  "timestamp": 1642962883605,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/application-workloads/blockchain/blockchain/azuredeploy.json",
+      "/application-workloads/blockchain/blockchain/azuredeploy.parameters.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT34",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "microsoft.network/publicipaddresses",
+      "microsoft.network/virtualnetworks",
+      "microsoft.network/networkinterfaces",
+      "microsoft.compute/virtualmachines/extensions",
+      "microsoft.compute/virtualmachines"
+    ]
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT34",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "vmDnsPrefix": {
+        "type": "string",
+        "metadata": {
+          "description": "This is the unique DNS name of the for the public IP for your VM"
+        },
+        "value": "GEN-UNIQUE-11"
+      },
+      "adminUsername": {
+        "type": "string",
+        "metadata": {
+          "description": "This is the the username you wish to assign to your VMs admin account"
+        },
+        "value": "GEN-UNIQUE"
+      },
+      "blockchainSoftware": {
+        "type": "string",
+        "allowedValues": [
+          "bitcoin",
+          "bitshares",
+          "bitswift",
+          "blocknet",
+          "bloqenterprise",
+          "dash",
+          "digibyte",
+          "dynamic",
+          "emercoin",
+          "groestlcoin",
+          "influx",
+          "jumbucks",
+          "monero",
+          "multichain",
+          "nxt",
+          "okcash",
+          "particl",
+          "sequence",
+          "stratis",
+          "syscoin",
+          "vcash",
+          "vechain",
+          "viacoin"
+        ],
+        "metadata": {
+          "description": "The blockchain software to install on the VM"
+        },
+        "value": "nxt"
+      },
+      "vmSize": {
+        "type": "string",
+        "defaultValue": "Standard_D2_v3",
+        "metadata": {
+          "description": "Size of VM"
+        }
+      },
+      "_artifactsLocation": {
+        "type": "string",
+        "metadata": {
+          "description": "The base URI where artifacts required by this template are located. When the template is deployed using the accompanying scripts, a private location in the subscription will be used and this value will be automatically generated."
+        },
+        "defaultValue": "[deployment().properties.templateLink.uri]"
+      },
+      "_artifactsLocationSasToken": {
+        "type": "securestring",
+        "metadata": {
+          "description": "The sasToken required to access _artifactsLocation. When the template is deployed using the accompanying scripts, a sasToken will be automatically generated."
+        },
+        "defaultValue": ""
+      },
+      "location": {
+        "type": "string",
+        "defaultValue": "[resourceGroup().location]",
+        "metadata": {
+          "description": "Location for all resources."
+        }
+      },
+      "authenticationType": {
+        "type": "string",
+        "defaultValue": "sshPublicKey",
+        "allowedValues": [
+          "sshPublicKey",
+          "password"
+        ],
+        "metadata": {
+          "description": "Type of authentication to use on the Virtual Machine. SSH key is recommended."
+        }
+      },
+      "adminPasswordOrKey": {
+        "type": "securestring",
+        "metadata": {
+          "description": "SSH Key or password for the Virtual Machine. SSH key is recommended."
+        },
+        "value": "GEN-SSH-PUB-KEY"
+      }
+    },
+    "variables": {
+      "nicName": "VMNic",
+      "addressPrefix": "10.0.0.0/16",
+      "imagePublisher": "Canonical",
+      "imageVersion": "latest",
+      "imageSKU": "18.04-LTS",
+      "imageOffer": "UbuntuServer",
+      "subnetName": "Subnet-1",
+      "subnetPrefix": "10.0.0.0/24",
+      "publicIPAddressName": "publicIP",
+      "publicIPAddressType": "Dynamic",
+      "vmName": "GEN-UNIQUE-11",
+      "virtualNetworkName": "VNET",
+      "subnetRef": "Microsoft.Network/virtualNetworks/subnets/VNET/Subnet-1",
+      "linuxConfiguration": {
+        "disablePasswordAuthentication": true,
+        "ssh": {
+          "publicKeys": [
+            {
+              "path": "/home/GEN-UNIQUE/.ssh/authorized_keys",
+              "keyData": "GEN-SSH-PUB-KEY"
+            }
+          ]
+        }
+      },
+      "commandToExecute": {
+        "bitcoin": "sh nxt.sh From_SourceGEN-UNIQUE",
+        "bitshares": "sh nxt.sh From_Source",
+        "bitswift": "sh nxt.sh From_Source",
+        "blocknet": "sh nxt.sh From_Source",
+        "bloqenterprise": "sh nxt.sh Download_Binaries",
+        "dash": "sh nxt.sh From_SourceGEN-UNIQUE",
+        "digibyte": "sh nxt.sh From_Source",
+        "dynamic": "sh nxt.sh From_SourceGEN-UNIQUE",
+        "emercoin": "sh nxt.sh \"GEN-UNIQUE\" \"GEN-SSH-PUB-KEY\"",
+        "groestlcoin": "sh nxt.sh From_PPA GEN-UNIQUE",
+        "influx": "sh nxt.sh From_Source",
+        "jumbucks": "sh nxt.sh From_Source GEN-UNIQUE",
+        "monero": "sh nxt.sh Download_Binaries",
+        "multichain": "sh nxt.sh GEN-UNIQUE",
+        "nxt": "sh nxt.sh false false",
+        "okcash": "sh nxt.sh From_Source GEN-UNIQUE",
+        "particl": "sh nxt.sh From_Source GEN-UNIQUE",
+        "sequence": "sh nxt.sh From_SourceGEN-UNIQUE",
+        "stratis": "sh nxt.sh From_SourceGEN-UNIQUE",
+        "syscoin": "sh nxt.sh From_SourceGEN-UNIQUE",
+        "vcash": "sh nxt.sh From_Source",
+        "vechain": "sh nxt.sh main",
+        "viacoin": "sh nxt.sh From_Source"
+      }
+    },
+    "resources": [
+      {
+        "apiVersion": "2020-11-01",
+        "type": "Microsoft.Network/publicIPAddresses",
+        "name": "publicIP",
+        "location": "[resourceGroup().location]",
+        "properties": {
+          "publicIPAllocationMethod": "Dynamic",
+          "dnsSettings": {
+            "domainNameLabel": "GEN-UNIQUE-11"
+          }
+        }
+      },
+      {
+        "apiVersion": "2020-11-01",
+        "type": "Microsoft.Network/virtualNetworks",
+        "name": "VNET",
+        "location": "[resourceGroup().location]",
+        "properties": {
+          "addressSpace": {
+            "addressPrefixes": [
+              "10.0.0.0/16"
+            ]
+          },
+          "subnets": [
+            {
+              "name": "Subnet-1",
+              "properties": {
+                "addressPrefix": "10.0.0.0/24"
+              }
+            }
+          ]
+        }
+      },
+      {
+        "apiVersion": "2020-11-01",
+        "type": "Microsoft.Network/networkInterfaces",
+        "name": "VMNic",
+        "location": "[resourceGroup().location]",
+        "dependsOn": [
+          "Microsoft.Network/publicIPAddresses/publicIP",
+          "Microsoft.Network/virtualNetworks/VNET"
+        ],
+        "properties": {
+          "ipConfigurations": [
+            {
+              "name": "ipconfig1",
+              "properties": {
+                "privateIPAllocationMethod": "Dynamic",
+                "publicIPAddress": {
+                  "id": "Microsoft.Network/publicIPAddresses/publicIP"
+                },
+                "subnet": {
+                  "id": "Microsoft.Network/virtualNetworks/subnets/VNET/Subnet-1"
+                }
+              }
+            }
+          ]
+        }
+      },
+      {
+        "apiVersion": "2020-12-01",
+        "type": "Microsoft.Compute/virtualMachines",
+        "name": "GEN-UNIQUE-11",
+        "location": "[resourceGroup().location]",
+        "dependsOn": [
+          "Microsoft.Network/networkInterfaces/VMNic"
+        ],
+        "properties": {
+          "hardwareProfile": {
+            "vmSize": "Standard_D2_v3"
+          },
+          "osProfile": {
+            "computerName": "GEN-UNIQUE-11",
+            "adminUsername": "GEN-UNIQUE",
+            "adminPassword": "GEN-SSH-PUB-KEY",
+            "linuxConfiguration": "[if(equals(parameters('authenticationType'), 'password'), json('null'), variables('linuxConfiguration'))]"
+          },
+          "storageProfile": {
+            "imageReference": {
+              "publisher": "Canonical",
+              "offer": "UbuntuServer",
+              "sku": "18.04-LTS",
+              "version": "latest"
+            },
+            "osDisk": {
+              "name": "osdisk1",
+              "caching": "ReadWrite",
+              "createOption": "FromImage"
+            }
+          },
+          "networkProfile": {
+            "networkInterfaces": [
+              {
+                "id": "Microsoft.Network/networkInterfaces/VMNic"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "type": "Microsoft.Compute/virtualMachines/extensions",
+        "name": "GEN-UNIQUE-11/newuserscript",
+        "apiVersion": "2020-12-01",
+        "location": "[resourceGroup().location]",
+        "dependsOn": [
+          "Microsoft.Compute/virtualMachines/GEN-UNIQUE-11"
+        ],
+        "properties": {
+          "publisher": "Microsoft.Azure.Extensions",
+          "type": "CustomScript",
+          "typeHandlerVersion": "2.0",
+          "autoUpgradeMinorVersion": true,
+          "settings": {
+            "fileUris": [
+              "[uri(parameters('_artifactsLocation'), concat('scripts/', parameters('blockchainSoftware'), '.sh', parameters('_artifactsLocationSasToken')))]"
+            ]
+          },
+          "protectedSettings": {
+            "commandToExecute": "(commandToExecute)[parameters(blockchainSoftware)]"
+          }
+        }
+      }
+    ],
+    "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+  }
+}

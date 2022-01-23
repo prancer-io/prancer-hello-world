@@ -1,0 +1,167 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAzureQuickStart",
+  "paths": [
+    "/application-workloads/rds/rds-update-certificate/azuredeploy.json",
+    "/application-workloads/rds/rds-update-certificate/azuredeploy.parameters.json"
+  ],
+  "timestamp": 1642962893326,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/application-workloads/rds/rds-update-certificate/azuredeploy.json",
+      "/application-workloads/rds/rds-update-certificate/azuredeploy.parameters.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT369",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "microsoft.compute/virtualmachines/extensions"
+    ]
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT369",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "vaultName": {
+        "type": "string",
+        "metadata": {
+          "description": "Azure Key Vault name where the certificate is stored."
+        },
+        "value": "myVault"
+      },
+      "certificateName": {
+        "type": "string",
+        "metadata": {
+          "description": "Name of the certificate in the Azure Key Vault."
+        },
+        "value": "certificate"
+      },
+      "applicationId": {
+        "type": "string",
+        "metadata": {
+          "description": "AD application Id used to access the certificate."
+        },
+        "value": "GEN-UNIQUE"
+      },
+      "applicationPassword": {
+        "type": "securestring",
+        "metadata": {
+          "description": "AD application password."
+        },
+        "value": "GEN-PASSWORD"
+      },
+      "tenantId": {
+        "type": "string",
+        "metadata": {
+          "description": "Tenant Id for whom the Secure Principal account was created."
+        },
+        "value": "GEN-UNIQUE"
+      },
+      "brokerVmName": {
+        "type": "string",
+        "metadata": {
+          "description": "Name of the RD Connection Broker VM resource in the deployment (the configure certificates script is executed on this VM)."
+        },
+        "defaultValue": "cb-vm",
+        "value": "cb-vm"
+      },
+      "existingDomainName": {
+        "type": "string",
+        "metadata": {
+          "description": "The FQDN of the AD domain"
+        },
+        "value": "mydomain.local"
+      },
+      "existingAdminUsername": {
+        "type": "string",
+        "metadata": {
+          "description": "Name of the domain account with administrative priviledges in the RDS deployment"
+        },
+        "value": "GEN-UNIQUE"
+      },
+      "existingAdminPassword": {
+        "type": "securestring",
+        "metadata": {
+          "description": "The password for the administrator account of the new VM and the domain"
+        },
+        "value": "GEN-PASSWORD"
+      },
+      "_artifactsLocation": {
+        "type": "string",
+        "metadata": {
+          "description": "The base URI where artifacts required by this template are located. When the template is deployed using the accompanying scripts, a private location in the subscription will be used and this value will be automatically generated."
+        },
+        "defaultValue": "https://raw.githubusercontent.com/Azure/Azure-QuickStart-Templates/master/rds-update-certificate"
+      },
+      "_artifactsLocationSasToken": {
+        "type": "securestring",
+        "metadata": {
+          "description": "The sasToken required to access _artifactsLocation.  When the template is deployed using the accompanying scripts, a sasToken will be automatically generated."
+        },
+        "defaultValue": ""
+      },
+      "location": {
+        "type": "string",
+        "defaultValue": "[resourceGroup().location]",
+        "metadata": {
+          "description": "Location for all resources."
+        }
+      }
+    },
+    "variables": {
+      "p": {
+        "appid": " -appId GEN-UNIQUE",
+        "apppassword": " -appPassword GEN-PASSWORD",
+        "tenantid": " -tenantId GEN-UNIQUE",
+        "vault": " -vaultName myVault",
+        "secret": " -secretName certificate",
+        "adminUsername": " -adminUsername GEN-UNIQUE",
+        "adminPassword": " -adminPassword GEN-PASSWORD",
+        "adDomainName": " -adDomainName mydomain.local"
+      },
+      "scriptParameters": "(p).appid(p).apppassword(p).tenantid(p).vault(p).secret(p).adminUsername(p).adminPassword(p).adDomainName",
+      "scriptFolder": "Scripts",
+      "scriptFileName": "Script.ps1",
+      "impersonateScript": "https://gallery.technet.microsoft.com/scriptcenter/Impersonate-a-User-9bfeff82/file/127189/1/New-ImpersonateUser.ps1",
+      "setPublishedNameScript": "https://gallery.technet.microsoft.com/Change-published-FQDN-for-2a029b80/file/103829/2/Set-RDPublishedName.ps1"
+    },
+    "resources": [
+      {
+        "apiVersion": "2015-06-15",
+        "type": "Microsoft.Compute/virtualMachines/extensions",
+        "name": "cb-vm/customscript",
+        "location": "[resourceGroup().location]",
+        "tags": {
+          "displayName": "script"
+        },
+        "properties": {
+          "publisher": "Microsoft.Compute",
+          "type": "CustomScriptExtension",
+          "typeHandlerVersion": "1.8",
+          "autoUpgradeMinorVersion": true,
+          "settings": {
+            "fileUris": [
+              "https://gallery.technet.microsoft.com/scriptcenter/Impersonate-a-User-9bfeff82/file/127189/1/New-ImpersonateUser.ps1",
+              "https://gallery.technet.microsoft.com/Change-published-FQDN-for-2a029b80/file/103829/2/Set-RDPublishedName.ps1",
+              "https://raw.githubusercontent.com/Azure/Azure-QuickStart-Templates/master/rds-update-certificate/Scripts/Script.ps1 parameters('_artifactsLocationSasToken')"
+            ]
+          },
+          "protectedSettings": {
+            "commandToExecute": "powershell -noninteractive -executionpolicy bypass -file Script.ps1(p).appid(p).apppassword(p).tenantid(p).vault(p).secret(p).adminUsername(p).adminPassword(p).adDomainName >> script.log 2>&1"
+          }
+        }
+      }
+    ],
+    "outputs": {},
+    "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+  }
+}

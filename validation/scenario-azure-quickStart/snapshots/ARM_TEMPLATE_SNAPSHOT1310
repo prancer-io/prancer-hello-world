@@ -1,0 +1,266 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAzureQuickStart",
+  "paths": [
+    "/quickstarts/microsoft.eventgrid/event-grid/prereqs/prereq.azuredeploy.json",
+    "/quickstarts/microsoft.eventgrid/event-grid/prereqs/prereq.azuredeploy.parameters.json"
+  ],
+  "timestamp": 1642962906644,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/quickstarts/microsoft.eventgrid/event-grid/prereqs/prereq.azuredeploy.json",
+      "/quickstarts/microsoft.eventgrid/event-grid/prereqs/prereq.azuredeploy.parameters.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT1310",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "microsoft.web/sites",
+      "microsoft.authorization/roleassignments",
+      "microsoft.resources/deploymentscripts",
+      "microsoft.web/sites/functions",
+      "microsoft.storage/storageaccounts",
+      "microsoft.managedidentity/userassignedidentities",
+      "microsoft.web/serverfarms",
+      "microsoft.insights/components"
+    ]
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT1310",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.0.0.0",
+    "metadata": {
+      "_generator": {
+        "name": "bicep",
+        "version": "0.3.255.40792",
+        "templateHash": "8243481558500064980"
+      }
+    },
+    "parameters": {
+      "location": {
+        "type": "string",
+        "defaultValue": "[resourceGroup().location]",
+        "metadata": {
+          "description": "The location into which the Azure Functions resources should be deployed."
+        }
+      },
+      "appName": {
+        "type": "string",
+        "defaultValue": "[format('fn-{0}', uniqueString(resourceGroup().id))]",
+        "metadata": {
+          "description": "The name of the Azure Functions application to create. This must be globally unique."
+        }
+      },
+      "functionRuntime": {
+        "type": "string",
+        "defaultValue": "dotnet",
+        "metadata": {
+          "description": "The runtime to deploy onto the Azure Functions application."
+        }
+      },
+      "functionPlanSkuName": {
+        "type": "string",
+        "defaultValue": "Y1",
+        "metadata": {
+          "description": "The name of the SKU to use when creating the Azure Functions plan. Common SKUs include Y1 (consumption) and EP1, EP2, and EP3 (premium)."
+        }
+      }
+    },
+    "functions": [],
+    "variables": {
+      "appServicePlanName": "FunctionPlan",
+      "appInsightsName": "AppInsights",
+      "storageAccountName": "[format('fnstor{0}', uniqueString(resourceGroup().id, parameters('appName')))]",
+      "functionPlanKind": "[if(equals(parameters('functionPlanSkuName'), 'Y1'), 'functionapp', 'elastic')]",
+      "functionName": "MyHttpTriggeredFunction",
+      "contributorRoleDefinitionId": "[subscriptionResourceId('Microsoft.Authorization/roleDefinitions', 'b24988ac-6180-42a0-ab88-20f7382dd24c')]",
+      "managedIdentityName": "EventGridFunctionEnabler",
+      "deploymentScriptName": "GetFunctionAppEventGridKey"
+    },
+    "resources": [
+      {
+        "type": "Microsoft.Storage/storageAccounts",
+        "apiVersion": "2019-06-01",
+        "name": "[format('fnstor{0}', uniqueString(resourceGroup().id, parameters('appName')))]",
+        "location": "[resourceGroup().location]",
+        "sku": {
+          "name": "Standard_LRS",
+          "tier": "Standard"
+        },
+        "kind": "StorageV2",
+        "properties": {
+          "supportsHttpsTrafficOnly": true,
+          "encryption": {
+            "services": {
+              "file": {
+                "keyType": "Account",
+                "enabled": true
+              },
+              "blob": {
+                "keyType": "Account",
+                "enabled": true
+              }
+            },
+            "keySource": "Microsoft.Storage"
+          },
+          "accessTier": "Hot"
+        }
+      },
+      {
+        "type": "Microsoft.Insights/components",
+        "apiVersion": "2018-05-01-preview",
+        "name": "AppInsights",
+        "location": "[resourceGroup().location]",
+        "kind": "web",
+        "properties": {
+          "Application_Type": "web",
+          "publicNetworkAccessForIngestion": "Enabled",
+          "publicNetworkAccessForQuery": "Enabled"
+        }
+      },
+      {
+        "type": "Microsoft.Web/serverfarms",
+        "apiVersion": "2020-06-01",
+        "name": "FunctionPlan",
+        "location": "[resourceGroup().location]",
+        "kind": "[if(equals(parameters('functionPlanSkuName'), 'Y1'), 'functionapp', 'elastic')]",
+        "sku": {
+          "name": "Y1"
+        },
+        "properties": {}
+      },
+      {
+        "type": "Microsoft.Web/sites",
+        "apiVersion": "2020-06-01",
+        "name": "[format('fn-{0}', uniqueString(resourceGroup().id))]",
+        "location": "[resourceGroup().location]",
+        "kind": "functionapp",
+        "properties": {
+          "serverFarmId": "Microsoft.Web/serverfarms/FunctionPlan",
+          "siteConfig": {
+            "appSettings": [
+              {
+                "name": "AzureWebJobsStorage",
+                "value": "[format('DefaultEndpointsProtocol=https;AccountName={0};EndpointSuffix={1};AccountKey={2}', variables('storageAccountName'), environment().suffixes.storage, listKeys(resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName')), '2019-06-01').keys[0].value)]"
+              },
+              {
+                "name": "WEBSITE_CONTENTAZUREFILECONNECTIONSTRING",
+                "value": "[format('DefaultEndpointsProtocol=https;AccountName={0};EndpointSuffix={1};AccountKey={2}', variables('storageAccountName'), environment().suffixes.storage, listKeys(resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName')), '2019-06-01').keys[0].value)]"
+              },
+              {
+                "name": "APPINSIGHTS_INSTRUMENTATIONKEY",
+                "value": "[reference(resourceId('Microsoft.Insights/components', variables('appInsightsName'))).InstrumentationKey]"
+              },
+              {
+                "name": "APPLICATIONINSIGHTS_CONNECTION_STRING",
+                "value": "[format('InstrumentationKey={0}', reference(resourceId('Microsoft.Insights/components', variables('appInsightsName'))).InstrumentationKey)]"
+              },
+              {
+                "name": "FUNCTIONS_WORKER_RUNTIME",
+                "value": "dotnet"
+              },
+              {
+                "name": "FUNCTIONS_EXTENSION_VERSION",
+                "value": "~3"
+              },
+              {
+                "name": "AzureWebJobsDisableHomepage",
+                "value": "true"
+              }
+            ]
+          },
+          "httpsOnly": true
+        },
+        "dependsOn": [
+          "Microsoft.Insights/components/AppInsights",
+          "Microsoft.Web/serverfarms/FunctionPlan",
+          "Microsoft.Storage/storageAccounts/[format('fnstor{0}', uniqueString(resourceGroup().id, parameters('appName')))]"
+        ]
+      },
+      {
+        "type": "Microsoft.Web/sites/functions",
+        "apiVersion": "2020-06-01",
+        "name": "[format('{0}/{1}', parameters('appName'), variables('functionName'))]",
+        "properties": {
+          "config": {
+            "disabled": false,
+            "bindings": [
+              {
+                "name": "eventGridEvent",
+                "type": "eventGridTrigger",
+                "direction": "in"
+              }
+            ]
+          },
+          "files": {
+            "run.csx": "      #r \"Microsoft.Azure.EventGrid\"\n      using Microsoft.Azure.EventGrid.Models;\n      using Microsoft.Extensions.Logging;\n\n      public static void Run(EventGridEvent eventGridEvent, ILogger log)\n      {\n          log.LogInformation(eventGridEvent.Data.ToString());\n      }\n      "
+          }
+        },
+        "dependsOn": [
+          "Microsoft.Web/sites/[format('fn-{0}', uniqueString(resourceGroup().id))]"
+        ]
+      },
+      {
+        "type": "Microsoft.ManagedIdentity/userAssignedIdentities",
+        "apiVersion": "2018-11-30",
+        "name": "EventGridFunctionEnabler",
+        "location": "[resourceGroup().location]"
+      },
+      {
+        "type": "Microsoft.Authorization/roleAssignments",
+        "apiVersion": "2020-04-01-preview",
+        "scope": "[format('Microsoft.Web/sites/{0}', parameters('appName'))]",
+        "name": "[guid(resourceGroup().id, resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', variables('managedIdentityName')), variables('contributorRoleDefinitionId'))]",
+        "properties": {
+          "roleDefinitionId": "[subscriptionResourceId('Microsoft.Authorization/roleDefinitions', 'b24988ac-6180-42a0-ab88-20f7382dd24c')]",
+          "principalId": "[reference(resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', variables('managedIdentityName'))).principalId]",
+          "principalType": "ServicePrincipal"
+        },
+        "dependsOn": [
+          "Microsoft.Web/sites/[format('fn-{0}', uniqueString(resourceGroup().id))]",
+          "Microsoft.ManagedIdentity/userAssignedIdentities/EventGridFunctionEnabler"
+        ]
+      },
+      {
+        "type": "Microsoft.Resources/deploymentScripts",
+        "apiVersion": "2020-10-01",
+        "name": "GetFunctionAppEventGridKey",
+        "location": "[resourceGroup().location]",
+        "kind": "AzurePowerShell",
+        "identity": {
+          "type": "UserAssigned",
+          "userAssignedIdentities": {
+            "[resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', variables('managedIdentityName'))]": {}
+          }
+        },
+        "properties": {
+          "azPowerShellVersion": "5.4",
+          "scriptContent": "    param([string] $FunctionHostResourceId)\n\n    $ErrorActionPreference = 'Stop'\n\n    # Try to get the key. If this fails, retry up to 5 times.\n    $loopAttempts = 0\n    while ($loopAttempts -lt 5)\n    {\n      $listKeysOutput = Invoke-AzResourceAction -ResourceId $FunctionHostResourceId -Action listKeys -ApiVersion 2020-06-01 -Force\n      $eventGridKey = $listKeysOutput.systemKeys.eventgrid_extension\n      if ($null -ne $eventGridKey)\n      {\n        break\n      }\n\n      $loopAttempts += 1\n      Write-Output 'Event Grid key is not included in response. Sleeping for 5 seconds.'\n      Start-Sleep -Seconds 5\n    }\n\n    if ($null -eq $eventGridKey)\n    {\n      Write-Error 'Event Grid key could not be obtained.'\n      return 1\n    }\n\n    # Propagate to the deployment script output.\n    $DeploymentScriptOutputs = @{}\n    $DeploymentScriptOutputs['eventGridExtensionSystemKey'] = $eventGridKey\n    ",
+          "cleanupPreference": "OnSuccess",
+          "retentionInterval": "PT4H",
+          "arguments": "[format('-FunctionHostResourceId {0}/host/default', resourceId('Microsoft.Web/sites', parameters('appName')))]"
+        },
+        "dependsOn": [
+          "Microsoft.Web/sites/[format('fn-{0}', uniqueString(resourceGroup().id))]",
+          "Microsoft.ManagedIdentity/userAssignedIdentities/EventGridFunctionEnabler",
+          "[extensionResourceId(resourceId('Microsoft.Web/sites', parameters('appName')), 'Microsoft.Authorization/roleAssignments', guid(resourceGroup().id, resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', variables('managedIdentityName')), variables('contributorRoleDefinitionId')))]"
+        ]
+      }
+    ],
+    "outputs": {
+      "functionUrl": {
+        "type": "string",
+        "value": "[format('https://{0}/runtime/webhooks/EventGrid?functionName={1}&code={2}', reference(resourceId('Microsoft.Web/sites', parameters('appName'))).defaultHostName, variables('functionName'), reference(resourceId('Microsoft.Resources/deploymentScripts', variables('deploymentScriptName'))).outputs.eventGridExtensionSystemKey)]"
+      }
+    },
+    "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+  }
+}

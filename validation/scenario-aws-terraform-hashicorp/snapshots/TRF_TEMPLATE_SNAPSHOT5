@@ -1,0 +1,84 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "main",
+  "contentType": "json",
+  "source": "gitConnectorAwsTerraHashicorp",
+  "paths": [
+    "/examples/api-gateway-rest-api-openapi/main.tf",
+    "/examples/api-gateway-rest-api-openapi/outputs.tf",
+    "/examples/api-gateway-rest-api-openapi/terraform.template.tfvars",
+    "/examples/api-gateway-rest-api-openapi/variables.tf",
+    "/examples/api-gateway-rest-api-openapi/tls.tf"
+  ],
+  "timestamp": 1642967657618,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "TRF_TEMPLATE_SNAPSHOT",
+    "type": "terraform",
+    "collection": "terraformtemplate",
+    "paths": [
+      "/examples/api-gateway-rest-api-openapi/main.tf",
+      "/examples/api-gateway-rest-api-openapi/outputs.tf",
+      "/examples/api-gateway-rest-api-openapi/terraform.template.tfvars",
+      "/examples/api-gateway-rest-api-openapi/variables.tf",
+      "/examples/api-gateway-rest-api-openapi/tls.tf"
+    ],
+    "snapshotId": "TRF_TEMPLATE_SNAPSHOT5",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "tls_self_signed_cert",
+      "tls_private_key",
+      "aws_acm_certificate"
+    ]
+  },
+  "snapshotId": "TRF_TEMPLATE_SNAPSHOT5",
+  "collection": "terraformtemplate",
+  "json": {
+    "resources": [
+      {
+        "type": "tls_private_key",
+        "name": "example",
+        "properties": {
+          "algorithm": "RSA",
+          "compiletime_identity": "tls_private_key.example"
+        }
+      },
+      {
+        "type": "tls_self_signed_cert",
+        "name": "example",
+        "properties": {
+          "allowed_uses": [
+            "key_encipherment",
+            "digital_signature",
+            "server_auth"
+          ],
+          "dns_names": [
+            "example.com"
+          ],
+          "key_algorithm": "${tls_private_key.example.algorithm}",
+          "private_key_pem": "${tls_private_key.example.private_key_pem}",
+          "validity_period_hours": 12,
+          "subject": [
+            {
+              "common_name": "example.com",
+              "organization": "ACME Examples, Inc"
+            }
+          ],
+          "compiletime_identity": "tls_self_signed_cert.example"
+        }
+      },
+      {
+        "type": "aws_acm_certificate",
+        "name": "example",
+        "properties": {
+          "certificate_body": "${tls_self_signed_cert.example.cert_pem}",
+          "private_key": "${tls_private_key.example.private_key_pem}",
+          "compiletime_identity": "aws_acm_certificate.example"
+        }
+      }
+    ]
+  }
+}

@@ -1,0 +1,79 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAzureQuickStart",
+  "paths": [
+    "/quickstarts/microsoft.maps/maps-create/azuredeploy.json",
+    "/quickstarts/microsoft.maps/maps-create/azuredeploy.parameters.json"
+  ],
+  "timestamp": 1642962908033,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/quickstarts/microsoft.maps/maps-create/azuredeploy.json",
+      "/quickstarts/microsoft.maps/maps-create/azuredeploy.parameters.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT1466",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "microsoft.maps/accounts"
+    ]
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT1466",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "accountName": {
+        "type": "string",
+        "defaultValue": "[uniqueString(resourceGroup().id)]",
+        "metadata": {
+          "description": "The name for your Azure Maps account. This value must be globally unique."
+        }
+      },
+      "pricingTier": {
+        "type": "string",
+        "allowedValues": [
+          "S0",
+          "S1",
+          "G2"
+        ],
+        "defaultValue": "G2",
+        "metadata": {
+          "description": "The pricing tier for the account. Use S0 for small-scale development. Use S1 or G2 for large-scale applications."
+        }
+      },
+      "kind": {
+        "type": "string",
+        "allowedValues": [
+          "Gen1",
+          "Gen2"
+        ],
+        "defaultValue": "Gen2",
+        "metadata": {
+          "description": "The pricing tier for the account. Use Gen1 for small-scale development. Use Gen2 for large-scale applications."
+        }
+      }
+    },
+    "resources": [
+      {
+        "name": "[uniqueString(resourceGroup().id)]",
+        "type": "Microsoft.Maps/accounts",
+        "apiVersion": "2021-02-01",
+        "location": "global",
+        "sku": {
+          "name": "G2"
+        },
+        "kind": "Gen2"
+      }
+    ],
+    "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+  }
+}

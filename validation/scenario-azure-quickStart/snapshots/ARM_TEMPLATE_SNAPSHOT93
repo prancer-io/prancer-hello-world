@@ -1,0 +1,135 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAzureQuickStart",
+  "paths": [
+    "/application-workloads/cloudera/cloudera-tableau/nested/setup-cloudera.json"
+  ],
+  "timestamp": 1642962885991,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/application-workloads/cloudera/cloudera-tableau/nested/setup-cloudera.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT93",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "microsoft.compute/virtualmachines/extensions"
+    ]
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT93",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.0.0.1",
+    "parameters": {
+      "resourceAPIVersion": {
+        "type": "string"
+      },
+      "dnsNamePrefix": {
+        "type": "string"
+      },
+      "scriptsUri": {
+        "type": "string"
+      },
+      "vmSpec": {
+        "type": "object"
+      },
+      "networkSpec": {
+        "type": "object"
+      },
+      "clusterSpec": {
+        "type": "object"
+      },
+      "fqdn": {
+        "type": "string"
+      },
+      "cmUsername": {
+        "type": "string"
+      },
+      "cmPassword": {
+        "type": "securestring"
+      },
+      "company": {
+        "type": "string"
+      },
+      "emailAddress": {
+        "type": "string"
+      },
+      "businessPhone": {
+        "type": "string"
+      },
+      "firstName": {
+        "type": "string"
+      },
+      "lastName": {
+        "type": "string"
+      },
+      "jobRole": {
+        "type": "string"
+      },
+      "jobFunction": {
+        "type": "string"
+      },
+      "installCDH": {
+        "type": "string"
+      },
+      "clouderaTags": {
+        "type": "object"
+      },
+      "tableauTags": {
+        "type": "object"
+      },
+      "quickstartTags": {
+        "type": "object"
+      },
+      "location": {
+        "type": "string",
+        "defaultValue": "[resourceGroup().location]",
+        "metadata": {
+          "description": "Location for all resources."
+        }
+      }
+    },
+    "variables": {
+      "masterIP": "networkSpec",
+      "workerIP": "networkSpec"
+    },
+    "resources": [
+      {
+        "type": "Microsoft.Compute/virtualMachines/extensions",
+        "name": "dnsNamePrefix-mn0/prepareDisks",
+        "location": "[resourceGroup().location]",
+        "comments": "Cloudera Setup extensions that run to configure the Cloudera cluster environment",
+        "tags": {
+          "quickstartName": "quickstartTags",
+          "provider": "clouderaTags"
+        },
+        "properties": {
+          "publisher": "Microsoft.Azure.Extensions",
+          "type": "CustomScript",
+          "typeHandlerVersion": "2.0",
+          "autoUpgradeMinorVersion": true,
+          "settings": {
+            "fileUris": [
+              "scriptsUri/scripts/bootstrap-cloudera.sh",
+              "scriptsUri/scripts/initialize-cloudera-server.sh",
+              "scriptsUri/scripts/cmxDeployOnIbiza.py",
+              "scriptsUri/scripts/install-postgresql.sh"
+            ]
+          },
+          "protectedSettings": {
+            "commandToExecute": "sh bootstrap-cloudera.sh \"networkSpec\" \"networkSpec\" \"dnsNamePrefix\" \"fqdn\" clusterSpec clusterSpec \"vmSpec\" \"clusterSpec\" \"vmSpec\" \"cmUsername\" \"cmPassword\" \"emailAddress\" \"businessPhone\" \"firstName\" \"lastName\" \"jobRole\" \"jobFunction\" \"company\" \"installCDH\" \"vmSpec\" >> /home/$ADMINUSER/bootstrap-cloudera.log 2>&1"
+          }
+        }
+      }
+    ],
+    "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+  }
+}

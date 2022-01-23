@@ -1,0 +1,150 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "main",
+  "contentType": "json",
+  "source": "gitConnectorAzureTerraHashicorp",
+  "paths": [
+    "/examples/virtual-machines/virtual_machine/bastion-box/outputs.tf",
+    "/examples/virtual-machines/virtual_machine/bastion-box/variables.tf",
+    "/examples/virtual-machines/virtual_machine/bastion-box/1-dependencies.tf"
+  ],
+  "timestamp": 1642943280040,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "TRF_TEMPLATE_SNAPSHOT",
+    "type": "terraform",
+    "collection": "terraformtemplate",
+    "paths": [
+      "/examples/virtual-machines/virtual_machine/bastion-box/outputs.tf",
+      "/examples/virtual-machines/virtual_machine/bastion-box/variables.tf",
+      "/examples/virtual-machines/virtual_machine/bastion-box/1-dependencies.tf"
+    ],
+    "snapshotId": "TRF_TEMPLATE_SNAPSHOT129",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "azurerm_network_security_group",
+      "azurerm_subnet",
+      "azurerm_virtual_network",
+      "azurerm_resource_group"
+    ]
+  },
+  "snapshotId": "TRF_TEMPLATE_SNAPSHOT129",
+  "collection": "terraformtemplate",
+  "json": {
+    "resources": [
+      {
+        "type": "azurerm_resource_group",
+        "name": "example",
+        "properties": {
+          "name": "${var.prefix}-resources",
+          "location": "${var.location}",
+          "compiletime_identity": "azurerm_resource_group.example"
+        }
+      },
+      {
+        "type": "azurerm_virtual_network",
+        "name": "example",
+        "properties": {
+          "name": "${var.prefix}-network",
+          "location": "${azurerm_resource_group.example.location}",
+          "resource_group_name": "${azurerm_resource_group.example.name}",
+          "address_space": [
+            "10.0.0.0/16"
+          ],
+          "compiletime_identity": "azurerm_virtual_network.example"
+        }
+      },
+      {
+        "type": "azurerm_network_security_group",
+        "name": "bastion",
+        "properties": {
+          "name": "${azurerm_resource_group.example.name}-mgmt-nsg",
+          "location": "${azurerm_resource_group.example.location}",
+          "resource_group_name": "${azurerm_resource_group.example.name}",
+          "security_rule": [
+            {
+              "name": "allow-ssh",
+              "description": "Allow SSH",
+              "priority": 100,
+              "direction": "Inbound",
+              "access": "Allow",
+              "protocol": "Tcp",
+              "source_port_range": "*",
+              "destination_port_range": 22,
+              "source_address_prefix": "Internet",
+              "destination_address_prefix": "*"
+            }
+          ],
+          "compiletime_identity": "azurerm_network_security_group.bastion"
+        }
+      },
+      {
+        "type": "azurerm_network_security_group",
+        "name": "web",
+        "properties": {
+          "name": "${azurerm_resource_group.example.name}-web",
+          "location": "${azurerm_resource_group.example.location}",
+          "resource_group_name": "${azurerm_resource_group.example.name}",
+          "security_rule": [
+            {
+              "name": "allow-www",
+              "description": "Allow HTTP Traffic",
+              "priority": 100,
+              "direction": "Inbound",
+              "access": "Allow",
+              "protocol": "Tcp",
+              "source_port_range": "*",
+              "destination_port_range": 80,
+              "source_address_prefix": "Internet",
+              "destination_address_prefix": "*"
+            },
+            {
+              "name": "allow-internal-ssh",
+              "description": "Allow Internal SSH",
+              "priority": 101,
+              "direction": "Inbound",
+              "access": "Allow",
+              "protocol": "Tcp",
+              "source_port_range": "*",
+              "destination_port_range": 22,
+              "source_address_prefix": "VirtualNetwork",
+              "destination_address_prefix": "*"
+            }
+          ],
+          "compiletime_identity": "azurerm_network_security_group.web"
+        }
+      },
+      {
+        "type": "azurerm_subnet",
+        "name": "bastion",
+        "properties": {
+          "name": "${azurerm_resource_group.example.name}-bastion",
+          "virtual_network_name": "${azurerm_virtual_network.example.name}",
+          "resource_group_name": "${azurerm_resource_group.example.name}",
+          "address_prefixes": [
+            "10.0.0.128/25"
+          ],
+          "network_security_group_id": "${azurerm_network_security_group.bastion.id}",
+          "compiletime_identity": "azurerm_subnet.bastion"
+        }
+      },
+      {
+        "type": "azurerm_subnet",
+        "name": "web",
+        "properties": {
+          "name": "${azurerm_resource_group.example.name}-web",
+          "virtual_network_name": "${azurerm_virtual_network.example.name}",
+          "resource_group_name": "${azurerm_resource_group.example.name}",
+          "address_prefixes": [
+            "10.0.1.0/24"
+          ],
+          "network_security_group_id": "${azurerm_network_security_group.web.id}",
+          "compiletime_identity": "azurerm_subnet.web"
+        }
+      }
+    ]
+  }
+}

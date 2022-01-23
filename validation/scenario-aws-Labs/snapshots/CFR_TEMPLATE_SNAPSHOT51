@@ -1,0 +1,94 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAwsLabs",
+  "paths": [
+    "/aws/services/SNS/SNSTopic.json"
+  ],
+  "timestamp": 1642972590483,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "CFR_TEMPLATE_SNAPSHOT",
+    "type": "cloudformation",
+    "collection": "cloudformationtemplate",
+    "paths": [
+      "/aws/services/SNS/SNSTopic.json"
+    ],
+    "snapshotId": "CFR_TEMPLATE_SNAPSHOT51",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "aws::sns::subscription",
+      "aws::sns::topic"
+    ]
+  },
+  "snapshotId": "CFR_TEMPLATE_SNAPSHOT51",
+  "collection": "cloudformationtemplate",
+  "json": {
+    "AWSTemplateFormatVersion": "2010-09-09",
+    "Description": "Best Practice SNS Topic",
+    "Parameters": {
+      "SubscriptionEndPoint": {
+        "Type": "String",
+        "Description": "The endpoint that receives notifications from the Amazon SNS topic. The endpoint value depends on the protocol that you specify. This could be a URL or ARN"
+      },
+      "SubscriptionProtocol": {
+        "Type": "String",
+        "Description": "The subscription's protocol",
+        "AllowedValues": [
+          "http",
+          "https",
+          "email",
+          "email-json",
+          "sms",
+          "sqs",
+          "application",
+          "lambda"
+        ],
+        "Default": "sqs"
+      }
+    },
+    "Mappings": {},
+    "Conditions": {},
+    "Resources": [
+      {
+        "Type": "AWS::SNS::Topic",
+        "Properties": {},
+        "Name": "SNSTopic"
+      },
+      {
+        "Type": "AWS::SNS::Subscription",
+        "Properties": {
+          "Endpoint": {
+            "Ref": "SubscriptionEndPoint"
+          },
+          "Protocol": "sqs",
+          "TopicArn": {
+            "Ref": "SNSTopic"
+          }
+        },
+        "Name": "SNSSubscription"
+      }
+    ],
+    "Outputs": {
+      "TopicARN": {
+        "Description": "ARN of newly created SNS Topic",
+        "Value": {
+          "Ref": "SNSTopic"
+        }
+      },
+      "QueueName": {
+        "Description": "Name of newly created SNS Topic",
+        "Value": {
+          "Fn::GetAtt": [
+            "SNSTopic",
+            "TopicName"
+          ]
+        }
+      }
+    }
+  }
+}

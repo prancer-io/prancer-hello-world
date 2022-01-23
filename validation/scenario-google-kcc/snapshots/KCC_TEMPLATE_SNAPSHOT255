@@ -2,12 +2,12 @@
   "structure": "filesystem",
   "error": null,
   "reference": "master",
-  "contentType": "yaml",
+  "contentType": "json",
   "source": "gitConnectorGoogleKcc",
   "paths": [
-    "/samples/resources/computetargetpool/compute_v1beta1_computeinstance_multiple_yaml_0.yaml"
+    "/samples/resources/computeserviceattachment/compute_v1beta1_computeforwardingrule.yaml"
   ],
-  "timestamp": 1628765143957,
+  "timestamp": 1642973303158,
   "queryuser": null,
   "checksum": "99914b932bd37a50b983c5e7c90ae93b",
   "node": {
@@ -15,25 +15,38 @@
     "type": "kcc",
     "collection": "kcctemplate",
     "paths": [
-      "/samples/resources/computetargetpool/compute_v1beta1_computeinstance_multiple_yaml_0.yaml"
+      "/samples/resources/computeserviceattachment/compute_v1beta1_computeforwardingrule.yaml"
     ],
     "snapshotId": "KCC_TEMPLATE_SNAPSHOT255",
     "status": "active",
-    "validate": true
+    "validate": true,
+    "resourceTypes": [
+      "computeforwardingrule"
+    ]
   },
   "snapshotId": "KCC_TEMPLATE_SNAPSHOT255",
   "collection": "kcctemplate",
   "json": {
     "apiVersion": "compute.cnrm.cloud.google.com/v1beta1",
-    "kind": "ComputeInstance",
+    "kind": "ComputeForwardingRule",
     "metadata": {
-      "name": "computetargetpool-dep1"
+      "name": "computeserviceattachment-dep"
     },
     "spec": {
-      "instanceTemplateRef": {
-        "name": "computetargetpool-dep"
+      "location": "us-west2",
+      "networkRef": {
+        "name": "computeserviceattachment-dep"
       },
-      "zone": "us-central1-a"
+      "subnetworkRef": {
+        "name": "computeserviceattachment-dep3"
+      },
+      "description": "A test forwarding rule with internal load balancing scheme",
+      "loadBalancingScheme": "INTERNAL",
+      "backendServiceRef": {
+        "name": "computeserviceattachment-dep"
+      },
+      "networkTier": "PREMIUM",
+      "allPorts": true
     }
   }
 }

@@ -1,0 +1,352 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAzureQuickStart",
+  "paths": [
+    "/demos/subnet-driven-deployment/WinServ.json",
+    "/demos/subnet-driven-deployment/azuredeploy.parameters.json"
+  ],
+  "timestamp": 1642962902062,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/demos/subnet-driven-deployment/WinServ.json",
+      "/demos/subnet-driven-deployment/azuredeploy.parameters.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT832",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "microsoft.network/networkinterfaces",
+      "microsoft.compute/virtualmachines",
+      "microsoft.network/loadbalancers/inboundnatrules"
+    ]
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT832",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.2.0.0",
+    "parameters": {
+      "dDisks": {
+        "type": "array",
+        "defaultValue": [],
+        "metadata": {
+          "description": "Array of disks objects that can be added (see azuredeploy.json for the disk object content)"
+        }
+      },
+      "adminPassword": {
+        "type": "securestring",
+        "metadata": {
+          "description": "Admin password"
+        },
+        "value": "GEN-PASSWORD"
+      },
+      "adminUsername": {
+        "type": "string",
+        "metadata": {
+          "description": "Admin username"
+        },
+        "value": "zeAdmin"
+      },
+      "_artifactsLocation": {
+        "type": "string",
+        "metadata": {
+          "description": "The base URI where artifacts required by this template are located including a trailing '/'"
+        }
+      },
+      "_artifactsLocationSasToken": {
+        "type": "securestring",
+        "metadata": {
+          "description": "The sasToken required to access _artifactsLocation.  When the template is deployed using the accompanying scripts, a sasToken will be automatically generated. Use the defaultValue if the staging location is not secured."
+        }
+      },
+      "availabilitySetName": {
+        "type": "string",
+        "defaultValue": "AVSet1",
+        "metadata": {
+          "description": "Availibility Set the VM will belong to"
+        }
+      },
+      "computerName": {
+        "type": "string",
+        "defaultValue": "mbmr",
+        "metadata": {
+          "description": "Computer Name"
+        }
+      },
+      "imageOffer": {
+        "type": "string",
+        "defaultValue": "WindowsServer",
+        "metadata": {
+          "description": "Image Offer"
+        }
+      },
+      "imagePublisher": {
+        "type": "string",
+        "defaultValue": "MicrosoftWindowsServer",
+        "metadata": {
+          "description": "Image Publisher"
+        }
+      },
+      "imageSKU": {
+        "type": "string",
+        "defaultValue": "2012-R2-Datacenter",
+        "metadata": {
+          "description": "Image SKU"
+        }
+      },
+      "imageVersion": {
+        "type": "string",
+        "defaultValue": "latest",
+        "metadata": {
+          "description": "Image version, 'latest' by default (recommended)"
+        }
+      },
+      "indx": {
+        "type": "int",
+        "defaultValue": 0,
+        "metadata": {
+          "description": "objects suffix to avoid name collisions"
+        }
+      },
+      "lbName": {
+        "type": "string",
+        "defaultValue": "lbn",
+        "metadata": {
+          "description": "Front End load Balancer Name'."
+        }
+      },
+      "natRulePrefix": {
+        "type": "string",
+        "defaultValue": "nr-",
+        "metadata": {
+          "description": "Prefix for Nat Rules."
+        }
+      },
+      "nicNamePrefix": {
+        "type": "string",
+        "defaultValue": "nic-",
+        "metadata": {
+          "description": "Prefix for NICs."
+        }
+      },
+      "publicStartRdpPort": {
+        "type": "int",
+        "defaultValue": 5500,
+        "metadata": {
+          "description": "Public port, for RDP remote connection. The value of indx parameter will be added"
+        }
+      },
+      "storageAccountName": {
+        "type": "string",
+        "metadata": {
+          "description": "Storage to put the disk image on"
+        }
+      },
+      "subnets": {
+        "type": "array",
+        "metadata": {
+          "description": "list of subnets where the VM will belong to"
+        }
+      },
+      "vmNamePrefix": {
+        "type": "string",
+        "defaultValue": "srv-"
+      },
+      "vmSize": {
+        "type": "string",
+        "defaultValue": "Standard_A2",
+        "metadata": {
+          "description": "VM Size, from // Get-AzureRoleSize  | select instanceSize"
+        }
+      },
+      "bootDiagnostics": {
+        "type": "bool",
+        "defaultValue": false,
+        "metadata": {
+          "description": "Activate boot diagnostics. MUST be set to false is premium storage option is used"
+        }
+      },
+      "location": {
+        "type": "string",
+        "metadata": {
+          "description": "Location for all resources."
+        }
+      },
+      "dnsLabelPrefix": {
+        "value": "GEN-UNIQUE-8"
+      },
+      "storageCategory": {
+        "value": "Premium"
+      },
+      "numberOfSubnets": {
+        "value": 4
+      },
+      "memberServersPerSubnet": {
+        "value": 1
+      }
+    },
+    "variables": {
+      "frontEndIPConfigID": "Microsoft.Network/loadBalancers/frontendIPConfigurations/lbn/loadBalancerFrontend",
+      "natRuleName": "nr-mbmr parameters('indx')",
+      "inboundNatName": "lbn/nr-mbmr parameters('indx')",
+      "subnetIndex": "[mod(parameters('indx'),length(parameters('subnets')))]",
+      "subnetRef": "subnets)[variables(subnetIndex",
+      "vmName": "srv-mbmr parameters('indx')",
+      "nicName": "nic-mbmr parameters('indx')",
+      "rdpPort": "[add(parameters('publicStartRdpPort'), parameters('indx'))]"
+    },
+    "resources": [
+      {
+        "apiVersion": "2020-11-01",
+        "type": "Microsoft.Network/loadBalancers/inboundNatRules",
+        "name": "lbn/nr-mbmr parameters('indx')",
+        "location": "location",
+        "properties": {
+          "frontendIPConfiguration": {
+            "id": "Microsoft.Network/loadBalancers/frontendIPConfigurations/lbn/loadBalancerFrontend"
+          },
+          "protocol": "Tcp",
+          "frontendPort": "[add(parameters('publicStartRdpPort'), parameters('indx'))]",
+          "backendPort": 3389,
+          "enableFloatingIP": false
+        }
+      },
+      {
+        "apiVersion": "2020-11-01",
+        "type": "Microsoft.Network/networkInterfaces",
+        "name": "nic-mbmr parameters('indx')",
+        "location": "location",
+        "dependsOn": [
+          "Microsoft.Network/loadBalancers/inboundNatRules/lbn/nr-mbmr parameters('indx')"
+        ],
+        "properties": {
+          "ipConfigurations": [
+            {
+              "name": "ipconfig1",
+              "properties": {
+                "privateIPAllocationMethod": "Dynamic",
+                "subnet": {
+                  "id": "subnets)[variables(subnetIndex"
+                },
+                "loadBalancerBackendAddressPools": [
+                  {
+                    "id": "Microsoft.Network/loadBalancers/backendAddressPools/lbn/LoadBalancerBackend"
+                  }
+                ],
+                "loadBalancerInboundNatRules": [
+                  {
+                    "id": "Microsoft.Network/loadBalancers/inboundNatRules/lbn/nr-mbmr parameters('indx')"
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      },
+      {
+        "apiVersion": "2020-12-01",
+        "type": "Microsoft.Compute/virtualMachines",
+        "name": "srv-mbmr parameters('indx')",
+        "location": "location",
+        "dependsOn": [
+          "Microsoft.Network/networkInterfaces//nic-mbmr parameters('indx')"
+        ],
+        "properties": {
+          "availabilitySet": {
+            "id": "Microsoft.Compute/availabilitySets/AVSet1"
+          },
+          "hardwareProfile": {
+            "vmSize": "Standard_A2"
+          },
+          "osProfile": {
+            "computerName": "mbmrparameters('indx')",
+            "adminUsername": "zeAdmin",
+            "adminPassword": "GEN-PASSWORD"
+          },
+          "storageProfile": {
+            "imageReference": {
+              "publisher": "MicrosoftWindowsServer",
+              "offer": "WindowsServer",
+              "sku": "2012-R2-Datacenter",
+              "version": "latest"
+            },
+            "osDisk": {
+              "name": "osdisksrv-mbmr parameters('indx')",
+              "caching": "ReadWrite",
+              "createOption": "FromImage"
+            },
+            "dataDisks": []
+          },
+          "networkProfile": {
+            "networkInterfaces": [
+              {
+                "id": "Microsoft.Network/networkInterfaces/nic-mbmr parameters('indx')"
+              }
+            ]
+          },
+          "diagnosticsProfile": {
+            "bootDiagnostics": {
+              "enabled": false,
+              "storageUri": "[concat('https://',parameters('storageAccountName'),'.blob.', environment().suffixes.storage)]"
+            }
+          }
+        },
+        "resources": [
+          {
+            "name": "srv-mbmr parameters('indx')/BgInfo",
+            "type": "Microsoft.Compute/virtualMachines/extensions",
+            "location": "location",
+            "apiVersion": "2020-12-01",
+            "dependsOn": [
+              "Microsoft.Compute/virtualMachines//srv-mbmr parameters('indx')"
+            ],
+            "properties": {
+              "publisher": "Microsoft.Compute",
+              "type": "BGInfo",
+              "typeHandlerVersion": "2.1",
+              "settings": {
+                "properties": []
+              }
+            }
+          },
+          {
+            "type": "Microsoft.Compute/virtualMachines/extensions",
+            "name": "srv-mbmr parameters('indx')/MyCustomScriptExtension",
+            "apiVersion": "2020-12-01",
+            "location": "location",
+            "dependsOn": [
+              "Microsoft.Compute/virtualMachines//srv-mbmr parameters('indx')",
+              "Microsoft.Compute/virtualMachines/extensions/srv-mbmr parameters('indx')/BgInfo"
+            ],
+            "properties": {
+              "publisher": "Microsoft.Compute",
+              "type": "CustomScriptExtension",
+              "typeHandlerVersion": "1.4",
+              "autoUpgradeMinorVersion": true,
+              "settings": {
+                "fileUris": [
+                  "[uri(parameters('_artifactsLocation'), concat('start.ps1', parameters('_artifactsLocationSasToken')))]"
+                ],
+                "commandToExecute": "powershell.exe -ExecutionPolicy Unrestricted -File start.ps1"
+              }
+            }
+          }
+        ]
+      }
+    ],
+    "outputs": {
+      "vmIPAddress": {
+        "type": "string",
+        "value": "[reference(variables('nicName')).ipConfigurations[0].properties.privateIPAddress]"
+      }
+    },
+    "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+  }
+}

@@ -1,0 +1,107 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAzureQuickStart",
+  "paths": [
+    "/application-workloads/rds/rds-deployment/vnet-with-dns-server.json",
+    "/application-workloads/rds/rds-deployment/azuredeploy.parameters.json"
+  ],
+  "timestamp": 1642962893265,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/application-workloads/rds/rds-deployment/vnet-with-dns-server.json",
+      "/application-workloads/rds/rds-deployment/azuredeploy.parameters.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT365",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "microsoft.network/virtualnetworks"
+    ]
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT365",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "virtualNetworkName": {
+        "type": "string",
+        "metadata": {
+          "description": "The name of the Virtual Network to Create"
+        }
+      },
+      "virtualNetworkAddressRange": {
+        "type": "string",
+        "metadata": {
+          "description": "The address range of the new VNET in CIDR format"
+        },
+        "defaultValue": "10.0.0.0/16"
+      },
+      "subnetName": {
+        "type": "string",
+        "metadata": {
+          "description": "The name of the subnet created in the new VNET"
+        }
+      },
+      "subnetRange": {
+        "type": "string",
+        "metadata": {
+          "description": "The address range of the subnet created in the new VNET"
+        },
+        "defaultValue": "10.0.0.0/24"
+      },
+      "dnsServerAddress": {
+        "type": "array",
+        "metadata": {
+          "description": "The DNS address(es) of the DNS Server(s) used by the VNET"
+        }
+      },
+      "location": {
+        "type": "string",
+        "metadata": {
+          "description": "Location for all resources."
+        }
+      },
+      "gwdnsLabelPrefix": {
+        "value": "GEN-UNIQUE"
+      },
+      "adminPassword": {
+        "value": "GEN-PASSWORD"
+      }
+    },
+    "resources": [
+      {
+        "apiVersion": "2020-08-01",
+        "name": "virtualNetworkName",
+        "type": "Microsoft.Network/virtualNetworks",
+        "location": "location",
+        "properties": {
+          "addressSpace": {
+            "addressPrefixes": [
+              "10.0.0.0/16"
+            ]
+          },
+          "dhcpOptions": {
+            "dnsServers": "dnsServerAddress"
+          },
+          "subnets": [
+            {
+              "name": "subnetName",
+              "properties": {
+                "addressPrefix": "10.0.0.0/24"
+              }
+            }
+          ]
+        }
+      }
+    ],
+    "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+  }
+}

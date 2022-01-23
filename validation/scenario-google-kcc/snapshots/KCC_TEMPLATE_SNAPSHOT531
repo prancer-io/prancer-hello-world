@@ -2,12 +2,12 @@
   "structure": "filesystem",
   "error": null,
   "reference": "master",
-  "contentType": "yaml",
+  "contentType": "json",
   "source": "gitConnectorGoogleKcc",
   "paths": [
-    "/samples/resources/storagedefaultobjectaccesscontrol/storage_v1beta1_storagedefaultobjectaccesscontrol.yaml"
+    "/samples/resources/monitoringmetricdescriptor/monitoring_v1beta1_monitoringmetricdescriptor.yaml"
   ],
-  "timestamp": 1628765151415,
+  "timestamp": 1642973304599,
   "queryuser": null,
   "checksum": "99914b932bd37a50b983c5e7c90ae93b",
   "node": {
@@ -15,29 +15,50 @@
     "type": "kcc",
     "collection": "kcctemplate",
     "paths": [
-      "/samples/resources/storagedefaultobjectaccesscontrol/storage_v1beta1_storagedefaultobjectaccesscontrol.yaml"
+      "/samples/resources/monitoringmetricdescriptor/monitoring_v1beta1_monitoringmetricdescriptor.yaml"
     ],
     "snapshotId": "KCC_TEMPLATE_SNAPSHOT531",
     "status": "active",
-    "validate": true
+    "validate": true,
+    "resourceTypes": [
+      "monitoringmetricdescriptor"
+    ]
   },
   "snapshotId": "KCC_TEMPLATE_SNAPSHOT531",
   "collection": "kcctemplate",
   "json": {
-    "apiVersion": "storage.cnrm.cloud.google.com/v1beta1",
-    "kind": "StorageDefaultObjectAccessControl",
+    "apiVersion": "monitoring.cnrm.cloud.google.com/v1beta1",
+    "kind": "MonitoringMetricDescriptor",
     "metadata": {
-      "labels": {
-        "label-one": "value-one"
-      },
-      "name": "storagedefaultobjectaccesscontrol-sample"
+      "name": "monitoringmetricdescriptor-sample"
     },
     "spec": {
-      "bucketRef": {
-        "name": "${PROJECT_ID?}-objectaccesscontrol-dep"
+      "projectRef": {
+        "external": "projects/${PROJECT_ID?}"
       },
-      "entity": "allAuthenticatedUsers",
-      "role": "READER"
+      "labels": [
+        {
+          "key": "system_stable",
+          "valueType": "BOOL",
+          "description": "True if the estimation system is stable."
+        },
+        {
+          "key": "condition_summary",
+          "valueType": "STRING",
+          "description": "A description of the condition the market system is in."
+        }
+      ],
+      "launchStage": "BETA",
+      "metadata": {
+        "ingestDelay": "1000s",
+        "samplePeriod": "100s"
+      },
+      "metricKind": "GAUGE",
+      "type": "custom.googleapis.com/market/measurements/volume",
+      "unit": "{USD}/h",
+      "valueType": "DISTRIBUTION",
+      "description": "Tracks a combination of estimates of trade volume for a given resource, in $USD per hour.",
+      "displayName": "Trading Volume Estimate"
     }
   }
 }

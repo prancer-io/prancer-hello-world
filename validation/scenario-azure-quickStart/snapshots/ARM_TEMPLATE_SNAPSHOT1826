@@ -1,0 +1,245 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAzureQuickStart",
+  "paths": [
+    "/test/ci-tests/data/get-template-hash-tests/ModularTemplateWithoutMetadata.json"
+  ],
+  "timestamp": 1642962911645,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/test/ci-tests/data/get-template-hash-tests/ModularTemplateWithoutMetadata.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT1826",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "microsoft.resources/deployments",
+      "microsoft.storage/storageaccounts"
+    ]
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT1826",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "p1": {
+        "type": "string",
+        "metadata": {
+          "description": "p1 description"
+        }
+      }
+    },
+    "functions": [],
+    "resources": [
+      {
+        "type": "Microsoft.Storage/storageAccounts",
+        "apiVersion": "2021-01-01",
+        "name": "storageaccount1",
+        "location": "westus",
+        "properties": {
+          "allowBlobPublicAccess": true
+        },
+        "kind": "BlobStorage",
+        "sku": {
+          "name": "Premium_LRS"
+        }
+      },
+      {
+        "type": "Microsoft.Storage/storageAccounts",
+        "apiVersion": "2021-01-01",
+        "name": "storageaccount2",
+        "location": "westus",
+        "properties": {
+          "allowBlobPublicAccess": true
+        },
+        "kind": "BlobStorage",
+        "sku": {
+          "name": "Premium_LRS"
+        }
+      },
+      {
+        "type": "Microsoft.Resources/deployments",
+        "apiVersion": "2019-10-01",
+        "name": "myModule1a",
+        "properties": {
+          "expressionEvaluationOptions": {
+            "scope": "inner"
+          },
+          "mode": "Incremental",
+          "template": {
+            "contentVersion": "1.0.0.0",
+            "functions": [],
+            "resources": [
+              {
+                "type": "Microsoft.Resources/deployments",
+                "apiVersion": "2019-10-01",
+                "name": "mymodule2",
+                "properties": {
+                  "expressionEvaluationOptions": {
+                    "scope": "inner"
+                  },
+                  "mode": "Incremental",
+                  "parameters": {
+                    "p2": {
+                      "value": "p2 value"
+                    }
+                  },
+                  "template": {
+                    "contentVersion": "1.0.0.0",
+                    "parameters": {
+                      "p2": {
+                        "type": "string",
+                        "metadata": {
+                          "description": "p2 description"
+                        }
+                      }
+                    },
+                    "functions": [],
+                    "resources": [
+                      {
+                        "type": "Microsoft.ContainerInstance/containerGroups",
+                        "apiVersion": "2021-03-01",
+                        "name": "name",
+                        "location": "[resourceGroup().location]",
+                        "properties": {
+                          "containers": [
+                            {
+                              "name": "containername",
+                              "properties": {
+                                "image": "mcr.microsoft.com/azuredocs/aci-helloworld:latest",
+                                "ports": [
+                                  {
+                                    "port": 80
+                                  }
+                                ],
+                                "resources": {
+                                  "requests": {
+                                    "cpu": 1,
+                                    "memoryInGB": 4
+                                  }
+                                }
+                              }
+                            }
+                          ],
+                          "restartPolicy": "OnFailure",
+                          "osType": "Linux",
+                          "ipAddress": {
+                            "type": "Public",
+                            "ports": [
+                              {
+                                "protocol": "TCP",
+                                "port": 80
+                              }
+                            ]
+                          }
+                        }
+                      }
+                    ],
+                    "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+                  }
+                }
+              }
+            ],
+            "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+          }
+        }
+      },
+      {
+        "type": "Microsoft.Resources/deployments",
+        "apiVersion": "2019-10-01",
+        "name": "myModule1b",
+        "properties": {
+          "expressionEvaluationOptions": {
+            "scope": "inner"
+          },
+          "mode": "Incremental",
+          "template": {
+            "contentVersion": "1.0.0.0",
+            "functions": [],
+            "resources": [
+              {
+                "type": "Microsoft.Resources/deployments",
+                "apiVersion": "2019-10-01",
+                "name": "mymodule2",
+                "properties": {
+                  "expressionEvaluationOptions": {
+                    "scope": "inner"
+                  },
+                  "mode": "Incremental",
+                  "parameters": {
+                    "p2": {
+                      "value": "p2 value"
+                    }
+                  },
+                  "template": {
+                    "contentVersion": "1.0.0.0",
+                    "parameters": {
+                      "p2": {
+                        "type": "string",
+                        "metadata": {
+                          "description": "p2 description"
+                        }
+                      }
+                    },
+                    "functions": [],
+                    "resources": [
+                      {
+                        "type": "Microsoft.ContainerInstance/containerGroups",
+                        "apiVersion": "2021-03-01",
+                        "name": "name",
+                        "location": "[resourceGroup().location]",
+                        "properties": {
+                          "containers": [
+                            {
+                              "name": "containername",
+                              "properties": {
+                                "image": "mcr.microsoft.com/azuredocs/aci-helloworld:latest",
+                                "ports": [
+                                  {
+                                    "port": 80
+                                  }
+                                ],
+                                "resources": {
+                                  "requests": {
+                                    "cpu": 1,
+                                    "memoryInGB": 4
+                                  }
+                                }
+                              }
+                            }
+                          ],
+                          "restartPolicy": "OnFailure",
+                          "osType": "Linux",
+                          "ipAddress": {
+                            "type": "Public",
+                            "ports": [
+                              {
+                                "protocol": "TCP",
+                                "port": 80
+                              }
+                            ]
+                          }
+                        }
+                      }
+                    ],
+                    "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+                  }
+                }
+              }
+            ],
+            "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+          }
+        }
+      }
+    ],
+    "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+  }
+}

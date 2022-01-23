@@ -1,0 +1,206 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAzureQuickStart",
+  "paths": [
+    "/application-workloads/elastic/elasticsearch/nestedtemplates/client-nodes-resources.json"
+  ],
+  "timestamp": 1642962887094,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/application-workloads/elastic/elasticsearch/nestedtemplates/client-nodes-resources.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT119",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "microsoft.network/networkinterfaces",
+      "microsoft.compute/virtualmachines",
+      "microsoft.compute/availabilitysets"
+    ]
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT119",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "adminUsername": {
+        "type": "string",
+        "metadata": {
+          "description": "Admin username used when provisioning virtual machines"
+        }
+      },
+      "authSet": {
+        "type": "object",
+        "metadata": {
+          "description": "Authentication information"
+        }
+      },
+      "storageSettings": {
+        "type": "object",
+        "metadata": {
+          "description": "Storage Account Settings"
+        }
+      },
+      "subnet": {
+        "type": "object",
+        "metadata": {
+          "description": "Reference to the VNET Subnet to deploy the nodes in to"
+        }
+      },
+      "vmSize": {
+        "type": "string",
+        "defaultValue": "Standard_D2_v3",
+        "metadata": {
+          "description": "Size of the Elasticsearch master nodes"
+        }
+      },
+      "osSettings": {
+        "type": "object",
+        "metadata": {
+          "description": "Elasticsearch deployment platform settings"
+        }
+      },
+      "vmCount": {
+        "type": "int",
+        "metadata": {
+          "description": "Number of instances to create"
+        }
+      },
+      "lbBackendPools": {
+        "type": "object",
+        "metadata": {
+          "description": "loadBalancerBackendAddressPools config object"
+        }
+      },
+      "namespace": {
+        "type": "string",
+        "metadata": {
+          "description": "Namespace for resources created by this template"
+        }
+      },
+      "location": {
+        "type": "string",
+        "metadata": {
+          "description": "Location for all resources."
+        }
+      }
+    },
+    "variables": {
+      "subnetRef": "Microsoft.Network/virtualNetworks/subnets/subnet/subnet",
+      "storageAccountNameAFS": "storageSettings",
+      "vmName": "namespace-vm",
+      "nicName": "namespace-nic"
+    },
+    "resources": [
+      {
+        "apiVersion": "2020-12-01",
+        "type": "Microsoft.Compute/availabilitySets",
+        "name": "es-client-set",
+        "location": "location",
+        "sku": {
+          "name": "Aligned"
+        },
+        "properties": {
+          "platformFaultDomainCount": 2,
+          "platformUpdateDomainCount": 5
+        }
+      },
+      {
+        "apiVersion": "2020-05-01",
+        "type": "Microsoft.Network/networkInterfaces",
+        "name": "namespace-niccopyindex()",
+        "location": "location",
+        "copy": {
+          "name": "clientNodesNicLoop",
+          "count": "vmCount"
+        },
+        "properties": {
+          "ipConfigurations": [
+            {
+              "name": "ipconfig1",
+              "properties": {
+                "privateIPAllocationMethod": "Dynamic",
+                "subnet": {
+                  "id": "Microsoft.Network/virtualNetworks/subnets/subnet/subnet"
+                },
+                "loadBalancerBackendAddressPools": "lbBackendPools"
+              }
+            }
+          ]
+        }
+      },
+      {
+        "apiVersion": "2020-12-01",
+        "type": "Microsoft.Compute/virtualMachines",
+        "name": "namespace-vmcopyindex()",
+        "location": "location",
+        "copy": {
+          "name": "clientVmLoop",
+          "count": "vmCount"
+        },
+        "dependsOn": [
+          "Microsoft.Network/networkInterfaces/namespace-niccopyindex()",
+          "Microsoft.Compute/availabilitySets/es-client-set"
+        ],
+        "properties": {
+          "availabilitySet": {
+            "id": "Microsoft.Compute/availabilitySets/es-client-set"
+          },
+          "hardwareProfile": {
+            "vmSize": "Standard_D2_v3"
+          },
+          "osProfile": {
+            "computerName": "client-vmcopyIndex()",
+            "adminUsername": "adminUsername",
+            "adminPassword": "authSet",
+            "linuxConfiguration": "osSettings"
+          },
+          "storageProfile": {
+            "imageReference": "osSettings",
+            "osDisk": {
+              "name": "namespace-vmcopyindex()_OSDisk",
+              "caching": "ReadWrite",
+              "createOption": "FromImage"
+            }
+          },
+          "networkProfile": {
+            "networkInterfaces": [
+              {
+                "id": "Microsoft.Network/networkInterfaces/namespace-niccopyindex()"
+              }
+            ]
+          }
+        },
+        "resources": [
+          {
+            "type": "extensions",
+            "name": "installelasticsearch",
+            "apiVersion": "2020-12-01",
+            "location": "location",
+            "dependsOn": [
+              "Microsoft.Compute/virtualMachines/namespace-vmcopyindex()"
+            ],
+            "properties": {
+              "publisher": "osSettings",
+              "type": "osSettings",
+              "typeHandlerVersion": "osSettings",
+              "settings": {
+                "fileUris": "osSettings",
+                "commandToExecute": "[concat(parameters('osSettings').extensionSettings.client.settings.commandToExecute, listKeys(resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountNameAFS')), '2021-01-01').keys[0].value)]"
+              }
+            }
+          }
+        ]
+      }
+    ],
+    "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+  }
+}

@@ -2,12 +2,12 @@
   "structure": "filesystem",
   "error": null,
   "reference": "master",
-  "contentType": "yaml",
+  "contentType": "json",
   "source": "gitConnectorGoogleKcc",
   "paths": [
-    "/samples/resources/logginglogsink/organization-sink/logging_v1beta1_logginglogsink.yaml"
+    "/samples/resources/iampolicy/external-project-level-policy/iam_v1beta1_iamserviceaccount.yaml"
   ],
-  "timestamp": 1628765149000,
+  "timestamp": 1642973304264,
   "queryuser": null,
   "checksum": "99914b932bd37a50b983c5e7c90ae93b",
   "node": {
@@ -15,30 +15,25 @@
     "type": "kcc",
     "collection": "kcctemplate",
     "paths": [
-      "/samples/resources/logginglogsink/organization-sink/logging_v1beta1_logginglogsink.yaml"
+      "/samples/resources/iampolicy/external-project-level-policy/iam_v1beta1_iamserviceaccount.yaml"
     ],
     "snapshotId": "KCC_TEMPLATE_SNAPSHOT451",
     "status": "active",
-    "validate": true
+    "validate": true,
+    "resourceTypes": [
+      "iamserviceaccount"
+    ]
   },
   "snapshotId": "KCC_TEMPLATE_SNAPSHOT451",
   "collection": "kcctemplate",
   "json": {
-    "apiVersion": "logging.cnrm.cloud.google.com/v1beta1",
-    "kind": "LoggingLogSink",
+    "apiVersion": "iam.cnrm.cloud.google.com/v1beta1",
+    "kind": "IAMServiceAccount",
     "metadata": {
-      "name": "logginglogsink-sample-org"
-    },
-    "spec": {
-      "organizationRef": {
-        "external": "${ORG_ID?}"
+      "annotations": {
+        "cnrm.cloud.google.com/project-id": "iampolicy-dep-external-project"
       },
-      "destination": {
-        "storageBucketRef": {
-          "name": "${PROJECT_ID?}-logginglogsink-dep-org"
-        }
-      },
-      "filter": "resource.type=\"bigquery_project\" AND logName:\"cloudaudit.googleapis.com\""
+      "name": "iampolicy-dep-external-project"
     }
   }
 }

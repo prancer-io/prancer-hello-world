@@ -1,0 +1,643 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAzureQuickStart",
+  "paths": [
+    "/application-workloads/cloudera/cloudera-on-centos/azuredeploy.json",
+    "/application-workloads/cloudera/cloudera-on-centos/azuredeploy.parameters.json"
+  ],
+  "timestamp": 1642962885465,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/application-workloads/cloudera/cloudera-on-centos/azuredeploy.json",
+      "/application-workloads/cloudera/cloudera-on-centos/azuredeploy.parameters.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT75",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "microsoft.resources/deployments"
+    ]
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT75",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.0.0.1",
+    "parameters": {
+      "adminUsername": {
+        "type": "string",
+        "defaultValue": "azureuser",
+        "metadata": {
+          "description": "Admin user name for the VMs"
+        }
+      },
+      "adminPassword": {
+        "type": "securestring",
+        "metadata": {
+          "description": "Admin password for the VMs (A mix of upper and lower-case characters, digits and symbols)"
+        },
+        "value": "GEN-PASSWORD"
+      },
+      "cmUsername": {
+        "type": "string",
+        "defaultValue": "cmadmin",
+        "metadata": {
+          "description": "User name for the Cloudera Manager"
+        }
+      },
+      "cmPassword": {
+        "type": "securestring",
+        "metadata": {
+          "description": "password for the Cloudera Manager (A mix of upper and lower-case characters, digits and symbols)"
+        },
+        "value": "GEN-PASSWORD"
+      },
+      "dnsNamePrefix": {
+        "type": "string",
+        "metadata": {
+          "description": "Unique public DNS name where the VMs will be exposed"
+        },
+        "value": "GEN-UNIQUE-10"
+      },
+      "masterStorageAccountType": {
+        "type": "string",
+        "defaultValue": "Premium_LRS",
+        "metadata": {
+          "description": "The type of the Storage Account to be created for master nodes (defaults to Premium_LRS)"
+        },
+        "value": "Premium_LRS"
+      },
+      "workerStorageAccountType": {
+        "type": "string",
+        "defaultValue": "Standard_LRS",
+        "metadata": {
+          "description": "The type of the Storage Account to be created for worker nodes (defaults to Standard_LRS)"
+        },
+        "value": "Standard_LRS"
+      },
+      "virtualNetworkName": {
+        "type": "string",
+        "defaultValue": "clouderavnet",
+        "metadata": {
+          "description": "The name of the virtual network provisioned for the deployment"
+        },
+        "value": "GEN-UNIQUE-10"
+      },
+      "vnetNewOrExisting": {
+        "type": "string",
+        "defaultValue": "new",
+        "allowedValues": [
+          "new",
+          "existing"
+        ],
+        "metadata": {
+          "description": "Indicator for new or exiting Virtual Network"
+        }
+      },
+      "virtualNetworkRGName": {
+        "type": "string",
+        "defaultValue": "",
+        "metadata": {
+          "description": "Resource Group Name for Vnet. For new VNet leave it empty, otherwise type in existing resource group name"
+        }
+      },
+      "subnetName": {
+        "type": "string",
+        "defaultValue": "clouderasubnet",
+        "metadata": {
+          "description": "Subnet name for the virtual network where resources will be provisioned"
+        },
+        "value": "GEN-UNIQUE-10"
+      },
+      "addressPrefix": {
+        "type": "string",
+        "defaultValue": "10.3.0.0/16",
+        "metadata": {
+          "description": "Virtual Network address CIDR"
+        }
+      },
+      "subnetPrefix": {
+        "type": "string",
+        "defaultValue": "10.3.0.0/16",
+        "metadata": {
+          "description": "CIDR for the subnet where VMs will be placed"
+        }
+      },
+      "masterNodeIPAddress": {
+        "type": "string",
+        "defaultValue": "10.3.0.4",
+        "metadata": {
+          "description": "IP address for the first master"
+        }
+      },
+      "dataNodeIPOffSetFromMaster": {
+        "type": "int",
+        "defaultValue": 5,
+        "metadata": {
+          "description": "IP address from the master node, for example if the first master is 10.1.1.1, then the first dataNode would be 10.1.1.11"
+        }
+      },
+      "tshirtSize": {
+        "type": "string",
+        "defaultValue": "Eval",
+        "allowedValues": [
+          "Eval",
+          "Prod"
+        ],
+        "metadata": {
+          "description": "T-shirt size of the Cloudera cluster (Eval, Prod)"
+        },
+        "value": "Eval"
+      },
+      "numberOfDataNodes": {
+        "type": "int",
+        "defaultValue": 3,
+        "metadata": {
+          "description": "Number of data nodes for Prod (defaults to 3)"
+        },
+        "value": 3
+      },
+      "vmSize": {
+        "type": "string",
+        "defaultValue": "Standard_D16s_v3",
+        "metadata": {
+          "description": "The size of the VMs deployed in the cluster (defaults to Standard_DS14)"
+        },
+        "allowedValues": [
+          "Standard_D16s_v3",
+          "Standard_D8s_v3",
+          "Standard_D16s_v3",
+          "Standard_D8s_v3"
+        ],
+        "value": "Standard_D16s_v3"
+      },
+      "vmImage": {
+        "type": "string",
+        "defaultValue": "ClouderaCentOS6_7",
+        "metadata": {
+          "description": "The OS VM Image (defaults to ClouderaCentOS6_7)"
+        },
+        "allowedValues": [
+          "ClouderaCentOS6_7",
+          "ClouderaCentOS6_8"
+        ],
+        "value": "ClouderaCentOS6_7"
+      },
+      "company": {
+        "type": "string",
+        "defaultValue": "Company",
+        "metadata": {
+          "description": "Your Company"
+        },
+        "value": "company"
+      },
+      "emailAddress": {
+        "type": "string",
+        "defaultValue": "email@yourcompany.com",
+        "metadata": {
+          "description": "your email"
+        },
+        "value": "email@yourcompany.com"
+      },
+      "businessPhone": {
+        "type": "string",
+        "defaultValue": "123456789",
+        "metadata": {
+          "description": "your business phone number"
+        },
+        "value": "123456789"
+      },
+      "firstName": {
+        "type": "string",
+        "defaultValue": "FirstName",
+        "metadata": {
+          "description": "Your FirstName"
+        },
+        "value": "FirstName"
+      },
+      "lastName": {
+        "type": "string",
+        "defaultValue": "LastName",
+        "metadata": {
+          "description": "Your LastName"
+        },
+        "value": "LastName"
+      },
+      "jobRole": {
+        "type": "string",
+        "defaultValue": "Administrator",
+        "metadata": {
+          "description": "Job Role"
+        },
+        "allowedValues": [
+          "Administrator",
+          "Analyst (Industry/Finance)",
+          "Analyst (Technical)",
+          "Architect",
+          "C level",
+          "Consultant",
+          "Developer",
+          "Director",
+          "Engineer",
+          "Individual contributor",
+          "Manager",
+          "Partner",
+          "Student",
+          "VP"
+        ],
+        "value": "Administrator"
+      },
+      "jobFunction": {
+        "type": "string",
+        "defaultValue": "Analytics / Business Intelligence",
+        "metadata": {
+          "description": "Job Function"
+        },
+        "allowedValues": [
+          "Analytics / Business Intelligence",
+          "Big Data / Architecture",
+          "Data Warehouse / Management",
+          "Data Science",
+          "Database",
+          "ETL / ELT",
+          "Infrastructure",
+          "IT",
+          "Marketing / Sales",
+          "Networking",
+          "Manager",
+          "Security / Compliance",
+          "Storage"
+        ],
+        "value": "Storage"
+      }
+    },
+    "variables": {
+      "templateAPIVersion": "2015-11-01",
+      "resourceAPIVersion": "2015-06-15",
+      "installCDH": "True",
+      "addressPrefix": "10.3.0.0/16",
+      "subnetPrefix": "10.3.0.0/16",
+      "scriptsUriDescription": "For Command Line Deployment, scriptsUri must point to an Azure-accessible location like: https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/cloudera-on-centos",
+      "scriptsUri": "[uri(deployment().properties.templateLink.uri, '.')]",
+      "share-resourcesUri": "[uri(deployment().properties.templateLink.uri, '.')]/shared-resources-new-vnet.json",
+      "data-nodeUri": "[concat(variables('scriptsUri'), '/data-node-', toLower(subString(parameters('vmSize'), 0, 13)), '.json')]",
+      "sa": "10.3.0.4",
+      "ipOctet01": "[concat(split(variables('sa'), '.')[0], '.', split(variables('sa'), '.')[1], '.')]",
+      "ipOctet2": "[int(split(variables('sa'), '.')[2])]",
+      "ipOctet3": "[int(split(variables('sa'), '.')[3])]",
+      "datanodeIpOctet3": "[add(int(split(variables('sa'), '.')[3]), parameters('dataNodeIPOffSetFromMaster'))]",
+      "masterStorageAccount": {
+        "type": "Premium_LRS"
+      },
+      "workerStorageAccount": {
+        "type": "Standard_LRS"
+      },
+      "clusterTshirtSizeEval": {
+        "masterNodeCount": 1,
+        "dataNodeCount": 3,
+        "highAvailability": "false"
+      },
+      "clusterTshirtSizeProd": {
+        "masterNodeCount": 3,
+        "dataNodeCount": 3,
+        "highAvailability": "true"
+      },
+      "clusterSpec": "concat(clusterTshirtSize, parameters(tshirtSize))",
+      "vmImageInfo": {
+        "ClouderaCentOS6_7": {
+          "plan": {
+            "name": "cloudera-centos-6",
+            "publisher": "cloudera",
+            "product": "cloudera-centos-6"
+          },
+          "imageReference": {
+            "publisher": "cloudera",
+            "offer": "cloudera-centos-6",
+            "sku": "cloudera-centos-6",
+            "version": "latest"
+          }
+        },
+        "ClouderaCentOS6_8": {
+          "plan": {
+            "name": "6_8",
+            "publisher": "cloudera",
+            "product": "cloudera-centos-os"
+          },
+          "imageReference": {
+            "publisher": "cloudera",
+            "offer": "cloudera-centos-os",
+            "sku": "6_8",
+            "version": "latest"
+          }
+        },
+        "ClouderaCentOS6_7Germany": {
+          "plan": null,
+          "imageReference": {
+            "publisher": "cloudera",
+            "offer": "cloudera-centos-os",
+            "sku": "6_7",
+            "version": "latest"
+          }
+        }
+      },
+      "vmSpec": {
+        "vmSize": "Standard_D16s_v3",
+        "imageInfo": "(vmImageInfo)[parameters(vmImage)]",
+        "adminUsername": "azureuser",
+        "adminPassword": "GEN-PASSWORD",
+        "masterNodeASName": "GEN-UNIQUE-10-mnAS",
+        "dataNodeASName": "GEN-UNIQUE-10-dnAS"
+      },
+      "networkSpec": {
+        "addressPrefix": "10.3.0.0/16",
+        "subnetPrefix": "10.3.0.0/16",
+        "ipOctet01": "[concat(split(variables('sa'), '.')[0], '.', split(variables('sa'), '.')[1], '.')]",
+        "ipOctet2": "[int(split(variables('sa'), '.')[2])]",
+        "ipOctet3": "[int(split(variables('sa'), '.')[3])]",
+        "datanodeIpOctet3": "[add(int(split(variables('sa'), '.')[3]), parameters('dataNodeIPOffSetFromMaster'))]",
+        "masterIP": "10.3.0.4",
+        "workerIP": "[concat(variables('ipOctet01'), add(variables('ipOctet2'), div(variables('datanodeIpOctet3'), 255)), '.', mod(variables('datanodeIpOctet3'), 255))]",
+        "virtualNetworkName": "GEN-UNIQUE-10",
+        "virtualNetworkRGName": "",
+        "vnetNewOrExisting": "new",
+        "virtualNetworkSubnetName": "GEN-UNIQUE-10"
+      },
+      "newVNetId": "Microsoft.Network/virtualNetworks/GEN-UNIQUE-10",
+      "existingVNetId": "parameters('virtualNetworkRGName')/Microsoft.Network/virtualNetworks/GEN-UNIQUE-10",
+      "VNetId": "concat(parameters(vnetNewOrExisting),VNetId)"
+    },
+    "resources": [
+      {
+        "name": "shared-resources",
+        "type": "Microsoft.Resources/deployments",
+        "apiVersion": "2015-11-01",
+        "properties": {
+          "mode": "Incremental",
+          "templateLink": {
+            "uri": "[uri(deployment().properties.templateLink.uri, '.')]/shared-resources-new-vnet.json",
+            "contentVersion": "1.0.0.1"
+          },
+          "parameters": {
+            "resourceAPIVersion": {
+              "value": "2015-06-15"
+            },
+            "networkSpec": {
+              "value": {
+                "addressPrefix": "10.3.0.0/16",
+                "subnetPrefix": "10.3.0.0/16",
+                "ipOctet01": "[concat(split(variables('sa'), '.')[0], '.', split(variables('sa'), '.')[1], '.')]",
+                "ipOctet2": "[int(split(variables('sa'), '.')[2])]",
+                "ipOctet3": "[int(split(variables('sa'), '.')[3])]",
+                "datanodeIpOctet3": "[add(int(split(variables('sa'), '.')[3]), parameters('dataNodeIPOffSetFromMaster'))]",
+                "masterIP": "10.3.0.4",
+                "workerIP": "[concat(variables('ipOctet01'), add(variables('ipOctet2'), div(variables('datanodeIpOctet3'), 255)), '.', mod(variables('datanodeIpOctet3'), 255))]",
+                "virtualNetworkName": "GEN-UNIQUE-10",
+                "virtualNetworkRGName": "",
+                "vnetNewOrExisting": "new",
+                "virtualNetworkSubnetName": "GEN-UNIQUE-10"
+              }
+            },
+            "masterNodeASName": {
+              "value": "(vmSpec).masterNodeASName"
+            },
+            "dataNodeASName": {
+              "value": "(vmSpec).dataNodeASName"
+            }
+          }
+        }
+      },
+      {
+        "name": "master-node",
+        "type": "Microsoft.Resources/deployments",
+        "apiVersion": "2015-11-01",
+        "dependsOn": [
+          "Microsoft.Resources/deployments/shared-resources"
+        ],
+        "properties": {
+          "mode": "Incremental",
+          "templateLink": {
+            "uri": "[uri(deployment().properties.templateLink.uri, '.')]/master-node.json",
+            "contentVersion": "1.0.0.1"
+          },
+          "parameters": {
+            "vnetID": {
+              "value": "concat(parameters(vnetNewOrExisting),VNetId)"
+            },
+            "resourceAPIVersion": {
+              "value": "2015-06-15"
+            },
+            "dnsNamePrefix": {
+              "value": "GEN-UNIQUE-10"
+            },
+            "scriptsUri": {
+              "value": "[uri(deployment().properties.templateLink.uri, '.')]"
+            },
+            "storageAccount": {
+              "value": {
+                "type": "Premium_LRS"
+              }
+            },
+            "vmCount": {
+              "value": "(clusterSpec).masterNodeCount"
+            },
+            "vmSpec": {
+              "value": {
+                "vmSize": "Standard_D16s_v3",
+                "imageInfo": "(vmImageInfo)[parameters(vmImage)]",
+                "adminUsername": "azureuser",
+                "adminPassword": "GEN-PASSWORD",
+                "masterNodeASName": "GEN-UNIQUE-10-mnAS",
+                "dataNodeASName": "GEN-UNIQUE-10-dnAS"
+              }
+            },
+            "networkSpec": {
+              "value": {
+                "addressPrefix": "10.3.0.0/16",
+                "subnetPrefix": "10.3.0.0/16",
+                "ipOctet01": "[concat(split(variables('sa'), '.')[0], '.', split(variables('sa'), '.')[1], '.')]",
+                "ipOctet2": "[int(split(variables('sa'), '.')[2])]",
+                "ipOctet3": "[int(split(variables('sa'), '.')[3])]",
+                "datanodeIpOctet3": "[add(int(split(variables('sa'), '.')[3]), parameters('dataNodeIPOffSetFromMaster'))]",
+                "masterIP": "10.3.0.4",
+                "workerIP": "[concat(variables('ipOctet01'), add(variables('ipOctet2'), div(variables('datanodeIpOctet3'), 255)), '.', mod(variables('datanodeIpOctet3'), 255))]",
+                "virtualNetworkName": "GEN-UNIQUE-10",
+                "virtualNetworkRGName": "",
+                "vnetNewOrExisting": "new",
+                "virtualNetworkSubnetName": "GEN-UNIQUE-10"
+              }
+            },
+            "clusterSpec": {
+              "value": "concat(clusterTshirtSize, parameters(tshirtSize))"
+            }
+          }
+        }
+      },
+      {
+        "name": "data-node",
+        "type": "Microsoft.Resources/deployments",
+        "apiVersion": "2015-11-01",
+        "dependsOn": [
+          "Microsoft.Resources/deployments/shared-resources"
+        ],
+        "properties": {
+          "mode": "Incremental",
+          "templateLink": {
+            "uri": "[variables('data-nodeUri')]",
+            "contentVersion": "1.0.0.1"
+          },
+          "parameters": {
+            "vnetID": {
+              "value": "concat(parameters(vnetNewOrExisting),VNetId)"
+            },
+            "templateAPIVersion": {
+              "value": "2015-11-01"
+            },
+            "resourceAPIVersion": {
+              "value": "2015-06-15"
+            },
+            "dnsNamePrefix": {
+              "value": "GEN-UNIQUE-10"
+            },
+            "scriptsUri": {
+              "value": "[uri(deployment().properties.templateLink.uri, '.')]"
+            },
+            "storageAccount": {
+              "value": {
+                "type": "Standard_LRS"
+              }
+            },
+            "vmCount": {
+              "value": "(clusterSpec).dataNodeCount"
+            },
+            "vmSpec": {
+              "value": {
+                "vmSize": "Standard_D16s_v3",
+                "imageInfo": "(vmImageInfo)[parameters(vmImage)]",
+                "adminUsername": "azureuser",
+                "adminPassword": "GEN-PASSWORD",
+                "masterNodeASName": "GEN-UNIQUE-10-mnAS",
+                "dataNodeASName": "GEN-UNIQUE-10-dnAS"
+              }
+            },
+            "networkSpec": {
+              "value": {
+                "addressPrefix": "10.3.0.0/16",
+                "subnetPrefix": "10.3.0.0/16",
+                "ipOctet01": "[concat(split(variables('sa'), '.')[0], '.', split(variables('sa'), '.')[1], '.')]",
+                "ipOctet2": "[int(split(variables('sa'), '.')[2])]",
+                "ipOctet3": "[int(split(variables('sa'), '.')[3])]",
+                "datanodeIpOctet3": "[add(int(split(variables('sa'), '.')[3]), parameters('dataNodeIPOffSetFromMaster'))]",
+                "masterIP": "10.3.0.4",
+                "workerIP": "[concat(variables('ipOctet01'), add(variables('ipOctet2'), div(variables('datanodeIpOctet3'), 255)), '.', mod(variables('datanodeIpOctet3'), 255))]",
+                "virtualNetworkName": "GEN-UNIQUE-10",
+                "virtualNetworkRGName": "",
+                "vnetNewOrExisting": "new",
+                "virtualNetworkSubnetName": "GEN-UNIQUE-10"
+              }
+            },
+            "clusterSpec": {
+              "value": "concat(clusterTshirtSize, parameters(tshirtSize))"
+            }
+          }
+        }
+      },
+      {
+        "name": "setup-cloudera",
+        "type": "Microsoft.Resources/deployments",
+        "apiVersion": "2015-11-01",
+        "dependsOn": [
+          "Microsoft.Resources/deployments/data-node",
+          "Microsoft.Resources/deployments/master-node"
+        ],
+        "properties": {
+          "mode": "Incremental",
+          "templateLink": {
+            "uri": "[uri(deployment().properties.templateLink.uri, '.')]/setup-cloudera.json",
+            "contentVersion": "1.0.0.1"
+          },
+          "parameters": {
+            "resourceAPIVersion": {
+              "value": "2015-06-15"
+            },
+            "dnsNamePrefix": {
+              "value": "GEN-UNIQUE-10"
+            },
+            "scriptsUri": {
+              "value": "[uri(deployment().properties.templateLink.uri, '.')]"
+            },
+            "vmSpec": {
+              "value": {
+                "vmSize": "Standard_D16s_v3",
+                "imageInfo": "(vmImageInfo)[parameters(vmImage)]",
+                "adminUsername": "azureuser",
+                "adminPassword": "GEN-PASSWORD",
+                "masterNodeASName": "GEN-UNIQUE-10-mnAS",
+                "dataNodeASName": "GEN-UNIQUE-10-dnAS"
+              }
+            },
+            "networkSpec": {
+              "value": {
+                "addressPrefix": "10.3.0.0/16",
+                "subnetPrefix": "10.3.0.0/16",
+                "ipOctet01": "[concat(split(variables('sa'), '.')[0], '.', split(variables('sa'), '.')[1], '.')]",
+                "ipOctet2": "[int(split(variables('sa'), '.')[2])]",
+                "ipOctet3": "[int(split(variables('sa'), '.')[3])]",
+                "datanodeIpOctet3": "[add(int(split(variables('sa'), '.')[3]), parameters('dataNodeIPOffSetFromMaster'))]",
+                "masterIP": "10.3.0.4",
+                "workerIP": "[concat(variables('ipOctet01'), add(variables('ipOctet2'), div(variables('datanodeIpOctet3'), 255)), '.', mod(variables('datanodeIpOctet3'), 255))]",
+                "virtualNetworkName": "GEN-UNIQUE-10",
+                "virtualNetworkRGName": "",
+                "vnetNewOrExisting": "new",
+                "virtualNetworkSubnetName": "GEN-UNIQUE-10"
+              }
+            },
+            "clusterSpec": {
+              "value": "concat(clusterTshirtSize, parameters(tshirtSize))"
+            },
+            "fqdn": {
+              "value": "[reference('master-node').outputs.fqdn.value]"
+            },
+            "cmUsername": {
+              "value": "cmadmin"
+            },
+            "cmPassword": {
+              "value": "GEN-PASSWORD"
+            },
+            "company": {
+              "value": "Company"
+            },
+            "emailAddress": {
+              "value": "email@yourcompany.com"
+            },
+            "businessPhone": {
+              "value": "123456789"
+            },
+            "firstName": {
+              "value": "FirstName"
+            },
+            "lastName": {
+              "value": "LastName"
+            },
+            "jobRole": {
+              "value": "Administrator"
+            },
+            "jobFunction": {
+              "value": "Storage"
+            },
+            "installCDH": {
+              "value": "True"
+            }
+          }
+        }
+      }
+    ],
+    "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+  }
+}

@@ -1,0 +1,1009 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAzureQuickStart",
+  "paths": [
+    "/demos/custom-private-dns/nested/server/setupserver.json"
+  ],
+  "timestamp": 1642962899006,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/demos/custom-private-dns/nested/server/setupserver.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT683",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "microsoft.compute/virtualmachines/extensions"
+    ]
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT683",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "vmList": {
+        "type": "string",
+        "minLength": 1,
+        "metadata": {
+          "description": "List of virtual machines to be configured.  If using multiple VMs, make their names comma separate, e.g. VM01,VM02,VM03."
+        }
+      },
+      "dnsZone": {
+        "type": "string",
+        "metadata": {
+          "description": "Name of the forward dnsZone to configure for updates"
+        }
+      },
+      "vnetName": {
+        "type": "string",
+        "metadata": {
+          "description": "Name of the vnet for which to create the reverse DNS zone"
+        }
+      },
+      "_artifactsLocation": {
+        "type": "string",
+        "metadata": {
+          "description": "The location of resources, such as templates and scripts, that this script depends on"
+        }
+      },
+      "_artifactsLocationSasToken": {
+        "type": "securestring",
+        "metadata": {
+          "description": "The sasToken required to access _artifactsLocation.  When the template is deployed using the accompanying scripts, a sasToken will be automatically generated."
+        }
+      },
+      "location": {
+        "type": "string",
+        "metadata": {
+          "description": "Location for all resources."
+        }
+      }
+    },
+    "variables": {
+      "vmListArray": "[split(replace(parameters('vmList'),' ',''),',')]",
+      "vnetID": "Microsoft.Network/virtualNetworks//vnetName"
+    },
+    "resources": [
+      {
+        "comments": "DNS server setup - assumes AD has already been setup",
+        "apiVersion": "2020-12-01",
+        "type": "Microsoft.Compute/virtualMachines/extensions",
+        "name": "[concat(variables('vmListArray')[copyIndex()],'/SetupDnsServer')]",
+        "location": "location",
+        "properties": {
+          "publisher": "Microsoft.Compute",
+          "type": "CustomScriptExtension",
+          "typeHandlerVersion": "1.8",
+          "autoUpgradeMinorVersion": true,
+          "settings": {
+            "fileUris": [
+              "[uri(parameters('_artifactsLocation'), concat('nested/server/setupserver.ps1', parameters('_artifactsLocationSasToken')))]"
+            ],
+            "commandToExecute": "[concat('powershell -ExecutionPolicy Unrestricted -File nested/server/setupserver.ps1', ' ', parameters('dnsZone'), ' ', reference(variables('vnetID'), '2016-12-01').addressSpace.addressPrefixes[0])]"
+          }
+        }
+      },
+      {
+        "comments": "DNS server setup - assumes AD has already been setup",
+        "apiVersion": "2020-12-01",
+        "type": "Microsoft.Compute/virtualMachines/extensions",
+        "name": "[concat(variables('vmListArray')[copyIndex()],'/SetupDnsServer')]",
+        "location": "location",
+        "properties": {
+          "publisher": "Microsoft.Compute",
+          "type": "CustomScriptExtension",
+          "typeHandlerVersion": "1.8",
+          "autoUpgradeMinorVersion": true,
+          "settings": {
+            "fileUris": [
+              "[uri(parameters('_artifactsLocation'), concat('nested/server/setupserver.ps1', parameters('_artifactsLocationSasToken')))]"
+            ],
+            "commandToExecute": "[concat('powershell -ExecutionPolicy Unrestricted -File nested/server/setupserver.ps1', ' ', parameters('dnsZone'), ' ', reference(variables('vnetID'), '2016-12-01').addressSpace.addressPrefixes[0])]"
+          }
+        }
+      },
+      {
+        "comments": "DNS server setup - assumes AD has already been setup",
+        "apiVersion": "2020-12-01",
+        "type": "Microsoft.Compute/virtualMachines/extensions",
+        "name": "[concat(variables('vmListArray')[copyIndex()],'/SetupDnsServer')]",
+        "location": "location",
+        "properties": {
+          "publisher": "Microsoft.Compute",
+          "type": "CustomScriptExtension",
+          "typeHandlerVersion": "1.8",
+          "autoUpgradeMinorVersion": true,
+          "settings": {
+            "fileUris": [
+              "[uri(parameters('_artifactsLocation'), concat('nested/server/setupserver.ps1', parameters('_artifactsLocationSasToken')))]"
+            ],
+            "commandToExecute": "[concat('powershell -ExecutionPolicy Unrestricted -File nested/server/setupserver.ps1', ' ', parameters('dnsZone'), ' ', reference(variables('vnetID'), '2016-12-01').addressSpace.addressPrefixes[0])]"
+          }
+        }
+      },
+      {
+        "comments": "DNS server setup - assumes AD has already been setup",
+        "apiVersion": "2020-12-01",
+        "type": "Microsoft.Compute/virtualMachines/extensions",
+        "name": "[concat(variables('vmListArray')[copyIndex()],'/SetupDnsServer')]",
+        "location": "location",
+        "properties": {
+          "publisher": "Microsoft.Compute",
+          "type": "CustomScriptExtension",
+          "typeHandlerVersion": "1.8",
+          "autoUpgradeMinorVersion": true,
+          "settings": {
+            "fileUris": [
+              "[uri(parameters('_artifactsLocation'), concat('nested/server/setupserver.ps1', parameters('_artifactsLocationSasToken')))]"
+            ],
+            "commandToExecute": "[concat('powershell -ExecutionPolicy Unrestricted -File nested/server/setupserver.ps1', ' ', parameters('dnsZone'), ' ', reference(variables('vnetID'), '2016-12-01').addressSpace.addressPrefixes[0])]"
+          }
+        }
+      },
+      {
+        "comments": "DNS server setup - assumes AD has already been setup",
+        "apiVersion": "2020-12-01",
+        "type": "Microsoft.Compute/virtualMachines/extensions",
+        "name": "[concat(variables('vmListArray')[copyIndex()],'/SetupDnsServer')]",
+        "location": "location",
+        "properties": {
+          "publisher": "Microsoft.Compute",
+          "type": "CustomScriptExtension",
+          "typeHandlerVersion": "1.8",
+          "autoUpgradeMinorVersion": true,
+          "settings": {
+            "fileUris": [
+              "[uri(parameters('_artifactsLocation'), concat('nested/server/setupserver.ps1', parameters('_artifactsLocationSasToken')))]"
+            ],
+            "commandToExecute": "[concat('powershell -ExecutionPolicy Unrestricted -File nested/server/setupserver.ps1', ' ', parameters('dnsZone'), ' ', reference(variables('vnetID'), '2016-12-01').addressSpace.addressPrefixes[0])]"
+          }
+        }
+      },
+      {
+        "comments": "DNS server setup - assumes AD has already been setup",
+        "apiVersion": "2020-12-01",
+        "type": "Microsoft.Compute/virtualMachines/extensions",
+        "name": "[concat(variables('vmListArray')[copyIndex()],'/SetupDnsServer')]",
+        "location": "location",
+        "properties": {
+          "publisher": "Microsoft.Compute",
+          "type": "CustomScriptExtension",
+          "typeHandlerVersion": "1.8",
+          "autoUpgradeMinorVersion": true,
+          "settings": {
+            "fileUris": [
+              "[uri(parameters('_artifactsLocation'), concat('nested/server/setupserver.ps1', parameters('_artifactsLocationSasToken')))]"
+            ],
+            "commandToExecute": "[concat('powershell -ExecutionPolicy Unrestricted -File nested/server/setupserver.ps1', ' ', parameters('dnsZone'), ' ', reference(variables('vnetID'), '2016-12-01').addressSpace.addressPrefixes[0])]"
+          }
+        }
+      },
+      {
+        "comments": "DNS server setup - assumes AD has already been setup",
+        "apiVersion": "2020-12-01",
+        "type": "Microsoft.Compute/virtualMachines/extensions",
+        "name": "[concat(variables('vmListArray')[copyIndex()],'/SetupDnsServer')]",
+        "location": "location",
+        "properties": {
+          "publisher": "Microsoft.Compute",
+          "type": "CustomScriptExtension",
+          "typeHandlerVersion": "1.8",
+          "autoUpgradeMinorVersion": true,
+          "settings": {
+            "fileUris": [
+              "[uri(parameters('_artifactsLocation'), concat('nested/server/setupserver.ps1', parameters('_artifactsLocationSasToken')))]"
+            ],
+            "commandToExecute": "[concat('powershell -ExecutionPolicy Unrestricted -File nested/server/setupserver.ps1', ' ', parameters('dnsZone'), ' ', reference(variables('vnetID'), '2016-12-01').addressSpace.addressPrefixes[0])]"
+          }
+        }
+      },
+      {
+        "comments": "DNS server setup - assumes AD has already been setup",
+        "apiVersion": "2020-12-01",
+        "type": "Microsoft.Compute/virtualMachines/extensions",
+        "name": "[concat(variables('vmListArray')[copyIndex()],'/SetupDnsServer')]",
+        "location": "location",
+        "properties": {
+          "publisher": "Microsoft.Compute",
+          "type": "CustomScriptExtension",
+          "typeHandlerVersion": "1.8",
+          "autoUpgradeMinorVersion": true,
+          "settings": {
+            "fileUris": [
+              "[uri(parameters('_artifactsLocation'), concat('nested/server/setupserver.ps1', parameters('_artifactsLocationSasToken')))]"
+            ],
+            "commandToExecute": "[concat('powershell -ExecutionPolicy Unrestricted -File nested/server/setupserver.ps1', ' ', parameters('dnsZone'), ' ', reference(variables('vnetID'), '2016-12-01').addressSpace.addressPrefixes[0])]"
+          }
+        }
+      },
+      {
+        "comments": "DNS server setup - assumes AD has already been setup",
+        "apiVersion": "2020-12-01",
+        "type": "Microsoft.Compute/virtualMachines/extensions",
+        "name": "[concat(variables('vmListArray')[copyIndex()],'/SetupDnsServer')]",
+        "location": "location",
+        "properties": {
+          "publisher": "Microsoft.Compute",
+          "type": "CustomScriptExtension",
+          "typeHandlerVersion": "1.8",
+          "autoUpgradeMinorVersion": true,
+          "settings": {
+            "fileUris": [
+              "[uri(parameters('_artifactsLocation'), concat('nested/server/setupserver.ps1', parameters('_artifactsLocationSasToken')))]"
+            ],
+            "commandToExecute": "[concat('powershell -ExecutionPolicy Unrestricted -File nested/server/setupserver.ps1', ' ', parameters('dnsZone'), ' ', reference(variables('vnetID'), '2016-12-01').addressSpace.addressPrefixes[0])]"
+          }
+        }
+      },
+      {
+        "comments": "DNS server setup - assumes AD has already been setup",
+        "apiVersion": "2020-12-01",
+        "type": "Microsoft.Compute/virtualMachines/extensions",
+        "name": "[concat(variables('vmListArray')[copyIndex()],'/SetupDnsServer')]",
+        "location": "location",
+        "properties": {
+          "publisher": "Microsoft.Compute",
+          "type": "CustomScriptExtension",
+          "typeHandlerVersion": "1.8",
+          "autoUpgradeMinorVersion": true,
+          "settings": {
+            "fileUris": [
+              "[uri(parameters('_artifactsLocation'), concat('nested/server/setupserver.ps1', parameters('_artifactsLocationSasToken')))]"
+            ],
+            "commandToExecute": "[concat('powershell -ExecutionPolicy Unrestricted -File nested/server/setupserver.ps1', ' ', parameters('dnsZone'), ' ', reference(variables('vnetID'), '2016-12-01').addressSpace.addressPrefixes[0])]"
+          }
+        }
+      },
+      {
+        "comments": "DNS server setup - assumes AD has already been setup",
+        "apiVersion": "2020-12-01",
+        "type": "Microsoft.Compute/virtualMachines/extensions",
+        "name": "[concat(variables('vmListArray')[copyIndex()],'/SetupDnsServer')]",
+        "location": "location",
+        "properties": {
+          "publisher": "Microsoft.Compute",
+          "type": "CustomScriptExtension",
+          "typeHandlerVersion": "1.8",
+          "autoUpgradeMinorVersion": true,
+          "settings": {
+            "fileUris": [
+              "[uri(parameters('_artifactsLocation'), concat('nested/server/setupserver.ps1', parameters('_artifactsLocationSasToken')))]"
+            ],
+            "commandToExecute": "[concat('powershell -ExecutionPolicy Unrestricted -File nested/server/setupserver.ps1', ' ', parameters('dnsZone'), ' ', reference(variables('vnetID'), '2016-12-01').addressSpace.addressPrefixes[0])]"
+          }
+        }
+      },
+      {
+        "comments": "DNS server setup - assumes AD has already been setup",
+        "apiVersion": "2020-12-01",
+        "type": "Microsoft.Compute/virtualMachines/extensions",
+        "name": "[concat(variables('vmListArray')[copyIndex()],'/SetupDnsServer')]",
+        "location": "location",
+        "properties": {
+          "publisher": "Microsoft.Compute",
+          "type": "CustomScriptExtension",
+          "typeHandlerVersion": "1.8",
+          "autoUpgradeMinorVersion": true,
+          "settings": {
+            "fileUris": [
+              "[uri(parameters('_artifactsLocation'), concat('nested/server/setupserver.ps1', parameters('_artifactsLocationSasToken')))]"
+            ],
+            "commandToExecute": "[concat('powershell -ExecutionPolicy Unrestricted -File nested/server/setupserver.ps1', ' ', parameters('dnsZone'), ' ', reference(variables('vnetID'), '2016-12-01').addressSpace.addressPrefixes[0])]"
+          }
+        }
+      },
+      {
+        "comments": "DNS server setup - assumes AD has already been setup",
+        "apiVersion": "2020-12-01",
+        "type": "Microsoft.Compute/virtualMachines/extensions",
+        "name": "[concat(variables('vmListArray')[copyIndex()],'/SetupDnsServer')]",
+        "location": "location",
+        "properties": {
+          "publisher": "Microsoft.Compute",
+          "type": "CustomScriptExtension",
+          "typeHandlerVersion": "1.8",
+          "autoUpgradeMinorVersion": true,
+          "settings": {
+            "fileUris": [
+              "[uri(parameters('_artifactsLocation'), concat('nested/server/setupserver.ps1', parameters('_artifactsLocationSasToken')))]"
+            ],
+            "commandToExecute": "[concat('powershell -ExecutionPolicy Unrestricted -File nested/server/setupserver.ps1', ' ', parameters('dnsZone'), ' ', reference(variables('vnetID'), '2016-12-01').addressSpace.addressPrefixes[0])]"
+          }
+        }
+      },
+      {
+        "comments": "DNS server setup - assumes AD has already been setup",
+        "apiVersion": "2020-12-01",
+        "type": "Microsoft.Compute/virtualMachines/extensions",
+        "name": "[concat(variables('vmListArray')[copyIndex()],'/SetupDnsServer')]",
+        "location": "location",
+        "properties": {
+          "publisher": "Microsoft.Compute",
+          "type": "CustomScriptExtension",
+          "typeHandlerVersion": "1.8",
+          "autoUpgradeMinorVersion": true,
+          "settings": {
+            "fileUris": [
+              "[uri(parameters('_artifactsLocation'), concat('nested/server/setupserver.ps1', parameters('_artifactsLocationSasToken')))]"
+            ],
+            "commandToExecute": "[concat('powershell -ExecutionPolicy Unrestricted -File nested/server/setupserver.ps1', ' ', parameters('dnsZone'), ' ', reference(variables('vnetID'), '2016-12-01').addressSpace.addressPrefixes[0])]"
+          }
+        }
+      },
+      {
+        "comments": "DNS server setup - assumes AD has already been setup",
+        "apiVersion": "2020-12-01",
+        "type": "Microsoft.Compute/virtualMachines/extensions",
+        "name": "[concat(variables('vmListArray')[copyIndex()],'/SetupDnsServer')]",
+        "location": "location",
+        "properties": {
+          "publisher": "Microsoft.Compute",
+          "type": "CustomScriptExtension",
+          "typeHandlerVersion": "1.8",
+          "autoUpgradeMinorVersion": true,
+          "settings": {
+            "fileUris": [
+              "[uri(parameters('_artifactsLocation'), concat('nested/server/setupserver.ps1', parameters('_artifactsLocationSasToken')))]"
+            ],
+            "commandToExecute": "[concat('powershell -ExecutionPolicy Unrestricted -File nested/server/setupserver.ps1', ' ', parameters('dnsZone'), ' ', reference(variables('vnetID'), '2016-12-01').addressSpace.addressPrefixes[0])]"
+          }
+        }
+      },
+      {
+        "comments": "DNS server setup - assumes AD has already been setup",
+        "apiVersion": "2020-12-01",
+        "type": "Microsoft.Compute/virtualMachines/extensions",
+        "name": "[concat(variables('vmListArray')[copyIndex()],'/SetupDnsServer')]",
+        "location": "location",
+        "properties": {
+          "publisher": "Microsoft.Compute",
+          "type": "CustomScriptExtension",
+          "typeHandlerVersion": "1.8",
+          "autoUpgradeMinorVersion": true,
+          "settings": {
+            "fileUris": [
+              "[uri(parameters('_artifactsLocation'), concat('nested/server/setupserver.ps1', parameters('_artifactsLocationSasToken')))]"
+            ],
+            "commandToExecute": "[concat('powershell -ExecutionPolicy Unrestricted -File nested/server/setupserver.ps1', ' ', parameters('dnsZone'), ' ', reference(variables('vnetID'), '2016-12-01').addressSpace.addressPrefixes[0])]"
+          }
+        }
+      },
+      {
+        "comments": "DNS server setup - assumes AD has already been setup",
+        "apiVersion": "2020-12-01",
+        "type": "Microsoft.Compute/virtualMachines/extensions",
+        "name": "[concat(variables('vmListArray')[copyIndex()],'/SetupDnsServer')]",
+        "location": "location",
+        "properties": {
+          "publisher": "Microsoft.Compute",
+          "type": "CustomScriptExtension",
+          "typeHandlerVersion": "1.8",
+          "autoUpgradeMinorVersion": true,
+          "settings": {
+            "fileUris": [
+              "[uri(parameters('_artifactsLocation'), concat('nested/server/setupserver.ps1', parameters('_artifactsLocationSasToken')))]"
+            ],
+            "commandToExecute": "[concat('powershell -ExecutionPolicy Unrestricted -File nested/server/setupserver.ps1', ' ', parameters('dnsZone'), ' ', reference(variables('vnetID'), '2016-12-01').addressSpace.addressPrefixes[0])]"
+          }
+        }
+      },
+      {
+        "comments": "DNS server setup - assumes AD has already been setup",
+        "apiVersion": "2020-12-01",
+        "type": "Microsoft.Compute/virtualMachines/extensions",
+        "name": "[concat(variables('vmListArray')[copyIndex()],'/SetupDnsServer')]",
+        "location": "location",
+        "properties": {
+          "publisher": "Microsoft.Compute",
+          "type": "CustomScriptExtension",
+          "typeHandlerVersion": "1.8",
+          "autoUpgradeMinorVersion": true,
+          "settings": {
+            "fileUris": [
+              "[uri(parameters('_artifactsLocation'), concat('nested/server/setupserver.ps1', parameters('_artifactsLocationSasToken')))]"
+            ],
+            "commandToExecute": "[concat('powershell -ExecutionPolicy Unrestricted -File nested/server/setupserver.ps1', ' ', parameters('dnsZone'), ' ', reference(variables('vnetID'), '2016-12-01').addressSpace.addressPrefixes[0])]"
+          }
+        }
+      },
+      {
+        "comments": "DNS server setup - assumes AD has already been setup",
+        "apiVersion": "2020-12-01",
+        "type": "Microsoft.Compute/virtualMachines/extensions",
+        "name": "[concat(variables('vmListArray')[copyIndex()],'/SetupDnsServer')]",
+        "location": "location",
+        "properties": {
+          "publisher": "Microsoft.Compute",
+          "type": "CustomScriptExtension",
+          "typeHandlerVersion": "1.8",
+          "autoUpgradeMinorVersion": true,
+          "settings": {
+            "fileUris": [
+              "[uri(parameters('_artifactsLocation'), concat('nested/server/setupserver.ps1', parameters('_artifactsLocationSasToken')))]"
+            ],
+            "commandToExecute": "[concat('powershell -ExecutionPolicy Unrestricted -File nested/server/setupserver.ps1', ' ', parameters('dnsZone'), ' ', reference(variables('vnetID'), '2016-12-01').addressSpace.addressPrefixes[0])]"
+          }
+        }
+      },
+      {
+        "comments": "DNS server setup - assumes AD has already been setup",
+        "apiVersion": "2020-12-01",
+        "type": "Microsoft.Compute/virtualMachines/extensions",
+        "name": "[concat(variables('vmListArray')[copyIndex()],'/SetupDnsServer')]",
+        "location": "location",
+        "properties": {
+          "publisher": "Microsoft.Compute",
+          "type": "CustomScriptExtension",
+          "typeHandlerVersion": "1.8",
+          "autoUpgradeMinorVersion": true,
+          "settings": {
+            "fileUris": [
+              "[uri(parameters('_artifactsLocation'), concat('nested/server/setupserver.ps1', parameters('_artifactsLocationSasToken')))]"
+            ],
+            "commandToExecute": "[concat('powershell -ExecutionPolicy Unrestricted -File nested/server/setupserver.ps1', ' ', parameters('dnsZone'), ' ', reference(variables('vnetID'), '2016-12-01').addressSpace.addressPrefixes[0])]"
+          }
+        }
+      },
+      {
+        "comments": "DNS server setup - assumes AD has already been setup",
+        "apiVersion": "2020-12-01",
+        "type": "Microsoft.Compute/virtualMachines/extensions",
+        "name": "[concat(variables('vmListArray')[copyIndex()],'/SetupDnsServer')]",
+        "location": "location",
+        "properties": {
+          "publisher": "Microsoft.Compute",
+          "type": "CustomScriptExtension",
+          "typeHandlerVersion": "1.8",
+          "autoUpgradeMinorVersion": true,
+          "settings": {
+            "fileUris": [
+              "[uri(parameters('_artifactsLocation'), concat('nested/server/setupserver.ps1', parameters('_artifactsLocationSasToken')))]"
+            ],
+            "commandToExecute": "[concat('powershell -ExecutionPolicy Unrestricted -File nested/server/setupserver.ps1', ' ', parameters('dnsZone'), ' ', reference(variables('vnetID'), '2016-12-01').addressSpace.addressPrefixes[0])]"
+          }
+        }
+      },
+      {
+        "comments": "DNS server setup - assumes AD has already been setup",
+        "apiVersion": "2020-12-01",
+        "type": "Microsoft.Compute/virtualMachines/extensions",
+        "name": "[concat(variables('vmListArray')[copyIndex()],'/SetupDnsServer')]",
+        "location": "location",
+        "properties": {
+          "publisher": "Microsoft.Compute",
+          "type": "CustomScriptExtension",
+          "typeHandlerVersion": "1.8",
+          "autoUpgradeMinorVersion": true,
+          "settings": {
+            "fileUris": [
+              "[uri(parameters('_artifactsLocation'), concat('nested/server/setupserver.ps1', parameters('_artifactsLocationSasToken')))]"
+            ],
+            "commandToExecute": "[concat('powershell -ExecutionPolicy Unrestricted -File nested/server/setupserver.ps1', ' ', parameters('dnsZone'), ' ', reference(variables('vnetID'), '2016-12-01').addressSpace.addressPrefixes[0])]"
+          }
+        }
+      },
+      {
+        "comments": "DNS server setup - assumes AD has already been setup",
+        "apiVersion": "2020-12-01",
+        "type": "Microsoft.Compute/virtualMachines/extensions",
+        "name": "[concat(variables('vmListArray')[copyIndex()],'/SetupDnsServer')]",
+        "location": "location",
+        "properties": {
+          "publisher": "Microsoft.Compute",
+          "type": "CustomScriptExtension",
+          "typeHandlerVersion": "1.8",
+          "autoUpgradeMinorVersion": true,
+          "settings": {
+            "fileUris": [
+              "[uri(parameters('_artifactsLocation'), concat('nested/server/setupserver.ps1', parameters('_artifactsLocationSasToken')))]"
+            ],
+            "commandToExecute": "[concat('powershell -ExecutionPolicy Unrestricted -File nested/server/setupserver.ps1', ' ', parameters('dnsZone'), ' ', reference(variables('vnetID'), '2016-12-01').addressSpace.addressPrefixes[0])]"
+          }
+        }
+      },
+      {
+        "comments": "DNS server setup - assumes AD has already been setup",
+        "apiVersion": "2020-12-01",
+        "type": "Microsoft.Compute/virtualMachines/extensions",
+        "name": "[concat(variables('vmListArray')[copyIndex()],'/SetupDnsServer')]",
+        "location": "location",
+        "properties": {
+          "publisher": "Microsoft.Compute",
+          "type": "CustomScriptExtension",
+          "typeHandlerVersion": "1.8",
+          "autoUpgradeMinorVersion": true,
+          "settings": {
+            "fileUris": [
+              "[uri(parameters('_artifactsLocation'), concat('nested/server/setupserver.ps1', parameters('_artifactsLocationSasToken')))]"
+            ],
+            "commandToExecute": "[concat('powershell -ExecutionPolicy Unrestricted -File nested/server/setupserver.ps1', ' ', parameters('dnsZone'), ' ', reference(variables('vnetID'), '2016-12-01').addressSpace.addressPrefixes[0])]"
+          }
+        }
+      },
+      {
+        "comments": "DNS server setup - assumes AD has already been setup",
+        "apiVersion": "2020-12-01",
+        "type": "Microsoft.Compute/virtualMachines/extensions",
+        "name": "[concat(variables('vmListArray')[copyIndex()],'/SetupDnsServer')]",
+        "location": "location",
+        "properties": {
+          "publisher": "Microsoft.Compute",
+          "type": "CustomScriptExtension",
+          "typeHandlerVersion": "1.8",
+          "autoUpgradeMinorVersion": true,
+          "settings": {
+            "fileUris": [
+              "[uri(parameters('_artifactsLocation'), concat('nested/server/setupserver.ps1', parameters('_artifactsLocationSasToken')))]"
+            ],
+            "commandToExecute": "[concat('powershell -ExecutionPolicy Unrestricted -File nested/server/setupserver.ps1', ' ', parameters('dnsZone'), ' ', reference(variables('vnetID'), '2016-12-01').addressSpace.addressPrefixes[0])]"
+          }
+        }
+      },
+      {
+        "comments": "DNS server setup - assumes AD has already been setup",
+        "apiVersion": "2020-12-01",
+        "type": "Microsoft.Compute/virtualMachines/extensions",
+        "name": "[concat(variables('vmListArray')[copyIndex()],'/SetupDnsServer')]",
+        "location": "location",
+        "properties": {
+          "publisher": "Microsoft.Compute",
+          "type": "CustomScriptExtension",
+          "typeHandlerVersion": "1.8",
+          "autoUpgradeMinorVersion": true,
+          "settings": {
+            "fileUris": [
+              "[uri(parameters('_artifactsLocation'), concat('nested/server/setupserver.ps1', parameters('_artifactsLocationSasToken')))]"
+            ],
+            "commandToExecute": "[concat('powershell -ExecutionPolicy Unrestricted -File nested/server/setupserver.ps1', ' ', parameters('dnsZone'), ' ', reference(variables('vnetID'), '2016-12-01').addressSpace.addressPrefixes[0])]"
+          }
+        }
+      },
+      {
+        "comments": "DNS server setup - assumes AD has already been setup",
+        "apiVersion": "2020-12-01",
+        "type": "Microsoft.Compute/virtualMachines/extensions",
+        "name": "[concat(variables('vmListArray')[copyIndex()],'/SetupDnsServer')]",
+        "location": "location",
+        "properties": {
+          "publisher": "Microsoft.Compute",
+          "type": "CustomScriptExtension",
+          "typeHandlerVersion": "1.8",
+          "autoUpgradeMinorVersion": true,
+          "settings": {
+            "fileUris": [
+              "[uri(parameters('_artifactsLocation'), concat('nested/server/setupserver.ps1', parameters('_artifactsLocationSasToken')))]"
+            ],
+            "commandToExecute": "[concat('powershell -ExecutionPolicy Unrestricted -File nested/server/setupserver.ps1', ' ', parameters('dnsZone'), ' ', reference(variables('vnetID'), '2016-12-01').addressSpace.addressPrefixes[0])]"
+          }
+        }
+      },
+      {
+        "comments": "DNS server setup - assumes AD has already been setup",
+        "apiVersion": "2020-12-01",
+        "type": "Microsoft.Compute/virtualMachines/extensions",
+        "name": "[concat(variables('vmListArray')[copyIndex()],'/SetupDnsServer')]",
+        "location": "location",
+        "properties": {
+          "publisher": "Microsoft.Compute",
+          "type": "CustomScriptExtension",
+          "typeHandlerVersion": "1.8",
+          "autoUpgradeMinorVersion": true,
+          "settings": {
+            "fileUris": [
+              "[uri(parameters('_artifactsLocation'), concat('nested/server/setupserver.ps1', parameters('_artifactsLocationSasToken')))]"
+            ],
+            "commandToExecute": "[concat('powershell -ExecutionPolicy Unrestricted -File nested/server/setupserver.ps1', ' ', parameters('dnsZone'), ' ', reference(variables('vnetID'), '2016-12-01').addressSpace.addressPrefixes[0])]"
+          }
+        }
+      },
+      {
+        "comments": "DNS server setup - assumes AD has already been setup",
+        "apiVersion": "2020-12-01",
+        "type": "Microsoft.Compute/virtualMachines/extensions",
+        "name": "[concat(variables('vmListArray')[copyIndex()],'/SetupDnsServer')]",
+        "location": "location",
+        "properties": {
+          "publisher": "Microsoft.Compute",
+          "type": "CustomScriptExtension",
+          "typeHandlerVersion": "1.8",
+          "autoUpgradeMinorVersion": true,
+          "settings": {
+            "fileUris": [
+              "[uri(parameters('_artifactsLocation'), concat('nested/server/setupserver.ps1', parameters('_artifactsLocationSasToken')))]"
+            ],
+            "commandToExecute": "[concat('powershell -ExecutionPolicy Unrestricted -File nested/server/setupserver.ps1', ' ', parameters('dnsZone'), ' ', reference(variables('vnetID'), '2016-12-01').addressSpace.addressPrefixes[0])]"
+          }
+        }
+      },
+      {
+        "comments": "DNS server setup - assumes AD has already been setup",
+        "apiVersion": "2020-12-01",
+        "type": "Microsoft.Compute/virtualMachines/extensions",
+        "name": "[concat(variables('vmListArray')[copyIndex()],'/SetupDnsServer')]",
+        "location": "location",
+        "properties": {
+          "publisher": "Microsoft.Compute",
+          "type": "CustomScriptExtension",
+          "typeHandlerVersion": "1.8",
+          "autoUpgradeMinorVersion": true,
+          "settings": {
+            "fileUris": [
+              "[uri(parameters('_artifactsLocation'), concat('nested/server/setupserver.ps1', parameters('_artifactsLocationSasToken')))]"
+            ],
+            "commandToExecute": "[concat('powershell -ExecutionPolicy Unrestricted -File nested/server/setupserver.ps1', ' ', parameters('dnsZone'), ' ', reference(variables('vnetID'), '2016-12-01').addressSpace.addressPrefixes[0])]"
+          }
+        }
+      },
+      {
+        "comments": "DNS server setup - assumes AD has already been setup",
+        "apiVersion": "2020-12-01",
+        "type": "Microsoft.Compute/virtualMachines/extensions",
+        "name": "[concat(variables('vmListArray')[copyIndex()],'/SetupDnsServer')]",
+        "location": "location",
+        "properties": {
+          "publisher": "Microsoft.Compute",
+          "type": "CustomScriptExtension",
+          "typeHandlerVersion": "1.8",
+          "autoUpgradeMinorVersion": true,
+          "settings": {
+            "fileUris": [
+              "[uri(parameters('_artifactsLocation'), concat('nested/server/setupserver.ps1', parameters('_artifactsLocationSasToken')))]"
+            ],
+            "commandToExecute": "[concat('powershell -ExecutionPolicy Unrestricted -File nested/server/setupserver.ps1', ' ', parameters('dnsZone'), ' ', reference(variables('vnetID'), '2016-12-01').addressSpace.addressPrefixes[0])]"
+          }
+        }
+      },
+      {
+        "comments": "DNS server setup - assumes AD has already been setup",
+        "apiVersion": "2020-12-01",
+        "type": "Microsoft.Compute/virtualMachines/extensions",
+        "name": "[concat(variables('vmListArray')[copyIndex()],'/SetupDnsServer')]",
+        "location": "location",
+        "properties": {
+          "publisher": "Microsoft.Compute",
+          "type": "CustomScriptExtension",
+          "typeHandlerVersion": "1.8",
+          "autoUpgradeMinorVersion": true,
+          "settings": {
+            "fileUris": [
+              "[uri(parameters('_artifactsLocation'), concat('nested/server/setupserver.ps1', parameters('_artifactsLocationSasToken')))]"
+            ],
+            "commandToExecute": "[concat('powershell -ExecutionPolicy Unrestricted -File nested/server/setupserver.ps1', ' ', parameters('dnsZone'), ' ', reference(variables('vnetID'), '2016-12-01').addressSpace.addressPrefixes[0])]"
+          }
+        }
+      },
+      {
+        "comments": "DNS server setup - assumes AD has already been setup",
+        "apiVersion": "2020-12-01",
+        "type": "Microsoft.Compute/virtualMachines/extensions",
+        "name": "[concat(variables('vmListArray')[copyIndex()],'/SetupDnsServer')]",
+        "location": "location",
+        "properties": {
+          "publisher": "Microsoft.Compute",
+          "type": "CustomScriptExtension",
+          "typeHandlerVersion": "1.8",
+          "autoUpgradeMinorVersion": true,
+          "settings": {
+            "fileUris": [
+              "[uri(parameters('_artifactsLocation'), concat('nested/server/setupserver.ps1', parameters('_artifactsLocationSasToken')))]"
+            ],
+            "commandToExecute": "[concat('powershell -ExecutionPolicy Unrestricted -File nested/server/setupserver.ps1', ' ', parameters('dnsZone'), ' ', reference(variables('vnetID'), '2016-12-01').addressSpace.addressPrefixes[0])]"
+          }
+        }
+      },
+      {
+        "comments": "DNS server setup - assumes AD has already been setup",
+        "apiVersion": "2020-12-01",
+        "type": "Microsoft.Compute/virtualMachines/extensions",
+        "name": "[concat(variables('vmListArray')[copyIndex()],'/SetupDnsServer')]",
+        "location": "location",
+        "properties": {
+          "publisher": "Microsoft.Compute",
+          "type": "CustomScriptExtension",
+          "typeHandlerVersion": "1.8",
+          "autoUpgradeMinorVersion": true,
+          "settings": {
+            "fileUris": [
+              "[uri(parameters('_artifactsLocation'), concat('nested/server/setupserver.ps1', parameters('_artifactsLocationSasToken')))]"
+            ],
+            "commandToExecute": "[concat('powershell -ExecutionPolicy Unrestricted -File nested/server/setupserver.ps1', ' ', parameters('dnsZone'), ' ', reference(variables('vnetID'), '2016-12-01').addressSpace.addressPrefixes[0])]"
+          }
+        }
+      },
+      {
+        "comments": "DNS server setup - assumes AD has already been setup",
+        "apiVersion": "2020-12-01",
+        "type": "Microsoft.Compute/virtualMachines/extensions",
+        "name": "[concat(variables('vmListArray')[copyIndex()],'/SetupDnsServer')]",
+        "location": "location",
+        "properties": {
+          "publisher": "Microsoft.Compute",
+          "type": "CustomScriptExtension",
+          "typeHandlerVersion": "1.8",
+          "autoUpgradeMinorVersion": true,
+          "settings": {
+            "fileUris": [
+              "[uri(parameters('_artifactsLocation'), concat('nested/server/setupserver.ps1', parameters('_artifactsLocationSasToken')))]"
+            ],
+            "commandToExecute": "[concat('powershell -ExecutionPolicy Unrestricted -File nested/server/setupserver.ps1', ' ', parameters('dnsZone'), ' ', reference(variables('vnetID'), '2016-12-01').addressSpace.addressPrefixes[0])]"
+          }
+        }
+      },
+      {
+        "comments": "DNS server setup - assumes AD has already been setup",
+        "apiVersion": "2020-12-01",
+        "type": "Microsoft.Compute/virtualMachines/extensions",
+        "name": "[concat(variables('vmListArray')[copyIndex()],'/SetupDnsServer')]",
+        "location": "location",
+        "properties": {
+          "publisher": "Microsoft.Compute",
+          "type": "CustomScriptExtension",
+          "typeHandlerVersion": "1.8",
+          "autoUpgradeMinorVersion": true,
+          "settings": {
+            "fileUris": [
+              "[uri(parameters('_artifactsLocation'), concat('nested/server/setupserver.ps1', parameters('_artifactsLocationSasToken')))]"
+            ],
+            "commandToExecute": "[concat('powershell -ExecutionPolicy Unrestricted -File nested/server/setupserver.ps1', ' ', parameters('dnsZone'), ' ', reference(variables('vnetID'), '2016-12-01').addressSpace.addressPrefixes[0])]"
+          }
+        }
+      },
+      {
+        "comments": "DNS server setup - assumes AD has already been setup",
+        "apiVersion": "2020-12-01",
+        "type": "Microsoft.Compute/virtualMachines/extensions",
+        "name": "[concat(variables('vmListArray')[copyIndex()],'/SetupDnsServer')]",
+        "location": "location",
+        "properties": {
+          "publisher": "Microsoft.Compute",
+          "type": "CustomScriptExtension",
+          "typeHandlerVersion": "1.8",
+          "autoUpgradeMinorVersion": true,
+          "settings": {
+            "fileUris": [
+              "[uri(parameters('_artifactsLocation'), concat('nested/server/setupserver.ps1', parameters('_artifactsLocationSasToken')))]"
+            ],
+            "commandToExecute": "[concat('powershell -ExecutionPolicy Unrestricted -File nested/server/setupserver.ps1', ' ', parameters('dnsZone'), ' ', reference(variables('vnetID'), '2016-12-01').addressSpace.addressPrefixes[0])]"
+          }
+        }
+      },
+      {
+        "comments": "DNS server setup - assumes AD has already been setup",
+        "apiVersion": "2020-12-01",
+        "type": "Microsoft.Compute/virtualMachines/extensions",
+        "name": "[concat(variables('vmListArray')[copyIndex()],'/SetupDnsServer')]",
+        "location": "location",
+        "properties": {
+          "publisher": "Microsoft.Compute",
+          "type": "CustomScriptExtension",
+          "typeHandlerVersion": "1.8",
+          "autoUpgradeMinorVersion": true,
+          "settings": {
+            "fileUris": [
+              "[uri(parameters('_artifactsLocation'), concat('nested/server/setupserver.ps1', parameters('_artifactsLocationSasToken')))]"
+            ],
+            "commandToExecute": "[concat('powershell -ExecutionPolicy Unrestricted -File nested/server/setupserver.ps1', ' ', parameters('dnsZone'), ' ', reference(variables('vnetID'), '2016-12-01').addressSpace.addressPrefixes[0])]"
+          }
+        }
+      },
+      {
+        "comments": "DNS server setup - assumes AD has already been setup",
+        "apiVersion": "2020-12-01",
+        "type": "Microsoft.Compute/virtualMachines/extensions",
+        "name": "[concat(variables('vmListArray')[copyIndex()],'/SetupDnsServer')]",
+        "location": "location",
+        "properties": {
+          "publisher": "Microsoft.Compute",
+          "type": "CustomScriptExtension",
+          "typeHandlerVersion": "1.8",
+          "autoUpgradeMinorVersion": true,
+          "settings": {
+            "fileUris": [
+              "[uri(parameters('_artifactsLocation'), concat('nested/server/setupserver.ps1', parameters('_artifactsLocationSasToken')))]"
+            ],
+            "commandToExecute": "[concat('powershell -ExecutionPolicy Unrestricted -File nested/server/setupserver.ps1', ' ', parameters('dnsZone'), ' ', reference(variables('vnetID'), '2016-12-01').addressSpace.addressPrefixes[0])]"
+          }
+        }
+      },
+      {
+        "comments": "DNS server setup - assumes AD has already been setup",
+        "apiVersion": "2020-12-01",
+        "type": "Microsoft.Compute/virtualMachines/extensions",
+        "name": "[concat(variables('vmListArray')[copyIndex()],'/SetupDnsServer')]",
+        "location": "location",
+        "properties": {
+          "publisher": "Microsoft.Compute",
+          "type": "CustomScriptExtension",
+          "typeHandlerVersion": "1.8",
+          "autoUpgradeMinorVersion": true,
+          "settings": {
+            "fileUris": [
+              "[uri(parameters('_artifactsLocation'), concat('nested/server/setupserver.ps1', parameters('_artifactsLocationSasToken')))]"
+            ],
+            "commandToExecute": "[concat('powershell -ExecutionPolicy Unrestricted -File nested/server/setupserver.ps1', ' ', parameters('dnsZone'), ' ', reference(variables('vnetID'), '2016-12-01').addressSpace.addressPrefixes[0])]"
+          }
+        }
+      },
+      {
+        "comments": "DNS server setup - assumes AD has already been setup",
+        "apiVersion": "2020-12-01",
+        "type": "Microsoft.Compute/virtualMachines/extensions",
+        "name": "[concat(variables('vmListArray')[copyIndex()],'/SetupDnsServer')]",
+        "location": "location",
+        "properties": {
+          "publisher": "Microsoft.Compute",
+          "type": "CustomScriptExtension",
+          "typeHandlerVersion": "1.8",
+          "autoUpgradeMinorVersion": true,
+          "settings": {
+            "fileUris": [
+              "[uri(parameters('_artifactsLocation'), concat('nested/server/setupserver.ps1', parameters('_artifactsLocationSasToken')))]"
+            ],
+            "commandToExecute": "[concat('powershell -ExecutionPolicy Unrestricted -File nested/server/setupserver.ps1', ' ', parameters('dnsZone'), ' ', reference(variables('vnetID'), '2016-12-01').addressSpace.addressPrefixes[0])]"
+          }
+        }
+      },
+      {
+        "comments": "DNS server setup - assumes AD has already been setup",
+        "apiVersion": "2020-12-01",
+        "type": "Microsoft.Compute/virtualMachines/extensions",
+        "name": "[concat(variables('vmListArray')[copyIndex()],'/SetupDnsServer')]",
+        "location": "location",
+        "properties": {
+          "publisher": "Microsoft.Compute",
+          "type": "CustomScriptExtension",
+          "typeHandlerVersion": "1.8",
+          "autoUpgradeMinorVersion": true,
+          "settings": {
+            "fileUris": [
+              "[uri(parameters('_artifactsLocation'), concat('nested/server/setupserver.ps1', parameters('_artifactsLocationSasToken')))]"
+            ],
+            "commandToExecute": "[concat('powershell -ExecutionPolicy Unrestricted -File nested/server/setupserver.ps1', ' ', parameters('dnsZone'), ' ', reference(variables('vnetID'), '2016-12-01').addressSpace.addressPrefixes[0])]"
+          }
+        }
+      },
+      {
+        "comments": "DNS server setup - assumes AD has already been setup",
+        "apiVersion": "2020-12-01",
+        "type": "Microsoft.Compute/virtualMachines/extensions",
+        "name": "[concat(variables('vmListArray')[copyIndex()],'/SetupDnsServer')]",
+        "location": "location",
+        "properties": {
+          "publisher": "Microsoft.Compute",
+          "type": "CustomScriptExtension",
+          "typeHandlerVersion": "1.8",
+          "autoUpgradeMinorVersion": true,
+          "settings": {
+            "fileUris": [
+              "[uri(parameters('_artifactsLocation'), concat('nested/server/setupserver.ps1', parameters('_artifactsLocationSasToken')))]"
+            ],
+            "commandToExecute": "[concat('powershell -ExecutionPolicy Unrestricted -File nested/server/setupserver.ps1', ' ', parameters('dnsZone'), ' ', reference(variables('vnetID'), '2016-12-01').addressSpace.addressPrefixes[0])]"
+          }
+        }
+      },
+      {
+        "comments": "DNS server setup - assumes AD has already been setup",
+        "apiVersion": "2020-12-01",
+        "type": "Microsoft.Compute/virtualMachines/extensions",
+        "name": "[concat(variables('vmListArray')[copyIndex()],'/SetupDnsServer')]",
+        "location": "location",
+        "properties": {
+          "publisher": "Microsoft.Compute",
+          "type": "CustomScriptExtension",
+          "typeHandlerVersion": "1.8",
+          "autoUpgradeMinorVersion": true,
+          "settings": {
+            "fileUris": [
+              "[uri(parameters('_artifactsLocation'), concat('nested/server/setupserver.ps1', parameters('_artifactsLocationSasToken')))]"
+            ],
+            "commandToExecute": "[concat('powershell -ExecutionPolicy Unrestricted -File nested/server/setupserver.ps1', ' ', parameters('dnsZone'), ' ', reference(variables('vnetID'), '2016-12-01').addressSpace.addressPrefixes[0])]"
+          }
+        }
+      },
+      {
+        "comments": "DNS server setup - assumes AD has already been setup",
+        "apiVersion": "2020-12-01",
+        "type": "Microsoft.Compute/virtualMachines/extensions",
+        "name": "[concat(variables('vmListArray')[copyIndex()],'/SetupDnsServer')]",
+        "location": "location",
+        "properties": {
+          "publisher": "Microsoft.Compute",
+          "type": "CustomScriptExtension",
+          "typeHandlerVersion": "1.8",
+          "autoUpgradeMinorVersion": true,
+          "settings": {
+            "fileUris": [
+              "[uri(parameters('_artifactsLocation'), concat('nested/server/setupserver.ps1', parameters('_artifactsLocationSasToken')))]"
+            ],
+            "commandToExecute": "[concat('powershell -ExecutionPolicy Unrestricted -File nested/server/setupserver.ps1', ' ', parameters('dnsZone'), ' ', reference(variables('vnetID'), '2016-12-01').addressSpace.addressPrefixes[0])]"
+          }
+        }
+      },
+      {
+        "comments": "DNS server setup - assumes AD has already been setup",
+        "apiVersion": "2020-12-01",
+        "type": "Microsoft.Compute/virtualMachines/extensions",
+        "name": "[concat(variables('vmListArray')[copyIndex()],'/SetupDnsServer')]",
+        "location": "location",
+        "properties": {
+          "publisher": "Microsoft.Compute",
+          "type": "CustomScriptExtension",
+          "typeHandlerVersion": "1.8",
+          "autoUpgradeMinorVersion": true,
+          "settings": {
+            "fileUris": [
+              "[uri(parameters('_artifactsLocation'), concat('nested/server/setupserver.ps1', parameters('_artifactsLocationSasToken')))]"
+            ],
+            "commandToExecute": "[concat('powershell -ExecutionPolicy Unrestricted -File nested/server/setupserver.ps1', ' ', parameters('dnsZone'), ' ', reference(variables('vnetID'), '2016-12-01').addressSpace.addressPrefixes[0])]"
+          }
+        }
+      },
+      {
+        "comments": "DNS server setup - assumes AD has already been setup",
+        "apiVersion": "2020-12-01",
+        "type": "Microsoft.Compute/virtualMachines/extensions",
+        "name": "[concat(variables('vmListArray')[copyIndex()],'/SetupDnsServer')]",
+        "location": "location",
+        "properties": {
+          "publisher": "Microsoft.Compute",
+          "type": "CustomScriptExtension",
+          "typeHandlerVersion": "1.8",
+          "autoUpgradeMinorVersion": true,
+          "settings": {
+            "fileUris": [
+              "[uri(parameters('_artifactsLocation'), concat('nested/server/setupserver.ps1', parameters('_artifactsLocationSasToken')))]"
+            ],
+            "commandToExecute": "[concat('powershell -ExecutionPolicy Unrestricted -File nested/server/setupserver.ps1', ' ', parameters('dnsZone'), ' ', reference(variables('vnetID'), '2016-12-01').addressSpace.addressPrefixes[0])]"
+          }
+        }
+      },
+      {
+        "comments": "DNS server setup - assumes AD has already been setup",
+        "apiVersion": "2020-12-01",
+        "type": "Microsoft.Compute/virtualMachines/extensions",
+        "name": "[concat(variables('vmListArray')[copyIndex()],'/SetupDnsServer')]",
+        "location": "location",
+        "properties": {
+          "publisher": "Microsoft.Compute",
+          "type": "CustomScriptExtension",
+          "typeHandlerVersion": "1.8",
+          "autoUpgradeMinorVersion": true,
+          "settings": {
+            "fileUris": [
+              "[uri(parameters('_artifactsLocation'), concat('nested/server/setupserver.ps1', parameters('_artifactsLocationSasToken')))]"
+            ],
+            "commandToExecute": "[concat('powershell -ExecutionPolicy Unrestricted -File nested/server/setupserver.ps1', ' ', parameters('dnsZone'), ' ', reference(variables('vnetID'), '2016-12-01').addressSpace.addressPrefixes[0])]"
+          }
+        }
+      },
+      {
+        "comments": "DNS server setup - assumes AD has already been setup",
+        "apiVersion": "2020-12-01",
+        "type": "Microsoft.Compute/virtualMachines/extensions",
+        "name": "[concat(variables('vmListArray')[copyIndex()],'/SetupDnsServer')]",
+        "location": "location",
+        "properties": {
+          "publisher": "Microsoft.Compute",
+          "type": "CustomScriptExtension",
+          "typeHandlerVersion": "1.8",
+          "autoUpgradeMinorVersion": true,
+          "settings": {
+            "fileUris": [
+              "[uri(parameters('_artifactsLocation'), concat('nested/server/setupserver.ps1', parameters('_artifactsLocationSasToken')))]"
+            ],
+            "commandToExecute": "[concat('powershell -ExecutionPolicy Unrestricted -File nested/server/setupserver.ps1', ' ', parameters('dnsZone'), ' ', reference(variables('vnetID'), '2016-12-01').addressSpace.addressPrefixes[0])]"
+          }
+        }
+      }
+    ],
+    "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+  }
+}

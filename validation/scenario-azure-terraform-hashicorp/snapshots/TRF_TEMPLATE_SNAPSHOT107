@@ -1,0 +1,98 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "main",
+  "contentType": "json",
+  "source": "gitConnectorAzureTerraHashicorp",
+  "paths": [
+    "/examples/sql-azure/database/outputs.tf",
+    "/examples/sql-azure/database/variables.tf",
+    "/examples/sql-azure/database/main.tf"
+  ],
+  "timestamp": 1642943279947,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "TRF_TEMPLATE_SNAPSHOT",
+    "type": "terraform",
+    "collection": "terraformtemplate",
+    "paths": [
+      "/examples/sql-azure/database/outputs.tf",
+      "/examples/sql-azure/database/variables.tf",
+      "/examples/sql-azure/database/main.tf"
+    ],
+    "snapshotId": "TRF_TEMPLATE_SNAPSHOT107",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "azurerm_sql_server",
+      "azurerm_resource_group",
+      "azurerm_sql_database",
+      "azurerm_sql_firewall_rule"
+    ]
+  },
+  "snapshotId": "TRF_TEMPLATE_SNAPSHOT107",
+  "collection": "terraformtemplate",
+  "json": {
+    "provider": [
+      {
+        "azurerm": {
+          "features": [
+            {}
+          ]
+        }
+      }
+    ],
+    "resources": [
+      {
+        "type": "azurerm_resource_group",
+        "name": "example",
+        "properties": {
+          "name": "${var.prefix}-resources",
+          "location": "${var.location}",
+          "compiletime_identity": "azurerm_resource_group.example"
+        }
+      },
+      {
+        "type": "azurerm_sql_server",
+        "name": "example",
+        "properties": {
+          "name": "${var.prefix}-sqlsvr",
+          "resource_group_name": "${azurerm_resource_group.example.name}",
+          "location": "${azurerm_resource_group.example.location}",
+          "version": 12.0,
+          "administrator_login": "4dm1n157r470r",
+          "administrator_login_password": "4-v3ry-53cr37-p455w0rd",
+          "compiletime_identity": "azurerm_sql_server.example"
+        }
+      },
+      {
+        "type": "azurerm_sql_database",
+        "name": "example",
+        "properties": {
+          "name": "${var.prefix}-db",
+          "resource_group_name": "${azurerm_resource_group.example.name}",
+          "location": "${azurerm_resource_group.example.location}",
+          "server_name": "${azurerm_sql_server.example.name}",
+          "edition": "Basic",
+          "collation": "SQL_Latin1_General_CP1_CI_AS",
+          "create_mode": "Default",
+          "requested_service_objective_name": "Basic",
+          "compiletime_identity": "azurerm_sql_database.example"
+        }
+      },
+      {
+        "type": "azurerm_sql_firewall_rule",
+        "name": "example",
+        "properties": {
+          "name": "allow-azure-services",
+          "resource_group_name": "${azurerm_resource_group.example.name}",
+          "server_name": "${azurerm_sql_server.example.name}",
+          "start_ip_address": "0.0.0.0",
+          "end_ip_address": "0.0.0.0",
+          "compiletime_identity": "azurerm_sql_firewall_rule.example"
+        }
+      }
+    ]
+  }
+}

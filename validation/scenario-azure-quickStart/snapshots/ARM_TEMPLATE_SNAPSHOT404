@@ -1,0 +1,70 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAzureQuickStart",
+  "paths": [
+    "/application-workloads/sap/sap-2-tier-marketplace-image/shared/disks.json"
+  ],
+  "timestamp": 1642962894068,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/application-workloads/sap/sap-2-tier-marketplace-image/shared/disks.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT404",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": []
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT404",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "diskName": {
+        "type": "string"
+      },
+      "diskLun": {
+        "type": "int"
+      },
+      "diskSize": {
+        "type": "int"
+      },
+      "storageAccountName": {
+        "type": "string"
+      },
+      "diskArray": {
+        "type": "array",
+        "defaultValue": []
+      }
+    },
+    "variables": {
+      "a": [
+        {
+          "name": "diskName",
+          "lun": "diskLun",
+          "vhd": {
+            "uri": "[concat('http://', parameters('storageAccountName'), '.blob.', environment().suffixes.storage, '/', concat('vhds-', uniqueString(resourceGroup().id)), '/', parameters('diskName'), '.vhd')]"
+          },
+          "createOption": "Empty",
+          "caching": "None",
+          "diskSizeGB": "diskSize"
+        }
+      ]
+    },
+    "resources": [],
+    "outputs": {
+      "diskArray": {
+        "value": "[concat(parameters('diskArray'), variables('a'))]",
+        "type": "array"
+      }
+    },
+    "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+  }
+}

@@ -1,0 +1,74 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "main",
+  "contentType": "json",
+  "source": "gitConnectorAwsTerraHashicorp",
+  "paths": [
+    "/examples/api-gateway-rest-api-openapi/main.tf",
+    "/examples/api-gateway-rest-api-openapi/outputs.tf",
+    "/examples/api-gateway-rest-api-openapi/terraform.template.tfvars",
+    "/examples/api-gateway-rest-api-openapi/variables.tf",
+    "/examples/api-gateway-rest-api-openapi/rest-api.tf"
+  ],
+  "timestamp": 1642967657608,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "TRF_TEMPLATE_SNAPSHOT",
+    "type": "terraform",
+    "collection": "terraformtemplate",
+    "paths": [
+      "/examples/api-gateway-rest-api-openapi/main.tf",
+      "/examples/api-gateway-rest-api-openapi/outputs.tf",
+      "/examples/api-gateway-rest-api-openapi/terraform.template.tfvars",
+      "/examples/api-gateway-rest-api-openapi/variables.tf",
+      "/examples/api-gateway-rest-api-openapi/rest-api.tf"
+    ],
+    "snapshotId": "TRF_TEMPLATE_SNAPSHOT3",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "aws_api_gateway_deployment",
+      "aws_api_gateway_rest_api"
+    ]
+  },
+  "snapshotId": "TRF_TEMPLATE_SNAPSHOT3",
+  "collection": "terraformtemplate",
+  "json": {
+    "resources": [
+      {
+        "type": "aws_api_gateway_rest_api",
+        "name": "example",
+        "properties": {
+          "body": "${jsonencode({'openapi': '3.0.1', 'info': {'title': 'api-gateway-rest-api-openapi-example', 'version': '1.0'}, 'paths': {'var.rest_api_path': {'get': {'x-amazon-apigateway-integration': {'httpMethod': 'GET', 'payloadFormatVersion': '1.0', 'type': 'HTTP_PROXY', 'uri': 'https://ip-ranges.amazonaws.com/ip-ranges.json'}}}}})}",
+          "name": "api-gateway-rest-api-openapi-example",
+          "endpoint_configuration": [
+            {
+              "types": [
+                "REGIONAL"
+              ]
+            }
+          ],
+          "compiletime_identity": "aws_api_gateway_rest_api.example"
+        }
+      },
+      {
+        "type": "aws_api_gateway_deployment",
+        "name": "example",
+        "properties": {
+          "rest_api_id": "${aws_api_gateway_rest_api.example.id}",
+          "triggers": {
+            "redeployment": "${sha1(jsonencode(aws_api_gateway_rest_api.example.body))}"
+          },
+          "lifecycle": [
+            {
+              "create_before_destroy": true
+            }
+          ],
+          "compiletime_identity": "aws_api_gateway_deployment.example"
+        }
+      }
+    ]
+  }
+}

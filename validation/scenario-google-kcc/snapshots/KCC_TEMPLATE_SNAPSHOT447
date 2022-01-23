@@ -2,12 +2,12 @@
   "structure": "filesystem",
   "error": null,
   "reference": "master",
-  "contentType": "yaml",
+  "contentType": "json",
   "source": "gitConnectorGoogleKcc",
   "paths": [
-    "/samples/resources/logginglogexclusion/project-exclusion/resourcemanager_v1beta1_project.yaml"
+    "/samples/resources/iampartialpolicy/pubsub-admin-policy/iam_v1beta1_iampartialpolicy.yaml"
   ],
-  "timestamp": 1628765148921,
+  "timestamp": 1642973304250,
   "queryuser": null,
   "checksum": "99914b932bd37a50b983c5e7c90ae93b",
   "node": {
@@ -15,28 +15,39 @@
     "type": "kcc",
     "collection": "kcctemplate",
     "paths": [
-      "/samples/resources/logginglogexclusion/project-exclusion/resourcemanager_v1beta1_project.yaml"
+      "/samples/resources/iampartialpolicy/pubsub-admin-policy/iam_v1beta1_iampartialpolicy.yaml"
     ],
     "snapshotId": "KCC_TEMPLATE_SNAPSHOT447",
     "status": "active",
-    "validate": true
+    "validate": true,
+    "resourceTypes": [
+      "iampartialpolicy"
+    ]
   },
   "snapshotId": "KCC_TEMPLATE_SNAPSHOT447",
   "collection": "kcctemplate",
   "json": {
-    "apiVersion": "resourcemanager.cnrm.cloud.google.com/v1beta1",
-    "kind": "Project",
+    "apiVersion": "iam.cnrm.cloud.google.com/v1beta1",
+    "kind": "IAMPartialPolicy",
     "metadata": {
-      "name": "logginglogexclusion-dep-project"
+      "name": "iampartialpolicy-sample-pubsubadmin"
     },
     "spec": {
-      "name": "Project Exclusion Sample",
-      "organizationRef": {
-        "external": "${ORG_ID?}"
+      "resourceRef": {
+        "apiVersion": "pubsub.cnrm.cloud.google.com/v1beta1",
+        "kind": "PubSubTopic",
+        "name": "iampartialpolicy-dep-pubsubadmin"
       },
-      "billingAccountRef": {
-        "external": "${BILLING_ACCOUNT_ID?}"
-      }
+      "bindings": [
+        {
+          "role": "roles/editor",
+          "members": [
+            {
+              "member": "serviceAccount:partialpolicy-dep-pubsubadmin@${PROJECT_ID?}.iam.gserviceaccount.com"
+            }
+          ]
+        }
+      ]
     }
   }
 }

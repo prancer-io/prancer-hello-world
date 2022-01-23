@@ -1,0 +1,264 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAzureQuickStart",
+  "paths": [
+    "/quickstarts/microsoft.datafactory/data-factory-v2-blob-to-mysql-copy/azuredeploy.json",
+    "/quickstarts/microsoft.datafactory/data-factory-v2-blob-to-mysql-copy/azuredeploy.parameters.json"
+  ],
+  "timestamp": 1642962905719,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/quickstarts/microsoft.datafactory/data-factory-v2-blob-to-mysql-copy/azuredeploy.json",
+      "/quickstarts/microsoft.datafactory/data-factory-v2-blob-to-mysql-copy/azuredeploy.parameters.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT1226",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "microsoft.datafactory/factories"
+    ]
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT1226",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "dataFactoryName": {
+        "type": "string",
+        "defaultValue": "[uniquestring(resourceGroup().id)]",
+        "metadata": {
+          "description": "Name of the data factory. Must be globally unique."
+        },
+        "value": "GEN-UNIQUE"
+      },
+      "location": {
+        "type": "string",
+        "defaultValue": "[resourceGroup().location]",
+        "metadata": {
+          "description": "Location of the data factory."
+        }
+      },
+      "storageAccountResourceId": {
+        "type": "string",
+        "metadata": {
+          "description": "Resource ID of Source Azure Storage account."
+        },
+        "value": "GET-PREREQ-storageAccountResourceId"
+      },
+      "blobContainer": {
+        "type": "string",
+        "metadata": {
+          "description": "Name of the blob container in the Azure Storage account."
+        },
+        "value": "adftutorial"
+      },
+      "inputBlobFolder": {
+        "type": "string",
+        "metadata": {
+          "description": "The folder in the blob container that has the input file."
+        },
+        "value": "input"
+      },
+      "inputBlobName": {
+        "type": "string",
+        "metadata": {
+          "description": "Name of the input file/blob."
+        },
+        "value": "employee.txt"
+      },
+      "mysqlResourceId": {
+        "type": "string",
+        "metadata": {
+          "description": "Resource ID of target Azure Database for MySQL Server."
+        },
+        "value": "GET-PREREQ-serverResourceId"
+      },
+      "mysqlUserName": {
+        "type": "string",
+        "metadata": {
+          "description": "UserName of the target Azure Database for MySQL Server."
+        },
+        "value": "GET-PREREQ-serverUsername"
+      },
+      "mysqlPassword": {
+        "type": "securestring",
+        "metadata": {
+          "description": "Password of the target Azure Database for MySQL Server."
+        }
+      },
+      "mysqlDatabase": {
+        "type": "string",
+        "metadata": {
+          "description": "Name of the target database in the Azure Database for MySQL."
+        },
+        "value": "employee"
+      },
+      "mysqlTableName": {
+        "type": "string",
+        "metadata": {
+          "description": "Name of the target table in the Azure Database for MySQL."
+        },
+        "value": "employee"
+      }
+    },
+    "variables": {
+      "azureStorageLinkedServiceName": "Tutorial2-AzureStorageLinkedService",
+      "azureMySqlDatabaseLinkedServiceName": "Tutorial2-AzureMySqlDatabaseLinkedService",
+      "inputDatasetName": "Tutorial2_InputBlobDataset",
+      "outputDatasetName": "Tutorial2_OutputMySqlDataset",
+      "pipelineName": "Tutorial2-CopyFromBlobToMySqlPipeline"
+    },
+    "resources": [
+      {
+        "name": "GEN-UNIQUE",
+        "apiVersion": "2018-06-01",
+        "type": "Microsoft.DataFactory/factories",
+        "location": "[resourceGroup().location]",
+        "properties": {},
+        "resources": [
+          {
+            "type": "linkedservices",
+            "name": "Tutorial2-AzureStorageLinkedService",
+            "dependsOn": [
+              "GEN-UNIQUE"
+            ],
+            "apiVersion": "2018-06-01",
+            "properties": {
+              "type": "AzureStorage",
+              "description": "Azure Storage linked service",
+              "typeProperties": {
+                "connectionString": {
+                  "value": "[concat('DefaultEndpointsProtocol=https;AccountName=', split(split(reference(parameters('storageAccountResourceId'), '2019-04-01').primaryEndpoints.blob, '/')[2], '.')[0], ';AccountKey=', listKeys(parameters('storageAccountResourceId'), '2019-04-01').keys[0].value)]",
+                  "type": "SecureString"
+                }
+              }
+            }
+          },
+          {
+            "type": "linkedservices",
+            "name": "Tutorial2-AzureMySqlDatabaseLinkedService",
+            "dependsOn": [
+              "GEN-UNIQUE"
+            ],
+            "apiVersion": "2018-06-01",
+            "properties": {
+              "type": "AzureMySql",
+              "description": "Azure Database for MySQL linked service",
+              "typeProperties": {
+                "connectionString": {
+                  "value": "[concat('Server=', reference(parameters('mysqlResourceId'), '2017-12-01').fullyQualifiedDomainName, ';Port=3306;Database=' ,parameters('mysqlDatabase'), ';UID=', parameters('mysqlUserName'), ';PWD=', parameters('mysqlPassword'), ';SslMode=Preferred;')]",
+                  "type": "SecureString"
+                }
+              }
+            }
+          },
+          {
+            "type": "datasets",
+            "name": "Tutorial2_InputBlobDataset",
+            "dependsOn": [
+              "GEN-UNIQUE",
+              "Tutorial2-AzureStorageLinkedService"
+            ],
+            "apiVersion": "2018-06-01",
+            "properties": {
+              "type": "AzureBlob",
+              "structure": [
+                {
+                  "name": "firstname",
+                  "type": "string"
+                },
+                {
+                  "name": "lastname",
+                  "type": "string"
+                }
+              ],
+              "typeProperties": {
+                "format": {
+                  "type": "TextFormat",
+                  "columnDelimiter": ",",
+                  "nullValue": "\\N",
+                  "treatEmptyAsNull": false,
+                  "firstRowAsHeader": false
+                },
+                "folderPath": "adftutorial/input/",
+                "fileName": "employee.txt"
+              },
+              "linkedServiceName": {
+                "referenceName": "Tutorial2-AzureStorageLinkedService",
+                "type": "LinkedServiceReference"
+              }
+            }
+          },
+          {
+            "type": "datasets",
+            "name": "Tutorial2_OutputMySqlDataset",
+            "dependsOn": [
+              "GEN-UNIQUE",
+              "Tutorial2-AzureMySqlDatabaseLinkedService"
+            ],
+            "apiVersion": "2018-06-01",
+            "properties": {
+              "type": "AzureMySqlTable",
+              "typeProperties": {
+                "tableName": "employee"
+              },
+              "linkedServiceName": {
+                "referenceName": "Tutorial2-AzureMySqlDatabaseLinkedService",
+                "type": "LinkedServiceReference"
+              }
+            }
+          },
+          {
+            "type": "pipelines",
+            "name": "Tutorial2-CopyFromBlobToMySqlPipeline",
+            "dependsOn": [
+              "GEN-UNIQUE",
+              "Tutorial2_InputBlobDataset",
+              "Tutorial2_OutputMySqlDataset"
+            ],
+            "apiVersion": "2018-06-01",
+            "properties": {
+              "activities": [
+                {
+                  "type": "Copy",
+                  "typeProperties": {
+                    "source": {
+                      "type": "BlobSource",
+                      "recursive": true
+                    },
+                    "sink": {
+                      "type": "AzureMySqlSink",
+                      "writeBatchSize": 10000
+                    }
+                  },
+                  "name": "MyCopyActivity",
+                  "inputs": [
+                    {
+                      "referenceName": "Tutorial2_InputBlobDataset",
+                      "type": "DatasetReference"
+                    }
+                  ],
+                  "outputs": [
+                    {
+                      "referenceName": "Tutorial2_OutputMySqlDataset",
+                      "type": "DatasetReference"
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        ]
+      }
+    ],
+    "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+  }
+}

@@ -1,0 +1,168 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAzureQuickStart",
+  "paths": [
+    "/application-workloads/safekit/safekit-cluster-farm/nestedtemplates/installCluster.json"
+  ],
+  "timestamp": 1642962893504,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/application-workloads/safekit/safekit-cluster-farm/nestedtemplates/installCluster.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT380",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "microsoft.compute/virtualmachines/extensions"
+    ]
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT380",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "vmname": {
+        "type": "string",
+        "metadata": {
+          "description": "vm name"
+        }
+      },
+      "ostype": {
+        "type": "string",
+        "metadata": {
+          "description": "OS type (windows, linux)"
+        },
+        "defaultValue": "windows"
+      },
+      "vmList": {
+        "type": "array",
+        "metadata": {
+          "description": "vm names"
+        }
+      },
+      "fqdn": {
+        "type": "string",
+        "metadata": {
+          "description": "first vm public ip name"
+        }
+      },
+      "privateIps": {
+        "type": "array",
+        "metadata": {
+          "description": "vm private ip list"
+        }
+      },
+      "VMDnsPrefix": {
+        "type": "string",
+        "metadata": {
+          "description": "Public VM IP dns label prefix"
+        }
+      },
+      "lblist": {
+        "type": "string",
+        "metadata": {
+          "description": "dns name of loadbalancer"
+        },
+        "defaultValue": ""
+      },
+      "capassword": {
+        "type": "securestring",
+        "metadata": {
+          "description": "password for CA server access"
+        }
+      },
+      "location": {
+        "type": "string",
+        "metadata": {
+          "description": "resources location"
+        }
+      },
+      "_artifactsLocation": {
+        "type": "string",
+        "metadata": {
+          "description": "base URL of deployment resources (template,subtemplates,scripts)"
+        }
+      },
+      "_artifactsLocationSasToken": {
+        "type": "securestring",
+        "metadata": {
+          "description": "The sasToken required to access _artifactsLocation.  When the template is deployed using the accompanying scripts, a sasToken will be automatically generated. Use the defaultValue if the staging location is not secured."
+        }
+      }
+    },
+    "variables": {
+      "pwconfscripturi": "[uri(parameters('_artifactsLocation'), concat('scripts/configCluster.ps1' ,parameters('_artifactsLocationSasToken')))]",
+      "pwcertscripturi": "[uri(parameters('_artifactsLocation'), concat('scripts/uploadcerts.ps1', parameters('_artifactsLocationSasToken')))]",
+      "pwiscripturi": "[uri(parameters('_artifactsLocation'), concat('scripts/installCluster.ps1' ,parameters('_artifactsLocationSasToken')))]",
+      "shelliscripturi": "[uri(parameters('_artifactsLocation'),concat('scripts/installCluster.sh' ,parameters('_artifactsLocationSasToken')))]",
+      "domain": "[skip(parameters('fqdn'),indexOf(parameters('fqdn'),'.'))]",
+      "publicipfmt": "VMDnsPrefix%VM%[skip(parameters('fqdn'),indexOf(parameters('fqdn'),'.'))]",
+      "privateiplistarg": "[replace(string(parameters('privateIps')),'\"','')]",
+      "vmlistarg": "[replace(string(parameters('vmList')),'\"','')]",
+      "windowsfileuris": [
+        "[uri(parameters('_artifactsLocation'), concat('scripts/uploadcerts.ps1', parameters('_artifactsLocationSasToken')))]",
+        "[uri(parameters('_artifactsLocation'), concat('scripts/configCluster.ps1' ,parameters('_artifactsLocationSasToken')))]",
+        "[uri(parameters('_artifactsLocation'), concat('scripts/installCluster.ps1' ,parameters('_artifactsLocationSasToken')))]"
+      ],
+      "linuxfileuris": [
+        "[uri(parameters('_artifactsLocation'), concat('scripts/uploadcerts.ps1', parameters('_artifactsLocationSasToken')))]",
+        "[uri(parameters('_artifactsLocation'), concat('scripts/configCluster.ps1' ,parameters('_artifactsLocationSasToken')))]",
+        "[uri(parameters('_artifactsLocation'),concat('scripts/installCluster.sh' ,parameters('_artifactsLocationSasToken')))]"
+      ],
+      "properties": {
+        "windows": {
+          "publisher": "Microsoft.Compute",
+          "type": "CustomScriptExtension",
+          "typeHandlerVersion": "1.9",
+          "autoUpgradeMinorVersion": true,
+          "settings": {
+            "fileUris": [
+              "[uri(parameters('_artifactsLocation'), concat('scripts/uploadcerts.ps1', parameters('_artifactsLocationSasToken')))]",
+              "[uri(parameters('_artifactsLocation'), concat('scripts/configCluster.ps1' ,parameters('_artifactsLocationSasToken')))]",
+              "[uri(parameters('_artifactsLocation'), concat('scripts/installCluster.ps1' ,parameters('_artifactsLocationSasToken')))]"
+            ]
+          },
+          "protectedSettings": {
+            "commandToExecute": "powershell -ExecutionPolicy Unrestricted -File  .\\Scripts\\InstallCluster.ps1 -vmlist \"[replace(string(parameters('vmList')),'\"','')]\" -publicipfmt \"VMDnsPrefix%VM%[skip(parameters('fqdn'),indexOf(parameters('fqdn'),'.'))]\" -privateiplist \"[replace(string(parameters('privateIps')),'\"','')]\" -lblist \"parameters('lblist')\" -Passwd \"capassword\""
+          }
+        },
+        "linux": {
+          "publisher": "Microsoft.Azure.Extensions",
+          "type": "CustomScript",
+          "typeHandlerVersion": "2.0",
+          "autoUpgradeMinorVersion": true,
+          "settings": {
+            "skipDos2Unix": false,
+            "timestamp": 1,
+            "fileUris": [
+              "[uri(parameters('_artifactsLocation'), concat('scripts/uploadcerts.ps1', parameters('_artifactsLocationSasToken')))]",
+              "[uri(parameters('_artifactsLocation'), concat('scripts/configCluster.ps1' ,parameters('_artifactsLocationSasToken')))]",
+              "[uri(parameters('_artifactsLocation'),concat('scripts/installCluster.sh' ,parameters('_artifactsLocationSasToken')))]"
+            ]
+          },
+          "protectedSettings": {
+            "commandToExecute": "(sh installCluster.sh \",variables(vmlistarg),\" \",variables(publicipfmt),\" \",variables(privateiplistarg),\" \",parameters(lblist),\" \",parameters(capassword),\")"
+          }
+        }
+      }
+    },
+    "resources": [
+      {
+        "name": "vmname/safekit",
+        "type": "Microsoft.Compute/virtualMachines/extensions",
+        "apiVersion": "2020-12-01",
+        "location": "location",
+        "properties": "(properties)[parameters(ostype)]"
+      }
+    ],
+    "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+  }
+}

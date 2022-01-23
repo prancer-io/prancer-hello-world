@@ -1,0 +1,120 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "main",
+  "contentType": "json",
+  "source": "gitConnectorAzureTerraHashicorp",
+  "paths": [
+    "/examples/virtual-machines/virtual_machine/managed-disks/public-ip/outputs.tf",
+    "/examples/virtual-machines/virtual_machine/managed-disks/public-ip/variables.tf",
+    "/examples/virtual-machines/virtual_machine/managed-disks/public-ip/main.tf"
+  ],
+  "timestamp": 1642943280094,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "TRF_TEMPLATE_SNAPSHOT",
+    "type": "terraform",
+    "collection": "terraformtemplate",
+    "paths": [
+      "/examples/virtual-machines/virtual_machine/managed-disks/public-ip/outputs.tf",
+      "/examples/virtual-machines/virtual_machine/managed-disks/public-ip/variables.tf",
+      "/examples/virtual-machines/virtual_machine/managed-disks/public-ip/main.tf"
+    ],
+    "snapshotId": "TRF_TEMPLATE_SNAPSHOT142",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "azurerm_virtual_machine",
+      "azurerm_network_interface",
+      "azurerm_public_ip"
+    ]
+  },
+  "snapshotId": "TRF_TEMPLATE_SNAPSHOT142",
+  "collection": "terraformtemplate",
+  "json": {
+    "provider": [
+      {
+        "azurerm": {
+          "features": [
+            {}
+          ]
+        }
+      }
+    ],
+    "resources": [
+      {
+        "type": "azurerm_public_ip",
+        "name": "example",
+        "properties": {
+          "name": "${var.prefix}-pip",
+          "location": "${azurerm_resource_group.example.location}",
+          "resource_group_name": "${azurerm_resource_group.example.name}",
+          "allocation_method": "Static",
+          "compiletime_identity": "azurerm_public_ip.example"
+        }
+      },
+      {
+        "type": "azurerm_network_interface",
+        "name": "example",
+        "properties": {
+          "name": "${var.prefix}-nic",
+          "location": "${azurerm_resource_group.example.location}",
+          "resource_group_name": "${azurerm_resource_group.example.name}",
+          "ip_configuration": [
+            {
+              "name": "testconfiguration1",
+              "subnet_id": "${azurerm_subnet.example.id}",
+              "private_ip_address_allocation": "Dynamic",
+              "public_ip_address_id": "${azurerm_public_ip.example.id}"
+            }
+          ],
+          "compiletime_identity": "azurerm_network_interface.example"
+        }
+      },
+      {
+        "type": "azurerm_virtual_machine",
+        "name": "example",
+        "properties": {
+          "name": "${var.prefix}-vm",
+          "location": "${azurerm_resource_group.example.location}",
+          "resource_group_name": "${azurerm_resource_group.example.name}",
+          "network_interface_ids": [
+            "${azurerm_network_interface.example.id}"
+          ],
+          "vm_size": "Standard_F2",
+          "delete_os_disk_on_termination": true,
+          "storage_image_reference": [
+            {
+              "publisher": "Canonical",
+              "offer": "UbuntuServer",
+              "sku": "16.04-LTS",
+              "version": "latest"
+            }
+          ],
+          "storage_os_disk": [
+            {
+              "name": "myosdisk1",
+              "caching": "ReadWrite",
+              "create_option": "FromImage",
+              "managed_disk_type": "Standard_LRS"
+            }
+          ],
+          "os_profile": [
+            {
+              "computer_name": "hostname",
+              "admin_username": "testadmin",
+              "admin_password": "Password1234!"
+            }
+          ],
+          "os_profile_linux_config": [
+            {
+              "disable_password_authentication": false
+            }
+          ],
+          "compiletime_identity": "azurerm_virtual_machine.example"
+        }
+      }
+    ]
+  }
+}

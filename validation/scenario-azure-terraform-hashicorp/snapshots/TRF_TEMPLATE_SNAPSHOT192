@@ -1,0 +1,141 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "main",
+  "contentType": "json",
+  "source": "gitConnectorAzureTerraHashicorp",
+  "paths": [
+    "/examples/vm-scale-set/virtual_machine_scale_set/basic/variables.tf",
+    "/examples/vm-scale-set/virtual_machine_scale_set/basic/main.tf"
+  ],
+  "timestamp": 1642943280292,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "TRF_TEMPLATE_SNAPSHOT",
+    "type": "terraform",
+    "collection": "terraformtemplate",
+    "paths": [
+      "/examples/vm-scale-set/virtual_machine_scale_set/basic/variables.tf",
+      "/examples/vm-scale-set/virtual_machine_scale_set/basic/main.tf"
+    ],
+    "snapshotId": "TRF_TEMPLATE_SNAPSHOT192",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "azurerm_virtual_machine_scale_set",
+      "azurerm_subnet",
+      "azurerm_virtual_network",
+      "azurerm_resource_group"
+    ]
+  },
+  "snapshotId": "TRF_TEMPLATE_SNAPSHOT192",
+  "collection": "terraformtemplate",
+  "json": {
+    "provider": [
+      {
+        "azurerm": {
+          "features": [
+            {}
+          ]
+        }
+      }
+    ],
+    "resources": [
+      {
+        "type": "azurerm_resource_group",
+        "name": "example",
+        "properties": {
+          "name": "${var.prefix}-resources",
+          "location": "${var.location}",
+          "compiletime_identity": "azurerm_resource_group.example"
+        }
+      },
+      {
+        "type": "azurerm_virtual_network",
+        "name": "example",
+        "properties": {
+          "name": "${var.prefix}-network",
+          "resource_group_name": "${azurerm_resource_group.example.name}",
+          "location": "${azurerm_resource_group.example.location}",
+          "address_space": [
+            "10.0.0.0/16"
+          ],
+          "compiletime_identity": "azurerm_virtual_network.example"
+        }
+      },
+      {
+        "type": "azurerm_subnet",
+        "name": "example",
+        "properties": {
+          "name": "internal",
+          "virtual_network_name": "${azurerm_virtual_network.example.name}",
+          "resource_group_name": "${azurerm_resource_group.example.name}",
+          "address_prefixes": [
+            "10.0.1.0/24"
+          ],
+          "compiletime_identity": "azurerm_subnet.example"
+        }
+      },
+      {
+        "type": "azurerm_virtual_machine_scale_set",
+        "name": "example",
+        "properties": {
+          "name": "${var.prefix}-vmss",
+          "location": "${azurerm_resource_group.example.location}",
+          "resource_group_name": "${azurerm_resource_group.example.name}",
+          "upgrade_policy_mode": "Manual",
+          "sku": [
+            {
+              "name": "Standard_D1_v2",
+              "tier": "Standard",
+              "capacity": 2
+            }
+          ],
+          "os_profile": [
+            {
+              "computer_name_prefix": "${var.prefix}-vm",
+              "admin_username": "myadmin",
+              "admin_password": "Passwword1234"
+            }
+          ],
+          "os_profile_linux_config": [
+            {
+              "disable_password_authentication": false
+            }
+          ],
+          "network_profile": [
+            {
+              "name": "web_ss_net_profile",
+              "primary": true,
+              "ip_configuration": [
+                {
+                  "name": "internal",
+                  "subnet_id": "${azurerm_subnet.example.id}",
+                  "primary": true
+                }
+              ]
+            }
+          ],
+          "storage_profile_os_disk": [
+            {
+              "name": "",
+              "caching": "ReadWrite",
+              "create_option": "FromImage",
+              "managed_disk_type": "Standard_LRS"
+            }
+          ],
+          "storage_profile_image_reference": [
+            {
+              "publisher": "Canonical",
+              "offer": "UbuntuServer",
+              "sku": "16.04-LTS",
+              "version": "latest"
+            }
+          ],
+          "compiletime_identity": "azurerm_virtual_machine_scale_set.example"
+        }
+      }
+    ]
+  }
+}

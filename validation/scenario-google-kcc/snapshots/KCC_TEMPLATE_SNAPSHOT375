@@ -2,12 +2,12 @@
   "structure": "filesystem",
   "error": null,
   "reference": "master",
-  "contentType": "yaml",
+  "contentType": "json",
   "source": "gitConnectorGoogleKcc",
   "paths": [
-    "/samples/resources/gkehubfeaturemembership/gkehub_v1beta1_gkehubfeaturemembership.yaml"
+    "/samples/resources/dataprocworkflowtemplate/dataproc_v1beta1_dataprocworkflowtemplate.yaml"
   ],
-  "timestamp": 1628765147073,
+  "timestamp": 1642973303913,
   "queryuser": null,
   "checksum": "99914b932bd37a50b983c5e7c90ae93b",
   "node": {
@@ -15,62 +15,82 @@
     "type": "kcc",
     "collection": "kcctemplate",
     "paths": [
-      "/samples/resources/gkehubfeaturemembership/gkehub_v1beta1_gkehubfeaturemembership.yaml"
+      "/samples/resources/dataprocworkflowtemplate/dataproc_v1beta1_dataprocworkflowtemplate.yaml"
     ],
     "snapshotId": "KCC_TEMPLATE_SNAPSHOT375",
     "status": "active",
-    "validate": true
+    "validate": true,
+    "resourceTypes": [
+      "dataprocworkflowtemplate"
+    ]
   },
   "snapshotId": "KCC_TEMPLATE_SNAPSHOT375",
   "collection": "kcctemplate",
   "json": {
-    "apiVersion": "gkehub.cnrm.cloud.google.com/v1beta1",
-    "kind": "GKEHubFeatureMembership",
+    "apiVersion": "dataproc.cnrm.cloud.google.com/v1beta1",
+    "kind": "DataprocWorkflowTemplate",
     "metadata": {
-      "name": "gkehubfeaturemembership-sample"
+      "labels": {
+        "label-one": "value-one"
+      },
+      "name": "dataprocworkflowtemplate-sample"
     },
     "spec": {
-      "projectRef": {
-        "name": "gkehubfeaturemembership-dep"
+      "location": "us-central1",
+      "placement": {
+        "managedCluster": {
+          "clusterName": "test-cluster",
+          "config": {
+            "autoscalingConfig": {
+              "policyRef": {
+                "name": "dataprocworkflowtemplate-dep"
+              }
+            },
+            "masterConfig": {
+              "diskConfig": {
+                "bootDiskSizeGb": 30,
+                "bootDiskType": "pd-standard"
+              },
+              "machineType": "n2-standard-8",
+              "numInstances": 1
+            },
+            "workerConfig": {
+              "numInstances": 2,
+              "machineType": "n2-standard-8",
+              "diskConfig": {
+                "bootDiskSizeGb": 30,
+                "numLocalSsds": 1
+              }
+            },
+            "softwareConfig": {
+              "imageVersion": "2.0.27-debian10"
+            },
+            "gceClusterConfig": {
+              "tags": [
+                "foo",
+                "bar"
+              ]
+            }
+          }
+        }
       },
-      "location": "global",
-      "membershipRef": {
-        "name": "gkehubfeaturemembership-dep"
-      },
-      "featureRef": {
-        "name": "gkehubfeaturemembership-dep"
-      },
-      "configmanagement": {
-        "version": "1.6.2",
-        "configSync": {
-          "sourceFormat": "unstructured",
-          "git": {
-            "syncRepo": "https://github.com/GoogleCloudPlatform/cloud-foundation-toolkit",
-            "syncBranch": "master",
-            "policyDir": "config-connector",
-            "syncWaitSecs": "20",
-            "syncRev": "HEAD"
+      "jobs": [
+        {
+          "stepId": "someJob",
+          "sparkJob": {
+            "mainClass": "SomeClass"
           }
         },
-        "policyController": {
-          "enabled": true,
-          "exemtableNamespaces": [
-            "test-namespace"
+        {
+          "stepId": "otherJob",
+          "prerequisiteStepIds": [
+            "someJob"
           ],
-          "referentialRulesEnabled": true,
-          "logDeniesEnabled": true,
-          "templateLibraryInstalled": true,
-          "auditIntervalSeconds": "20"
-        },
-        "binauthz": {
-          "enabled": true
-        },
-        "hierarchicalController": {
-          "enabled": true,
-          "enablePodTreeLabels": true,
-          "enableHierarchicalResourceQuota": true
+          "prestoJob": {
+            "queryFileUri": "someUri"
+          }
         }
-      }
+      ]
     }
   }
 }

@@ -2,12 +2,12 @@
   "structure": "filesystem",
   "error": null,
   "reference": "master",
-  "contentType": "yaml",
+  "contentType": "json",
   "source": "gitConnectorGoogleKcc",
   "paths": [
-    "/samples/resources/kmscryptokey/kms_v1beta1_kmskeyring.yaml"
+    "/samples/resources/iamcustomrole/project-role/iam_v1beta1_iamcustomrole.yaml"
   ],
-  "timestamp": 1628765148765,
+  "timestamp": 1642973304219,
   "queryuser": null,
   "checksum": "99914b932bd37a50b983c5e7c90ae93b",
   "node": {
@@ -15,22 +15,34 @@
     "type": "kcc",
     "collection": "kcctemplate",
     "paths": [
-      "/samples/resources/kmscryptokey/kms_v1beta1_kmskeyring.yaml"
+      "/samples/resources/iamcustomrole/project-role/iam_v1beta1_iamcustomrole.yaml"
     ],
     "snapshotId": "KCC_TEMPLATE_SNAPSHOT440",
     "status": "active",
-    "validate": true
+    "validate": true,
+    "resourceTypes": [
+      "iamcustomrole"
+    ]
   },
   "snapshotId": "KCC_TEMPLATE_SNAPSHOT440",
   "collection": "kcctemplate",
   "json": {
-    "apiVersion": "kms.cnrm.cloud.google.com/v1beta1",
-    "kind": "KMSKeyRing",
+    "apiVersion": "iam.cnrm.cloud.google.com/v1beta1",
+    "kind": "IAMCustomRole",
     "metadata": {
-      "name": "kmscryptokey-dep"
+      "annotations": {
+        "cnrm.cloud.google.com/project-id": "${PROJECT_ID?}"
+      },
+      "name": "iamcustomrolesampleproject"
     },
     "spec": {
-      "location": "us-central1"
+      "title": "Example Project-Level Custom Role",
+      "description": "This role only contains two permissions - publish and update",
+      "permissions": [
+        "pubsub.topics.publish",
+        "pubsub.topics.update"
+      ],
+      "stage": "GA"
     }
   }
 }

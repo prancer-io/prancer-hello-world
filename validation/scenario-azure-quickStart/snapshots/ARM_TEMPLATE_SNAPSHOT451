@@ -1,0 +1,98 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAzureQuickStart",
+  "paths": [
+    "/application-workloads/sap/sap-3-tier-marketplace-image-converged-md/shared/newvnetnsg.json"
+  ],
+  "timestamp": 1642962895125,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/application-workloads/sap/sap-3-tier-marketplace-image-converged-md/shared/newvnetnsg.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT451",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "microsoft.network/virtualnetworks"
+    ]
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT451",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "vnetName": {
+        "type": "string",
+        "metadata": {
+          "description": "Name of the Virtual Network."
+        }
+      },
+      "addressPrefix": {
+        "type": "string",
+        "metadata": {
+          "description": "IP Address prefix of the Virtual Network."
+        }
+      },
+      "subnetName": {
+        "type": "string",
+        "metadata": {
+          "description": "Name of the Virtual Network Subnet."
+        }
+      },
+      "subnetPrefix": {
+        "type": "string",
+        "metadata": {
+          "description": "IP Address prefix of the Virtual Network Subnet."
+        }
+      },
+      "nsgName": {
+        "type": "string",
+        "metadata": {
+          "description": "Name of the Network Security Group."
+        }
+      },
+      "location": {
+        "type": "string",
+        "metadata": {
+          "description": "Location for all resources."
+        }
+      }
+    },
+    "variables": {},
+    "resources": [
+      {
+        "type": "Microsoft.Network/virtualNetworks",
+        "name": "vnetName",
+        "apiVersion": "2021-02-01",
+        "location": "location",
+        "properties": {
+          "addressSpace": {
+            "addressPrefixes": [
+              "addressPrefix"
+            ]
+          },
+          "subnets": [
+            {
+              "name": "subnetName",
+              "properties": {
+                "addressPrefix": "subnetPrefix",
+                "networkSecurityGroup": {
+                  "id": "Microsoft.Network/networkSecurityGroups/nsgName"
+                }
+              }
+            }
+          ]
+        }
+      }
+    ],
+    "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+  }
+}

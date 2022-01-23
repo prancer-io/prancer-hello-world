@@ -1,0 +1,832 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAzureQuickStart",
+  "paths": [
+    "/application-workloads/cloudera/cloudera-tableau/azuredeploy.json",
+    "/application-workloads/cloudera/cloudera-tableau/azuredeploy.parameters.json"
+  ],
+  "timestamp": 1642962886078,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/application-workloads/cloudera/cloudera-tableau/azuredeploy.json",
+      "/application-workloads/cloudera/cloudera-tableau/azuredeploy.parameters.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT97",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "microsoft.resources/deployments"
+    ]
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT97",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.0.0.1",
+    "parameters": {
+      "adminUsername": {
+        "type": "string",
+        "defaultValue": "azureuser",
+        "metadata": {
+          "description": "Admin user name for the VMs"
+        },
+        "value": "GEN-UNIQUE"
+      },
+      "scriptsUri": {
+        "type": "string",
+        "defaultValue": "https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/cloudera-tableau",
+        "metadata": {
+          "descritption": "The location of the templates and resources"
+        },
+        "value": "https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/cloudera-tableau"
+      },
+      "adminPassword": {
+        "type": "securestring",
+        "metadata": {
+          "description": "Admin password for the VMs (A mix of upper and lower-case characters, digits and symbols)"
+        },
+        "value": "GEN-PASSWORD"
+      },
+      "cmUsername": {
+        "type": "string",
+        "defaultValue": "cmadmin",
+        "metadata": {
+          "description": "User name for the Cloudera Manager"
+        },
+        "value": "cmadmin"
+      },
+      "cmPassword": {
+        "type": "securestring",
+        "metadata": {
+          "description": "password for the Cloudera Manager (A mix of upper and lower-case characters, digits and symbols)"
+        },
+        "value": "GEN-PASSWORD"
+      },
+      "storageAccountPrefix": {
+        "type": "string",
+        "metadata": {
+          "description": "Unique namespace for the Storage Account where the VM disks will be placed (alphahumeric characters only)"
+        },
+        "value": "GEN-UNIQUE"
+      },
+      "dnsNamePrefix": {
+        "type": "string",
+        "metadata": {
+          "description": "Unique public DNS name where the VMs will be exposed"
+        },
+        "value": "GEN-UNIQUE-10"
+      },
+      "masterStorageAccountType": {
+        "type": "string",
+        "defaultValue": "Premium_LRS",
+        "metadata": {
+          "description": "The type of the Storage Account to be created for master nodes (defaults to Premium_LRS)"
+        },
+        "value": "Premium_LRS"
+      },
+      "workerStorageAccountType": {
+        "type": "string",
+        "defaultValue": "Standard_LRS",
+        "metadata": {
+          "description": "The type of the Storage Account to be created for worker nodes (defaults to Standard_LRS)"
+        },
+        "value": "Standard_LRS"
+      },
+      "virtualNetworkName": {
+        "type": "string",
+        "defaultValue": "clouderavnet",
+        "metadata": {
+          "description": "The name of the virtual network provisioned for the deployment"
+        },
+        "value": "cltabVNet"
+      },
+      "vnetNewOrExisting": {
+        "type": "string",
+        "defaultValue": "new",
+        "allowedValues": [
+          "new",
+          "existing"
+        ],
+        "metadata": {
+          "description": "Indicator for new or exiting Virtual Network"
+        },
+        "value": "new"
+      },
+      "virtualNetworkRGName": {
+        "type": "string",
+        "defaultValue": "",
+        "metadata": {
+          "description": "Resource Group Name for Vnet. For new VNet leave it empty, otherwise type in existing resource group name"
+        },
+        "value": ""
+      },
+      "addressPrefix": {
+        "type": "string",
+        "defaultValue": "10.0.0.0/16",
+        "metadata": {
+          "description": "Virtual Network address CIDR"
+        },
+        "value": "10.0.0.0/16"
+      },
+      "subnetName": {
+        "type": "string",
+        "defaultValue": "clouderasubnet",
+        "metadata": {
+          "description": "Subnet name for the virtual network where resources will be provisioned"
+        },
+        "value": "clouderasubnet"
+      },
+      "subnetPrefix": {
+        "type": "string",
+        "defaultValue": "10.0.2.0/24",
+        "metadata": {
+          "description": "CIDR for the subnet where VMs will be placed"
+        },
+        "value": "10.0.2.0/24"
+      },
+      "subnet1Name": {
+        "type": "string",
+        "defaultValue": "tableausubnet",
+        "metadata": {
+          "description": "Subnet name for the virtual network where resources will be provisioned"
+        },
+        "value": "tableausubnet"
+      },
+      "subnet1Prefix": {
+        "type": "string",
+        "defaultValue": "10.0.1.0/24",
+        "metadata": {
+          "description": "CIDR for the subnet where VMs will be placed"
+        },
+        "value": "10.0.1.0/24"
+      },
+      "masterNodeIPAddress": {
+        "type": "string",
+        "defaultValue": "10.0.2.4",
+        "metadata": {
+          "description": "IP address for the first master"
+        },
+        "value": "10.0.2.4"
+      },
+      "tableauIPAddress": {
+        "type": "string",
+        "defaultValue": "10.0.1.4",
+        "metadata": {
+          "description": "IP address for the Tableau server"
+        },
+        "value": "10.0.1.4"
+      },
+      "dataNodeIPOffSetFromMaster": {
+        "type": "int",
+        "defaultValue": 5,
+        "metadata": {
+          "description": "IP address from the master node, for example if the first master is 10.1.1.1, then the first dataNode would be 10.1.1.11"
+        },
+        "value": 5
+      },
+      "tshirtSize": {
+        "type": "string",
+        "defaultValue": "Eval",
+        "allowedValues": [
+          "Eval",
+          "Prod"
+        ],
+        "metadata": {
+          "description": "T-shirt size of the Cloudera cluster (Eval, Prod)"
+        },
+        "value": "Eval"
+      },
+      "numberOfDataNodes": {
+        "type": "int",
+        "defaultValue": 3,
+        "metadata": {
+          "description": "Number of data nodes for Prod (defaults to 3)"
+        },
+        "value": 3
+      },
+      "vmSize": {
+        "type": "string",
+        "defaultValue": "Standard_D16s_v3",
+        "metadata": {
+          "description": "The size of the VMs deployed in the cluster (defaults to Standard_DS14)"
+        },
+        "value": "Standard_D16s_v3"
+      },
+      "company": {
+        "type": "string",
+        "defaultValue": "Company",
+        "metadata": {
+          "description": "Your Company"
+        },
+        "value": "Company"
+      },
+      "emailAddress": {
+        "type": "string",
+        "defaultValue": "email@yourcompany.com",
+        "metadata": {
+          "description": "your email"
+        },
+        "value": "someon@somewhere.com"
+      },
+      "businessPhone": {
+        "type": "string",
+        "defaultValue": "123456789",
+        "metadata": {
+          "description": "your business phone number"
+        },
+        "value": "55555555"
+      },
+      "firstName": {
+        "type": "string",
+        "defaultValue": "FirstName",
+        "metadata": {
+          "description": "Your FirstName"
+        },
+        "value": "someone"
+      },
+      "lastName": {
+        "type": "string",
+        "defaultValue": "LastName",
+        "metadata": {
+          "description": "Your LastName"
+        },
+        "value": "Somewhere"
+      },
+      "jobRole": {
+        "type": "string",
+        "defaultValue": "Administrator",
+        "metadata": {
+          "description": "Job Role"
+        },
+        "allowedValues": [
+          "Administrator",
+          "Analyst (Industry/Finance)",
+          "Analyst (Technical)",
+          "Architect",
+          "C level",
+          "Consultant",
+          "Developer",
+          "Director",
+          "Engineer",
+          "Individual contributor",
+          "Manager",
+          "Partner",
+          "Student",
+          "VP"
+        ],
+        "value": "Administrator"
+      },
+      "jobFunction": {
+        "type": "string",
+        "defaultValue": "Analytics / Business Intelligence",
+        "metadata": {
+          "description": "Job Function"
+        },
+        "allowedValues": [
+          "Analytics / Business Intelligence",
+          "Big Data / Architecture",
+          "Data Warehouse / Management",
+          "Data Science",
+          "Database",
+          "ETL / ELT",
+          "Infrastructure",
+          "IT",
+          "Marketing / Sales",
+          "Networking",
+          "Manager",
+          "Security / Compliance",
+          "Storage"
+        ],
+        "value": "Infrastructure"
+      }
+    },
+    "variables": {
+      "templateAPIVersion": "2015-11-01",
+      "resourceAPIVersion": "2015-06-15",
+      "installCDH": "True",
+      "addressPrefix": "10.0.0.0/16",
+      "subnetPrefix": "10.0.2.0/24",
+      "subnet1Prefix": "10.0.1.0/24",
+      "scriptsUri": "https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/cloudera-tableau",
+      "share-resourcesUri": "https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/cloudera-tableau/nested/shared-resources-new-vnet.json",
+      "data-nodeUri": "[concat(variables('scriptsUri'), '/nested/data-node-', toLower(subString(parameters('vmSize'), 9, 4)), '.json')]",
+      "sa": "10.0.2.4",
+      "tableau": "10.0.1.4",
+      "ipOctet01": "[concat(split(variables('sa'), '.')[0], '.', split(variables('sa'), '.')[1], '.')]",
+      "ipOctet2": "[int(split(variables('sa'), '.')[2])]",
+      "ipOctet3": "[int(split(variables('sa'), '.')[3])]",
+      "datanodeIpOctet3": "[add(int(split(variables('sa'), '.')[3]), parameters('dataNodeIPOffSetFromMaster'))]",
+      "masterStorageAccount": {
+        "prefix": "GEN-UNIQUE",
+        "type": "Premium_LRS"
+      },
+      "workerStorageAccount": {
+        "prefix": "GEN-UNIQUE",
+        "type": "Standard_LRS"
+      },
+      "clusterTshirtSizeEval": {
+        "masterNodeCount": 1,
+        "dataNodeCount": 3,
+        "highAvailability": "false"
+      },
+      "clusterTshirtSizeProd": {
+        "masterNodeCount": 3,
+        "dataNodeCount": 3,
+        "highAvailability": "true"
+      },
+      "clusterSpec": "concat(clusterTshirtSize, parameters(tshirtSize))",
+      "vmSpec": {
+        "vmSize": "Standard_D16s_v3",
+        "adminUsername": "GEN-UNIQUE",
+        "adminPassword": "GEN-PASSWORD",
+        "masterNodeASName": "GEN-UNIQUE-10-mnAS",
+        "dataNodeASName": "GEN-UNIQUE-10-dnAS",
+        "tableauASName": "GEN-UNIQUE-10-tsAS"
+      },
+      "networkSpec": {
+        "addressPrefix": "10.0.0.0/16",
+        "subnetPrefix": "10.0.2.0/24",
+        "subnet1Prefix": "10.0.1.0/24",
+        "ipOctet01": "[concat(split(variables('sa'), '.')[0], '.', split(variables('sa'), '.')[1], '.')]",
+        "ipOctet2": "[int(split(variables('sa'), '.')[2])]",
+        "ipOctet3": "[int(split(variables('sa'), '.')[3])]",
+        "datanodeIpOctet3": "[add(int(split(variables('sa'), '.')[3]), parameters('dataNodeIPOffSetFromMaster'))]",
+        "masterIP": "10.0.2.4",
+        "tableauIPAddress": "10.0.1.4",
+        "workerIP": "[concat(variables('ipOctet01'), add(variables('ipOctet2'), div(variables('datanodeIpOctet3'), 255)), '.', mod(variables('datanodeIpOctet3'), 255))]",
+        "virtualNetworkName": "cltabVNet",
+        "virtualNetworkRGName": "",
+        "vnetNewOrExisting": "new",
+        "virtualNetworkSubnetName": "clouderasubnet",
+        "virtualNetworkSubnet1Name": "tableausubnet"
+      },
+      "newVNetId": "Microsoft.Network/virtualNetworks/cltabVNet",
+      "existingVNetId": "parameters('virtualNetworkRGName')/Microsoft.Network/virtualNetworks/cltabVNet",
+      "VNetId": "concat(parameters(vnetNewOrExisting),VNetId)",
+      "clouderaTags": {
+        "type": "object",
+        "provider": "B33D5D26-DD73-41FC-994A-BD709E8C8488"
+      },
+      "tableauTags": {
+        "type": "object",
+        "provider": "C417510C-A4EC-4E09-8BA4-86DA72BC2F5E"
+      },
+      "quickstartTags": {
+        "type": "object",
+        "name": "cloudera-tableau"
+      }
+    },
+    "resources": [
+      {
+        "name": "shared-resources",
+        "type": "Microsoft.Resources/deployments",
+        "apiVersion": "2015-11-01",
+        "comments": "Resources that are shared within the infrastructure environment",
+        "properties": {
+          "mode": "Incremental",
+          "templateLink": {
+            "uri": "https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/cloudera-tableau/nested/shared-resources-new-vnet.json",
+            "contentVersion": "1.0.0.1"
+          },
+          "parameters": {
+            "resourceAPIVersion": {
+              "value": "2015-06-15"
+            },
+            "networkSpec": {
+              "value": {
+                "addressPrefix": "10.0.0.0/16",
+                "subnetPrefix": "10.0.2.0/24",
+                "subnet1Prefix": "10.0.1.0/24",
+                "ipOctet01": "[concat(split(variables('sa'), '.')[0], '.', split(variables('sa'), '.')[1], '.')]",
+                "ipOctet2": "[int(split(variables('sa'), '.')[2])]",
+                "ipOctet3": "[int(split(variables('sa'), '.')[3])]",
+                "datanodeIpOctet3": "[add(int(split(variables('sa'), '.')[3]), parameters('dataNodeIPOffSetFromMaster'))]",
+                "masterIP": "10.0.2.4",
+                "tableauIPAddress": "10.0.1.4",
+                "workerIP": "[concat(variables('ipOctet01'), add(variables('ipOctet2'), div(variables('datanodeIpOctet3'), 255)), '.', mod(variables('datanodeIpOctet3'), 255))]",
+                "virtualNetworkName": "cltabVNet",
+                "virtualNetworkRGName": "",
+                "vnetNewOrExisting": "new",
+                "virtualNetworkSubnetName": "clouderasubnet",
+                "virtualNetworkSubnet1Name": "tableausubnet"
+              }
+            },
+            "tableauASName": {
+              "value": "(vmSpec).tableauASName"
+            },
+            "masterNodeASName": {
+              "value": "(vmSpec).masterNodeASName"
+            },
+            "dataNodeASName": {
+              "value": "(vmSpec).dataNodeASName"
+            },
+            "clouderaTags": {
+              "value": {
+                "type": "object",
+                "provider": "B33D5D26-DD73-41FC-994A-BD709E8C8488"
+              }
+            },
+            "tableauTags": {
+              "value": {
+                "type": "object",
+                "provider": "C417510C-A4EC-4E09-8BA4-86DA72BC2F5E"
+              }
+            },
+            "quickstartTags": {
+              "value": {
+                "type": "object",
+                "name": "cloudera-tableau"
+              }
+            }
+          }
+        }
+      },
+      {
+        "name": "master-node",
+        "type": "Microsoft.Resources/deployments",
+        "apiVersion": "2015-11-01",
+        "comments": "Cloudera master node that manages the cluster nodes",
+        "dependsOn": [
+          "Microsoft.Resources/deployments/shared-resources"
+        ],
+        "properties": {
+          "mode": "Incremental",
+          "templateLink": {
+            "uri": "https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/cloudera-tableau/nested/master-node.json",
+            "contentVersion": "1.0.0.1"
+          },
+          "parameters": {
+            "vnetID": {
+              "value": "concat(parameters(vnetNewOrExisting),VNetId)"
+            },
+            "resourceAPIVersion": {
+              "value": "2015-06-15"
+            },
+            "dnsNamePrefix": {
+              "value": "GEN-UNIQUE-10"
+            },
+            "scriptsUri": {
+              "value": "https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/cloudera-tableau"
+            },
+            "storageAccount": {
+              "value": {
+                "prefix": "GEN-UNIQUE",
+                "type": "Premium_LRS"
+              }
+            },
+            "vmCount": {
+              "value": "(clusterSpec).masterNodeCount"
+            },
+            "vmSpec": {
+              "value": {
+                "vmSize": "Standard_D16s_v3",
+                "adminUsername": "GEN-UNIQUE",
+                "adminPassword": "GEN-PASSWORD",
+                "masterNodeASName": "GEN-UNIQUE-10-mnAS",
+                "dataNodeASName": "GEN-UNIQUE-10-dnAS",
+                "tableauASName": "GEN-UNIQUE-10-tsAS"
+              }
+            },
+            "networkSpec": {
+              "value": {
+                "addressPrefix": "10.0.0.0/16",
+                "subnetPrefix": "10.0.2.0/24",
+                "subnet1Prefix": "10.0.1.0/24",
+                "ipOctet01": "[concat(split(variables('sa'), '.')[0], '.', split(variables('sa'), '.')[1], '.')]",
+                "ipOctet2": "[int(split(variables('sa'), '.')[2])]",
+                "ipOctet3": "[int(split(variables('sa'), '.')[3])]",
+                "datanodeIpOctet3": "[add(int(split(variables('sa'), '.')[3]), parameters('dataNodeIPOffSetFromMaster'))]",
+                "masterIP": "10.0.2.4",
+                "tableauIPAddress": "10.0.1.4",
+                "workerIP": "[concat(variables('ipOctet01'), add(variables('ipOctet2'), div(variables('datanodeIpOctet3'), 255)), '.', mod(variables('datanodeIpOctet3'), 255))]",
+                "virtualNetworkName": "cltabVNet",
+                "virtualNetworkRGName": "",
+                "vnetNewOrExisting": "new",
+                "virtualNetworkSubnetName": "clouderasubnet",
+                "virtualNetworkSubnet1Name": "tableausubnet"
+              }
+            },
+            "clusterSpec": {
+              "value": "concat(clusterTshirtSize, parameters(tshirtSize))"
+            },
+            "clouderaTags": {
+              "value": {
+                "type": "object",
+                "provider": "B33D5D26-DD73-41FC-994A-BD709E8C8488"
+              }
+            },
+            "tableauTags": {
+              "value": {
+                "type": "object",
+                "provider": "C417510C-A4EC-4E09-8BA4-86DA72BC2F5E"
+              }
+            },
+            "quickstartTags": {
+              "value": {
+                "type": "object",
+                "name": "cloudera-tableau"
+              }
+            }
+          }
+        }
+      },
+      {
+        "name": "data-node",
+        "type": "Microsoft.Resources/deployments",
+        "apiVersion": "2015-11-01",
+        "comments": "Cloudera data nodes or cluster members",
+        "dependsOn": [
+          "Microsoft.Resources/deployments/shared-resources"
+        ],
+        "properties": {
+          "mode": "Incremental",
+          "templateLink": {
+            "uri": "[variables('data-nodeUri')]",
+            "contentVersion": "1.0.0.1"
+          },
+          "parameters": {
+            "vnetID": {
+              "value": "concat(parameters(vnetNewOrExisting),VNetId)"
+            },
+            "resourceAPIVersion": {
+              "value": "2015-06-15"
+            },
+            "dnsNamePrefix": {
+              "value": "GEN-UNIQUE-10"
+            },
+            "scriptsUri": {
+              "value": "https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/cloudera-tableau"
+            },
+            "storageAccount": {
+              "value": {
+                "prefix": "GEN-UNIQUE",
+                "type": "Standard_LRS"
+              }
+            },
+            "vmCount": {
+              "value": "(clusterSpec).dataNodeCount"
+            },
+            "vmSpec": {
+              "value": {
+                "vmSize": "Standard_D16s_v3",
+                "adminUsername": "GEN-UNIQUE",
+                "adminPassword": "GEN-PASSWORD",
+                "masterNodeASName": "GEN-UNIQUE-10-mnAS",
+                "dataNodeASName": "GEN-UNIQUE-10-dnAS",
+                "tableauASName": "GEN-UNIQUE-10-tsAS"
+              }
+            },
+            "networkSpec": {
+              "value": {
+                "addressPrefix": "10.0.0.0/16",
+                "subnetPrefix": "10.0.2.0/24",
+                "subnet1Prefix": "10.0.1.0/24",
+                "ipOctet01": "[concat(split(variables('sa'), '.')[0], '.', split(variables('sa'), '.')[1], '.')]",
+                "ipOctet2": "[int(split(variables('sa'), '.')[2])]",
+                "ipOctet3": "[int(split(variables('sa'), '.')[3])]",
+                "datanodeIpOctet3": "[add(int(split(variables('sa'), '.')[3]), parameters('dataNodeIPOffSetFromMaster'))]",
+                "masterIP": "10.0.2.4",
+                "tableauIPAddress": "10.0.1.4",
+                "workerIP": "[concat(variables('ipOctet01'), add(variables('ipOctet2'), div(variables('datanodeIpOctet3'), 255)), '.', mod(variables('datanodeIpOctet3'), 255))]",
+                "virtualNetworkName": "cltabVNet",
+                "virtualNetworkRGName": "",
+                "vnetNewOrExisting": "new",
+                "virtualNetworkSubnetName": "clouderasubnet",
+                "virtualNetworkSubnet1Name": "tableausubnet"
+              }
+            },
+            "clusterSpec": {
+              "value": "concat(clusterTshirtSize, parameters(tshirtSize))"
+            },
+            "clouderaTags": {
+              "value": {
+                "type": "object",
+                "provider": "B33D5D26-DD73-41FC-994A-BD709E8C8488"
+              }
+            },
+            "tableauTags": {
+              "value": {
+                "type": "object",
+                "provider": "C417510C-A4EC-4E09-8BA4-86DA72BC2F5E"
+              }
+            },
+            "quickstartTags": {
+              "value": {
+                "type": "object",
+                "name": "cloudera-tableau"
+              }
+            }
+          }
+        }
+      },
+      {
+        "name": "tableau-server",
+        "type": "Microsoft.Resources/deployments",
+        "apiVersion": "2015-11-01",
+        "comments": "Tableau Server offering from the Azure market place",
+        "dependsOn": [
+          "Microsoft.Resources/deployments/shared-resources"
+        ],
+        "properties": {
+          "mode": "Incremental",
+          "templateLink": {
+            "uri": "https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/cloudera-tableau/nested/tableau-server.json",
+            "contentVersion": "1.0.0.1"
+          },
+          "parameters": {
+            "vnetID": {
+              "value": "concat(parameters(vnetNewOrExisting),VNetId)"
+            },
+            "resourceAPIVersion": {
+              "value": "2015-06-15"
+            },
+            "dnsNamePrefix": {
+              "value": "GEN-UNIQUE-10"
+            },
+            "scriptsUri": {
+              "value": "https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/cloudera-tableau"
+            },
+            "storageAccount": {
+              "value": {
+                "prefix": "GEN-UNIQUE",
+                "type": "Premium_LRS"
+              }
+            },
+            "vmSpec": {
+              "value": {
+                "vmSize": "Standard_D16s_v3",
+                "adminUsername": "GEN-UNIQUE",
+                "adminPassword": "GEN-PASSWORD",
+                "masterNodeASName": "GEN-UNIQUE-10-mnAS",
+                "dataNodeASName": "GEN-UNIQUE-10-dnAS",
+                "tableauASName": "GEN-UNIQUE-10-tsAS"
+              }
+            },
+            "networkSpec": {
+              "value": {
+                "addressPrefix": "10.0.0.0/16",
+                "subnetPrefix": "10.0.2.0/24",
+                "subnet1Prefix": "10.0.1.0/24",
+                "ipOctet01": "[concat(split(variables('sa'), '.')[0], '.', split(variables('sa'), '.')[1], '.')]",
+                "ipOctet2": "[int(split(variables('sa'), '.')[2])]",
+                "ipOctet3": "[int(split(variables('sa'), '.')[3])]",
+                "datanodeIpOctet3": "[add(int(split(variables('sa'), '.')[3]), parameters('dataNodeIPOffSetFromMaster'))]",
+                "masterIP": "10.0.2.4",
+                "tableauIPAddress": "10.0.1.4",
+                "workerIP": "[concat(variables('ipOctet01'), add(variables('ipOctet2'), div(variables('datanodeIpOctet3'), 255)), '.', mod(variables('datanodeIpOctet3'), 255))]",
+                "virtualNetworkName": "cltabVNet",
+                "virtualNetworkRGName": "",
+                "vnetNewOrExisting": "new",
+                "virtualNetworkSubnetName": "clouderasubnet",
+                "virtualNetworkSubnet1Name": "tableausubnet"
+              }
+            },
+            "adminUsername": {
+              "value": "GEN-UNIQUE"
+            },
+            "adminPassword": {
+              "value": "GEN-PASSWORD"
+            },
+            "clouderaTags": {
+              "value": {
+                "type": "object",
+                "provider": "B33D5D26-DD73-41FC-994A-BD709E8C8488"
+              }
+            },
+            "tableauTags": {
+              "value": {
+                "type": "object",
+                "provider": "C417510C-A4EC-4E09-8BA4-86DA72BC2F5E"
+              }
+            },
+            "quickstartTags": {
+              "value": {
+                "type": "object",
+                "name": "cloudera-tableau"
+              }
+            }
+          }
+        }
+      },
+      {
+        "name": "setup-cloudera",
+        "type": "Microsoft.Resources/deployments",
+        "apiVersion": "2015-11-01",
+        "comments": "Scripts and configuration settings that intialize the Cloudera cluster environment",
+        "dependsOn": [
+          "Microsoft.Resources/deployments/data-node",
+          "Microsoft.Resources/deployments/master-node"
+        ],
+        "properties": {
+          "mode": "Incremental",
+          "templateLink": {
+            "uri": "https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/cloudera-tableau/nested/setup-cloudera.json",
+            "contentVersion": "1.0.0.1"
+          },
+          "parameters": {
+            "resourceAPIVersion": {
+              "value": "2015-06-15"
+            },
+            "dnsNamePrefix": {
+              "value": "GEN-UNIQUE-10"
+            },
+            "scriptsUri": {
+              "value": "https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/cloudera-tableau"
+            },
+            "vmSpec": {
+              "value": {
+                "vmSize": "Standard_D16s_v3",
+                "adminUsername": "GEN-UNIQUE",
+                "adminPassword": "GEN-PASSWORD",
+                "masterNodeASName": "GEN-UNIQUE-10-mnAS",
+                "dataNodeASName": "GEN-UNIQUE-10-dnAS",
+                "tableauASName": "GEN-UNIQUE-10-tsAS"
+              }
+            },
+            "networkSpec": {
+              "value": {
+                "addressPrefix": "10.0.0.0/16",
+                "subnetPrefix": "10.0.2.0/24",
+                "subnet1Prefix": "10.0.1.0/24",
+                "ipOctet01": "[concat(split(variables('sa'), '.')[0], '.', split(variables('sa'), '.')[1], '.')]",
+                "ipOctet2": "[int(split(variables('sa'), '.')[2])]",
+                "ipOctet3": "[int(split(variables('sa'), '.')[3])]",
+                "datanodeIpOctet3": "[add(int(split(variables('sa'), '.')[3]), parameters('dataNodeIPOffSetFromMaster'))]",
+                "masterIP": "10.0.2.4",
+                "tableauIPAddress": "10.0.1.4",
+                "workerIP": "[concat(variables('ipOctet01'), add(variables('ipOctet2'), div(variables('datanodeIpOctet3'), 255)), '.', mod(variables('datanodeIpOctet3'), 255))]",
+                "virtualNetworkName": "cltabVNet",
+                "virtualNetworkRGName": "",
+                "vnetNewOrExisting": "new",
+                "virtualNetworkSubnetName": "clouderasubnet",
+                "virtualNetworkSubnet1Name": "tableausubnet"
+              }
+            },
+            "clusterSpec": {
+              "value": "concat(clusterTshirtSize, parameters(tshirtSize))"
+            },
+            "fqdn": {
+              "value": "[reference('master-node').outputs.fqdn.value]"
+            },
+            "cmUsername": {
+              "value": "cmadmin"
+            },
+            "cmPassword": {
+              "value": "GEN-PASSWORD"
+            },
+            "company": {
+              "value": "Company"
+            },
+            "emailAddress": {
+              "value": "someon@somewhere.com"
+            },
+            "businessPhone": {
+              "value": "55555555"
+            },
+            "firstName": {
+              "value": "someone"
+            },
+            "lastName": {
+              "value": "Somewhere"
+            },
+            "jobRole": {
+              "value": "Administrator"
+            },
+            "jobFunction": {
+              "value": "Infrastructure"
+            },
+            "installCDH": {
+              "value": "True"
+            },
+            "clouderaTags": {
+              "value": {
+                "type": "object",
+                "provider": "B33D5D26-DD73-41FC-994A-BD709E8C8488"
+              }
+            },
+            "tableauTags": {
+              "value": {
+                "type": "object",
+                "provider": "C417510C-A4EC-4E09-8BA4-86DA72BC2F5E"
+              }
+            },
+            "quickstartTags": {
+              "value": {
+                "type": "object",
+                "name": "cloudera-tableau"
+              }
+            }
+          }
+        }
+      }
+    ],
+    "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+  }
+}

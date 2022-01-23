@@ -1,0 +1,70 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAzureQuickStart",
+  "paths": [
+    "/application-workloads/mahara/mahara-autoscale-cache/nested/recoveryservicesEnlist.json"
+  ],
+  "timestamp": 1642962891201,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/application-workloads/mahara/mahara-autoscale-cache/nested/recoveryservicesEnlist.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT242",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "microsoft.recoveryservices/vaults/backupfabrics/protectioncontainers/protecteditems"
+    ]
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT242",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "maharaCommon": {
+        "metadata": {
+          "description": "Common Mahara values"
+        },
+        "type": "object"
+      },
+      "vmName": {
+        "metadata": {
+          "description": "Name of VM to enlist in AzureBackup"
+        },
+        "type": "string"
+      },
+      "resourceGroupName": {
+        "type": "string",
+        "defaultValue": "[resourceGroup().name]"
+      }
+    },
+    "resources": [
+      {
+        "type": "Microsoft.RecoveryServices/vaults/backupFabrics/protectionContainers/protectedItems",
+        "apiVersion": "2021-03-01",
+        "location": "maharaCommon",
+        "name": "[concat(parameters('maharaCommon').vaultName, '/', variables('backupFabric'), '/', variables('v2VmContainer'), concat(resourceGroup().name,';',parameters('vmName')), '/', variables('v2Vm'), concat(resourceGroup().name,';',parameters('vmName')))]",
+        "properties": {
+          "policyId": "Microsoft.RecoveryServices/vaults/backupPolicies/maharaCommon/maharaCommon",
+          "protectedItemType": "Microsoft.Compute/virtualMachines",
+          "sourceResourceId": "[resourceGroup().name]/Microsoft.Compute/virtualMachines/vmName"
+        }
+      }
+    ],
+    "variables": {
+      "backupFabric": "Azure",
+      "v2Vm": "vm;iaasvmcontainerv2;",
+      "v2VmContainer": "iaasvmcontainer;iaasvmcontainerv2;",
+      "v2VmType": "Microsoft.Compute/virtualMachines"
+    },
+    "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+  }
+}

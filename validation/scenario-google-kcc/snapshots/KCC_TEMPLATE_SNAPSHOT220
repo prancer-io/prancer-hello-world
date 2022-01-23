@@ -2,12 +2,12 @@
   "structure": "filesystem",
   "error": null,
   "reference": "master",
-  "contentType": "yaml",
+  "contentType": "json",
   "source": "gitConnectorGoogleKcc",
   "paths": [
-    "/samples/resources/computerouterpeer/compute_v1beta1_computerouterpeer.yaml"
+    "/samples/resources/computeresourcepolicy/daily-resource-policy-schedule/compute_v1alpha3_computeresourcepolicy.yaml"
   ],
-  "timestamp": 1628765142917,
+  "timestamp": 1642973303023,
   "queryuser": null,
   "checksum": "99914b932bd37a50b983c5e7c90ae93b",
   "node": {
@@ -15,30 +15,46 @@
     "type": "kcc",
     "collection": "kcctemplate",
     "paths": [
-      "/samples/resources/computerouterpeer/compute_v1beta1_computerouterpeer.yaml"
+      "/samples/resources/computeresourcepolicy/daily-resource-policy-schedule/compute_v1alpha3_computeresourcepolicy.yaml"
     ],
     "snapshotId": "KCC_TEMPLATE_SNAPSHOT220",
     "status": "active",
-    "validate": true
+    "validate": true,
+    "resourceTypes": [
+      "computeresourcepolicy"
+    ]
   },
   "snapshotId": "KCC_TEMPLATE_SNAPSHOT220",
   "collection": "kcctemplate",
   "json": {
     "apiVersion": "compute.cnrm.cloud.google.com/v1beta1",
-    "kind": "ComputeRouterPeer",
+    "kind": "ComputeResourcePolicy",
     "metadata": {
-      "name": "computerouterpeer-sample"
+      "name": "computeresourcepolicy-sample-dailyschedule"
     },
     "spec": {
       "region": "us-central1",
-      "peerIpAddress": "169.254.0.2",
-      "peerAsn": 65513,
-      "advertisedRoutePriority": 1,
-      "routerRef": {
-        "name": "computerouterpeer-dep"
-      },
-      "routerInterfaceRef": {
-        "name": "computerouterpeer-dep"
+      "snapshotSchedulePolicy": {
+        "schedule": {
+          "dailySchedule": {
+            "daysInCycle": 1,
+            "startTime": "00:00"
+          }
+        },
+        "retentionPolicy": {
+          "maxRetentionDays": 8,
+          "onSourceDiskDelete": "KEEP_AUTO_SNAPSHOTS"
+        },
+        "snapshotProperties": {
+          "storageLocations": [
+            "us-central1"
+          ],
+          "guestFlush": true,
+          "labels": {
+            "autodeleted": "false",
+            "interval": "daily"
+          }
+        }
       }
     }
   }

@@ -2,12 +2,12 @@
   "structure": "filesystem",
   "error": null,
   "reference": "master",
-  "contentType": "yaml",
+  "contentType": "json",
   "source": "gitConnectorGoogleKcc",
   "paths": [
-    "/samples/resources/storagetransferjob/storage_v1beta1_storagebucket_multiple_yaml_1.yaml"
+    "/samples/resources/monitoringservicelevelobjective/request-based-good-total-ratio/monitoring_v1beta1_monitoringservicelevelobjective.yaml"
   ],
-  "timestamp": 1628765151614,
+  "timestamp": 1642973304666,
   "queryuser": null,
   "checksum": "99914b932bd37a50b983c5e7c90ae93b",
   "node": {
@@ -15,19 +15,44 @@
     "type": "kcc",
     "collection": "kcctemplate",
     "paths": [
-      "/samples/resources/storagetransferjob/storage_v1beta1_storagebucket_multiple_yaml_1.yaml"
+      "/samples/resources/monitoringservicelevelobjective/request-based-good-total-ratio/monitoring_v1beta1_monitoringservicelevelobjective.yaml"
     ],
     "snapshotId": "KCC_TEMPLATE_SNAPSHOT540",
     "status": "active",
-    "validate": true
+    "validate": true,
+    "resourceTypes": [
+      "monitoringservicelevelobjective"
+    ]
   },
   "snapshotId": "KCC_TEMPLATE_SNAPSHOT540",
   "collection": "kcctemplate",
   "json": {
-    "apiVersion": "storage.cnrm.cloud.google.com/v1beta1",
-    "kind": "StorageBucket",
+    "apiVersion": "monitoring.cnrm.cloud.google.com/v1beta1",
+    "kind": "MonitoringServiceLevelObjective",
     "metadata": {
-      "name": "${PROJECT_ID?}-storagetransferjob-dep2"
+      "name": "monitoringservicelevelobjective-sample-requestbasedgoodtotalratio",
+      "labels": {
+        "test1": "value1"
+      }
+    },
+    "spec": {
+      "projectRef": {
+        "external": "projects/${PROJECT_ID?}"
+      },
+      "serviceRef": {
+        "external": "monitoringservicelevelobjective-dep-requestbasedgoodtotalratio"
+      },
+      "displayName": "A request based good total ratio filter",
+      "goal": 0.9,
+      "rollingPeriod": "86400s",
+      "serviceLevelIndicator": {
+        "requestBased": {
+          "goodTotalRatio": {
+            "goodServiceFilter": "metric.type=\"serviceruntime.googleapis.com/api/request_count\" \n resource.type=\"api\" ",
+            "badServiceFilter": "metric.type=\"serviceruntime.googleapis.com/api/request_count\" \n resource.type=\"api\" "
+          }
+        }
+      }
     }
   }
 }

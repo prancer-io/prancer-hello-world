@@ -1,0 +1,476 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAzureQuickStart",
+  "paths": [
+    "/demos/2fe-lb80-rdp-1be-nsg-rdp/azuredeploy.json",
+    "/demos/2fe-lb80-rdp-1be-nsg-rdp/azuredeploy.parameters.json"
+  ],
+  "timestamp": 1642962897656,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/demos/2fe-lb80-rdp-1be-nsg-rdp/azuredeploy.json",
+      "/demos/2fe-lb80-rdp-1be-nsg-rdp/azuredeploy.parameters.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT598",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "microsoft.network/publicipaddresses",
+      "microsoft.network/virtualnetworks",
+      "microsoft.network/loadbalancers",
+      "microsoft.network/networkinterfaces",
+      "microsoft.compute/virtualmachines",
+      "microsoft.network/networksecuritygroups",
+      "microsoft.storage/storageaccounts",
+      "microsoft.compute/availabilitysets"
+    ]
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT598",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "publicDnsName": {
+        "type": "string",
+        "metadata": {
+          "description": "Unique public DNS prefix for the deployment. The fqdn will look something like '<dnsname>.westus.cloudapp.azure.com'. Up to 62 chars, digits or dashes, lowercase, should start with a letter: must conform to '^[a-z][a-z0-9-]{1,61}[a-z0-9]$'."
+        },
+        "value": "GEN-UNIQUE"
+      },
+      "adminUsername": {
+        "type": "string",
+        "metadata": {
+          "description": "The name of the administrator of the new VM. Exclusion list: 'admin','administrator'"
+        },
+        "value": "pietro"
+      },
+      "adminPassword": {
+        "type": "securestring",
+        "metadata": {
+          "description": "The password for the administrator account of the new VM"
+        },
+        "value": "GEN-PASSWORD"
+      },
+      "location": {
+        "type": "string",
+        "defaultValue": "[resourceGroup().location]",
+        "metadata": {
+          "description": "Location for all resources."
+        }
+      },
+      "windowsVmSku": {
+        "type": "string",
+        "defaultValue": "2019-Datacenter",
+        "metadata": {
+          "description": "Windows Image VM SKU"
+        }
+      },
+      "sqlVmOffer": {
+        "type": "string",
+        "defaultValue": "sql2019-ws2019",
+        "metadata": {
+          "description": "SQL VM Image Offer"
+        }
+      },
+      "sqlVmSku": {
+        "type": "string",
+        "defaultValue": "standard",
+        "allowedValues": [
+          "standard",
+          "enterprise"
+        ],
+        "metadata": {
+          "description": "SQL VM Image SKU"
+        }
+      },
+      "sqlVmSize": {
+        "type": "string",
+        "defaultValue": "Standard_A1",
+        "metadata": {
+          "description": "SQL VM Size"
+        }
+      },
+      "windowsVmSize": {
+        "type": "string",
+        "defaultValue": "Standard_A1",
+        "metadata": {
+          "description": "Windows VM Size"
+        }
+      }
+    },
+    "variables": {
+      "vnetAddressRange": "10.0.0.0/16",
+      "subnetAddressRange": "10.0.0.0/24",
+      "subnetName": "Subnet",
+      "vnetName": "VNET",
+      "numberOfInstances": 2,
+      "availabilitySetName": "myavlset",
+      "vmName": "vm",
+      "nicsql": "vmsql",
+      "newStorageAccountName": "[concat('st', uniqueString(resourceGroup().id))]",
+      "subnet-id": "Microsoft.Network/virtualNetworks/subnets/VNET/Subnet",
+      "imagePublisher": "MicrosoftWindowsServer",
+      "imageOffer": "WindowsServer",
+      "SQLimagePublisher": "MicrosoftSQLServer",
+      "networkSecurityGroupName": "Subnet-nsg"
+    },
+    "resources": [
+      {
+        "apiVersion": "2020-03-01",
+        "type": "Microsoft.Network/publicIPAddresses",
+        "name": "publicIp",
+        "location": "[resourceGroup().location]",
+        "properties": {
+          "publicIPAllocationMethod": "Dynamic",
+          "dnsSettings": {
+            "domainNameLabel": "GEN-UNIQUE"
+          }
+        }
+      },
+      {
+        "apiVersion": "2020-03-01",
+        "type": "Microsoft.Network/publicIPAddresses",
+        "name": "vmsqlIp",
+        "location": "[resourceGroup().location]",
+        "properties": {
+          "publicIPAllocationMethod": "Dynamic"
+        }
+      },
+      {
+        "type": "Microsoft.Compute/availabilitySets",
+        "name": "myavlset",
+        "apiVersion": "2019-12-01",
+        "location": "[resourceGroup().location]",
+        "sku": {
+          "name": "Aligned"
+        },
+        "properties": {
+          "platformFaultDomainCount": 2,
+          "platformUpdateDomainCount": 2
+        }
+      },
+      {
+        "apiVersion": "2019-06-01",
+        "type": "Microsoft.Storage/storageAccounts",
+        "name": "[variables('newStorageAccountName')]",
+        "location": "[resourceGroup().location]",
+        "kind": "StorageV2",
+        "sku": {
+          "name": "Standard_LRS"
+        }
+      },
+      {
+        "comments": "Simple Network Security Group for subnet [Subnet]",
+        "type": "Microsoft.Network/networkSecurityGroups",
+        "apiVersion": "2019-08-01",
+        "name": "Subnet-nsg",
+        "location": "[resourceGroup().location]",
+        "properties": {}
+      },
+      {
+        "apiVersion": "2020-03-01",
+        "type": "Microsoft.Network/virtualNetworks",
+        "name": "VNET",
+        "location": "[resourceGroup().location]",
+        "dependsOn": [
+          "Microsoft.Network/networkSecurityGroups/Subnet-nsg"
+        ],
+        "properties": {
+          "addressSpace": {
+            "addressPrefixes": [
+              "10.0.0.0/16"
+            ]
+          },
+          "subnets": [
+            {
+              "name": "Subnet",
+              "properties": {
+                "addressPrefix": "10.0.0.0/24",
+                "networkSecurityGroup": {
+                  "id": "Microsoft.Network/networkSecurityGroups/Subnet-nsg"
+                }
+              }
+            }
+          ]
+        }
+      },
+      {
+        "apiVersion": "2020-03-01",
+        "name": "loadBalancer",
+        "type": "Microsoft.Network/loadBalancers",
+        "location": "[resourceGroup().location]",
+        "dependsOn": [
+          "Microsoft.Network/publicIPAddresses/publicIp"
+        ],
+        "properties": {
+          "frontendIpConfigurations": [
+            {
+              "name": "LBFE",
+              "properties": {
+                "publicIPAddress": {
+                  "id": "Microsoft.Network/publicIPAddresses/publicIp"
+                }
+              }
+            }
+          ],
+          "backendAddressPools": [
+            {
+              "name": "LBBAP"
+            }
+          ],
+          "inboundNatRules": [
+            {
+              "name": "rdp0",
+              "properties": {
+                "frontendIPConfiguration": {
+                  "id": "Microsoft.Network/loadBalancers/frontendIPConfigurations/loadBalancer/LBFE"
+                },
+                "protocol": "Tcp",
+                "frontendPort": 6001,
+                "backendPort": 3389,
+                "enableFloatingIP": false
+              }
+            },
+            {
+              "name": "rdp1",
+              "properties": {
+                "frontendIPConfiguration": {
+                  "id": "Microsoft.Network/loadBalancers/frontendIPConfigurations/loadBalancer/LBFE"
+                },
+                "protocol": "Tcp",
+                "frontendPort": 6002,
+                "backendPort": 3389,
+                "enableFloatingIP": false
+              }
+            }
+          ],
+          "loadBalancingRules": [
+            {
+              "properties": {
+                "frontendIPConfiguration": {
+                  "id": "Microsoft.Network/loadBalancers/frontendIpConfigurations/loadBalancer/LBFE"
+                },
+                "backendAddressPool": {
+                  "id": "Microsoft.Network/loadBalancers/backendAddressPools/loadBalancer/LBBAP"
+                },
+                "probe": {
+                  "id": "Microsoft.Network/loadBalancers/probes/loadBalancer/lbprobe"
+                },
+                "protocol": "Tcp",
+                "frontendPort": 80,
+                "backendPort": 80,
+                "idleTimeoutInMinutes": 15
+              },
+              "name": "lbrule"
+            }
+          ],
+          "probes": [
+            {
+              "properties": {
+                "protocol": "Tcp",
+                "port": 80,
+                "intervalInSeconds": 15,
+                "numberOfProbes": 2
+              },
+              "name": "lbprobe"
+            }
+          ]
+        }
+      },
+      {
+        "apiVersion": "2020-03-01",
+        "type": "Microsoft.Network/networkSecurityGroups",
+        "name": "vmsql",
+        "location": "[resourceGroup().location]",
+        "properties": {
+          "securityRules": [
+            {
+              "name": "default-allow-rdp",
+              "properties": {
+                "description": "Allow RDP",
+                "protocol": "Tcp",
+                "sourcePortRange": "*",
+                "destinationPortRange": "3389",
+                "sourceAddressPrefix": "*",
+                "destinationAddressPrefix": "*",
+                "access": "Allow",
+                "priority": 1000,
+                "direction": "Inbound"
+              }
+            }
+          ]
+        }
+      },
+      {
+        "apiVersion": "2020-03-01",
+        "type": "Microsoft.Network/networkInterfaces",
+        "name": "vmcopyindex()",
+        "copy": {
+          "name": "netIntLoop",
+          "count": 2
+        },
+        "location": "[resourceGroup().location]",
+        "dependsOn": [
+          "VNET",
+          "Microsoft.Network/loadBalancers/loadBalancer"
+        ],
+        "properties": {
+          "ipConfigurations": [
+            {
+              "name": "ipconfig",
+              "properties": {
+                "privateIPAllocationMethod": "Dynamic",
+                "subnet": {
+                  "id": "Microsoft.Network/virtualNetworks/subnets/VNET/Subnet"
+                },
+                "loadBalancerBackendAddressPools": [
+                  {
+                    "id": "Microsoft.Network/loadBalancers/backendAddressPools/loadBalancer/LBBAP"
+                  }
+                ],
+                "loadBalancerInboundNatRules": [
+                  {
+                    "id": "Microsoft.Network/loadBalancers/inboundNatRules/loadBalancer/rdpcopyindex()"
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      },
+      {
+        "apiVersion": "2020-03-01",
+        "type": "Microsoft.Network/networkInterfaces",
+        "name": "vmsql",
+        "location": "[resourceGroup().location]",
+        "dependsOn": [
+          "VNET",
+          "Microsoft.Network/networkSecurityGroups/vmsql"
+        ],
+        "properties": {
+          "networkSecurityGroup": {
+            "id": "Microsoft.Network/networkSecurityGroups/vmsql"
+          },
+          "ipConfigurations": [
+            {
+              "name": "ipconfig1",
+              "properties": {
+                "privateIPAllocationMethod": "Dynamic",
+                "publicIPAddress": {
+                  "id": "Microsoft.Network/publicIPAddresses/vmsqlIp"
+                },
+                "subnet": {
+                  "id": "Microsoft.Network/virtualNetworks/subnets/VNET/Subnet"
+                }
+              }
+            }
+          ]
+        }
+      },
+      {
+        "apiVersion": "2019-12-01",
+        "type": "Microsoft.Compute/virtualMachines",
+        "name": "vmcopyindex()",
+        "copy": {
+          "name": "virtualMachineLoop",
+          "count": 2
+        },
+        "location": "[resourceGroup().location]",
+        "dependsOn": [
+          "[resourceId('Microsoft.Storage/storageAccounts', variables('newStorageAccountName'))]",
+          "[resourceId('Microsoft.Compute/availabilitySets', variables('availabilitySetName'))]"
+        ],
+        "properties": {
+          "availabilitySet": {
+            "id": "Microsoft.Compute/availabilitySets/myavlset"
+          },
+          "hardwareProfile": {
+            "vmSize": "Standard_A1"
+          },
+          "osProfile": {
+            "computerName": "vmcopyindex()",
+            "adminUsername": "pietro",
+            "adminPassword": "GEN-PASSWORD"
+          },
+          "storageProfile": {
+            "imageReference": {
+              "publisher": "MicrosoftWindowsServer",
+              "offer": "WindowsServer",
+              "sku": "2019-Datacenter",
+              "version": "latest"
+            },
+            "osDisk": {
+              "createOption": "FromImage"
+            }
+          },
+          "networkProfile": {
+            "networkInterfaces": [
+              {
+                "id": "Microsoft.Network/networkInterfaces/vmcopyindex()"
+              }
+            ]
+          },
+          "diagnosticsProfile": {
+            "bootDiagnostics": {
+              "enabled": true,
+              "storageUri": "[reference(variables('newStorageAccountName')).primaryEndpoints.blob]"
+            }
+          }
+        }
+      },
+      {
+        "apiVersion": "2019-12-01",
+        "type": "Microsoft.Compute/virtualMachines",
+        "name": "vmsql",
+        "location": "[resourceGroup().location]",
+        "dependsOn": [
+          "[resourceId('Microsoft.Storage/storageAccounts', variables('newStorageAccountName'))]",
+          "[resourceId('Microsoft.Network/networkInterfaces', variables('nicsql'))]"
+        ],
+        "properties": {
+          "hardwareProfile": {
+            "vmSize": "Standard_A1"
+          },
+          "osProfile": {
+            "computerName": "vmsql",
+            "adminUsername": "pietro",
+            "adminPassword": "GEN-PASSWORD"
+          },
+          "storageProfile": {
+            "imageReference": {
+              "publisher": "MicrosoftSQLServer",
+              "offer": "sql2019-ws2019",
+              "sku": "standard",
+              "version": "latest"
+            },
+            "osDisk": {
+              "createOption": "FromImage"
+            }
+          },
+          "networkProfile": {
+            "networkInterfaces": [
+              {
+                "id": "Microsoft.Network/networkInterfaces/vmsql"
+              }
+            ]
+          },
+          "diagnosticsProfile": {
+            "bootDiagnostics": {
+              "enabled": true,
+              "storageUri": "[reference(variables('newStorageAccountName')).primaryEndpoints.blob]"
+            }
+          }
+        }
+      }
+    ],
+    "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+  }
+}

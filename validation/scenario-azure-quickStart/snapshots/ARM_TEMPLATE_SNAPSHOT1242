@@ -1,0 +1,96 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAzureQuickStart",
+  "paths": [
+    "/quickstarts/microsoft.datalakestore/data-lake-analytics/azuredeploy.json",
+    "/quickstarts/microsoft.datalakestore/data-lake-analytics/azuredeploy.parameters.json"
+  ],
+  "timestamp": 1642962905897,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/quickstarts/microsoft.datalakestore/data-lake-analytics/azuredeploy.json",
+      "/quickstarts/microsoft.datalakestore/data-lake-analytics/azuredeploy.parameters.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT1242",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "microsoft.datalakestore/accounts",
+      "microsoft.datalakeanalytics/accounts"
+    ]
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT1242",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "adlAnalyticsName": {
+        "type": "string",
+        "metadata": {
+          "description": "The name of the Data Lake Analytics account to create."
+        },
+        "value": "GEN-UNIQUE"
+      },
+      "adlStoreName": {
+        "type": "string",
+        "metadata": {
+          "description": "The name of the Data Lake Store account to create."
+        },
+        "value": "GEN-UNIQUE"
+      },
+      "location": {
+        "type": "string",
+        "defaultValue": "[resourceGroup().location]",
+        "metadata": {
+          "description": "The location in which the resources will be created."
+        },
+        "value": "eastus2"
+      }
+    },
+    "resources": [
+      {
+        "name": "GEN-UNIQUE",
+        "type": "Microsoft.DataLakeStore/accounts",
+        "location": "eastus2",
+        "apiVersion": "2016-11-01",
+        "properties": {}
+      },
+      {
+        "name": "GEN-UNIQUE",
+        "type": "Microsoft.DataLakeAnalytics/accounts",
+        "location": "eastus2",
+        "apiVersion": "2016-11-01",
+        "dependsOn": [
+          "Microsoft.DataLakeStore/accounts//GEN-UNIQUE"
+        ],
+        "properties": {
+          "defaultDataLakeStoreAccount": "GEN-UNIQUE",
+          "dataLakeStoreAccounts": [
+            {
+              "name": "GEN-UNIQUE"
+            }
+          ]
+        }
+      }
+    ],
+    "outputs": {
+      "adlAnalyticsAccount": {
+        "type": "object",
+        "value": "[reference(resourceId('Microsoft.DataLakeAnalytics/accounts',parameters('adlAnalyticsName')))]"
+      },
+      "adlStoreAccount": {
+        "type": "object",
+        "value": "[reference(resourceId('Microsoft.DataLakeStore/accounts',parameters('adlStoreName')))]"
+      }
+    },
+    "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+  }
+}

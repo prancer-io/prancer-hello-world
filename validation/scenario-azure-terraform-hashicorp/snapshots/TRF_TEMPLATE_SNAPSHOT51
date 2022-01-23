@@ -1,0 +1,108 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "main",
+  "contentType": "json",
+  "source": "gitConnectorAzureTerraHashicorp",
+  "paths": [
+    "/examples/kubernetes/basic-cluster/outputs.tf",
+    "/examples/kubernetes/basic-cluster/variables.tf",
+    "/examples/kubernetes/basic-cluster/main.tf"
+  ],
+  "timestamp": 1642943279735,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "TRF_TEMPLATE_SNAPSHOT",
+    "type": "terraform",
+    "collection": "terraformtemplate",
+    "paths": [
+      "/examples/kubernetes/basic-cluster/outputs.tf",
+      "/examples/kubernetes/basic-cluster/variables.tf",
+      "/examples/kubernetes/basic-cluster/main.tf"
+    ],
+    "snapshotId": "TRF_TEMPLATE_SNAPSHOT51",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "azurerm_kubernetes_cluster",
+      "azurerm_resource_group"
+    ]
+  },
+  "snapshotId": "TRF_TEMPLATE_SNAPSHOT51",
+  "collection": "terraformtemplate",
+  "json": {
+    "provider": [
+      {
+        "azurerm": {
+          "features": [
+            {}
+          ]
+        }
+      }
+    ],
+    "resources": [
+      {
+        "type": "azurerm_resource_group",
+        "name": "example",
+        "properties": {
+          "name": "${var.prefix}-k8s-resources",
+          "location": "${var.location}",
+          "compiletime_identity": "azurerm_resource_group.example"
+        }
+      },
+      {
+        "type": "azurerm_kubernetes_cluster",
+        "name": "example",
+        "properties": {
+          "name": "${var.prefix}-k8s",
+          "location": "${azurerm_resource_group.example.location}",
+          "resource_group_name": "${azurerm_resource_group.example.name}",
+          "dns_prefix": "${var.prefix}-k8s",
+          "default_node_pool": [
+            {
+              "name": "default",
+              "node_count": 1,
+              "vm_size": "Standard_DS2_v2"
+            }
+          ],
+          "identity": [
+            {
+              "type": "SystemAssigned"
+            }
+          ],
+          "addon_profile": [
+            {
+              "aci_connector_linux": [
+                {
+                  "enabled": false
+                }
+              ],
+              "azure_policy": [
+                {
+                  "enabled": false
+                }
+              ],
+              "http_application_routing": [
+                {
+                  "enabled": false
+                }
+              ],
+              "kube_dashboard": [
+                {
+                  "enabled": true
+                }
+              ],
+              "oms_agent": [
+                {
+                  "enabled": false
+                }
+              ]
+            }
+          ],
+          "compiletime_identity": "azurerm_kubernetes_cluster.example"
+        }
+      }
+    ]
+  }
+}

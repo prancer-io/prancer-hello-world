@@ -1,0 +1,280 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAzureQuickStart",
+  "paths": [
+    "/application-workloads/mahara/mahara-autoscale-cache/nested/network.json"
+  ],
+  "timestamp": 1642962891141,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/application-workloads/mahara/mahara-autoscale-cache/nested/network.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT238",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "microsoft.network/publicipaddresses",
+      "microsoft.network/virtualnetworks",
+      "microsoft.network/loadbalancers",
+      "microsoft.network/virtualnetworkgateways",
+      "microsoft.network/virtualnetworks/subnets"
+    ]
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT238",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "maharaCommon": {
+        "metadata": {
+          "description": "Common Mahara values"
+        },
+        "type": "object"
+      }
+    },
+    "resources": [
+      {
+        "type": "Microsoft.Network/virtualNetworks",
+        "apiVersion": "2020-11-01",
+        "location": "maharaCommon",
+        "name": "maharaCommon",
+        "properties": {
+          "addressSpace": {
+            "addressPrefixes": [
+              "maharaCommon/16"
+            ]
+          },
+          "subnets": [
+            {
+              "name": "maharaCommon",
+              "properties": {
+                "addressPrefix": "maharaCommon"
+              }
+            },
+            {
+              "name": "maharaCommon",
+              "properties": {
+                "addressPrefix": "maharaCommon"
+              }
+            },
+            {
+              "name": "maharaCommon",
+              "properties": {
+                "addressPrefix": "maharaCommon"
+              }
+            },
+            {
+              "name": "maharaCommon",
+              "properties": {
+                "addressPrefix": "maharaCommon"
+              }
+            }
+          ]
+        }
+      },
+      {
+        "condition": "maharaCommon",
+        "type": "Microsoft.Network/publicIPAddresses",
+        "apiVersion": "2020-11-01",
+        "location": "maharaCommon",
+        "name": "maharaCommon",
+        "properties": {
+          "publicIPAllocationMethod": "Dynamic"
+        },
+        "tags": {
+          "displayName": "Virtual network gateway Public IP"
+        }
+      },
+      {
+        "condition": "maharaCommon",
+        "type": "Microsoft.Network/virtualNetworks/subnets",
+        "apiVersion": "2020-11-01",
+        "dependsOn": [
+          "Microsoft.Network/virtualNetworks/maharaCommon"
+        ],
+        "name": "maharaCommon/maharaCommon",
+        "properties": {
+          "addressPrefix": "maharaCommon"
+        }
+      },
+      {
+        "condition": "maharaCommon",
+        "type": "Microsoft.Network/virtualNetworkGateways",
+        "apiVersion": "2020-11-01",
+        "dependsOn": [
+          "Microsoft.Network/publicIPAddresses/maharaCommon",
+          "Microsoft.Network/virtualNetworks/subnets/maharaCommon/maharaCommon"
+        ],
+        "location": "maharaCommon",
+        "name": "maharaCommon",
+        "properties": {
+          "activeActive": false,
+          "enableBgp": false,
+          "gatewayType": "maharaCommon",
+          "ipConfigurations": [
+            {
+              "name": "vnet-Gateway-Config",
+              "properties": {
+                "privateIPAllocationMethod": "Dynamic",
+                "publicIPAddress": {
+                  "id": "Microsoft.Network/publicIPAddresses/maharaCommon"
+                },
+                "subnet": {
+                  "id": "Microsoft.Network/virtualNetworks/subnets/maharaCommon/maharaCommon"
+                }
+              }
+            }
+          ],
+          "sku": {
+            "name": "VpnGw1",
+            "tier": "VpnGw1",
+            "capacity": 2
+          },
+          "vpnType": "maharaCommon"
+        }
+      },
+      {
+        "type": "Microsoft.Network/publicIPAddresses",
+        "apiVersion": "2020-11-01",
+        "location": "maharaCommon",
+        "name": "maharaCommon",
+        "properties": {
+          "dnsSettings": {
+            "domainNameLabel": "maharaCommon"
+          },
+          "publicIPAllocationMethod": "Static"
+        },
+        "tags": {
+          "displayName": "Load Balancer Public IP"
+        }
+      },
+      {
+        "type": "Microsoft.Network/publicIPAddresses",
+        "apiVersion": "2020-11-01",
+        "location": "maharaCommon",
+        "name": "maharaCommon",
+        "properties": {
+          "dnsSettings": {
+            "domainNameLabel": "maharaCommon"
+          },
+          "publicIPAllocationMethod": "Static"
+        },
+        "tags": {
+          "displayName": "Controller VM Public IP"
+        }
+      },
+      {
+        "type": "Microsoft.Network/loadBalancers",
+        "apiVersion": "2020-11-01",
+        "dependsOn": [
+          "Microsoft.Network/publicIPAddresses//maharaCommon"
+        ],
+        "location": "maharaCommon",
+        "name": "maharaCommon",
+        "properties": {
+          "backendAddressPools": [
+            {
+              "name": "maharaCommon"
+            }
+          ],
+          "frontendIPConfigurations": [
+            {
+              "name": "maharaCommon",
+              "properties": {
+                "publicIPAddress": {
+                  "id": "Microsoft.Network/publicIPAddresses/maharaCommon"
+                }
+              }
+            }
+          ],
+          "loadBalancingRules": [
+            {
+              "name": "Http",
+              "properties": {
+                "backendAddressPool": {
+                  "id": "Microsoft.Network/loadBalancers/backendAddressPools/maharaCommon/maharaCommon"
+                },
+                "backendPort": 80,
+                "enableFloatingIP": false,
+                "frontendIPConfiguration": {
+                  "id": "Microsoft.Network/loadBalancers/frontendIPConfigurations/maharaCommon/maharaCommon"
+                },
+                "frontendPort": 80,
+                "idleTimeoutInMinutes": 5,
+                "probe": {
+                  "id": "Microsoft.Network/loadBalancers/probes/maharaCommon/maharaCommon"
+                },
+                "protocol": "Tcp"
+              }
+            },
+            {
+              "name": "Https",
+              "properties": {
+                "backendAddressPool": {
+                  "id": "Microsoft.Network/loadBalancers/backendAddressPools/maharaCommon/maharaCommon"
+                },
+                "backendPort": 443,
+                "enableFloatingIP": false,
+                "frontendIPConfiguration": {
+                  "id": "Microsoft.Network/loadBalancers/frontendIPConfigurations/maharaCommon/maharaCommon"
+                },
+                "frontendPort": 443,
+                "idleTimeoutInMinutes": 5,
+                "probe": {
+                  "id": "Microsoft.Network/loadBalancers/probes/maharaCommon/maharaCommon"
+                },
+                "protocol": "Tcp"
+              }
+            }
+          ],
+          "probes": [
+            {
+              "name": "maharaCommon",
+              "properties": {
+                "intervalInSeconds": 5,
+                "numberOfProbes": 3,
+                "port": 80,
+                "protocol": "Tcp"
+              }
+            }
+          ]
+        }
+      }
+    ],
+    "variables": {
+      "extBeID": "Microsoft.Network/loadBalancers/backendAddressPools/maharaCommon/maharaCommon",
+      "extFeID": "Microsoft.Network/loadBalancers/frontendIPConfigurations/maharaCommon/maharaCommon",
+      "extProbeID": "Microsoft.Network/loadBalancers/probes/maharaCommon/maharaCommon",
+      "gatewaySubnetRef": "Microsoft.Network/virtualNetworks/subnets/maharaCommon/maharaCommon",
+      "lbPipID": "Microsoft.Network/publicIPAddresses/maharaCommon",
+      "ctlrPipID": "Microsoft.Network/publicIPAddresses/maharaCommon"
+    },
+    "outputs": {
+      "lbPubIp": {
+        "value": "[reference(parameters('maharaCommon').lbPipName, '2020-11-01').ipAddress]",
+        "type": "string"
+      },
+      "ctlrPubIp": {
+        "value": "[reference(parameters('maharaCommon').ctlrPipName, '2020-11-01').ipAddress]",
+        "type": "string"
+      },
+      "ctlrPubIpId": {
+        "value": "[variables('ctlrPipID')]",
+        "type": "string"
+      },
+      "siteFQDN": {
+        "value": "[reference(variables('lbPipID'), '2020-11-01').dnsSettings.fqdn]",
+        "type": "string"
+      }
+    },
+    "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+  }
+}

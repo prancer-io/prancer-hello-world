@@ -2,12 +2,12 @@
   "structure": "filesystem",
   "error": null,
   "reference": "master",
-  "contentType": "yaml",
+  "contentType": "json",
   "source": "gitConnectorGoogleKcc",
   "paths": [
-    "/samples/resources/dnsrecordset/dnssec-sshfp-record-set/dns_v1beta1_dnsmanagedzone.yaml"
+    "/samples/resources/containernodepool/sole-tenant-node-pool/container_v1beta1_containernodepool.yaml"
   ],
-  "timestamp": 1628765146435,
+  "timestamp": 1642973303810,
   "queryuser": null,
   "checksum": "99914b932bd37a50b983c5e7c90ae93b",
   "node": {
@@ -15,24 +15,37 @@
     "type": "kcc",
     "collection": "kcctemplate",
     "paths": [
-      "/samples/resources/dnsrecordset/dnssec-sshfp-record-set/dns_v1beta1_dnsmanagedzone.yaml"
+      "/samples/resources/containernodepool/sole-tenant-node-pool/container_v1beta1_containernodepool.yaml"
     ],
     "snapshotId": "KCC_TEMPLATE_SNAPSHOT351",
     "status": "active",
-    "validate": true
+    "validate": true,
+    "resourceTypes": [
+      "containernodepool"
+    ]
   },
   "snapshotId": "KCC_TEMPLATE_SNAPSHOT351",
   "collection": "kcctemplate",
   "json": {
-    "apiVersion": "dns.cnrm.cloud.google.com/v1beta1",
-    "kind": "DNSManagedZone",
+    "apiVersion": "container.cnrm.cloud.google.com/v1beta1",
+    "kind": "ContainerNodePool",
     "metadata": {
-      "name": "dnsrecordset-dep-dnssecsshfp"
+      "name": "containernodepool-sample-soletenancy"
     },
     "spec": {
-      "dnsName": "secure.example.com.",
-      "dnssecConfig": {
-        "state": "on"
+      "location": "us-central1-b",
+      "autoscaling": {
+        "minNodeCount": 1,
+        "maxNodeCount": 3
+      },
+      "nodeConfig": {
+        "machineType": "n1-standard-2",
+        "nodeGroupRef": {
+          "name": "containernodepool-dep-soletenancy"
+        }
+      },
+      "clusterRef": {
+        "name": "containernodepool-dep-soletenancy"
       }
     }
   }

@@ -1,0 +1,220 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAzureQuickStart",
+  "paths": [
+    "/quickstarts/microsoft.network/front-door-standard-premium/azuredeploy.json",
+    "/quickstarts/microsoft.network/front-door-standard-premium/azuredeploy.parameters.json"
+  ],
+  "timestamp": 1642962908984,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/quickstarts/microsoft.network/front-door-standard-premium/azuredeploy.json",
+      "/quickstarts/microsoft.network/front-door-standard-premium/azuredeploy.parameters.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT1543",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "microsoft.cdn/profiles/origingroups/origins",
+      "microsoft.cdn/profiles/afdendpoints",
+      "microsoft.cdn/profiles",
+      "microsoft.cdn/profiles/afdendpoints/routes",
+      "microsoft.cdn/profiles/origingroups"
+    ]
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT1543",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.0.0.0",
+    "metadata": {
+      "_generator": {
+        "name": "bicep",
+        "version": "0.3.255.40792",
+        "templateHash": "6456583574145527380"
+      }
+    },
+    "parameters": {
+      "endpointName": {
+        "type": "string",
+        "defaultValue": "[format('afd-{0}', uniqueString(resourceGroup().id))]",
+        "metadata": {
+          "description": "The name of the Front Door endpoint to create. This must be globally unique."
+        }
+      },
+      "skuName": {
+        "type": "string",
+        "defaultValue": "Standard_AzureFrontDoor",
+        "allowedValues": [
+          "Standard_AzureFrontDoor",
+          "Premium_AzureFrontDoor"
+        ],
+        "metadata": {
+          "description": "The name of the SKU to use when creating the Front Door profile."
+        }
+      },
+      "originHostName": {
+        "type": "string",
+        "metadata": {
+          "description": "The host name that should be used when connecting from Front Door to the origin."
+        },
+        "value": "GEN-STATIC-WEBSITE-HOST-NAME"
+      }
+    },
+    "functions": [],
+    "variables": {
+      "profileName": "MyFrontDoor",
+      "originGroupName": "MyOriginGroup",
+      "originName": "MyOrigin",
+      "routeName": "MyRoute"
+    },
+    "resources": [
+      {
+        "type": "Microsoft.Cdn/profiles",
+        "apiVersion": "2020-09-01",
+        "name": "MyFrontDoor",
+        "location": "global",
+        "sku": {
+          "name": "Standard_AzureFrontDoor"
+        }
+      },
+      {
+        "type": "Microsoft.Cdn/profiles/afdEndpoints",
+        "apiVersion": "2020-09-01",
+        "name": "[format('{0}/{1}', variables('profileName'), parameters('endpointName'))]",
+        "location": "global",
+        "properties": {
+          "originResponseTimeoutSeconds": 240,
+          "enabledState": "Enabled"
+        },
+        "dependsOn": [
+          "Microsoft.Cdn/profiles/MyFrontDoor"
+        ]
+      },
+      {
+        "type": "Microsoft.Cdn/profiles/originGroups",
+        "apiVersion": "2020-09-01",
+        "name": "[format('{0}/{1}', variables('profileName'), variables('originGroupName'))]",
+        "properties": {
+          "loadBalancingSettings": {
+            "sampleSize": 4,
+            "successfulSamplesRequired": 3
+          },
+          "healthProbeSettings": {
+            "probePath": "/",
+            "probeRequestType": "HEAD",
+            "probeProtocol": "Http",
+            "probeIntervalInSeconds": 100
+          }
+        },
+        "dependsOn": [
+          "Microsoft.Cdn/profiles/MyFrontDoor"
+        ]
+      },
+      {
+        "type": "Microsoft.Cdn/profiles/originGroups/origins",
+        "apiVersion": "2020-09-01",
+        "name": "[format('{0}/{1}/{2}', variables('profileName'), variables('originGroupName'), variables('originName'))]",
+        "properties": {
+          "hostName": "GEN-STATIC-WEBSITE-HOST-NAME",
+          "httpPort": 80,
+          "httpsPort": 443,
+          "originHostHeader": "GEN-STATIC-WEBSITE-HOST-NAME",
+          "priority": 1,
+          "weight": 1000
+        },
+        "dependsOn": [
+          "Microsoft.Cdn/profiles/originGroups/MyFrontDoor/MyOriginGroup",
+          "Microsoft.Cdn/profiles/MyFrontDoor"
+        ]
+      },
+      {
+        "type": "Microsoft.Cdn/profiles/afdEndpoints/routes",
+        "apiVersion": "2020-09-01",
+        "name": "[format('{0}/{1}/{2}', variables('profileName'), parameters('endpointName'), variables('routeName'))]",
+        "properties": {
+          "originGroup": {
+            "id": "Microsoft.Cdn/profiles/originGroups/MyFrontDoor/MyOriginGroup"
+          },
+          "supportedProtocols": [
+            "Http",
+            "Https"
+          ],
+          "patternsToMatch": [
+            "/*"
+          ],
+          "compressionSettings": {
+            "contentTypesToCompress": [
+              "application/eot",
+              "application/font",
+              "application/font-sfnt",
+              "application/javascript",
+              "application/json",
+              "application/opentype",
+              "application/otf",
+              "application/pkcs7-mime",
+              "application/truetype",
+              "application/ttf",
+              "application/vnd.ms-fontobject",
+              "application/xhtml+xml",
+              "application/xml",
+              "application/xml+rss",
+              "application/x-font-opentype",
+              "application/x-font-truetype",
+              "application/x-font-ttf",
+              "application/x-httpd-cgi",
+              "application/x-javascript",
+              "application/x-mpegurl",
+              "application/x-opentype",
+              "application/x-otf",
+              "application/x-perl",
+              "application/x-ttf",
+              "font/eot",
+              "font/ttf",
+              "font/otf",
+              "font/opentype",
+              "image/svg+xml",
+              "text/css",
+              "text/csv",
+              "text/html",
+              "text/javascript",
+              "text/js",
+              "text/plain",
+              "text/richtext",
+              "text/tab-separated-values",
+              "text/xml",
+              "text/x-script",
+              "text/x-component",
+              "text/x-java-source"
+            ],
+            "isCompressionEnabled": true
+          },
+          "queryStringCachingBehavior": "IgnoreQueryString",
+          "forwardingProtocol": "HttpsOnly",
+          "linkToDefaultDomain": "Enabled",
+          "httpsRedirect": "Enabled"
+        },
+        "dependsOn": [
+          "Microsoft.Cdn/profiles/afdEndpoints/MyFrontDoor/[format('afd-{0}', uniqueString(resourceGroup().id))]",
+          "Microsoft.Cdn/profiles/originGroups/origins/MyFrontDoor/MyOriginGroup/MyOrigin",
+          "Microsoft.Cdn/profiles/originGroups/MyFrontDoor/MyOriginGroup",
+          "Microsoft.Cdn/profiles/MyFrontDoor"
+        ]
+      }
+    ],
+    "outputs": {
+      "frontDoorEndpointHostName": {
+        "type": "string",
+        "value": "[reference(resourceId('Microsoft.Cdn/profiles/afdEndpoints', variables('profileName'), parameters('endpointName'))).hostName]"
+      }
+    },
+    "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+  }
+}

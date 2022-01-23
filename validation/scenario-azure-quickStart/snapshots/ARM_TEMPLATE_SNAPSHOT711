@@ -1,0 +1,558 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAzureQuickStart",
+  "paths": [
+    "/demos/haproxy-redundant-floatingip-ubuntu/azuredeploy.json",
+    "/demos/haproxy-redundant-floatingip-ubuntu/azuredeploy.parameters.json"
+  ],
+  "timestamp": 1642962899372,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/demos/haproxy-redundant-floatingip-ubuntu/azuredeploy.json",
+      "/demos/haproxy-redundant-floatingip-ubuntu/azuredeploy.parameters.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT711",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "microsoft.network/publicipaddresses",
+      "microsoft.network/virtualnetworks",
+      "microsoft.network/loadbalancers",
+      "microsoft.network/networkinterfaces",
+      "microsoft.compute/virtualmachines/extensions",
+      "microsoft.compute/virtualmachines",
+      "microsoft.storage/storageaccounts",
+      "microsoft.compute/availabilitysets"
+    ]
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT711",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "adminUsername": {
+        "type": "string",
+        "defaultValue": "azureuser",
+        "metadata": {
+          "description": "Admin username"
+        },
+        "value": "GEN-UNIQUE"
+      },
+      "sshKeyData": {
+        "type": "string",
+        "metadata": {
+          "description": "SSH rsa public key file as a string."
+        },
+        "value": "GEN-SSH-PUB-KEY"
+      },
+      "lbDNSLabelPrefix": {
+        "type": "string",
+        "metadata": {
+          "description": "DNS Label for the load balancer Public IP. Must be lowercase. It should match with the regex: ^[a-z][a-z0-9-]{1,61}[a-z0-9]$."
+        },
+        "value": "GEN-UNIQUE"
+      },
+      "haproxyVMNamePrefix": {
+        "type": "string",
+        "defaultValue": "haproxyvm-",
+        "metadata": {
+          "description": "Prefix to use for names of VMs under the load balancer"
+        }
+      },
+      "appVMNamePrefix": {
+        "type": "string",
+        "defaultValue": "appvm-",
+        "metadata": {
+          "description": "Prefix to use for names of application VMs"
+        }
+      },
+      "ubuntuOSVersion": {
+        "type": "string",
+        "defaultValue": "14.04.5-LTS",
+        "allowedValues": [
+          "12.04.5-LTS",
+          "14.04.5-LTS",
+          "15.10"
+        ],
+        "metadata": {
+          "description": "The Ubuntu version for the VM. This will pick a fully patched image of this given Ubuntu version. Allowed values: 12.04.5-LTS, 14.04.5-LTS, 15.10."
+        },
+        "value": "14.04.5-LTS"
+      },
+      "vmSize": {
+        "type": "string",
+        "defaultValue": "Standard_D2_v3",
+        "metadata": {
+          "description": "Size of the VM"
+        },
+        "value": "Standard_D2_v3"
+      },
+      "location": {
+        "type": "string",
+        "defaultValue": "[resourceGroup().location]",
+        "metadata": {
+          "description": "location"
+        }
+      },
+      "_artifactsLocation": {
+        "type": "string",
+        "metadata": {
+          "description": "The base URI where artifacts required by this template are located including a trailing '/'"
+        },
+        "defaultValue": "[deployment().properties.templateLink.uri]"
+      },
+      "_artifactsLocationSasToken": {
+        "type": "securestring",
+        "metadata": {
+          "description": "The sasToken required to access _artifactsLocation.  When the template is deployed using the accompanying scripts, a sasToken will be automatically generated. Use the defaultValue if the staging location is not secured."
+        },
+        "defaultValue": ""
+      }
+    },
+    "variables": {
+      "storageAccountName": "[concat(uniqueString(resourceGroup().id), 'haproxysa')]",
+      "numberOfHAproxyInstances": 2,
+      "haproxyVMScripts": {
+        "fileUris": [
+          "[uri(parameters('_artifactsLocation'), concat('haproxyvm-configure.sh', parameters('_artifactsLocationSasToken')))]",
+          "[uri(parameters('_artifactsLocation'), concat('keepalived-action.sh', parameters('_artifactsLocationSasToken')))]",
+          "[uri(parameters('_artifactsLocation'), concat('keepalived-check-appsvc.sh', parameters('_artifactsLocationSasToken')))]"
+        ],
+        "commandToExecute": "sudo bash -x haproxyvm-configure.sh  -a appvm-0 -a appvm-1 -p 80 -l GEN-UNIQUE.[resourceGroup().location].cloudapp.azure.com -t 80 -m haproxyvm-0 -b haproxyvm-1"
+      },
+      "numberOfAppInstances": 2,
+      "appVMScripts": {
+        "fileUris": [
+          "[uri(parameters('_artifactsLocation'), concat('apache-setup.sh', parameters('_artifactsLocationSasToken')))]"
+        ],
+        "commandToExecute": "sudo bash apache-setup.sh"
+      },
+      "appVMPort": 80,
+      "imagePublisher": "Canonical",
+      "imageOffer": "UbuntuServer",
+      "sshKeyPath": "/home/GEN-UNIQUE/.ssh/authorized_keys",
+      "nicNamePrefix": "nic-",
+      "storageAccountType": "StandardSSD_LRS",
+      "haproxyAvailabilitySetName": "haproxyAvSet",
+      "appAvailabilitySetName": "appAvSet",
+      "vnetName": "haproxyVNet",
+      "addressPrefix": "10.0.0.0/16",
+      "subnetName": "Subnet-1",
+      "subnetPrefix": "10.0.0.0/24",
+      "lbName": "haproxyLB",
+      "lbPublicIPAddressType": "Static",
+      "lbPublicIPAddressName": "haproxyLB-publicip",
+      "lbVIPPort": 80
+    },
+    "resources": [
+      {
+        "apiVersion": "2021-01-01",
+        "type": "Microsoft.Storage/storageAccounts",
+        "name": "[variables('storageAccountName')]",
+        "location": "[resourceGroup().location]",
+        "sku": {
+          "name": "StandardSSD_LRS"
+        },
+        "kind": "StorageV2"
+      },
+      {
+        "apiVersion": "2020-12-01",
+        "type": "Microsoft.Compute/availabilitySets",
+        "name": "haproxyAvSet",
+        "location": "[resourceGroup().location]",
+        "properties": {
+          "PlatformUpdateDomainCount": 3,
+          "PlatformFaultDomainCount": 2
+        },
+        "sku": {
+          "name": "Aligned"
+        }
+      },
+      {
+        "apiVersion": "2020-12-01",
+        "type": "Microsoft.Compute/availabilitySets",
+        "name": "appAvSet",
+        "location": "[resourceGroup().location]",
+        "properties": {
+          "PlatformUpdateDomainCount": 3,
+          "PlatformFaultDomainCount": 2
+        },
+        "sku": {
+          "name": "Aligned"
+        }
+      },
+      {
+        "apiVersion": "2020-11-01",
+        "type": "Microsoft.Network/publicIPAddresses",
+        "name": "haproxyLB-publicip",
+        "location": "[resourceGroup().location]",
+        "properties": {
+          "publicIPAllocationMethod": "Static",
+          "dnsSettings": {
+            "domainNameLabel": "GEN-UNIQUE"
+          }
+        }
+      },
+      {
+        "apiVersion": "2020-11-01",
+        "type": "Microsoft.Network/virtualNetworks",
+        "name": "haproxyVNet",
+        "location": "[resourceGroup().location]",
+        "properties": {
+          "addressSpace": {
+            "addressPrefixes": [
+              "10.0.0.0/16"
+            ]
+          },
+          "subnets": [
+            {
+              "name": "Subnet-1",
+              "properties": {
+                "addressPrefix": "10.0.0.0/24"
+              }
+            }
+          ]
+        }
+      },
+      {
+        "apiVersion": "2020-11-01",
+        "name": "haproxyLB",
+        "type": "Microsoft.Network/loadBalancers",
+        "location": "[resourceGroup().location]",
+        "dependsOn": [
+          "Microsoft.Network/publicIPAddresses//haproxyLB-publicip"
+        ],
+        "properties": {
+          "frontendIPConfigurations": [
+            {
+              "name": "LoadBalancerFrontEnd",
+              "properties": {
+                "publicIPAddress": {
+                  "id": "Microsoft.Network/publicIPAddresses/haproxyLB-publicip"
+                }
+              }
+            }
+          ],
+          "backendAddressPools": [
+            {
+              "name": "BackendPool1"
+            }
+          ],
+          "inboundNatRules": [
+            {
+              "name": "SSH-VM0",
+              "properties": {
+                "frontendIPConfiguration": {
+                  "id": "Microsoft.Network/loadBalancers/frontendIPConfigurations/haproxyLB/LoadBalancerFrontEnd"
+                },
+                "protocol": "Tcp",
+                "frontendPort": 50001,
+                "backendPort": 22,
+                "enableFloatingIP": false
+              }
+            },
+            {
+              "name": "SSH-VM1",
+              "properties": {
+                "frontendIPConfiguration": {
+                  "id": "Microsoft.Network/loadBalancers/frontendIPConfigurations/haproxyLB/LoadBalancerFrontEnd"
+                },
+                "protocol": "Tcp",
+                "frontendPort": 50002,
+                "backendPort": 22,
+                "enableFloatingIP": false
+              }
+            }
+          ],
+          "loadBalancingRules": [
+            {
+              "name": "LBRule",
+              "properties": {
+                "frontendIPConfiguration": {
+                  "id": "Microsoft.Network/loadBalancers/frontendIPConfigurations/haproxyLB/LoadBalancerFrontEnd"
+                },
+                "backendAddressPool": {
+                  "id": "Microsoft.Network/loadBalancers/backendAddressPools/haproxyLB/BackendPool1"
+                },
+                "protocol": "Tcp",
+                "frontendPort": 80,
+                "backendPort": 80,
+                "enableFloatingIP": true,
+                "idleTimeoutInMinutes": 5,
+                "probe": {
+                  "id": "Microsoft.Network/loadBalancers/probes/haproxyLB/tcpProbe"
+                }
+              }
+            }
+          ],
+          "probes": [
+            {
+              "name": "tcpProbe",
+              "properties": {
+                "protocol": "Tcp",
+                "port": 80,
+                "intervalInSeconds": 5,
+                "numberOfProbes": 2
+              }
+            }
+          ]
+        }
+      },
+      {
+        "apiVersion": "2020-06-01",
+        "type": "Microsoft.Network/networkInterfaces",
+        "name": "haproxyvm-nic-copyindex()",
+        "location": "[resourceGroup().location]",
+        "copy": {
+          "name": "haproxyNicLoop",
+          "count": 2
+        },
+        "dependsOn": [
+          "Microsoft.Network/virtualNetworks//haproxyVNet",
+          "Microsoft.Network/loadBalancers//haproxyLB"
+        ],
+        "properties": {
+          "ipConfigurations": [
+            {
+              "name": "ipconfig1",
+              "properties": {
+                "privateIPAllocationMethod": "Dynamic",
+                "subnet": {
+                  "id": "Microsoft.Network/virtualNetworks/subnets/haproxyVNet/variables (subnetName)"
+                },
+                "loadBalancerBackendAddressPools": [
+                  {
+                    "id": "Microsoft.Network/loadBalancers/backendAddressPools/haproxyLB/BackendPool1"
+                  }
+                ],
+                "loadBalancerInboundNatRules": [
+                  {
+                    "id": "Microsoft.Network/loadBalancers/inboundNatRules/haproxyLB/SSH-VMcopyindex()"
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      },
+      {
+        "apiVersion": "2020-12-01",
+        "type": "Microsoft.Compute/virtualMachines",
+        "name": "haproxyvm-copyindex()",
+        "copy": {
+          "name": "haproxyVMLoop",
+          "count": 2
+        },
+        "location": "[resourceGroup().location]",
+        "dependsOn": [
+          "[resourceId('Microsoft.Storage/storageAccounts/', variables('storageAccountName'))]",
+          "[resourceId('Microsoft.Network/networkInterfaces/', concat(parameters('haproxyVMNamePrefix'), variables('nicNamePrefix'), copyindex()))]",
+          "[resourceId('Microsoft.Compute/availabilitySets/', variables('haproxyAvailabilitySetName'))]"
+        ],
+        "properties": {
+          "availabilitySet": {
+            "id": "Microsoft.Compute/availabilitySets/haproxyAvSet"
+          },
+          "hardwareProfile": {
+            "vmSize": "Standard_D2_v3"
+          },
+          "osProfile": {
+            "computerName": "haproxyvm-copyIndex()",
+            "adminUsername": "GEN-UNIQUE",
+            "linuxConfiguration": {
+              "disablePasswordAuthentication": true,
+              "ssh": {
+                "publicKeys": [
+                  {
+                    "path": "/home/GEN-UNIQUE/.ssh/authorized_keys",
+                    "keyData": "GEN-SSH-PUB-KEY"
+                  }
+                ]
+              }
+            }
+          },
+          "storageProfile": {
+            "imageReference": {
+              "publisher": "Canonical",
+              "offer": "UbuntuServer",
+              "sku": "14.04.5-LTS",
+              "version": "latest"
+            },
+            "osDisk": {
+              "name": "haproxyvm-OSDisk-copyindex()",
+              "caching": "ReadWrite",
+              "createOption": "FromImage",
+              "managedDisk": {
+                "storageAccountType": "StandardSSD_LRS"
+              }
+            }
+          },
+          "networkProfile": {
+            "networkInterfaces": [
+              {
+                "id": "Microsoft.Network/networkInterfaces/haproxyvm-nic-copyindex()"
+              }
+            ]
+          },
+          "diagnosticsProfile": {
+            "bootDiagnostics": {
+              "enabled": true,
+              "storageUri": "[concat(reference(resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName')), '2021-01-01').primaryEndpoints.blob)]"
+            }
+          }
+        }
+      },
+      {
+        "apiVersion": "2020-11-01",
+        "type": "Microsoft.Network/networkInterfaces",
+        "name": "appvm-nic-copyindex()",
+        "location": "[resourceGroup().location]",
+        "copy": {
+          "name": "appNicLoop",
+          "count": 2
+        },
+        "dependsOn": [
+          "Microsoft.Network/virtualNetworks//haproxyVNet"
+        ],
+        "properties": {
+          "ipConfigurations": [
+            {
+              "name": "ipconfig1",
+              "properties": {
+                "privateIPAllocationMethod": "Dynamic",
+                "subnet": {
+                  "id": "Microsoft.Network/virtualNetworks/subnets/haproxyVNet/Subnet-1"
+                }
+              }
+            }
+          ]
+        }
+      },
+      {
+        "apiVersion": "2020-12-01",
+        "type": "Microsoft.Compute/virtualMachines",
+        "name": "appvm-copyindex()",
+        "copy": {
+          "name": "appVMLoop",
+          "count": 2
+        },
+        "location": "[resourceGroup().location]",
+        "dependsOn": [
+          "[resourceId('Microsoft.Storage/storageAccounts/', variables('storageAccountName'))]",
+          "[resourceId('Microsoft.Network/networkInterfaces/', concat(parameters('appVMNamePrefix'), variables('nicNamePrefix'), copyindex()))]",
+          "[resourceId('Microsoft.Compute/availabilitySets/', variables('appAvailabilitySetName'))]"
+        ],
+        "properties": {
+          "availabilitySet": {
+            "id": "Microsoft.Compute/availabilitySets/appAvSet"
+          },
+          "hardwareProfile": {
+            "vmSize": "Standard_D2_v3"
+          },
+          "osProfile": {
+            "computerName": "appvm-copyIndex()",
+            "adminUsername": "GEN-UNIQUE",
+            "linuxConfiguration": {
+              "disablePasswordAuthentication": true,
+              "ssh": {
+                "publicKeys": [
+                  {
+                    "path": "/home/GEN-UNIQUE/.ssh/authorized_keys",
+                    "keyData": "GEN-SSH-PUB-KEY"
+                  }
+                ]
+              }
+            }
+          },
+          "storageProfile": {
+            "imageReference": {
+              "publisher": "Canonical",
+              "offer": "UbuntuServer",
+              "sku": "14.04.5-LTS",
+              "version": "latest"
+            },
+            "osDisk": {
+              "name": "appvm-OSDisk-copyindex()",
+              "caching": "ReadWrite",
+              "createOption": "FromImage",
+              "managedDisk": {
+                "storageAccountType": "StandardSSD_LRS"
+              }
+            }
+          },
+          "networkProfile": {
+            "networkInterfaces": [
+              {
+                "id": "Microsoft.Network/networkInterfaces/appvm-nic-copyindex()"
+              }
+            ]
+          },
+          "diagnosticsProfile": {
+            "bootDiagnostics": {
+              "enabled": true,
+              "storageUri": "[concat(reference(resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName')), '2021-01-01').primaryEndpoints.blob)]"
+            }
+          }
+        }
+      },
+      {
+        "apiVersion": "2020-12-01",
+        "type": "Microsoft.Compute/virtualMachines/extensions",
+        "name": "appvm-copyindex()/configureappvm",
+        "copy": {
+          "name": "appVMExtensionsLoop",
+          "count": 2
+        },
+        "location": "[resourceGroup().location]",
+        "dependsOn": [
+          "Microsoft.Compute/virtualMachines//appvm-copyindex()"
+        ],
+        "properties": {
+          "publisher": "Microsoft.Azure.Extensions",
+          "type": "CustomScript",
+          "typeHandlerVersion": "2.0",
+          "autoUpgradeMinorVersion": true,
+          "settings": {
+            "fileUris": "(appVMScripts).fileUris"
+          },
+          "protectedSettings": {
+            "commandToExecute": "(appVMScripts).commandToExecute"
+          }
+        }
+      },
+      {
+        "apiVersion": "2020-12-01",
+        "type": "Microsoft.Compute/virtualMachines/extensions",
+        "name": "haproxyvm-copyindex()/configureHAproxyVM",
+        "copy": {
+          "name": "haproxyVMExtensionsLoop",
+          "count": 2
+        },
+        "location": "[resourceGroup().location]",
+        "dependsOn": [
+          "Microsoft.Compute/virtualMachines//haproxyvm-copyindex()",
+          "appVMExtensionsLoop"
+        ],
+        "properties": {
+          "publisher": "Microsoft.Azure.Extensions",
+          "type": "CustomScript",
+          "typeHandlerVersion": "2.0",
+          "autoUpgradeMinorVersion": true,
+          "settings": {
+            "fileUris": "(haproxyVMScripts).fileUris",
+            "commandToExecute": "(haproxyVMScripts).commandToExecute"
+          }
+        }
+      }
+    ],
+    "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+  }
+}

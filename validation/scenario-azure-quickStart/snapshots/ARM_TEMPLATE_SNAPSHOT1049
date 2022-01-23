@@ -1,0 +1,505 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAzureQuickStart",
+  "paths": [
+    "/quickstarts/microsoft.compute/multi-vmss-linux-lb-zones/azuredeploy.json",
+    "/quickstarts/microsoft.compute/multi-vmss-linux-lb-zones/azuredeploy.parameters.us.json"
+  ],
+  "timestamp": 1642962903951,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/quickstarts/microsoft.compute/multi-vmss-linux-lb-zones/azuredeploy.json",
+      "/quickstarts/microsoft.compute/multi-vmss-linux-lb-zones/azuredeploy.parameters.us.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT1049",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "microsoft.network/publicipaddresses",
+      "microsoft.network/virtualnetworks",
+      "microsoft.network/loadbalancers",
+      "microsoft.compute/virtualmachinescalesets",
+      "microsoft.network/networksecuritygroups"
+    ]
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT1049",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "location": {
+        "type": "string",
+        "metadata": {
+          "description": "Location for the VM, only certain regions support Availability Zones"
+        },
+        "value": "usgovvirginia"
+      },
+      "vmssSku": {
+        "type": "string",
+        "defaultValue": "Standard_A2_V2",
+        "metadata": {
+          "description": "Size of the scale set."
+        }
+      },
+      "adminUsername": {
+        "type": "string",
+        "metadata": {
+          "description": "Username for the Virtual Machine."
+        },
+        "value": "GEN-UNIQUE"
+      },
+      "dnsName": {
+        "type": "string",
+        "metadata": {
+          "description": "String used as a base for naming resources. Must be 3-61 characters in length and globally unique across Azure. A hash is prepended to this string for some resources and resource-specific information is appended."
+        },
+        "minLength": 3,
+        "maxLength": 61,
+        "value": "GEN-UNIQUE"
+      },
+      "numberOfVms": {
+        "type": "int",
+        "defaultValue": 2,
+        "metadata": {
+          "description": "The number of VMs to deploy in each VMSS."
+        }
+      },
+      "authenticationType": {
+        "type": "string",
+        "defaultValue": "sshPublicKey",
+        "allowedValues": [
+          "sshPublicKey",
+          "password"
+        ],
+        "metadata": {
+          "description": "Type of authentication to use on the Virtual Machine. SSH key is recommended."
+        }
+      },
+      "adminPasswordOrKey": {
+        "type": "securestring",
+        "metadata": {
+          "description": "SSH Key or password for the Virtual Machine. SSH key is recommended."
+        },
+        "value": "GEN-SSH-PUB-KEY"
+      }
+    },
+    "variables": {
+      "virtualNetworkName": "GEN-UNIQUE-vnet",
+      "subnetName": "Subnet1",
+      "networkSecurityGroupName": "allowRemoting",
+      "publicIPAddressName": "lbPublicIp",
+      "lbName": "lb-GEN-UNIQUE",
+      "lbBE": "lbBE",
+      "lbNAT": "lbNAT",
+      "myZones": [
+        "1",
+        "2"
+      ],
+      "linuxImage": {
+        "publisher": "Canonical",
+        "offer": "UbuntuServer",
+        "sku": "16.04.0-LTS",
+        "version": "latest"
+      },
+      "linuxConfiguration": {
+        "disablePasswordAuthentication": true,
+        "ssh": {
+          "publicKeys": [
+            {
+              "path": "/home/GEN-UNIQUE/.ssh/authorized_keys",
+              "keyData": "GEN-SSH-PUB-KEY"
+            }
+          ]
+        }
+      }
+    },
+    "resources": [
+      {
+        "type": "Microsoft.Network/virtualNetworks",
+        "apiVersion": "2020-11-01",
+        "name": "GEN-UNIQUE-vnet",
+        "location": "usgovvirginia",
+        "properties": {
+          "addressSpace": {
+            "addressPrefixes": [
+              "10.0.0.0/16"
+            ]
+          },
+          "subnets": [
+            {
+              "name": "Subnet1",
+              "properties": {
+                "addressPrefix": "10.0.0.0/24"
+              }
+            }
+          ]
+        }
+      },
+      {
+        "type": "Microsoft.Network/networkSecurityGroups",
+        "apiVersion": "2020-11-01",
+        "name": "allowRemoting",
+        "location": "usgovvirginia",
+        "properties": {
+          "securityRules": [
+            {
+              "name": "remoteConnection",
+              "properties": {
+                "description": "Allow SSH traffic",
+                "protocol": "Tcp",
+                "sourcePortRange": "*",
+                "destinationPortRange": "22",
+                "sourceAddressPrefix": "*",
+                "destinationAddressPrefix": "*",
+                "access": "Allow",
+                "priority": 101,
+                "direction": "Inbound"
+              }
+            },
+            {
+              "name": "webTraffic",
+              "properties": {
+                "description": "Allow web traffic",
+                "protocol": "Tcp",
+                "sourcePortRange": "80",
+                "destinationPortRange": "80",
+                "sourceAddressPrefix": "*",
+                "destinationAddressPrefix": "*",
+                "access": "Allow",
+                "priority": 100,
+                "direction": "Inbound"
+              }
+            }
+          ]
+        }
+      },
+      {
+        "type": "Microsoft.Network/publicIPAddresses",
+        "apiVersion": "2020-11-01",
+        "name": "lbPublicIp",
+        "location": "usgovvirginia",
+        "sku": {
+          "name": "Standard"
+        },
+        "properties": {
+          "publicIPAllocationMethod": "Static",
+          "dnsSettings": {
+            "domainNameLabel": "GEN-UNIQUE"
+          }
+        }
+      },
+      {
+        "type": "Microsoft.Network/loadBalancers",
+        "apiVersion": "2020-11-01",
+        "name": "lb-GEN-UNIQUE",
+        "location": "usgovvirginia",
+        "sku": {
+          "name": "Standard"
+        },
+        "dependsOn": [
+          "lbPublicIp"
+        ],
+        "properties": {
+          "frontendIPConfigurations": [
+            {
+              "name": "LoadBalancerFrontEnd",
+              "properties": {
+                "publicIPAddress": {
+                  "id": "Microsoft.Network/publicIPAddresses/lbPublicIp"
+                }
+              }
+            }
+          ],
+          "backendAddressPools": [
+            {
+              "name": "lbBE"
+            }
+          ],
+          "loadbalancingRules": [
+            {
+              "name": "lbrule1",
+              "properties": {
+                "frontendIPConfiguration": {
+                  "id": "Microsoft.Network/loadBalancers/frontendIpConfigurations/lb-GEN-UNIQUE/loadBalancerFrontEnd"
+                },
+                "backendaddressPool": {
+                  "id": "Microsoft.Network/loadBalancers/backendAddressPools/lb-GEN-UNIQUE/lbBE"
+                },
+                "protocol": "Tcp",
+                "frontendPort": 80,
+                "backendPort": 80,
+                "probe": {
+                  "id": "Microsoft.Network/loadBalancers/probes/lb-GEN-UNIQUE/tcpProbe"
+                }
+              }
+            }
+          ],
+          "probes": [
+            {
+              "name": "tcpProbe",
+              "properties": {
+                "protocol": "Tcp",
+                "port": 80,
+                "intervalInSeconds": 5,
+                "numberOfProbes": 2
+              }
+            }
+          ],
+          "inboundNatPools": [
+            {
+              "name": "lbNAT1",
+              "properties": {
+                "frontendIPConfiguration": {
+                  "id": "Microsoft.Network/loadBalancers/frontendIpConfigurations/lb-GEN-UNIQUE/loadBalancerFrontEnd"
+                },
+                "protocol": "Tcp",
+                "frontendPortRangeStart": 50100,
+                "frontendPortRangeEnd": 50199,
+                "backendPort": 22
+              }
+            },
+            {
+              "name": "lbNAT2",
+              "properties": {
+                "frontendIPConfiguration": {
+                  "id": "Microsoft.Network/loadBalancers/frontendIpConfigurations/lb-GEN-UNIQUE/loadBalancerFrontEnd"
+                },
+                "protocol": "Tcp",
+                "frontendPortRangeStart": 50200,
+                "frontendPortRangeEnd": 50299,
+                "backendPort": 22
+              }
+            },
+            {
+              "name": "lbNAT3",
+              "properties": {
+                "frontendIPConfiguration": {
+                  "id": "Microsoft.Network/loadBalancers/frontendIpConfigurations/lb-GEN-UNIQUE/loadBalancerFrontEnd"
+                },
+                "protocol": "Tcp",
+                "frontendPortRangeStart": 50300,
+                "frontendPortRangeEnd": 50399,
+                "backendPort": 22
+              }
+            }
+          ]
+        }
+      },
+      {
+        "type": "Microsoft.Compute/virtualMachineScaleSets",
+        "apiVersion": "2020-12-01",
+        "name": "[concat('myScaleset','-zone', variables('myZones')[copyindex()])]",
+        "location": "usgovvirginia",
+        "zones": [
+          "(myZones)[copyindex()]"
+        ],
+        "dependsOn": [
+          "GEN-UNIQUE-vnet",
+          "lb-GEN-UNIQUE",
+          "allowRemoting"
+        ],
+        "sku": {
+          "name": "Standard_A2_V2",
+          "capacity": 2
+        },
+        "properties": {
+          "singlePlacementGroup": true,
+          "upgradePolicy": {
+            "mode": "Manual"
+          },
+          "virtualMachineProfile": {
+            "storageProfile": {
+              "osDisk": {
+                "createOption": "FromImage"
+              },
+              "imageReference": {
+                "publisher": "Canonical",
+                "offer": "UbuntuServer",
+                "sku": "16.04.0-LTS",
+                "version": "latest"
+              },
+              "dataDisks": [
+                {
+                  "lun": 1,
+                  "createOption": "Empty",
+                  "diskSizeGB": 50
+                }
+              ]
+            },
+            "osProfile": {
+              "computerNamePrefix": "vm",
+              "adminUsername": "GEN-UNIQUE",
+              "adminPassword": "GEN-SSH-PUB-KEY",
+              "customData": "[base64(variables('myZones')[copyindex()])]",
+              "linuxConfiguration": "[if(equals(parameters('authenticationType'), 'password'), json('null'), variables('linuxConfiguration'))]"
+            },
+            "networkProfile": {
+              "networkInterfaceConfigurations": [
+                {
+                  "name": "myNic",
+                  "properties": {
+                    "networkSecurityGroup": {
+                      "id": "Microsoft.Network/networkSecurityGroups/allowRemoting"
+                    },
+                    "primary": true,
+                    "ipConfigurations": [
+                      {
+                        "name": "myIpConfig",
+                        "properties": {
+                          "subnet": {
+                            "id": "Microsoft.Network/virtualNetworks/subnets/GEN-UNIQUE-vnet/Subnet1"
+                          },
+                          "loadBalancerBackendAddressPools": [
+                            {
+                              "id": "Microsoft.Network/loadBalancers/backendAddressPools/lb-GEN-UNIQUE/lbBE"
+                            }
+                          ],
+                          "loadBalancerInboundNatPools": [
+                            {
+                              "id": "[resourceId('Microsoft.Network/loadBalancers/inboundNatPools', variables('lbName'), concat(variables('lbNAT'), copyindex(1)))]"
+                            }
+                          ]
+                        }
+                      }
+                    ]
+                  }
+                }
+              ]
+            },
+            "extensionProfile": {
+              "extensions": [
+                {
+                  "name": "AppInstall",
+                  "properties": {
+                    "publisher": "Microsoft.Azure.Extensions",
+                    "type": "CustomScript",
+                    "typeHandlerVersion": "2.0",
+                    "autoUpgradeMinorVersion": true,
+                    "settings": {
+                      "fileUris": [
+                        "https://raw.githubusercontent.com/Azure-Samples/compute-automation-configurations/master/automate_nginx.sh"
+                      ],
+                      "commandToExecute": "bash automate_nginx.sh"
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        }
+      },
+      {
+        "type": "Microsoft.Compute/virtualMachineScaleSets",
+        "apiVersion": "2020-12-01",
+        "name": "[concat('myScaleset','-zone', variables('myZones')[copyindex()])]",
+        "location": "usgovvirginia",
+        "zones": [
+          "(myZones)[copyindex()]"
+        ],
+        "dependsOn": [
+          "GEN-UNIQUE-vnet",
+          "lb-GEN-UNIQUE",
+          "allowRemoting"
+        ],
+        "sku": {
+          "name": "Standard_A2_V2",
+          "capacity": 2
+        },
+        "properties": {
+          "singlePlacementGroup": true,
+          "upgradePolicy": {
+            "mode": "Manual"
+          },
+          "virtualMachineProfile": {
+            "storageProfile": {
+              "osDisk": {
+                "createOption": "FromImage"
+              },
+              "imageReference": {
+                "publisher": "Canonical",
+                "offer": "UbuntuServer",
+                "sku": "16.04.0-LTS",
+                "version": "latest"
+              },
+              "dataDisks": [
+                {
+                  "lun": 1,
+                  "createOption": "Empty",
+                  "diskSizeGB": 50
+                }
+              ]
+            },
+            "osProfile": {
+              "computerNamePrefix": "vm",
+              "adminUsername": "GEN-UNIQUE",
+              "adminPassword": "GEN-SSH-PUB-KEY",
+              "customData": "[base64(variables('myZones')[copyindex()])]",
+              "linuxConfiguration": "[if(equals(parameters('authenticationType'), 'password'), json('null'), variables('linuxConfiguration'))]"
+            },
+            "networkProfile": {
+              "networkInterfaceConfigurations": [
+                {
+                  "name": "myNic",
+                  "properties": {
+                    "networkSecurityGroup": {
+                      "id": "Microsoft.Network/networkSecurityGroups/allowRemoting"
+                    },
+                    "primary": true,
+                    "ipConfigurations": [
+                      {
+                        "name": "myIpConfig",
+                        "properties": {
+                          "subnet": {
+                            "id": "Microsoft.Network/virtualNetworks/subnets/GEN-UNIQUE-vnet/Subnet1"
+                          },
+                          "loadBalancerBackendAddressPools": [
+                            {
+                              "id": "Microsoft.Network/loadBalancers/backendAddressPools/lb-GEN-UNIQUE/lbBE"
+                            }
+                          ],
+                          "loadBalancerInboundNatPools": [
+                            {
+                              "id": "[resourceId('Microsoft.Network/loadBalancers/inboundNatPools', variables('lbName'), concat(variables('lbNAT'), copyindex(1)))]"
+                            }
+                          ]
+                        }
+                      }
+                    ]
+                  }
+                }
+              ]
+            },
+            "extensionProfile": {
+              "extensions": [
+                {
+                  "name": "AppInstall",
+                  "properties": {
+                    "publisher": "Microsoft.Azure.Extensions",
+                    "type": "CustomScript",
+                    "typeHandlerVersion": "2.0",
+                    "autoUpgradeMinorVersion": true,
+                    "settings": {
+                      "fileUris": [
+                        "https://raw.githubusercontent.com/Azure-Samples/compute-automation-configurations/master/automate_nginx.sh"
+                      ],
+                      "commandToExecute": "bash automate_nginx.sh"
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        }
+      }
+    ],
+    "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+  }
+}

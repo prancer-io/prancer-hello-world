@@ -1,0 +1,107 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAzureQuickStart",
+  "paths": [
+    "/application-workloads/sas/sas9.4-viya/sas9.4-viya/nestedtemplates/access_policy.json"
+  ],
+  "timestamp": 1642962896108,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/application-workloads/sas/sas9.4-viya/sas9.4-viya/nestedtemplates/access_policy.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT505",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "microsoft.keyvault/vaults/accesspolicies"
+    ]
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT505",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "keyVaultName": {
+        "type": "string",
+        "metadata": {
+          "description": "Specifies the name of the key vault."
+        }
+      },
+      "tenantId": {
+        "type": "string",
+        "defaultValue": "[subscription().tenantId]",
+        "metadata": {
+          "description": "Specifies the Azure Active Directory tenant ID that should be used for authenticating requests to the key vault. Get it by using Get-AzSubscription cmdlet."
+        }
+      },
+      "objectId": {
+        "type": "string",
+        "metadata": {
+          "description": "Specifies the object ID of a user, service principal or security group in the Azure Active Directory tenant for the vault. The object ID must be unique for the list of access policies. Get it by using Get-AzADUser or Get-AzADServicePrincipal cmdlets."
+        }
+      },
+      "secretsPermissions": {
+        "type": "array",
+        "defaultValue": [
+          "list"
+        ],
+        "metadata": {
+          "description": "Specifies the permissions to secrets in the vault. Valid values are: all, get, list, set, delete, backup, restore, recover, and purge."
+        }
+      },
+      "keysPermissions": {
+        "type": "array",
+        "defaultValue": [
+          "list"
+        ],
+        "metadata": {
+          "description": "Specifies the permissions to keys in the vault."
+        }
+      },
+      "certificatesPermissions": {
+        "type": "array",
+        "defaultValue": [
+          "list"
+        ],
+        "metadata": {
+          "description": "Specifies the permissions to keys in the vault."
+        }
+      }
+    },
+    "resources": [
+      {
+        "type": "Microsoft.KeyVault/vaults/accessPolicies",
+        "name": "keyVaultName/add",
+        "apiVersion": "2019-09-01",
+        "properties": {
+          "accessPolicies": [
+            {
+              "tenantId": "[subscription().tenantId]",
+              "objectId": "objectId",
+              "permissions": {
+                "secrets": [
+                  "list"
+                ],
+                "keys": [
+                  "list"
+                ],
+                "certificates": [
+                  "list"
+                ]
+              }
+            }
+          ]
+        }
+      }
+    ],
+    "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+  }
+}

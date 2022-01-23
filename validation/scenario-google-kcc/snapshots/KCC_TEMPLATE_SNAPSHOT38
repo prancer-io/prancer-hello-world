@@ -2,12 +2,12 @@
   "structure": "filesystem",
   "error": null,
   "reference": "master",
-  "contentType": "yaml",
+  "contentType": "json",
   "source": "gitConnectorGoogleKcc",
   "paths": [
-    "/samples/resources/bigtablegcpolicy/bigtable_v1beta1_bigtablegcpolicy.yaml"
+    "/samples/resources/bigtableappprofile/single-cluster-bigtable-app-profile/bigtable_v1beta1_bigtableinstance.yaml"
   ],
-  "timestamp": 1628765139057,
+  "timestamp": 1642973301845,
   "queryuser": null,
   "checksum": "99914b932bd37a50b983c5e7c90ae93b",
   "node": {
@@ -15,37 +15,36 @@
     "type": "kcc",
     "collection": "kcctemplate",
     "paths": [
-      "/samples/resources/bigtablegcpolicy/bigtable_v1beta1_bigtablegcpolicy.yaml"
+      "/samples/resources/bigtableappprofile/single-cluster-bigtable-app-profile/bigtable_v1beta1_bigtableinstance.yaml"
     ],
     "snapshotId": "KCC_TEMPLATE_SNAPSHOT38",
     "status": "active",
-    "validate": true
+    "validate": true,
+    "resourceTypes": [
+      "bigtableinstance"
+    ]
   },
   "snapshotId": "KCC_TEMPLATE_SNAPSHOT38",
   "collection": "kcctemplate",
   "json": {
     "apiVersion": "bigtable.cnrm.cloud.google.com/v1beta1",
-    "kind": "BigtableGCPolicy",
+    "kind": "BigtableInstance",
     "metadata": {
-      "name": "bigtablegcpolicy-sample"
+      "name": "bigtableappprofile-dep-single"
     },
     "spec": {
-      "tableRef": {
-        "name": "bigtablegcpolicy-dep"
-      },
-      "columnFamily": "family1",
-      "instanceRef": {
-        "name": "bigtablegcpolicy-dep"
-      },
-      "mode": "INTERSECTION",
-      "maxAge": [
+      "displayName": "BigtableSample",
+      "instanceType": "PRODUCTION",
+      "cluster": [
         {
-          "duration": "24h"
-        }
-      ],
-      "maxVersion": [
+          "clusterId": "bigtableappprofile-dep1-single",
+          "zone": "us-central1-a",
+          "numNodes": 3
+        },
         {
-          "number": 10
+          "clusterId": "bigtableappprofile-dep2-single",
+          "zone": "us-west1-a",
+          "numNodes": 3
         }
       ]
     }

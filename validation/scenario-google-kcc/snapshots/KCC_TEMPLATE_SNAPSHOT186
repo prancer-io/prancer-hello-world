@@ -2,12 +2,12 @@
   "structure": "filesystem",
   "error": null,
   "reference": "master",
-  "contentType": "yaml",
+  "contentType": "json",
   "source": "gitConnectorGoogleKcc",
   "paths": [
-    "/samples/resources/computeprojectmetadata/compute_v1beta1_computeprojectmetadata.yaml"
+    "/samples/resources/computeinstancegroupmanager/zonal-compute-instance-group-manager/compute_v1beta1_computeinstancegroupmanager.yaml"
   ],
-  "timestamp": 1628765142187,
+  "timestamp": 1642973302890,
   "queryuser": null,
   "checksum": "99914b932bd37a50b983c5e7c90ae93b",
   "node": {
@@ -15,24 +15,49 @@
     "type": "kcc",
     "collection": "kcctemplate",
     "paths": [
-      "/samples/resources/computeprojectmetadata/compute_v1beta1_computeprojectmetadata.yaml"
+      "/samples/resources/computeinstancegroupmanager/zonal-compute-instance-group-manager/compute_v1beta1_computeinstancegroupmanager.yaml"
     ],
     "snapshotId": "KCC_TEMPLATE_SNAPSHOT186",
     "status": "active",
-    "validate": true
+    "validate": true,
+    "resourceTypes": [
+      "computeinstancegroupmanager"
+    ]
   },
   "snapshotId": "KCC_TEMPLATE_SNAPSHOT186",
   "collection": "kcctemplate",
   "json": {
     "apiVersion": "compute.cnrm.cloud.google.com/v1beta1",
-    "kind": "ComputeProjectMetadata",
+    "kind": "ComputeInstanceGroupManager",
     "metadata": {
-      "name": "computeprojectmetadata-sample"
+      "name": "computeinstancegroupmanager-sample-zonal"
     },
     "spec": {
-      "metadata": {
-        "baz": "bat",
-        "foo": "bar"
+      "projectRef": {
+        "external": "projects/${PROJECT_ID?}"
+      },
+      "location": "us-central1-a",
+      "baseInstanceName": "app",
+      "autoHealingPolicies": [
+        {
+          "healthCheckRef": {
+            "name": "computeinstancegroupmanager-dep-zonal"
+          },
+          "initialDelaySec": 300
+        }
+      ],
+      "targetSize": 3,
+      "instanceTemplateRef": {
+        "name": "computeinstancegroupmanager-dep-zonal"
+      },
+      "updatePolicy": {
+        "minimalAction": "RESTART",
+        "maxSurge": {
+          "fixed": 3
+        },
+        "maxUnavailable": {
+          "fixed": 3
+        }
       }
     }
   }

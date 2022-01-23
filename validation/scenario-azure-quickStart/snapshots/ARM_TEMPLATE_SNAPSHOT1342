@@ -1,0 +1,520 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAzureQuickStart",
+  "paths": [
+    "/quickstarts/microsoft.hdinsight/hdinsight-hbase-replication-geo/azuredeploy.json",
+    "/quickstarts/microsoft.hdinsight/hdinsight-hbase-replication-geo/azuredeploy.parameters.json"
+  ],
+  "timestamp": 1642962906996,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/quickstarts/microsoft.hdinsight/hdinsight-hbase-replication-geo/azuredeploy.json",
+      "/quickstarts/microsoft.hdinsight/hdinsight-hbase-replication-geo/azuredeploy.parameters.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT1342",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "microsoft.network/publicipaddresses",
+      "microsoft.network/virtualnetworks",
+      "microsoft.network/networkinterfaces",
+      "microsoft.network/virtualnetworkgateways",
+      "microsoft.network/connections",
+      "microsoft.network/networksecuritygroups",
+      "microsoft.compute/virtualmachines"
+    ]
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT1342",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "clusterNamePrefix": {
+        "type": "string",
+        "metadata": {
+          "description": "The prefix of the HDInsight cluster name."
+        },
+        "value": "GEN-UNIQUE-5"
+      },
+      "sshUserName": {
+        "type": "string",
+        "metadata": {
+          "description": "These credentials can be used to remotely access the cluster."
+        },
+        "value": "GEN-UNIQUE"
+      },
+      "Vnet1Region": {
+        "type": "string",
+        "metadata": {
+          "description": "Region for the first vNet."
+        },
+        "value": "westus"
+      },
+      "Vnet2Region": {
+        "type": "string",
+        "metadata": {
+          "description": "Region for the second vNet. This should be in another Azure region from the first vNet."
+        },
+        "value": "eastus"
+      },
+      "authenticationType": {
+        "type": "string",
+        "defaultValue": "sshPublicKey",
+        "allowedValues": [
+          "sshPublicKey",
+          "password"
+        ],
+        "metadata": {
+          "description": "Type of authentication to use on the Virtual Machine. SSH key is recommended."
+        }
+      },
+      "adminPasswordOrKey": {
+        "type": "securestring",
+        "metadata": {
+          "description": "SSH Key or password for the Virtual Machine. SSH key is recommended."
+        },
+        "value": "GEN-SSH-PUB-KEY"
+      },
+      "UnbuntuNodeVirtualMachineSize": {
+        "type": "string",
+        "defaultValue": "Standard_D4_v3",
+        "metadata": {
+          "description": "This is the Unbuntu DNS node Azure Virtual Machine size, and will affect the cost. If you don't know, just leave the default value."
+        }
+      }
+    },
+    "variables": {
+      "Ubuntu": {
+        "publisher": "Canonical",
+        "offer": "UbuntuServer",
+        "sku": "16.04.0-LTS",
+        "version": "latest"
+      },
+      "vNet1": {
+        "name": "GEN-UNIQUE-5-vnet1",
+        "location": "westus",
+        "addressSpacePrefix": "10.1.0.0/16",
+        "subnetName": "subnet1",
+        "subnetPrefix": "10.1.0.0/24",
+        "gatewaySubnetName": "GatewaySubnet",
+        "gatewaySubnetPrefix": "10.1.255.0/27",
+        "vpnGatewayName": "vnet1gw",
+        "vpnGatewayIP": "vnet1gwip",
+        "dnsName": "vnet1DNS",
+        "dnsNICName": "vnet1DNSNIC",
+        "dnsIPName": "vnet1DNSPublicIP",
+        "dnsIPAddress": "10.1.0.4"
+      },
+      "vNet2": {
+        "name": "GEN-UNIQUE-5-vnet2",
+        "location": "eastus",
+        "addressSpacePrefix": "10.2.0.0/16",
+        "subnetName": "subnet1",
+        "subnetPrefix": "10.2.0.0/24",
+        "gatewaySubnetName": "GatewaySubnet",
+        "gatewaySubnetPrefix": "10.2.255.0/27",
+        "vpnGatewayName": "vnet2gw",
+        "vpnGatewayIP": "vnet2gwip",
+        "dnsName": "vnet2DNS",
+        "dnsNICName": "vnet2DNSNIC",
+        "dnsIPName": "vnet2DNSPublicIP",
+        "dnsIPAddress": "10.2.0.4"
+      },
+      "vpnConnections": {
+        "name1": "vnet1tovnet2",
+        "name2": "vnet2tovnet1",
+        "sharedKey": "A1b2C3D4"
+      },
+      "linuxConfiguration": {
+        "disablePasswordAuthentication": true,
+        "ssh": {
+          "publicKeys": [
+            {
+              "path": "/home/GEN-UNIQUE/.ssh/authorized_keys",
+              "keyData": "GEN-SSH-PUB-KEY"
+            }
+          ]
+        }
+      },
+      "networkSecurityGroupName": "vNet1-subnet1-nsg",
+      "networkSecurityGroupName2": "vNet2-subnet1-nsg"
+    },
+    "resources": [
+      {
+        "comments": "Simple Network Security Group for subnet [variables('vNet1').subnetName]",
+        "type": "Microsoft.Network/networkSecurityGroups",
+        "apiVersion": "2020-04-01",
+        "name": "vNet1-subnet1-nsg",
+        "location": "(vNet1).location",
+        "properties": {}
+      },
+      {
+        "comments": "Simple Network Security Group for subnet [variables('vNet2').subnetName]",
+        "type": "Microsoft.Network/networkSecurityGroups",
+        "apiVersion": "2020-04-01",
+        "name": "vNet2-subnet1-nsg",
+        "location": "(vNet2).location",
+        "properties": {}
+      },
+      {
+        "type": "Microsoft.Network/virtualNetworks",
+        "name": "(vNet1).name",
+        "apiVersion": "2020-04-01",
+        "location": "(vNet1).location",
+        "dependsOn": [
+          "Microsoft.Network/networkSecurityGroups/vNet1-subnet1-nsg"
+        ],
+        "properties": {
+          "addressSpace": {
+            "addressPrefixes": [
+              "(vNet1).addressSpacePrefix"
+            ]
+          },
+          "dhcpOptions": {
+            "dnsServers": [
+              "(vNet1).dnsIPAddress"
+            ]
+          },
+          "subnets": [
+            {
+              "name": "(vNet1).subnetName",
+              "properties": {
+                "addressPrefix": "(vNet1).subnetPrefix",
+                "networkSecurityGroup": {
+                  "id": "Microsoft.Network/networkSecurityGroups/vNet1-subnet1-nsg"
+                }
+              }
+            },
+            {
+              "name": "(vNet1).gatewaySubnetName",
+              "properties": {
+                "addressPrefix": "(vNet1).gatewaySubnetPrefix"
+              }
+            }
+          ]
+        }
+      },
+      {
+        "type": "Microsoft.Network/publicIPAddresses",
+        "name": "(vNet1).vpnGatewayIP",
+        "location": "(vNet1).location",
+        "apiVersion": "2020-04-01",
+        "properties": {
+          "publicIPAllocationMethod": "Dynamic"
+        }
+      },
+      {
+        "type": "Microsoft.Network/virtualNetworkGateways",
+        "name": "(vNet1).vpnGatewayName",
+        "location": "(vNet1).location",
+        "dependsOn": [
+          "Microsoft.Network/publicIPAddresses/(vNet1).vpnGatewayIP",
+          "Microsoft.Network/virtualNetworks/(vNet1).name"
+        ],
+        "apiVersion": "2020-04-01",
+        "properties": {
+          "gatewayType": "Vpn",
+          "vpnType": "RouteBased",
+          "sku": {
+            "name": "Basic",
+            "tier": "Basic"
+          },
+          "ipConfigurations": [
+            {
+              "name": "default",
+              "properties": {
+                "privateIPAllocationMethod": "Dynamic",
+                "subnet": {
+                  "id": "Microsoft.Network/virtualNetworks/subnets/(vNet1).name/(vNet1).gatewaySubnetName"
+                },
+                "publicIpAddress": {
+                  "id": "Microsoft.Network/publicIPAddresses/(vNet1).vpnGatewayIP"
+                }
+              }
+            }
+          ]
+        }
+      },
+      {
+        "type": "Microsoft.Network/virtualNetworks",
+        "name": "(vNet2).name",
+        "apiVersion": "2020-04-01",
+        "location": "(vNet2).location",
+        "dependsOn": [
+          "Microsoft.Network/networkSecurityGroups/vNet2-subnet1-nsg"
+        ],
+        "properties": {
+          "addressSpace": {
+            "addressPrefixes": [
+              "(vNet2).addressSpacePrefix"
+            ]
+          },
+          "dhcpOptions": {
+            "dnsServers": [
+              "(vNet2).dnsIPAddress"
+            ]
+          },
+          "subnets": [
+            {
+              "name": "(vNet2).subnetName",
+              "properties": {
+                "addressPrefix": "(vNet2).subnetPrefix",
+                "networkSecurityGroup": {
+                  "id": "Microsoft.Network/networkSecurityGroups/vNet2-subnet1-nsg"
+                }
+              }
+            },
+            {
+              "name": "(vNet2).gatewaySubnetName",
+              "properties": {
+                "addressPrefix": "(vNet2).gatewaySubnetPrefix"
+              }
+            }
+          ]
+        }
+      },
+      {
+        "type": "Microsoft.Network/publicIPAddresses",
+        "name": "(vNet2).vpnGatewayIP",
+        "location": "(vNet2).location",
+        "apiVersion": "2020-04-01",
+        "properties": {
+          "publicIPAllocationMethod": "Dynamic"
+        }
+      },
+      {
+        "type": "Microsoft.Network/virtualNetworkGateways",
+        "name": "(vNet2).vpnGatewayName",
+        "location": "(vNet2).location",
+        "dependsOn": [
+          "Microsoft.Network/publicIPAddresses/(vNet2).vpnGatewayIP",
+          "Microsoft.Network/virtualNetworks/(vNet2).name"
+        ],
+        "apiVersion": "2020-04-01",
+        "properties": {
+          "gatewayType": "Vpn",
+          "vpnType": "RouteBased",
+          "sku": {
+            "name": "Basic",
+            "tier": "Basic"
+          },
+          "ipConfigurations": [
+            {
+              "name": "default",
+              "properties": {
+                "privateIPAllocationMethod": "Dynamic",
+                "subnet": {
+                  "id": "Microsoft.Network/virtualNetworks/subnets/(vNet2).name/(vNet2).gatewaySubnetName"
+                },
+                "publicIpAddress": {
+                  "id": "Microsoft.Network/publicIPAddresses/(vNet2).vpnGatewayIP"
+                }
+              }
+            }
+          ]
+        }
+      },
+      {
+        "type": "Microsoft.Network/connections",
+        "name": "(vpnConnections).name1",
+        "apiVersion": "2020-04-01",
+        "location": "(vNet1).location",
+        "dependsOn": [
+          "Microsoft.Network/virtualNetworkGateways/(vNet1).vpnGatewayName",
+          "Microsoft.Network/virtualNetworkGateways/(vNet2).vpnGatewayName"
+        ],
+        "properties": {
+          "connectionType": "Vnet2Vnet",
+          "virtualNetworkGateway1": {
+            "id": "Microsoft.Network/virtualNetworkGateways/(vNet1).vpnGatewayName"
+          },
+          "virtualNetworkGateway2": {
+            "id": "Microsoft.Network/virtualNetworkGateways/(vNet2).vpnGatewayName"
+          },
+          "sharedKey": "(vpnConnections).sharedKey",
+          "routingWeight": 0,
+          "enableBgp": false,
+          "usePolicyBasedTrafficSelectors": false
+        }
+      },
+      {
+        "type": "Microsoft.Network/connections",
+        "name": "(vpnConnections).name2",
+        "apiVersion": "2020-04-01",
+        "location": "(vNet2).location",
+        "dependsOn": [
+          "Microsoft.Network/virtualNetworkGateways/(vNet2).vpnGatewayName",
+          "Microsoft.Network/virtualNetworkGateways/(vNet1).vpnGatewayName"
+        ],
+        "properties": {
+          "connectionType": "Vnet2Vnet",
+          "virtualNetworkGateway1": {
+            "id": "Microsoft.Network/virtualNetworkGateways/(vNet2).vpnGatewayName"
+          },
+          "virtualNetworkGateway2": {
+            "id": "Microsoft.Network/virtualNetworkGateways/(vNet1).vpnGatewayName"
+          },
+          "sharedKey": "(vpnConnections).sharedKey",
+          "routingWeight": 0,
+          "enableBgp": false,
+          "usePolicyBasedTrafficSelectors": false
+        }
+      },
+      {
+        "type": "Microsoft.Network/publicIPAddresses",
+        "name": "(vNet1).dnsIPName",
+        "location": "(vNet1).location",
+        "apiVersion": "2020-04-01",
+        "properties": {
+          "publicIPAllocationMethod": "Dynamic"
+        }
+      },
+      {
+        "type": "Microsoft.Network/networkInterfaces",
+        "name": "(vNet1).dnsNICName",
+        "apiVersion": "2020-04-01",
+        "location": "(vNet1).location",
+        "dependsOn": [
+          "Microsoft.Network/virtualNetworks/(vNet1).name",
+          "Microsoft.Network/publicIPAddresses/(vNet1).dnsIPName"
+        ],
+        "properties": {
+          "ipConfigurations": [
+            {
+              "name": "ipconfig1",
+              "properties": {
+                "privateIPAllocationMethod": "Dynamic",
+                "publicIPAddress": {
+                  "id": "Microsoft.Network/publicIPAddresses/(vNet1).dnsIPName"
+                },
+                "subnet": {
+                  "id": "Microsoft.Network/virtualNetworks/subnets/(vNet1).name/(vNet1).subnetName"
+                }
+              }
+            }
+          ]
+        }
+      },
+      {
+        "type": "Microsoft.Compute/virtualMachines",
+        "name": "(vNet1).dnsName",
+        "apiVersion": "2019-12-01",
+        "location": "(vNet1).location",
+        "dependsOn": [
+          "Microsoft.Network/networkInterfaces/(vNet1).dnsNICName"
+        ],
+        "properties": {
+          "hardwareProfile": {
+            "vmSize": "Standard_D4_v3"
+          },
+          "osProfile": {
+            "computerName": "(vNet1).dnsName",
+            "adminUsername": "GEN-UNIQUE",
+            "adminPassword": "GEN-SSH-PUB-KEY",
+            "linuxConfiguration": "[if(equals(parameters('authenticationType'), 'password'), json('null'), variables('linuxConfiguration'))]"
+          },
+          "storageProfile": {
+            "imageReference": "ubuntu",
+            "osDisk": {
+              "createOption": "FromImage"
+            }
+          },
+          "networkProfile": {
+            "networkInterfaces": [
+              {
+                "id": "Microsoft.Network/networkInterfaces/(vNet1).dnsNICName"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "type": "Microsoft.Network/publicIPAddresses",
+        "name": "(vNet2).dnsIPName",
+        "location": "(vNet2).location",
+        "apiVersion": "2020-04-01",
+        "properties": {
+          "publicIPAllocationMethod": "Dynamic"
+        }
+      },
+      {
+        "type": "Microsoft.Network/networkInterfaces",
+        "name": "(vNet2).dnsNICName",
+        "apiVersion": "2020-04-01",
+        "location": "(vNet2).location",
+        "dependsOn": [
+          "Microsoft.Network/virtualNetworks/(vNet2).name",
+          "Microsoft.Network/publicIPAddresses/(vNet2).dnsIPName"
+        ],
+        "properties": {
+          "ipConfigurations": [
+            {
+              "name": "ipconfig1",
+              "properties": {
+                "privateIPAllocationMethod": "Dynamic",
+                "publicIPAddress": {
+                  "id": "Microsoft.Network/publicIPAddresses/(vNet2).dnsIPName"
+                },
+                "subnet": {
+                  "id": "Microsoft.Network/virtualNetworks/subnets/(vNet2).name/(vNet2).subnetName"
+                }
+              }
+            }
+          ]
+        }
+      },
+      {
+        "type": "Microsoft.Compute/virtualMachines",
+        "name": "(vNet2).dnsName",
+        "apiVersion": "2019-12-01",
+        "location": "(vNet2).location",
+        "dependsOn": [
+          "Microsoft.Network/networkInterfaces/(vNet2).dnsNICName"
+        ],
+        "properties": {
+          "hardwareProfile": {
+            "vmSize": "Standard_D4_v3"
+          },
+          "osProfile": {
+            "computerName": "(vNet2).dnsName",
+            "adminUsername": "GEN-UNIQUE",
+            "adminPassword": "GEN-SSH-PUB-KEY",
+            "linuxConfiguration": "[if(equals(parameters('authenticationType'), 'password'), json('null'), variables('linuxConfiguration'))]"
+          },
+          "storageProfile": {
+            "imageReference": "ubuntu",
+            "osDisk": {
+              "createOption": "FromImage"
+            }
+          },
+          "networkProfile": {
+            "networkInterfaces": [
+              {
+                "id": "Microsoft.Network/networkInterfaces/(vNet2).dnsNICName"
+              }
+            ]
+          }
+        }
+      }
+    ],
+    "outputs": {
+      "vnet1": {
+        "type": "object",
+        "value": "[reference(resourceId('Microsoft.Network/virtualNetworks',variables('vNet1').name))]"
+      },
+      "vnet2": {
+        "type": "object",
+        "value": "[reference(resourceId('Microsoft.Network/virtualNetworks',variables('vNet2').name))]"
+      }
+    },
+    "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+  }
+}

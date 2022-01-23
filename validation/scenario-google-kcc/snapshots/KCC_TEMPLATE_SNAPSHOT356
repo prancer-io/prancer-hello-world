@@ -2,12 +2,12 @@
   "structure": "filesystem",
   "error": null,
   "reference": "master",
-  "contentType": "yaml",
+  "contentType": "json",
   "source": "gitConnectorGoogleKcc",
   "paths": [
-    "/samples/resources/gameservicesrealm/gameservices_v1beta1_gameservicesrealm.yaml"
+    "/samples/resources/dataflowflextemplatejob/streaming-dataflow-flex-template-job/dataflow_v1beta1_dataflowflextemplatejob.yaml"
   ],
-  "timestamp": 1628765146560,
+  "timestamp": 1642973303841,
   "queryuser": null,
   "checksum": "99914b932bd37a50b983c5e7c90ae93b",
   "node": {
@@ -15,26 +15,36 @@
     "type": "kcc",
     "collection": "kcctemplate",
     "paths": [
-      "/samples/resources/gameservicesrealm/gameservices_v1beta1_gameservicesrealm.yaml"
+      "/samples/resources/dataflowflextemplatejob/streaming-dataflow-flex-template-job/dataflow_v1beta1_dataflowflextemplatejob.yaml"
     ],
     "snapshotId": "KCC_TEMPLATE_SNAPSHOT356",
     "status": "active",
-    "validate": true
+    "validate": true,
+    "resourceTypes": [
+      "dataflowflextemplatejob"
+    ]
   },
   "snapshotId": "KCC_TEMPLATE_SNAPSHOT356",
   "collection": "kcctemplate",
   "json": {
-    "apiVersion": "gameservices.cnrm.cloud.google.com/v1beta1",
-    "kind": "GameServicesRealm",
+    "apiVersion": "dataflow.cnrm.cloud.google.com/v1beta1",
+    "kind": "DataflowFlexTemplateJob",
     "metadata": {
-      "labels": {
-        "label-one": "value-one"
+      "annotations": {
+        "cnrm.cloud.google.com/on-delete": "drain"
       },
-      "name": "realm-sample"
+      "name": "dataflowflextemplatejob-sample-streaming"
     },
     "spec": {
-      "timeZone": "EST",
-      "location": "us-east1"
+      "region": "us-central1",
+      "containerSpecGcsPath": "gs://dataflow-templates/2020-08-31-00_RC00/flex/PubSub_Avro_to_BigQuery",
+      "parameters": {
+        "schemaPath": "gs://config-connector-samples/dataflowflextemplate/numbers.avsc",
+        "inputSubscription": "projects/${PROJECT_ID?}/subscriptions/dataflowflextemplatejob-dep-streaming",
+        "outputTopic": "projects/${PROJECT_ID?}/topics/dataflowflextemplatejob-dep1-streaming",
+        "outputTableSpec": "${PROJECT_ID?}:dataflowflextemplatejobdepstreaming.dataflowflextemplatejobdepstreaming",
+        "createDisposition": "CREATE_NEVER"
+      }
     }
   }
 }

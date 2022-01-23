@@ -1,0 +1,76 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "main",
+  "contentType": "json",
+  "source": "gitConnectorAzureTerraHashicorp",
+  "paths": [
+    "/examples/redis-cache/premium-with-clustering/variables.tf",
+    "/examples/redis-cache/premium-with-clustering/main.tf"
+  ],
+  "timestamp": 1642943279908,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "TRF_TEMPLATE_SNAPSHOT",
+    "type": "terraform",
+    "collection": "terraformtemplate",
+    "paths": [
+      "/examples/redis-cache/premium-with-clustering/variables.tf",
+      "/examples/redis-cache/premium-with-clustering/main.tf"
+    ],
+    "snapshotId": "TRF_TEMPLATE_SNAPSHOT96",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "azurerm_redis_cache",
+      "azurerm_resource_group"
+    ]
+  },
+  "snapshotId": "TRF_TEMPLATE_SNAPSHOT96",
+  "collection": "terraformtemplate",
+  "json": {
+    "provider": [
+      {
+        "azurerm": {
+          "features": [
+            {}
+          ]
+        }
+      }
+    ],
+    "resources": [
+      {
+        "type": "azurerm_resource_group",
+        "name": "example",
+        "properties": {
+          "name": "${var.prefix}-resources",
+          "location": "${var.location}",
+          "compiletime_identity": "azurerm_resource_group.example"
+        }
+      },
+      {
+        "type": "azurerm_redis_cache",
+        "name": "example",
+        "properties": {
+          "name": "${var.prefix}-cache",
+          "location": "${azurerm_resource_group.example.location}",
+          "resource_group_name": "${azurerm_resource_group.example.name}",
+          "capacity": 1,
+          "family": "P",
+          "sku_name": "Premium",
+          "enable_non_ssl_port": false,
+          "shard_count": 3,
+          "redis_configuration": [
+            {
+              "maxmemory_reserved": 2,
+              "maxmemory_delta": 2,
+              "maxmemory_policy": "allkeys-lru"
+            }
+          ],
+          "compiletime_identity": "azurerm_redis_cache.example"
+        }
+      }
+    ]
+  }
+}

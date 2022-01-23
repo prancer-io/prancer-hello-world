@@ -1,0 +1,266 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAzureQuickStart",
+  "paths": [
+    "/quickstarts/microsoft.datafactory/data-factory-blob-to-sql-copy/azuredeploy.json",
+    "/quickstarts/microsoft.datafactory/data-factory-blob-to-sql-copy/azuredeploy.parameters.json"
+  ],
+  "timestamp": 1642962905646,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/quickstarts/microsoft.datafactory/data-factory-blob-to-sql-copy/azuredeploy.json",
+      "/quickstarts/microsoft.datafactory/data-factory-blob-to-sql-copy/azuredeploy.parameters.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT1216",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "microsoft.datafactory/datafactories"
+    ]
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT1216",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "storageAccountName": {
+        "type": "string",
+        "metadata": {
+          "description": "Name of the Azure storage account that contains the data to be copied."
+        },
+        "value": "nameofyourstorageaccount"
+      },
+      "storageAccountKey": {
+        "type": "securestring",
+        "metadata": {
+          "description": "Key for the Azure storage account."
+        },
+        "value": "keyofyourstorageaccount"
+      },
+      "sourceBlobContainer": {
+        "type": "string",
+        "metadata": {
+          "description": "Name of the blob container in the Azure Storage account."
+        },
+        "value": "adftutorial"
+      },
+      "sourceBlobName": {
+        "type": "string",
+        "metadata": {
+          "description": "Name of the blob in the container that has the data to be copied to Azure SQL Database table"
+        },
+        "value": "emp.txt"
+      },
+      "sqlServerName": {
+        "type": "string",
+        "metadata": {
+          "description": "Name of the Azure SQL Server that will hold the output/copied data."
+        },
+        "value": "sptempsqlserver"
+      },
+      "databaseName": {
+        "type": "string",
+        "metadata": {
+          "description": "Name of the Azure SQL Database in the Azure SQL server."
+        },
+        "value": "sptempsqldb"
+      },
+      "sqlServerUserName": {
+        "type": "string",
+        "metadata": {
+          "description": "Name of the user that has access to the Azure SQL server."
+        },
+        "value": "sqluser"
+      },
+      "sqlServerPassword": {
+        "type": "securestring",
+        "metadata": {
+          "description": "Password for the user."
+        },
+        "value": "pass@word1"
+      },
+      "targetSQLTable": {
+        "type": "string",
+        "metadata": {
+          "description": "Table in the Azure SQL Database that will hold the copied data."
+        },
+        "value": "emp"
+      }
+    },
+    "variables": {
+      "dataFactoryName": "[concat('AzureBlobToAzureSQLDatabaseDF', uniqueString(resourceGroup().id))]",
+      "azureSqlLinkedServiceName": "AzureSqlLinkedService",
+      "azureStorageLinkedServiceName": "AzureStorageLinkedService",
+      "blobInputDatasetName": "BlobInputDataset",
+      "sqlOutputDatasetName": "SQLOutputDataset",
+      "pipelineName": "Blob2SQLPipeline"
+    },
+    "resources": [
+      {
+        "name": "[variables('dataFactoryName')]",
+        "apiVersion": "2015-10-01",
+        "type": "Microsoft.DataFactory/datafactories",
+        "location": "West US",
+        "resources": [
+          {
+            "type": "linkedservices",
+            "name": "AzureStorageLinkedService",
+            "dependsOn": [
+              "[variables('dataFactoryName')]"
+            ],
+            "apiVersion": "2015-10-01",
+            "properties": {
+              "type": "AzureStorage",
+              "description": "Azure Storage linked service",
+              "typeProperties": {
+                "connectionString": "DefaultEndpointsProtocol=https;AccountName=nameofyourstorageaccount;AccountKey=keyofyourstorageaccount"
+              }
+            }
+          },
+          {
+            "type": "linkedservices",
+            "name": "AzureSqlLinkedService",
+            "dependsOn": [
+              "[variables('dataFactoryName')]"
+            ],
+            "apiVersion": "2015-10-01",
+            "properties": {
+              "type": "AzureSqlDatabase",
+              "description": "Azure SQL linked service",
+              "typeProperties": {
+                "connectionString": "Server=tcp:sptempsqlserver.database.windows.net1433;Database=sptempsqldb;User ID=sqluser;Password=pass@word1;Trusted_Connection=False;Encrypt=True;Connection Timeout=30"
+              }
+            }
+          },
+          {
+            "type": "datasets",
+            "name": "BlobInputDataset",
+            "dependsOn": [
+              "[variables('dataFactoryName')]",
+              "[variables('azureStorageLinkedServiceName')]"
+            ],
+            "apiVersion": "2015-10-01",
+            "properties": {
+              "type": "AzureBlob",
+              "linkedServiceName": "AzureStorageLinkedService",
+              "structure": [
+                {
+                  "name": "Column0",
+                  "type": "string"
+                },
+                {
+                  "name": "Column1",
+                  "type": "string"
+                }
+              ],
+              "typeProperties": {
+                "folderPath": "adftutorial/",
+                "fileName": "emp.txt",
+                "format": {
+                  "type": "TextFormat",
+                  "columnDelimiter": ","
+                }
+              },
+              "availability": {
+                "frequency": "Day",
+                "interval": 1
+              },
+              "external": true
+            }
+          },
+          {
+            "type": "datasets",
+            "name": "SQLOutputDataset",
+            "dependsOn": [
+              "[variables('dataFactoryName')]",
+              "[variables('azureSqlLinkedServiceName')]"
+            ],
+            "apiVersion": "2015-10-01",
+            "properties": {
+              "type": "AzureSqlTable",
+              "linkedServiceName": "AzureSqlLinkedService",
+              "structure": [
+                {
+                  "name": "FirstName",
+                  "type": "string"
+                },
+                {
+                  "name": "LastName",
+                  "type": "string"
+                }
+              ],
+              "typeProperties": {
+                "tableName": "emp"
+              },
+              "availability": {
+                "frequency": "Day",
+                "interval": 1
+              }
+            }
+          },
+          {
+            "type": "datapipelines",
+            "name": "Blob2SQLPipeline",
+            "dependsOn": [
+              "[variables('dataFactoryName')]",
+              "[variables('azureStorageLinkedServiceName')]",
+              "[variables('azureSqlLinkedServiceName')]",
+              "[variables('blobInputDatasetName')]",
+              "[variables('sqlOutputDatasetName')]"
+            ],
+            "apiVersion": "2015-10-01",
+            "properties": {
+              "activities": [
+                {
+                  "name": "CopyFromAzureBlobToAzureSQL",
+                  "description": "Copy data frm Azure blob to Azure SQL",
+                  "type": "Copy",
+                  "inputs": [
+                    {
+                      "name": "BlobInputDataset"
+                    }
+                  ],
+                  "outputs": [
+                    {
+                      "name": "SQLOutputDataset"
+                    }
+                  ],
+                  "typeProperties": {
+                    "source": {
+                      "type": "BlobSource"
+                    },
+                    "sink": {
+                      "type": "SqlSink",
+                      "sqlWriterCleanupScript": "$$Text.Format('DELETE FROM {0}', 'emp')"
+                    },
+                    "translator": {
+                      "type": "TabularTranslator",
+                      "columnMappings": "Column0:FirstName,Column1:LastName"
+                    }
+                  },
+                  "Policy": {
+                    "concurrency": 1,
+                    "executionPriorityOrder": "NewestFirst",
+                    "retry": 3,
+                    "timeout": "01:00:00"
+                  }
+                }
+              ],
+              "start": "2016-10-03T00:00:00Z",
+              "end": "2016-10-04T00:00:00Z"
+            }
+          }
+        ]
+      }
+    ],
+    "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+  }
+}

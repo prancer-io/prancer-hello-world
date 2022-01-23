@@ -1,0 +1,268 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAzureQuickStart",
+  "paths": [
+    "/quickstarts/microsoft.customproviders/custom-rp-existing-resource-deployments/azuredeploy.json",
+    "/quickstarts/microsoft.customproviders/custom-rp-existing-resource-deployments/azuredeploy.parameters.json"
+  ],
+  "timestamp": 1642962905531,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/quickstarts/microsoft.customproviders/custom-rp-existing-resource-deployments/azuredeploy.json",
+      "/quickstarts/microsoft.customproviders/custom-rp-existing-resource-deployments/azuredeploy.parameters.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT1201",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "microsoft.resources/deployments",
+      "microsoft.customproviders/associations"
+    ]
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT1201",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "location": {
+        "type": "string",
+        "allowedValues": [
+          "australiaeast",
+          "australiasoutheast",
+          "eastus",
+          "westus2",
+          "eastus2euap",
+          "westeurope",
+          "northeurope",
+          "canadacentral",
+          "canadaeast",
+          "japaneast",
+          "japanwest"
+        ],
+        "metadata": {
+          "description": "Location for the resources."
+        },
+        "value": "eastus"
+      },
+      "logicAppName": {
+        "type": "string",
+        "defaultValue": "[uniqueString(resourceGroup().id)]",
+        "metadata": {
+          "description": "Name of the logic app to be created."
+        }
+      },
+      "customResourceProviderName": {
+        "type": "string",
+        "defaultValue": "[uniqueString(resourceGroup().id)]",
+        "metadata": {
+          "description": "Name of the custom provider to be created."
+        }
+      },
+      "customResourceProviderId": {
+        "type": "string",
+        "defaultValue": "",
+        "metadata": {
+          "description": "The resource id of an existing custom provider. Provide this to skip deployment of new logic app and custom provider."
+        }
+      },
+      "associationName": {
+        "type": "string",
+        "defaultValue": "myDemoAssociationResource",
+        "metadata": {
+          "description": "Name of the association resource that is being created."
+        },
+        "value": "myAssociationName"
+      }
+    },
+    "resources": [
+      {
+        "condition": "[empty(parameters('customResourceProviderId'))]",
+        "type": "Microsoft.Resources/deployments",
+        "apiVersion": "2019-09-01",
+        "name": "customProviderInfrastructureTemplate",
+        "properties": {
+          "mode": "Incremental",
+          "expressionEvaluationOptions": {
+            "scope": "inner"
+          },
+          "parameters": {
+            "location": {
+              "value": "eastus"
+            },
+            "logicAppName": {
+              "value": "[uniqueString(resourceGroup().id)]"
+            },
+            "customResourceProviderName": {
+              "value": "[uniqueString(resourceGroup().id)]"
+            }
+          },
+          "template": {
+            "contentVersion": "1.0.0.0",
+            "parameters": {
+              "location": {
+                "type": "string"
+              },
+              "logicAppName": {
+                "type": "string"
+              },
+              "customResourceProviderName": {
+                "type": "string"
+              }
+            },
+            "resources": [
+              {
+                "type": "Microsoft.Logic/workflows",
+                "apiVersion": "2019-05-01",
+                "name": "[uniqueString(resourceGroup().id)]",
+                "location": "eastus",
+                "properties": {
+                  "state": "Enabled",
+                  "definition": {
+                    "actions": {
+                      "Switch": {
+                        "cases": {
+                          "CreateAssociation": {
+                            "actions": {
+                              "CreateCustomResource": {
+                                "inputs": {
+                                  "body": {
+                                    "properties": "@addProperty(triggerBody().Body['properties'], 'myDynamicProperty', 'myDynamicValue')"
+                                  },
+                                  "statusCode": 200
+                                },
+                                "kind": "Http",
+                                "type": "Response"
+                              }
+                            },
+                            "case": "CREATE"
+                          }
+                        },
+                        "default": {
+                          "actions": {
+                            "DefaultHttpResponse": {
+                              "inputs": {
+                                "statusCode": 200
+                              },
+                              "kind": "Http",
+                              "type": "Response"
+                            }
+                          }
+                        },
+                        "expression": "@triggerBody().operationType",
+                        "type": "Switch"
+                      }
+                    },
+                    "contentVersion": "1.0.0.0",
+                    "outputs": {},
+                    "parameters": {},
+                    "triggers": {
+                      "CustomProviderWebhook": {
+                        "inputs": {
+                          "schema": {
+                            "required": [
+                              "OperationType",
+                              "ResourceType",
+                              "ResourceId",
+                              "ResourceName",
+                              "Body"
+                            ],
+                            "properties": {
+                              "OperationType": {
+                                "$id": "#/properties/OperationType",
+                                "type": "string",
+                                "enum": [
+                                  "CREATE",
+                                  "DELETE",
+                                  "GET",
+                                  "LIST",
+                                  "TRIGGER"
+                                ]
+                              },
+                              "ResourceType": {
+                                "$id": "#/properties/ResourceType",
+                                "type": "string"
+                              },
+                              "ResourceId": {
+                                "$id": "#/properties/ResourceId",
+                                "type": "string"
+                              },
+                              "ResourceName": {
+                                "$id": "#/properties/ResourceName",
+                                "type": "string"
+                              },
+                              "Body": {
+                                "$id": "#/properties/Body",
+                                "type": "object"
+                              }
+                            }
+                          }
+                        },
+                        "kind": "Http",
+                        "type": "Request"
+                      }
+                    },
+                    "\uff04schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#"
+                  }
+                }
+              },
+              {
+                "type": "Microsoft.CustomProviders/resourceProviders",
+                "apiVersion": "2018-09-01-preview",
+                "name": "[uniqueString(resourceGroup().id)]",
+                "location": "eastus",
+                "properties": {
+                  "resourceTypes": [
+                    {
+                      "name": "associations",
+                      "mode": "Secure",
+                      "routingType": "Webhook,Cache,Extension",
+                      "endpoint": "[listCallbackURL(resourceId('Microsoft.Logic/workflows/triggers', parameters('logicAppName'), 'CustomProviderWebhook'), '2019-05-01').value]"
+                    }
+                  ]
+                }
+              }
+            ],
+            "outputs": {
+              "customProviderResourceId": {
+                "type": "string",
+                "value": "Microsoft.CustomProviders/resourceProviders/[uniqueString(resourceGroup().id)]"
+              }
+            },
+            "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+          }
+        }
+      },
+      {
+        "type": "Microsoft.CustomProviders/associations",
+        "apiVersion": "2018-09-01-preview",
+        "name": "myAssociationName",
+        "location": "global",
+        "dependsOn": [
+          "customProviderInfrastructureTemplate"
+        ],
+        "properties": {
+          "targetResourceId": "[if(empty(parameters('customResourceProviderId')), reference('customProviderInfrastructureTemplate').outputs.customProviderResourceId.value, parameters('customResourceProviderId'))]",
+          "myCustomInputProperty": "myCustomInputValue",
+          "myCustomInputObject": {
+            "Property1": "Value1"
+          }
+        }
+      }
+    ],
+    "outputs": {
+      "associationResource": {
+        "type": "object",
+        "value": "[reference(parameters('associationName'), '2018-09-01-preview', 'Full')]"
+      }
+    },
+    "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+  }
+}

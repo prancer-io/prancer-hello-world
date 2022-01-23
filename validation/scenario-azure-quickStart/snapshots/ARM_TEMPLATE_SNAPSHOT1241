@@ -1,0 +1,257 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAzureQuickStart",
+  "paths": [
+    "/quickstarts/microsoft.datafactory/mutiple-vms-with-data-management-gateway/azuredeploy.json",
+    "/quickstarts/microsoft.datafactory/mutiple-vms-with-data-management-gateway/azuredeploy.parameters.json"
+  ],
+  "timestamp": 1642962905884,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/quickstarts/microsoft.datafactory/mutiple-vms-with-data-management-gateway/azuredeploy.json",
+      "/quickstarts/microsoft.datafactory/mutiple-vms-with-data-management-gateway/azuredeploy.parameters.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT1241",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "microsoft.resources/deployments",
+      "microsoft.storage/storageaccounts",
+      "microsoft.network/networksecuritygroups"
+    ]
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT1241",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "existingDataFactoryName": {
+        "type": "string",
+        "metadata": {
+          "description": "your existing data factory name"
+        },
+        "value": "existingDF"
+      },
+      "existingDataFactoryResourceGroup": {
+        "type": "string",
+        "metadata": {
+          "description": "your existing data factory resource group"
+        },
+        "value": "existingDFResourceGroup"
+      },
+      "GatewayName": {
+        "type": "string",
+        "metadata": {
+          "description": "Gateway name must be unique in subscription"
+        },
+        "value": "newgateway"
+      },
+      "GatewayNodeCount": {
+        "type": "int",
+        "defaultValue": 2,
+        "maxValue": 4,
+        "minValue": 1,
+        "metadata": {
+          "description": "the node count is between 1 and 4."
+        }
+      },
+      "adminUserName": {
+        "type": "string",
+        "metadata": {
+          "description": "User name for the virtual machine"
+        },
+        "value": "GEN-UNIQUE"
+      },
+      "adminPassword": {
+        "type": "securestring",
+        "metadata": {
+          "description": "Password for the virtual machine"
+        },
+        "value": "GEN-PASSWORD"
+      },
+      "existingVirtualNetworkName": {
+        "type": "string",
+        "metadata": {
+          "description": "your existing vnet name"
+        },
+        "value": "gwvnet"
+      },
+      "existingVnetLocation": {
+        "type": "string",
+        "metadata": {
+          "description": "your virtual machine will be create in the same datacenter with VNET"
+        },
+        "value": "West US"
+      },
+      "existingVnetResourceGroupName": {
+        "type": "string",
+        "metadata": {
+          "description": "Name of the existing VNET resource group"
+        },
+        "value": "gwvnetrg"
+      },
+      "existingSubnetInYourVnet": {
+        "type": "string",
+        "metadata": {
+          "description": "Name of the subnet in the virtual network you want to use"
+        },
+        "value": "subnet"
+      },
+      "_artifactsLocation": {
+        "type": "string",
+        "metadata": {
+          "description": "The base URI where artifacts required by this template are located."
+        },
+        "defaultValue": "https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/quickstarts/microsoft.datafactory/mutiple-vms-with-data-management-gateway/"
+      },
+      "_artifactsLocationSasToken": {
+        "type": "securestring",
+        "metadata": {
+          "description": "The sasToken required to access _artifactsLocation.  When the template is deployed using the accompanying scripts, a sasToken will be automatically generated."
+        },
+        "defaultValue": ""
+      },
+      "enableToSetDataStorePasswordsFromInternet": {
+        "value": "yes"
+      }
+    },
+    "variables": {
+      "delimiters": [
+        "-",
+        "_"
+      ],
+      "prefix": "[split(parameters('GatewayName'), variables('delimiters'))[0]]",
+      "gatewayId": "existingDFResourceGroup/Microsoft.DataFactory/dataFactories/gateways/existingDF/newgateway",
+      "storageAccountName": "[take(concat(toLower(variables('prefix')), uniquestring(resourceGroup().id, parameters('GatewayName'))), 24)]",
+      "networkSecurityGroupName": "newgatewaynsg",
+      "vmTemplateLink": "https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/quickstarts/microsoft.datafactory/mutiple-vms-with-data-management-gateway/nested/VMtemplate.jsonparameters('_artifactsLocationSasToken')",
+      "subnetId": "gwvnetrg/Microsoft.Network/virtualNetworks/subnets/gwvnet/subnet",
+      "scriptURL": "https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/quickstarts/microsoft.datafactory/mutiple-vms-with-data-management-gateway/scripts/gatewayInstall.ps1parameters('_artifactsLocationSasToken')"
+    },
+    "resources": [
+      {
+        "apiVersion": "2017-05-10",
+        "name": "nestedTemplate",
+        "type": "Microsoft.Resources/deployments",
+        "resourceGroup": "existingDFResourceGroup",
+        "properties": {
+          "mode": "Incremental",
+          "template": {
+            "contentVersion": "1.0.0.0",
+            "parameters": {},
+            "variables": {},
+            "resources": [
+              {
+                "type": "Microsoft.DataFactory/dataFactories/gateways",
+                "apiVersion": "2015-10-01",
+                "name": "existingDF/newgateway",
+                "properties": {
+                  "multiNodeSupportEnabled": true,
+                  "description": "my gateway"
+                }
+              }
+            ],
+            "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+          },
+          "parameters": {}
+        }
+      },
+      {
+        "name": "newgatewaynsg",
+        "type": "Microsoft.Network/networkSecurityGroups",
+        "apiVersion": "2016-09-01",
+        "location": "West US",
+        "properties": {
+          "securityRules": [
+            {
+              "name": "default-allow-rdp",
+              "properties": {
+                "priority": 1000,
+                "sourceAddressPrefix": "*",
+                "protocol": "Tcp",
+                "destinationPortRange": "3389",
+                "access": "Allow",
+                "direction": "Inbound",
+                "sourcePortRange": "*",
+                "destinationAddressPrefix": "*"
+              }
+            }
+          ]
+        }
+      },
+      {
+        "type": "Microsoft.Storage/storageAccounts",
+        "name": "[take(concat(toLower(variables('prefix')), uniquestring(resourceGroup().id, parameters('GatewayName'))), 24)]",
+        "apiVersion": "2016-01-01",
+        "location": "West US",
+        "dependsOn": [
+          "existingDFResourceGroup/Microsoft.Resources/deployments/nestedTemplate"
+        ],
+        "sku": {
+          "name": "Standard_LRS"
+        },
+        "kind": "Storage",
+        "properties": {}
+      },
+      {
+        "apiVersion": "2015-01-01",
+        "name": "VMtemplate-copyIndex()",
+        "type": "Microsoft.Resources/deployments",
+        "dependsOn": [
+          "existingDFResourceGroup/Microsoft.Resources/deployments/nestedTemplate",
+          "Microsoft.Network/networkSecurityGroups/newgatewaynsg",
+          "Microsoft.Storage/storageAccounts/[take(concat(toLower(variables('prefix')), uniquestring(resourceGroup().id, parameters('GatewayName'))), 24)]"
+        ],
+        "copy": {
+          "name": "vmcopy",
+          "count": 2
+        },
+        "properties": {
+          "mode": "Incremental",
+          "templateLink": {
+            "uri": "https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/quickstarts/microsoft.datafactory/mutiple-vms-with-data-management-gateway/nested/VMtemplate.jsonparameters('_artifactsLocationSasToken')",
+            "contentVersion": "1.0.0.0"
+          },
+          "parameters": {
+            "gatewayId": {
+              "value": "existingDFResourceGroup/Microsoft.DataFactory/dataFactories/gateways/existingDF/newgateway"
+            },
+            "virtualMachineName": {
+              "value": "[take(concat('vm',copyIndex(),'-', variables('prefix')), 15)]"
+            },
+            "adminUserName": {
+              "value": "GEN-UNIQUE"
+            },
+            "adminPassword": {
+              "value": "GEN-PASSWORD"
+            },
+            "existingVnetLocation": {
+              "value": "West US"
+            },
+            "subnetId": {
+              "value": "gwvnetrg/Microsoft.Network/virtualNetworks/subnets/gwvnet/subnet"
+            },
+            "nsgId": {
+              "value": "Microsoft.Network/networkSecurityGroups/newgatewaynsg"
+            },
+            "storageAccountName": {
+              "value": "[take(concat(toLower(variables('prefix')), uniquestring(resourceGroup().id, parameters('GatewayName'))), 24)]"
+            },
+            "scriptUrl": {
+              "value": "https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/quickstarts/microsoft.datafactory/mutiple-vms-with-data-management-gateway/scripts/gatewayInstall.ps1parameters('_artifactsLocationSasToken')"
+            }
+          }
+        }
+      }
+    ],
+    "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+  }
+}

@@ -2,12 +2,12 @@
   "structure": "filesystem",
   "error": null,
   "reference": "master",
-  "contentType": "yaml",
+  "contentType": "json",
   "source": "gitConnectorGoogleKcc",
   "paths": [
-    "/samples/resources/computerouterinterface/compute_v1beta1_computerouter.yaml"
+    "/samples/resources/computenetworkendpointgroup/compute_v1beta1_computenetworkendpointgroup.yaml"
   ],
-  "timestamp": 1628765142511,
+  "timestamp": 1642973302946,
   "queryuser": null,
   "checksum": "99914b932bd37a50b983c5e7c90ae93b",
   "node": {
@@ -15,38 +15,33 @@
     "type": "kcc",
     "collection": "kcctemplate",
     "paths": [
-      "/samples/resources/computerouterinterface/compute_v1beta1_computerouter.yaml"
+      "/samples/resources/computenetworkendpointgroup/compute_v1beta1_computenetworkendpointgroup.yaml"
     ],
     "snapshotId": "KCC_TEMPLATE_SNAPSHOT201",
     "status": "active",
-    "validate": true
+    "validate": true,
+    "resourceTypes": [
+      "computenetworkendpointgroup"
+    ]
   },
   "snapshotId": "KCC_TEMPLATE_SNAPSHOT201",
   "collection": "kcctemplate",
   "json": {
     "apiVersion": "compute.cnrm.cloud.google.com/v1beta1",
-    "kind": "ComputeRouter",
+    "kind": "ComputeNetworkEndpointGroup",
     "metadata": {
-      "name": "computerouterinterface-dep"
+      "name": "computenetworkendpointgroup-sample"
     },
     "spec": {
       "networkRef": {
-        "name": "computerouterinterface-dep"
+        "name": "computenetworkendpointgroup-dep"
       },
-      "description": "example router description",
-      "region": "us-central1",
-      "bgp": {
-        "asn": 64514,
-        "advertiseMode": "CUSTOM",
-        "advertisedGroups": [
-          "ALL_SUBNETS"
-        ],
-        "advertisedIpRanges": [
-          {
-            "range": "1.2.3.4"
-          }
-        ]
-      }
+      "subnetworkRef": {
+        "name": "computenetworkendpointgroup-dep"
+      },
+      "location": "us-west1-a",
+      "defaultPort": 90,
+      "description": "A network endpoint group living in a specific us-west1 subnetwork, whose member endpoints will serve on port number 90 by default."
     }
   }
 }

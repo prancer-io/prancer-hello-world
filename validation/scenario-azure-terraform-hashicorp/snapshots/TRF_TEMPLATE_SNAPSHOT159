@@ -1,0 +1,340 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "main",
+  "contentType": "json",
+  "source": "gitConnectorAzureTerraHashicorp",
+  "paths": [
+    "/examples/virtual-machines/windows/vm-joined-to-active-directory/variables.tf",
+    "/examples/virtual-machines/windows/vm-joined-to-active-directory/main.tf"
+  ],
+  "timestamp": 1642943280165,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "TRF_TEMPLATE_SNAPSHOT",
+    "type": "terraform",
+    "collection": "terraformtemplate",
+    "paths": [
+      "/examples/virtual-machines/windows/vm-joined-to-active-directory/variables.tf",
+      "/examples/virtual-machines/windows/vm-joined-to-active-directory/main.tf"
+    ],
+    "snapshotId": "TRF_TEMPLATE_SNAPSHOT159",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "azurerm_windows_virtual_machine",
+      "azurerm_subnet",
+      "azurerm_virtual_network",
+      "azurerm_resource_group",
+      "azurerm_network_interface",
+      "azurerm_public_ip",
+      "azurerm_virtual_machine_extension"
+    ]
+  },
+  "snapshotId": "TRF_TEMPLATE_SNAPSHOT159",
+  "collection": "terraformtemplate",
+  "json": {
+    "provider": [
+      {
+        "azurerm": {
+          "features": [
+            {}
+          ]
+        }
+      }
+    ],
+    "resources": [
+      {
+        "type": "azurerm_virtual_network",
+        "name": "example",
+        "properties": {
+          "name": "${var.prefix}-network",
+          "location": "${var.location}",
+          "address_space": [
+            "10.0.0.0/16"
+          ],
+          "resource_group_name": "${azurerm_resource_group.example.name}",
+          "dns_servers": [
+            "10.0.1.4",
+            "8.8.8.8"
+          ],
+          "prefix": "${var.prefix}",
+          "compiletime_identity": "module.network"
+        }
+      },
+      {
+        "type": "azurerm_subnet",
+        "name": "domain-controllers",
+        "properties": {
+          "name": "domain-controllers",
+          "address_prefixes": [
+            "10.0.1.0/24"
+          ],
+          "resource_group_name": "${azurerm_resource_group.example.name}",
+          "virtual_network_name": "${var.prefix}-network",
+          "location": "${var.location}",
+          "prefix": "${var.prefix}",
+          "compiletime_identity": "module.network"
+        }
+      },
+      {
+        "type": "azurerm_subnet",
+        "name": "domain-members",
+        "properties": {
+          "name": "domain-members",
+          "address_prefixes": [
+            "10.0.2.0/24"
+          ],
+          "resource_group_name": "${azurerm_resource_group.example.name}",
+          "virtual_network_name": "${var.prefix}-network",
+          "location": "${var.location}",
+          "prefix": "${var.prefix}",
+          "compiletime_identity": "module.network"
+        }
+      },
+      {
+        "type": "azurerm_network_interface",
+        "name": "dc_nic",
+        "properties": {
+          "name": "${var.prefix}-dc-primary",
+          "location": "${azurerm_resource_group.example.location}",
+          "resource_group_name": "${azurerm_resource_group.example.name}",
+          "ip_configuration": [
+            {
+              "name": "primary",
+              "private_ip_address_allocation": "Static",
+              "private_ip_address": "10.0.1.4",
+              "subnet_id": "${module.network.domain_controllers_subnet_id}"
+            }
+          ],
+          "active_directory_domain_name": "${var.prefix}.local",
+          "active_directory_netbios_name": "${var.prefix}",
+          "admin_username": "${var.admin_username}",
+          "admin_password": "${var.admin_password}",
+          "prefix": "${var.prefix}",
+          "subnet_id": "${module.network.domain_controllers_subnet_id}",
+          "compiletime_identity": "module.active-directory-domain"
+        }
+      },
+      {
+        "type": "azurerm_network_interface",
+        "name": "primary",
+        "properties": {
+          "name": "${var.prefix}",
+          "location": "${azurerm_resource_group.example.location}",
+          "resource_group_name": "${azurerm_resource_group.example.name}",
+          "ip_configuration": [
+            {
+              "name": "primary",
+              "subnet_id": "${module.network.domain_members_subnet_id}",
+              "private_ip_address_allocation": "Dynamic",
+              "public_ip_address_id": "${azurerm_public_ip.static.id}"
+            }
+          ],
+          "prefix": "${var.prefix}",
+          "active_directory_domain_name": "${var.prefix}.local",
+          "active_directory_username": "${var.admin_username}",
+          "active_directory_password": "${var.admin_password}",
+          "admin_username": "${var.admin_username}",
+          "admin_password": "${var.admin_password}",
+          "subnet_id": "${module.network.domain_members_subnet_id}",
+          "compiletime_identity": "module.active-directory-member"
+        }
+      },
+      {
+        "type": "azurerm_windows_virtual_machine",
+        "name": "domain-controller",
+        "properties": {
+          "name": "${local.virtual_machine_name}",
+          "resource_group_name": "${azurerm_resource_group.example.name}",
+          "location": "${azurerm_resource_group.example.location}",
+          "size": "Standard_F2",
+          "admin_username": "${var.admin_username}",
+          "admin_password": "${var.admin_password}",
+          "custom_data": "${local.custom_data}",
+          "network_interface_ids": [
+            "${azurerm_network_interface.dc_nic.id}"
+          ],
+          "os_disk": [
+            {
+              "caching": "ReadWrite",
+              "storage_account_type": "Standard_LRS"
+            }
+          ],
+          "source_image_reference": [
+            {
+              "publisher": "MicrosoftWindowsServer",
+              "offer": "WindowsServer",
+              "sku": "2016-Datacenter",
+              "version": "latest"
+            }
+          ],
+          "additional_unattend_content": [
+            {
+              "content": "${local.auto_logon_data}",
+              "setting": "AutoLogon"
+            },
+            {
+              "content": "${local.first_logon_data}",
+              "setting": "FirstLogonCommands"
+            }
+          ],
+          "active_directory_domain_name": "${var.prefix}.local",
+          "active_directory_netbios_name": "${var.prefix}",
+          "prefix": "${var.prefix}",
+          "subnet_id": "${module.network.domain_controllers_subnet_id}",
+          "compiletime_identity": "module.active-directory-domain"
+        }
+      },
+      {
+        "type": "azurerm_windows_virtual_machine",
+        "name": "domain-member",
+        "properties": {
+          "name": "${local.virtual_machine_name}",
+          "resource_group_name": "${azurerm_resource_group.example.name}",
+          "location": "${azurerm_resource_group.example.location}",
+          "size": "Standard_F2",
+          "admin_username": "${var.admin_username}",
+          "admin_password": "${var.admin_password}",
+          "provision_vm_agent": true,
+          "enable_automatic_updates": true,
+          "network_interface_ids": [
+            "${azurerm_network_interface.primary.id}"
+          ],
+          "source_image_reference": [
+            {
+              "publisher": "MicrosoftWindowsServer",
+              "offer": "WindowsServer",
+              "sku": "2016-Datacenter",
+              "version": "latest"
+            }
+          ],
+          "os_disk": [
+            {
+              "caching": "ReadWrite",
+              "storage_account_type": "Standard_LRS"
+            }
+          ],
+          "prefix": "${var.prefix}",
+          "active_directory_domain_name": "${var.prefix}.local",
+          "active_directory_username": "${var.admin_username}",
+          "active_directory_password": "${var.admin_password}",
+          "subnet_id": "${module.network.domain_members_subnet_id}",
+          "compiletime_identity": "module.active-directory-member"
+        }
+      },
+      {
+        "type": "azurerm_virtual_machine_extension",
+        "name": "create-ad-forest",
+        "properties": {
+          "name": "create-active-directory-forest",
+          "virtual_machine_id": "${azurerm_windows_virtual_machine.domain-controller.id}",
+          "publisher": "Microsoft.Compute",
+          "type": "CustomScriptExtension",
+          "type_handler_version": 1.9,
+          "settings": "  {\n    \"commandToExecute\": \"powershell.exe -Command \\\"${local.powershell_command}\\\"\"\n  }",
+          "resource_group_name": "${azurerm_resource_group.example.name}",
+          "location": "${azurerm_resource_group.example.location}",
+          "active_directory_domain_name": "${var.prefix}.local",
+          "active_directory_netbios_name": "${var.prefix}",
+          "admin_username": "${var.admin_username}",
+          "admin_password": "${var.admin_password}",
+          "prefix": "${var.prefix}",
+          "subnet_id": "${module.network.domain_controllers_subnet_id}",
+          "compiletime_identity": "module.active-directory-domain"
+        }
+      },
+      {
+        "type": "azurerm_virtual_machine_extension",
+        "name": "wait-for-domain-to-provision",
+        "properties": {
+          "name": "TestConnectionDomain",
+          "publisher": "Microsoft.Compute",
+          "type": "CustomScriptExtension",
+          "type_handler_version": 1.9,
+          "virtual_machine_id": "${azurerm_windows_virtual_machine.domain-member.id}",
+          "settings": "  {\n    \"commandToExecute\": \"powershell.exe -Command \\\"while (!(Test-Connection -ComputerName ${var.prefix}.local -Count 1 -Quiet) -and ($retryCount++ -le 360)) { Start-Sleep 10 } \\\"\"\n  }",
+          "resource_group_name": "${azurerm_resource_group.example.name}",
+          "location": "${azurerm_resource_group.example.location}",
+          "prefix": "${var.prefix}",
+          "active_directory_domain_name": "${var.prefix}.local",
+          "active_directory_username": "${var.admin_username}",
+          "active_directory_password": "${var.admin_password}",
+          "admin_username": "${var.admin_username}",
+          "admin_password": "${var.admin_password}",
+          "subnet_id": "${module.network.domain_members_subnet_id}",
+          "compiletime_identity": "module.active-directory-member"
+        }
+      },
+      {
+        "type": "azurerm_virtual_machine_extension",
+        "name": "join-domain",
+        "properties": {
+          "name": "${local.virtual_machine_name}",
+          "publisher": "Microsoft.Compute",
+          "type": "JsonADDomainExtension",
+          "type_handler_version": 1.3,
+          "virtual_machine_id": "${azurerm_windows_virtual_machine.domain-member.id}",
+          "settings": {
+            "Name": "${var.prefix}.local",
+            "OUPath": "",
+            "User": "${var.admin_username}@${var.prefix}.local",
+            "Restart": true,
+            "Options": 3
+          },
+          "protected_settings": {
+            "Password": "${var.admin_password}"
+          },
+          "depends_on": [
+            {
+              "name": "TestConnectionDomain",
+              "publisher": "Microsoft.Compute",
+              "type": "CustomScriptExtension",
+              "type_handler_version": 1.9,
+              "virtual_machine_id": "${azurerm_windows_virtual_machine.domain-member.id}",
+              "settings": "  {\n    \"commandToExecute\": \"powershell.exe -Command \\\"while (!(Test-Connection -ComputerName ${var.prefix}.local -Count 1 -Quiet) -and ($retryCount++ -le 360)) { Start-Sleep 10 } \\\"\"\n  }"
+            }
+          ],
+          "resource_group_name": "${azurerm_resource_group.example.name}",
+          "location": "${azurerm_resource_group.example.location}",
+          "prefix": "${var.prefix}",
+          "active_directory_domain_name": "${var.prefix}.local",
+          "active_directory_username": "${var.admin_username}",
+          "active_directory_password": "${var.admin_password}",
+          "admin_username": "${var.admin_username}",
+          "admin_password": "${var.admin_password}",
+          "subnet_id": "${module.network.domain_members_subnet_id}",
+          "compiletime_identity": "module.active-directory-member"
+        }
+      },
+      {
+        "type": "azurerm_public_ip",
+        "name": "static",
+        "properties": {
+          "name": "${var.prefix}",
+          "location": "${azurerm_resource_group.example.location}",
+          "resource_group_name": "${azurerm_resource_group.example.name}",
+          "allocation_method": "Static",
+          "prefix": "${var.prefix}",
+          "active_directory_domain_name": "${var.prefix}.local",
+          "active_directory_username": "${var.admin_username}",
+          "active_directory_password": "${var.admin_password}",
+          "admin_username": "${var.admin_username}",
+          "admin_password": "${var.admin_password}",
+          "subnet_id": "${module.network.domain_members_subnet_id}",
+          "compiletime_identity": "module.active-directory-member"
+        }
+      },
+      {
+        "type": "azurerm_resource_group",
+        "name": "example",
+        "properties": {
+          "location": "${var.location}",
+          "name": "${var.prefix}-rg",
+          "compiletime_identity": "azurerm_resource_group.example"
+        }
+      }
+    ]
+  }
+}

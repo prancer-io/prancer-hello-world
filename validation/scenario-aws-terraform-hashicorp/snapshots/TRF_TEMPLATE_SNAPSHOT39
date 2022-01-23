@@ -1,0 +1,66 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "main",
+  "contentType": "json",
+  "source": "gitConnectorAwsTerraHashicorp",
+  "paths": [
+    "/infrastructure/repository/main.tf",
+    "/infrastructure/repository/labels-partition.tf"
+  ],
+  "timestamp": 1642967657748,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "TRF_TEMPLATE_SNAPSHOT",
+    "type": "terraform",
+    "collection": "terraformtemplate",
+    "paths": [
+      "/infrastructure/repository/main.tf",
+      "/infrastructure/repository/labels-partition.tf"
+    ],
+    "snapshotId": "TRF_TEMPLATE_SNAPSHOT39",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "github_issue_label"
+    ]
+  },
+  "snapshotId": "TRF_TEMPLATE_SNAPSHOT39",
+  "collection": "terraformtemplate",
+  "json": {
+    "variable": [
+      {
+        "partition_labels": {
+          "default": [
+            "aws-cn",
+            "aws-iso",
+            "aws-iso-b",
+            "aws-us-gov"
+          ],
+          "description": "Set of AWS Partition labels",
+          "type": "${set(string)}"
+        }
+      }
+    ],
+    "resources": [
+      {
+        "type": "github_issue_label",
+        "name": "partition",
+        "properties": {
+          "for_each": [
+            "aws-cn",
+            "aws-iso",
+            "aws-iso-b",
+            "aws-us-gov"
+          ],
+          "repository": "terraform-provider-aws",
+          "name": "partition/${each.value}",
+          "color": "844fba",
+          "description": "Pertains to the ${each.value} partition.",
+          "compiletime_identity": "github_issue_label.partition"
+        }
+      }
+    ]
+  }
+}

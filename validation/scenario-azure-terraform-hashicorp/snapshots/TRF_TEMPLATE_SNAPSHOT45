@@ -1,0 +1,133 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "main",
+  "contentType": "json",
+  "source": "gitConnectorAzureTerraHashicorp",
+  "paths": [
+    "/examples/eventgrid/event-subscription/variables.tf",
+    "/examples/eventgrid/event-subscription/main.tf"
+  ],
+  "timestamp": 1642943279715,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "TRF_TEMPLATE_SNAPSHOT",
+    "type": "terraform",
+    "collection": "terraformtemplate",
+    "paths": [
+      "/examples/eventgrid/event-subscription/variables.tf",
+      "/examples/eventgrid/event-subscription/main.tf"
+    ],
+    "snapshotId": "TRF_TEMPLATE_SNAPSHOT45",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "azurerm_eventgrid_event_subscription",
+      "azurerm_resource_group",
+      "azurerm_storage_container",
+      "azurerm_storage_blob",
+      "azurerm_storage_account",
+      "azurerm_storage_queue"
+    ]
+  },
+  "snapshotId": "TRF_TEMPLATE_SNAPSHOT45",
+  "collection": "terraformtemplate",
+  "json": {
+    "provider": [
+      {
+        "azurerm": {
+          "features": [
+            {}
+          ]
+        }
+      }
+    ],
+    "resources": [
+      {
+        "type": "azurerm_resource_group",
+        "name": "example",
+        "properties": {
+          "name": "${var.prefix}-resources",
+          "location": "${var.location}",
+          "compiletime_identity": "azurerm_resource_group.example"
+        }
+      },
+      {
+        "type": "azurerm_storage_account",
+        "name": "example",
+        "properties": {
+          "name": "${var.prefix}sa",
+          "resource_group_name": "${azurerm_resource_group.example.name}",
+          "location": "${azurerm_resource_group.example.location}",
+          "account_tier": "Standard",
+          "account_replication_type": "LRS",
+          "compiletime_identity": "azurerm_storage_account.example"
+        }
+      },
+      {
+        "type": "azurerm_storage_queue",
+        "name": "example",
+        "properties": {
+          "name": "${var.prefix}-sq",
+          "storage_account_name": "${azurerm_storage_account.example.name}",
+          "compiletime_identity": "azurerm_storage_queue.example"
+        }
+      },
+      {
+        "type": "azurerm_storage_container",
+        "name": "example",
+        "properties": {
+          "name": "vhds",
+          "storage_account_name": "${azurerm_storage_account.example.name}",
+          "container_access_type": "private",
+          "compiletime_identity": "azurerm_storage_container.example"
+        }
+      },
+      {
+        "type": "azurerm_storage_blob",
+        "name": "example",
+        "properties": {
+          "name": "herpderp1.vhd",
+          "storage_account_name": "${azurerm_storage_account.example.name}",
+          "storage_container_name": "${azurerm_storage_container.example.name}",
+          "type": "Page",
+          "size": 5120,
+          "compiletime_identity": "azurerm_storage_blob.example"
+        }
+      },
+      {
+        "type": "azurerm_eventgrid_event_subscription",
+        "name": "example",
+        "properties": {
+          "name": "${var.prefix}-eventsubs",
+          "scope": "${azurerm_resource_group.example.id}",
+          "storage_queue_endpoint": [
+            {
+              "storage_account_id": "${azurerm_storage_account.example.id}",
+              "queue_name": "${azurerm_storage_queue.example.name}"
+            }
+          ],
+          "storage_blob_dead_letter_destination": [
+            {
+              "storage_account_id": "${azurerm_storage_account.example.id}",
+              "storage_blob_container_name": "${azurerm_storage_container.example.name}"
+            }
+          ],
+          "retry_policy": [
+            {
+              "event_time_to_live": 11,
+              "max_delivery_attempts": 11
+            }
+          ],
+          "labels": [
+            "test",
+            "test1",
+            "test2"
+          ],
+          "compiletime_identity": "azurerm_eventgrid_event_subscription.example"
+        }
+      }
+    ]
+  }
+}

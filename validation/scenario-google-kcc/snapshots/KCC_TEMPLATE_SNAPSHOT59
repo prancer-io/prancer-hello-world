@@ -2,12 +2,12 @@
   "structure": "filesystem",
   "error": null,
   "reference": "master",
-  "contentType": "yaml",
+  "contentType": "json",
   "source": "gitConnectorGoogleKcc",
   "paths": [
-    "/samples/resources/binaryauthorizationpolicy/service-identity-policy/binaryauthorization_v1beta1_binaryauthorizationpolicy.yaml"
+    "/samples/resources/binaryauthorizationpolicy/namespace-policy/resourcemanager_v1beta1_project.yaml"
   ],
-  "timestamp": 1628765139477,
+  "timestamp": 1642973301978,
   "queryuser": null,
   "checksum": "99914b932bd37a50b983c5e7c90ae93b",
   "node": {
@@ -15,48 +15,31 @@
     "type": "kcc",
     "collection": "kcctemplate",
     "paths": [
-      "/samples/resources/binaryauthorizationpolicy/service-identity-policy/binaryauthorization_v1beta1_binaryauthorizationpolicy.yaml"
+      "/samples/resources/binaryauthorizationpolicy/namespace-policy/resourcemanager_v1beta1_project.yaml"
     ],
     "snapshotId": "KCC_TEMPLATE_SNAPSHOT59",
     "status": "active",
-    "validate": true
+    "validate": true,
+    "resourceTypes": [
+      "project"
+    ]
   },
   "snapshotId": "KCC_TEMPLATE_SNAPSHOT59",
   "collection": "kcctemplate",
   "json": {
-    "apiVersion": "binaryauthorization.cnrm.cloud.google.com/v1beta1",
-    "kind": "BinaryAuthorizationPolicy",
+    "apiVersion": "resourcemanager.cnrm.cloud.google.com/v1beta1",
+    "kind": "Project",
     "metadata": {
-      "name": "binaryauthorizationpolicy-sample-serviceidentity"
+      "name": "binauthzpolicy-dep-namespace"
     },
     "spec": {
-      "admissionWhitelistPatterns": [
-        {
-          "namePattern": "gcr.io/*"
-        }
-      ],
-      "istioServiceIdentityAdmissionRules": {
-        "spiffe://example.com/ns/test-ns/sa/default": {
-          "evaluationMode": "REQUIRE_ATTESTATION",
-          "requireAttestationsBy": [
-            {
-              "name": "binaryauthorizationpolicy-dep-serviceidentity"
-            }
-          ],
-          "enforcementMode": "ENFORCED_BLOCK_AND_AUDIT_LOG"
-        }
+      "name": "Config Connector Sample",
+      "organizationRef": {
+        "external": "${ORG_ID?}"
       },
-      "defaultAdmissionRule": {
-        "evaluationMode": "REQUIRE_ATTESTATION",
-        "requireAttestationsBy": [
-          {
-            "name": "binaryauthorizationpolicy-dep-serviceidentity"
-          }
-        ],
-        "enforcementMode": "ENFORCED_BLOCK_AND_AUDIT_LOG"
-      },
-      "description": "A sample Binary Authorization policy",
-      "globalPolicyEvaluationMode": "DISABLE"
+      "billingAccountRef": {
+        "external": "${BILLING_ACCOUNT_ID?}"
+      }
     }
   }
 }

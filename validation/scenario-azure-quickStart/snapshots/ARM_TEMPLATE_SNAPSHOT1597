@@ -1,0 +1,95 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAzureQuickStart",
+  "paths": [
+    "/quickstarts/microsoft.network/traffic-manager-external-endpoint/azuredeploy.json",
+    "/quickstarts/microsoft.network/traffic-manager-external-endpoint/azuredeploy.parameters.json"
+  ],
+  "timestamp": 1642962909517,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/quickstarts/microsoft.network/traffic-manager-external-endpoint/azuredeploy.json",
+      "/quickstarts/microsoft.network/traffic-manager-external-endpoint/azuredeploy.parameters.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT1597",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "microsoft.network/trafficmanagerprofiles"
+    ]
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT1597",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "uniqueDnsName": {
+        "type": "string",
+        "metadata": {
+          "description": "Relative DNS name for the traffic manager profile, must be globally unique."
+        },
+        "value": "GEN-UNIQUE"
+      }
+    },
+    "resources": [
+      {
+        "type": "Microsoft.Network/trafficManagerProfiles",
+        "apiVersion": "2018-08-01",
+        "name": "ExternalEndpointExample",
+        "location": "global",
+        "properties": {
+          "profileStatus": "Enabled",
+          "trafficRoutingMethod": "Performance",
+          "dnsConfig": {
+            "relativeName": "GEN-UNIQUE",
+            "ttl": 30
+          },
+          "monitorConfig": {
+            "protocol": "HTTPS",
+            "port": 443,
+            "path": "/",
+            "expectedStatusCodeRanges": [
+              {
+                "min": 200,
+                "max": 202
+              },
+              {
+                "min": 301,
+                "max": 302
+              }
+            ]
+          },
+          "endpoints": [
+            {
+              "type": "Microsoft.Network/TrafficManagerProfiles/ExternalEndpoints",
+              "name": "endpoint1",
+              "properties": {
+                "target": "www.microsoft.com",
+                "endpointStatus": "Enabled",
+                "endpointLocation": "northeurope"
+              }
+            },
+            {
+              "type": "Microsoft.Network/TrafficManagerProfiles/ExternalEndpoints",
+              "name": "endpoint2",
+              "properties": {
+                "target": "docs.microsoft.com",
+                "endpointStatus": "Enabled",
+                "endpointLocation": "southcentralus"
+              }
+            }
+          ]
+        }
+      }
+    ],
+    "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+  }
+}

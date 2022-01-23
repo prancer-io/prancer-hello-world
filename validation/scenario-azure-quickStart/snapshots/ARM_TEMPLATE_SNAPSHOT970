@@ -1,0 +1,159 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAzureQuickStart",
+  "paths": [
+    "/quickstarts/microsoft.cache/redis-premium-cluster-diagnostics/azuredeploy.json",
+    "/quickstarts/microsoft.cache/redis-premium-cluster-diagnostics/azuredeploy.parameters.json"
+  ],
+  "timestamp": 1642962903199,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/quickstarts/microsoft.cache/redis-premium-cluster-diagnostics/azuredeploy.json",
+      "/quickstarts/microsoft.cache/redis-premium-cluster-diagnostics/azuredeploy.parameters.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT970",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "microsoft.cache/redis",
+      "microsoft.insights/diagnosticsettings"
+    ]
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT970",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.0.0.0",
+    "metadata": {
+      "_generator": {
+        "name": "bicep",
+        "version": "0.4.1.14562",
+        "templateHash": "13872689946402645874"
+      }
+    },
+    "parameters": {
+      "redisCacheName": {
+        "type": "string",
+        "metadata": {
+          "description": "Specify the name of the Azure Redis Cache to create."
+        },
+        "value": "GEN-UNIQUE"
+      },
+      "location": {
+        "type": "string",
+        "defaultValue": "[resourceGroup().location]",
+        "metadata": {
+          "description": "Location of all resources"
+        }
+      },
+      "redisCacheSKU": {
+        "type": "string",
+        "defaultValue": "Premium",
+        "allowedValues": [
+          "Basic",
+          "Standard",
+          "Premium"
+        ],
+        "metadata": {
+          "description": "Specify the pricing tier of the new Azure Redis Cache."
+        }
+      },
+      "redisCacheFamily": {
+        "type": "string",
+        "defaultValue": "P",
+        "allowedValues": [
+          "C",
+          "P"
+        ],
+        "metadata": {
+          "description": "Specify the family for the sku. C = Basic/Standard, P = Premium."
+        }
+      },
+      "redisCacheCapacity": {
+        "type": "int",
+        "defaultValue": 1,
+        "allowedValues": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6
+        ],
+        "metadata": {
+          "description": "Specify the size of the new Azure Redis Cache instance. Valid values: for C (Basic/Standard) family (0, 1, 2, 3, 4, 5, 6), for P (Premium) family (1, 2, 3, 4)"
+        }
+      },
+      "enableNonSslPort": {
+        "type": "bool",
+        "defaultValue": false,
+        "metadata": {
+          "description": "Set to true to allow access to redis on port 6379, without SSL tunneling (less secure)."
+        }
+      },
+      "diagnosticsEnabled": {
+        "type": "bool",
+        "defaultValue": true,
+        "metadata": {
+          "description": "Specify a boolean value that indicates whether diagnostics should be saved to the specified storage account."
+        }
+      },
+      "existingDiagnosticsStorageAccountId": {
+        "type": "string",
+        "metadata": {
+          "description": "Specify an existing storage account for diagnostics. Must be in the same subscription."
+        },
+        "value": "GET-PREREQ-diagnosticsStorageAccountId"
+      }
+    },
+    "functions": [],
+    "resources": [
+      {
+        "type": "Microsoft.Cache/redis",
+        "apiVersion": "2020-06-01",
+        "name": "GEN-UNIQUE",
+        "location": "[resourceGroup().location]",
+        "properties": {
+          "enableNonSslPort": false,
+          "minimumTlsVersion": "1.2",
+          "sku": {
+            "capacity": 1,
+            "family": "P",
+            "name": "Premium"
+          }
+        }
+      },
+      {
+        "type": "microsoft.insights/diagnosticSettings",
+        "apiVersion": "2017-05-01-preview",
+        "scope": "[format('Microsoft.Cache/redis/{0}', parameters('redisCacheName'))]",
+        "name": "GEN-UNIQUE",
+        "properties": {
+          "storageAccountId": "GET-PREREQ-diagnosticsStorageAccountId",
+          "metrics": [
+            {
+              "timeGrain": "AllMetrics",
+              "enabled": true,
+              "retentionPolicy": {
+                "days": 90,
+                "enabled": true
+              }
+            }
+          ]
+        },
+        "dependsOn": [
+          "Microsoft.Cache/redis/GEN-UNIQUE"
+        ]
+      }
+    ],
+    "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+  }
+}

@@ -1,0 +1,113 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAzureQuickStart",
+  "paths": [
+    "/application-workloads/sql/vm-sql-full-autobackup-autopatching-keyvault/nested/preparingSqlServerSa.json"
+  ],
+  "timestamp": 1642962896684,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/application-workloads/sql/vm-sql-full-autobackup-autopatching-keyvault/nested/preparingSqlServerSa.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT555",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "microsoft.compute/virtualmachines/extensions"
+    ]
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT555",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "sqlVMName": {
+        "type": "string"
+      },
+      "location": {
+        "type": "string"
+      },
+      "adminUsername": {
+        "type": "string"
+      },
+      "adminPassword": {
+        "type": "securestring"
+      },
+      "sqlUsername": {
+        "type": "string"
+      },
+      "sqlPassword": {
+        "type": "securestring"
+      },
+      "disksCount": {
+        "type": "int"
+      },
+      "diskSizeInGB": {
+        "type": "int"
+      },
+      "sqlEnginePort": {
+        "type": "int"
+      },
+      "workloadType": {
+        "type": "string"
+      },
+      "connectionType": {
+        "type": "string"
+      },
+      "sqlVMPrepareModulesURL": {
+        "type": "string"
+      },
+      "sqlVMPrepareConfigurationFunction": {
+        "type": "string"
+      }
+    },
+    "resources": [
+      {
+        "type": "Microsoft.Compute/virtualMachines/extensions",
+        "name": "sqlVMName/dscExtension",
+        "apiVersion": "2020-12-01",
+        "location": "location",
+        "properties": {
+          "publisher": "Microsoft.Powershell",
+          "type": "DSC",
+          "typeHandlerVersion": "2.19",
+          "autoUpgradeMinorVersion": false,
+          "settings": {
+            "ModulesUrl": "sqlVMPrepareModulesURL",
+            "ConfigurationFunction": "sqlVMPrepareConfigurationFunction",
+            "properties": {
+              "SQLAdminAuthCreds": {
+                "userName": "adminUsername",
+                "Password": "privateSettingsRef:AdminPassword"
+              },
+              "SQLAuthCreds": {
+                "userName": "sqlUsername",
+                "Password": "privateSettingsRef:SqlAuthPassword"
+              },
+              "DisksCount": "disksCount",
+              "DiskSizeInGB": "diskSizeInGB",
+              "DatabaseEnginePort": "sqlEnginePort",
+              "WorkloadType": "workloadType",
+              "ConnectionType": "connectionType"
+            }
+          },
+          "protectedSettings": {
+            "items": {
+              "AdminPassword": "adminPassword",
+              "SqlAuthPassword": "sqlPassword"
+            }
+          }
+        }
+      }
+    ],
+    "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+  }
+}

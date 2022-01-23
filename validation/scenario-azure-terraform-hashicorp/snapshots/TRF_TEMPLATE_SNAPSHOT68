@@ -1,0 +1,74 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "main",
+  "contentType": "json",
+  "source": "gitConnectorAzureTerraHashicorp",
+  "paths": [
+    "/examples/managed-disks/encrypted/variables.tf",
+    "/examples/managed-disks/encrypted/1-dependencies.tf"
+  ],
+  "timestamp": 1642943279794,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "TRF_TEMPLATE_SNAPSHOT",
+    "type": "terraform",
+    "collection": "terraformtemplate",
+    "paths": [
+      "/examples/managed-disks/encrypted/variables.tf",
+      "/examples/managed-disks/encrypted/1-dependencies.tf"
+    ],
+    "snapshotId": "TRF_TEMPLATE_SNAPSHOT68",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "azurerm_key_vault",
+      "azurerm_resource_group"
+    ]
+  },
+  "snapshotId": "TRF_TEMPLATE_SNAPSHOT68",
+  "collection": "terraformtemplate",
+  "json": {
+    "provider": [
+      {
+        "azurerm": {
+          "features": [
+            {}
+          ]
+        }
+      }
+    ],
+    "data": {
+      "azurerm_client_config": {
+        "current": {
+          "compiletime_identity": "data.azurerm_client_config.current"
+        }
+      }
+    },
+    "resources": [
+      {
+        "type": "azurerm_resource_group",
+        "name": "test",
+        "properties": {
+          "name": "${var.prefix}-resources",
+          "location": "North Europe",
+          "compiletime_identity": "azurerm_resource_group.test"
+        }
+      },
+      {
+        "type": "azurerm_key_vault",
+        "name": "test",
+        "properties": {
+          "name": "${var.prefix}kv",
+          "location": "${azurerm_resource_group.test.location}",
+          "resource_group_name": "${azurerm_resource_group.test.name}",
+          "tenant_id": "${data.azurerm_client_config.current.tenant_id}",
+          "sku_name": "premium",
+          "enabled_for_disk_encryption": true,
+          "compiletime_identity": "azurerm_key_vault.test"
+        }
+      }
+    ]
+  }
+}

@@ -2,12 +2,12 @@
   "structure": "filesystem",
   "error": null,
   "reference": "master",
-  "contentType": "yaml",
+  "contentType": "json",
   "source": "gitConnectorGoogleKcc",
   "paths": [
-    "/samples/resources/servicenetworkingconnection/compute_v1beta1_computeaddress_multiple_yaml_1.yaml"
+    "/samples/resources/logginglogexclusion/folder-exclusion/logging_v1beta1_logginglogexclusion.yaml"
   ],
-  "timestamp": 1628765150600,
+  "timestamp": 1642973304483,
   "queryuser": null,
   "checksum": "99914b932bd37a50b983c5e7c90ae93b",
   "node": {
@@ -15,28 +15,29 @@
     "type": "kcc",
     "collection": "kcctemplate",
     "paths": [
-      "/samples/resources/servicenetworkingconnection/compute_v1beta1_computeaddress_multiple_yaml_1.yaml"
+      "/samples/resources/logginglogexclusion/folder-exclusion/logging_v1beta1_logginglogexclusion.yaml"
     ],
     "snapshotId": "KCC_TEMPLATE_SNAPSHOT502",
     "status": "active",
-    "validate": true
+    "validate": true,
+    "resourceTypes": [
+      "logginglogexclusion"
+    ]
   },
   "snapshotId": "KCC_TEMPLATE_SNAPSHOT502",
   "collection": "kcctemplate",
   "json": {
-    "apiVersion": "compute.cnrm.cloud.google.com/v1beta1",
-    "kind": "ComputeAddress",
+    "apiVersion": "logging.cnrm.cloud.google.com/v1beta1",
+    "kind": "LoggingLogExclusion",
     "metadata": {
-      "name": "servicenetworkingconnection-dep2"
+      "name": "logginglogexclusion-sample-folder"
     },
     "spec": {
-      "addressType": "INTERNAL",
-      "location": "global",
-      "networkRef": {
-        "name": "servicenetworkingconnection-dep"
+      "folderRef": {
+        "name": "logginglogexclusion-dep-folder"
       },
-      "prefixLength": 24,
-      "purpose": "VPC_PEERING"
+      "description": "A folder log exclusion",
+      "filter": "resource.type=gcs_bucket severity<ERROR sample(insertId, 0.99)"
     }
   }
 }

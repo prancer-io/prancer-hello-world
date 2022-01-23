@@ -1,0 +1,127 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAzureQuickStart",
+  "paths": [
+    "/modules/Microsoft.KeyVault/vaults/keys/0.9/azuredeploy.json",
+    "/modules/Microsoft.KeyVault/vaults/keys/0.9/azuredeploy.parameters.json"
+  ],
+  "timestamp": 1642962902682,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/modules/Microsoft.KeyVault/vaults/keys/0.9/azuredeploy.json",
+      "/modules/Microsoft.KeyVault/vaults/keys/0.9/azuredeploy.parameters.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT908",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "microsoft.keyvault/vaults/keys"
+    ]
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT908",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "vaultName": {
+        "type": "string",
+        "metadata": {
+          "description": "Specifies the name of the KeyVault, this vault must already exist."
+        },
+        "value": "GET-PREREQ-vaultName"
+      },
+      "keyName": {
+        "type": "string",
+        "metadata": {
+          "description": "Specifies the name of the key to be created."
+        },
+        "value": "GEN-UNIQUE"
+      },
+      "attributes": {
+        "type": "object",
+        "defaultValue": {},
+        "metadata": {
+          "description": "The attributes of a key managed by the key vault service."
+        }
+      },
+      "crv": {
+        "type": "string",
+        "defaultValue": "",
+        "allowedValues": [
+          "",
+          "P-256",
+          "P-256K",
+          "P-384",
+          "P-521"
+        ],
+        "metadata": {
+          "description": "Elliptic curve name."
+        }
+      },
+      "key_ops": {
+        "type": "array",
+        "defaultValue": [],
+        "metadata": {
+          "description": "JSON web key operations. Operations include: 'encrypt', 'decrypt', 'sign', 'verify', 'wrapKey', 'unwrapKey'"
+        }
+      },
+      "key_size": {
+        "type": "int",
+        "defaultValue": 4096,
+        "metadata": {
+          "description": "The key size in bits. For example: 2048, 3072, or 4096 for RSA."
+        }
+      },
+      "kty": {
+        "type": "string",
+        "defaultValue": "RSA",
+        "allowedValues": [
+          "EC",
+          "EC-HSM",
+          "RSA",
+          "RSA-HSM"
+        ],
+        "metadata": {
+          "description": "The type of key to create"
+        }
+      },
+      "tags": {
+        "type": "object",
+        "defaultValue": {},
+        "metadata": {
+          "description": "Tags to be assigned to the Key."
+        }
+      }
+    },
+    "resources": [
+      {
+        "type": "Microsoft.KeyVault/vaults/keys",
+        "apiVersion": "2019-09-01",
+        "name": "GET-PREREQ-vaultName/GEN-UNIQUE",
+        "tags": {},
+        "properties": {
+          "attributes": {},
+          "crv": "",
+          "kty": "RSA",
+          "key_ops": [],
+          "key_size": 4096
+        }
+      }
+    ],
+    "outputs": {
+      "key": {
+        "type": "object",
+        "value": "[reference(resourceId('Microsoft.KeyVault/vaults/keys', parameters('vaultName'), parameters('keyName')), '2019-09-01', 'Full')]"
+      }
+    },
+    "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+  }
+}

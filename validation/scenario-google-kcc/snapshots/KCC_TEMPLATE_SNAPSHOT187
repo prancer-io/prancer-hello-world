@@ -2,12 +2,12 @@
   "structure": "filesystem",
   "error": null,
   "reference": "master",
-  "contentType": "yaml",
+  "contentType": "json",
   "source": "gitConnectorGoogleKcc",
   "paths": [
-    "/samples/resources/computereservation/bulk-compute-reservation/compute_v1beta1_computereservation.yaml"
+    "/samples/resources/computeinstancegroupmanager/zonal-compute-instance-group-manager/compute_v1beta1_computeinstancetemplate.yaml"
   ],
-  "timestamp": 1628765142209,
+  "timestamp": 1642973302893,
   "queryuser": null,
   "checksum": "99914b932bd37a50b983c5e7c90ae93b",
   "node": {
@@ -15,30 +15,43 @@
     "type": "kcc",
     "collection": "kcctemplate",
     "paths": [
-      "/samples/resources/computereservation/bulk-compute-reservation/compute_v1beta1_computereservation.yaml"
+      "/samples/resources/computeinstancegroupmanager/zonal-compute-instance-group-manager/compute_v1beta1_computeinstancetemplate.yaml"
     ],
     "snapshotId": "KCC_TEMPLATE_SNAPSHOT187",
     "status": "active",
-    "validate": true
+    "validate": true,
+    "resourceTypes": [
+      "computeinstancetemplate"
+    ]
   },
   "snapshotId": "KCC_TEMPLATE_SNAPSHOT187",
   "collection": "kcctemplate",
   "json": {
     "apiVersion": "compute.cnrm.cloud.google.com/v1beta1",
-    "kind": "ComputeReservation",
+    "kind": "ComputeInstanceTemplate",
     "metadata": {
-      "name": "computereservation-sample-bulk"
+      "name": "computeinstancegroupmanager-dep-zonal"
     },
     "spec": {
-      "description": "Reservation for 2 basic machines which will become generally available for VM instances to consume.",
-      "zone": "us-central1-a",
-      "specificReservation": {
-        "count": 2,
-        "instanceProperties": {
-          "machineType": "n1-standard-1",
-          "minCpuPlatform": "Intel Sandy Bridge"
+      "machineType": "n1-standard-1",
+      "disk": [
+        {
+          "sourceImageRef": {
+            "external": "debian-cloud/debian-9"
+          },
+          "boot": true
         }
-      }
+      ],
+      "networkInterface": [
+        {
+          "networkRef": {
+            "name": "computeinstancegroupmanager-dep-zonal"
+          },
+          "subnetworkRef": {
+            "name": "computeinstancegroupmanager-dep-zonal"
+          }
+        }
+      ]
     }
   }
 }

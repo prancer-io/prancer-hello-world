@@ -2,12 +2,12 @@
   "structure": "filesystem",
   "error": null,
   "reference": "master",
-  "contentType": "yaml",
+  "contentType": "json",
   "source": "gitConnectorGoogleKcc",
   "paths": [
-    "/samples/resources/logginglogexclusion/project-exclusion/logging_v1beta1_logginglogexclusion.yaml"
+    "/samples/resources/iampartialpolicy/project-level-policy/resourcemanager_v1beta1_project.yaml"
   ],
-  "timestamp": 1628765148899,
+  "timestamp": 1642973304247,
   "queryuser": null,
   "checksum": "99914b932bd37a50b983c5e7c90ae93b",
   "node": {
@@ -15,26 +15,34 @@
     "type": "kcc",
     "collection": "kcctemplate",
     "paths": [
-      "/samples/resources/logginglogexclusion/project-exclusion/logging_v1beta1_logginglogexclusion.yaml"
+      "/samples/resources/iampartialpolicy/project-level-policy/resourcemanager_v1beta1_project.yaml"
     ],
     "snapshotId": "KCC_TEMPLATE_SNAPSHOT446",
     "status": "active",
-    "validate": true
+    "validate": true,
+    "resourceTypes": [
+      "project"
+    ]
   },
   "snapshotId": "KCC_TEMPLATE_SNAPSHOT446",
   "collection": "kcctemplate",
   "json": {
-    "apiVersion": "logging.cnrm.cloud.google.com/v1beta1",
-    "kind": "LoggingLogExclusion",
+    "apiVersion": "resourcemanager.cnrm.cloud.google.com/v1beta1",
+    "kind": "Project",
     "metadata": {
-      "name": "logginglogexclusion-sample-project"
+      "annotations": {
+        "cnrm.cloud.google.com/auto-create-network": "false"
+      },
+      "name": "iampartialpolicy-dep-project"
     },
     "spec": {
-      "projectRef": {
-        "name": "logginglogexclusion-dep-project"
+      "name": "Config Connector Sample",
+      "billingAccountRef": {
+        "external": "${BILLING_ACCOUNT_ID?}"
       },
-      "description": "A project log exclusion",
-      "filter": "resource.type=gcs_bucket severity<ERROR sample(insertId, 0.99)"
+      "organizationRef": {
+        "external": "${ORG_ID?}"
+      }
     }
   }
 }

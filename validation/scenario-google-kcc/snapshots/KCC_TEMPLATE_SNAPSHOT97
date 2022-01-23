@@ -2,12 +2,12 @@
   "structure": "filesystem",
   "error": null,
   "reference": "master",
-  "contentType": "yaml",
+  "contentType": "json",
   "source": "gitConnectorGoogleKcc",
   "paths": [
-    "/samples/resources/computeexternalvpngateway/compute_v1beta1_computeexternalvpngateway.yaml"
+    "/samples/resources/computebackendbucket/basic-backend-bucket/compute_v1beta1_computebackendbucket.yaml"
   ],
-  "timestamp": 1628765140276,
+  "timestamp": 1642973302299,
   "queryuser": null,
   "checksum": "99914b932bd37a50b983c5e7c90ae93b",
   "node": {
@@ -15,32 +15,31 @@
     "type": "kcc",
     "collection": "kcctemplate",
     "paths": [
-      "/samples/resources/computeexternalvpngateway/compute_v1beta1_computeexternalvpngateway.yaml"
+      "/samples/resources/computebackendbucket/basic-backend-bucket/compute_v1beta1_computebackendbucket.yaml"
     ],
     "snapshotId": "KCC_TEMPLATE_SNAPSHOT97",
     "status": "active",
-    "validate": true
+    "validate": true,
+    "resourceTypes": [
+      "computebackendbucket"
+    ]
   },
   "snapshotId": "KCC_TEMPLATE_SNAPSHOT97",
   "collection": "kcctemplate",
   "json": {
     "apiVersion": "compute.cnrm.cloud.google.com/v1beta1",
-    "kind": "ComputeExternalVPNGateway",
+    "kind": "ComputeBackendBucket",
     "metadata": {
-      "name": "computeexternalvpngateway-sample",
+      "name": "computebackendbucket-sample-basic",
       "labels": {
         "label-one": "value-one"
       }
     },
     "spec": {
-      "description": "an external vpn gateway",
-      "redundancyType": "SINGLE_IP_INTERNALLY_REDUNDANT",
-      "interface": [
-        {
-          "id": 0,
-          "ipAddress": "8.8.8.8"
-        }
-      ]
+      "bucketRef": {
+        "name": "${PROJECT_ID?}-backendbucket-dep-basic"
+      },
+      "description": "contains a reference to a bucket for use with HTTP(S) load-balancing"
     }
   }
 }

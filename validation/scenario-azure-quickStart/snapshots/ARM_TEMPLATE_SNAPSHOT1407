@@ -1,0 +1,264 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAzureQuickStart",
+  "paths": [
+    "/quickstarts/microsoft.machinelearningservices/machine-learning-compute-attach-dsvm/prereqs/prereq.azuredeploy.json",
+    "/quickstarts/microsoft.machinelearningservices/machine-learning-compute-attach-dsvm/prereqs/prereq.azuredeploy.parameters.json"
+  ],
+  "timestamp": 1642962907531,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/quickstarts/microsoft.machinelearningservices/machine-learning-compute-attach-dsvm/prereqs/prereq.azuredeploy.json",
+      "/quickstarts/microsoft.machinelearningservices/machine-learning-compute-attach-dsvm/prereqs/prereq.azuredeploy.parameters.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT1407",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "microsoft.network/publicipaddresses",
+      "microsoft.resources/deployments",
+      "microsoft.network/virtualnetworks",
+      "microsoft.network/networkinterfaces",
+      "microsoft.compute/virtualmachines",
+      "microsoft.network/networksecuritygroups"
+    ]
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT1407",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "projectName": {
+        "type": "string",
+        "metadata": {
+          "description": "Specifies a name for generating resource names."
+        },
+        "value": "GEN-UNIQUE-8"
+      },
+      "adminPassword": {
+        "type": "securestring",
+        "metadata": {
+          "description": "The password for the Administrator account."
+        }
+      },
+      "vmSize": {
+        "type": "string",
+        "defaultValue": "Standard_D2s_v3",
+        "metadata": {
+          "description": "The size of the virtual machine."
+        }
+      },
+      "location": {
+        "type": "string",
+        "defaultValue": "[resourceGroup().location]",
+        "metadata": {
+          "description": "Specifies the location for all resources."
+        }
+      },
+      "adminUsername": {
+        "type": "string",
+        "metadata": {
+          "description": "Specifies a username for the Virtual Machine."
+        },
+        "value": "GEN-UNIQUE-8"
+      },
+      "adminPublicKey": {
+        "type": "string",
+        "metadata": {
+          "description": "Specifies the SSH rsa public key file as a string. Use \"ssh-keygen -t rsa -b 2048\" to generate your SSH key pairs."
+        },
+        "value": "GEN-SSH-PUB-KEY"
+      }
+    },
+    "variables": {
+      "vNetName": "GEN-UNIQUE-8-vnet",
+      "vNetAddressPrefixes": "10.0.0.0/16",
+      "vNetSubnetName": "default",
+      "vNetSubnetAddressPrefix": "10.0.0.0/24",
+      "vmName": "GEN-UNIQUE-8-vm",
+      "publicIPAddressName": "GEN-UNIQUE-8-ip",
+      "networkInterfaceName": "GEN-UNIQUE-8-nic",
+      "networkSecurityGroupName": "GEN-UNIQUE-8-nsg"
+    },
+    "resources": [
+      {
+        "type": "Microsoft.Resources/deployments",
+        "apiVersion": "2020-06-01",
+        "name": "ml",
+        "properties": {
+          "mode": "Incremental",
+          "templateLink": {
+            "uri": "https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/modules/machine-learning-workspace/0.9/azuredeploy.json",
+            "contentVersion": "1.0.0.0"
+          },
+          "parameters": {
+            "location": {
+              "value": "[resourceGroup().location]"
+            }
+          }
+        }
+      },
+      {
+        "type": "Microsoft.Network/networkSecurityGroups",
+        "apiVersion": "2020-06-01",
+        "name": "GEN-UNIQUE-8-nsg",
+        "location": "[resourceGroup().location]",
+        "properties": {
+          "securityRules": [
+            {
+              "name": "ssh_rule",
+              "properties": {
+                "description": "Locks inbound down to ssh default port 22.",
+                "protocol": "Tcp",
+                "sourcePortRange": "*",
+                "destinationPortRange": "22",
+                "sourceAddressPrefix": "*",
+                "destinationAddressPrefix": "*",
+                "access": "Allow",
+                "priority": 123,
+                "direction": "Inbound"
+              }
+            }
+          ]
+        }
+      },
+      {
+        "type": "Microsoft.Network/publicIPAddresses",
+        "apiVersion": "2020-06-01",
+        "name": "GEN-UNIQUE-8-ip",
+        "location": "[resourceGroup().location]",
+        "properties": {
+          "publicIPAllocationMethod": "Dynamic"
+        },
+        "sku": {
+          "name": "Basic"
+        }
+      },
+      {
+        "type": "Microsoft.Network/virtualNetworks",
+        "apiVersion": "2020-06-01",
+        "name": "GEN-UNIQUE-8-vnet",
+        "location": "[resourceGroup().location]",
+        "dependsOn": [
+          "Microsoft.Network/networkSecurityGroups/GEN-UNIQUE-8-nsg"
+        ],
+        "properties": {
+          "addressSpace": {
+            "addressPrefixes": [
+              "10.0.0.0/16"
+            ]
+          },
+          "subnets": [
+            {
+              "name": "default",
+              "properties": {
+                "addressPrefix": "10.0.0.0/24",
+                "networkSecurityGroup": {
+                  "id": "Microsoft.Network/networkSecurityGroups/GEN-UNIQUE-8-nsg"
+                }
+              }
+            }
+          ]
+        }
+      },
+      {
+        "type": "Microsoft.Network/networkInterfaces",
+        "apiVersion": "2020-06-01",
+        "name": "GEN-UNIQUE-8-nic",
+        "location": "[resourceGroup().location]",
+        "dependsOn": [
+          "Microsoft.Network/publicIPAddresses/GEN-UNIQUE-8-ip",
+          "Microsoft.Network/virtualNetworks/GEN-UNIQUE-8-vnet",
+          "Microsoft.Network/networkSecurityGroups/GEN-UNIQUE-8-nsg"
+        ],
+        "properties": {
+          "ipConfigurations": [
+            {
+              "name": "ipconfig1",
+              "properties": {
+                "privateIPAllocationMethod": "Dynamic",
+                "publicIPAddress": {
+                  "id": "Microsoft.Network/publicIPAddresses/GEN-UNIQUE-8-ip"
+                },
+                "subnet": {
+                  "id": "Microsoft.Network/virtualNetworks/subnets/GEN-UNIQUE-8-vnet/default"
+                }
+              }
+            }
+          ]
+        }
+      },
+      {
+        "type": "Microsoft.Compute/virtualMachines",
+        "apiVersion": "2020-06-01",
+        "name": "GEN-UNIQUE-8-vm",
+        "location": "[resourceGroup().location]",
+        "dependsOn": [
+          "Microsoft.Network/networkInterfaces/GEN-UNIQUE-8-nic"
+        ],
+        "properties": {
+          "hardwareProfile": {
+            "vmSize": "Standard_D2s_v3"
+          },
+          "osProfile": {
+            "computerName": "GEN-UNIQUE-8-vm",
+            "adminUsername": "GEN-UNIQUE-8",
+            "adminPassword": "adminPassword",
+            "linuxConfiguration": {
+              "disablePasswordAuthentication": false,
+              "ssh": {
+                "publicKeys": [
+                  {
+                    "path": "/home/GEN-UNIQUE-8/.ssh/authorized_keys",
+                    "keyData": "GEN-SSH-PUB-KEY"
+                  }
+                ]
+              }
+            }
+          },
+          "storageProfile": {
+            "imageReference": {
+              "publisher": "Canonical",
+              "offer": "UbuntuServer",
+              "sku": "18.04-LTS",
+              "version": "latest"
+            },
+            "osDisk": {
+              "createOption": "fromImage"
+            }
+          },
+          "networkProfile": {
+            "networkInterfaces": [
+              {
+                "id": "Microsoft.Network/networkInterfaces/GEN-UNIQUE-8-nic"
+              }
+            ]
+          }
+        }
+      }
+    ],
+    "outputs": {
+      "workspaceName": {
+        "type": "string",
+        "value": "[reference('ml').outputs.workspaceName.value]"
+      },
+      "adminUsername": {
+        "type": "string",
+        "value": "[parameters('adminUsername')]"
+      },
+      "vmName": {
+        "type": "string",
+        "value": "[variables('vmName')]"
+      }
+    },
+    "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+  }
+}

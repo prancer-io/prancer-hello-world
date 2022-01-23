@@ -2,12 +2,12 @@
   "structure": "filesystem",
   "error": null,
   "reference": "master",
-  "contentType": "yaml",
+  "contentType": "json",
   "source": "gitConnectorGoogleKcc",
   "paths": [
-    "/samples/resources/cloudschedulerjob/scheduler-job-oauth/iam_v1beta1_iamserviceaccount.yaml"
+    "/samples/resources/binaryauthorizationpolicy/service-identity-policy/binaryauthorization_v1beta1_binaryauthorizationpolicy.yaml"
   ],
-  "timestamp": 1628765139703,
+  "timestamp": 1642973302072,
   "queryuser": null,
   "checksum": "99914b932bd37a50b983c5e7c90ae93b",
   "node": {
@@ -15,22 +15,54 @@
     "type": "kcc",
     "collection": "kcctemplate",
     "paths": [
-      "/samples/resources/cloudschedulerjob/scheduler-job-oauth/iam_v1beta1_iamserviceaccount.yaml"
+      "/samples/resources/binaryauthorizationpolicy/service-identity-policy/binaryauthorization_v1beta1_binaryauthorizationpolicy.yaml"
     ],
     "snapshotId": "KCC_TEMPLATE_SNAPSHOT69",
     "status": "active",
-    "validate": true
+    "validate": true,
+    "resourceTypes": [
+      "binaryauthorizationpolicy"
+    ]
   },
   "snapshotId": "KCC_TEMPLATE_SNAPSHOT69",
   "collection": "kcctemplate",
   "json": {
-    "apiVersion": "iam.cnrm.cloud.google.com/v1beta1",
-    "kind": "IAMServiceAccount",
+    "apiVersion": "binaryauthorization.cnrm.cloud.google.com/v1beta1",
+    "kind": "BinaryAuthorizationPolicy",
     "metadata": {
-      "name": "cloudscheduler-oauth-dep"
+      "name": "binaryauthorizationpolicy-sample-serviceidentity"
     },
     "spec": {
-      "displayName": "Example Service Account"
+      "projectRef": {
+        "name": "binauthzpolicy-dep-si"
+      },
+      "admissionWhitelistPatterns": [
+        {
+          "namePattern": "gcr.io/*"
+        }
+      ],
+      "istioServiceIdentityAdmissionRules": {
+        "spiffe://example.com/ns/test-ns/sa/default": {
+          "evaluationMode": "REQUIRE_ATTESTATION",
+          "requireAttestationsBy": [
+            {
+              "name": "binaryauthorizationpolicy-dep-serviceidentity"
+            }
+          ],
+          "enforcementMode": "ENFORCED_BLOCK_AND_AUDIT_LOG"
+        }
+      },
+      "defaultAdmissionRule": {
+        "evaluationMode": "REQUIRE_ATTESTATION",
+        "requireAttestationsBy": [
+          {
+            "name": "binaryauthorizationpolicy-dep-serviceidentity"
+          }
+        ],
+        "enforcementMode": "ENFORCED_BLOCK_AND_AUDIT_LOG"
+      },
+      "description": "A sample Binary Authorization policy",
+      "globalPolicyEvaluationMode": "DISABLE"
     }
   }
 }

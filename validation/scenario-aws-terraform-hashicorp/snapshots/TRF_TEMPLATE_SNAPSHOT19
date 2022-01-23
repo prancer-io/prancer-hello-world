@@ -1,0 +1,136 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "main",
+  "contentType": "json",
+  "source": "gitConnectorAwsTerraHashicorp",
+  "paths": [
+    "/examples/events/kinesis/outputs.tf",
+    "/examples/events/kinesis/variables.tf",
+    "/examples/events/kinesis/main.tf"
+  ],
+  "timestamp": 1642967657681,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "TRF_TEMPLATE_SNAPSHOT",
+    "type": "terraform",
+    "collection": "terraformtemplate",
+    "paths": [
+      "/examples/events/kinesis/outputs.tf",
+      "/examples/events/kinesis/variables.tf",
+      "/examples/events/kinesis/main.tf"
+    ],
+    "snapshotId": "TRF_TEMPLATE_SNAPSHOT19",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "aws_iam_role_policy",
+      "aws_iam_role",
+      "aws_cloudwatch_event_rule",
+      "aws_kinesis_stream",
+      "aws_cloudwatch_event_target"
+    ]
+  },
+  "snapshotId": "TRF_TEMPLATE_SNAPSHOT19",
+  "collection": "terraformtemplate",
+  "json": {
+    "terraform": [
+      {
+        "required_version": ">= 0.12"
+      }
+    ],
+    "provider": [
+      {
+        "aws": {
+          "region": "${var.aws_region}"
+        }
+      }
+    ],
+    "resources": [
+      {
+        "type": "aws_cloudwatch_event_rule",
+        "name": "foo",
+        "properties": {
+          "name": "tf-example-cloudwatch-event-rule-for-kinesis",
+          "event_pattern": {
+            "detail-type": [
+              "AWS API Call via CloudTrail"
+            ],
+            "detail": {
+              "eventSource": [
+                "autoscaling.amazonaws.com"
+              ]
+            }
+          },
+          "role_arn": "${aws_iam_role.role.arn}",
+          "compiletime_identity": "aws_cloudwatch_event_rule.foo"
+        }
+      },
+      {
+        "type": "aws_iam_role",
+        "name": "role",
+        "properties": {
+          "name": "tf-example-iam-role-for-kinesis",
+          "assume_role_policy": {
+            "Version": "2012-10-17",
+            "Statement": [
+              {
+                "Action": "sts:AssumeRole",
+                "Principal": {
+                  "Service": "events.amazonaws.com"
+                },
+                "Effect": "Allow",
+                "Sid": ""
+              }
+            ]
+          },
+          "compiletime_identity": "aws_iam_role.role"
+        }
+      },
+      {
+        "type": "aws_iam_role_policy",
+        "name": "policy",
+        "properties": {
+          "name": "tf-example-policy",
+          "role": "${aws_iam_role.role.id}",
+          "policy": {
+            "Version": "2012-10-17",
+            "Statement": [
+              {
+                "Action": [
+                  "kinesis:PutRecord",
+                  "kinesis:PutRecords"
+                ],
+                "Resource": [
+                  "*"
+                ],
+                "Effect": "Allow"
+              }
+            ]
+          },
+          "compiletime_identity": "aws_iam_role_policy.policy"
+        }
+      },
+      {
+        "type": "aws_cloudwatch_event_target",
+        "name": "foobar",
+        "properties": {
+          "rule": "${aws_cloudwatch_event_rule.foo.name}",
+          "target_id": "tf-example-cloudwatch-event-target-for-kinesis",
+          "arn": "${aws_kinesis_stream.foo.arn}",
+          "compiletime_identity": "aws_cloudwatch_event_target.foobar"
+        }
+      },
+      {
+        "type": "aws_kinesis_stream",
+        "name": "foo",
+        "properties": {
+          "name": "tf-example-kinesis-stream",
+          "shard_count": 1,
+          "compiletime_identity": "aws_kinesis_stream.foo"
+        }
+      }
+    ]
+  }
+}

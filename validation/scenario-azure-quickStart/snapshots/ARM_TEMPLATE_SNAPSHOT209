@@ -1,0 +1,155 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAzureQuickStart",
+  "paths": [
+    "/application-workloads/kafka/kafka-on-ubuntu/shared-resources.json",
+    "/application-workloads/kafka/kafka-on-ubuntu/azuredeploy.parameters.json"
+  ],
+  "timestamp": 1642962890588,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/application-workloads/kafka/kafka-on-ubuntu/shared-resources.json",
+      "/application-workloads/kafka/kafka-on-ubuntu/azuredeploy.parameters.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT209",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "microsoft.network/virtualnetworks",
+      "microsoft.storage/storageaccounts",
+      "microsoft.compute/availabilitysets"
+    ]
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT209",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "storageAccountName": {
+        "type": "string",
+        "defaultValue": "uniquestoragsharedkafka",
+        "metadata": {
+          "Description": "Unique namespace for the Storage Account where the Virtual Machine's disks will be placed"
+        },
+        "value": "GEN-UNIQUE-8"
+      },
+      "virtualNetworkName": {
+        "type": "string",
+        "defaultValue": "myVNET",
+        "metadata": {
+          "Description": "The arbitrary name of the virtual network provisioned for the cluster"
+        },
+        "value": "GEN-VNET-NAME"
+      },
+      "addressPrefix": {
+        "type": "string",
+        "defaultValue": "10.0.0.0/16",
+        "metadata": {
+          "Description": "The network address space for the virtual network"
+        },
+        "value": "10.0.0.0/16"
+      },
+      "subnetName": {
+        "type": "string",
+        "defaultValue": "Subnet-1",
+        "metadata": {
+          "Description": "Subnet name for the virtual network that resources will be provisioned in to"
+        },
+        "value": "GEN-SUBNET1-NAME"
+      },
+      "subnetPrefix": {
+        "type": "string",
+        "defaultValue": "10.0.0.0/24",
+        "metadata": {
+          "Description": "Address space for the virtual network subnet"
+        },
+        "value": "10.0.0.0/24"
+      },
+      "location": {
+        "type": "string",
+        "metadata": {
+          "description": "Location for all resources."
+        }
+      },
+      "adminUsername": {
+        "value": "GEN-UNIQUE"
+      },
+      "adminPassword": {
+        "value": "GEN-PASSWORD"
+      },
+      "kafkaVersion": {
+        "value": "0.8.2.1"
+      },
+      "kafkaNodeIPAddressPrefix": {
+        "value": "10.0.0.1"
+      },
+      "kafkaZooNodeIPAddressPrefix": {
+        "value": "10.0.0.4"
+      },
+      "jumpbox": {
+        "value": "enabled"
+      },
+      "tshirtSize": {
+        "value": "S"
+      }
+    },
+    "variables": {
+      "platformFaultDomainCount": 2,
+      "platformUpdateDomainCount": "5"
+    },
+    "resources": [
+      {
+        "type": "Microsoft.Storage/storageAccounts",
+        "name": "GEN-UNIQUE-8",
+        "apiVersion": "2021-01-01",
+        "location": "location",
+        "sku": {
+          "name": "Standard_LRS"
+        }
+      },
+      {
+        "apiVersion": "2020-12-01",
+        "type": "Microsoft.Compute/availabilitySets",
+        "name": "kafkaCluserAS",
+        "location": "location",
+        "sku": {
+          "name": "Aligned"
+        },
+        "properties": {
+          "platformFaultDomainCount": 2,
+          "platformUpdateDomainCount": "5"
+        }
+      },
+      {
+        "apiVersion": "2020-08-01",
+        "type": "Microsoft.Network/virtualNetworks",
+        "name": "GEN-VNET-NAME",
+        "location": "location",
+        "properties": {
+          "addressSpace": {
+            "addressPrefixes": [
+              "10.0.0.0/16"
+            ]
+          },
+          "subnets": [
+            {
+              "name": "GEN-SUBNET1-NAME",
+              "properties": {
+                "addressPrefix": "10.0.0.0/24"
+              }
+            }
+          ]
+        }
+      }
+    ],
+    "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+  }
+}

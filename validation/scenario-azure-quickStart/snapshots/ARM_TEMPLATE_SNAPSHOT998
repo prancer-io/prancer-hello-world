@@ -1,0 +1,130 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAzureQuickStart",
+  "paths": [
+    "/quickstarts/microsoft.compute/create-encrypted-managed-disk/azuredeploy.json",
+    "/quickstarts/microsoft.compute/create-encrypted-managed-disk/azuredeploy.parameters.json"
+  ],
+  "timestamp": 1642962903415,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/quickstarts/microsoft.compute/create-encrypted-managed-disk/azuredeploy.json",
+      "/quickstarts/microsoft.compute/create-encrypted-managed-disk/azuredeploy.parameters.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT998",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "microsoft.resources/deployments"
+    ]
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT998",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "vhdUri": {
+        "type": "string",
+        "metadata": {
+          "description": "Storage VHD Uri"
+        },
+        "value": "vhdUri"
+      },
+      "managedDiskName": {
+        "type": "string",
+        "metadata": {
+          "description": "Name of the managed disk to be copied"
+        },
+        "value": "MyManagedDisk"
+      },
+      "keyVaultResourceID": {
+        "type": "string",
+        "metadata": {
+          "description": "KeyVault resource id. Ex: /subscriptions/subscriptionid/resourceGroups/contosorg/providers/Microsoft.KeyVault/vaults/contosovault"
+        },
+        "value": "keyVaultResourceID"
+      },
+      "keyVaultSecretUrl": {
+        "type": "string",
+        "metadata": {
+          "description": "KeyVault secret Url. Ex: https://contosovault.vault.azure.net/secrets/contososecret/e088818e865e48488cf363af16dea596"
+        },
+        "value": "KeyVaultSecretUrl"
+      },
+      "useExistingKek": {
+        "type": "string",
+        "defaultValue": "nokek",
+        "allowedValues": [
+          "nokek",
+          "kek"
+        ],
+        "metadata": {
+          "description": "Select kek if the secret is encrypted with a key encryption key and pass explicit keyVaultKekUrl. For nokek, you can keep keyVaultKekUrl empty."
+        },
+        "value": "kek"
+      },
+      "kekUrl": {
+        "type": "string",
+        "defaultValue": "",
+        "metadata": {
+          "description": "key encryption key Url. Ex: https://contosovault.vault.azure.net/keys/contosokek/562a4bb76b524a1493a6afe8e536ee78"
+        },
+        "value": "FullVersionedKekUrl"
+      },
+      "kekVaultResourceID": {
+        "type": "string",
+        "defaultValue": "",
+        "metadata": {
+          "description": "key encryption key vault resource id. Ex: /subscriptions/subscriptionid/resourceGroups/contosorg/providers/Microsoft.KeyVault/vaults/contosovault"
+        },
+        "value": "KekVaultResourceId"
+      }
+    },
+    "variables": {
+      "createDiskUrl": "https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/201-create-encrypted-managed-disk/CreateEncryptedManagedDisk-kek.json"
+    },
+    "resources": [
+      {
+        "name": "CreateEncryptedManagedDisk",
+        "type": "Microsoft.Resources/deployments",
+        "apiVersion": "2015-01-01",
+        "properties": {
+          "mode": "Incremental",
+          "templateLink": {
+            "uri": "https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/201-create-encrypted-managed-disk/CreateEncryptedManagedDisk-kek.json",
+            "contentVersion": "1.0.0.0"
+          },
+          "parameters": {
+            "vhdUri": {
+              "value": "vhdUri"
+            },
+            "managedDiskName": {
+              "value": "MyManagedDisk"
+            },
+            "keyVaultResourceID": {
+              "value": "keyVaultResourceID"
+            },
+            "keyVaultSecretUrl": {
+              "value": "KeyVaultSecretUrl"
+            },
+            "kekUrl": {
+              "value": "FullVersionedKekUrl"
+            },
+            "kekVaultResourceID": {
+              "value": "KekVaultResourceId"
+            }
+          }
+        }
+      }
+    ],
+    "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+  }
+}

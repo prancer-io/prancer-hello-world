@@ -1,0 +1,115 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAzureQuickStart",
+  "paths": [
+    "/quickstarts/microsoft.logic/logic-app-create/azuredeploy.json",
+    "/quickstarts/microsoft.logic/logic-app-create/azuredeploy.parameters.json"
+  ],
+  "timestamp": 1642962907446,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/quickstarts/microsoft.logic/logic-app-create/azuredeploy.json",
+      "/quickstarts/microsoft.logic/logic-app-create/azuredeploy.parameters.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT1397",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "microsoft.logic/workflows"
+    ]
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT1397",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.0.0.0",
+    "metadata": {
+      "_generator": {
+        "name": "bicep",
+        "version": "0.4.1.14562",
+        "templateHash": "6960855688496991779"
+      }
+    },
+    "parameters": {
+      "logicAppName": {
+        "type": "string",
+        "metadata": {
+          "description": "The name of the logic app to create."
+        },
+        "value": "GEN-UNIQUE"
+      },
+      "testUri": {
+        "type": "string",
+        "defaultValue": "https://status.azure.com/en-us/status/",
+        "metadata": {
+          "description": "A test URI"
+        }
+      },
+      "location": {
+        "type": "string",
+        "defaultValue": "[resourceGroup().location]",
+        "metadata": {
+          "description": "Location for all resources."
+        }
+      }
+    },
+    "functions": [],
+    "variables": {
+      "frequency": "Hour",
+      "interval": "1",
+      "type": "recurrence",
+      "actionType": "http",
+      "method": "GET",
+      "workflowSchema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#"
+    },
+    "resources": [
+      {
+        "type": "Microsoft.Logic/workflows",
+        "apiVersion": "2019-05-01",
+        "name": "GEN-UNIQUE",
+        "location": "[resourceGroup().location]",
+        "tags": {
+          "displayName": "GEN-UNIQUE"
+        },
+        "properties": {
+          "definition": {
+            "contentVersion": "1.0.0.0",
+            "parameters": {
+              "testUri": {
+                "type": "string",
+                "defaultValue": "https://status.azure.com/en-us/status/"
+              }
+            },
+            "triggers": {
+              "recurrence": {
+                "type": "recurrence",
+                "recurrence": {
+                  "frequency": "Hour",
+                  "interval": "1"
+                }
+              }
+            },
+            "actions": {
+              "actionType": {
+                "type": "http",
+                "inputs": {
+                  "method": "GET",
+                  "uri": "https://status.azure.com/en-us/status/"
+                }
+              }
+            },
+            "\uff04schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#"
+          }
+        }
+      }
+    ],
+    "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+  }
+}

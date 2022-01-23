@@ -1,0 +1,2329 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAzureQuickStart",
+  "paths": [
+    "/quickstarts/microsoft.machinelearningservices/machine-learning-end-to-end-secure/azuredeploy.json",
+    "/quickstarts/microsoft.machinelearningservices/machine-learning-end-to-end-secure/azuredeploy.parameters.json"
+  ],
+  "timestamp": 1642962907844,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/quickstarts/microsoft.machinelearningservices/machine-learning-end-to-end-secure/azuredeploy.json",
+      "/quickstarts/microsoft.machinelearningservices/machine-learning-end-to-end-secure/azuredeploy.parameters.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT1446",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "microsoft.resources/deployments"
+    ]
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT1446",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.0.0.0",
+    "metadata": {
+      "_generator": {
+        "name": "bicep",
+        "version": "0.4.1008.15138",
+        "templateHash": "14565441295447500401"
+      }
+    },
+    "parameters": {
+      "prefix": {
+        "type": "string",
+        "metadata": {
+          "description": "Prefix for all resource names."
+        },
+        "maxLength": 10,
+        "minLength": 2,
+        "value": "GEN-UNIQUE-6"
+      },
+      "location": {
+        "type": "string",
+        "defaultValue": "[resourceGroup().location]",
+        "metadata": {
+          "description": "Azure region used for the deployment of all resources."
+        }
+      },
+      "tags": {
+        "type": "object",
+        "defaultValue": {},
+        "metadata": {
+          "description": "Set of tags to apply to all resources."
+        }
+      },
+      "vnetAddressPrefix": {
+        "type": "string",
+        "defaultValue": "192.168.0.0/16",
+        "metadata": {
+          "description": "Virtual network address prefix"
+        }
+      },
+      "trainingSubnetPrefix": {
+        "type": "string",
+        "defaultValue": "192.168.0.0/24",
+        "metadata": {
+          "description": "Training subnet address prefix"
+        }
+      },
+      "scoringSubnetPrefix": {
+        "type": "string",
+        "defaultValue": "192.168.1.0/24",
+        "metadata": {
+          "description": "Scoring subnet address prefix"
+        }
+      },
+      "azureBastionSubnetPrefix": {
+        "type": "string",
+        "defaultValue": "192.168.250.0/27",
+        "metadata": {
+          "description": "Bastion subnet address prefix"
+        }
+      },
+      "deployJumphost": {
+        "type": "bool",
+        "defaultValue": true,
+        "metadata": {
+          "description": "Deploy a Bastion jumphost to access the network-isolated environment?"
+        }
+      },
+      "dsvmJumpboxUsername": {
+        "type": "string",
+        "metadata": {
+          "description": "Jumphost virtual machine username"
+        },
+        "value": "GEN-UNIQUE-12"
+      },
+      "dsvmJumpboxPassword": {
+        "type": "secureString",
+        "metadata": {
+          "description": "Jumphost virtual machine password"
+        },
+        "minLength": 8,
+        "value": "GEN-PASSWORD"
+      },
+      "amlComputePublicIp": {
+        "type": "bool",
+        "defaultValue": true,
+        "metadata": {
+          "description": "Enable public IP for Azure Machine Learning compute nodes"
+        }
+      }
+    },
+    "functions": [],
+    "variables": {
+      "name": "[toLower(format('{0}', parameters('prefix')))]",
+      "uniqueSuffix": "[substring(uniqueString(resourceGroup().id), 0, 4)]"
+    },
+    "resources": [
+      {
+        "type": "Microsoft.Resources/deployments",
+        "apiVersion": "2020-06-01",
+        "name": "[format('nsg-{0}-{1}-deployment', variables('name'), variables('uniqueSuffix'))]",
+        "properties": {
+          "expressionEvaluationOptions": {
+            "scope": "inner"
+          },
+          "mode": "Incremental",
+          "parameters": {
+            "location": {
+              "value": "[resourceGroup().location]"
+            },
+            "tags": {
+              "value": {}
+            },
+            "nsgName": {
+              "value": "[format('nsg-{0}-{1}', variables('name'), variables('uniqueSuffix'))]"
+            }
+          },
+          "template": {
+            "contentVersion": "1.0.0.0",
+            "metadata": {
+              "_generator": {
+                "name": "bicep",
+                "version": "0.4.1008.15138",
+                "templateHash": "5724756153718803515"
+              }
+            },
+            "parameters": {
+              "location": {
+                "type": "string",
+                "metadata": {
+                  "description": "Azure region of the deployment"
+                }
+              },
+              "tags": {
+                "type": "object",
+                "metadata": {
+                  "description": "Tags to add to the resources"
+                }
+              },
+              "nsgName": {
+                "type": "string",
+                "metadata": {
+                  "description": "Name of the network security group"
+                }
+              }
+            },
+            "functions": [],
+            "resources": [
+              {
+                "type": "Microsoft.Network/networkSecurityGroups",
+                "apiVersion": "2020-07-01",
+                "name": "nsgName",
+                "location": "[resourceGroup().location]",
+                "tags": {},
+                "properties": {
+                  "securityRules": [
+                    {
+                      "name": "BatchNodeManagement",
+                      "properties": {
+                        "protocol": "Tcp",
+                        "sourcePortRange": "*",
+                        "destinationPortRange": "29876-29877",
+                        "sourceAddressPrefix": "BatchNodeManagement",
+                        "destinationAddressPrefix": "*",
+                        "access": "Allow",
+                        "priority": 120,
+                        "direction": "Inbound"
+                      }
+                    },
+                    {
+                      "name": "AzureMachineLearning",
+                      "properties": {
+                        "protocol": "Tcp",
+                        "sourcePortRange": "*",
+                        "destinationPortRange": "44224",
+                        "sourceAddressPrefix": "AzureMachineLearning",
+                        "destinationAddressPrefix": "*",
+                        "access": "Allow",
+                        "priority": 130,
+                        "direction": "Inbound"
+                      }
+                    },
+                    {
+                      "name": "AzureActiveDirectory",
+                      "properties": {
+                        "protocol": "Tcp",
+                        "sourcePortRange": "*",
+                        "destinationPortRange": "*",
+                        "sourceAddressPrefix": "*",
+                        "destinationAddressPrefix": "AzureActiveDirectory",
+                        "access": "Allow",
+                        "priority": 140,
+                        "direction": "Outbound"
+                      }
+                    },
+                    {
+                      "name": "AzureMachineLearningOutbound",
+                      "properties": {
+                        "protocol": "Tcp",
+                        "sourcePortRange": "*",
+                        "destinationPortRange": "443",
+                        "sourceAddressPrefix": "*",
+                        "destinationAddressPrefix": "AzureMachineLearning",
+                        "access": "Allow",
+                        "priority": 150,
+                        "direction": "Outbound"
+                      }
+                    },
+                    {
+                      "name": "AzureResourceManager",
+                      "properties": {
+                        "protocol": "Tcp",
+                        "sourcePortRange": "*",
+                        "destinationPortRange": "443",
+                        "sourceAddressPrefix": "*",
+                        "destinationAddressPrefix": "AzureResourceManager",
+                        "access": "Allow",
+                        "priority": 160,
+                        "direction": "Outbound"
+                      }
+                    },
+                    {
+                      "name": "AzureStorageAccount",
+                      "properties": {
+                        "protocol": "Tcp",
+                        "sourcePortRange": "*",
+                        "destinationPortRange": "443",
+                        "sourceAddressPrefix": "*",
+                        "destinationAddressPrefix": "[format('Storage.{0}', parameters('location'))]",
+                        "access": "Allow",
+                        "priority": 170,
+                        "direction": "Outbound"
+                      }
+                    },
+                    {
+                      "name": "AzureFrontDoor",
+                      "properties": {
+                        "protocol": "Tcp",
+                        "sourcePortRange": "*",
+                        "destinationPortRange": "443",
+                        "sourceAddressPrefix": "*",
+                        "destinationAddressPrefix": "AzureFrontDoor.FrontEnd",
+                        "access": "Allow",
+                        "priority": 180,
+                        "direction": "Outbound"
+                      }
+                    },
+                    {
+                      "name": "AzureContainerRegistry",
+                      "properties": {
+                        "protocol": "Tcp",
+                        "sourcePortRange": "*",
+                        "destinationPortRange": "443",
+                        "sourceAddressPrefix": "*",
+                        "destinationAddressPrefix": "[format('AzureContainerRegistry.{0}', parameters('location'))]",
+                        "access": "Allow",
+                        "priority": 190,
+                        "direction": "Outbound"
+                      }
+                    },
+                    {
+                      "name": "MicrosoftContainerRegistry",
+                      "properties": {
+                        "protocol": "Tcp",
+                        "sourcePortRange": "*",
+                        "destinationPortRange": "443",
+                        "sourceAddressPrefix": "VirtualNetwork",
+                        "destinationAddressPrefix": "MicrosoftContainerRegistry",
+                        "access": "Allow",
+                        "priority": 200,
+                        "direction": "Outbound"
+                      }
+                    }
+                  ]
+                }
+              }
+            ],
+            "outputs": {
+              "networkSecurityGroup": {
+                "type": "string",
+                "value": "Microsoft.Network/networkSecurityGroups/nsgName"
+              }
+            },
+            "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+          }
+        }
+      },
+      {
+        "type": "Microsoft.Resources/deployments",
+        "apiVersion": "2020-06-01",
+        "name": "[format('vnet-{0}-{1}-deployment', variables('name'), variables('uniqueSuffix'))]",
+        "properties": {
+          "expressionEvaluationOptions": {
+            "scope": "inner"
+          },
+          "mode": "Incremental",
+          "parameters": {
+            "location": {
+              "value": "[resourceGroup().location]"
+            },
+            "virtualNetworkName": {
+              "value": "[format('vnet-{0}-{1}', variables('name'), variables('uniqueSuffix'))]"
+            },
+            "networkSecurityGroupId": {
+              "value": "[reference(resourceId('Microsoft.Resources/deployments', format('nsg-{0}-{1}-deployment', variables('name'), variables('uniqueSuffix'))), '2020-06-01').outputs.networkSecurityGroup.value]"
+            },
+            "vnetAddressPrefix": {
+              "value": "192.168.0.0/16"
+            },
+            "trainingSubnetPrefix": {
+              "value": "192.168.0.0/24"
+            },
+            "scoringSubnetPrefix": {
+              "value": "192.168.1.0/24"
+            },
+            "tags": {
+              "value": {}
+            }
+          },
+          "template": {
+            "contentVersion": "1.0.0.0",
+            "metadata": {
+              "_generator": {
+                "name": "bicep",
+                "version": "0.4.1008.15138",
+                "templateHash": "10591746188748759881"
+              }
+            },
+            "parameters": {
+              "location": {
+                "type": "string",
+                "defaultValue": "[resourceGroup().location]",
+                "metadata": {
+                  "description": "Azure region of the deployment"
+                }
+              },
+              "tags": {
+                "type": "object",
+                "defaultValue": {},
+                "metadata": {
+                  "description": "Tags to add to the resources"
+                }
+              },
+              "virtualNetworkName": {
+                "type": "string",
+                "metadata": {
+                  "description": "Name of the virtual network resource"
+                }
+              },
+              "networkSecurityGroupId": {
+                "type": "string",
+                "metadata": {
+                  "description": "Group ID of the network security group"
+                }
+              },
+              "vnetAddressPrefix": {
+                "type": "string",
+                "defaultValue": "192.168.0.0/16",
+                "metadata": {
+                  "description": "Virtual network address prefix"
+                }
+              },
+              "trainingSubnetPrefix": {
+                "type": "string",
+                "defaultValue": "192.168.0.0/24",
+                "metadata": {
+                  "description": "Training subnet address prefix"
+                }
+              },
+              "scoringSubnetPrefix": {
+                "type": "string",
+                "defaultValue": "192.168.1.0/24",
+                "metadata": {
+                  "description": "Scoring subnet address prefix"
+                }
+              }
+            },
+            "functions": [],
+            "resources": [
+              {
+                "type": "Microsoft.Network/virtualNetworks",
+                "apiVersion": "2020-07-01",
+                "name": "virtualNetworkName",
+                "location": "[resourceGroup().location]",
+                "tags": {},
+                "properties": {
+                  "addressSpace": {
+                    "addressPrefixes": [
+                      "192.168.0.0/16"
+                    ]
+                  },
+                  "subnets": [
+                    {
+                      "name": "snet-training",
+                      "properties": {
+                        "addressPrefix": "192.168.0.0/24",
+                        "privateEndpointNetworkPolicies": "Disabled",
+                        "privateLinkServiceNetworkPolicies": "Disabled",
+                        "networkSecurityGroup": {
+                          "id": "networkSecurityGroupId"
+                        }
+                      }
+                    },
+                    {
+                      "name": "snet-scoring",
+                      "properties": {
+                        "addressPrefix": "192.168.1.0/24",
+                        "privateEndpointNetworkPolicies": "Disabled",
+                        "privateLinkServiceNetworkPolicies": "Disabled",
+                        "serviceEndpoints": [
+                          {
+                            "service": "Microsoft.KeyVault"
+                          },
+                          {
+                            "service": "Microsoft.ContainerRegistry"
+                          },
+                          {
+                            "service": "Microsoft.Storage"
+                          }
+                        ],
+                        "networkSecurityGroup": {
+                          "id": "networkSecurityGroupId"
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            ],
+            "outputs": {
+              "id": {
+                "type": "string",
+                "value": "Microsoft.Network/virtualNetworks/virtualNetworkName"
+              },
+              "name": {
+                "type": "string",
+                "value": "virtualNetworkName"
+              }
+            },
+            "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+          }
+        },
+        "dependsOn": [
+          "[resourceId('Microsoft.Resources/deployments', format('nsg-{0}-{1}-deployment', variables('name'), variables('uniqueSuffix')))]"
+        ]
+      },
+      {
+        "type": "Microsoft.Resources/deployments",
+        "apiVersion": "2020-06-01",
+        "name": "[format('kv-{0}-{1}-deployment', variables('name'), variables('uniqueSuffix'))]",
+        "properties": {
+          "expressionEvaluationOptions": {
+            "scope": "inner"
+          },
+          "mode": "Incremental",
+          "parameters": {
+            "location": {
+              "value": "[resourceGroup().location]"
+            },
+            "keyvaultName": {
+              "value": "[format('kv-{0}-{1}', variables('name'), variables('uniqueSuffix'))]"
+            },
+            "keyvaultPleName": {
+              "value": "[format('ple-{0}-{1}-kv', variables('name'), variables('uniqueSuffix'))]"
+            },
+            "subnetId": {
+              "value": "[format('{0}/subnets/snet-training', reference(resourceId('Microsoft.Resources/deployments', format('vnet-{0}-{1}-deployment', variables('name'), variables('uniqueSuffix'))), '2020-06-01').outputs.id.value)]"
+            },
+            "virtualNetworkId": {
+              "value": "[format('{0}', reference(resourceId('Microsoft.Resources/deployments', format('vnet-{0}-{1}-deployment', variables('name'), variables('uniqueSuffix'))), '2020-06-01').outputs.id.value)]"
+            },
+            "tags": {
+              "value": {}
+            }
+          },
+          "template": {
+            "contentVersion": "1.0.0.0",
+            "metadata": {
+              "_generator": {
+                "name": "bicep",
+                "version": "0.4.1008.15138",
+                "templateHash": "12636422013707223001"
+              }
+            },
+            "parameters": {
+              "location": {
+                "type": "string",
+                "defaultValue": "[resourceGroup().location]",
+                "metadata": {
+                  "description": "The Azure Region to deploy the resrouce group into"
+                }
+              },
+              "tags": {
+                "type": "object",
+                "defaultValue": {},
+                "metadata": {
+                  "description": "Tags to apply to the Key Vault Instance"
+                }
+              },
+              "keyvaultName": {
+                "type": "string",
+                "metadata": {
+                  "description": "The name of the Key Vault"
+                }
+              },
+              "keyvaultPleName": {
+                "type": "string",
+                "metadata": {
+                  "description": "The name of the Key Vault private link endpoint"
+                }
+              },
+              "subnetId": {
+                "type": "string",
+                "metadata": {
+                  "description": "The Subnet ID where the Key Vault Private Link is to be created"
+                }
+              },
+              "virtualNetworkId": {
+                "type": "string",
+                "metadata": {
+                  "description": "The VNet ID where the Key Vault Private Link is to be created"
+                }
+              }
+            },
+            "functions": [],
+            "variables": {
+              "privateDnsZoneName": "[format('privatelink{0}', environment().suffixes.keyvaultDns)]"
+            },
+            "resources": [
+              {
+                "type": "Microsoft.KeyVault/vaults",
+                "apiVersion": "2021-04-01-preview",
+                "name": "keyvaultName",
+                "location": "[resourceGroup().location]",
+                "tags": {},
+                "properties": {
+                  "createMode": "default",
+                  "enabledForDeployment": false,
+                  "enabledForDiskEncryption": false,
+                  "enabledForTemplateDeployment": false,
+                  "enableSoftDelete": true,
+                  "enableRbacAuthorization": true,
+                  "enablePurgeProtection": true,
+                  "networkAcls": {
+                    "bypass": "AzureServices",
+                    "defaultAction": "Deny"
+                  },
+                  "sku": {
+                    "family": "A",
+                    "name": "standard"
+                  },
+                  "softDeleteRetentionInDays": 7,
+                  "tenantId": "[subscription().tenantId]"
+                }
+              },
+              {
+                "type": "Microsoft.Network/privateEndpoints",
+                "apiVersion": "2020-11-01",
+                "name": "keyvaultPleName",
+                "location": "[resourceGroup().location]",
+                "tags": {},
+                "properties": {
+                  "privateLinkServiceConnections": [
+                    {
+                      "name": "keyvaultPleName",
+                      "properties": {
+                        "groupIds": [
+                          "vault"
+                        ],
+                        "privateLinkServiceId": "Microsoft.KeyVault/vaults/keyvaultName"
+                      }
+                    }
+                  ],
+                  "subnet": {
+                    "id": "subnetId"
+                  }
+                },
+                "dependsOn": [
+                  "Microsoft.KeyVault/vaults/keyvaultName"
+                ]
+              },
+              {
+                "type": "Microsoft.Network/privateDnsZones",
+                "apiVersion": "2020-01-01",
+                "name": "privateDnsZoneName",
+                "location": "global"
+              },
+              {
+                "type": "Microsoft.Network/privateEndpoints/privateDnsZoneGroups",
+                "apiVersion": "2020-06-01",
+                "name": "[format('{0}/vault-PrivateDnsZoneGroup', parameters('keyvaultPleName'))]",
+                "properties": {
+                  "privateDnsZoneConfigs": [
+                    {
+                      "name": "privateDnsZoneName",
+                      "properties": {
+                        "privateDnsZoneId": "Microsoft.Network/privateDnsZones/privateDnsZoneName"
+                      }
+                    }
+                  ]
+                },
+                "dependsOn": [
+                  "Microsoft.Network/privateDnsZones/privateDnsZoneName",
+                  "Microsoft.Network/privateEndpoints/keyvaultPleName"
+                ]
+              },
+              {
+                "type": "Microsoft.Network/privateDnsZones/virtualNetworkLinks",
+                "apiVersion": "2020-01-01",
+                "name": "[format('{0}/{1}', variables('privateDnsZoneName'), uniqueString(resourceId('Microsoft.KeyVault/vaults', parameters('keyvaultName'))))]",
+                "location": "global",
+                "properties": {
+                  "registrationEnabled": false,
+                  "virtualNetwork": {
+                    "id": "virtualNetworkId"
+                  }
+                },
+                "dependsOn": [
+                  "Microsoft.KeyVault/vaults/keyvaultName",
+                  "Microsoft.Network/privateDnsZones/privateDnsZoneName"
+                ]
+              }
+            ],
+            "outputs": {
+              "keyvaultId": {
+                "type": "string",
+                "value": "Microsoft.KeyVault/vaults/keyvaultName"
+              }
+            },
+            "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+          }
+        },
+        "dependsOn": [
+          "[resourceId('Microsoft.Resources/deployments', format('vnet-{0}-{1}-deployment', variables('name'), variables('uniqueSuffix')))]"
+        ]
+      },
+      {
+        "type": "Microsoft.Resources/deployments",
+        "apiVersion": "2020-06-01",
+        "name": "[format('st{0}{1}-deployment', variables('name'), variables('uniqueSuffix'))]",
+        "properties": {
+          "expressionEvaluationOptions": {
+            "scope": "inner"
+          },
+          "mode": "Incremental",
+          "parameters": {
+            "location": {
+              "value": "[resourceGroup().location]"
+            },
+            "storageName": {
+              "value": "[format('st{0}{1}', variables('name'), variables('uniqueSuffix'))]"
+            },
+            "storagePleBlobName": {
+              "value": "[format('ple-{0}-{1}-st-blob', variables('name'), variables('uniqueSuffix'))]"
+            },
+            "storagePleFileName": {
+              "value": "[format('ple-{0}-{1}-st-file', variables('name'), variables('uniqueSuffix'))]"
+            },
+            "storageSkuName": {
+              "value": "Standard_LRS"
+            },
+            "subnetId": {
+              "value": "[format('{0}/subnets/snet-training', reference(resourceId('Microsoft.Resources/deployments', format('vnet-{0}-{1}-deployment', variables('name'), variables('uniqueSuffix'))), '2020-06-01').outputs.id.value)]"
+            },
+            "virtualNetworkId": {
+              "value": "[format('{0}', reference(resourceId('Microsoft.Resources/deployments', format('vnet-{0}-{1}-deployment', variables('name'), variables('uniqueSuffix'))), '2020-06-01').outputs.id.value)]"
+            },
+            "tags": {
+              "value": {}
+            }
+          },
+          "template": {
+            "contentVersion": "1.0.0.0",
+            "metadata": {
+              "_generator": {
+                "name": "bicep",
+                "version": "0.4.1008.15138",
+                "templateHash": "14988990043174041597"
+              }
+            },
+            "parameters": {
+              "location": {
+                "type": "string",
+                "metadata": {
+                  "description": "Azure region of the deployment"
+                }
+              },
+              "tags": {
+                "type": "object",
+                "metadata": {
+                  "description": "Tags to add to the resources"
+                }
+              },
+              "storageName": {
+                "type": "string",
+                "metadata": {
+                  "description": "Name of the storage account"
+                }
+              },
+              "storagePleBlobName": {
+                "type": "string",
+                "metadata": {
+                  "description": "Name of the storage blob private link endpoint"
+                }
+              },
+              "storagePleFileName": {
+                "type": "string",
+                "metadata": {
+                  "description": "Name of the storage file private link endpoint"
+                }
+              },
+              "subnetId": {
+                "type": "string",
+                "metadata": {
+                  "description": "Resource ID of the subnet"
+                }
+              },
+              "virtualNetworkId": {
+                "type": "string",
+                "metadata": {
+                  "description": "Resource ID of the virtual network"
+                }
+              },
+              "storageSkuName": {
+                "type": "string",
+                "defaultValue": "Standard_LRS",
+                "metadata": {
+                  "description": "Storage SKU"
+                },
+                "allowedValues": [
+                  "Standard_LRS",
+                  "Standard_ZRS",
+                  "Standard_GRS",
+                  "Standard_GZRS",
+                  "Standard_RAGRS",
+                  "Standard_RAGZRS",
+                  "Premium_LRS",
+                  "Premium_ZRS"
+                ]
+              }
+            },
+            "functions": [],
+            "variables": {
+              "storageNameCleaned": "[replace(parameters('storageName'), '-', '')]",
+              "blobPrivateDnsZoneName": "[format('privatelink.blob.{0}', environment().suffixes.storage)]",
+              "filePrivateDnsZoneName": "[format('privatelink.file.{0}', environment().suffixes.storage)]"
+            },
+            "resources": [
+              {
+                "type": "Microsoft.Storage/storageAccounts",
+                "apiVersion": "2021-04-01",
+                "name": "storageNameCleaned",
+                "location": "[resourceGroup().location]",
+                "tags": {},
+                "sku": {
+                  "name": "storageSkuName"
+                },
+                "kind": "StorageV2",
+                "properties": {
+                  "accessTier": "Hot",
+                  "allowBlobPublicAccess": false,
+                  "allowCrossTenantReplication": false,
+                  "allowSharedKeyAccess": true,
+                  "encryption": {
+                    "keySource": "Microsoft.Storage",
+                    "requireInfrastructureEncryption": false,
+                    "services": {
+                      "blob": {
+                        "enabled": true,
+                        "keyType": "Account"
+                      },
+                      "file": {
+                        "enabled": true,
+                        "keyType": "Account"
+                      },
+                      "queue": {
+                        "enabled": true,
+                        "keyType": "Service"
+                      },
+                      "table": {
+                        "enabled": true,
+                        "keyType": "Service"
+                      }
+                    }
+                  },
+                  "isHnsEnabled": false,
+                  "isNfsV3Enabled": false,
+                  "keyPolicy": {
+                    "keyExpirationPeriodInDays": 7
+                  },
+                  "largeFileSharesState": "Disabled",
+                  "minimumTlsVersion": "TLS1_2",
+                  "networkAcls": {
+                    "bypass": "AzureServices",
+                    "defaultAction": "Deny"
+                  },
+                  "supportsHttpsTrafficOnly": true
+                }
+              },
+              {
+                "type": "Microsoft.Network/privateEndpoints",
+                "apiVersion": "2020-11-01",
+                "name": "storagePleBlobName",
+                "location": "[resourceGroup().location]",
+                "tags": {},
+                "properties": {
+                  "privateLinkServiceConnections": [
+                    {
+                      "name": "storagePleBlobName",
+                      "properties": {
+                        "groupIds": [
+                          "blob"
+                        ],
+                        "privateLinkServiceId": "Microsoft.Storage/storageAccounts/storageNameCleaned",
+                        "privateLinkServiceConnectionState": {
+                          "status": "Approved",
+                          "description": "Auto-Approved",
+                          "actionsRequired": "None"
+                        }
+                      }
+                    }
+                  ],
+                  "subnet": {
+                    "id": "subnetId"
+                  }
+                },
+                "dependsOn": [
+                  "Microsoft.Storage/storageAccounts/storageNameCleaned"
+                ]
+              },
+              {
+                "type": "Microsoft.Network/privateEndpoints",
+                "apiVersion": "2020-11-01",
+                "name": "storagePleFileName",
+                "location": "[resourceGroup().location]",
+                "tags": {},
+                "properties": {
+                  "privateLinkServiceConnections": [
+                    {
+                      "name": "storagePleFileName",
+                      "properties": {
+                        "groupIds": [
+                          "file"
+                        ],
+                        "privateLinkServiceId": "Microsoft.Storage/storageAccounts/storageNameCleaned",
+                        "privateLinkServiceConnectionState": {
+                          "status": "Approved",
+                          "description": "Auto-Approved",
+                          "actionsRequired": "None"
+                        }
+                      }
+                    }
+                  ],
+                  "subnet": {
+                    "id": "subnetId"
+                  }
+                },
+                "dependsOn": [
+                  "Microsoft.Storage/storageAccounts/storageNameCleaned"
+                ]
+              },
+              {
+                "type": "Microsoft.Network/privateDnsZones",
+                "apiVersion": "2020-01-01",
+                "name": "blobPrivateDnsZoneName",
+                "location": "global"
+              },
+              {
+                "type": "Microsoft.Network/privateEndpoints/privateDnsZoneGroups",
+                "apiVersion": "2020-06-01",
+                "name": "[format('{0}/blob-PrivateDnsZoneGroup', parameters('storagePleBlobName'))]",
+                "properties": {
+                  "privateDnsZoneConfigs": [
+                    {
+                      "name": "blobPrivateDnsZoneName",
+                      "properties": {
+                        "privateDnsZoneId": "Microsoft.Network/privateDnsZones/blobPrivateDnsZoneName"
+                      }
+                    }
+                  ]
+                },
+                "dependsOn": [
+                  "Microsoft.Network/privateDnsZones/blobPrivateDnsZoneName",
+                  "Microsoft.Network/privateEndpoints/storagePleBlobName"
+                ]
+              },
+              {
+                "type": "Microsoft.Network/privateDnsZones/virtualNetworkLinks",
+                "apiVersion": "2020-01-01",
+                "name": "[format('{0}/{1}', variables('blobPrivateDnsZoneName'), uniqueString(resourceId('Microsoft.Storage/storageAccounts', variables('storageNameCleaned'))))]",
+                "location": "global",
+                "properties": {
+                  "registrationEnabled": false,
+                  "virtualNetwork": {
+                    "id": "virtualNetworkId"
+                  }
+                },
+                "dependsOn": [
+                  "Microsoft.Network/privateDnsZones/blobPrivateDnsZoneName",
+                  "Microsoft.Storage/storageAccounts/storageNameCleaned"
+                ]
+              },
+              {
+                "type": "Microsoft.Network/privateDnsZones",
+                "apiVersion": "2020-01-01",
+                "name": "filePrivateDnsZoneName",
+                "location": "global"
+              },
+              {
+                "type": "Microsoft.Network/privateEndpoints/privateDnsZoneGroups",
+                "apiVersion": "2020-06-01",
+                "name": "[format('{0}/flie-PrivateDnsZoneGroup', parameters('storagePleFileName'))]",
+                "properties": {
+                  "privateDnsZoneConfigs": [
+                    {
+                      "name": "filePrivateDnsZoneName",
+                      "properties": {
+                        "privateDnsZoneId": "Microsoft.Network/privateDnsZones/filePrivateDnsZoneName"
+                      }
+                    }
+                  ]
+                },
+                "dependsOn": [
+                  "Microsoft.Network/privateDnsZones/filePrivateDnsZoneName",
+                  "Microsoft.Network/privateEndpoints/storagePleFileName"
+                ]
+              },
+              {
+                "type": "Microsoft.Network/privateDnsZones/virtualNetworkLinks",
+                "apiVersion": "2020-01-01",
+                "name": "[format('{0}/{1}', variables('filePrivateDnsZoneName'), uniqueString(resourceId('Microsoft.Storage/storageAccounts', variables('storageNameCleaned'))))]",
+                "location": "global",
+                "properties": {
+                  "registrationEnabled": false,
+                  "virtualNetwork": {
+                    "id": "virtualNetworkId"
+                  }
+                },
+                "dependsOn": [
+                  "Microsoft.Network/privateDnsZones/filePrivateDnsZoneName",
+                  "Microsoft.Storage/storageAccounts/storageNameCleaned"
+                ]
+              }
+            ],
+            "outputs": {
+              "storageId": {
+                "type": "string",
+                "value": "Microsoft.Storage/storageAccounts/storageNameCleaned"
+              }
+            },
+            "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+          }
+        },
+        "dependsOn": [
+          "[resourceId('Microsoft.Resources/deployments', format('vnet-{0}-{1}-deployment', variables('name'), variables('uniqueSuffix')))]"
+        ]
+      },
+      {
+        "type": "Microsoft.Resources/deployments",
+        "apiVersion": "2020-06-01",
+        "name": "[format('cr{0}{1}-deployment', variables('name'), variables('uniqueSuffix'))]",
+        "properties": {
+          "expressionEvaluationOptions": {
+            "scope": "inner"
+          },
+          "mode": "Incremental",
+          "parameters": {
+            "location": {
+              "value": "[resourceGroup().location]"
+            },
+            "containerRegistryName": {
+              "value": "[format('cr{0}{1}', variables('name'), variables('uniqueSuffix'))]"
+            },
+            "containerRegistryPleName": {
+              "value": "[format('ple-{0}-{1}-cr', variables('name'), variables('uniqueSuffix'))]"
+            },
+            "subnetId": {
+              "value": "[format('{0}/subnets/snet-training', reference(resourceId('Microsoft.Resources/deployments', format('vnet-{0}-{1}-deployment', variables('name'), variables('uniqueSuffix'))), '2020-06-01').outputs.id.value)]"
+            },
+            "virtualNetworkId": {
+              "value": "[format('{0}', reference(resourceId('Microsoft.Resources/deployments', format('vnet-{0}-{1}-deployment', variables('name'), variables('uniqueSuffix'))), '2020-06-01').outputs.id.value)]"
+            },
+            "tags": {
+              "value": {}
+            }
+          },
+          "template": {
+            "contentVersion": "1.0.0.0",
+            "metadata": {
+              "_generator": {
+                "name": "bicep",
+                "version": "0.4.1008.15138",
+                "templateHash": "1520760919535861853"
+              }
+            },
+            "parameters": {
+              "location": {
+                "type": "string",
+                "metadata": {
+                  "description": "Azure region of the deployment"
+                }
+              },
+              "tags": {
+                "type": "object",
+                "metadata": {
+                  "description": "Tags to add to the resources"
+                }
+              },
+              "containerRegistryName": {
+                "type": "string",
+                "metadata": {
+                  "description": "Container registry name"
+                }
+              },
+              "containerRegistryPleName": {
+                "type": "string",
+                "metadata": {
+                  "description": "Container registry private link endpoint name"
+                }
+              },
+              "subnetId": {
+                "type": "string",
+                "metadata": {
+                  "description": "Resource ID of the subnet"
+                }
+              },
+              "virtualNetworkId": {
+                "type": "string",
+                "metadata": {
+                  "description": "Resource ID of the virtual network"
+                }
+              }
+            },
+            "functions": [],
+            "variables": {
+              "containerRegistryNameCleaned": "[replace(parameters('containerRegistryName'), '-', '')]",
+              "privateDnsZoneName": "[format('privatelink{0}', environment().suffixes.acrLoginServer)]",
+              "groupName": "registry"
+            },
+            "resources": [
+              {
+                "type": "Microsoft.ContainerRegistry/registries",
+                "apiVersion": "2020-11-01-preview",
+                "name": "containerRegistryNameCleaned",
+                "location": "[resourceGroup().location]",
+                "tags": {},
+                "sku": {
+                  "name": "Premium"
+                },
+                "properties": {
+                  "adminUserEnabled": true,
+                  "anonymousPullEnabled": false,
+                  "dataEndpointEnabled": false,
+                  "networkRuleBypassOptions": "AzureServices",
+                  "networkRuleSet": {
+                    "defaultAction": "Deny"
+                  },
+                  "policies": {
+                    "quarantinePolicy": {
+                      "status": "enabled"
+                    },
+                    "retentionPolicy": {
+                      "status": "enabled",
+                      "days": 7
+                    },
+                    "trustPolicy": {
+                      "status": "disabled",
+                      "type": "Notary"
+                    }
+                  },
+                  "publicNetworkAccess": "Disabled",
+                  "zoneRedundancy": "Disabled"
+                }
+              },
+              {
+                "type": "Microsoft.Network/privateEndpoints",
+                "apiVersion": "2020-11-01",
+                "name": "containerRegistryPleName",
+                "location": "[resourceGroup().location]",
+                "tags": {},
+                "properties": {
+                  "privateLinkServiceConnections": [
+                    {
+                      "name": "containerRegistryPleName",
+                      "properties": {
+                        "groupIds": [
+                          "groupName"
+                        ],
+                        "privateLinkServiceId": "Microsoft.ContainerRegistry/registries/containerRegistryNameCleaned"
+                      }
+                    }
+                  ],
+                  "subnet": {
+                    "id": "subnetId"
+                  }
+                },
+                "dependsOn": [
+                  "Microsoft.ContainerRegistry/registries/containerRegistryNameCleaned"
+                ]
+              },
+              {
+                "type": "Microsoft.Network/privateDnsZones",
+                "apiVersion": "2020-01-01",
+                "name": "privateDnsZoneName",
+                "location": "global"
+              },
+              {
+                "type": "Microsoft.Network/privateEndpoints/privateDnsZoneGroups",
+                "apiVersion": "2020-06-01",
+                "name": "[format('{0}/{1}-PrivateDnsZoneGroup', parameters('containerRegistryPleName'), variables('groupName'))]",
+                "properties": {
+                  "privateDnsZoneConfigs": [
+                    {
+                      "name": "privateDnsZoneName",
+                      "properties": {
+                        "privateDnsZoneId": "Microsoft.Network/privateDnsZones/privateDnsZoneName"
+                      }
+                    }
+                  ]
+                },
+                "dependsOn": [
+                  "Microsoft.Network/privateDnsZones/privateDnsZoneName",
+                  "Microsoft.Network/privateEndpoints/containerRegistryPleName"
+                ]
+              },
+              {
+                "type": "Microsoft.Network/privateDnsZones/virtualNetworkLinks",
+                "apiVersion": "2020-01-01",
+                "name": "[format('{0}/{1}', variables('privateDnsZoneName'), uniqueString(resourceId('Microsoft.ContainerRegistry/registries', variables('containerRegistryNameCleaned'))))]",
+                "location": "global",
+                "properties": {
+                  "registrationEnabled": false,
+                  "virtualNetwork": {
+                    "id": "virtualNetworkId"
+                  }
+                },
+                "dependsOn": [
+                  "Microsoft.Network/privateDnsZones/privateDnsZoneName",
+                  "Microsoft.ContainerRegistry/registries/containerRegistryNameCleaned"
+                ]
+              }
+            ],
+            "outputs": {
+              "containerRegistryId": {
+                "type": "string",
+                "value": "Microsoft.ContainerRegistry/registries/containerRegistryNameCleaned"
+              }
+            },
+            "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+          }
+        },
+        "dependsOn": [
+          "[resourceId('Microsoft.Resources/deployments', format('vnet-{0}-{1}-deployment', variables('name'), variables('uniqueSuffix')))]"
+        ]
+      },
+      {
+        "type": "Microsoft.Resources/deployments",
+        "apiVersion": "2020-06-01",
+        "name": "[format('appi-{0}-{1}-deployment', variables('name'), variables('uniqueSuffix'))]",
+        "properties": {
+          "expressionEvaluationOptions": {
+            "scope": "inner"
+          },
+          "mode": "Incremental",
+          "parameters": {
+            "location": {
+              "value": "[resourceGroup().location]"
+            },
+            "applicationInsightsName": {
+              "value": "[format('appi-{0}-{1}', variables('name'), variables('uniqueSuffix'))]"
+            },
+            "tags": {
+              "value": {}
+            }
+          },
+          "template": {
+            "contentVersion": "1.0.0.0",
+            "metadata": {
+              "_generator": {
+                "name": "bicep",
+                "version": "0.4.1008.15138",
+                "templateHash": "17382591072791361067"
+              }
+            },
+            "parameters": {
+              "location": {
+                "type": "string",
+                "defaultValue": "[resourceGroup().location]",
+                "metadata": {
+                  "description": "Azure region of the deployment"
+                }
+              },
+              "tags": {
+                "type": "object",
+                "defaultValue": {},
+                "metadata": {
+                  "description": "Tags to add to the resources"
+                }
+              },
+              "applicationInsightsName": {
+                "type": "string",
+                "metadata": {
+                  "description": "Application Insights resource name"
+                }
+              }
+            },
+            "functions": [],
+            "resources": [
+              {
+                "type": "Microsoft.Insights/components",
+                "apiVersion": "2020-02-02",
+                "name": "applicationInsightsName",
+                "location": "[resourceGroup().location]",
+                "tags": {},
+                "kind": "web",
+                "properties": {
+                  "Application_Type": "web",
+                  "DisableIpMasking": false,
+                  "DisableLocalAuth": false,
+                  "Flow_Type": "Bluefield",
+                  "ForceCustomerStorageForProfiler": false,
+                  "ImmediatePurgeDataOn30Days": true,
+                  "IngestionMode": "ApplicationInsights",
+                  "publicNetworkAccessForIngestion": "Enabled",
+                  "publicNetworkAccessForQuery": "Disabled",
+                  "Request_Source": "rest"
+                }
+              }
+            ],
+            "outputs": {
+              "applicationInsightsId": {
+                "type": "string",
+                "value": "Microsoft.Insights/components/applicationInsightsName"
+              }
+            },
+            "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+          }
+        }
+      },
+      {
+        "type": "Microsoft.Resources/deployments",
+        "apiVersion": "2020-06-01",
+        "name": "[format('mlw-{0}-{1}-deployment', variables('name'), variables('uniqueSuffix'))]",
+        "properties": {
+          "expressionEvaluationOptions": {
+            "scope": "inner"
+          },
+          "mode": "Incremental",
+          "parameters": {
+            "machineLearningName": {
+              "value": "[format('mlw-{0}-{1}', variables('name'), variables('uniqueSuffix'))]"
+            },
+            "machineLearningFriendlyName": {
+              "value": "Private link endpoint sample workspace"
+            },
+            "machineLearningDescription": {
+              "value": "This is an example workspace having a private link endpoint."
+            },
+            "location": {
+              "value": "[resourceGroup().location]"
+            },
+            "prefix": {
+              "value": "[toLower(format('{0}', parameters('prefix')))]"
+            },
+            "tags": {
+              "value": {}
+            },
+            "applicationInsightsId": {
+              "value": "[reference(resourceId('Microsoft.Resources/deployments', format('appi-{0}-{1}-deployment', variables('name'), variables('uniqueSuffix'))), '2020-06-01').outputs.applicationInsightsId.value]"
+            },
+            "containerRegistryId": {
+              "value": "[reference(resourceId('Microsoft.Resources/deployments', format('cr{0}{1}-deployment', variables('name'), variables('uniqueSuffix'))), '2020-06-01').outputs.containerRegistryId.value]"
+            },
+            "keyVaultId": {
+              "value": "[reference(resourceId('Microsoft.Resources/deployments', format('kv-{0}-{1}-deployment', variables('name'), variables('uniqueSuffix'))), '2020-06-01').outputs.keyvaultId.value]"
+            },
+            "storageAccountId": {
+              "value": "[reference(resourceId('Microsoft.Resources/deployments', format('st{0}{1}-deployment', variables('name'), variables('uniqueSuffix'))), '2020-06-01').outputs.storageId.value]"
+            },
+            "subnetId": {
+              "value": "[format('{0}/subnets/snet-training', reference(resourceId('Microsoft.Resources/deployments', format('vnet-{0}-{1}-deployment', variables('name'), variables('uniqueSuffix'))), '2020-06-01').outputs.id.value)]"
+            },
+            "computeSubnetId": {
+              "value": "[format('{0}/subnets/snet-training', reference(resourceId('Microsoft.Resources/deployments', format('vnet-{0}-{1}-deployment', variables('name'), variables('uniqueSuffix'))), '2020-06-01').outputs.id.value)]"
+            },
+            "aksSubnetId": {
+              "value": "[format('{0}/subnets/snet-scoring', reference(resourceId('Microsoft.Resources/deployments', format('vnet-{0}-{1}-deployment', variables('name'), variables('uniqueSuffix'))), '2020-06-01').outputs.id.value)]"
+            },
+            "virtualNetworkId": {
+              "value": "[format('{0}', reference(resourceId('Microsoft.Resources/deployments', format('vnet-{0}-{1}-deployment', variables('name'), variables('uniqueSuffix'))), '2020-06-01').outputs.id.value)]"
+            },
+            "machineLearningPleName": {
+              "value": "[format('ple-{0}-{1}-mlw', variables('name'), variables('uniqueSuffix'))]"
+            },
+            "amlComputePublicIp": {
+              "value": true
+            },
+            "mlAksName": {
+              "value": "[format('aks-{0}-{1}', variables('name'), variables('uniqueSuffix'))]"
+            }
+          },
+          "template": {
+            "contentVersion": "1.0.0.0",
+            "metadata": {
+              "_generator": {
+                "name": "bicep",
+                "version": "0.4.1008.15138",
+                "templateHash": "5261050574578415030"
+              }
+            },
+            "parameters": {
+              "prefix": {
+                "type": "string",
+                "metadata": {
+                  "description": "Prefix for resource names"
+                }
+              },
+              "location": {
+                "type": "string",
+                "metadata": {
+                  "description": "Azure region of the deployment"
+                }
+              },
+              "tags": {
+                "type": "object",
+                "metadata": {
+                  "description": "Tags to add to the resources"
+                }
+              },
+              "machineLearningName": {
+                "type": "string",
+                "metadata": {
+                  "description": "Machine learning workspace name"
+                }
+              },
+              "machineLearningFriendlyName": {
+                "type": "string",
+                "defaultValue": "machineLearningName",
+                "metadata": {
+                  "description": "Machine learning workspace display name"
+                }
+              },
+              "machineLearningDescription": {
+                "type": "string",
+                "metadata": {
+                  "description": "Machine learning workspace description"
+                }
+              },
+              "mlAksName": {
+                "type": "string",
+                "metadata": {
+                  "description": "Name of the Azure Kubernetes services resource to create and attached to the machine learning workspace"
+                }
+              },
+              "applicationInsightsId": {
+                "type": "string",
+                "metadata": {
+                  "description": "Resource ID of the application insights resource"
+                }
+              },
+              "containerRegistryId": {
+                "type": "string",
+                "metadata": {
+                  "description": "Resource ID of the container registry resource"
+                }
+              },
+              "keyVaultId": {
+                "type": "string",
+                "metadata": {
+                  "description": "Resource ID of the key vault resource"
+                }
+              },
+              "storageAccountId": {
+                "type": "string",
+                "metadata": {
+                  "description": "Resource ID of the storage account resource"
+                }
+              },
+              "subnetId": {
+                "type": "string",
+                "metadata": {
+                  "description": "Resource ID of the subnet resource"
+                }
+              },
+              "computeSubnetId": {
+                "type": "string",
+                "metadata": {
+                  "description": "Resource ID of the compute subnet"
+                }
+              },
+              "aksSubnetId": {
+                "type": "string",
+                "metadata": {
+                  "description": "Resource ID of the Azure Kubernetes services resource"
+                }
+              },
+              "virtualNetworkId": {
+                "type": "string",
+                "metadata": {
+                  "description": "Resource ID of the virtual network"
+                }
+              },
+              "machineLearningPleName": {
+                "type": "string",
+                "metadata": {
+                  "description": "Machine learning workspace private link endpoint name"
+                }
+              },
+              "amlComputePublicIp": {
+                "type": "bool",
+                "defaultValue": true,
+                "metadata": {
+                  "description": "Enable public IP for Azure Machine Learning compute nodes"
+                }
+              }
+            },
+            "functions": [],
+            "resources": [
+              {
+                "type": "Microsoft.MachineLearningServices/workspaces",
+                "apiVersion": "2021-04-01",
+                "name": "machineLearningName",
+                "location": "[resourceGroup().location]",
+                "tags": {},
+                "identity": {
+                  "type": "SystemAssigned"
+                },
+                "properties": {
+                  "friendlyName": "machineLearningFriendlyName",
+                  "description": "machineLearningDescription",
+                  "applicationInsights": "applicationInsightsId",
+                  "containerRegistry": "containerRegistryId",
+                  "keyVault": "keyVaultId",
+                  "storageAccount": "storageAccountId",
+                  "imageBuildCompute": "cluster001",
+                  "allowPublicAccessWhenBehindVnet": false
+                }
+              },
+              {
+                "type": "Microsoft.Resources/deployments",
+                "apiVersion": "2020-06-01",
+                "name": "machineLearningNetworking",
+                "properties": {
+                  "expressionEvaluationOptions": {
+                    "scope": "inner"
+                  },
+                  "mode": "Incremental",
+                  "parameters": {
+                    "location": {
+                      "value": "[resourceGroup().location]"
+                    },
+                    "tags": {
+                      "value": {}
+                    },
+                    "virtualNetworkId": {
+                      "value": "virtualNetworkId"
+                    },
+                    "workspaceArmId": {
+                      "value": "Microsoft.MachineLearningServices/workspaces/machineLearningName"
+                    },
+                    "subnetId": {
+                      "value": "subnetId"
+                    },
+                    "machineLearningPleName": {
+                      "value": "machineLearningPleName"
+                    }
+                  },
+                  "template": {
+                    "contentVersion": "1.0.0.0",
+                    "metadata": {
+                      "_generator": {
+                        "name": "bicep",
+                        "version": "0.4.1008.15138",
+                        "templateHash": "17531978814905497831"
+                      }
+                    },
+                    "parameters": {
+                      "location": {
+                        "type": "string",
+                        "metadata": {
+                          "description": "Azure region of the deployment"
+                        }
+                      },
+                      "machineLearningPleName": {
+                        "type": "string",
+                        "metadata": {
+                          "description": "Machine learning workspace private link endpoint name"
+                        }
+                      },
+                      "virtualNetworkId": {
+                        "type": "string",
+                        "metadata": {
+                          "description": "Resource ID of the virtual network resource"
+                        }
+                      },
+                      "subnetId": {
+                        "type": "string",
+                        "metadata": {
+                          "description": "Resource ID of the subnet resource"
+                        }
+                      },
+                      "workspaceArmId": {
+                        "type": "string",
+                        "metadata": {
+                          "description": "Resource ID of the machine learning workspace"
+                        }
+                      },
+                      "tags": {
+                        "type": "object",
+                        "metadata": {
+                          "description": "Tags to add to the resources"
+                        }
+                      }
+                    },
+                    "functions": [],
+                    "variables": {
+                      "privateDnsZoneName": {
+                        "azureusgovernment": "privatelink.api.ml.azure.us",
+                        "azurechinacloud": "privatelink.api.ml.azure.cn",
+                        "azurecloud": "privatelink.api.azureml.ms"
+                      },
+                      "privateAznbDnsZoneName": {
+                        "azureusgovernment": "privatelink.notebooks.usgovcloudapi.net",
+                        "azurechinacloud": "privatelink.notebooks.chinacloudapi.cn",
+                        "azurecloud": "privatelink.notebooks.azure.net"
+                      }
+                    },
+                    "resources": [
+                      {
+                        "type": "Microsoft.Network/privateEndpoints",
+                        "apiVersion": "2020-11-01",
+                        "name": "machineLearningPleName",
+                        "location": "[resourceGroup().location]",
+                        "tags": {},
+                        "properties": {
+                          "privateLinkServiceConnections": [
+                            {
+                              "name": "machineLearningPleName",
+                              "properties": {
+                                "groupIds": [
+                                  "amlworkspace"
+                                ],
+                                "privateLinkServiceId": "workspaceArmId"
+                              }
+                            }
+                          ],
+                          "subnet": {
+                            "id": "subnetId"
+                          }
+                        }
+                      },
+                      {
+                        "type": "Microsoft.Network/privateDnsZones",
+                        "apiVersion": "2020-01-01",
+                        "name": "(privateDnsZoneName)[toLower(environment().name)]",
+                        "location": "global"
+                      },
+                      {
+                        "type": "Microsoft.Network/privateDnsZones/virtualNetworkLinks",
+                        "apiVersion": "2020-01-01",
+                        "name": "[format('{0}/{1}', variables('privateDnsZoneName')[toLower(environment().name)], uniqueString(parameters('workspaceArmId')))]",
+                        "location": "global",
+                        "properties": {
+                          "registrationEnabled": false,
+                          "virtualNetwork": {
+                            "id": "virtualNetworkId"
+                          }
+                        },
+                        "dependsOn": [
+                          "[resourceId('Microsoft.Network/privateDnsZones', variables('privateDnsZoneName')[toLower(environment().name)])]"
+                        ]
+                      },
+                      {
+                        "type": "Microsoft.Network/privateDnsZones",
+                        "apiVersion": "2020-01-01",
+                        "name": "(privateAznbDnsZoneName)[toLower(environment().name)]",
+                        "location": "global"
+                      },
+                      {
+                        "type": "Microsoft.Network/privateDnsZones/virtualNetworkLinks",
+                        "apiVersion": "2020-01-01",
+                        "name": "[format('{0}/{1}', variables('privateAznbDnsZoneName')[toLower(environment().name)], uniqueString(parameters('workspaceArmId')))]",
+                        "location": "global",
+                        "properties": {
+                          "registrationEnabled": false,
+                          "virtualNetwork": {
+                            "id": "virtualNetworkId"
+                          }
+                        },
+                        "dependsOn": [
+                          "[resourceId('Microsoft.Network/privateDnsZones', variables('privateAznbDnsZoneName')[toLower(environment().name)])]"
+                        ]
+                      },
+                      {
+                        "type": "Microsoft.Network/privateEndpoints/privateDnsZoneGroups",
+                        "apiVersion": "2020-06-01",
+                        "name": "[format('{0}/amlworkspace-PrivateDnsZoneGroup', parameters('machineLearningPleName'))]",
+                        "properties": {
+                          "privateDnsZoneConfigs": [
+                            {
+                              "name": "(privateDnsZoneName)[environment().name]",
+                              "properties": {
+                                "privateDnsZoneId": "[resourceId('Microsoft.Network/privateDnsZones', variables('privateDnsZoneName')[toLower(environment().name)])]"
+                              }
+                            },
+                            {
+                              "name": "(privateAznbDnsZoneName)[environment().name]",
+                              "properties": {
+                                "privateDnsZoneId": "[resourceId('Microsoft.Network/privateDnsZones', variables('privateAznbDnsZoneName')[toLower(environment().name)])]"
+                              }
+                            }
+                          ]
+                        },
+                        "dependsOn": [
+                          "[resourceId('Microsoft.Network/privateDnsZones', variables('privateDnsZoneName')[toLower(environment().name)])]",
+                          "Microsoft.Network/privateEndpoints/machineLearningPleName",
+                          "[resourceId('Microsoft.Network/privateDnsZones', variables('privateAznbDnsZoneName')[toLower(environment().name)])]"
+                        ]
+                      }
+                    ],
+                    "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+                  }
+                },
+                "dependsOn": [
+                  "Microsoft.MachineLearningServices/workspaces/machineLearningName"
+                ]
+              },
+              {
+                "type": "Microsoft.Resources/deployments",
+                "apiVersion": "2020-06-01",
+                "name": "machineLearningComputes",
+                "properties": {
+                  "expressionEvaluationOptions": {
+                    "scope": "inner"
+                  },
+                  "mode": "Incremental",
+                  "parameters": {
+                    "machineLearning": {
+                      "value": "machineLearningName"
+                    },
+                    "location": {
+                      "value": "[resourceGroup().location]"
+                    },
+                    "computeSubnetId": {
+                      "value": "computeSubnetId"
+                    },
+                    "aksName": {
+                      "value": "mlAksName"
+                    },
+                    "aksSubnetId": {
+                      "value": "aksSubnetId"
+                    },
+                    "prefix": {
+                      "value": "GEN-UNIQUE-6"
+                    },
+                    "tags": {
+                      "value": {}
+                    },
+                    "amlComputePublicIp": {
+                      "value": true
+                    }
+                  },
+                  "template": {
+                    "contentVersion": "1.0.0.0",
+                    "metadata": {
+                      "_generator": {
+                        "name": "bicep",
+                        "version": "0.4.1008.15138",
+                        "templateHash": "1624514256460089621"
+                      }
+                    },
+                    "parameters": {
+                      "prefix": {
+                        "type": "string",
+                        "metadata": {
+                          "description": "Prefix for resource names"
+                        }
+                      },
+                      "machineLearning": {
+                        "type": "string",
+                        "metadata": {
+                          "description": "Azure Machine Learning workspace to create the compute resources in"
+                        }
+                      },
+                      "location": {
+                        "type": "string",
+                        "metadata": {
+                          "description": "Azure region of the deployment"
+                        }
+                      },
+                      "tags": {
+                        "type": "object",
+                        "metadata": {
+                          "description": "Tags to add to the resources"
+                        }
+                      },
+                      "computeSubnetId": {
+                        "type": "string",
+                        "metadata": {
+                          "description": "Resource ID of the compute subnet"
+                        }
+                      },
+                      "aksName": {
+                        "type": "string",
+                        "metadata": {
+                          "description": "Name of the Azure Kubernetes services resource"
+                        }
+                      },
+                      "aksSubnetId": {
+                        "type": "string",
+                        "metadata": {
+                          "description": "Resource ID of the Azure Kubernetes services resource"
+                        }
+                      },
+                      "amlComputePublicIp": {
+                        "type": "bool",
+                        "metadata": {
+                          "description": "Resource ID of the Azure Kubernetes services resource"
+                        }
+                      },
+                      "amlComputeDefaultVmSize": {
+                        "type": "string",
+                        "defaultValue": "Standard_Ds3_v2",
+                        "metadata": {
+                          "description": "VM size for the default compute cluster"
+                        }
+                      }
+                    },
+                    "functions": [],
+                    "resources": [
+                      {
+                        "type": "Microsoft.MachineLearningServices/workspaces/computes",
+                        "apiVersion": "2021-07-01",
+                        "name": "[format('{0}/cluster001', parameters('machineLearning'))]",
+                        "location": "[resourceGroup().location]",
+                        "tags": {},
+                        "identity": {
+                          "type": "SystemAssigned"
+                        },
+                        "properties": {
+                          "computeType": "AmlCompute",
+                          "computeLocation": "[resourceGroup().location]",
+                          "description": "Machine Learning cluster 001",
+                          "disableLocalAuth": true,
+                          "properties": {
+                            "vmPriority": "Dedicated",
+                            "vmSize": "amlComputeDefaultVmSize",
+                            "enableNodePublicIp": true,
+                            "isolatedNetwork": false,
+                            "osType": "Linux",
+                            "remoteLoginPortPublicAccess": "Disabled",
+                            "scaleSettings": {
+                              "minNodeCount": 0,
+                              "maxNodeCount": 5,
+                              "nodeIdleTimeBeforeScaleDown": "PT120S"
+                            },
+                            "subnet": {
+                              "id": "computeSubnetId"
+                            }
+                          }
+                        }
+                      },
+                      {
+                        "type": "Microsoft.MachineLearningServices/workspaces/computes",
+                        "apiVersion": "2021-07-01",
+                        "name": "[format('{0}/{1}-ci001', parameters('machineLearning'), parameters('prefix'))]",
+                        "location": "[resourceGroup().location]",
+                        "tags": {},
+                        "identity": {
+                          "type": "SystemAssigned"
+                        },
+                        "properties": {
+                          "computeType": "ComputeInstance",
+                          "computeLocation": "[resourceGroup().location]",
+                          "description": "Machine Learning compute instance 001",
+                          "disableLocalAuth": true,
+                          "properties": {
+                            "applicationSharingPolicy": "Personal",
+                            "computeInstanceAuthorizationType": "personal",
+                            "sshSettings": {
+                              "sshPublicAccess": "Disabled"
+                            },
+                            "subnet": {
+                              "id": "computeSubnetId"
+                            },
+                            "vmSize": "amlComputeDefaultVmSize"
+                          }
+                        }
+                      },
+                      {
+                        "type": "Microsoft.Resources/deployments",
+                        "apiVersion": "2020-06-01",
+                        "name": "aksName",
+                        "properties": {
+                          "expressionEvaluationOptions": {
+                            "scope": "inner"
+                          },
+                          "mode": "Incremental",
+                          "parameters": {
+                            "location": {
+                              "value": "[resourceGroup().location]"
+                            },
+                            "tags": {
+                              "value": {}
+                            },
+                            "aksClusterName": {
+                              "value": "aksName"
+                            },
+                            "computeName": {
+                              "value": "aksName"
+                            },
+                            "aksSubnetId": {
+                              "value": "aksSubnetId"
+                            },
+                            "workspaceName": {
+                              "value": "machineLearning"
+                            }
+                          },
+                          "template": {
+                            "contentVersion": "1.0.0.0",
+                            "metadata": {
+                              "_generator": {
+                                "name": "bicep",
+                                "version": "0.4.1008.15138",
+                                "templateHash": "12038476238490937868"
+                              }
+                            },
+                            "parameters": {
+                              "aksClusterName": {
+                                "type": "string",
+                                "metadata": {
+                                  "description": "Name of the Azure Kubernetes Service cluster"
+                                }
+                              },
+                              "location": {
+                                "type": "string",
+                                "metadata": {
+                                  "description": "Azure region of the deployment"
+                                }
+                              },
+                              "tags": {
+                                "type": "object",
+                                "metadata": {
+                                  "description": "Tags to add to the resources"
+                                }
+                              },
+                              "aksSubnetId": {
+                                "type": "string",
+                                "metadata": {
+                                  "description": "Resource ID for the Azure Kubernetes Service subnet"
+                                }
+                              },
+                              "workspaceName": {
+                                "type": "string",
+                                "metadata": {
+                                  "description": "Name of the Azure Machine Learning workspace"
+                                }
+                              },
+                              "computeName": {
+                                "type": "string",
+                                "metadata": {
+                                  "description": "Name of the Azure Machine Learning attached compute"
+                                }
+                              }
+                            },
+                            "functions": [],
+                            "resources": [
+                              {
+                                "type": "Microsoft.ContainerService/managedClusters",
+                                "apiVersion": "2020-07-01",
+                                "name": "aksClusterName",
+                                "location": "[resourceGroup().location]",
+                                "tags": {},
+                                "identity": {
+                                  "type": "SystemAssigned"
+                                },
+                                "properties": {
+                                  "kubernetesVersion": "1.20.7",
+                                  "dnsPrefix": "[format('{0}-dns', parameters('aksClusterName'))]",
+                                  "agentPoolProfiles": [
+                                    {
+                                      "name": "[toLower('agentpool')]",
+                                      "count": 3,
+                                      "vmSize": "Standard_DS2_v2",
+                                      "osDiskSizeGB": 128,
+                                      "vnetSubnetID": "aksSubnetId",
+                                      "maxPods": 110,
+                                      "osType": "Linux",
+                                      "mode": "System",
+                                      "type": "VirtualMachineScaleSets"
+                                    }
+                                  ],
+                                  "enableRBAC": true,
+                                  "networkProfile": {
+                                    "networkPlugin": "kubenet",
+                                    "serviceCidr": "10.0.0.0/16",
+                                    "dnsServiceIP": "10.0.0.10",
+                                    "dockerBridgeCidr": "172.17.0.1/16",
+                                    "loadBalancerSku": "standard"
+                                  },
+                                  "apiServerAccessProfile": {
+                                    "enablePrivateCluster": true
+                                  }
+                                }
+                              },
+                              {
+                                "type": "Microsoft.MachineLearningServices/workspaces/computes",
+                                "apiVersion": "2021-01-01",
+                                "name": "[format('{0}/{1}', parameters('workspaceName'), parameters('computeName'))]",
+                                "location": "[resourceGroup().location]",
+                                "properties": {
+                                  "computeType": "AKS",
+                                  "resourceId": "Microsoft.ContainerService/managedClusters/aksClusterName",
+                                  "properties": {
+                                    "aksNetworkingConfiguration": {
+                                      "subnetId": "aksSubnetId"
+                                    }
+                                  }
+                                },
+                                "dependsOn": [
+                                  "Microsoft.ContainerService/managedClusters/aksClusterName"
+                                ]
+                              }
+                            ],
+                            "outputs": {
+                              "aksResourceId": {
+                                "type": "string",
+                                "value": "Microsoft.ContainerService/managedClusters/aksClusterName"
+                              }
+                            },
+                            "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+                          }
+                        }
+                      }
+                    ],
+                    "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+                  }
+                },
+                "dependsOn": [
+                  "Microsoft.MachineLearningServices/workspaces/machineLearningName",
+                  "Microsoft.Resources/deployments/machineLearningNetworking"
+                ]
+              }
+            ],
+            "outputs": {
+              "machineLearningId": {
+                "type": "string",
+                "value": "Microsoft.MachineLearningServices/workspaces/machineLearningName"
+              }
+            },
+            "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+          }
+        },
+        "dependsOn": [
+          "[resourceId('Microsoft.Resources/deployments', format('appi-{0}-{1}-deployment', variables('name'), variables('uniqueSuffix')))]",
+          "[resourceId('Microsoft.Resources/deployments', format('cr{0}{1}-deployment', variables('name'), variables('uniqueSuffix')))]",
+          "[resourceId('Microsoft.Resources/deployments', format('kv-{0}-{1}-deployment', variables('name'), variables('uniqueSuffix')))]",
+          "[resourceId('Microsoft.Resources/deployments', format('st{0}{1}-deployment', variables('name'), variables('uniqueSuffix')))]",
+          "[resourceId('Microsoft.Resources/deployments', format('vnet-{0}-{1}-deployment', variables('name'), variables('uniqueSuffix')))]"
+        ]
+      },
+      {
+        "condition": true,
+        "type": "Microsoft.Resources/deployments",
+        "apiVersion": "2020-06-01",
+        "name": "[format('vm-{0}-{1}-deployment', variables('name'), variables('uniqueSuffix'))]",
+        "properties": {
+          "expressionEvaluationOptions": {
+            "scope": "inner"
+          },
+          "mode": "Incremental",
+          "parameters": {
+            "location": {
+              "value": "[resourceGroup().location]"
+            },
+            "virtualMachineName": {
+              "value": "[format('vm-{0}-{1}', variables('name'), variables('uniqueSuffix'))]"
+            },
+            "subnetId": {
+              "value": "[format('{0}/subnets/snet-training', reference(resourceId('Microsoft.Resources/deployments', format('vnet-{0}-{1}-deployment', variables('name'), variables('uniqueSuffix'))), '2020-06-01').outputs.id.value)]"
+            },
+            "adminUsername": {
+              "value": "GEN-UNIQUE-12"
+            },
+            "adminPassword": {
+              "value": "GEN-PASSWORD"
+            },
+            "networkSecurityGroupId": {
+              "value": "[reference(resourceId('Microsoft.Resources/deployments', format('nsg-{0}-{1}-deployment', variables('name'), variables('uniqueSuffix'))), '2020-06-01').outputs.networkSecurityGroup.value]"
+            }
+          },
+          "template": {
+            "contentVersion": "1.0.0.0",
+            "metadata": {
+              "_generator": {
+                "name": "bicep",
+                "version": "0.4.1008.15138",
+                "templateHash": "14144773516215032849"
+              }
+            },
+            "parameters": {
+              "location": {
+                "type": "string",
+                "defaultValue": "[resourceGroup().location]",
+                "metadata": {
+                  "description": "Azure region of the deployment"
+                }
+              },
+              "subnetId": {
+                "type": "string",
+                "metadata": {
+                  "description": "Resource ID of the subnet"
+                }
+              },
+              "networkSecurityGroupId": {
+                "type": "string",
+                "metadata": {
+                  "description": "Network Security Group Resource ID"
+                }
+              },
+              "virtualMachineName": {
+                "type": "string",
+                "metadata": {
+                  "description": "Virtual machine name"
+                }
+              },
+              "vmSize": {
+                "type": "string",
+                "defaultValue": "Standard_DS3_v2",
+                "metadata": {
+                  "description": "Virtual machine size"
+                }
+              },
+              "adminUsername": {
+                "type": "string",
+                "metadata": {
+                  "description": "Virtual machine admin username"
+                }
+              },
+              "adminPassword": {
+                "type": "secureString",
+                "metadata": {
+                  "description": "Virtual machine admin password"
+                },
+                "minLength": 8
+              }
+            },
+            "functions": [],
+            "variables": {
+              "aadLoginExtensionName": "AADLoginForWindows"
+            },
+            "resources": [
+              {
+                "type": "Microsoft.Network/networkInterfaces",
+                "apiVersion": "2021-03-01",
+                "name": "[format('{0}-nic', parameters('virtualMachineName'))]",
+                "location": "[resourceGroup().location]",
+                "properties": {
+                  "ipConfigurations": [
+                    {
+                      "name": "ipconfig1",
+                      "properties": {
+                        "subnet": {
+                          "id": "subnetId"
+                        },
+                        "privateIPAllocationMethod": "Dynamic"
+                      }
+                    }
+                  ],
+                  "networkSecurityGroup": {
+                    "id": "networkSecurityGroupId"
+                  }
+                }
+              },
+              {
+                "type": "Microsoft.Compute/virtualMachines",
+                "apiVersion": "2021-03-01",
+                "name": "virtualMachineName",
+                "location": "[resourceGroup().location]",
+                "properties": {
+                  "hardwareProfile": {
+                    "vmSize": "vmSize"
+                  },
+                  "storageProfile": {
+                    "osDisk": {
+                      "createOption": "FromImage",
+                      "managedDisk": {
+                        "storageAccountType": "Premium_LRS"
+                      }
+                    },
+                    "imageReference": {
+                      "publisher": "microsoft-dsvm",
+                      "offer": "dsvm-win-2019",
+                      "sku": "server-2019",
+                      "version": "latest"
+                    }
+                  },
+                  "networkProfile": {
+                    "networkInterfaces": [
+                      {
+                        "id": "[resourceId('Microsoft.Network/networkInterfaces', format('{0}-nic', parameters('virtualMachineName')))]"
+                      }
+                    ]
+                  },
+                  "osProfile": {
+                    "computerName": "virtualMachineName",
+                    "adminUsername": "adminUsername",
+                    "adminPassword": "adminPassword",
+                    "windowsConfiguration": {
+                      "enableAutomaticUpdates": true,
+                      "provisionVMAgent": true,
+                      "patchSettings": {
+                        "enableHotpatching": false,
+                        "patchMode": "AutomaticByOS"
+                      }
+                    }
+                  },
+                  "diagnosticsProfile": {
+                    "bootDiagnostics": {
+                      "enabled": true
+                    }
+                  }
+                },
+                "identity": {
+                  "type": "SystemAssigned"
+                },
+                "dependsOn": [
+                  "[resourceId('Microsoft.Network/networkInterfaces', format('{0}-nic', parameters('virtualMachineName')))]"
+                ]
+              },
+              {
+                "type": "Microsoft.Compute/virtualMachines/extensions",
+                "apiVersion": "2021-03-01",
+                "name": "[format('{0}/{1}', parameters('virtualMachineName'), variables('aadLoginExtensionName'))]",
+                "location": "[resourceGroup().location]",
+                "properties": {
+                  "publisher": "Microsoft.Azure.ActiveDirectory",
+                  "type": "aadLoginExtensionName",
+                  "typeHandlerVersion": "1.0",
+                  "autoUpgradeMinorVersion": true
+                },
+                "dependsOn": [
+                  "Microsoft.Compute/virtualMachines/virtualMachineName"
+                ]
+              }
+            ],
+            "outputs": {
+              "dsvmId": {
+                "type": "string",
+                "value": "Microsoft.Compute/virtualMachines/virtualMachineName"
+              }
+            },
+            "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+          }
+        },
+        "dependsOn": [
+          "[resourceId('Microsoft.Resources/deployments', format('nsg-{0}-{1}-deployment', variables('name'), variables('uniqueSuffix')))]",
+          "[resourceId('Microsoft.Resources/deployments', format('vnet-{0}-{1}-deployment', variables('name'), variables('uniqueSuffix')))]"
+        ]
+      },
+      {
+        "condition": true,
+        "type": "Microsoft.Resources/deployments",
+        "apiVersion": "2020-06-01",
+        "name": "[format('bas-{0}-{1}-deployment', variables('name'), variables('uniqueSuffix'))]",
+        "properties": {
+          "expressionEvaluationOptions": {
+            "scope": "inner"
+          },
+          "mode": "Incremental",
+          "parameters": {
+            "bastionHostName": {
+              "value": "[format('bas-{0}-{1}', variables('name'), variables('uniqueSuffix'))]"
+            },
+            "location": {
+              "value": "[resourceGroup().location]"
+            },
+            "vnetName": {
+              "value": "[reference(resourceId('Microsoft.Resources/deployments', format('vnet-{0}-{1}-deployment', variables('name'), variables('uniqueSuffix'))), '2020-06-01').outputs.name.value]"
+            },
+            "addressPrefix": {
+              "value": "192.168.250.0/27"
+            }
+          },
+          "template": {
+            "contentVersion": "1.0.0.0",
+            "metadata": {
+              "_generator": {
+                "name": "bicep",
+                "version": "0.4.1008.15138",
+                "templateHash": "6308129535924756775"
+              }
+            },
+            "parameters": {
+              "location": {
+                "type": "string",
+                "defaultValue": "[resourceGroup().location]",
+                "metadata": {
+                  "description": "The Azure region where the Bastion should be deployed"
+                }
+              },
+              "vnetName": {
+                "type": "string",
+                "metadata": {
+                  "description": "Virtual network name"
+                }
+              },
+              "addressPrefix": {
+                "type": "string",
+                "defaultValue": "192.168.250.0/27",
+                "metadata": {
+                  "description": "The address prefix to use for the Bastion subnet"
+                }
+              },
+              "publicIpName": {
+                "type": "string",
+                "defaultValue": "pip-bastion",
+                "metadata": {
+                  "description": "The name of the Bastion public IP address"
+                }
+              },
+              "bastionHostName": {
+                "type": "string",
+                "defaultValue": "bastion-jumpbox",
+                "metadata": {
+                  "description": "The name of the Bastion host"
+                }
+              }
+            },
+            "functions": [],
+            "variables": {
+              "subnetName": "AzureBastionSubnet"
+            },
+            "resources": [
+              {
+                "type": "Microsoft.Network/virtualNetworks/subnets",
+                "apiVersion": "2021-02-01",
+                "name": "[format('{0}/{1}', parameters('vnetName'), variables('subnetName'))]",
+                "properties": {
+                  "addressPrefix": "addressPrefix",
+                  "privateEndpointNetworkPolicies": "Disabled",
+                  "privateLinkServiceNetworkPolicies": "Disabled"
+                }
+              },
+              {
+                "type": "Microsoft.Network/publicIPAddresses",
+                "apiVersion": "2020-08-01",
+                "name": "publicIpName",
+                "location": "[resourceGroup().location]",
+                "sku": {
+                  "name": "Standard"
+                },
+                "properties": {
+                  "publicIPAllocationMethod": "Static"
+                }
+              },
+              {
+                "type": "Microsoft.Network/bastionHosts",
+                "apiVersion": "2021-03-01",
+                "name": "bastionHostName",
+                "location": "[resourceGroup().location]",
+                "properties": {
+                  "ipConfigurations": [
+                    {
+                      "name": "IpConf",
+                      "properties": {
+                        "subnet": {
+                          "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', split(format('{0}/{1}', parameters('vnetName'), variables('subnetName')), '/')[0], split(format('{0}/{1}', parameters('vnetName'), variables('subnetName')), '/')[1])]"
+                        },
+                        "publicIPAddress": {
+                          "id": "Microsoft.Network/publicIPAddresses/publicIpName"
+                        }
+                      }
+                    }
+                  ]
+                },
+                "dependsOn": [
+                  "[resourceId('Microsoft.Network/virtualNetworks/subnets', split(format('{0}/{1}', parameters('vnetName'), variables('subnetName')), '/')[0], split(format('{0}/{1}', parameters('vnetName'), variables('subnetName')), '/')[1])]",
+                  "Microsoft.Network/publicIPAddresses/publicIpName"
+                ]
+              }
+            ],
+            "outputs": {
+              "bastionId": {
+                "type": "string",
+                "value": "Microsoft.Network/bastionHosts/bastionHostName"
+              }
+            },
+            "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+          }
+        },
+        "dependsOn": [
+          "[resourceId('Microsoft.Resources/deployments', format('vnet-{0}-{1}-deployment', variables('name'), variables('uniqueSuffix')))]"
+        ]
+      }
+    ],
+    "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+  }
+}

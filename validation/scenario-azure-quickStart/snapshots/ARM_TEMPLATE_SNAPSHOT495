@@ -1,0 +1,594 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAzureQuickStart",
+  "paths": [
+    "/application-workloads/sap/sap-file-server-md/azuredeploy.json",
+    "/application-workloads/sap/sap-file-server-md/azuredeploy.parameters.json"
+  ],
+  "timestamp": 1642962896003,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/application-workloads/sap/sap-file-server-md/azuredeploy.json",
+      "/application-workloads/sap/sap-file-server-md/azuredeploy.parameters.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT495",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "microsoft.network/publicipaddresses",
+      "microsoft.network/virtualnetworks",
+      "microsoft.network/loadbalancers",
+      "microsoft.network/networkinterfaces",
+      "microsoft.compute/virtualmachines/extensions",
+      "microsoft.compute/virtualmachines",
+      "microsoft.network/networksecuritygroups",
+      "microsoft.compute/availabilitysets"
+    ]
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT495",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "resourcePrefix": {
+        "type": "string",
+        "maxLength": 6,
+        "minLength": 3,
+        "defaultValue": "dev",
+        "metadata": {
+          "description": "The prefix that should be used to create the resource names."
+        }
+      },
+      "sapSystemCount": {
+        "type": "int",
+        "defaultValue": 1,
+        "metadata": {
+          "description": "The number of SAP systems that will use this file server"
+        }
+      },
+      "osType": {
+        "type": "string",
+        "allowedValues": [
+          "Windows Server 2016 Datacenter",
+          "SLES 12",
+          "SLES 12 BYOS",
+          "RHEL 7"
+        ],
+        "defaultValue": "Windows Server 2016 Datacenter",
+        "metadata": {
+          "description": "The type of the operating system you want to deploy."
+        }
+      },
+      "adminUsername": {
+        "type": "string",
+        "metadata": {
+          "description": "Username for the Virtual Machine."
+        },
+        "value": "GEN-UNIQUE"
+      },
+      "authenticationType": {
+        "type": "string",
+        "defaultValue": "password",
+        "allowedValues": [
+          "password",
+          "sshPublicKey"
+        ],
+        "metadata": {
+          "description": "Type of authentication to use on the Virtual Machine."
+        }
+      },
+      "adminPasswordOrKey": {
+        "type": "securestring",
+        "metadata": {
+          "description": "Password or ssh key for the Virtual Machine."
+        },
+        "value": "GEN-PASSWORD"
+      },
+      "subnetId": {
+        "type": "string",
+        "defaultValue": "",
+        "metadata": {
+          "description": "The id of the subnet you want to use."
+        }
+      },
+      "location": {
+        "type": "string",
+        "defaultValue": "[resourceGroup().location]",
+        "metadata": {
+          "description": "Location for all resources."
+        }
+      },
+      "_artifactsLocation": {
+        "type": "string",
+        "metadata": {
+          "description": "The base URI where artifacts required by this template are located. When the template is deployed using the accompanying scripts, a private location in the subscription will be used and this value will be automatically generated."
+        },
+        "defaultValue": "[deployment().properties.templateLink.uri]"
+      },
+      "_artifactsLocationSasToken": {
+        "type": "securestring",
+        "metadata": {
+          "description": "The sasToken required to access _artifactsLocation.  When the template is deployed using the accompanying scripts, a sasToken will be automatically generated."
+        },
+        "defaultValue": ""
+      }
+    },
+    "variables": {
+      "images": {
+        "Windows Server 2016 Datacenter": {
+          "sku": "2016-Datacenter",
+          "offer": "WindowsServer",
+          "publisher": "MicrosoftWindowsServer",
+          "version": "latest",
+          "OSFamily": "Windows",
+          "OSType": "Windows"
+        },
+        "SLES 12": {
+          "sku": "12-SP3",
+          "offer": "SLES-SAP",
+          "publisher": "SUSE",
+          "version": "latest",
+          "OSFamily": "SLES",
+          "OSType": "Linux"
+        },
+        "SLES 12 BYOS": {
+          "sku": "12-SP3",
+          "offer": "SLES-SAP-BYOS",
+          "publisher": "SUSE",
+          "OSType": "Linux",
+          "OSFamily": "SLES",
+          "version": "latest"
+        },
+        "RHEL 7": {
+          "sku": "7.4",
+          "offer": "RHEL",
+          "publisher": "RedHat",
+          "OSType": "Linux",
+          "OSFamily": "RHEL",
+          "version": "latest"
+        }
+      },
+      "internalOSType": "(images)[parameters(osType)].OSType",
+      "linuxConfiguration": {
+        "disablePasswordAuthentication": true,
+        "ssh": {
+          "publicKeys": [
+            {
+              "path": "/home/GEN-UNIQUE/.ssh/authorized_keys",
+              "keyData": "GEN-PASSWORD"
+            }
+          ]
+        }
+      },
+      "csExtension": {
+        "Windows": {
+          "Publisher": "Microsoft.Compute",
+          "Name": "CustomScriptExtension",
+          "Version": "1.7",
+          "script": "[uri(parameters('_artifactsLocation'), concat('scripts/noop.ps1', parameters('_artifactsLocationSasToken')))]",
+          "scriptCall": "powershell.exe -ExecutionPolicy bypass -File scripts/noop.ps1"
+        },
+        "Linux": {
+          "Publisher": "Microsoft.Azure.Extensions",
+          "Name": "CustomScript",
+          "Version": "2.0",
+          "script": "[uri(parameters('_artifactsLocation'), concat('scripts/noop.sh', parameters('_artifactsLocationSasToken')))]",
+          "scriptCall": "sh noop.sh"
+        }
+      },
+      "cseExtPublisher": "(csExtension)[variables(internalOSType)].Publisher",
+      "cseExtName": "(csExtension)[variables(internalOSType)].Name",
+      "cseExtVersion": "(csExtension)[variables(internalOSType)].Version",
+      "cseExtScript": "(csExtension)[variables(internalOSType)].script",
+      "cseExtCall": "(csExtension)[variables(internalOSType)].scriptCall",
+      "loadBalancingRulesLinux2049T": {
+        "copy": [
+          {
+            "name": "loadBalancingRules",
+            "count": 1,
+            "input": {
+              "properties": {
+                "frontendIPConfiguration": {
+                  "id": "[resourceId('Microsoft.Network/loadBalancers/frontendIpConfigurations/', variables('fsloadBalancerName'), concat('lbFrontendFile', '-', copyIndex('loadBalancingRules')))]"
+                },
+                "backendAddressPool": {
+                  "id": "[resourceId('Microsoft.Network/loadBalancers/backendAddressPools/', variables('fsloadBalancerName'), concat('lbBackendFile', '-', copyIndex('loadBalancingRules')))]"
+                },
+                "probe": {
+                  "id": "[resourceId('Microsoft.Network/loadBalancers/probes/', variables('fsloadBalancerName'), concat('lbProbeFile', '-', copyIndex('loadBalancingRules')))]"
+                },
+                "protocol": "Tcp",
+                "frontendPort": 2049,
+                "backendPort": 2049,
+                "enableFloatingIP": true,
+                "idleTimeoutInMinutes": 30
+              },
+              "name": "[concat('lbProbeFile2049T', '-', copyIndex('loadBalancingRules'))]"
+            }
+          }
+        ]
+      },
+      "loadBalancingRulesLinux2049U": {
+        "copy": [
+          {
+            "name": "loadBalancingRules",
+            "count": 1,
+            "input": {
+              "properties": {
+                "frontendIPConfiguration": {
+                  "id": "[resourceId('Microsoft.Network/loadBalancers/frontendIpConfigurations/', variables('fsloadBalancerName'), concat('lbFrontendFile', '-', copyIndex('loadBalancingRules')))]"
+                },
+                "backendAddressPool": {
+                  "id": "[resourceId('Microsoft.Network/loadBalancers/backendAddressPools/', variables('fsloadBalancerName'), concat('lbBackendFile', '-', copyIndex('loadBalancingRules')))]"
+                },
+                "probe": {
+                  "id": "[resourceId('Microsoft.Network/loadBalancers/probes/', variables('fsloadBalancerName'), concat('lbProbeFile', '-', copyIndex('loadBalancingRules')))]"
+                },
+                "protocol": "Udp",
+                "frontendPort": 2049,
+                "backendPort": 2049,
+                "enableFloatingIP": true,
+                "idleTimeoutInMinutes": 30
+              },
+              "name": "[concat('lbProbeFile2049U', '-', copyIndex('loadBalancingRules'))]"
+            }
+          }
+        ]
+      },
+      "osFamilies": {
+        "Windows": {
+          "serversize": "Standard_D2s_v3",
+          "useFastNetwork": false,
+          "diskPerSystem": 2,
+          "servercount": 2,
+          "serverdisksSize": 128,
+          "needsLB": false,
+          "loadBalancingRules": "[createArray()]"
+        },
+        "SLES": {
+          "serversize": "Standard_D2s_v3",
+          "useFastNetwork": false,
+          "diskPerSystem": 1,
+          "servercount": 2,
+          "serverdisksSize": 128,
+          "needsLB": true,
+          "loadBalancingRules": "(loadBalancingRulesLinux2049T).loadBalancingRules(loadBalancingRulesLinux2049U).loadBalancingRules"
+        },
+        "RHEL": {
+          "serversize": "Standard_D2s_v3",
+          "useFastNetwork": false,
+          "diskPerSystem": 1,
+          "servercount": 3,
+          "serverdisksSize": 128,
+          "needsLB": false,
+          "loadBalancingRules": "[createArray()]"
+        }
+      },
+      "fsvmCount": "(osFamilies)[variables(images)[parameters(osType)].OSFamily].servercount",
+      "fsvmSize": "(osFamilies)[variables(images)[parameters(osType)].OSFamily].serversize",
+      "fsdiskSize": "(osFamilies)[variables(images)[parameters(osType)].OSFamily].serverdisksSize",
+      "fsvmDataDisks": "[mul(variables('osFamilies')[variables('images')[parameters('osType')].OSFamily].diskPerSystem, parameters('sapSystemCount'))]",
+      "needsLB": "(osFamilies)[variables(images)[parameters(osType)].OSFamily].needsLB",
+      "loadBalancingRules": "(osFamilies)[variables(images)[parameters(osType)].OSFamily].loadBalancingRules",
+      "useFastNetwork": "(osFamilies)[variables(images)[parameters(osType)].OSFamily].useFastNetwork",
+      "frontendIPConfigurations": {
+        "copy": [
+          {
+            "name": "frontendIPConfigurations",
+            "count": 1,
+            "input": {
+              "properties": {
+                "subnet": {
+                  "id": "(subnets)[string(equals(length(parameters(subnetId)), 0))]"
+                },
+                "privateIPAllocationMethod": "Dynamic"
+              },
+              "name": "[concat('lbFrontendFile', '-', copyIndex('frontendIPConfigurations'))]"
+            }
+          }
+        ]
+      },
+      "backendAddressPools": {
+        "copy": [
+          {
+            "name": "backendAddressPools",
+            "count": 1,
+            "input": {
+              "name": "[concat('lbBackendFile', '-', copyIndex('backendAddressPools'))]"
+            }
+          }
+        ]
+      },
+      "probes": {
+        "copy": [
+          {
+            "name": "probes",
+            "count": 1,
+            "input": {
+              "properties": {
+                "protocol": "Tcp",
+                "port": "[add(61000, copyIndex('probes'))]",
+                "intervalInSeconds": 5,
+                "numberOfProbes": 2
+              },
+              "name": "[concat('lbProbeFile', '-', copyIndex('probes'))]"
+            }
+          }
+        ]
+      },
+      "nicBackAddressPools": {
+        "copy": [
+          {
+            "name": "nicBackAddressPools",
+            "count": 1,
+            "input": {
+              "id": "[resourceId('Microsoft.Network/loadBalancers/backendAddressPools/', variables('fsloadBalancerName'), concat('lbBackendFile', '-', copyIndex('nicBackAddressPools')))]"
+            }
+          }
+        ]
+      },
+      "sidlower": "[toLower(parameters('resourcePrefix'))]",
+      "vmName": "[toLower(parameters('resourcePrefix'))]-fs",
+      "vnetName": "[toLower(parameters('resourcePrefix'))]-vnet",
+      "subnetName": "Subnet",
+      "subnets": {
+        "true": "Microsoft.Network/virtualNetworks/subnets/[toLower(parameters('resourcePrefix'))]-vnet/Subnet",
+        "false": ""
+      },
+      "selectedSubnetId": "(subnets)[string(equals(length(parameters(subnetId)), 0))]",
+      "fspublicIpName": "[toLower(parameters('resourcePrefix'))]-pip-fs",
+      "fsavSetName": "[toLower(parameters('resourcePrefix'))]-avset-fs",
+      "nsgName": "[toLower(parameters('resourcePrefix'))]-nsg",
+      "fsloadBalancerName": "[toLower(parameters('resourcePrefix'))]-lb-fs",
+      "fsnicName": "[toLower(parameters('resourcePrefix'))]-nic-fs",
+      "osSecurityRules": {
+        "Windows": [
+          {
+            "name": "RDP",
+            "properties": {
+              "description": "Allow RDP Subnet",
+              "protocol": "Tcp",
+              "sourcePortRange": "*",
+              "destinationPortRange": "3389",
+              "sourceAddressPrefix": "*",
+              "destinationAddressPrefix": "*",
+              "access": "Allow",
+              "priority": 150,
+              "direction": "Inbound"
+            }
+          }
+        ],
+        "Linux": [
+          {
+            "name": "SSH",
+            "properties": {
+              "description": "Allow SSH Subnet",
+              "protocol": "Tcp",
+              "sourcePortRange": "*",
+              "destinationPortRange": "22",
+              "sourceAddressPrefix": "*",
+              "destinationAddressPrefix": "*",
+              "access": "Allow",
+              "priority": 150,
+              "direction": "Inbound"
+            }
+          }
+        ]
+      },
+      "selectedSecurityRules": "(osSecurityRules)[variables(internalOSType)]"
+    },
+    "resources": [
+      {
+        "condition": "[empty(parameters('subnetId'))]",
+        "type": "Microsoft.Network/networkSecurityGroups",
+        "apiVersion": "2020-04-01",
+        "name": "[toLower(parameters('resourcePrefix'))]-nsg",
+        "location": "[resourceGroup().location]",
+        "properties": {
+          "securityRules": "(osSecurityRules)[variables(internalOSType)]"
+        }
+      },
+      {
+        "condition": "[empty(parameters('subnetId'))]",
+        "type": "Microsoft.Network/virtualNetworks",
+        "apiVersion": "2020-04-01",
+        "name": "[toLower(parameters('resourcePrefix'))]-vnet",
+        "location": "[resourceGroup().location]",
+        "dependsOn": [
+          "Microsoft.Network/networkSecurityGroups/[toLower(parameters('resourcePrefix'))]-nsg"
+        ],
+        "properties": {
+          "addressSpace": {
+            "addressPrefixes": [
+              "10.0.0.0/16"
+            ]
+          },
+          "subnets": [
+            {
+              "name": "Subnet",
+              "properties": {
+                "addressPrefix": "10.0.0.0/24",
+                "networkSecurityGroup": {
+                  "id": "Microsoft.Network/networkSecurityGroups/[toLower(parameters('resourcePrefix'))]-nsg"
+                }
+              }
+            }
+          ]
+        }
+      },
+      {
+        "type": "Microsoft.Compute/availabilitySets",
+        "apiVersion": "2020-06-01",
+        "name": "[toLower(parameters('resourcePrefix'))]-avset-fs",
+        "location": "[resourceGroup().location]",
+        "sku": {
+          "name": "Aligned"
+        },
+        "properties": {
+          "platformFaultDomainCount": 2,
+          "platformUpdateDomainCount": 20
+        }
+      },
+      {
+        "condition": "[empty(parameters('subnetId'))]",
+        "type": "Microsoft.Network/publicIPAddresses",
+        "apiVersion": "2020-04-01",
+        "name": "[toLower(parameters('resourcePrefix'))]-pip-fs-copyIndex()",
+        "dependsOn": [
+          "Microsoft.Network/virtualNetworks/[toLower(parameters('resourcePrefix'))]-vnet"
+        ],
+        "location": "[resourceGroup().location]",
+        "copy": {
+          "name": "pipLoop",
+          "count": "(osFamilies)[variables(images)[parameters(osType)].OSFamily].servercount"
+        },
+        "properties": {
+          "publicIPAllocationMethod": "Dynamic"
+        }
+      },
+      {
+        "condition": "(osFamilies)[variables(images)[parameters(osType)].OSFamily].needsLB",
+        "type": "Microsoft.Network/loadBalancers",
+        "apiVersion": "2020-04-01",
+        "name": "[toLower(parameters('resourcePrefix'))]-lb-fs",
+        "location": "[resourceGroup().location]",
+        "dependsOn": [
+          "Microsoft.Network/virtualNetworks/[toLower(parameters('resourcePrefix'))]-vnet"
+        ],
+        "properties": {
+          "frontendIPConfigurations": "(frontendIPConfigurations).frontendIPConfigurations",
+          "backendAddressPools": "(backendAddressPools).backendAddressPools",
+          "loadBalancingRules": "(osFamilies)[variables(images)[parameters(osType)].OSFamily].loadBalancingRules",
+          "probes": "(probes).probes"
+        }
+      },
+      {
+        "type": "Microsoft.Network/networkInterfaces",
+        "apiVersion": "2020-04-01",
+        "name": "[toLower(parameters('resourcePrefix'))]-nic-fs-copyIndex()",
+        "location": "[resourceGroup().location]",
+        "copy": {
+          "name": "nicLoop",
+          "count": "(osFamilies)[variables(images)[parameters(osType)].OSFamily].servercount"
+        },
+        "dependsOn": [
+          "pipLoop",
+          "Microsoft.Network/virtualNetworks/[toLower(parameters('resourcePrefix'))]-vnet",
+          "Microsoft.Network/loadBalancers/[toLower(parameters('resourcePrefix'))]-lb-fs"
+        ],
+        "properties": {
+          "ipConfigurations": [
+            {
+              "name": "ipconfig1",
+              "properties": {
+                "privateIPAllocationMethod": "Dynamic",
+                "publicIPAddress": "[if(equals(length(parameters('subnetId')), 0), json(concat('{\"id\": \"', resourceId('Microsoft.Network/publicIPAddresses', concat(variables('fspublicIpName'), '-', copyIndex())) ,'\"}')), json('null'))]",
+                "subnet": {
+                  "id": "(subnets)[string(equals(length(parameters(subnetId)), 0))]"
+                },
+                "loadBalancerBackendAddressPools": "[if(variables('needsLB'), variables('nicBackAddressPools').nicBackAddressPools, json('null'))]"
+              }
+            }
+          ],
+          "enableAcceleratedNetworking": "(osFamilies)[variables(images)[parameters(osType)].OSFamily].useFastNetwork"
+        }
+      },
+      {
+        "type": "Microsoft.Compute/virtualMachines",
+        "apiVersion": "2020-06-01",
+        "name": "[toLower(parameters('resourcePrefix'))]-fs-copyIndex()",
+        "location": "[resourceGroup().location]",
+        "copy": {
+          "name": "vmLoop",
+          "count": "(osFamilies)[variables(images)[parameters(osType)].OSFamily].servercount"
+        },
+        "dependsOn": [
+          "nicLoop",
+          "Microsoft.Compute/availabilitySets/[toLower(parameters('resourcePrefix'))]-avset-fs"
+        ],
+        "properties": {
+          "availabilitySet": {
+            "id": "Microsoft.Compute/availabilitySets/[toLower(parameters('resourcePrefix'))]-avset-fs"
+          },
+          "hardwareProfile": {
+            "vmSize": "(osFamilies)[variables(images)[parameters(osType)].OSFamily].serversize"
+          },
+          "osProfile": {
+            "computerName": "[toLower(parameters('resourcePrefix'))]-fs-copyIndex()",
+            "adminUsername": "GEN-UNIQUE",
+            "adminPassword": "GEN-PASSWORD",
+            "linuxConfiguration": "[if(equals(parameters('authenticationType'), 'password'), json('null'), variables('linuxConfiguration'))]"
+          },
+          "storageProfile": {
+            "imageReference": {
+              "publisher": "(images)[parameters(osType)].publisher",
+              "offer": "(images)[parameters(osType)].offer",
+              "sku": "(images)[parameters(osType)].sku",
+              "version": "latest"
+            },
+            "osDisk": {
+              "name": "[toLower(parameters('resourcePrefix'))]-fs-copyIndex()-osdisk",
+              "caching": "ReadWrite",
+              "createOption": "FromImage",
+              "managedDisk": {
+                "storageAccountType": "Premium_LRS"
+              }
+            },
+            "copy": [
+              {
+                "name": "dataDisks",
+                "count": "[mul(variables('osFamilies')[variables('images')[parameters('osType')].OSFamily].diskPerSystem, parameters('sapSystemCount'))]",
+                "input": {
+                  "lun": "[copyIndex('dataDisks')]",
+                  "createOption": "Empty",
+                  "diskSizeGB": "(osFamilies)[variables(images)[parameters(osType)].OSFamily].serverdisksSize"
+                }
+              }
+            ]
+          },
+          "networkProfile": {
+            "networkInterfaces": [
+              {
+                "id": "Microsoft.Network/networkInterfaces/[toLower(parameters('resourcePrefix'))]-nic-fs-copyIndex()"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "type": "Microsoft.Compute/virtualMachines/extensions",
+        "apiVersion": "2020-06-01",
+        "name": "[toLower(parameters('resourcePrefix'))]-fs-copyIndex()/(csExtension)[variables(internalOSType)].Name",
+        "location": "[resourceGroup().location]",
+        "copy": {
+          "name": "cseLoop",
+          "count": "(osFamilies)[variables(images)[parameters(osType)].OSFamily].servercount"
+        },
+        "dependsOn": [
+          "vmLoop"
+        ],
+        "properties": {
+          "publisher": "(csExtension)[variables(internalOSType)].Publisher",
+          "type": "(csExtension)[variables(internalOSType)].Name",
+          "typeHandlerVersion": "(csExtension)[variables(internalOSType)].Version",
+          "autoUpgradeMinorVersion": true,
+          "settings": {
+            "fileUris": [
+              "(csExtension)[variables(internalOSType)].script"
+            ],
+            "commandToExecute": "(csExtension)[variables(internalOSType)].scriptCall"
+          }
+        }
+      }
+    ],
+    "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+  }
+}

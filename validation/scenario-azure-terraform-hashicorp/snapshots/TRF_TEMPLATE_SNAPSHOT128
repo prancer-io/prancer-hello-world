@@ -1,0 +1,352 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "main",
+  "contentType": "json",
+  "source": "gitConnectorAzureTerraHashicorp",
+  "paths": [
+    "/examples/virtual-machines/virtual_machine/2-vms-loadbalancer-lbrules/outputs.tf",
+    "/examples/virtual-machines/virtual_machine/2-vms-loadbalancer-lbrules/variables.tf",
+    "/examples/virtual-machines/virtual_machine/2-vms-loadbalancer-lbrules/main.tf"
+  ],
+  "timestamp": 1642943280035,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "TRF_TEMPLATE_SNAPSHOT",
+    "type": "terraform",
+    "collection": "terraformtemplate",
+    "paths": [
+      "/examples/virtual-machines/virtual_machine/2-vms-loadbalancer-lbrules/outputs.tf",
+      "/examples/virtual-machines/virtual_machine/2-vms-loadbalancer-lbrules/variables.tf",
+      "/examples/virtual-machines/virtual_machine/2-vms-loadbalancer-lbrules/main.tf"
+    ],
+    "snapshotId": "TRF_TEMPLATE_SNAPSHOT128",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "azurerm_lb_backend_address_pool",
+      "azurerm_lb_rule",
+      "azurerm_subnet",
+      "azurerm_virtual_network",
+      "azurerm_resource_group",
+      "azurerm_availability_set",
+      "azurerm_network_interface",
+      "azurerm_virtual_machine",
+      "azurerm_lb",
+      "azurerm_public_ip",
+      "azurerm_storage_account",
+      "azurerm_network_interface_nat_rule_association",
+      "azurerm_lb_probe",
+      "azurerm_lb_nat_rule"
+    ]
+  },
+  "snapshotId": "TRF_TEMPLATE_SNAPSHOT128",
+  "collection": "terraformtemplate",
+  "json": {
+    "provider": [
+      {
+        "azurerm": {
+          "features": [
+            {}
+          ]
+        }
+      }
+    ],
+    "resources": [
+      {
+        "type": "azurerm_resource_group",
+        "name": "rg",
+        "properties": {
+          "name": "${var.resource_group}",
+          "location": "southcentralus",
+          "compiletime_identity": "azurerm_resource_group.rg"
+        }
+      },
+      {
+        "type": "azurerm_storage_account",
+        "name": "stor",
+        "properties": {
+          "name": "${var.dns_name}stor",
+          "location": "southcentralus",
+          "resource_group_name": "${azurerm_resource_group.rg.name}",
+          "account_tier": "Standard",
+          "account_replication_type": "LRS",
+          "compiletime_identity": "azurerm_storage_account.stor"
+        }
+      },
+      {
+        "type": "azurerm_availability_set",
+        "name": "avset",
+        "properties": {
+          "name": "${var.dns_name}avset",
+          "location": "southcentralus",
+          "resource_group_name": "${azurerm_resource_group.rg.name}",
+          "platform_fault_domain_count": 2,
+          "platform_update_domain_count": 2,
+          "managed": true,
+          "compiletime_identity": "azurerm_availability_set.avset"
+        }
+      },
+      {
+        "type": "azurerm_public_ip",
+        "name": "lbpip",
+        "properties": {
+          "name": "rg-ip",
+          "location": "southcentralus",
+          "resource_group_name": "${azurerm_resource_group.rg.name}",
+          "allocation_method": "Dynamic",
+          "domain_name_label": "${var.lb_ip_dns_name}",
+          "compiletime_identity": "azurerm_public_ip.lbpip"
+        }
+      },
+      {
+        "type": "azurerm_virtual_network",
+        "name": "vnet",
+        "properties": {
+          "name": "vnet",
+          "location": "southcentralus",
+          "address_space": [
+            "10.0.0.0/16"
+          ],
+          "resource_group_name": "${azurerm_resource_group.rg.name}",
+          "compiletime_identity": "azurerm_virtual_network.vnet"
+        }
+      },
+      {
+        "type": "azurerm_subnet",
+        "name": "subnet",
+        "properties": {
+          "name": "rgsubnet",
+          "virtual_network_name": "${azurerm_virtual_network.vnet.name}",
+          "resource_group_name": "${azurerm_resource_group.rg.name}",
+          "address_prefixes": [
+            "10.0.10.0/24"
+          ],
+          "compiletime_identity": "azurerm_subnet.subnet"
+        }
+      },
+      {
+        "type": "azurerm_lb",
+        "name": "lb",
+        "properties": {
+          "resource_group_name": "${azurerm_resource_group.rg.name}",
+          "name": "rglb",
+          "location": "southcentralus",
+          "frontend_ip_configuration": [
+            {
+              "name": "LoadBalancerFrontEnd",
+              "public_ip_address_id": "${azurerm_public_ip.lbpip.id}"
+            }
+          ],
+          "compiletime_identity": "azurerm_lb.lb"
+        }
+      },
+      {
+        "type": "azurerm_lb_backend_address_pool",
+        "name": "backend_pool",
+        "properties": {
+          "resource_group_name": "${azurerm_resource_group.rg.name}",
+          "loadbalancer_id": "${azurerm_lb.lb.id}",
+          "name": "BackendPool1",
+          "compiletime_identity": "azurerm_lb_backend_address_pool.backend_pool"
+        }
+      },
+      {
+        "type": "azurerm_lb_nat_rule",
+        "name": "tcp",
+        "properties": {
+          "resource_group_name": "${azurerm_resource_group.rg.name}",
+          "loadbalancer_id": "${azurerm_lb.lb.id}",
+          "name": "RDP-VM-0",
+          "protocol": "tcp",
+          "frontend_port": "5000${count.index + 1}",
+          "backend_port": 3389,
+          "frontend_ip_configuration_name": "LoadBalancerFrontEnd",
+          "compiletime_identity": "azurerm_lb_nat_rule.tcp"
+        }
+      },
+      {
+        "type": "azurerm_lb_nat_rule",
+        "name": "tcp",
+        "properties": {
+          "resource_group_name": "${azurerm_resource_group.rg.name}",
+          "loadbalancer_id": "${azurerm_lb.lb.id}",
+          "name": "RDP-VM-1",
+          "protocol": "tcp",
+          "frontend_port": "5000${count.index + 1}",
+          "backend_port": 3389,
+          "frontend_ip_configuration_name": "LoadBalancerFrontEnd",
+          "compiletime_identity": "azurerm_lb_nat_rule.tcp"
+        }
+      },
+      {
+        "type": "azurerm_lb_rule",
+        "name": "lb_rule",
+        "properties": {
+          "resource_group_name": "${azurerm_resource_group.rg.name}",
+          "loadbalancer_id": "${azurerm_lb.lb.id}",
+          "name": "LBRule",
+          "protocol": "tcp",
+          "frontend_port": 80,
+          "backend_port": 80,
+          "frontend_ip_configuration_name": "LoadBalancerFrontEnd",
+          "enable_floating_ip": false,
+          "backend_address_pool_id": "${azurerm_lb_backend_address_pool.backend_pool.id}",
+          "idle_timeout_in_minutes": 5,
+          "probe_id": "${azurerm_lb_probe.lb_probe.id}",
+          "depends_on": [
+            "azurerm_lb_probe.lb_probe"
+          ],
+          "compiletime_identity": "azurerm_lb_rule.lb_rule"
+        }
+      },
+      {
+        "type": "azurerm_lb_probe",
+        "name": "lb_probe",
+        "properties": {
+          "resource_group_name": "${azurerm_resource_group.rg.name}",
+          "loadbalancer_id": "${azurerm_lb.lb.id}",
+          "name": "tcpProbe",
+          "protocol": "tcp",
+          "port": 80,
+          "interval_in_seconds": 5,
+          "number_of_probes": 2,
+          "compiletime_identity": "azurerm_lb_probe.lb_probe"
+        }
+      },
+      {
+        "type": "azurerm_network_interface",
+        "name": "nic",
+        "properties": {
+          "name": "nic0",
+          "location": "southcentralus",
+          "resource_group_name": "${azurerm_resource_group.rg.name}",
+          "ip_configuration": [
+            {
+              "name": "ipconfig0",
+              "subnet_id": "${azurerm_subnet.subnet.id}",
+              "private_ip_address_allocation": "Dynamic"
+            }
+          ],
+          "compiletime_identity": "azurerm_network_interface.nic"
+        }
+      },
+      {
+        "type": "azurerm_network_interface",
+        "name": "nic",
+        "properties": {
+          "name": "nic1",
+          "location": "southcentralus",
+          "resource_group_name": "${azurerm_resource_group.rg.name}",
+          "ip_configuration": [
+            {
+              "name": "ipconfig1",
+              "subnet_id": "${azurerm_subnet.subnet.id}",
+              "private_ip_address_allocation": "Dynamic"
+            }
+          ],
+          "compiletime_identity": "azurerm_network_interface.nic"
+        }
+      },
+      {
+        "type": "azurerm_network_interface_nat_rule_association",
+        "name": "natrule",
+        "properties": {
+          "network_interface_id": "element(azurerm_network_interface.nic.*.id,0)",
+          "ip_configuration_name": "ipconfig0",
+          "nat_rule_id": "element(azurerm_lb_nat_rule.tcp.*.id,0)",
+          "compiletime_identity": "azurerm_network_interface_nat_rule_association.natrule"
+        }
+      },
+      {
+        "type": "azurerm_network_interface_nat_rule_association",
+        "name": "natrule",
+        "properties": {
+          "network_interface_id": "element(azurerm_network_interface.nic.*.id,1)",
+          "ip_configuration_name": "ipconfig1",
+          "nat_rule_id": "element(azurerm_lb_nat_rule.tcp.*.id,1)",
+          "compiletime_identity": "azurerm_network_interface_nat_rule_association.natrule"
+        }
+      },
+      {
+        "type": "azurerm_virtual_machine",
+        "name": "vm",
+        "properties": {
+          "name": "vm0",
+          "location": "southcentralus",
+          "resource_group_name": "${azurerm_resource_group.rg.name}",
+          "availability_set_id": "${azurerm_availability_set.avset.id}",
+          "vm_size": "Standard_D1_v2",
+          "network_interface_ids": [
+            "element(azurerm_network_interface.nic.*.id,0)"
+          ],
+          "storage_image_reference": [
+            {
+              "publisher": "MicrosoftWindowsServer",
+              "offer": "WindowsServer",
+              "sku": "2012-R2-Datacenter",
+              "version": "latest"
+            }
+          ],
+          "storage_os_disk": [
+            {
+              "name": "osdisk0",
+              "create_option": "FromImage"
+            }
+          ],
+          "os_profile": [
+            {
+              "computer_name": "${var.hostname}",
+              "admin_username": "vmadmin",
+              "admin_password": "${var.admin_password}"
+            }
+          ],
+          "os_profile_windows_config": [
+            {}
+          ],
+          "compiletime_identity": "azurerm_virtual_machine.vm"
+        }
+      },
+      {
+        "type": "azurerm_virtual_machine",
+        "name": "vm",
+        "properties": {
+          "name": "vm1",
+          "location": "southcentralus",
+          "resource_group_name": "${azurerm_resource_group.rg.name}",
+          "availability_set_id": "${azurerm_availability_set.avset.id}",
+          "vm_size": "Standard_D1_v2",
+          "network_interface_ids": [
+            "element(azurerm_network_interface.nic.*.id,1)"
+          ],
+          "storage_image_reference": [
+            {
+              "publisher": "MicrosoftWindowsServer",
+              "offer": "WindowsServer",
+              "sku": "2012-R2-Datacenter",
+              "version": "latest"
+            }
+          ],
+          "storage_os_disk": [
+            {
+              "name": "osdisk1",
+              "create_option": "FromImage"
+            }
+          ],
+          "os_profile": [
+            {
+              "computer_name": "${var.hostname}",
+              "admin_username": "vmadmin",
+              "admin_password": "${var.admin_password}"
+            }
+          ],
+          "os_profile_windows_config": [
+            {}
+          ],
+          "compiletime_identity": "azurerm_virtual_machine.vm"
+        }
+      }
+    ]
+  }
+}

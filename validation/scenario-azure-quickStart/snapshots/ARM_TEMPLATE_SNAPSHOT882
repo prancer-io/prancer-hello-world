@@ -1,0 +1,271 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAzureQuickStart",
+  "paths": [
+    "/demos/website-cluster-centos/nested/mysqlSlave-resources.json"
+  ],
+  "timestamp": 1642962902491,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/demos/website-cluster-centos/nested/mysqlSlave-resources.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT882",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "microsoft.network/networkinterfaces",
+      "microsoft.compute/virtualmachines",
+      "microsoft.network/networksecuritygroups",
+      "microsoft.compute/virtualmachines/extensions"
+    ]
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT882",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "adminUsername": {
+        "type": "string"
+      },
+      "mysqlPassword": {
+        "type": "securestring"
+      },
+      "namespace": {
+        "type": "string"
+      },
+      "vmbasename": {
+        "type": "string"
+      },
+      "osSettings": {
+        "type": "object"
+      },
+      "vmSize": {
+        "type": "string"
+      },
+      "sizeOfDataDiskInGB": {
+        "type": "int"
+      },
+      "subnet": {
+        "type": "object"
+      },
+      "zabbixServerIPAddress": {
+        "type": "string"
+      },
+      "location": {
+        "type": "string",
+        "metadata": {
+          "description": "Location for all resources."
+        }
+      },
+      "authenticationType": {
+        "type": "string"
+      },
+      "adminPasswordOrKey": {
+        "type": "securestring"
+      }
+    },
+    "variables": {
+      "subnetRef": "Microsoft.Network/virtualNetworks/subnets/subnet/subnet",
+      "securityGroupName": "namespacevmbasenamensg",
+      "linuxConfiguration": {
+        "disablePasswordAuthentication": true,
+        "ssh": {
+          "publicKeys": [
+            {
+              "path": "/home/adminUsername/.ssh/authorized_keys",
+              "keyData": "adminPasswordOrKey"
+            }
+          ]
+        }
+      }
+    },
+    "resources": [
+      {
+        "apiVersion": "2020-11-01",
+        "type": "Microsoft.Network/networkSecurityGroups",
+        "name": "namespacevmbasenamensg",
+        "location": "location",
+        "properties": {
+          "securityRules": [
+            {
+              "name": "SSH",
+              "properties": {
+                "description": "Allows SSH traffic",
+                "protocol": "Tcp",
+                "sourcePortRange": "*",
+                "destinationPortRange": "22",
+                "sourceAddressPrefix": "*",
+                "destinationAddressPrefix": "*",
+                "access": "Allow",
+                "priority": 100,
+                "direction": "Inbound"
+              }
+            },
+            {
+              "name": "mysql",
+              "properties": {
+                "description": "Allows MySQL traffic",
+                "protocol": "Tcp",
+                "sourcePortRange": "*",
+                "destinationPortRange": "3306",
+                "sourceAddressPrefix": "*",
+                "destinationAddressPrefix": "*",
+                "access": "Allow",
+                "priority": 110,
+                "direction": "Inbound"
+              }
+            },
+            {
+              "name": "zabbixAgent",
+              "properties": {
+                "description": "Allows zabbix monitoring",
+                "protocol": "Tcp",
+                "sourcePortRange": "*",
+                "destinationPortRange": "10050",
+                "sourceAddressPrefix": "*",
+                "destinationAddressPrefix": "*",
+                "access": "Allow",
+                "priority": 120,
+                "direction": "Inbound"
+              }
+            },
+            {
+              "name": "zabbixAgent1",
+              "properties": {
+                "description": "Allows zabbix monitoring",
+                "protocol": "Tcp",
+                "sourcePortRange": "*",
+                "destinationPortRange": "10051",
+                "sourceAddressPrefix": "*",
+                "destinationAddressPrefix": "*",
+                "access": "Allow",
+                "priority": 130,
+                "direction": "Inbound"
+              }
+            }
+          ]
+        }
+      },
+      {
+        "apiVersion": "2020-11-01",
+        "type": "Microsoft.Network/networkInterfaces",
+        "name": "namespacevmbasenamenic",
+        "location": "location",
+        "dependsOn": [
+          "Microsoft.Network/networkSecurityGroups/namespacevmbasenamensg"
+        ],
+        "properties": {
+          "ipConfigurations": [
+            {
+              "name": "ipconfig1",
+              "properties": {
+                "privateIPAllocationMethod": "Dynamic",
+                "subnet": {
+                  "id": "Microsoft.Network/virtualNetworks/subnets/subnet/subnet"
+                }
+              }
+            }
+          ],
+          "networkSecurityGroup": {
+            "id": "Microsoft.Network/networkSecurityGroups/namespacevmbasenamensg"
+          }
+        }
+      },
+      {
+        "apiVersion": "2020-12-01",
+        "type": "Microsoft.Compute/virtualMachines",
+        "name": "namespacevmbasenamevm",
+        "location": "location",
+        "dependsOn": [
+          "Microsoft.Network/networkInterfaces//namespacevmbasenamenic"
+        ],
+        "properties": {
+          "hardwareProfile": {
+            "vmSize": "vmSize"
+          },
+          "osProfile": {
+            "computerName": "vmbasenamevm",
+            "adminUsername": "adminUsername",
+            "adminPassword": "adminPasswordOrKey",
+            "linuxConfiguration": "[if(equals(parameters('authenticationType'), 'password'), json('null'), variables('linuxConfiguration'))]"
+          },
+          "storageProfile": {
+            "imageReference": "osSettings",
+            "dataDisks": [
+              {
+                "name": "namespacevmbasenamevm_DataDisk1",
+                "diskSizeGB": "sizeOfDataDiskInGB",
+                "lun": 0,
+                "createOption": "Empty",
+                "caching": "ReadWrite"
+              },
+              {
+                "name": "namespacevmbasenamevm_DataDisk2",
+                "diskSizeGB": "sizeOfDataDiskInGB",
+                "lun": 1,
+                "caching": "ReadWrite",
+                "createOption": "Empty"
+              },
+              {
+                "name": "namespacevmbasenamevm_DataDisk3",
+                "diskSizeGB": "sizeOfDataDiskInGB",
+                "lun": 2,
+                "caching": "ReadWrite",
+                "createOption": "Empty"
+              },
+              {
+                "name": "namespacevmbasenamevm_DataDisk4",
+                "diskSizeGB": "sizeOfDataDiskInGB",
+                "lun": 3,
+                "caching": "ReadWrite",
+                "createOption": "Empty"
+              }
+            ],
+            "osDisk": {
+              "name": "namespacevmbasenamevm_OSDisk",
+              "caching": "ReadWrite",
+              "createOption": "FromImage"
+            }
+          },
+          "networkProfile": {
+            "networkInterfaces": [
+              {
+                "id": "Microsoft.Network/networkInterfaces/namespacevmbasenamenic"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "type": "Microsoft.Compute/virtualMachines/extensions",
+        "name": "namespacevmbasenamevm/mysqlSlaveInstall",
+        "apiVersion": "2020-12-01",
+        "location": "location",
+        "dependsOn": [
+          "Microsoft.Compute/virtualMachines//namespacevmbasenamevm"
+        ],
+        "properties": {
+          "publisher": "Microsoft.Azure.Extensions",
+          "type": "CustomScript",
+          "typeHandlerVersion": "2.0",
+          "autoUpgradeMinorVersion": true,
+          "settings": {
+            "fileUris": "osSettings"
+          },
+          "protectedSettings": {
+            "commandToExecute": "bash mysqlSlave.sh mysqlPassword zabbixServerIPAddress"
+          }
+        }
+      }
+    ],
+    "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+  }
+}
