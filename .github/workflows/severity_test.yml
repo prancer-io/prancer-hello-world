@@ -40,18 +40,4 @@ jobs:
           source helloenv/bin/activate
           pip install -U pip
           pip install -U prancer-basic
-          prancer -v
-          echo "Run without severity, all should pass.."
-          prancer --db NONE severity_none_pass
-          retval=`echo $?`
-          if [ $a -eq 1 ]; then
-            echo "severity_none_pass test case failed..."
-            exit 1
-          fi
-          prancer --db NONE severity_none_fail
-          retval=`echo $?`
-          if [ $a -eq 0 ]; then
-            echo "severity_none_fail test case returned 0..."
-            exit 1
-          fi
-          exit 0
+          bash testscripts/test_severity.sh 
