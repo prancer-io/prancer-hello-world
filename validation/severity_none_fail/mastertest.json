@@ -1,0 +1,197 @@
+{
+  "testSet": [
+    {
+      "masterTestName": "AWS_iac_TEST",
+      "version": "0.1",
+      "cases": [
+        {
+          "masterTestId": "TEST_S3_9",
+          "masterSnapshotId": [
+            "CFR_TEMPLATE_SNAPSHOT"
+          ],
+          "type": "rego",
+          "rule": "file(s3.rego)",
+          "evals": [
+            {
+              "id": "PR-AWS-0144-CFR",
+              "eval": "data.rule.s3_cloudtrail",
+              "message": "data.rule.s3_cloudtrail_err",
+              "remediationDescription": "Make sure you are following the Cloudformation template format presented at this URL:\u00a0https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-s3-bucket.html , https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-s3-policy.html",
+              "remediationFunction": "PR_AWS_0144_CFR.py"
+            }
+          ],
+          "severity": "Low",
+          "title": "AWS S3 CloudTrail buckets for which access logging is disabled",
+          "description": "This policy identifies S3 CloudTrail buckets for which access is disabled.S3 Bucket access logging generates access records for each request made to your S3 bucket. An access log record contains information such as the request type, the resources specified in the request worked, and the time and date the request was processed. It is recommended that bucket access logging be enabled on the CloudTrail S3 bucket",
+          "tags": [
+            {
+              "cloud": "git",
+              "compliance": [],
+              "service": [
+                "s3",
+                "cloudformation"
+              ]
+            }
+          ]
+        },
+        {
+          "masterTestId": "TEST_S3_10",
+          "masterSnapshotId": [
+            "CFR_TEMPLATE_SNAPSHOT"
+          ],
+          "type": "rego",
+          "rule": "file(s3.rego)",
+          "evals": [
+            {
+              "id": "PR-AWS-0147-CFR",
+              "eval": "data.rule.s3_public_acl",
+              "message": "data.rule.s3_public_acl_err",
+              "remediationDescription": "Make sure you are following the Cloudformation template format presented at this URL:\u00a0https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-s3-bucket.html , https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-s3-policy.html",
+              "remediationFunction": "PR_AWS_0147_CFR.py"
+            }
+          ],
+          "severity": "Low",
+          "title": "AWS S3 bucket has global view ACL permissions enabled.",
+          "description": "This policy determines if any S3 bucket(s) has Global View ACL permissions enabled for the All Users group. These permissions allow external resources to see the permission settings associated to the object.",
+          "tags": [
+            {
+              "cloud": "git",
+              "compliance": [],
+              "service": [
+                "s3",
+                "cloudformation"
+              ]
+            }
+          ]
+        },
+        {
+          "masterTestId": "TEST_S3_11",
+          "masterSnapshotId": [
+            "CFR_TEMPLATE_SNAPSHOT"
+          ],
+          "type": "rego",
+          "rule": "file(s3.rego)",
+          "evals": [
+            {
+              "id": "PR-AWS-0149-CFR",
+              "eval": "data.rule.s3_auth_acl",
+              "message": "data.rule.s3_auth_acl_err",
+              "remediationDescription": "Make sure you are following the Cloudformation template format presented at this URL:\u00a0https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-s3-bucket.html , https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-s3-policy.html",
+              "remediationFunction": "PR_AWS_0149_CFR.py"
+            }
+          ],
+          "severity": "Medium",
+          "title": "AWS S3 buckets are accessible to any authenticated user.",
+          "description": "This policy identifies S3 buckets accessible to any authenticated AWS users. Amazon S3 allows customer to store and retrieve any type of content from anywhere in the web. Often, customers have legitimate reasons to expose the S3 bucket to public, for example to host website content. However, these buckets often contain highly sensitive enterprise data which if left accessible to anyone with valid AWS credentials, may result in sensitive data leaks.",
+          "tags": [
+            {
+              "cloud": "git",
+              "compliance": [],
+              "service": [
+                "s3",
+                "cloudformation"
+              ]
+            }
+          ]
+        },
+        {
+          "masterTestId": "TEST_S3_12",
+          "masterSnapshotId": [
+            "CFR_TEMPLATE_SNAPSHOT"
+          ],
+          "type": "rego",
+          "rule": "file(s3.rego)",
+          "evals": [
+            {
+              "id": "PR-AWS-0150-CFR",
+              "eval": "data.rule.s3_public_access",
+              "message": "data.rule.s3_public_access_err",
+              "remediationDescription": "Make sure you are following the Cloudformation template format presented at this URL:\u00a0https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-s3-bucket.html , https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-s3-policy.html",
+              "remediationFunction": "PR_AWS_0150_CFR.py"
+            }
+          ],
+          "severity": "Medium",
+          "title": "AWS S3 buckets are accessible to public",
+          "description": "This policy identifies S3 buckets which are publicly accessible. Amazon S3 allows customers to store and retrieve any type of content from anywhere in the web. Often, customers have legitimate reasons to expose the S3 bucket to public, for example, to host website content. However, these buckets often contain highly sensitive enterprise data which if left open to public may result in sensitive data leaks.",
+          "tags": [
+            {
+              "cloud": "git",
+              "compliance": [],
+              "service": [
+                "s3",
+                "cloudformation"
+              ]
+            }
+          ]
+        },
+        {
+          "masterTestId": "TEST_S3_13",
+          "masterSnapshotId": [
+            "CFR_TEMPLATE_SNAPSHOT"
+          ],
+          "type": "rego",
+          "rule": "file(s3.rego)",
+          "evals": [
+            {
+              "id": "PR-AWS-0151-CFR",
+              "eval": "data.rule.s3_encryption",
+              "message": "data.rule.s3_encryption_err",
+              "remediationDescription": "Make sure you are following the Cloudformation template format presented at this URL:\u00a0https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-s3-bucket.html , https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-s3-policy.html",
+              "remediationFunction": "PR_AWS_0151_CFR.py"
+            }
+          ],
+          "severity": "High",
+          "title": "AWS S3 buckets do not have server side encryption.",
+          "description": "Customers can protect the data in S3 buckets using the AWS server-side encryption. If the server-side encryption is not turned on for S3 buckets with sensitive data, in the event of a data breach, malicious users can gain access to the data.",
+          "tags": [
+            {
+              "cloud": "git",
+              "compliance": [],
+              "service": [
+                "s3",
+                "cloudformation"
+              ]
+            }
+          ]
+        },
+        {
+          "masterTestId": "TEST_S3_14",
+          "masterSnapshotId": [
+            "CFR_TEMPLATE_SNAPSHOT"
+          ],
+          "type": "rego",
+          "rule": "file(s3.rego)",
+          "evals": [
+            {
+              "id": "PR-AWS-0246-CFR",
+              "eval": "data.rule.s3_cors",
+              "message": "data.rule.s3_cors_err",
+              "remediationDescription": "Make sure you are following the Cloudformation template format presented at this URL:\u00a0https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-s3-bucket.html#aws-properties-s3-bucket--seealso\nAllowedHeaders should not have default value '*', define value more specific like Content-Type, x-requested-with etc. and AllowedMethods should be 'GET', 'POST', 'PUT', 'PATHCH', 'DELETE' or 'OPTIONS'",
+              "remediationFunction": "PR_AWS_0246_CFR.py"
+            }
+          ],
+          "severity": "High",
+          "title": "Ensure S3 hosted sites supported hardened CORS",
+          "description": "Ensure that AllowedOrigins, AllowedMethods should not be set to *. this allows all cross site users to access s3 bucket and they have permission to manipulate data",
+          "tags": [
+            {
+              "cloud": "git",
+              "compliance": [],
+              "service": [
+                "S3",
+                "cloudformation"
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "notification": [],
+  "connector": null,
+  "remoteFile": null,
+  "connectorUsers": [],
+  "contentVersion": "1.0.0.0",
+  "fileType": "mastertest",
+  "masterSnapshot": "mastersnapshot"
+}
