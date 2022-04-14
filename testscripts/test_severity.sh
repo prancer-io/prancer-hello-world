@@ -1,7 +1,4 @@
 #!/bin/bash
-# source helloenv/bin/activate
-# pip install -U pip
-# pip install -U prancer-basic
 prancer -v
 echo "Run without severity, all should pass.."
 prancer --db NONE severity_none_pass
@@ -48,4 +45,5 @@ if [ $retval -eq 0 ]; then
   echo "severity_medium_low_fail test case failed..."
   exit 1
 fi
+echo "ALL SEVERITY TESTS RAN SUCCESSFULLY..............."
 exit 0
