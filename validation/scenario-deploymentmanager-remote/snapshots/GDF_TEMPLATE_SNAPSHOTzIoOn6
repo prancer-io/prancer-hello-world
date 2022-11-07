@@ -1,0 +1,135 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorDeploymentmanager",
+  "paths": [
+    "/cluster/cluster.yaml"
+  ],
+  "timestamp": 1667799922600,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "GDF_TEMPLATE_SNAPSHOT",
+    "type": "deploymentmanager",
+    "collection": "deploymentmanagertemplate",
+    "paths": [
+      "/cluster/cluster.yaml"
+    ],
+    "snapshotId": "GDF_TEMPLATE_SNAPSHOTzIoOn6",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "container.v1.cluster"
+    ]
+  },
+  "snapshotId": "GDF_TEMPLATE_SNAPSHOTzIoOn6",
+  "collection": "deploymentmanagertemplate",
+  "json": {
+    "imports": [
+      {
+        "path": "cluster.jinja"
+      }
+    ],
+    "resources": [
+      {
+        "name": "properties['cluster_name']",
+        "type": "container.v1.cluster",
+        "properties": {
+          "zone": "ZONE_TO_RUN",
+          "cluster": {
+            "name": "properties['cluster_name']",
+            "initialNodeCount": 3
+          },
+          "nodeConfig": {
+            "metadata": {
+              "disable-legacy-endpoints": true
+            }
+          },
+          "podSecurityPolicyConfig": {
+            "enabled": false
+          },
+          "privateClusterConfig": {
+            "enablePrivateNodes": false,
+            "enablePrivateEndpoint": false
+          },
+          "resourceUsageExportConfig": {
+            "enableNetworkEgressMetering": false,
+            "consumptionMeteringConfig": {
+              "enabled": true
+            }
+          },
+          "enableKubernetesAlpha": true,
+          "networkConfig": {
+            "enableIntraNodeVisibility": false
+          },
+          "addonsConfig": {
+            "istioConfig": {
+              "disabled": false
+            },
+            "kubernetesDashboard": {
+              "disabled": false
+            },
+            "httpLoadBalancing": {
+              "disabled": true
+            }
+          },
+          "legacyAbac": {
+            "enabled": true
+          },
+          "masterAuthorizedNetworksConfig": {
+            "enabled": false,
+            "cidrBlocks": [
+              {
+                "displayName": "public",
+                "cidrBlock": "10.0.0.0/16"
+              }
+            ]
+          },
+          "networkPolicy": {
+            "provider": "CALICO",
+            "enabled": false
+          },
+          "loggingService": "none",
+          "monitoringService": "none",
+          "binaryAuthorization": {
+            "enabled": false
+          },
+          "nodePool": {
+            "name": "-test1",
+            "initialNodeCount": 1,
+            "autoscaling": {
+              "enabled": true,
+              "minNodeCount": 1,
+              "maxNodeCount": 3
+            },
+            "management": {
+              "autoUpgrade": true,
+              "autoRepair": true
+            },
+            "config": {
+              "machineType": "custom-2-4096",
+              "diskSizeGb": 20,
+              "preemptible": false,
+              "imageType": "COS",
+              "oauthScopes": [
+                "https://www.googleapis.com/auth/compute",
+                "https://www.googleapis.com/auth/devstorage.read_only",
+                "https://www.googleapis.com/auth/logging.write",
+                "https://www.googleapis.com/auth/monitoring",
+                "https://www.googleapis.com/auth/cloud_debugger"
+              ],
+              "localSsdCount": 0,
+              "serviceAccount": "svc-@.iam.gserviceaccount.com"
+            }
+          },
+          "ipAllocationPolicy": {
+            "useIpAliases": false
+          }
+        }
+      }
+    ]
+  },
+  "session_id": "session_1667787303138"
+}

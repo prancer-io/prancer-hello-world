@@ -1,0 +1,66 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorDeploymentmanager",
+  "paths": [
+    "/logging/logging.yaml"
+  ],
+  "timestamp": 1667810135427,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "GDF_TEMPLATE_SNAPSHOT",
+    "type": "deploymentmanager",
+    "collection": "deploymentmanagertemplate",
+    "paths": [
+      "/logging/logging.yaml"
+    ],
+    "snapshotId": "GDF_TEMPLATE_SNAPSHOTtZlxr7",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "gcp-types/logging-v2:projects.metrics",
+      "gcp-types/pubsub-v1:projects.topics",
+      "gcp-types/logging-v2:projects.sinks"
+    ]
+  },
+  "snapshotId": "GDF_TEMPLATE_SNAPSHOTtZlxr7",
+  "collection": "deploymentmanagertemplate",
+  "json": {
+    "imports": [
+      {
+        "path": "logging.jinja"
+      }
+    ],
+    "resources": [
+      {
+        "type": "gcp-types/logging-v2:projects.sinks",
+        "name": "my-sink",
+        "properties": {
+          "sink": "sink-",
+          "destination": "pubsub.googleapis.com/$(ref.my-topic.name)",
+          "filter": "severity >= ERROR",
+          "outputVersionFormat": "V2"
+        }
+      },
+      {
+        "type": "gcp-types/logging-v2:projects.metrics",
+        "name": "my-metric",
+        "properties": {
+          "metric": "metric-",
+          "filter": "severity >= ERROR"
+        }
+      },
+      {
+        "type": "gcp-types/pubsub-v1:projects.topics",
+        "name": "my-topic",
+        "properties": {
+          "topic": null
+        }
+      }
+    ]
+  },
+  "session_id": "session_1667797527823"
+}

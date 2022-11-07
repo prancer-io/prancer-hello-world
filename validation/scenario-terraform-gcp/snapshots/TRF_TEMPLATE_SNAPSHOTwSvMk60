@@ -1,0 +1,168 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorTerraform",
+  "paths": [
+    "/gcp/container_cluster/vars.tf",
+    "/gcp/container_cluster/provider.tf",
+    "/gcp/container_cluster/terraform.tfvars",
+    "/gcp/container_cluster/main.tf"
+  ],
+  "timestamp": 1667813323719,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "TRF_TEMPLATE_SNAPSHOT",
+    "type": "terraform",
+    "collection": "terraformtemplate",
+    "paths": [
+      "/gcp/container_cluster/vars.tf",
+      "/gcp/container_cluster/provider.tf",
+      "/gcp/container_cluster/terraform.tfvars",
+      "/gcp/container_cluster/main.tf"
+    ],
+    "snapshotId": "TRF_TEMPLATE_SNAPSHOTwSvMk60",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "google_container_node_pool",
+      "google_container_cluster",
+      "google_bigquery_dataset"
+    ]
+  },
+  "snapshotId": "TRF_TEMPLATE_SNAPSHOTwSvMk60",
+  "collection": "terraformtemplate",
+  "json": {
+    "resources": [
+      {
+        "type": "google_container_cluster",
+        "name": "primary",
+        "properties": {
+          "name": "prancer-k8s",
+          "location": "us-central1",
+          "remove_default_node_pool": true,
+          "initial_node_count": 1,
+          "enable_kubernetes_alpha": false,
+          "enable_legacy_abac": true,
+          "network": null,
+          "network_policy": [
+            {
+              "enabled": true
+            }
+          ],
+          "private_cluster_config": [],
+          "ip_allocation_policy": [],
+          "master_authorized_networks_config": [],
+          "database_encryption": [
+            {
+              "state": "DECRYPTED",
+              "key_name": ""
+            }
+          ],
+          "addons_config": [
+            {
+              "network_policy_config": [
+                {
+                  "disabled": true
+                }
+              ],
+              "http_load_balancing": [
+                {
+                  "disabled": true
+                }
+              ]
+            }
+          ],
+          "master_auth": [
+            {
+              "username": "",
+              "password": "Root1234",
+              "client_certificate_config": [
+                {
+                  "issue_client_certificate": false
+                }
+              ]
+            }
+          ],
+          "pod_security_policy_config": [
+            {
+              "enabled": false
+            }
+          ],
+          "resource_usage_export_config": [
+            {
+              "enable_network_egress_metering": false,
+              "bigquery_destination": [
+                {
+                  "dataset_id": "${google_bigquery_dataset.dataset.dataset_id}"
+                }
+              ]
+            }
+          ],
+          "enable_binary_authorization": false,
+          "enable_intranode_visibility": false,
+          "monitoring_service": "none",
+          "logging_service": "none",
+          "resource_labels": {},
+          "compiletime_identity": "module.k8s"
+        }
+      },
+      {
+        "type": "google_container_node_pool",
+        "name": "nodes",
+        "properties": {
+          "name": "prancer-k8s-node",
+          "location": "us-central1",
+          "cluster": "prancer-k8s",
+          "node_count": 3,
+          "node_locations": [
+            "us-central1-a"
+          ],
+          "node_config": [
+            {
+              "image_type": "UBUNTU",
+              "preemptible": true,
+              "machine_type": "e2-medium",
+              "service_account": null,
+              "metadata": {
+                "disable-legacy-endpoints": false
+              },
+              "enable_shielded_nodes": true,
+              "shielded_instance_config": [
+                {
+                  "enable_secure_boot": false,
+                  "enable_integrity_monitoring": false
+                }
+              ],
+              "oauth_scopes": [
+                "https://www.googleapis.com/auth/logging.write",
+                "https://www.googleapis.com/auth/monitoring"
+              ],
+              "workload_metadata_config": [
+                {
+                  "mode": "gce_metadata"
+                }
+              ]
+            }
+          ],
+          "compiletime_identity": "module.k8s"
+        }
+      },
+      {
+        "type": "google_bigquery_dataset",
+        "name": "dataset",
+        "properties": {
+          "dataset_id": "prancer_dataset",
+          "friendly_name": "prancerd",
+          "description": "Prancer BigData Dataset",
+          "location": "US",
+          "default_table_expiration_ms": 3600000,
+          "compiletime_identity": "google_bigquery_dataset.dataset"
+        }
+      }
+    ]
+  },
+  "session_id": "session_1667800667997"
+}

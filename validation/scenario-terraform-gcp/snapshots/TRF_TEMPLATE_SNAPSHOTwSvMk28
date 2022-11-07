@@ -1,0 +1,97 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorTerraform",
+  "paths": [
+    "/azure/vnetpeerings/vars.tf",
+    "/azure/vnetpeerings/provider.tf",
+    "/azure/vnetpeerings/terraform.tfvars",
+    "/azure/vnetpeerings/main.tf"
+  ],
+  "timestamp": 1667813323702,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "TRF_TEMPLATE_SNAPSHOT",
+    "type": "terraform",
+    "collection": "terraformtemplate",
+    "paths": [
+      "/azure/vnetpeerings/vars.tf",
+      "/azure/vnetpeerings/provider.tf",
+      "/azure/vnetpeerings/terraform.tfvars",
+      "/azure/vnetpeerings/main.tf"
+    ],
+    "snapshotId": "TRF_TEMPLATE_SNAPSHOTwSvMk28",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "azurerm_virtual_network_peering",
+      "azurerm_virtual_network"
+    ]
+  },
+  "snapshotId": "TRF_TEMPLATE_SNAPSHOTwSvMk28",
+  "collection": "terraformtemplate",
+  "json": {
+    "resources": [
+      {
+        "type": "azurerm_virtual_network",
+        "name": "vnet",
+        "properties": {
+          "name": "peer1",
+          "resource_group_name": "prancer-test-rg",
+          "address_space": [
+            "10.154.0.0/16"
+          ],
+          "location": "eastus2",
+          "tags": {},
+          "compiletime_identity": "module.peer1"
+        }
+      },
+      {
+        "type": "azurerm_virtual_network",
+        "name": "vnet",
+        "properties": {
+          "name": "peer2",
+          "resource_group_name": "prancer-test-rg",
+          "address_space": [
+            "10.254.0.0/16"
+          ],
+          "location": "eastus2",
+          "tags": {},
+          "compiletime_identity": "module.peer2"
+        }
+      },
+      {
+        "type": "azurerm_virtual_network_peering",
+        "name": "vnet1peering",
+        "properties": {
+          "name": "prancer-vnet-peering",
+          "resource_group_name": "prancer-test-rg",
+          "virtual_network_name": "peer1",
+          "remote_virtual_network_id": "${module.peer2.vnet_id}",
+          "allow_virtual_network_access": false,
+          "allow_forwarded_traffic": true,
+          "allow_gateway_transit": false,
+          "compiletime_identity": "module.vnetpeering"
+        }
+      },
+      {
+        "type": "azurerm_virtual_network_peering",
+        "name": "vnet2peering",
+        "properties": {
+          "name": "prancer-vnet-peering",
+          "resource_group_name": "prancer-test-rg",
+          "virtual_network_name": "peer2",
+          "remote_virtual_network_id": "${module.peer1.vnet_id}",
+          "allow_virtual_network_access": false,
+          "allow_forwarded_traffic": true,
+          "allow_gateway_transit": false,
+          "compiletime_identity": "module.vnetpeering"
+        }
+      }
+    ]
+  },
+  "session_id": "session_1667800667997"
+}

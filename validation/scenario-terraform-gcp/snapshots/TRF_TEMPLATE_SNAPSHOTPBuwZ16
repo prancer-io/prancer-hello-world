@@ -1,0 +1,118 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorTerraform",
+  "paths": [
+    "/azure/vault/main.tf"
+  ],
+  "timestamp": 1667822617470,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "TRF_TEMPLATE_SNAPSHOT",
+    "type": "terraform",
+    "collection": "terraformtemplate",
+    "paths": [
+      "/azure/vault/main.tf"
+    ],
+    "snapshotId": "TRF_TEMPLATE_SNAPSHOTPBuwZ16",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "azurerm_key_vault_key",
+      "azurerm_key_vault_secret",
+      "azurerm_key_vault",
+      "azurerm_resource_group",
+      "azurerm_disk_encryption_set"
+    ]
+  },
+  "snapshotId": "TRF_TEMPLATE_SNAPSHOTPBuwZ16",
+  "collection": "terraformtemplate",
+  "json": {
+    "data": {
+      "azurerm_client_config": {
+        "current": {
+          "compiletime_identity": "data.azurerm_client_config.current"
+        }
+      }
+    },
+    "resources": [
+      {
+        "type": "azurerm_resource_group",
+        "name": "example",
+        "properties": {
+          "name": "example-resources",
+          "location": "West Europe",
+          "compiletime_identity": "azurerm_resource_group.example"
+        }
+      },
+      {
+        "type": "azurerm_key_vault",
+        "name": "example",
+        "properties": {
+          "name": "examplekeyvault",
+          "location": "${azurerm_resource_group.example.location}",
+          "resource_group_name": "${azurerm_resource_group.example.name}",
+          "tenant_id": "${data.azurerm_client_config.current.tenant_id}",
+          "sku_name": "premium",
+          "soft_delete_retention_days": 7,
+          "access_policy": [
+            {
+              "tenant_id": "${data.azurerm_client_config.current.tenant_id}",
+              "object_id": "${data.azurerm_client_config.current.object_id}"
+            }
+          ],
+          "compiletime_identity": "azurerm_key_vault.example"
+        }
+      },
+      {
+        "type": "azurerm_key_vault_secret",
+        "name": "example",
+        "properties": {
+          "name": "secret-sauce",
+          "value": "UyVc_EG&ZPn=3m6%",
+          "key_vault_id": "${azurerm_key_vault.example.id}",
+          "compiletime_identity": "azurerm_key_vault_secret.example"
+        }
+      },
+      {
+        "type": "azurerm_key_vault_key",
+        "name": "test",
+        "properties": {
+          "name": "examplekey",
+          "key_vault_id": "${azurerm_key_vault.example.id}",
+          "key_type": "RSA",
+          "key_size": 2048,
+          "key_opts": [
+            "decrypt",
+            "encrypt",
+            "sign",
+            "unwrapKey",
+            "verify",
+            "wrapKey"
+          ],
+          "compiletime_identity": "azurerm_key_vault_key.test"
+        }
+      },
+      {
+        "type": "azurerm_disk_encryption_set",
+        "name": "test",
+        "properties": {
+          "name": "test-des",
+          "resource_group_name": "${azurerm_resource_group.example.name}",
+          "location": "${azurerm_resource_group.example.location}",
+          "key_vault_key_id": "${azurerm_key_vault_key.test.id}",
+          "identity": [
+            {
+              "type": "SystemAssigned"
+            }
+          ],
+          "compiletime_identity": "azurerm_disk_encryption_set.test"
+        }
+      }
+    ]
+  },
+  "session_id": "session_1667809951321"
+}

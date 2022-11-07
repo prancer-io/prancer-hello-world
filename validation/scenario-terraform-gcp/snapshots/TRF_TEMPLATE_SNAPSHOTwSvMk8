@@ -1,0 +1,76 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorTerraform",
+  "paths": [
+    "/azure/mariadb_database/main.tf"
+  ],
+  "timestamp": 1667813323688,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "TRF_TEMPLATE_SNAPSHOT",
+    "type": "terraform",
+    "collection": "terraformtemplate",
+    "paths": [
+      "/azure/mariadb_database/main.tf"
+    ],
+    "snapshotId": "TRF_TEMPLATE_SNAPSHOTwSvMk8",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "azurerm_mariadb_database",
+      "azurerm_resource_group",
+      "azurerm_mariadb_server"
+    ]
+  },
+  "snapshotId": "TRF_TEMPLATE_SNAPSHOTwSvMk8",
+  "collection": "terraformtemplate",
+  "json": {
+    "resources": [
+      {
+        "type": "azurerm_resource_group",
+        "name": "example",
+        "properties": {
+          "name": "tfex-mariadb-database-RG",
+          "location": "West Europe",
+          "compiletime_identity": "azurerm_resource_group.example"
+        }
+      },
+      {
+        "type": "azurerm_mariadb_server",
+        "name": "example",
+        "properties": {
+          "name": "mariadb-svr",
+          "location": "${azurerm_resource_group.example.location}",
+          "resource_group_name": "${azurerm_resource_group.example.name}",
+          "sku_name": "B_Gen5_2",
+          "storage_mb": 51200,
+          "backup_retention_days": 7,
+          "geo_redundant_backup_enabled": false,
+          "administrator_login": "acctestun",
+          "administrator_login_password": "H@Sh1CoR3!",
+          "version": 10.2,
+          "ssl_enforcement_enabled": false,
+          "public_network_access_enabled": true,
+          "compiletime_identity": "azurerm_mariadb_server.example"
+        }
+      },
+      {
+        "type": "azurerm_mariadb_database",
+        "name": "example",
+        "properties": {
+          "name": "mariadb_database",
+          "resource_group_name": "${azurerm_resource_group.example.name}",
+          "server_name": "${azurerm_mariadb_server.example.name}",
+          "charset": "utf8",
+          "collation": "utf8_general_ci",
+          "compiletime_identity": "azurerm_mariadb_database.example"
+        }
+      }
+    ]
+  },
+  "session_id": "session_1667800667997"
+}

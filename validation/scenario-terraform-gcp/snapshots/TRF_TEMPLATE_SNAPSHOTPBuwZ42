@@ -1,0 +1,114 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorTerraform",
+  "paths": [
+    "/aws/sg/main.tf"
+  ],
+  "timestamp": 1667822617484,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "TRF_TEMPLATE_SNAPSHOT",
+    "type": "terraform",
+    "collection": "terraformtemplate",
+    "paths": [
+      "/aws/sg/main.tf"
+    ],
+    "snapshotId": "TRF_TEMPLATE_SNAPSHOTPBuwZ42",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "aws_security_group"
+    ]
+  },
+  "snapshotId": "TRF_TEMPLATE_SNAPSHOTPBuwZ42",
+  "collection": "terraformtemplate",
+  "json": {
+    "resources": [
+      {
+        "type": "aws_security_group",
+        "name": "allow_tls",
+        "properties": {
+          "name": "allow_tls",
+          "description": "Allow TLS inbound traffic",
+          "vpc_id": "${aws_vpc.main.id}",
+          "ingress": [
+            {
+              "description": "TLS from VPC",
+              "from_port": 443,
+              "to_port": 443,
+              "protocol": "tcp",
+              "cidr_blocks": [
+                "${aws_vpc.main.cidr_block}"
+              ],
+              "ipv6_cidr_blocks": [
+                "${aws_vpc.main.ipv6_cidr_block}"
+              ]
+            }
+          ],
+          "egress": [
+            {
+              "from_port": 0,
+              "to_port": 0,
+              "protocol": -1,
+              "cidr_blocks": [
+                "0.0.0.0/0"
+              ],
+              "ipv6_cidr_blocks": [
+                "::/0"
+              ]
+            }
+          ],
+          "tags": {
+            "Name": "allow_tls"
+          },
+          "compiletime_identity": "aws_security_group.allow_tls"
+        }
+      },
+      {
+        "type": "aws_security_group",
+        "name": "allow_ssh",
+        "properties": {
+          "name": "allow_ssh",
+          "description": "Allow SSH inbound traffic",
+          "vpc_id": "${aws_vpc.main.id}",
+          "ingress": [
+            {
+              "description": "SSH from VPC",
+              "from_port": 21,
+              "to_port": 21,
+              "protocol": "tcp",
+              "cidr_blocks": [
+                "${aws_vpc.main.cidr_block}"
+              ],
+              "ipv6_cidr_blocks": [
+                "${aws_vpc.main.ipv6_cidr_block}"
+              ]
+            }
+          ],
+          "egress": [
+            {
+              "from_port": 0,
+              "to_port": 0,
+              "protocol": -1,
+              "cidr_blocks": [
+                "0.0.0.0/0"
+              ],
+              "ipv6_cidr_blocks": [
+                "::/0"
+              ]
+            }
+          ],
+          "tags": {
+            "Name": "allow_ssh"
+          },
+          "compiletime_identity": "aws_security_group.allow_ssh"
+        }
+      }
+    ]
+  },
+  "session_id": "session_1667809951321"
+}

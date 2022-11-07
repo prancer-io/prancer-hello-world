@@ -1,0 +1,74 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorTerraform",
+  "paths": [
+    "/azure/sql_servers/vars.tf",
+    "/azure/sql_servers/provider.tf",
+    "/azure/sql_servers/terraform.tfvars",
+    "/azure/sql_servers/main.tf"
+  ],
+  "timestamp": 1667813323684,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "TRF_TEMPLATE_SNAPSHOT",
+    "type": "terraform",
+    "collection": "terraformtemplate",
+    "paths": [
+      "/azure/sql_servers/vars.tf",
+      "/azure/sql_servers/provider.tf",
+      "/azure/sql_servers/terraform.tfvars",
+      "/azure/sql_servers/main.tf"
+    ],
+    "snapshotId": "TRF_TEMPLATE_SNAPSHOTwSvMk4",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "azurerm_sql_firewall_rule",
+      "azurerm_sql_server"
+    ]
+  },
+  "snapshotId": "TRF_TEMPLATE_SNAPSHOTwSvMk4",
+  "collection": "terraformtemplate",
+  "json": {
+    "data": {
+      "azurerm_client_config": {
+        "current": {
+          "compiletime_identity": "data.azurerm_client_config.current"
+        }
+      }
+    },
+    "resources": [
+      {
+        "type": "azurerm_sql_server",
+        "name": "sqlserver",
+        "properties": {
+          "name": "prancer-sql-server2",
+          "resource_group_name": "prancer-test-rg",
+          "location": "eastus2",
+          "version": 12.0,
+          "administrator_login": "prancer_admin",
+          "administrator_login_password": "vijcykDaHarj+Oz5",
+          "tags": {},
+          "compiletime_identity": "module.sqlServers"
+        }
+      },
+      {
+        "type": "azurerm_sql_firewall_rule",
+        "name": "sqlserverfw",
+        "properties": {
+          "name": "prancer-sql-fw-block-200-net",
+          "resource_group_name": "prancer-test-rg",
+          "server_name": "${module.sqlServers.sqlserver_name}",
+          "start_ip_address": "0.0.0.0/32",
+          "end_ip_address": "10.254.200.255",
+          "compiletime_identity": "module.sqlServerFWRule"
+        }
+      }
+    ]
+  },
+  "session_id": "session_1667800667997"
+}

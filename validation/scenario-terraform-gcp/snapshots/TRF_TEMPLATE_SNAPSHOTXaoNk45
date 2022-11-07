@@ -1,0 +1,108 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorTerraform",
+  "paths": [
+    "/aws/cloudtrail/vars.tf",
+    "/aws/cloudtrail/provider.tf",
+    "/aws/cloudtrail/terraform.tfvars",
+    "/aws/cloudtrail/main.tf"
+  ],
+  "timestamp": 1667812871874,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "TRF_TEMPLATE_SNAPSHOT",
+    "type": "terraform",
+    "collection": "terraformtemplate",
+    "paths": [
+      "/aws/cloudtrail/vars.tf",
+      "/aws/cloudtrail/provider.tf",
+      "/aws/cloudtrail/terraform.tfvars",
+      "/aws/cloudtrail/main.tf"
+    ],
+    "snapshotId": "TRF_TEMPLATE_SNAPSHOTXaoNk45",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "aws_cloudtrail",
+      "aws_s3_bucket"
+    ]
+  },
+  "snapshotId": "TRF_TEMPLATE_SNAPSHOTXaoNk45",
+  "collection": "terraformtemplate",
+  "json": {
+    "data": {
+      "aws_caller_identity": {
+        "current": {
+          "compiletime_identity": "data.aws_caller_identity.current"
+        }
+      }
+    },
+    "resources": [
+      {
+        "type": "aws_cloudtrail",
+        "name": "cloudtrail",
+        "properties": {
+          "name": "prancer-ct",
+          "enable_logging": true,
+          "s3_bucket_name": "${aws_s3_bucket.s3.id}",
+          "s3_key_prefix": "prefix",
+          "enable_log_file_validation": false,
+          "is_multi_region_trail": false,
+          "include_global_service_events": true,
+          "cloud_watch_logs_role_arn": "",
+          "cloud_watch_logs_group_arn": "",
+          "tags": {
+            "Environment": "Production",
+            "Project": "Prancer"
+          },
+          "kms_key_id": "",
+          "is_organization_trail": false,
+          "event_selector": [],
+          "compiletime_identity": "module.cloudtrail"
+        }
+      },
+      {
+        "type": "aws_s3_bucket",
+        "name": "s3",
+        "properties": {
+          "bucket": "tf-s3-trail",
+          "force_destroy": true,
+          "policy": {
+            "Version": "2012-10-17",
+            "Statement": [
+              {
+                "Sid": "AWSCloudTrailAclCheck",
+                "Effect": "Allow",
+                "Principal": {
+                  "Service": "cloudtrail.amazonaws.com"
+                },
+                "Action": "s3:GetBucketAcl",
+                "Resource": "arn:aws:s3:::tf-s3-trail"
+              },
+              {
+                "Sid": "AWSCloudTrailWrite",
+                "Effect": "Allow",
+                "Principal": {
+                  "Service": "cloudtrail.amazonaws.com"
+                },
+                "Action": "s3:PutObject",
+                "Resource": "arn:aws:s3:::tf-s3-trail/prefix/AWSLogs/${data.aws_caller_identity.current.account_id}/*",
+                "Condition": {
+                  "StringEquals": {
+                    "s3:x-amz-acl": "bucket-owner-full-control"
+                  }
+                }
+              }
+            ]
+          },
+          "compiletime_identity": "aws_s3_bucket.s3"
+        }
+      }
+    ]
+  },
+  "session_id": "session_1667800207814"
+}

@@ -1,0 +1,305 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorTerraform",
+  "paths": [
+    "/azure/applicationgateways/vars.tf",
+    "/azure/applicationgateways/provider.tf",
+    "/azure/applicationgateways/terraform.tfvars",
+    "/azure/applicationgateways/main.tf"
+  ],
+  "timestamp": 1667812871858,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "TRF_TEMPLATE_SNAPSHOT",
+    "type": "terraform",
+    "collection": "terraformtemplate",
+    "paths": [
+      "/azure/applicationgateways/vars.tf",
+      "/azure/applicationgateways/provider.tf",
+      "/azure/applicationgateways/terraform.tfvars",
+      "/azure/applicationgateways/main.tf"
+    ],
+    "snapshotId": "TRF_TEMPLATE_SNAPSHOTXaoNk17",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "azurerm_management_lock",
+      "azurerm_application_gateway",
+      "azurerm_virtual_network",
+      "azurerm_public_ip",
+      "azurerm_subnet",
+      "azurerm_web_application_firewall_policy"
+    ]
+  },
+  "snapshotId": "TRF_TEMPLATE_SNAPSHOTXaoNk17",
+  "collection": "terraformtemplate",
+  "json": {
+    "resources": [
+      {
+        "type": "azurerm_virtual_network",
+        "name": "vnet",
+        "properties": {
+          "name": "prancer-vnet",
+          "resource_group_name": "prancer-test-rg",
+          "address_space": [
+            "10.254.0.0/16"
+          ],
+          "location": "eastus2",
+          "tags": {
+            "environment": "Production",
+            "project": "Prancer"
+          },
+          "compiletime_identity": "module.vnet"
+        }
+      },
+      {
+        "type": "azurerm_subnet",
+        "name": "sub",
+        "properties": {
+          "name": "prancer-frontend",
+          "resource_group_name": "prancer-test-rg",
+          "virtual_network_name": "prancer-vnet",
+          "address_prefixes": [
+            "10.254.0.0/24"
+          ],
+          "compiletime_identity": "module.subnet-frontend"
+        }
+      },
+      {
+        "type": "azurerm_subnet",
+        "name": "sub",
+        "properties": {
+          "name": "prancer-backend",
+          "resource_group_name": "prancer-test-rg",
+          "virtual_network_name": "prancer-vnet",
+          "address_prefixes": [
+            "10.254.2.0/24"
+          ],
+          "compiletime_identity": "module.subnet-backend"
+        }
+      },
+      {
+        "type": "azurerm_public_ip",
+        "name": "public",
+        "properties": {
+          "name": "prancer-pip",
+          "location": "eastus2",
+          "resource_group_name": "prancer-test-rg",
+          "allocation_method": "Dynamic",
+          "sku": "Basic",
+          "ip_version": "IPv4",
+          "compiletime_identity": "module.publicIP"
+        }
+      },
+      {
+        "type": "azurerm_public_ip",
+        "name": "example",
+        "properties": {
+          "name": "example-pip",
+          "resource_group_name": "prancer-test-rg",
+          "location": "eastus2",
+          "allocation_method": "Dynamic",
+          "compiletime_identity": "module.applicationGateway"
+        }
+      },
+      {
+        "type": "azurerm_management_lock",
+        "name": "public-ip",
+        "properties": {
+          "name": "resource-ip",
+          "scope": "${azurerm_public_ip.public.id}",
+          "lock_level": "ReadOnly",
+          "notes": "Locked because it's needed by a third-party",
+          "compiletime_identity": "module.publicIP"
+        }
+      },
+      {
+        "type": "azurerm_application_gateway",
+        "name": "appgw",
+        "properties": {
+          "name": "prancer-app-gw",
+          "resource_group_name": "prancer-test-rg",
+          "location": "eastus2",
+          "sku": [
+            {
+              "name": "WAF_Medium",
+              "tier": "WAF",
+              "capacity": 2
+            }
+          ],
+          "gateway_ip_configuration": [
+            {
+              "name": "prancer-app-gw-ip-conf",
+              "subnet_id": "${module.subnet-frontend.subnet_id}"
+            }
+          ],
+          "frontend_port": [
+            {
+              "name": "prancer-app-gw-fe-port",
+              "port": 80
+            }
+          ],
+          "frontend_ip_configuration": [
+            {
+              "name": "prancer-app-gw-fe-ip",
+              "public_ip_address_id": "${azurerm_public_ip.example.id}"
+            }
+          ],
+          "backend_address_pool": [
+            {
+              "name": "prancer-app-gw-be-pool"
+            }
+          ],
+          "backend_http_settings": [
+            {
+              "name": "prancer-app-gw-be-http",
+              "cookie_based_affinity": "Disabled",
+              "path": "/login/",
+              "port": 80,
+              "protocol": "Http",
+              "request_timeout": 60
+            }
+          ],
+          "http_listener": [
+            {
+              "name": "prancer-app-gw-listener",
+              "frontend_ip_configuration_name": "prancer-app-gw-fe-ip",
+              "frontend_port_name": "prancer-app-gw-fe-port",
+              "protocol": "Http"
+            }
+          ],
+          "request_routing_rule": [
+            {
+              "name": "prancer-app-gw-req-route",
+              "rule_type": "Basic",
+              "http_listener_name": "prancer-app-gw-listener",
+              "backend_address_pool_name": "prancer-app-gw-be-pool",
+              "backend_http_settings_name": "prancer-app-gw-be-http"
+            }
+          ],
+          "ssl_policy": [
+            {
+              "min_protocol_version": "TLSv1_0"
+            }
+          ],
+          "waf_configuration": [
+            {
+              "enabled": false,
+              "firewall_mode": "Detection",
+              "rule_set_type": "OWASP",
+              "rule_set_version": "2.2.9"
+            }
+          ],
+          "compiletime_identity": "module.applicationGateway"
+        }
+      },
+      {
+        "type": "azurerm_application_gateway",
+        "name": "appgw2",
+        "properties": {
+          "name": "prancer-app-gw",
+          "resource_group_name": "prancer-test-rg",
+          "location": "eastus2",
+          "sku": [
+            {
+              "name": "WAF_Medium",
+              "tier": "WAF",
+              "capacity": 2
+            }
+          ],
+          "gateway_ip_configuration": [
+            {
+              "name": "prancer-app-gw-ip-conf",
+              "subnet_id": "${module.subnet-frontend.subnet_id}"
+            }
+          ],
+          "frontend_port": [
+            {
+              "name": "prancer-app-gw-fe-port",
+              "port": 80
+            }
+          ],
+          "frontend_ip_configuration": [
+            {
+              "name": "prancer-app-gw-fe-ip",
+              "public_ip_address_id": "${azurerm_public_ip.example.id}"
+            }
+          ],
+          "backend_address_pool": [
+            {
+              "name": "prancer-app-gw-be-pool"
+            }
+          ],
+          "backend_http_settings": [
+            {
+              "name": "prancer-app-gw-be-http",
+              "cookie_based_affinity": "Disabled",
+              "path": "/login/",
+              "port": 80,
+              "protocol": "Http",
+              "request_timeout": 60
+            }
+          ],
+          "http_listener": [
+            {
+              "name": "prancer-app-gw-listener",
+              "frontend_ip_configuration_name": "prancer-app-gw-fe-ip",
+              "frontend_port_name": "prancer-app-gw-fe-port",
+              "protocol": "Http"
+            }
+          ],
+          "request_routing_rule": [
+            {
+              "name": "prancer-app-gw-req-route",
+              "rule_type": "Basic",
+              "http_listener_name": "prancer-app-gw-listener",
+              "backend_address_pool_name": "prancer-app-gw-be-pool",
+              "backend_http_settings_name": "prancer-app-gw-be-http"
+            }
+          ],
+          "ssl_policy": [
+            {
+              "min_protocol_version": "TLSv1_0"
+            }
+          ],
+          "firewall_policy_id": "${azurerm_web_application_firewall_policy.testfwp.id}",
+          "compiletime_identity": "module.applicationGateway"
+        }
+      },
+      {
+        "type": "azurerm_web_application_firewall_policy",
+        "name": "testfwp",
+        "properties": {
+          "name": "acctest-fwp",
+          "resource_group_name": "prancer-test-rg",
+          "location": "eastus2",
+          "policy_settings": [
+            {
+              "enabled": true,
+              "mode": "Prevention",
+              "file_upload_limit_in_mb": 100,
+              "max_request_body_size_in_kb": 100,
+              "request_body_check": true
+            }
+          ],
+          "managed_rules": [
+            {
+              "managed_rule_set": [
+                {
+                  "type": "OWASP",
+                  "version": 3.0
+                }
+              ]
+            }
+          ],
+          "compiletime_identity": "module.applicationGateway"
+        }
+      }
+    ]
+  },
+  "session_id": "session_1667800207814"
+}

@@ -1,0 +1,101 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorTerraform",
+  "paths": [
+    "/azure/aks/vars.tf",
+    "/azure/aks/provider.tf",
+    "/azure/aks/terraform.tfvars",
+    "/azure/aks/main.tf"
+  ],
+  "timestamp": 1667813323683,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "TRF_TEMPLATE_SNAPSHOT",
+    "type": "terraform",
+    "collection": "terraformtemplate",
+    "paths": [
+      "/azure/aks/vars.tf",
+      "/azure/aks/provider.tf",
+      "/azure/aks/terraform.tfvars",
+      "/azure/aks/main.tf"
+    ],
+    "snapshotId": "TRF_TEMPLATE_SNAPSHOTwSvMk2",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "azurerm_kubernetes_cluster"
+    ]
+  },
+  "snapshotId": "TRF_TEMPLATE_SNAPSHOTwSvMk2",
+  "collection": "terraformtemplate",
+  "json": {
+    "resources": [
+      {
+        "type": "azurerm_kubernetes_cluster",
+        "name": "aks",
+        "properties": {
+          "name": "prancer-aks-cluster",
+          "location": "eastus2",
+          "resource_group_name": "prancer-test-rg",
+          "dns_prefix": "prancer-aks",
+          "network_profile": [
+            {
+              "network_plugin": "kubenet",
+              "network_policy": "calico"
+            }
+          ],
+          "default_node_pool": [
+            {
+              "name": "prancer",
+              "node_count": 1,
+              "vm_size": "Standard_DS2_v2"
+            }
+          ],
+          "role_based_access_control": [
+            {
+              "azure_active_directory": [
+                {
+                  "managed": true,
+                  "azure_rbac_enabled": false
+                }
+              ],
+              "enabled": false
+            }
+          ],
+          "addon_profile": [
+            {
+              "http_application_routing": [
+                {
+                  "enabled": true
+                }
+              ],
+              "oms_agent": [
+                {
+                  "enabled": false,
+                  "log_analytics_workspace_id": null
+                }
+              ],
+              "kube_dashboard": [
+                {
+                  "enabled": true
+                }
+              ]
+            }
+          ],
+          "identity": [
+            {
+              "type": "SystemAssigned"
+            }
+          ],
+          "tags": {},
+          "compiletime_identity": "module.aks"
+        }
+      }
+    ]
+  },
+  "session_id": "session_1667800667997"
+}

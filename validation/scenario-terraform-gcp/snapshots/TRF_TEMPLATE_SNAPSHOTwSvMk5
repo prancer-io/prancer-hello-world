@@ -1,0 +1,139 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorTerraform",
+  "paths": [
+    "/azure/networkwatcher/vars.tf",
+    "/azure/networkwatcher/provider.tf",
+    "/azure/networkwatcher/terraform.tfvars",
+    "/azure/networkwatcher/main.tf"
+  ],
+  "timestamp": 1667813323685,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "TRF_TEMPLATE_SNAPSHOT",
+    "type": "terraform",
+    "collection": "terraformtemplate",
+    "paths": [
+      "/azure/networkwatcher/vars.tf",
+      "/azure/networkwatcher/provider.tf",
+      "/azure/networkwatcher/terraform.tfvars",
+      "/azure/networkwatcher/main.tf"
+    ],
+    "snapshotId": "TRF_TEMPLATE_SNAPSHOTwSvMk5",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "azurerm_network_security_group",
+      "azurerm_storage_account",
+      "azurerm_resource_group",
+      "azurerm_network_watcher_flow_log",
+      "azurerm_network_watcher",
+      "azurerm_log_analytics_workspace"
+    ]
+  },
+  "snapshotId": "TRF_TEMPLATE_SNAPSHOTwSvMk5",
+  "collection": "terraformtemplate",
+  "json": {
+    "resources": [
+      {
+        "type": "azurerm_resource_group",
+        "name": "application1",
+        "properties": {
+          "name": "app1_rg",
+          "location": "northcentralus",
+          "compiletime_identity": "azurerm_resource_group.application1"
+        }
+      },
+      {
+        "type": "azurerm_network_security_group",
+        "name": "application1",
+        "properties": {
+          "name": "application1",
+          "location": "${azurerm_resource_group.application1.location}",
+          "resource_group_name": "${azurerm_resource_group.application1.name}",
+          "security_rule": [
+            {
+              "name": "test123",
+              "priority": 110,
+              "direction": "Inbound",
+              "access": "Deny",
+              "protocol": "Tcp",
+              "source_port_range": "*",
+              "destination_port_range": 22,
+              "source_address_prefix": "*",
+              "destination_address_prefix": "*"
+            }
+          ],
+          "compiletime_identity": "azurerm_network_security_group.application1"
+        }
+      },
+      {
+        "type": "azurerm_storage_account",
+        "name": "network_log_data",
+        "properties": {
+          "name": "applogdata",
+          "resource_group_name": "${azurerm_resource_group.application1.name}",
+          "location": "eastus2",
+          "account_tier": "Standard",
+          "account_replication_type": "GRS",
+          "min_tls_version": "TLS1_2",
+          "compiletime_identity": "azurerm_storage_account.network_log_data"
+        }
+      },
+      {
+        "type": "azurerm_log_analytics_workspace",
+        "name": "traffic_analytics",
+        "properties": {
+          "name": "app007-traffic-analytics",
+          "location": "eastus2",
+          "resource_group_name": "${azurerm_resource_group.application1.name}",
+          "retention_in_days": 90,
+          "daily_quota_gb": 10,
+          "compiletime_identity": "azurerm_log_analytics_workspace.traffic_analytics"
+        }
+      },
+      {
+        "type": "azurerm_network_watcher",
+        "name": "app1_traffic",
+        "properties": {
+          "name": "NetworkWatcher_northcentralus",
+          "location": "eastus2",
+          "resource_group_name": "${azurerm_resource_group.application1.name}",
+          "compiletime_identity": "azurerm_network_watcher.app1_traffic"
+        }
+      },
+      {
+        "type": "azurerm_network_watcher_flow_log",
+        "name": "app1_network_logs",
+        "properties": {
+          "network_watcher_name": "${azurerm_network_watcher.app1_traffic.name}",
+          "resource_group_name": "${azurerm_network_watcher.app1_traffic.resource_group_name}",
+          "network_security_group_id": "${azurerm_network_security_group.application1.id}",
+          "storage_account_id": "${azurerm_storage_account.network_log_data.id}",
+          "enabled": false,
+          "retention_policy": [
+            {
+              "enabled": false,
+              "days": 90
+            }
+          ],
+          "traffic_analytics": [
+            {
+              "enabled": false,
+              "workspace_id": "${azurerm_log_analytics_workspace.traffic_analytics.workspace_id}",
+              "workspace_region": "${azurerm_log_analytics_workspace.traffic_analytics.location}",
+              "workspace_resource_id": "${azurerm_log_analytics_workspace.traffic_analytics.id}",
+              "interval_in_minutes": 10
+            }
+          ],
+          "compiletime_identity": "azurerm_network_watcher_flow_log.app1_network_logs"
+        }
+      }
+    ]
+  },
+  "session_id": "session_1667800667997"
+}

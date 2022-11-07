@@ -1,0 +1,128 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorTerraform",
+  "paths": [
+    "/aws/dynamodb/vars.tf",
+    "/aws/dynamodb/provider.tf",
+    "/aws/dynamodb/terraform.tfvars",
+    "/aws/dynamodb/main.tf"
+  ],
+  "timestamp": 1667813323711,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "TRF_TEMPLATE_SNAPSHOT",
+    "type": "terraform",
+    "collection": "terraformtemplate",
+    "paths": [
+      "/aws/dynamodb/vars.tf",
+      "/aws/dynamodb/provider.tf",
+      "/aws/dynamodb/terraform.tfvars",
+      "/aws/dynamodb/main.tf"
+    ],
+    "snapshotId": "TRF_TEMPLATE_SNAPSHOTwSvMk47",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "aws_dynamodb_table"
+    ]
+  },
+  "snapshotId": "TRF_TEMPLATE_SNAPSHOTwSvMk47",
+  "collection": "terraformtemplate",
+  "json": {
+    "resources": [
+      {
+        "type": "aws_dynamodb_table",
+        "name": "dynamodb",
+        "properties": {
+          "name": "prancer-dynamodb",
+          "billing_mode": "PROVISIONED",
+          "read_capacity": 5,
+          "write_capacity": 5,
+          "hash_key": "HashKey",
+          "range_key": "RangeKey",
+          "stream_enabled": true,
+          "stream_view_type": "",
+          "stream_arn": null,
+          "server_side_encryption": [
+            {
+              "enabled": false
+            }
+          ],
+          "point_in_time_recovery": [
+            {
+              "enabled": true
+            }
+          ],
+          "lifecycle": [
+            {
+              "ignore_changes": [
+                "read_capacity",
+                "write_capacity"
+              ]
+            }
+          ],
+          "attribute": [],
+          "global_secondary_index": [
+            {
+              "hash_key": "PersonalID",
+              "name": "personalid_index",
+              "non_key_attributes": [
+                "HashKey",
+                "RangeKey"
+              ],
+              "projection_type": "INCLUDE",
+              "range_key": "Age",
+              "read_capacity": 5,
+              "write_capacity": 5
+            }
+          ],
+          "local_secondary_index": [
+            {
+              "name": "age_index",
+              "non_key_attributes": [
+                "HashKey",
+                "RangeKey"
+              ],
+              "projection_type": "INCLUDE",
+              "range_key": "Age"
+            },
+            {
+              "name": "firstname_index",
+              "non_key_attributes": [
+                "HashKey",
+                "RangeKey"
+              ],
+              "projection_type": "INCLUDE",
+              "range_key": "FirstName"
+            },
+            {
+              "name": "lastname_index",
+              "non_key_attributes": [
+                "HashKey",
+                "RangeKey"
+              ],
+              "projection_type": "INCLUDE",
+              "range_key": "LastName"
+            }
+          ],
+          "ttl": [
+            {
+              "attribute_name": "Expires",
+              "enabled": true
+            }
+          ],
+          "tags": {
+            "environmet": "Production",
+            "project": "Prancer"
+          },
+          "compiletime_identity": "module.dynamodb_table"
+        }
+      }
+    ]
+  },
+  "session_id": "session_1667800667997"
+}

@@ -1,0 +1,254 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorTerraform",
+  "paths": [
+    "/aws/sg/extrasg.tf"
+  ],
+  "timestamp": 1667812871872,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "TRF_TEMPLATE_SNAPSHOT",
+    "type": "terraform",
+    "collection": "terraformtemplate",
+    "paths": [
+      "/aws/sg/extrasg.tf"
+    ],
+    "snapshotId": "TRF_TEMPLATE_SNAPSHOTXaoNk41",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "aws_vpc",
+      "aws_security_group",
+      "aws_route_table",
+      "aws_internet_gateway",
+      "aws_route_table_association",
+      "aws_elb",
+      "aws_lb_cookie_stickiness_policy",
+      "aws_subnet",
+      "aws_instance"
+    ]
+  },
+  "snapshotId": "TRF_TEMPLATE_SNAPSHOTXaoNk41",
+  "collection": "terraformtemplate",
+  "json": {
+    "terraform": [
+      {
+        "required_version": ">= 0.12"
+      }
+    ],
+    "provider": [
+      {
+        "aws": {
+          "region": "${var.aws_region}"
+        }
+      }
+    ],
+    "resources": [
+      {
+        "type": "aws_vpc",
+        "name": "default",
+        "properties": {
+          "cidr_block": "10.0.0.0/16",
+          "enable_dns_hostnames": true,
+          "tags": {
+            "Name": "tf_test"
+          },
+          "compiletime_identity": "aws_vpc.default"
+        }
+      },
+      {
+        "type": "aws_subnet",
+        "name": "tf_test_subnet",
+        "properties": {
+          "vpc_id": "${aws_vpc.default.id}",
+          "cidr_block": "10.0.0.0/24",
+          "map_public_ip_on_launch": true,
+          "tags": {
+            "Name": "tf_test_subnet"
+          },
+          "compiletime_identity": "aws_subnet.tf_test_subnet"
+        }
+      },
+      {
+        "type": "aws_internet_gateway",
+        "name": "gw",
+        "properties": {
+          "vpc_id": "${aws_vpc.default.id}",
+          "tags": {
+            "Name": "tf_test_ig"
+          },
+          "compiletime_identity": "aws_internet_gateway.gw"
+        }
+      },
+      {
+        "type": "aws_route_table",
+        "name": "r",
+        "properties": {
+          "vpc_id": "${aws_vpc.default.id}",
+          "route": [
+            {
+              "cidr_block": "0.0.0.0/0",
+              "gateway_id": "${aws_internet_gateway.gw.id}"
+            }
+          ],
+          "tags": {
+            "Name": "aws_route_table"
+          },
+          "compiletime_identity": "aws_route_table.r"
+        }
+      },
+      {
+        "type": "aws_route_table_association",
+        "name": "a",
+        "properties": {
+          "subnet_id": "${aws_subnet.tf_test_subnet.id}",
+          "route_table_id": "${aws_route_table.r.id}",
+          "compiletime_identity": "aws_route_table_association.a"
+        }
+      },
+      {
+        "type": "aws_security_group",
+        "name": "default",
+        "properties": {
+          "name": "instance_sg",
+          "description": "Used in the terraform",
+          "vpc_id": "${aws_vpc.default.id}",
+          "ingress": [
+            {
+              "from_port": 22,
+              "to_port": 22,
+              "protocol": "tcp",
+              "cidr_blocks": [
+                "0.0.0.0/0"
+              ]
+            },
+            {
+              "from_port": 80,
+              "to_port": 80,
+              "protocol": "tcp",
+              "cidr_blocks": [
+                "0.0.0.0/0"
+              ]
+            }
+          ],
+          "egress": [
+            {
+              "from_port": 0,
+              "to_port": 0,
+              "protocol": -1,
+              "cidr_blocks": [
+                "0.0.0.0/0"
+              ]
+            }
+          ],
+          "compiletime_identity": "aws_security_group.default"
+        }
+      },
+      {
+        "type": "aws_security_group",
+        "name": "elb",
+        "properties": {
+          "name": "elb_sg",
+          "description": "Used in the terraform",
+          "vpc_id": "${aws_vpc.default.id}",
+          "ingress": [
+            {
+              "from_port": 80,
+              "to_port": 80,
+              "protocol": "tcp",
+              "cidr_blocks": [
+                "0.0.0.0/0"
+              ]
+            }
+          ],
+          "egress": [
+            {
+              "from_port": 0,
+              "to_port": 0,
+              "protocol": -1,
+              "cidr_blocks": [
+                "0.0.0.0/0"
+              ]
+            }
+          ],
+          "depends_on": [
+            "${aws_internet_gateway.gw}"
+          ],
+          "compiletime_identity": "aws_security_group.elb"
+        }
+      },
+      {
+        "type": "aws_elb",
+        "name": "web",
+        "properties": {
+          "name": "example-elb",
+          "subnets": [
+            "${aws_subnet.tf_test_subnet.id}"
+          ],
+          "security_groups": [
+            "${aws_security_group.elb.id}"
+          ],
+          "listener": [
+            {
+              "instance_port": 80,
+              "instance_protocol": "http",
+              "lb_port": 80,
+              "lb_protocol": "http"
+            }
+          ],
+          "health_check": [
+            {
+              "healthy_threshold": 2,
+              "unhealthy_threshold": 2,
+              "timeout": 3,
+              "target": "HTTP:80/",
+              "interval": 30
+            }
+          ],
+          "instances": [
+            "${aws_instance.web.id}"
+          ],
+          "cross_zone_load_balancing": true,
+          "idle_timeout": 400,
+          "connection_draining": true,
+          "connection_draining_timeout": 400,
+          "compiletime_identity": "aws_elb.web"
+        }
+      },
+      {
+        "type": "aws_lb_cookie_stickiness_policy",
+        "name": "default",
+        "properties": {
+          "name": "lbpolicy",
+          "load_balancer": "${aws_elb.web.id}",
+          "lb_port": 80,
+          "cookie_expiration_period": 600,
+          "compiletime_identity": "aws_lb_cookie_stickiness_policy.default"
+        }
+      },
+      {
+        "type": "aws_instance",
+        "name": "web",
+        "properties": {
+          "instance_type": "t2.micro",
+          "ami": "${var.aws_amis[var.aws_region]}",
+          "key_name": "${var.key_name}",
+          "vpc_security_group_ids": [
+            "${aws_security_group.default.id}"
+          ],
+          "subnet_id": "${aws_subnet.tf_test_subnet.id}",
+          "user_data": "${file(\"userdata.sh\")}",
+          "tags": {
+            "Name": "elb-example"
+          },
+          "compiletime_identity": "aws_instance.web"
+        }
+      }
+    ]
+  },
+  "session_id": "session_1667800207814"
+}

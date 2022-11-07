@@ -1,0 +1,82 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorDeploymentmanager",
+  "paths": [
+    "/vm/vm.yaml"
+  ],
+  "timestamp": 1667810098179,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "GDF_TEMPLATE_SNAPSHOT",
+    "type": "deploymentmanager",
+    "collection": "deploymentmanagertemplate",
+    "paths": [
+      "/vm/vm.yaml"
+    ],
+    "snapshotId": "GDF_TEMPLATE_SNAPSHOTkAtMf11",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "compute.v1.instance"
+    ]
+  },
+  "snapshotId": "GDF_TEMPLATE_SNAPSHOTkAtMf11",
+  "collection": "deploymentmanagertemplate",
+  "json": {
+    "imports": [
+      {
+        "path": "vm.jinja"
+      }
+    ],
+    "resources": [
+      {
+        "type": "compute.v1.instance",
+        "name": "--vm",
+        "properties": {
+          "zone": "us-central1-a",
+          "machineType": "https://www.googleapis.com/compute/v1/projects//zones/us-central1-a/machineTypes/f1-micro",
+          "metadata": {
+            "items": [
+              {
+                "key": "serial-port-enable",
+                "value": "true"
+              }
+            ]
+          },
+          "canIpForward": true,
+          "scheduling": {
+            "preemptible": true
+          },
+          "disks": [
+            {
+              "deviceName": "boot",
+              "type": "PERSISTENT",
+              "boot": true,
+              "autoDelete": true,
+              "initializeParams": {
+                "diskName": "--disk",
+                "sourceImage": "https://www.googleapis.com/compute/v1/projects/debian-cloud/global/images/family/debian-9"
+              }
+            }
+          ],
+          "networkInterfaces": [
+            {
+              "network": "https://www.googleapis.com/compute/v1/projects//global/networks/default",
+              "accessConfigs": [
+                {
+                  "name": "External NAT",
+                  "type": "ONE_TO_ONE_NAT"
+                }
+              ]
+            }
+          ]
+        }
+      }
+    ]
+  },
+  "session_id": "session_1667797490190"
+}
