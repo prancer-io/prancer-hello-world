@@ -1,0 +1,114 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorTerraform",
+  "paths": [
+    "/azure/vnetsubnets/vars.tf",
+    "/azure/vnetsubnets/provider.tf",
+    "/azure/vnetsubnets/terraform.tfvars",
+    "/azure/vnetsubnets/main.tf"
+  ],
+  "timestamp": 1667812871862,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "TRF_TEMPLATE_SNAPSHOT",
+    "type": "terraform",
+    "collection": "terraformtemplate",
+    "paths": [
+      "/azure/vnetsubnets/vars.tf",
+      "/azure/vnetsubnets/provider.tf",
+      "/azure/vnetsubnets/terraform.tfvars",
+      "/azure/vnetsubnets/main.tf"
+    ],
+    "snapshotId": "TRF_TEMPLATE_SNAPSHOTXaoNk23",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "azurerm_virtual_network",
+      "azurerm_subnet",
+      "azurerm_subnet_network_security_group_association"
+    ]
+  },
+  "snapshotId": "TRF_TEMPLATE_SNAPSHOTXaoNk23",
+  "collection": "terraformtemplate",
+  "json": {
+    "data": {
+      "azurerm_network_security_group": {
+        "nsg": [
+          {
+            "name": "prancer-test-nsg",
+            "resource_group_name": "prancer-test-rg",
+            "compiletime_identity": "data.azurerm_network_security_group.nsg"
+          }
+        ]
+      }
+    },
+    "resources": [
+      {
+        "type": "azurerm_virtual_network",
+        "name": "vnet",
+        "properties": {
+          "name": "prancer-vnet",
+          "resource_group_name": "prancer-test-rg",
+          "address_space": [
+            "10.254.0.0/16"
+          ],
+          "location": "eastus2",
+          "tags": {},
+          "compiletime_identity": "module.vnet"
+        }
+      },
+      {
+        "type": "azurerm_subnet",
+        "name": "sub",
+        "properties": {
+          "name": "subnet-prancer-frontend",
+          "resource_group_name": "prancer-test-rg",
+          "virtual_network_name": "prancer-vnet",
+          "address_prefixes": [
+            "10.254.0.0/24"
+          ],
+          "compiletime_identity": "module.subnets"
+        }
+      },
+      {
+        "type": "azurerm_subnet",
+        "name": "sub",
+        "properties": {
+          "name": "subnet-prancer-backend",
+          "resource_group_name": "prancer-test-rg",
+          "virtual_network_name": "prancer-vnet",
+          "address_prefixes": [
+            "10.254.2.0/24"
+          ],
+          "compiletime_identity": "module.subnets"
+        }
+      },
+      {
+        "type": "azurerm_subnet",
+        "name": "sub",
+        "properties": {
+          "name": "subnet-prancer-backup",
+          "resource_group_name": "prancer-test-rg",
+          "virtual_network_name": "prancer-vnet",
+          "address_prefixes": [
+            "10.254.222.0/24"
+          ],
+          "compiletime_identity": "module.subnets"
+        }
+      },
+      {
+        "type": "azurerm_subnet_network_security_group_association",
+        "name": "subnetnsg",
+        "properties": {
+          "network_security_group_id": "data.azurerm_network_security_group.nsg[0].id",
+          "compiletime_identity": "azurerm_subnet_network_security_group_association.subnetnsg"
+        }
+      }
+    ]
+  },
+  "session_id": "session_1667800207814"
+}

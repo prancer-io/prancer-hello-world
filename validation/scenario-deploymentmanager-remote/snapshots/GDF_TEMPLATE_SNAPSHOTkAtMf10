@@ -1,0 +1,73 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorDeploymentmanager",
+  "paths": [
+    "/kms/kms.yaml"
+  ],
+  "timestamp": 1667810098179,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "GDF_TEMPLATE_SNAPSHOT",
+    "type": "deploymentmanager",
+    "collection": "deploymentmanagertemplate",
+    "paths": [
+      "/kms/kms.yaml"
+    ],
+    "snapshotId": "GDF_TEMPLATE_SNAPSHOTkAtMf10",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "gcp-types/cloudkms-v1:projects.locations.keyrings",
+      "gcp-types/cloudkms-v1:projects.locations.keyrings.cryptokeys"
+    ]
+  },
+  "snapshotId": "GDF_TEMPLATE_SNAPSHOTkAtMf10",
+  "collection": "deploymentmanagertemplate",
+  "json": {
+    "configVersion": "v1alpha",
+    "imports": [
+      {
+        "path": "kms.jinja"
+      }
+    ],
+    "resources": [
+      {
+        "name": "keyRing",
+        "type": "gcp-types/cloudkms-v1:projects.locations.keyRings",
+        "properties": {
+          "parent": "projects//locations/REGION_TO_RUN",
+          "keyRingId": "test-keyRing"
+        }
+      },
+      {
+        "name": "cryptoKey",
+        "type": "gcp-types/cloudkms-v1:projects.locations.keyRings.cryptoKeys",
+        "properties": {
+          "parent": "$(ref.keyRing.name)",
+          "cryptoKeyId": "-cryptoKey",
+          "purpose": "ENCRYPT_DECRYPT",
+          "labels": {
+            "foo": null
+          }
+        },
+        "accessControl": {
+          "gcpIamPolicy": {
+            "bindings": [
+              {
+                "role": "roles/cloudkms.admin",
+                "members": [
+                  "user:ananke.iam@gmail.com"
+                ]
+              }
+            ]
+          }
+        }
+      }
+    ]
+  },
+  "session_id": "session_1667797490190"
+}

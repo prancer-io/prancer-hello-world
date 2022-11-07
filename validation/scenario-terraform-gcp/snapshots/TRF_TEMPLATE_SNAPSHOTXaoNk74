@@ -1,0 +1,83 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorTerraform",
+  "paths": [
+    "/gcp/sql_db_instance/vars.tf",
+    "/gcp/sql_db_instance/provider.tf",
+    "/gcp/sql_db_instance/terraform.tfvars",
+    "/gcp/sql_db_instance/main.tf"
+  ],
+  "timestamp": 1667812871968,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "TRF_TEMPLATE_SNAPSHOT",
+    "type": "terraform",
+    "collection": "terraformtemplate",
+    "paths": [
+      "/gcp/sql_db_instance/vars.tf",
+      "/gcp/sql_db_instance/provider.tf",
+      "/gcp/sql_db_instance/terraform.tfvars",
+      "/gcp/sql_db_instance/main.tf"
+    ],
+    "snapshotId": "TRF_TEMPLATE_SNAPSHOTXaoNk74",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "google_sql_database_instance"
+    ]
+  },
+  "snapshotId": "TRF_TEMPLATE_SNAPSHOTXaoNk74",
+  "collection": "terraformtemplate",
+  "json": {
+    "resources": [
+      {
+        "type": "google_sql_database_instance",
+        "name": "db",
+        "properties": {
+          "name": "prancer-mysql",
+          "database_version": "MYSQL_5_7",
+          "settings": [
+            {
+              "tier": "db-f1-micro",
+              "user_labels": {
+                "type": "mysql"
+              },
+              "backup_configuration": [
+                {
+                  "binary_log_enabled": "${backup_configuration.value[\"binary_log_enabled\"]}",
+                  "enabled": "${backup_configuration.value[\"enabled\"]}",
+                  "point_in_time_recovery_enabled": "${backup_configuration.value[\"point_in_time_recovery_enabled\"]}",
+                  "start_time": "${backup_configuration.value[\"start_time\"]}"
+                }
+              ],
+              "database_flags": [
+                {
+                  "name": "skip_show_database",
+                  "value": "on"
+                }
+              ],
+              "ip_configuration": [
+                {
+                  "ipv4_enabled": "${ip_configuration.value.ipv4_enabled}",
+                  "require_ssl": "${ip_configuration.value.require_ssl}",
+                  "authorized_networks": [
+                    {
+                      "name": "${net.value.name}",
+                      "value": "${net.value.value}"
+                    }
+                  ]
+                }
+              ]
+            }
+          ],
+          "compiletime_identity": "module.db_instance"
+        }
+      }
+    ]
+  },
+  "session_id": "session_1667800207814"
+}

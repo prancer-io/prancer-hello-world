@@ -1,0 +1,1733 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorTerraform",
+  "paths": [
+    "/aws/common/main.tf"
+  ],
+  "timestamp": 1667812871876,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "TRF_TEMPLATE_SNAPSHOT",
+    "type": "terraform",
+    "collection": "terraformtemplate",
+    "paths": [
+      "/aws/common/main.tf"
+    ],
+    "snapshotId": "TRF_TEMPLATE_SNAPSHOTXaoNk48",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "aws_elasticache_cluster",
+      "aws_vpc_endpoint_service",
+      "aws_vpc",
+      "aws_kinesis_stream",
+      "aws_glue_security_configuration",
+      "aws_ecr_repository",
+      "aws_dms_endpoint",
+      "aws_codebuild_project",
+      "aws_docdb_cluster_parameter_group",
+      "aws_dms_replication_instance",
+      "aws_iam_user",
+      "aws_codedeploy_app",
+      "aws_api_gateway_request_validator",
+      "aws_vpc_endpoint",
+      "aws_subnet",
+      "aws_api_gateway_stage",
+      "aws_api_gateway_method_settings",
+      "aws_iam_role_policy",
+      "aws_config_configuration_recorder",
+      "aws_api_gateway_rest_api",
+      "aws_dax_cluster",
+      "aws_glue_data_catalog_encryption_settings",
+      "aws_lambda_function",
+      "aws_docdb_cluster",
+      "aws_api_gateway_authorizer",
+      "aws_mq_broker",
+      "aws_ecr_repository_policy",
+      "aws_sagemaker_notebook_instance",
+      "aws_emr_security_configuration",
+      "aws_config_configuration_aggregator",
+      "aws_s3_bucket",
+      "aws_timestreamwrite_database",
+      "aws_wafv2_web_acl",
+      "aws_elb",
+      "aws_iam_group_membership",
+      "aws_codestarconnections_connection",
+      "aws_emr_cluster",
+      "aws_network_acl_rule",
+      "aws_api_gateway_domain_name",
+      "aws_iam_group",
+      "aws_eip",
+      "aws_codepipeline",
+      "aws_api_gateway_deployment",
+      "aws_iam_role_policy_attachment",
+      "aws_route53_record",
+      "aws_transfer_server",
+      "aws_iam_role",
+      "aws_internet_gateway",
+      "aws_secretsmanager_secret_rotation",
+      "aws_athena_workgroup",
+      "aws_wafv2_web_acl_association",
+      "aws_qldb_ledger",
+      "aws_secretsmanager_secret",
+      "aws_cloudformation_stack",
+      "aws_iam_policy",
+      "aws_instance",
+      "aws_appsync_graphql_api"
+    ]
+  },
+  "snapshotId": "TRF_TEMPLATE_SNAPSHOTXaoNk48",
+  "collection": "terraformtemplate",
+  "json": {
+    "data": {
+      "aws_kms_alias": {
+        "s3kmskey": {
+          "name": "alias/myKmsKey",
+          "compiletime_identity": "data.aws_kms_alias.s3kmskey"
+        }
+      },
+      "aws_iam_policy_document": {
+        "dms_assume_role": {
+          "statement": [
+            {
+              "actions": [
+                "sts:AssumeRole"
+              ],
+              "principals": [
+                {
+                  "identifiers": [
+                    "dms.amazonaws.com"
+                  ],
+                  "type": "Service"
+                }
+              ]
+            }
+          ],
+          "compiletime_identity": "data.aws_iam_policy_document.dms_assume_role"
+        }
+      }
+    },
+    "resources": [
+      {
+        "type": "aws_codedeploy_app",
+        "name": "example",
+        "properties": {
+          "compute_platform": "Server",
+          "name": "example",
+          "compiletime_identity": "aws_codedeploy_app.example"
+        }
+      },
+      {
+        "type": "aws_codepipeline",
+        "name": "codepipeline",
+        "properties": {
+          "name": "tf-test-pipeline",
+          "role_arn": "${aws_iam_role.codepipeline_role.arn}",
+          "artifact_store": [
+            {
+              "location": "${aws_s3_bucket.codepipeline_bucket.bucket}",
+              "type": "S3",
+              "encryption_key": [
+                {
+                  "id": "${data.aws_kms_alias.s3kmskey.arn}",
+                  "type": ""
+                }
+              ]
+            }
+          ],
+          "stage": [
+            {
+              "name": "Source",
+              "action": [
+                {
+                  "name": "Source",
+                  "category": "Source",
+                  "owner": "AWS",
+                  "provider": "CodeStarSourceConnection",
+                  "version": 1,
+                  "output_artifacts": [
+                    "source_output"
+                  ],
+                  "configuration": {
+                    "ConnectionArn": "${aws_codestarconnections_connection.example.arn}",
+                    "FullRepositoryId": "my-organization/example",
+                    "BranchName": "main"
+                  }
+                }
+              ]
+            },
+            {
+              "name": "Build",
+              "action": [
+                {
+                  "name": "Build",
+                  "category": "Build",
+                  "owner": "AWS",
+                  "provider": "CodeBuild",
+                  "input_artifacts": [
+                    "source_output"
+                  ],
+                  "output_artifacts": [
+                    "build_output"
+                  ],
+                  "version": 1,
+                  "configuration": {
+                    "ProjectName": "test"
+                  }
+                }
+              ]
+            },
+            {
+              "name": "Deploy",
+              "action": [
+                {
+                  "name": "Deploy",
+                  "category": "Deploy",
+                  "owner": "AWS",
+                  "provider": "CloudFormation",
+                  "input_artifacts": [
+                    "build_output"
+                  ],
+                  "version": 1,
+                  "configuration": {
+                    "ActionMode": "REPLACE_ON_FAILURE",
+                    "Capabilities": "CAPABILITY_AUTO_EXPAND,CAPABILITY_IAM",
+                    "OutputFileName": "CreateStackOutput.json",
+                    "StackName": "MyStack",
+                    "TemplatePath": "build_output::sam-templated.yaml"
+                  }
+                }
+              ]
+            }
+          ],
+          "compiletime_identity": "aws_codepipeline.codepipeline"
+        }
+      },
+      {
+        "type": "aws_codestarconnections_connection",
+        "name": "example",
+        "properties": {
+          "name": "example-connection",
+          "provider_type": "GitHub",
+          "compiletime_identity": "aws_codestarconnections_connection.example"
+        }
+      },
+      {
+        "type": "aws_s3_bucket",
+        "name": "codepipeline_bucket",
+        "properties": {
+          "bucket": "test-bucket",
+          "acl": "private",
+          "compiletime_identity": "aws_s3_bucket.codepipeline_bucket"
+        }
+      },
+      {
+        "type": "aws_iam_role",
+        "name": "codepipeline_role",
+        "properties": {
+          "name": "test-role",
+          "assume_role_policy": {
+            "Version": "2012-10-17",
+            "Statement": [
+              {
+                "Effect": "Allow",
+                "Principal": {
+                  "Service": "codepipeline.amazonaws.com"
+                },
+                "Action": "sts:AssumeRole"
+              }
+            ]
+          },
+          "compiletime_identity": "aws_iam_role.codepipeline_role"
+        }
+      },
+      {
+        "type": "aws_iam_role",
+        "name": "r",
+        "properties": {
+          "name": "awsconfig-example",
+          "assume_role_policy": {
+            "Version": "2012-10-17",
+            "Statement": [
+              {
+                "Action": "sts:AssumeRole",
+                "Principal": {
+                  "Service": "config.amazonaws.com"
+                },
+                "Effect": "Allow",
+                "Sid": ""
+              }
+            ]
+          },
+          "compiletime_identity": "aws_iam_role.r"
+        }
+      },
+      {
+        "type": "aws_iam_role",
+        "name": "invocation_role",
+        "properties": {
+          "name": "api_gateway_auth_invocation",
+          "path": "/",
+          "assume_role_policy": {
+            "Version": "2012-10-17",
+            "Statement": [
+              {
+                "Action": "sts:AssumeRole",
+                "Principal": {
+                  "Service": "apigateway.amazonaws.com"
+                },
+                "Effect": "Allow",
+                "Sid": ""
+              }
+            ]
+          },
+          "compiletime_identity": "aws_iam_role.invocation_role"
+        }
+      },
+      {
+        "type": "aws_iam_role",
+        "name": "lambda",
+        "properties": {
+          "name": "demo-lambda",
+          "assume_role_policy": "{\n  \"Version\": \"2012-10-17\",\n  \"Statement\": [\n    {\n      \"Action\": \"sts:AssumeRole\",\n      \"Principal\": {\n        \"Service\": \"lambda.amazonaws.com\"\n      },\n      \"Effect\": \"Allow\",\n      \"Sid\": \"\"\n      \"Resource\": \"*\"\n    }\n  ]\n}",
+          "compiletime_identity": "aws_iam_role.lambda"
+        }
+      },
+      {
+        "type": "aws_iam_role",
+        "name": "organization",
+        "properties": {
+          "name": "example",
+          "assume_role_policy": {
+            "Version": "2012-10-17",
+            "Statement": [
+              {
+                "Sid": "",
+                "Effect": "Allow",
+                "Principal": {
+                  "Service": "config.amazonaws.com"
+                },
+                "Action": "sts:AssumeRole"
+              }
+            ]
+          },
+          "compiletime_identity": "aws_iam_role.organization"
+        }
+      },
+      {
+        "type": "aws_iam_role",
+        "name": "dms-access-for-endpoint",
+        "properties": {
+          "assume_role_policy": {
+            "statement": [
+              {
+                "actions": [
+                  "sts:AssumeRole"
+                ],
+                "principals": [
+                  {
+                    "identifiers": [
+                      "dms.amazonaws.com"
+                    ],
+                    "type": "Service"
+                  }
+                ]
+              }
+            ],
+            "compiletime_identity": "data.aws_iam_policy_document.dms_assume_role"
+          },
+          "name": "dms-access-for-endpoint",
+          "compiletime_identity": "aws_iam_role.dms-access-for-endpoint"
+        }
+      },
+      {
+        "type": "aws_iam_role",
+        "name": "dms-cloudwatch-logs-role",
+        "properties": {
+          "assume_role_policy": {
+            "statement": [
+              {
+                "actions": [
+                  "sts:AssumeRole"
+                ],
+                "principals": [
+                  {
+                    "identifiers": [
+                      "dms.amazonaws.com"
+                    ],
+                    "type": "Service"
+                  }
+                ]
+              }
+            ],
+            "compiletime_identity": "data.aws_iam_policy_document.dms_assume_role"
+          },
+          "name": "dms-cloudwatch-logs-role",
+          "compiletime_identity": "aws_iam_role.dms-cloudwatch-logs-role"
+        }
+      },
+      {
+        "type": "aws_iam_role",
+        "name": "dms-vpc-role",
+        "properties": {
+          "assume_role_policy": {
+            "statement": [
+              {
+                "actions": [
+                  "sts:AssumeRole"
+                ],
+                "principals": [
+                  {
+                    "identifiers": [
+                      "dms.amazonaws.com"
+                    ],
+                    "type": "Service"
+                  }
+                ]
+              }
+            ],
+            "compiletime_identity": "data.aws_iam_policy_document.dms_assume_role"
+          },
+          "name": "dms-vpc-role",
+          "compiletime_identity": "aws_iam_role.dms-vpc-role"
+        }
+      },
+      {
+        "type": "aws_iam_role",
+        "name": "test_role",
+        "properties": {
+          "name": "test_role",
+          "assume_role_policy": {
+            "Version": "2012-10-17",
+            "Statement": [
+              {
+                "Action": [
+                  "iam:AttachGroupPolicy",
+                  "iam:AttachRolePolicy",
+                  "iam:AttachUserPolicy",
+                  "iam:CreatePolicy",
+                  "iam:CreatePolicyVersion",
+                  "iam:DeleteAccountPasswordPolicy",
+                  "iam:DeleteGroupPolicy",
+                  "iam:DeletePolicy",
+                  "iam:DeletePolicyVersion",
+                  "iam:DeleteRolePermissionsBoundary",
+                  "iam:DeleteRolePolicy",
+                  "iam:DeleteUserPermissionsBoundary",
+                  "iam:DeleteUserPolicy",
+                  "iam:DetachGroupPolicy",
+                  "iam:DetachRolePolicy",
+                  "iam:DetachUserPolicy",
+                  "iam:PutGroupPolicy",
+                  "iam:PutRolePermissionsBoundary",
+                  "iam:PutRolePolicy",
+                  "iam:PutUserPermissionsBoundary",
+                  "iam:PutUserPolicy",
+                  "iam:SetDefaultPolicyVersion",
+                  "iam:UpdateAssumeRolePolicy",
+                  "iam:AddClientIDToOpenIDConnectProvider",
+                  "iam:AddRoleToInstanceProfile",
+                  "iam:AddUserToGroup",
+                  "iam:ChangePassword",
+                  "iam:CreateAccessKey",
+                  "iam:CreateAccountAlias",
+                  "iam:CreateGroup",
+                  "iam:CreateInstanceProfile",
+                  "iam:CreateLoginProfile",
+                  "iam:CreateOpenIDConnectProvider",
+                  "iam:CreateRole",
+                  "iam:CreateSAMLProvider",
+                  "iam:CreateServiceLinkedRole",
+                  "iam:CreateServiceSpecificCredential",
+                  "iam:CreateUser",
+                  "iam:CreateVirtualMFADevice",
+                  "iam:DeactivateMFADevice",
+                  "iam:DeleteAccessKey",
+                  "iam:DeleteAccountAlias",
+                  "iam:DeleteGroup",
+                  "iam:DeleteInstanceProfile",
+                  "iam:DeleteLoginProfile",
+                  "iam:DeleteOpenIDConnectProvider",
+                  "iam:DeleteRole",
+                  "iam:DeleteSAMLProvider",
+                  "iam:DeleteSSHPublicKey",
+                  "iam:DeleteServerCertificate",
+                  "iam:DeleteServiceLinkedRole",
+                  "iam:DeleteServiceSpecificCredential",
+                  "iam:DeleteSigningCertificate",
+                  "iam:DeleteUser",
+                  "iam:DeleteVirtualMFADevice",
+                  "iam:EnableMFADevice",
+                  "iam:PassRole",
+                  "iam:RemoveClientIDFromOpenIDConnectProvider",
+                  "iam:RemoveRoleFromInstanceProfile",
+                  "iam:RemoveUserFromGroup",
+                  "iam:ResetServiceSpecificCredential",
+                  "iam:ResyncMFADevice",
+                  "iam:SetSecurityTokenServicePreferences",
+                  "iam:UpdateAccessKey",
+                  "iam:UpdateAccountPasswordPolicy",
+                  "iam:UpdateGroup",
+                  "iam:UpdateLoginProfile",
+                  "iam:UpdateOpenIDConnectProviderThumbprint",
+                  "iam:UpdateRole",
+                  "iam:UpdateRoleDescription",
+                  "iam:UpdateSAMLProvider",
+                  "iam:UpdateSSHPublicKey",
+                  "iam:UpdateServerCertificate",
+                  "iam:UpdateServiceSpecificCredential",
+                  "iam:UpdateSigningCertificate",
+                  "iam:UpdateUser",
+                  "iam:UploadSSHPublicKey",
+                  "iam:UploadServerCertificate",
+                  "iam:UploadSigningCertificate"
+                ],
+                "Effect": "Allow",
+                "Sid": "",
+                "Principal": {
+                  "Service": [
+                    "ec2.amazonaws.com",
+                    "lambda:amazonaws.com",
+                    "secretmanager.amazonaws.com",
+                    "sqs.amazonaws.com"
+                  ]
+                },
+                "Resource": "*",
+                "Condition": {
+                  "IpAddress": {
+                    "aws:SourceIp": "0.0.0.0/0"
+                  },
+                  "StringEquals": {
+                    "AWS:SourceOwner": "test"
+                  }
+                }
+              }
+            ]
+          },
+          "tags": {
+            "tag-key": "tag-value"
+          },
+          "compiletime_identity": "aws_iam_role.test_role"
+        }
+      },
+      {
+        "type": "aws_iam_role_policy",
+        "name": "codepipeline_policy",
+        "properties": {
+          "name": "codepipeline_policy",
+          "role": "${aws_iam_role.codepipeline_role.id}",
+          "policy": {
+            "Version": "2012-10-17",
+            "Statement": [
+              {
+                "Effect": "Allow",
+                "Action": [
+                  "s3:GetObject",
+                  "s3:GetObjectVersion",
+                  "s3:GetBucketVersioning",
+                  "s3:PutObjectAcl",
+                  "s3:PutObject"
+                ],
+                "Resource": [
+                  "${aws_s3_bucket.codepipeline_bucket.arn}",
+                  "${aws_s3_bucket.codepipeline_bucket.arn}/*"
+                ]
+              },
+              {
+                "Effect": "Allow",
+                "Action": [
+                  "codestar-connections:UseConnection"
+                ],
+                "Resource": "${aws_codestarconnections_connection.example.arn}"
+              },
+              {
+                "Effect": "Allow",
+                "Action": [
+                  "codebuild:BatchGetBuilds",
+                  "codebuild:StartBuild"
+                ],
+                "Resource": "*"
+              }
+            ]
+          },
+          "compiletime_identity": "aws_iam_role_policy.codepipeline_policy"
+        }
+      },
+      {
+        "type": "aws_iam_role_policy",
+        "name": "invocation_policy",
+        "properties": {
+          "name": "default",
+          "role": "${aws_iam_role.invocation_role.id}",
+          "policy": {
+            "Version": "2012-10-17",
+            "Statement": [
+              {
+                "Action": "lambda:InvokeFunction",
+                "Effect": "Allow",
+                "Resource": "${aws_lambda_function.authorizer.arn}"
+              }
+            ]
+          },
+          "compiletime_identity": "aws_iam_role_policy.invocation_policy"
+        }
+      },
+      {
+        "type": "aws_dms_endpoint",
+        "name": "test",
+        "properties": {
+          "certificate_arn": "arn:aws:acm:us-east-1:123456789012:certificate/12345678-1234-1234-1234-123456789012",
+          "database_name": "test",
+          "endpoint_id": "test-dms-endpoint-tf",
+          "endpoint_type": "source",
+          "engine_name": "aurora",
+          "extra_connection_attributes": "",
+          "kms_key_arn": "arn:aws:kms:us-east-1:123456789012:key/12345678-1234-1234-1234-123456789012",
+          "password": "test",
+          "port": 3306,
+          "server_name": "test",
+          "ssl_mode": "none",
+          "disable_rollback": false,
+          "tags": {
+            "Name": "test"
+          },
+          "username": "test",
+          "compiletime_identity": "aws_dms_endpoint.test"
+        }
+      },
+      {
+        "type": "aws_cloudformation_stack",
+        "name": "network",
+        "properties": {
+          "name": "networking-stack",
+          "parameters": {
+            "VPCCidr": "10.0.0.0/16"
+          },
+          "capabilities": [
+            "*"
+          ],
+          "template_body": {
+            "Parameters": {
+              "VPCCidr": {
+                "Type": "String",
+                "Default": "10.0.0.0/16",
+                "Description": "Enter the CIDR block for the VPC. Default is 10.0.0.0/16."
+              }
+            },
+            "Resources": {
+              "myVpc": {
+                "Type": "AWS::EC2::VPC",
+                "Properties": {
+                  "CidrBlock": {
+                    "Ref": "VPCCidr"
+                  },
+                  "Tags": [
+                    {
+                      "Key": "Name",
+                      "Value": "Primary_CF_VPC"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "compiletime_identity": "aws_cloudformation_stack.network"
+        }
+      },
+      {
+        "type": "aws_config_configuration_recorder",
+        "name": "foo",
+        "properties": {
+          "name": "example",
+          "role_arn": "${aws_iam_role.r.arn}",
+          "include_global_resource_types": false,
+          "compiletime_identity": "aws_config_configuration_recorder.foo"
+        }
+      },
+      {
+        "type": "aws_network_acl_rule",
+        "name": "ingress1",
+        "properties": {
+          "network_acl_id": "",
+          "rule_number": 200,
+          "egress": false,
+          "protocol": -1,
+          "rule_action": "allow",
+          "cidr_block": "0.0.0.0/0",
+          "from_port": 22,
+          "to_port": 22,
+          "compiletime_identity": "aws_network_acl_rule.ingress1"
+        }
+      },
+      {
+        "type": "aws_network_acl_rule",
+        "name": "ingress2",
+        "properties": {
+          "network_acl_id": "",
+          "rule_number": 200,
+          "egress": false,
+          "protocol": -1,
+          "rule_action": "allow",
+          "ipv6_cidr_block": "::/0",
+          "from_port": 22,
+          "to_port": 22,
+          "compiletime_identity": "aws_network_acl_rule.ingress2"
+        }
+      },
+      {
+        "type": "aws_network_acl_rule",
+        "name": "egress1",
+        "properties": {
+          "network_acl_id": "",
+          "rule_number": 200,
+          "egress": true,
+          "protocol": -1,
+          "rule_action": "allow",
+          "cidr_block": "0.0.0.0/0",
+          "from_port": 22,
+          "to_port": 22,
+          "compiletime_identity": "aws_network_acl_rule.egress1"
+        }
+      },
+      {
+        "type": "aws_network_acl_rule",
+        "name": "egress2",
+        "properties": {
+          "network_acl_id": "",
+          "rule_number": 200,
+          "egress": true,
+          "protocol": -1,
+          "rule_action": "allow",
+          "ipv6_cidr_block": "::/0",
+          "from_port": 22,
+          "to_port": 22,
+          "compiletime_identity": "aws_network_acl_rule.egress2"
+        }
+      },
+      {
+        "type": "aws_api_gateway_request_validator",
+        "name": "example",
+        "properties": {
+          "name": "example",
+          "rest_api_id": "${aws_api_gateway_rest_api.example.id}",
+          "validate_request_body": true,
+          "validate_request_parameters": false,
+          "compiletime_identity": "aws_api_gateway_request_validator.example"
+        }
+      },
+      {
+        "type": "aws_api_gateway_rest_api",
+        "name": "example",
+        "properties": {
+          "body": {
+            "openapi": "3.0.1",
+            "info": {
+              "title": "example",
+              "version": 1.0
+            },
+            "paths": {
+              "/path1": {
+                "get": {
+                  "x-amazon-apigateway-integration": {
+                    "httpMethod": "GET",
+                    "payloadFormatVersion": 1.0,
+                    "type": "HTTP_PROXY",
+                    "uri": "https://ip-ranges.amazonaws.com/ip-ranges.json"
+                  }
+                }
+              }
+            }
+          },
+          "name": "example",
+          "compiletime_identity": "aws_api_gateway_rest_api.example"
+        }
+      },
+      {
+        "type": "aws_api_gateway_rest_api",
+        "name": "demo",
+        "properties": {
+          "name": "auth-demo",
+          "compiletime_identity": "aws_api_gateway_rest_api.demo"
+        }
+      },
+      {
+        "type": "aws_api_gateway_deployment",
+        "name": "example",
+        "properties": {
+          "rest_api_id": "${aws_api_gateway_rest_api.example.id}",
+          "triggers": {
+            "redeployment": "${sha1(jsonencode(aws_api_gateway_rest_api.example.body))}"
+          },
+          "lifecycle": [
+            {
+              "create_before_destroy": true
+            }
+          ],
+          "compiletime_identity": "aws_api_gateway_deployment.example"
+        }
+      },
+      {
+        "type": "aws_api_gateway_stage",
+        "name": "example",
+        "properties": {
+          "deployment_id": "${aws_api_gateway_deployment.example.id}",
+          "rest_api_id": "${aws_api_gateway_rest_api.example.id}",
+          "stage_name": "example",
+          "compiletime_identity": "aws_api_gateway_stage.example"
+        }
+      },
+      {
+        "type": "aws_api_gateway_method_settings",
+        "name": "example",
+        "properties": {
+          "rest_api_id": "${aws_api_gateway_rest_api.example.id}",
+          "stage_name": "${aws_api_gateway_stage.example.stage_name}",
+          "method_path": "*/*",
+          "settings": [
+            {
+              "metrics_enabled": true,
+              "logging_level": "INFO"
+            }
+          ],
+          "compiletime_identity": "aws_api_gateway_method_settings.example"
+        }
+      },
+      {
+        "type": "aws_api_gateway_domain_name",
+        "name": "example",
+        "properties": {
+          "certificate_arn": "${aws_acm_certificate_validation.example.certificate_arn}",
+          "domain_name": "api.example.com",
+          "security_policy": "TLS_1_0",
+          "compiletime_identity": "aws_api_gateway_domain_name.example"
+        }
+      },
+      {
+        "type": "aws_ecr_repository",
+        "name": "foo",
+        "properties": {
+          "name": "bar",
+          "image_tag_mutability": "MUTABLE",
+          "image_scanning_configuration": [
+            {
+              "scan_on_push": true
+            }
+          ],
+          "encryption_configuration": [
+            {
+              "kms_key": ""
+            }
+          ],
+          "compiletime_identity": "aws_ecr_repository.foo"
+        }
+      },
+      {
+        "type": "aws_emr_cluster",
+        "name": "cluster",
+        "properties": {
+          "name": "emr-test-arn",
+          "release_label": "emr-4.6.0",
+          "applications": [
+            "Spark"
+          ],
+          "additional_info": {
+            "instanceAwsClientConfiguration": {
+              "proxyPort": 8099,
+              "proxyHost": "myproxy.example.com"
+            }
+          },
+          "termination_protection": false,
+          "keep_job_flow_alive_when_no_steps": true,
+          "ec2_attributes": [
+            {
+              "subnet_id": "${aws_subnet.main.id}",
+              "emr_managed_master_security_group": "${aws_security_group.sg.id}",
+              "emr_managed_slave_security_group": "${aws_security_group.sg.id}",
+              "instance_profile": "${aws_iam_instance_profile.emr_profile.arn}"
+            }
+          ],
+          "kerberos_attributes": [
+            {
+              "realm": null
+            }
+          ],
+          "master_instance_group": [
+            {
+              "instance_type": "m4.large"
+            }
+          ],
+          "core_instance_group": [
+            {
+              "instance_type": "c4.large",
+              "instance_count": 1,
+              "ebs_config": [
+                {
+                  "size": 40,
+                  "type": "gp2",
+                  "volumes_per_instance": 1
+                }
+              ],
+              "bid_price": 0.3,
+              "autoscaling_policy": {
+                "Constraints": {
+                  "MinCapacity": 1,
+                  "MaxCapacity": 2
+                },
+                "Rules": [
+                  {
+                    "Name": "ScaleOutMemoryPercentage",
+                    "Description": "Scale out if YARNMemoryAvailablePercentage is less than 15",
+                    "Action": {
+                      "SimpleScalingPolicyConfiguration": {
+                        "AdjustmentType": "CHANGE_IN_CAPACITY",
+                        "ScalingAdjustment": 1,
+                        "CoolDown": 300
+                      }
+                    },
+                    "Trigger": {
+                      "CloudWatchAlarmDefinition": {
+                        "ComparisonOperator": "LESS_THAN",
+                        "EvaluationPeriods": 1,
+                        "MetricName": "YARNMemoryAvailablePercentage",
+                        "Namespace": "AWS/ElasticMapReduce",
+                        "Period": 300,
+                        "Statistic": "AVERAGE",
+                        "Threshold": 15.0,
+                        "Unit": "PERCENT"
+                      }
+                    }
+                  }
+                ]
+              }
+            }
+          ],
+          "ebs_root_volume_size": 100,
+          "tags": {
+            "role": "rolename",
+            "env": "env"
+          },
+          "bootstrap_action": [
+            {
+              "path": "s3://elasticmapreduce/bootstrap-actions/run-if",
+              "name": "runif",
+              "args": [
+                "instance.isMaster=true",
+                "echo running on master node"
+              ]
+            }
+          ],
+          "configurations_json": [
+            {
+              "Classification": "hadoop-env",
+              "Configurations": [
+                {
+                  "Classification": "export",
+                  "Properties": {
+                    "JAVA_HOME": "/usr/lib/jvm/java-1.8.0"
+                  }
+                }
+              ],
+              "Properties": {}
+            },
+            {
+              "Classification": "spark-env",
+              "Configurations": [
+                {
+                  "Classification": "export",
+                  "Properties": {
+                    "JAVA_HOME": "/usr/lib/jvm/java-1.8.0"
+                  }
+                }
+              ],
+              "Properties": {}
+            }
+          ],
+          "service_role": "${aws_iam_role.iam_emr_service_role.arn}",
+          "compiletime_identity": "aws_emr_cluster.cluster"
+        }
+      },
+      {
+        "type": "aws_kinesis_stream",
+        "name": "test_stream",
+        "properties": {
+          "name": "terraform-kinesis-test",
+          "shard_count": 1,
+          "retention_period": 48,
+          "shard_level_metrics": [
+            "IncomingBytes",
+            "OutgoingBytes"
+          ],
+          "tags": {
+            "Environment": "test"
+          },
+          "compiletime_identity": "aws_kinesis_stream.test_stream"
+        }
+      },
+      {
+        "type": "aws_mq_broker",
+        "name": "example",
+        "properties": {
+          "broker_name": "example",
+          "configuration": [
+            {
+              "id": "${aws_mq_configuration.test.id}",
+              "revision": "${aws_mq_configuration.test.latest_revision}"
+            }
+          ],
+          "publicly_accessible": true,
+          "engine_type": "ActiveMQ",
+          "engine_version": "5.15.9",
+          "host_instance_type": "mq.t2.micro",
+          "security_groups": [
+            "${aws_security_group.test.id}"
+          ],
+          "user": [
+            {
+              "username": "ExampleUser",
+              "password": "MindTheGap"
+            }
+          ],
+          "compiletime_identity": "aws_mq_broker.example"
+        }
+      },
+      {
+        "type": "aws_api_gateway_authorizer",
+        "name": "demo",
+        "properties": {
+          "name": "demo",
+          "rest_api_id": "${aws_api_gateway_rest_api.demo.id}",
+          "authorizer_uri": "${aws_lambda_function.authorizer.invoke_arn}",
+          "authorizer_credentials": "${aws_iam_role.invocation_role.arn}",
+          "compiletime_identity": "aws_api_gateway_authorizer.demo"
+        }
+      },
+      {
+        "type": "aws_lambda_function",
+        "name": "authorizer",
+        "properties": {
+          "filename": "lambda-function.zip",
+          "function_name": "api_gateway_authorizer",
+          "role": "${aws_iam_role.lambda.arn}",
+          "handler": "exports.example",
+          "source_code_hash": "${filebase64sha256(\"lambda-function.zip\")}",
+          "compiletime_identity": "aws_lambda_function.authorizer"
+        }
+      },
+      {
+        "type": "aws_elb",
+        "name": "main",
+        "properties": {
+          "name": "foobar-terraform-elb",
+          "availability_zones": [
+            "us-east-1c"
+          ],
+          "listener": [
+            {
+              "instance_port": 80,
+              "instance_protocol": "http",
+              "lb_port": 80,
+              "lb_protocol": "http"
+            }
+          ],
+          "compiletime_identity": "aws_elb.main"
+        }
+      },
+      {
+        "type": "aws_route53_record",
+        "name": "www",
+        "properties": {
+          "zone_id": "${aws_route53_zone.primary.zone_id}",
+          "name": "example.com",
+          "type": "A",
+          "alias": [
+            {
+              "name": "${aws_elb.main.dns_name}",
+              "zone_id": "${aws_elb.main.zone_id}",
+              "evaluate_target_health": false
+            }
+          ],
+          "compiletime_identity": "aws_route53_record.www"
+        }
+      },
+      {
+        "type": "aws_sagemaker_notebook_instance",
+        "name": "ni",
+        "properties": {
+          "name": "my-notebook-instance",
+          "role_arn": "${aws_iam_role.role.arn}",
+          "instance_type": "ml.t2.medium",
+          "root_access": "Enabled",
+          "direct_internet_access": "Enabled",
+          "subnet_id": [],
+          "tags": {
+            "Name": "foo"
+          },
+          "compiletime_identity": "aws_sagemaker_notebook_instance.ni"
+        }
+      },
+      {
+        "type": "aws_dax_cluster",
+        "name": "bar",
+        "properties": {
+          "cluster_name": "cluster-example",
+          "iam_role_arn": "${data.aws_iam_role.example.arn}",
+          "node_type": "dax.r4.large",
+          "replication_factor": 1,
+          "cluster_endpoint_encryption_type": "NONE",
+          "server_side_encryption": [
+            {
+              "enabled": false
+            }
+          ],
+          "compiletime_identity": "aws_dax_cluster.bar"
+        }
+      },
+      {
+        "type": "aws_qldb_ledger",
+        "name": "sample-ledger",
+        "properties": {
+          "name": "sample-ledger",
+          "permissions_mode": "ALLOW_ALL",
+          "compiletime_identity": "aws_qldb_ledger.sample-ledger"
+        }
+      },
+      {
+        "type": "aws_codebuild_project",
+        "name": "project-with-cache",
+        "properties": {
+          "name": "test-project-cache",
+          "description": "test_codebuild_project_cache",
+          "build_timeout": 5,
+          "queued_timeout": 5,
+          "service_role": "${aws_iam_role.example.arn}",
+          "artifacts": [
+            {
+              "type": "NO_ARTIFACTS",
+              "encryption_disabled": true
+            }
+          ],
+          "cache": [
+            {
+              "type": "LOCAL",
+              "modes": [
+                "LOCAL_DOCKER_LAYER_CACHE",
+                "LOCAL_SOURCE_CACHE"
+              ]
+            }
+          ],
+          "environment": [
+            {
+              "compute_type": "BUILD_GENERAL1_SMALL",
+              "image": "aws/codebuild/standard:1.0",
+              "type": "LINUX_CONTAINER",
+              "image_pull_credentials_type": "CODEBUILD",
+              "environment_variable": [
+                {
+                  "name": "SOME_KEY1",
+                  "value": "SOME_VALUE1"
+                }
+              ]
+            }
+          ],
+          "source": [
+            {
+              "type": "GITHUB",
+              "location": "https://github.com/mitchellh/packer.git",
+              "git_clone_depth": 1
+            }
+          ],
+          "tags": {
+            "Environment": "Test"
+          },
+          "compiletime_identity": "aws_codebuild_project.project-with-cache"
+        }
+      },
+      {
+        "type": "aws_config_configuration_aggregator",
+        "name": "organization",
+        "properties": {
+          "depends_on": [
+            "${aws_iam_role_policy_attachment.organization}"
+          ],
+          "name": "example",
+          "organization_aggregation_source": [
+            {
+              "all_regions": false,
+              "role_arn": "${aws_iam_role.organization.arn}"
+            }
+          ],
+          "compiletime_identity": "aws_config_configuration_aggregator.organization"
+        }
+      },
+      {
+        "type": "aws_iam_role_policy_attachment",
+        "name": "organization",
+        "properties": {
+          "role": "${aws_iam_role.organization.name}",
+          "policy_arn": "arn:aws:iam::aws:policy/service-role/AWSConfigRoleForOrganizations",
+          "compiletime_identity": "aws_iam_role_policy_attachment.organization"
+        }
+      },
+      {
+        "type": "aws_iam_role_policy_attachment",
+        "name": "dms-access-for-endpoint-AmazonDMSRedshiftS3Role",
+        "properties": {
+          "policy_arn": "arn:aws:iam::aws:policy/service-role/AmazonDMSRedshiftS3Role",
+          "role": "${aws_iam_role.dms-access-for-endpoint.name}",
+          "compiletime_identity": "aws_iam_role_policy_attachment.dms-access-for-endpoint-AmazonDMSRedshiftS3Role"
+        }
+      },
+      {
+        "type": "aws_iam_role_policy_attachment",
+        "name": "dms-cloudwatch-logs-role-AmazonDMSCloudWatchLogsRole",
+        "properties": {
+          "policy_arn": "arn:aws:iam::aws:policy/service-role/AmazonDMSCloudWatchLogsRole",
+          "role": "${aws_iam_role.dms-cloudwatch-logs-role.name}",
+          "compiletime_identity": "aws_iam_role_policy_attachment.dms-cloudwatch-logs-role-AmazonDMSCloudWatchLogsRole"
+        }
+      },
+      {
+        "type": "aws_iam_role_policy_attachment",
+        "name": "dms-vpc-role-AmazonDMSVPCManagementRole",
+        "properties": {
+          "policy_arn": "arn:aws:iam::aws:policy/service-role/AmazonDMSVPCManagementRole",
+          "role": "${aws_iam_role.dms-vpc-role.name}",
+          "compiletime_identity": "aws_iam_role_policy_attachment.dms-vpc-role-AmazonDMSVPCManagementRole"
+        }
+      },
+      {
+        "type": "aws_docdb_cluster",
+        "name": "docdb",
+        "properties": {
+          "cluster_identifier": "my-docdb-cluster",
+          "engine": "docdb",
+          "master_username": "foo",
+          "master_password": "mustbeeightchars",
+          "backup_retention_period": 5,
+          "preferred_backup_window": "07:00-09:00",
+          "skip_final_snapshot": true,
+          "storage_encrypted": false,
+          "enabled_cloudwatch_logs_exports": false,
+          "compiletime_identity": "aws_docdb_cluster.docdb"
+        }
+      },
+      {
+        "type": "aws_docdb_cluster_parameter_group",
+        "name": "example",
+        "properties": {
+          "family": "docdb3.6",
+          "name": "example",
+          "description": "docdb cluster parameter group",
+          "parameter": [
+            {
+              "name": "tls",
+              "value": "disabled"
+            },
+            {
+              "name": "audit_logs",
+              "value": "disabled"
+            }
+          ],
+          "compiletime_identity": "aws_docdb_cluster_parameter_group.example"
+        }
+      },
+      {
+        "type": "aws_dms_replication_instance",
+        "name": "test",
+        "properties": {
+          "allocated_storage": 20,
+          "apply_immediately": true,
+          "auto_minor_version_upgrade": true,
+          "availability_zone": "us-west-2c",
+          "engine_version": "3.1.4",
+          "kms_key_arn": "arn:aws:kms:us-east-1:123456789012:key/12345678-1234-1234-1234-123456789012",
+          "multi_az": false,
+          "preferred_maintenance_window": "sun:10:30-sun:14:30",
+          "publicly_accessible": true,
+          "replication_instance_class": "dms.t2.micro",
+          "replication_instance_id": "test-dms-replication-instance-tf",
+          "replication_subnet_group_id": "${aws_dms_replication_subnet_group.test-dms-replication-subnet-group-tf.id}",
+          "tags": {
+            "Name": "test"
+          },
+          "vpc_security_group_ids": [
+            "sg-12345678"
+          ],
+          "depends_on": [
+            "${aws_iam_role_policy_attachment.dms-access-for-endpoint-AmazonDMSRedshiftS3Role}",
+            "${aws_iam_role_policy_attachment.dms-cloudwatch-logs-role-AmazonDMSCloudWatchLogsRole}",
+            "${aws_iam_role_policy_attachment.dms-vpc-role-AmazonDMSVPCManagementRole}"
+          ],
+          "compiletime_identity": "aws_dms_replication_instance.test"
+        }
+      },
+      {
+        "type": "aws_glue_data_catalog_encryption_settings",
+        "name": "example",
+        "properties": {
+          "data_catalog_encryption_settings": [
+            {
+              "connection_password_encryption": [
+                {
+                  "aws_kms_key_id": "${aws_kms_key.test.arn}",
+                  "return_connection_password_encrypted": false
+                }
+              ],
+              "encryption_at_rest": [
+                {
+                  "catalog_encryption_mode": "",
+                  "sse_aws_kms_key_id": "${aws_kms_key.test.arn}"
+                }
+              ]
+            }
+          ],
+          "compiletime_identity": "aws_glue_data_catalog_encryption_settings.example"
+        }
+      },
+      {
+        "type": "aws_glue_security_configuration",
+        "name": "example",
+        "properties": {
+          "name": "example",
+          "encryption_configuration": [
+            {
+              "cloudwatch_encryption": [
+                {
+                  "cloudwatch_encryption_mode": "DISABLED"
+                }
+              ],
+              "job_bookmarks_encryption": [
+                {
+                  "job_bookmarks_encryption_mode": "DISABLED"
+                }
+              ],
+              "s3_encryption": [
+                {
+                  "kms_key_arn": "${data.aws_kms_key.example.arn}",
+                  "s3_encryption_mode": "DISABLED"
+                }
+              ]
+            }
+          ],
+          "compiletime_identity": "aws_glue_security_configuration.example"
+        }
+      },
+      {
+        "type": "aws_iam_group_membership",
+        "name": "team",
+        "properties": {
+          "name": "tf-testing-group-membership",
+          "users": [],
+          "group": "${aws_iam_group.group.name}",
+          "compiletime_identity": "aws_iam_group_membership.team"
+        }
+      },
+      {
+        "type": "aws_iam_group",
+        "name": "group",
+        "properties": {
+          "name": "test-group",
+          "compiletime_identity": "aws_iam_group.group"
+        }
+      },
+      {
+        "type": "aws_iam_user",
+        "name": "user_one",
+        "properties": {
+          "name": "test-user",
+          "compiletime_identity": "aws_iam_user.user_one"
+        }
+      },
+      {
+        "type": "aws_iam_user",
+        "name": "user_two",
+        "properties": {
+          "name": "test-user-two",
+          "compiletime_identity": "aws_iam_user.user_two"
+        }
+      },
+      {
+        "type": "aws_secretsmanager_secret",
+        "name": "rotation-example",
+        "properties": {
+          "name": "rotation-example",
+          "rotation_rules": [
+            {
+              "automatically_after_days": 7
+            }
+          ],
+          "compiletime_identity": "aws_secretsmanager_secret.rotation-example"
+        }
+      },
+      {
+        "type": "aws_timestreamwrite_database",
+        "name": "example",
+        "properties": {
+          "database_name": "database-example",
+          "kms_key_id": "",
+          "tags": {
+            "Name": "value"
+          },
+          "compiletime_identity": "aws_timestreamwrite_database.example"
+        }
+      },
+      {
+        "type": "aws_vpc",
+        "name": "default",
+        "properties": {
+          "cidr_block": "10.0.0.0/16",
+          "enable_dns_hostnames": true,
+          "compiletime_identity": "aws_vpc.default"
+        }
+      },
+      {
+        "type": "aws_internet_gateway",
+        "name": "gw",
+        "properties": {
+          "vpc_id": "${aws_vpc.default.id}",
+          "compiletime_identity": "aws_internet_gateway.gw"
+        }
+      },
+      {
+        "type": "aws_subnet",
+        "name": "tf_test_subnet",
+        "properties": {
+          "vpc_id": "${aws_vpc.default.id}",
+          "cidr_block": "10.0.0.0/24",
+          "map_public_ip_on_launch": true,
+          "acceptance_required": false,
+          "depends_on": [
+            "${aws_internet_gateway.gw}"
+          ],
+          "compiletime_identity": "aws_subnet.tf_test_subnet"
+        }
+      },
+      {
+        "type": "aws_instance",
+        "name": "foo",
+        "properties": {
+          "ami": "ami-5189a661",
+          "instance_type": "t2.micro",
+          "private_ip": "10.0.0.12",
+          "subnet_id": "${aws_subnet.tf_test_subnet.id}",
+          "compiletime_identity": "aws_instance.foo"
+        }
+      },
+      {
+        "type": "aws_eip",
+        "name": "bar",
+        "properties": {
+          "vpc": true,
+          "domain": "vpc",
+          "associate_with_private_ip": "10.0.0.12",
+          "depends_on": [
+            "${aws_internet_gateway.gw}"
+          ],
+          "compiletime_identity": "aws_eip.bar"
+        }
+      },
+      {
+        "type": "aws_vpc_endpoint_service",
+        "name": "example",
+        "properties": {
+          "acceptance_required": false,
+          "gateway_load_balancer_arns": [
+            "${aws_lb.example.arn}"
+          ],
+          "compiletime_identity": "aws_vpc_endpoint_service.example"
+        }
+      },
+      {
+        "type": "aws_ecr_repository_policy",
+        "name": "foopolicy",
+        "properties": {
+          "repository": "${aws_ecr_repository.foo.name}",
+          "policy": {
+            "Version": "2008-10-17",
+            "Statement": [
+              {
+                "Sid": "new policy",
+                "Effect": "Allow",
+                "Principal": {
+                  "AWS": [
+                    "*"
+                  ]
+                },
+                "Action": [
+                  "ecr:GetDownloadUrlForLayer",
+                  "ecr:BatchGetImage",
+                  "ecr:BatchCheckLayerAvailability",
+                  "ecr:PutImage",
+                  "ecr:InitiateLayerUpload",
+                  "ecr:UploadLayerPart",
+                  "ecr:CompleteLayerUpload",
+                  "ecr:DescribeRepositories",
+                  "ecr:GetRepositoryPolicy",
+                  "ecr:ListImages",
+                  "ecr:DeleteRepository",
+                  "ecr:BatchDeleteImage",
+                  "ecr:SetRepositoryPolicy",
+                  "ecr:DeleteRepositoryPolicy"
+                ]
+              }
+            ]
+          },
+          "compiletime_identity": "aws_ecr_repository_policy.foopolicy"
+        }
+      },
+      {
+        "type": "aws_emr_security_configuration",
+        "name": "foo",
+        "properties": {
+          "name": "emrsc_other",
+          "configuration": {
+            "EncryptionConfiguration": {
+              "AtRestEncryptionConfiguration": {
+                "S3EncryptionConfiguration": {
+                  "EncryptionMode": ""
+                },
+                "LocalDiskEncryptionConfiguration": {
+                  "EncryptionKeyProviderType": "",
+                  "AwsKmsKey": "arn:aws:kms:us-west-2:187416307283:alias/tf_emr_test_key"
+                }
+              },
+              "EnableInTransitEncryption": false,
+              "EnableAtRestEncryption": false
+            }
+          },
+          "compiletime_identity": "aws_emr_security_configuration.foo"
+        }
+      },
+      {
+        "type": "aws_appsync_graphql_api",
+        "name": "example",
+        "properties": {
+          "authentication_type": "API_KEY",
+          "name": "example",
+          "compiletime_identity": "aws_appsync_graphql_api.example"
+        }
+      },
+      {
+        "type": "aws_wafv2_web_acl",
+        "name": "example",
+        "properties": {
+          "name": "managed-rule-example",
+          "description": "Example of a managed rule.",
+          "scope": "REGIONAL",
+          "default_action": [
+            {
+              "allow": [
+                {}
+              ]
+            }
+          ],
+          "rule": [
+            {
+              "name": "rule-1",
+              "priority": 1,
+              "override_action": [
+                {
+                  "count": [
+                    {}
+                  ]
+                }
+              ],
+              "statement": [
+                {
+                  "managed_rule_group_statement": [
+                    {
+                      "name": "AWSManagedRulesCommonRuleSet",
+                      "vendor_name": "AWS",
+                      "excluded_rule": [
+                        {
+                          "name": "SizeRestrictions_QUERYSTRING"
+                        },
+                        {
+                          "name": "NoUserAgent_HEADER"
+                        }
+                      ],
+                      "scope_down_statement": [
+                        {
+                          "geo_match_statement": [
+                            {
+                              "country_codes": [
+                                "US",
+                                "NL"
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ],
+              "visibility_config": [
+                {
+                  "cloudwatch_metrics_enabled": false,
+                  "metric_name": "friendly-rule-metric-name",
+                  "sampled_requests_enabled": false
+                }
+              ]
+            }
+          ],
+          "tags": {
+            "Tag1": "Value1",
+            "Tag2": "Value2"
+          },
+          "visibility_config": [
+            {
+              "cloudwatch_metrics_enabled": false,
+              "metric_name": "friendly-metric-name",
+              "sampled_requests_enabled": false
+            }
+          ],
+          "compiletime_identity": "aws_wafv2_web_acl.example"
+        }
+      },
+      {
+        "type": "aws_wafv2_web_acl_association",
+        "name": "example",
+        "properties": {
+          "resource_arn": "${aws_appsync_graphql_api.example1.arn}",
+          "web_acl_arn": "${aws_wafv2_web_acl.example.arn}",
+          "compiletime_identity": "aws_wafv2_web_acl_association.example"
+        }
+      },
+      {
+        "type": "aws_athena_workgroup",
+        "name": "example",
+        "properties": {
+          "name": "example",
+          "configuration": [
+            {
+              "enforce_workgroup_configuration": true,
+              "publish_cloudwatch_metrics_enabled": true,
+              "result_configuration": [
+                {
+                  "output_location": "s3://${aws_s3_bucket.example.bucket}/output/",
+                  "encryption_configuration": [
+                    {
+                      "encryption_option": "SSE_KMS",
+                      "kms_key_arn": "${aws_kms_key.example.arn}"
+                    }
+                  ]
+                }
+              ]
+            }
+          ],
+          "compiletime_identity": "aws_athena_workgroup.example"
+        }
+      },
+      {
+        "type": "aws_iam_policy",
+        "name": "policy",
+        "properties": {
+          "name": "test_policy",
+          "path": "/",
+          "description": "My test policy",
+          "policy": {
+            "Version": "2012-10-17",
+            "Statement": [
+              {
+                "Action": [
+                  "ec2:Describe*",
+                  "lambda:*",
+                  "elasticbeanstalk:*",
+                  "ecs:*"
+                ],
+                "Effect": "Allow",
+                "Resource": "*",
+                "Condition": {
+                  "IpAddress": {
+                    "aws:SourceIp": "0.0.0.0/0"
+                  },
+                  "StringEquals": {
+                    "AWS:SourceOwner": "test"
+                  }
+                }
+              }
+            ]
+          },
+          "compiletime_identity": "aws_iam_policy.policy"
+        }
+      },
+      {
+        "type": "aws_iam_policy",
+        "name": "policy2",
+        "properties": {
+          "name": "test_policy",
+          "path": "/",
+          "description": "My test policy",
+          "policy": "jsonencode({'Version': '2012-10-17', 'Statement': [{'Action': ['ec2:Describe*', 'lambda:*', 'elasticbeanstalk:*', 'ecs:*'], 'Effect': 'Allow', 'Resource': '*']})}",
+          "compiletime_identity": "aws_iam_policy.policy2"
+        }
+      },
+      {
+        "type": "aws_transfer_server",
+        "name": "example-transfer-server",
+        "properties": {
+          "endpoint_type": "VPC",
+          "endpoint_details": [
+            {
+              "subnet_ids": [
+                "${aws_subnet.example.id}"
+              ],
+              "vpc_id": "${aws_vpc.example.id}"
+            }
+          ],
+          "protocols": [
+            "FTP",
+            "FTPS"
+          ],
+          "certificate": "${aws_acm_certificate.example.arn}",
+          "identity_provider_type": "API_GATEWAY",
+          "compiletime_identity": "aws_transfer_server.example-transfer-server"
+        }
+      },
+      {
+        "type": "aws_vpc_endpoint",
+        "name": "vpc-policy",
+        "properties": {
+          "vpc_id": "${aws_vpc.main.id}",
+          "service_name": "com.amazonaws.us-west-2.s3",
+          "policy": "jsonencode({'Version': '2012-10-17', 'Statement': [{'Action': ['*'], 'Effect': 'Allow', 'Resource': '*', 'Principal': '*']})}",
+          "compiletime_identity": "aws_vpc_endpoint.vpc-policy"
+        }
+      },
+      {
+        "type": "aws_secretsmanager_secret_rotation",
+        "name": "secret-manager-example",
+        "properties": {
+          "secret_id": "${aws_secretsmanager_secret.rotation-example.id}",
+          "rotation_lambda_arn": "${aws_lambda_function.example.arn}",
+          "rotation_rules": [
+            {
+              "automatically_after_days": 35
+            }
+          ],
+          "compiletime_identity": "aws_secretsmanager_secret_rotation.secret-manager-example"
+        }
+      },
+      {
+        "type": "aws_elasticache_cluster",
+        "name": "example",
+        "properties": {
+          "cluster_id": "cluster-example",
+          "engine": "redis",
+          "node_type": "cache.m4.large",
+          "num_cache_nodes": 1,
+          "parameter_group_name": "default.redis3.2",
+          "engine_version": "3.2.10",
+          "port": 6379,
+          "compiletime_identity": "aws_elasticache_cluster.example"
+        }
+      }
+    ]
+  },
+  "session_id": "session_1667800207814"
+}

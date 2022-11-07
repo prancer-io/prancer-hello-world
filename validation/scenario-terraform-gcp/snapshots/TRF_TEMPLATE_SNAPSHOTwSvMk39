@@ -1,0 +1,184 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorTerraform",
+  "paths": [
+    "/aws/lambda/vars.tf",
+    "/aws/lambda/provider.tf",
+    "/aws/lambda/terraform.tfvars",
+    "/aws/lambda/main.tf"
+  ],
+  "timestamp": 1667813323707,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "TRF_TEMPLATE_SNAPSHOT",
+    "type": "terraform",
+    "collection": "terraformtemplate",
+    "paths": [
+      "/aws/lambda/vars.tf",
+      "/aws/lambda/provider.tf",
+      "/aws/lambda/terraform.tfvars",
+      "/aws/lambda/main.tf"
+    ],
+    "snapshotId": "TRF_TEMPLATE_SNAPSHOTwSvMk39",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "aws_subnet",
+      "aws_lambda_function",
+      "aws_iam_role_policy_attachment",
+      "aws_vpc",
+      "aws_security_group",
+      "aws_iam_role"
+    ]
+  },
+  "snapshotId": "TRF_TEMPLATE_SNAPSHOTwSvMk39",
+  "collection": "terraformtemplate",
+  "json": {
+    "resources": [
+      {
+        "type": "aws_iam_role",
+        "name": "iamrole",
+        "properties": {
+          "name": "prancer-iam-role",
+          "path": "/",
+          "max_session_duration": 3600,
+          "description": "",
+          "force_detach_policies": false,
+          "permissions_boundary": "",
+          "assume_role_policy": {
+            "Version": "2012-10-17",
+            "Statement": [
+              {
+                "Effect": "Allow",
+                "Principal": {
+                  "Service": "lambda.amazonaws.com"
+                },
+                "Action": "sts:AssumeRole"
+              }
+            ]
+          },
+          "tags": {
+            "environment": "Production",
+            "project": "Prancer"
+          },
+          "compiletime_identity": "module.iam_role"
+        }
+      },
+      {
+        "type": "aws_vpc",
+        "name": "vpc",
+        "properties": {
+          "cidr_block": "10.10.0.0/16",
+          "instance_tenancy": "default",
+          "enable_dns_hostnames": false,
+          "enable_dns_support": true,
+          "enable_classiclink": null,
+          "enable_classiclink_dns_support": null,
+          "assign_generated_ipv6_cidr_block": false,
+          "tags": {
+            "environment": "Production",
+            "project": "Prancer"
+          },
+          "compiletime_identity": "module.vpc"
+        }
+      },
+      {
+        "type": "aws_subnet",
+        "name": "subnet",
+        "properties": {
+          "vpc_id": "${module.vpc.vpc_id}",
+          "cidr_block": "10.10.1.0/24",
+          "availability_zone": null,
+          "availability_zone_id": null,
+          "map_public_ip_on_launch": false,
+          "assign_ipv6_address_on_creation": false,
+          "ipv6_cidr_block": null,
+          "tags": {
+            "environment": "Production",
+            "project": "Prancer"
+          },
+          "compiletime_identity": "module.subnet"
+        }
+      },
+      {
+        "type": "aws_security_group",
+        "name": "sgroup",
+        "properties": {
+          "name": "prancer-security-group",
+          "description": "Prancer Security Group",
+          "vpc_id": "${module.vpc.vpc_id}",
+          "revoke_rules_on_delete": false,
+          "ingress": [],
+          "tags": {
+            "environment": "Production",
+            "project": "Prancer"
+          },
+          "compiletime_identity": "module.security_group"
+        }
+      },
+      {
+        "type": "aws_lambda_function",
+        "name": "lambda",
+        "properties": {
+          "description": "",
+          "environment": [
+            {
+              "variables": {
+                "API_KEY": "3c3ac97c6fa1850d366b70fbcd49a3db"
+              }
+            }
+          ],
+          "vpc_config": [
+            {
+              "security_group_ids": [],
+              "subnet_ids": []
+            }
+          ],
+          "kms_key_arn": null,
+          "filename": "function.py.zip",
+          "function_name": "prancer-lambda-fn",
+          "handler": "prancer-lambda-handler",
+          "memory_size": 128,
+          "publish": false,
+          "reserved_concurrent_executions": -1,
+          "role": "${module.iam_role.arn}",
+          "runtime": "python3.7",
+          "s3_bucket": null,
+          "s3_key": null,
+          "s3_object_version": null,
+          "source_code_hash": "${filebase64sha256(var.filename)}",
+          "tags": {
+            "environment": "Production",
+            "project": "Prancer"
+          },
+          "timeout": 5,
+          "dead_letter_config": [
+            {
+              "target_arn": ""
+            }
+          ],
+          "tracing_config": [
+            {
+              "mode": "PassThrough"
+            }
+          ],
+          "compiletime_identity": "module.lambda"
+        }
+      },
+      {
+        "type": "aws_iam_role_policy_attachment",
+        "name": "AWSLambdaVPCAccessExecutionRole",
+        "properties": {
+          "role": "${module.iam_role.name}",
+          "policy_arn": "arn:aws:iam::aws:policy/service-role/AWSLambdaVPCAccessExecutionRole",
+          "compiletime_identity": "aws_iam_role_policy_attachment.AWSLambdaVPCAccessExecutionRole"
+        }
+      }
+    ]
+  },
+  "session_id": "session_1667800667997"
+}

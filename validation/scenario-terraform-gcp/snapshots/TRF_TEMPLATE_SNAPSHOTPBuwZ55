@@ -1,0 +1,233 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorTerraform",
+  "paths": [
+    "/aws/msk/main.tf"
+  ],
+  "timestamp": 1667822617491,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "TRF_TEMPLATE_SNAPSHOT",
+    "type": "terraform",
+    "collection": "terraformtemplate",
+    "paths": [
+      "/aws/msk/main.tf"
+    ],
+    "snapshotId": "TRF_TEMPLATE_SNAPSHOTPBuwZ55",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "aws_iam_role",
+      "aws_s3_bucket",
+      "aws_vpc",
+      "aws_kms_key",
+      "aws_cloudwatch_log_group",
+      "aws_msk_cluster",
+      "aws_security_group",
+      "aws_subnet",
+      "aws_kinesis_firehose_delivery_stream"
+    ]
+  },
+  "snapshotId": "TRF_TEMPLATE_SNAPSHOTPBuwZ55",
+  "collection": "terraformtemplate",
+  "json": {
+    "data": {
+      "aws_availability_zones": {
+        "azs": {
+          "state": "available",
+          "compiletime_identity": "data.aws_availability_zones.azs"
+        }
+      }
+    },
+    "output": [
+      {
+        "zookeeper_connect_string": {
+          "value": "${aws_msk_cluster.example.zookeeper_connect_string}"
+        }
+      },
+      {
+        "bootstrap_brokers_tls": {
+          "description": "TLS connection host:port pairs",
+          "value": "${aws_msk_cluster.example.bootstrap_brokers_tls}"
+        }
+      }
+    ],
+    "resources": [
+      {
+        "type": "aws_vpc",
+        "name": "vpc",
+        "properties": {
+          "cidr_block": "192.168.0.0/22",
+          "compiletime_identity": "aws_vpc.vpc"
+        }
+      },
+      {
+        "type": "aws_subnet",
+        "name": "subnet_az1",
+        "properties": {
+          "availability_zone": "${data.aws_availability_zones.azs.names[0]}",
+          "cidr_block": "192.168.0.0/24",
+          "vpc_id": "${aws_vpc.vpc.id}",
+          "compiletime_identity": "aws_subnet.subnet_az1"
+        }
+      },
+      {
+        "type": "aws_subnet",
+        "name": "subnet_az2",
+        "properties": {
+          "availability_zone": "${data.aws_availability_zones.azs.names[1]}",
+          "cidr_block": "192.168.1.0/24",
+          "vpc_id": "${aws_vpc.vpc.id}",
+          "compiletime_identity": "aws_subnet.subnet_az2"
+        }
+      },
+      {
+        "type": "aws_subnet",
+        "name": "subnet_az3",
+        "properties": {
+          "availability_zone": "${data.aws_availability_zones.azs.names[2]}",
+          "cidr_block": "192.168.2.0/24",
+          "vpc_id": "${aws_vpc.vpc.id}",
+          "compiletime_identity": "aws_subnet.subnet_az3"
+        }
+      },
+      {
+        "type": "aws_security_group",
+        "name": "sg",
+        "properties": {
+          "vpc_id": "${aws_vpc.vpc.id}",
+          "compiletime_identity": "aws_security_group.sg"
+        }
+      },
+      {
+        "type": "aws_kms_key",
+        "name": "kms",
+        "properties": {
+          "description": "example",
+          "compiletime_identity": "aws_kms_key.kms"
+        }
+      },
+      {
+        "type": "aws_cloudwatch_log_group",
+        "name": "test",
+        "properties": {
+          "name": "msk_broker_logs",
+          "compiletime_identity": "aws_cloudwatch_log_group.test"
+        }
+      },
+      {
+        "type": "aws_s3_bucket",
+        "name": "bucket",
+        "properties": {
+          "bucket": "msk-broker-logs-bucket",
+          "acl": "private",
+          "compiletime_identity": "aws_s3_bucket.bucket"
+        }
+      },
+      {
+        "type": "aws_iam_role",
+        "name": "firehose_role",
+        "properties": {
+          "name": "firehose_test_role",
+          "assume_role_policy": {
+            "Version": "2012-10-17",
+            "Statement": [
+              {
+                "Action": "sts:AssumeRole",
+                "Principal": {
+                  "Service": "firehose.amazonaws.com"
+                },
+                "Effect": "Allow",
+                "Sid": ""
+              }
+            ]
+          },
+          "compiletime_identity": "aws_iam_role.firehose_role"
+        }
+      },
+      {
+        "type": "aws_kinesis_firehose_delivery_stream",
+        "name": "test_stream",
+        "properties": {
+          "name": "terraform-kinesis-firehose-msk-broker-logs-stream",
+          "destination": "s3",
+          "s3_configuration": [
+            {
+              "role_arn": "${aws_iam_role.firehose_role.arn}",
+              "bucket_arn": "${aws_s3_bucket.bucket.arn}"
+            }
+          ],
+          "tags": {
+            "LogDeliveryEnabled": "placeholder"
+          },
+          "lifecycle": [
+            {
+              "ignore_changes": [
+                "tags[\"LogDeliveryEnabled\"]"
+              ]
+            }
+          ],
+          "compiletime_identity": "aws_kinesis_firehose_delivery_stream.test_stream"
+        }
+      },
+      {
+        "type": "aws_msk_cluster",
+        "name": "example",
+        "properties": {
+          "cluster_name": "example",
+          "kafka_version": "2.4.1",
+          "number_of_broker_nodes": 3,
+          "broker_node_group_info": [
+            {
+              "instance_type": "kafka.m5.large",
+              "ebs_volume_size": 1000,
+              "client_subnets": [
+                "${aws_subnet.subnet_az1.id}",
+                "${aws_subnet.subnet_az2.id}",
+                "${aws_subnet.subnet_az3.id}"
+              ],
+              "security_groups": [
+                "${aws_security_group.sg.id}"
+              ]
+            }
+          ],
+          "encryption_info": [
+            {
+              "encryption_at_rest_kms_key_arn": "${aws_kms_key.kms.arn}"
+            }
+          ],
+          "open_monitoring": [
+            {
+              "prometheus": [
+                {
+                  "jmx_exporter": [
+                    {
+                      "enabled_in_broker": true
+                    }
+                  ],
+                  "node_exporter": [
+                    {
+                      "enabled_in_broker": true
+                    }
+                  ]
+                }
+              ]
+            }
+          ],
+          "logging_info": [
+            {}
+          ],
+          "tags": {
+            "foo": "bar"
+          },
+          "compiletime_identity": "aws_msk_cluster.example"
+        }
+      }
+    ]
+  },
+  "session_id": "session_1667809951321"
+}

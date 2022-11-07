@@ -1,0 +1,90 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorTerraform",
+  "paths": [
+    "/aws/sqs/vars.tf",
+    "/aws/sqs/provider.tf",
+    "/aws/sqs/terraform.tfvars",
+    "/aws/sqs/main.tf"
+  ],
+  "timestamp": 1667812871868,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "TRF_TEMPLATE_SNAPSHOT",
+    "type": "terraform",
+    "collection": "terraformtemplate",
+    "paths": [
+      "/aws/sqs/vars.tf",
+      "/aws/sqs/provider.tf",
+      "/aws/sqs/terraform.tfvars",
+      "/aws/sqs/main.tf"
+    ],
+    "snapshotId": "TRF_TEMPLATE_SNAPSHOTXaoNk33",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "aws_sqs_queue_policy",
+      "aws_sqs_queue"
+    ]
+  },
+  "snapshotId": "TRF_TEMPLATE_SNAPSHOTXaoNk33",
+  "collection": "terraformtemplate",
+  "json": {
+    "resources": [
+      {
+        "type": "aws_sqs_queue",
+        "name": "sqs",
+        "properties": {
+          "name": "prancer-sqs",
+          "name_prefix": null,
+          "visibility_timeout_seconds": 30,
+          "message_retention_seconds": 345600,
+          "max_message_size": 262144,
+          "delay_seconds": 0,
+          "receive_wait_time_seconds": 0,
+          "policy": "",
+          "redrive_policy": "",
+          "fifo_queue": false,
+          "content_based_deduplication": false,
+          "kms_master_key_id": null,
+          "kms_data_key_reuse_period_seconds": 300,
+          "tags": {
+            "environment": "Production",
+            "project": "Prancer"
+          },
+          "compiletime_identity": "module.sqs"
+        }
+      },
+      {
+        "type": "aws_sqs_queue_policy",
+        "name": "test",
+        "properties": {
+          "policy": {
+            "Version": "2012-10-17",
+            "Id": "sqspolicy",
+            "Statement": [
+              {
+                "Sid": "First",
+                "Effect": "Allow",
+                "Principal": "*",
+                "Action": "sqs:SendMessage",
+                "Resource": "*",
+                "Condition": {
+                  "ArnEquals": {
+                    "aws:SourceArn": "test"
+                  }
+                }
+              }
+            ]
+          },
+          "compiletime_identity": "module.sqs"
+        }
+      }
+    ]
+  },
+  "session_id": "session_1667800207814"
+}

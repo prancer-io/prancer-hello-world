@@ -1,0 +1,461 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorTerraform",
+  "paths": [
+    "/azure/vmss/vars.tf",
+    "/azure/vmss/provider.tf",
+    "/azure/vmss/main.tf"
+  ],
+  "timestamp": 1667813323682,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "TRF_TEMPLATE_SNAPSHOT",
+    "type": "terraform",
+    "collection": "terraformtemplate",
+    "paths": [
+      "/azure/vmss/vars.tf",
+      "/azure/vmss/provider.tf",
+      "/azure/vmss/main.tf"
+    ],
+    "snapshotId": "TRF_TEMPLATE_SNAPSHOTwSvMk1",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "azurerm_subnet",
+      "azurerm_traffic_manager_profile",
+      "azurerm_lb_probe",
+      "azurerm_lb_backend_address_pool",
+      "azurerm_resource_group",
+      "azurerm_public_ip",
+      "azurerm_lb",
+      "azurerm_virtual_network",
+      "azurerm_traffic_manager_endpoint",
+      "azurerm_virtual_machine_scale_set",
+      "azurerm_lb_rule"
+    ]
+  },
+  "snapshotId": "TRF_TEMPLATE_SNAPSHOTwSvMk1",
+  "collection": "terraformtemplate",
+  "json": {
+    "provider": [
+      {
+        "azurerm": {
+          "features": [
+            {}
+          ]
+        }
+      }
+    ],
+    "resources": [
+      {
+        "type": "azurerm_resource_group",
+        "name": "example",
+        "properties": {
+          "name": "${var.prefix}-region1",
+          "location": "${var.location}",
+          "compiletime_identity": "module.region1"
+        }
+      },
+      {
+        "type": "azurerm_resource_group",
+        "name": "example",
+        "properties": {
+          "name": "${var.prefix}-region1",
+          "location": "${var.alt_location}",
+          "compiletime_identity": "module.region2"
+        }
+      },
+      {
+        "type": "azurerm_resource_group",
+        "name": "example",
+        "properties": {
+          "name": "${var.prefix}-tmresources",
+          "location": "${var.location}",
+          "compiletime_identity": "azurerm_resource_group.example"
+        }
+      },
+      {
+        "type": "azurerm_virtual_network",
+        "name": "example",
+        "properties": {
+          "name": "${var.prefix}-region1",
+          "resource_group_name": "${var.prefix}-region1",
+          "location": "${var.location}",
+          "address_space": [
+            "10.0.0.0/16"
+          ],
+          "compiletime_identity": "module.region1"
+        }
+      },
+      {
+        "type": "azurerm_virtual_network",
+        "name": "example",
+        "properties": {
+          "name": "${var.prefix}-region1",
+          "resource_group_name": "${var.prefix}-region1",
+          "location": "${var.alt_location}",
+          "address_space": [
+            "10.0.0.0/16"
+          ],
+          "compiletime_identity": "module.region2"
+        }
+      },
+      {
+        "type": "azurerm_subnet",
+        "name": "example",
+        "properties": {
+          "name": "internal",
+          "virtual_network_name": "${var.prefix}-region1",
+          "resource_group_name": "${var.prefix}-region1",
+          "address_prefixes": [
+            "10.0.1.0/24"
+          ],
+          "compiletime_identity": "module.region1"
+        }
+      },
+      {
+        "type": "azurerm_subnet",
+        "name": "example",
+        "properties": {
+          "name": "internal",
+          "virtual_network_name": "${var.prefix}-region1",
+          "resource_group_name": "${var.prefix}-region1",
+          "address_prefixes": [
+            "10.0.1.0/24"
+          ],
+          "compiletime_identity": "module.region2"
+        }
+      },
+      {
+        "type": "azurerm_virtual_machine_scale_set",
+        "name": "example",
+        "properties": {
+          "name": "${var.prefix}-region1",
+          "location": "${azurerm_resource_group.example.location}",
+          "resource_group_name": "${azurerm_resource_group.example.name}",
+          "upgrade_policy_mode": "Manual",
+          "sku": [
+            {
+              "name": "Standard_D1_v2",
+              "tier": "Standard",
+              "capacity": 2
+            }
+          ],
+          "os_profile": [
+            {
+              "computer_name_prefix": "${var.prefix}-region1",
+              "admin_username": "myadmin",
+              "admin_password": "Passwword1234"
+            }
+          ],
+          "os_profile_linux_config": [
+            {
+              "disable_password_authentication": false
+            }
+          ],
+          "network_profile": [
+            {
+              "name": "web_ss_net_profile",
+              "primary": true,
+              "ip_configuration": [
+                {
+                  "name": "internal",
+                  "subnet_id": "${azurerm_subnet.example.id}",
+                  "load_balancer_backend_address_pool_ids": [
+                    "${azurerm_lb_backend_address_pool.example.id}"
+                  ],
+                  "primary": true
+                }
+              ]
+            }
+          ],
+          "storage_profile_os_disk": [
+            {
+              "name": "",
+              "caching": "ReadWrite",
+              "create_option": "FromImage",
+              "managed_disk_type": "Standard_LRS"
+            }
+          ],
+          "storage_profile_image_reference": [
+            {
+              "publisher": "Canonical",
+              "offer": "UbuntuServer",
+              "sku": "16.04-LTS",
+              "version": "latest"
+            }
+          ],
+          "extension": [
+            {
+              "name": "CustomScriptForLinux",
+              "publisher": "Microsoft.OSTCExtensions",
+              "type": "CustomScriptForLinux",
+              "type_handler_version": 1.4,
+              "settings": {
+                "commandToExecute": "sudo apt-get -y install apache2"
+              }
+            }
+          ],
+          "compiletime_identity": "module.region1"
+        }
+      },
+      {
+        "type": "azurerm_virtual_machine_scale_set",
+        "name": "example",
+        "properties": {
+          "name": "${var.prefix}-region1",
+          "location": "${azurerm_resource_group.example.location}",
+          "resource_group_name": "${azurerm_resource_group.example.name}",
+          "upgrade_policy_mode": "Manual",
+          "sku": [
+            {
+              "name": "Standard_D1_v2",
+              "tier": "Standard",
+              "capacity": 2
+            }
+          ],
+          "os_profile": [
+            {
+              "computer_name_prefix": "${var.prefix}-region1",
+              "admin_username": "myadmin",
+              "admin_password": "Passwword1234"
+            }
+          ],
+          "os_profile_linux_config": [
+            {
+              "disable_password_authentication": false
+            }
+          ],
+          "network_profile": [
+            {
+              "name": "web_ss_net_profile",
+              "primary": true,
+              "ip_configuration": [
+                {
+                  "name": "internal",
+                  "subnet_id": "${azurerm_subnet.example.id}",
+                  "load_balancer_backend_address_pool_ids": [
+                    "${azurerm_lb_backend_address_pool.example.id}"
+                  ],
+                  "primary": true
+                }
+              ]
+            }
+          ],
+          "storage_profile_os_disk": [
+            {
+              "name": "",
+              "caching": "ReadWrite",
+              "create_option": "FromImage",
+              "managed_disk_type": "Standard_LRS"
+            }
+          ],
+          "storage_profile_image_reference": [
+            {
+              "publisher": "Canonical",
+              "offer": "UbuntuServer",
+              "sku": "16.04-LTS",
+              "version": "latest"
+            }
+          ],
+          "extension": [
+            {
+              "name": "CustomScriptForLinux",
+              "publisher": "Microsoft.OSTCExtensions",
+              "type": "CustomScriptForLinux",
+              "type_handler_version": 1.4,
+              "settings": {
+                "commandToExecute": "sudo apt-get -y install apache2"
+              }
+            }
+          ],
+          "compiletime_identity": "module.region2"
+        }
+      },
+      {
+        "type": "azurerm_public_ip",
+        "name": "example",
+        "properties": {
+          "name": "${var.prefix}-region1",
+          "location": "${azurerm_resource_group.example.location}",
+          "resource_group_name": "${azurerm_resource_group.example.name}",
+          "allocation_method": "Static",
+          "compiletime_identity": "module.region1"
+        }
+      },
+      {
+        "type": "azurerm_public_ip",
+        "name": "example",
+        "properties": {
+          "name": "${var.prefix}-region1",
+          "location": "${azurerm_resource_group.example.location}",
+          "resource_group_name": "${azurerm_resource_group.example.name}",
+          "allocation_method": "Static",
+          "compiletime_identity": "module.region2"
+        }
+      },
+      {
+        "type": "azurerm_lb",
+        "name": "example",
+        "properties": {
+          "name": "${var.prefix}-region1",
+          "location": "${azurerm_resource_group.example.location}",
+          "resource_group_name": "${azurerm_resource_group.example.name}",
+          "frontend_ip_configuration": [
+            {
+              "name": "internal",
+              "public_ip_address_id": "${azurerm_public_ip.example.id}"
+            }
+          ],
+          "compiletime_identity": "module.region1"
+        }
+      },
+      {
+        "type": "azurerm_lb",
+        "name": "example",
+        "properties": {
+          "name": "${var.prefix}-region1",
+          "location": "${azurerm_resource_group.example.location}",
+          "resource_group_name": "${azurerm_resource_group.example.name}",
+          "frontend_ip_configuration": [
+            {
+              "name": "internal",
+              "public_ip_address_id": "${azurerm_public_ip.example.id}"
+            }
+          ],
+          "compiletime_identity": "module.region2"
+        }
+      },
+      {
+        "type": "azurerm_lb_backend_address_pool",
+        "name": "example",
+        "properties": {
+          "name": "backend",
+          "resource_group_name": "${azurerm_resource_group.example.name}",
+          "loadbalancer_id": "${azurerm_lb.example.id}",
+          "compiletime_identity": "module.region1"
+        }
+      },
+      {
+        "type": "azurerm_lb_backend_address_pool",
+        "name": "example",
+        "properties": {
+          "name": "backend",
+          "resource_group_name": "${azurerm_resource_group.example.name}",
+          "loadbalancer_id": "${azurerm_lb.example.id}",
+          "compiletime_identity": "module.region2"
+        }
+      },
+      {
+        "type": "azurerm_lb_probe",
+        "name": "example",
+        "properties": {
+          "name": "probe",
+          "resource_group_name": "${azurerm_resource_group.example.name}",
+          "loadbalancer_id": "${azurerm_lb.example.id}",
+          "protocol": "tcp",
+          "port": 80,
+          "compiletime_identity": "module.region1"
+        }
+      },
+      {
+        "type": "azurerm_lb_probe",
+        "name": "example",
+        "properties": {
+          "name": "probe",
+          "resource_group_name": "${azurerm_resource_group.example.name}",
+          "loadbalancer_id": "${azurerm_lb.example.id}",
+          "protocol": "tcp",
+          "port": 80,
+          "compiletime_identity": "module.region2"
+        }
+      },
+      {
+        "type": "azurerm_lb_rule",
+        "name": "example",
+        "properties": {
+          "name": "http-lb-rule",
+          "resource_group_name": "${azurerm_resource_group.example.name}",
+          "loadbalancer_id": "${azurerm_lb.example.id}",
+          "probe_id": "${azurerm_lb_probe.example.id}",
+          "backend_address_pool_id": "${azurerm_lb_backend_address_pool.example.id}",
+          "frontend_ip_configuration_name": "internal",
+          "protocol": "Tcp",
+          "frontend_port": 80,
+          "backend_port": 80,
+          "compiletime_identity": "module.region1"
+        }
+      },
+      {
+        "type": "azurerm_lb_rule",
+        "name": "example",
+        "properties": {
+          "name": "http-lb-rule",
+          "resource_group_name": "${azurerm_resource_group.example.name}",
+          "loadbalancer_id": "${azurerm_lb.example.id}",
+          "probe_id": "${azurerm_lb_probe.example.id}",
+          "backend_address_pool_id": "${azurerm_lb_backend_address_pool.example.id}",
+          "frontend_ip_configuration_name": "internal",
+          "protocol": "Tcp",
+          "frontend_port": 80,
+          "backend_port": 80,
+          "compiletime_identity": "module.region2"
+        }
+      },
+      {
+        "type": "azurerm_traffic_manager_profile",
+        "name": "example",
+        "properties": {
+          "name": "${var.prefix}-trafficmgr",
+          "resource_group_name": "${azurerm_resource_group.example.name}",
+          "traffic_routing_method": "Weighted",
+          "dns_config": [
+            {
+              "relative_name": "${var.prefix}-trafficmgr",
+              "ttl": 100
+            }
+          ],
+          "monitor_config": [
+            {
+              "protocol": "http",
+              "port": 80,
+              "path": "/"
+            }
+          ],
+          "compiletime_identity": "azurerm_traffic_manager_profile.example"
+        }
+      },
+      {
+        "type": "azurerm_traffic_manager_endpoint",
+        "name": "region1",
+        "properties": {
+          "name": "${var.prefix}-region1",
+          "resource_group_name": "${azurerm_resource_group.example.name}",
+          "profile_name": "${azurerm_traffic_manager_profile.example.name}",
+          "target_resource_id": "${module.region1.public_ip_address_id}",
+          "type": "azureEndpoints",
+          "weight": 100,
+          "compiletime_identity": "azurerm_traffic_manager_endpoint.region1"
+        }
+      },
+      {
+        "type": "azurerm_traffic_manager_endpoint",
+        "name": "region2",
+        "properties": {
+          "name": "${var.prefix}-region2",
+          "resource_group_name": "${azurerm_resource_group.example.name}",
+          "profile_name": "${azurerm_traffic_manager_profile.example.name}",
+          "target_resource_id": "${module.region2.public_ip_address_id}",
+          "type": "azureEndpoints",
+          "weight": 100,
+          "compiletime_identity": "azurerm_traffic_manager_endpoint.region2"
+        }
+      }
+    ]
+  },
+  "session_id": "session_1667800667997"
+}

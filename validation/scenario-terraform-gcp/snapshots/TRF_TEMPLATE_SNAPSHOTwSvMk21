@@ -1,0 +1,205 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorTerraform",
+  "paths": [
+    "/azure/manageddisks/variables.tf",
+    "/azure/manageddisks/main.tf"
+  ],
+  "timestamp": 1667813323698,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "TRF_TEMPLATE_SNAPSHOT",
+    "type": "terraform",
+    "collection": "terraformtemplate",
+    "paths": [
+      "/azure/manageddisks/variables.tf",
+      "/azure/manageddisks/main.tf"
+    ],
+    "snapshotId": "TRF_TEMPLATE_SNAPSHOTwSvMk21",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "azurerm_subnet",
+      "azurerm_disk_encryption_set",
+      "azurerm_resource_group",
+      "azurerm_linux_virtual_machine_scale_set",
+      "azurerm_key_vault",
+      "azurerm_virtual_network",
+      "azurerm_key_vault_key",
+      "azurerm_managed_disk"
+    ]
+  },
+  "snapshotId": "TRF_TEMPLATE_SNAPSHOTwSvMk21",
+  "collection": "terraformtemplate",
+  "json": {
+    "provider": [
+      {
+        "azurerm": {
+          "features": [
+            {}
+          ]
+        }
+      }
+    ],
+    "data": {
+      "azurerm_client_config": {
+        "current": {
+          "compiletime_identity": "data.azurerm_client_config.current"
+        }
+      }
+    },
+    "resources": [
+      {
+        "type": "azurerm_resource_group",
+        "name": "main",
+        "properties": {
+          "name": "-resources",
+          "location": "West Europe",
+          "compiletime_identity": "azurerm_resource_group.main"
+        }
+      },
+      {
+        "type": "azurerm_virtual_network",
+        "name": "main",
+        "properties": {
+          "name": "-network",
+          "address_space": [
+            "10.0.0.0/16"
+          ],
+          "location": "${azurerm_resource_group.main.location}",
+          "resource_group_name": "${azurerm_resource_group.main.name}",
+          "compiletime_identity": "azurerm_virtual_network.main"
+        }
+      },
+      {
+        "type": "azurerm_subnet",
+        "name": "internal",
+        "properties": {
+          "name": "internal",
+          "resource_group_name": "${azurerm_resource_group.main.name}",
+          "virtual_network_name": "${azurerm_virtual_network.main.name}",
+          "address_prefixes": [
+            "10.0.2.0/24"
+          ],
+          "compiletime_identity": "azurerm_subnet.internal"
+        }
+      },
+      {
+        "type": "azurerm_key_vault",
+        "name": "example",
+        "properties": {
+          "name": "des-example-keyvault",
+          "location": "${azurerm_resource_group.main.location}",
+          "resource_group_name": "${azurerm_resource_group.main.name}",
+          "tenant_id": "${data.azurerm_client_config.current.tenant_id}",
+          "sku_name": "premium",
+          "enabled_for_disk_encryption": true,
+          "soft_delete_enabled": true,
+          "purge_protection_enabled": true,
+          "compiletime_identity": "azurerm_key_vault.example"
+        }
+      },
+      {
+        "type": "azurerm_key_vault_key",
+        "name": "example",
+        "properties": {
+          "name": "des-example-key",
+          "key_vault_id": "${azurerm_key_vault.example.id}",
+          "key_type": "RSA",
+          "key_size": 2048,
+          "key_opts": [
+            "decrypt",
+            "encrypt",
+            "sign",
+            "unwrapKey",
+            "verify",
+            "wrapKey"
+          ],
+          "compiletime_identity": "azurerm_key_vault_key.example"
+        }
+      },
+      {
+        "type": "azurerm_disk_encryption_set",
+        "name": "test",
+        "properties": {
+          "name": "-des",
+          "resource_group_name": "${azurerm_resource_group.main.name}",
+          "location": "${azurerm_resource_group.main.location}",
+          "key_vault_key_id": "${azurerm_key_vault_key.test.id}",
+          "identity": [
+            {
+              "type": "SystemAssigned"
+            }
+          ],
+          "compiletime_identity": "azurerm_disk_encryption_set.test"
+        }
+      },
+      {
+        "type": "azurerm_managed_disk",
+        "name": "data",
+        "properties": {
+          "name": "data",
+          "location": "${azurerm_resource_group.main.location}",
+          "create_option": "Empty",
+          "disk_size_gb": 10,
+          "resource_group_name": "${azurerm_resource_group.main.name}",
+          "storage_account_type": "Standard_LRS",
+          "disk_encryption_set_id": "${azurerm_disk_encryption_set.test.id}",
+          "compiletime_identity": "azurerm_managed_disk.data"
+        }
+      },
+      {
+        "type": "azurerm_linux_virtual_machine_scale_set",
+        "name": "main",
+        "properties": {
+          "name": "-vmss",
+          "resource_group_name": "${azurerm_resource_group.main.name}",
+          "location": "${azurerm_resource_group.main.location}",
+          "sku": "Standard_F2s_v2",
+          "instances": 3,
+          "admin_username": "adminuser",
+          "admin_password": "P@ssw0rd1234!",
+          "disable_password_authentication": false,
+          "source_image_reference": [
+            {
+              "publisher": "Canonical",
+              "offer": "UbuntuServer",
+              "sku": "16.04-LTS",
+              "version": "latest"
+            }
+          ],
+          "network_interface": [
+            {
+              "name": "example",
+              "primary": true,
+              "ip_configuration": [
+                {
+                  "name": "internal",
+                  "primary": true,
+                  "subnet_id": "${azurerm_subnet.internal.id}"
+                }
+              ]
+            }
+          ],
+          "os_disk": [
+            {
+              "storage_account_type": "Standard_LRS",
+              "caching": "ReadWrite",
+              "diff_disk_settings": [
+                {
+                  "option": "Local"
+                }
+              ]
+            }
+          ],
+          "compiletime_identity": "azurerm_linux_virtual_machine_scale_set.main"
+        }
+      }
+    ]
+  },
+  "session_id": "session_1667800667997"
+}

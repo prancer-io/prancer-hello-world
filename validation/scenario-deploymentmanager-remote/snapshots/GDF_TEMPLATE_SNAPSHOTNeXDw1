@@ -1,0 +1,139 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorDeploymentmanager",
+  "paths": [
+    "/cloudsql/db.example.yaml"
+  ],
+  "timestamp": 1667810907281,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "GDF_TEMPLATE_SNAPSHOT",
+    "type": "deploymentmanager",
+    "collection": "deploymentmanagertemplate",
+    "paths": [
+      "/cloudsql/db.example.yaml"
+    ],
+    "snapshotId": "GDF_TEMPLATE_SNAPSHOTNeXDw1",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "sqladmin.v1beta4.instance",
+      "sqladmin.v1beta4.database",
+      "sqladmin.v1beta4.user"
+    ]
+  },
+  "snapshotId": "GDF_TEMPLATE_SNAPSHOTNeXDw1",
+  "collection": "deploymentmanagertemplate",
+  "json": {
+    "imports": [
+      {
+        "path": "cloudsql.jinja"
+      }
+    ],
+    "resources": [
+      {
+        "name": "--master",
+        "type": "sqladmin.v1beta4.instance",
+        "properties": {
+          "backendType": "SECOND_GEN",
+          "instanceType": "CLOUD_SQL_INSTANCE",
+          "databaseVersion": null,
+          "region": null,
+          "settings": {
+            "tier": null,
+            "dataDiskSizeGb": null,
+            "dataDiskType": null,
+            "storageAutoResize": true,
+            "replicationType": "SYNCHRONOUS",
+            "locationPreference": {
+              "zone": null
+            },
+            "activationPolicy": "ALWAYS",
+            "backupConfiguration": {
+              "enabled": true,
+              "binaryLogEnabled": true,
+              "startTime": ""
+            },
+            "ipConfiguration": {
+              "authorizedNetworks": null
+            }
+          }
+        }
+      },
+      {
+        "name": "--failover",
+        "type": "sqladmin.v1beta4.instance",
+        "properties": {
+          "backendType": "SECOND_GEN",
+          "instanceType": "READ_REPLICA_INSTANCE",
+          "databaseVersion": null,
+          "region": null,
+          "masterInstanceName": "$(ref.--master.name)",
+          "replicaConfiguration": {
+            "failoverTarget": true
+          },
+          "settings": {
+            "tier": null
+          }
+        }
+      },
+      {
+        "name": "--rr-0",
+        "type": "sqladmin.v1beta4.instance",
+        "properties": {
+          "backendType": "SECOND_GEN",
+          "instanceType": "READ_REPLICA_INSTANCE",
+          "databaseVersion": null,
+          "region": null,
+          "masterInstanceName": "$(ref.--master.name)",
+          "replicaConfiguration": {
+            "failoverTarget": false
+          },
+          "settings": {
+            "tier": null
+          }
+        },
+        "metadata": {
+          "dependsOn": [
+            "--failover"
+          ]
+        }
+      },
+      {
+        "name": "--db",
+        "type": "sqladmin.v1beta4.database",
+        "properties": {
+          "name": "test",
+          "instance": "$(ref.--master.name)",
+          "charset": null
+        },
+        "metadata": {
+          "dependsOn": [
+            "--failover",
+            "--rr-0"
+          ]
+        }
+      },
+      {
+        "name": "--db-root",
+        "type": "sqladmin.v1beta4.user",
+        "properties": {
+          "name": null,
+          "host": "",
+          "instance": "$(ref.--master.name)",
+          "password": "test123_"
+        },
+        "metadata": {
+          "dependsOn": [
+            "--db"
+          ]
+        }
+      }
+    ]
+  },
+  "session_id": "session_1667798293087"
+}

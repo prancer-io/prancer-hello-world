@@ -1,0 +1,131 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorDeploymentmanager",
+  "paths": [
+    "/bucket/bucket.yaml"
+  ],
+  "timestamp": 1667812436092,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "GDF_TEMPLATE_SNAPSHOT",
+    "type": "deploymentmanager",
+    "collection": "deploymentmanagertemplate",
+    "paths": [
+      "/bucket/bucket.yaml"
+    ],
+    "snapshotId": "GDF_TEMPLATE_SNAPSHOTaKXlS13",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "storage.v1.bucket"
+    ]
+  },
+  "snapshotId": "GDF_TEMPLATE_SNAPSHOTaKXlS13",
+  "collection": "deploymentmanagertemplate",
+  "json": {
+    "imports": [
+      {
+        "path": "bucket.jinja"
+      }
+    ],
+    "resources": [
+      {
+        "type": "storage.v1.bucket",
+        "name": "log-bucket-",
+        "properties": {
+          "predefinedAcl": "projectPrivate",
+          "projection": "full",
+          "location": "US",
+          "storageClass": "STANDARD"
+        }
+      },
+      {
+        "type": "storage.v1.bucket",
+        "name": "bucket-",
+        "properties": {
+          "predefinedAcl": "projectPrivate",
+          "projection": "full",
+          "location": "US",
+          "storageClass": "STANDARD",
+          "defaultObjectAcl": [
+            {
+              "bucket": "bucket-",
+              "domain": "www.google.com",
+              "email": "scoobydoo@google.com",
+              "entity": "project-editors-657686986194",
+              "role": "READER",
+              "projectTeam": {
+                "team": "editors",
+                "projectNumber": 657686986194
+              }
+            }
+          ],
+          "cors": [
+            {
+              "maxAgeSeconds": 10,
+              "method": [
+                "GET",
+                "POST",
+                "OPTIONS"
+              ],
+              "origin": [
+                "*"
+              ],
+              "responseHeader": [
+                "Content-Type",
+                "Last-Modified",
+                "Expires"
+              ]
+            }
+          ],
+          "lifecycle": {
+            "rule": [
+              {
+                "action": {
+                  "type": "Delete"
+                },
+                "condition": {
+                  "age": 30,
+                  "isLive": true
+                }
+              },
+              {
+                "action": {
+                  "type": "Delete"
+                },
+                "condition": {
+                  "isLive": false,
+                  "numNewerVersions": 3
+                }
+              }
+            ]
+          },
+          "logging": {
+            "logBucket": "$(ref.log-bucket-.name)",
+            "logObjectPrefix": "log-prefix"
+          },
+          "acl": [
+            {
+              "bucket": "$(ref.log-bucket-.name)",
+              "domain": "www.google.com",
+              "email": "logging",
+              "role": "OWNER"
+            }
+          ],
+          "versioning": {
+            "enabled": false
+          },
+          "website": {
+            "mainPageSuffix": "http://www.google.com/",
+            "notFoundpage": "http://www.google.com/not-found"
+          }
+        }
+      }
+    ]
+  },
+  "session_id": "session_1667799818265"
+}

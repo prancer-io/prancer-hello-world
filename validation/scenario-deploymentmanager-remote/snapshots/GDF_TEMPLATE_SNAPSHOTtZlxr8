@@ -1,0 +1,125 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorDeploymentmanager",
+  "paths": [
+    "/cloud_router/cloud_router.yaml"
+  ],
+  "timestamp": 1667810135427,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "GDF_TEMPLATE_SNAPSHOT",
+    "type": "deploymentmanager",
+    "collection": "deploymentmanagertemplate",
+    "paths": [
+      "/cloud_router/cloud_router.yaml"
+    ],
+    "snapshotId": "GDF_TEMPLATE_SNAPSHOTtZlxr8",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "compute.v1.vpntunnel",
+      "compute.v1.network",
+      "compute.v1.targetvpngateway",
+      "compute.v1.forwardingrule",
+      "compute.v1.router",
+      "compute.v1.address"
+    ]
+  },
+  "snapshotId": "GDF_TEMPLATE_SNAPSHOTtZlxr8",
+  "collection": "deploymentmanagertemplate",
+  "json": {
+    "imports": [
+      {
+        "path": "cloud_router.jinja"
+      }
+    ],
+    "resources": [
+      {
+        "name": "-network",
+        "type": "compute.v1.network",
+        "properties": {}
+      },
+      {
+        "name": "-tvpng",
+        "type": "compute.v1.targetVpnGateway",
+        "properties": {
+          "network": "$(ref.-network.selfLink)",
+          "region": "REGION_TO_RUN"
+        }
+      },
+      {
+        "name": "-ip",
+        "type": "compute.v1.address",
+        "properties": {
+          "region": "REGION_TO_RUN"
+        }
+      },
+      {
+        "name": "-esp-rule",
+        "type": "compute.v1.forwardingRule",
+        "properties": {
+          "IPAddress": "$(ref.-ip.address)",
+          "IPProtocol": "ESP",
+          "region": "REGION_TO_RUN",
+          "target": "$(ref.-tvpng.selfLink)"
+        }
+      },
+      {
+        "name": "-udp-4500-rule",
+        "type": "compute.v1.forwardingRule",
+        "properties": {
+          "IPAddress": "$(ref.-ip.address)",
+          "IPProtocol": "UDP",
+          "portRange": 4500,
+          "region": "REGION_TO_RUN",
+          "target": "$(ref.-tvpng.selfLink)"
+        }
+      },
+      {
+        "name": "-udp-500-rule",
+        "type": "compute.v1.forwardingRule",
+        "properties": {
+          "IPAddress": "$(ref.-ip.address)",
+          "IPProtocol": "UDP",
+          "portRange": 500,
+          "region": "REGION_TO_RUN",
+          "target": "$(ref.-tvpng.selfLink)"
+        }
+      },
+      {
+        "name": "-router",
+        "type": "compute.v1.router",
+        "properties": {
+          "asn": 65001,
+          "network": "$(ref.-network.selfLink)",
+          "region": "REGION_TO_RUN"
+        }
+      },
+      {
+        "name": "-vpn",
+        "type": "compute.v1.vpnTunnel",
+        "properties": {
+          "description": "A vpn tunnel",
+          "ikeVersion": 2,
+          "peerIp": "1.2.3.4",
+          "region": "REGION_TO_RUN",
+          "router": "$(ref.-router.selfLink)",
+          "sharedSecret": "LosPajarosLolos",
+          "targetVpnGateway": "$(ref.-tvpng.selfLink)"
+        },
+        "metadata": {
+          "dependsOn": [
+            "-esp-rule",
+            "-udp-500-rule",
+            "-udp-4500-rule"
+          ]
+        }
+      }
+    ]
+  },
+  "session_id": "session_1667797527823"
+}

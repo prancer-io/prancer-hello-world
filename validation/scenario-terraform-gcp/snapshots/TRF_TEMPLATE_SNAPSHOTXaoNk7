@@ -1,0 +1,303 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorTerraform",
+  "paths": [
+    "/azure/azurefirewall/main.tf"
+  ],
+  "timestamp": 1667812871853,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "TRF_TEMPLATE_SNAPSHOT",
+    "type": "terraform",
+    "collection": "terraformtemplate",
+    "paths": [
+      "/azure/azurefirewall/main.tf"
+    ],
+    "snapshotId": "TRF_TEMPLATE_SNAPSHOTXaoNk7",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "azurerm_key_vault_access_policy",
+      "azurerm_key_vault_certificate",
+      "azurerm_virtual_network",
+      "azurerm_public_ip",
+      "azurerm_subnet",
+      "azurerm_firewall",
+      "azurerm_firewall_policy",
+      "azurerm_resource_group",
+      "azurerm_key_vault"
+    ]
+  },
+  "snapshotId": "TRF_TEMPLATE_SNAPSHOTXaoNk7",
+  "collection": "terraformtemplate",
+  "json": {
+    "provider": [
+      {
+        "azurerm": {
+          "features": [
+            {}
+          ]
+        }
+      }
+    ],
+    "data": {
+      "azurerm_client_config": {
+        "current": {
+          "compiletime_identity": "data.azurerm_client_config.current"
+        }
+      }
+    },
+    "resources": [
+      {
+        "type": "azurerm_resource_group",
+        "name": "test",
+        "properties": {
+          "name": "acctestRG-fw",
+          "location": "eastus2",
+          "compiletime_identity": "azurerm_resource_group.test"
+        }
+      },
+      {
+        "type": "azurerm_firewall",
+        "name": "test",
+        "properties": {
+          "name": "acctestfirewall",
+          "location": "${azurerm_resource_group.test.location}",
+          "resource_group_name": "${azurerm_resource_group.test.name}",
+          "ip_configuration": [
+            {
+              "name": "configuration",
+              "subnet_id": "${azurerm_subnet.test.id}",
+              "public_ip_address_id": "${azurerm_public_ip.test.id}"
+            }
+          ],
+          "firewall_policy_id": "${azurerm_firewall_policy.test.id}",
+          "lifecycle": [
+            {
+              "create_before_destroy": true
+            }
+          ],
+          "compiletime_identity": "azurerm_firewall.test"
+        }
+      },
+      {
+        "type": "azurerm_subnet",
+        "name": "test",
+        "properties": {
+          "name": "AzureFirewallSubnet",
+          "resource_group_name": "${azurerm_resource_group.test.name}",
+          "virtual_network_name": "${azurerm_virtual_network.test.name}",
+          "address_prefixes": [
+            "10.0.1.0/24"
+          ],
+          "compiletime_identity": "azurerm_subnet.test"
+        }
+      },
+      {
+        "type": "azurerm_public_ip",
+        "name": "test",
+        "properties": {
+          "name": "acctestpip",
+          "location": "${azurerm_resource_group.test.location}",
+          "resource_group_name": "${azurerm_resource_group.test.name}",
+          "allocation_method": "Static",
+          "sku": "Standard",
+          "compiletime_identity": "azurerm_public_ip.test"
+        }
+      },
+      {
+        "type": "azurerm_virtual_network",
+        "name": "test",
+        "properties": {
+          "name": "acctestvirtnet",
+          "address_space": [
+            "10.0.0.0/16"
+          ],
+          "location": "${azurerm_resource_group.test.location}",
+          "resource_group_name": "${azurerm_resource_group.test.name}",
+          "compiletime_identity": "azurerm_virtual_network.test"
+        }
+      },
+      {
+        "type": "azurerm_firewall_policy",
+        "name": "test",
+        "properties": {
+          "name": "acctest-networkfw-Policy",
+          "resource_group_name": "${azurerm_resource_group.test.name}",
+          "location": "${azurerm_resource_group.test.location}",
+          "sku": "Premium",
+          "threat_intelligence_mode": "Off",
+          "threat_intelligence_allowlist": [
+            {
+              "ip_addresses": [
+                "1.1.1.1",
+                "2.2.2.2"
+              ],
+              "fqdns": [
+                "foo.com",
+                "bar.com"
+              ]
+            }
+          ],
+          "dns": [
+            {
+              "servers": [
+                "1.1.1.1",
+                "2.2.2.2"
+              ],
+              "proxy_enabled": true
+            }
+          ],
+          "intrusion_detection": [
+            {
+              "mode": "Alert",
+              "signature_overrides": [
+                {
+                  "state": "Alert",
+                  "id": 1
+                }
+              ],
+              "traffic_bypass": [
+                {
+                  "name": "Name bypass traffic settings",
+                  "description": "Description bypass traffic settings",
+                  "protocol": "Any",
+                  "destination_ports": [
+                    "*"
+                  ],
+                  "source_ip_groups": [
+                    "${azurerm_ip_group.test_source.id}"
+                  ],
+                  "destination_ip_groups": [
+                    "${azurerm_ip_group.test_destination.id}"
+                  ]
+                }
+              ]
+            }
+          ],
+          "identity": [
+            {
+              "type": "UserAssigned",
+              "user_assigned_identity_ids": [
+                "${azurerm_user_assigned_identity.test.id}"
+              ]
+            }
+          ],
+          "tls_certificate": [
+            {
+              "key_vault_secret_id": "${azurerm_key_vault_certificate.test.secret_id}",
+              "name": "${azurerm_key_vault_certificate.test.name}"
+            }
+          ],
+          "private_ip_ranges": [
+            "172.16.0.0/12",
+            "192.168.0.0/16"
+          ],
+          "tags": {
+            "env": "Test"
+          },
+          "compiletime_identity": "azurerm_firewall_policy.test"
+        }
+      },
+      {
+        "type": "azurerm_key_vault_certificate",
+        "name": "test",
+        "properties": {
+          "name": "AzureFirewallPolicyCertificate",
+          "key_vault_id": "${azurerm_key_vault.test.id}",
+          "certificate": [
+            {
+              "contents": "${filebase64(\"testdata/certificate.pfx\")}"
+            }
+          ],
+          "certificate_policy": [
+            {
+              "issuer_parameters": [
+                {
+                  "name": "Self"
+                }
+              ],
+              "key_properties": [
+                {
+                  "exportable": true,
+                  "key_size": 2048,
+                  "key_type": "RSA",
+                  "reuse_key": false
+                }
+              ],
+              "secret_properties": [
+                {
+                  "content_type": "application/x-pkcs12"
+                }
+              ]
+            }
+          ],
+          "depends_on": [
+            "${azurerm_key_vault_access_policy.test2}"
+          ],
+          "compiletime_identity": "azurerm_key_vault_certificate.test"
+        }
+      },
+      {
+        "type": "azurerm_key_vault",
+        "name": "test",
+        "properties": {
+          "name": "tlskv",
+          "location": "${azurerm_resource_group.test.location}",
+          "resource_group_name": "${azurerm_resource_group.test.name}",
+          "enabled_for_disk_encryption": true,
+          "enabled_for_deployment": true,
+          "enabled_for_template_deployment": true,
+          "tenant_id": "${data.azurerm_client_config.current.tenant_id}",
+          "sku_name": "standard",
+          "compiletime_identity": "azurerm_key_vault.test"
+        }
+      },
+      {
+        "type": "azurerm_key_vault_access_policy",
+        "name": "test2",
+        "properties": {
+          "key_vault_id": "${azurerm_key_vault.test.id}",
+          "tenant_id": "${data.azurerm_client_config.current.tenant_id}",
+          "object_id": "${data.azurerm_client_config.current.object_id}",
+          "key_permissions": [
+            "backup",
+            "create",
+            "delete",
+            "get",
+            "import",
+            "list",
+            "purge",
+            "recover",
+            "restore",
+            "update"
+          ],
+          "certificate_permissions": [
+            "backup",
+            "create",
+            "get",
+            "list",
+            "import",
+            "purge",
+            "delete",
+            "recover"
+          ],
+          "secret_permissions": [
+            "get",
+            "list",
+            "set",
+            "purge",
+            "delete",
+            "recover"
+          ],
+          "compiletime_identity": "azurerm_key_vault_access_policy.test2"
+        }
+      }
+    ]
+  },
+  "session_id": "session_1667800207814"
+}

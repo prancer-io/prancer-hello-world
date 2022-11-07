@@ -1,0 +1,179 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorDeploymentmanager",
+  "paths": [
+    "/cloudsql/client.example.yaml"
+  ],
+  "timestamp": 1667812436087,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "GDF_TEMPLATE_SNAPSHOT",
+    "type": "deploymentmanager",
+    "collection": "deploymentmanagertemplate",
+    "paths": [
+      "/cloudsql/client.example.yaml"
+    ],
+    "snapshotId": "GDF_TEMPLATE_SNAPSHOTaKXlS2",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "compute.v1.instance",
+      "compute.v1.firewall"
+    ]
+  },
+  "snapshotId": "GDF_TEMPLATE_SNAPSHOTaKXlS2",
+  "collection": "deploymentmanagertemplate",
+  "json": {
+    "imports": [
+      {
+        "path": "cloudsql_client.jinja"
+      },
+      {
+        "path": "scripts/cloud-sql-proxy.sh",
+        "name": "startup-script"
+      }
+    ],
+    "resources": [
+      {
+        "name": "--allow-ssh",
+        "type": "compute.v1.firewall",
+        "properties": {
+          "targetTags": [
+            "--ssh"
+          ],
+          "allowed": [
+            {
+              "IPProtocol": "tcp",
+              "ports": [
+                22
+              ]
+            }
+          ]
+        }
+      },
+      {
+        "name": "--0",
+        "type": "compute.v1.instance",
+        "properties": {
+          "machineType": "zones//machineTypes/",
+          "zone": null,
+          "metadata": {
+            "items": [
+              {
+                "key": "startup-script",
+                "value": ""
+              },
+              {
+                "key": "cloud-sql-instances",
+                "value": "example-cloudsql:us-central1:db01-cloudsql-master"
+              }
+            ]
+          },
+          "disks": [
+            {
+              "deviceName": "boot",
+              "boot": true,
+              "autoDelete": true,
+              "mode": "READ_WRITE",
+              "type": "PERSISTENT",
+              "initializeParams": {
+                "diskSizeGb": 200,
+                "sourceImage": null
+              }
+            }
+          ],
+          "networkInterfaces": [
+            {
+              "name": "--eth0",
+              "network": null,
+              "subnetwork": "regions//subnetworks/",
+              "accessConfigs": [
+                {
+                  "name": "eth0",
+                  "type": "ONE_TO_ONE_NAT"
+                }
+              ]
+            }
+          ],
+          "serviceAccounts": [
+            {
+              "email": null,
+              "scopes": [
+                "https://www.googleapis.com/auth/cloud-platform"
+              ]
+            }
+          ],
+          "tags": {
+            "items": [
+              "--ssh"
+            ]
+          }
+        }
+      },
+      {
+        "name": "--1",
+        "type": "compute.v1.instance",
+        "properties": {
+          "machineType": "zones//machineTypes/",
+          "zone": null,
+          "metadata": {
+            "items": [
+              {
+                "key": "startup-script",
+                "value": ""
+              },
+              {
+                "key": "cloud-sql-instances",
+                "value": "example-cloudsql:us-central1:db01-cloudsql-master"
+              }
+            ]
+          },
+          "disks": [
+            {
+              "deviceName": "boot",
+              "boot": true,
+              "autoDelete": true,
+              "mode": "READ_WRITE",
+              "type": "PERSISTENT",
+              "initializeParams": {
+                "diskSizeGb": 200,
+                "sourceImage": null
+              }
+            }
+          ],
+          "networkInterfaces": [
+            {
+              "name": "--eth0",
+              "network": null,
+              "subnetwork": "regions//subnetworks/",
+              "accessConfigs": [
+                {
+                  "name": "eth0",
+                  "type": "ONE_TO_ONE_NAT"
+                }
+              ]
+            }
+          ],
+          "serviceAccounts": [
+            {
+              "email": null,
+              "scopes": [
+                "https://www.googleapis.com/auth/cloud-platform"
+              ]
+            }
+          ],
+          "tags": {
+            "items": [
+              "--ssh"
+            ]
+          }
+        }
+      }
+    ]
+  },
+  "session_id": "session_1667799818265"
+}

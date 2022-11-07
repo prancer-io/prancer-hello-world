@@ -1,0 +1,174 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorTerraform",
+  "paths": [
+    "/azure/functionapp/provider.tf",
+    "/azure/functionapp/main.tf"
+  ],
+  "timestamp": 1667813323700,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "TRF_TEMPLATE_SNAPSHOT",
+    "type": "terraform",
+    "collection": "terraformtemplate",
+    "paths": [
+      "/azure/functionapp/provider.tf",
+      "/azure/functionapp/main.tf"
+    ],
+    "snapshotId": "TRF_TEMPLATE_SNAPSHOTwSvMk25",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "azurerm_storage_account",
+      "azurerm_resource_group",
+      "azurerm_function_app",
+      "azurerm_app_service_plan",
+      "azurerm_app_service"
+    ]
+  },
+  "snapshotId": "TRF_TEMPLATE_SNAPSHOTwSvMk25",
+  "collection": "terraformtemplate",
+  "json": {
+    "resources": [
+      {
+        "type": "azurerm_resource_group",
+        "name": "example",
+        "properties": {
+          "name": "azure-functions-cptest-rg",
+          "location": "West Europe",
+          "compiletime_identity": "azurerm_resource_group.example"
+        }
+      },
+      {
+        "type": "azurerm_storage_account",
+        "name": "example",
+        "properties": {
+          "name": "functionsapptestsa",
+          "resource_group_name": "${azurerm_resource_group.example.name}",
+          "location": "${azurerm_resource_group.example.location}",
+          "account_tier": "Standard",
+          "account_replication_type": "LRS",
+          "compiletime_identity": "azurerm_storage_account.example"
+        }
+      },
+      {
+        "type": "azurerm_app_service",
+        "name": "example",
+        "properties": {
+          "name": "example-app-service",
+          "location": "${azurerm_resource_group.example.location}",
+          "resource_group_name": "${azurerm_resource_group.example.name}",
+          "app_service_plan_id": "${azurerm_app_service_plan.example.id}",
+          "site_config": [
+            {
+              "dotnet_framework_version": "v4.0",
+              "php_version": 7.1,
+              "python_version": 3.6,
+              "java_version": "1.7.0_80",
+              "scm_type": "LocalGit",
+              "min_tls_version": 1.1,
+              "remote_debugging_enabled": true,
+              "cors": [
+                {
+                  "allowed_origins": [
+                    "*"
+                  ]
+                }
+              ]
+            }
+          ],
+          "app_settings": {
+            "SOME_KEY": "some-value"
+          },
+          "connection_string": [
+            {
+              "name": "Database",
+              "type": "SQLServer",
+              "value": "Server=some-server.mydomain.com;Integrated Security=SSPI"
+            }
+          ],
+          "auth_settings": [
+            {
+              "enabled": false,
+              "default_provider": "AzureActiveDirectory",
+              "unauthenticated_client_action": "RedirectToLoginPage",
+              "microsoft": [
+                {
+                  "client_id": "microsoftclientid",
+                  "client_secret": "microsoftclientsecret",
+                  "oauth_scopes": [
+                    "somescope"
+                  ]
+                }
+              ]
+            }
+          ],
+          "storage_account": [
+            {
+              "name": "",
+              "type": "",
+              "account_name": "",
+              "share_name": "",
+              "access_key": ""
+            }
+          ],
+          "compiletime_identity": "azurerm_app_service.example"
+        }
+      },
+      {
+        "type": "azurerm_app_service_plan",
+        "name": "example",
+        "properties": {
+          "name": "azure-functions-test-service-plan",
+          "location": "${azurerm_resource_group.example.location}",
+          "resource_group_name": "${azurerm_resource_group.example.name}",
+          "kind": "Linux",
+          "reserved": true,
+          "sku": [
+            {
+              "tier": "Dynamic",
+              "size": "Y1"
+            }
+          ],
+          "compiletime_identity": "azurerm_app_service_plan.example"
+        }
+      },
+      {
+        "type": "azurerm_function_app",
+        "name": "example",
+        "properties": {
+          "name": "test-azure-functions",
+          "location": "${azurerm_resource_group.example.location}",
+          "resource_group_name": "${azurerm_resource_group.example.name}",
+          "app_service_plan_id": "${azurerm_app_service_plan.example.id}",
+          "storage_account_name": "${azurerm_storage_account.example.name}",
+          "storage_account_access_key": "${azurerm_storage_account.example.primary_access_key}",
+          "os_type": "linux",
+          "version": "~3",
+          "auth_settings": [
+            {
+              "enabled": false,
+              "default_provider": "AzureActiveDirectory",
+              "unauthenticated_client_action": "RedirectToLoginPage",
+              "microsoft": [
+                {
+                  "client_id": "microsoftclientid",
+                  "client_secret": "microsoftclientsecret",
+                  "oauth_scopes": [
+                    "somescope"
+                  ]
+                }
+              ]
+            }
+          ],
+          "compiletime_identity": "azurerm_function_app.example"
+        }
+      }
+    ]
+  },
+  "session_id": "session_1667800667997"
+}

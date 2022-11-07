@@ -1,0 +1,112 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorTerraform",
+  "paths": [
+    "/aws/waf/main.tf"
+  ],
+  "timestamp": 1667822617490,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "TRF_TEMPLATE_SNAPSHOT",
+    "type": "terraform",
+    "collection": "terraformtemplate",
+    "paths": [
+      "/aws/waf/main.tf"
+    ],
+    "snapshotId": "TRF_TEMPLATE_SNAPSHOTPBuwZ52",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "aws_wafv2_web_acl"
+    ]
+  },
+  "snapshotId": "TRF_TEMPLATE_SNAPSHOTPBuwZ52",
+  "collection": "terraformtemplate",
+  "json": {
+    "resources": [
+      {
+        "type": "aws_wafv2_web_acl",
+        "name": "example",
+        "properties": {
+          "name": "managed-rule-example",
+          "description": "Example of a managed rule.",
+          "scope": "REGIONAL",
+          "default_action": [
+            {
+              "allow": [
+                {}
+              ]
+            }
+          ],
+          "rule": [
+            {
+              "name": "rule-1",
+              "priority": 1,
+              "override_action": [
+                {
+                  "count": [
+                    {}
+                  ]
+                }
+              ],
+              "statement": [
+                {
+                  "managed_rule_group_statement": [
+                    {
+                      "name": "AWSManagedRulesKnownBadInputsRuleSet",
+                      "vendor_name": "AWS",
+                      "excluded_rule": [
+                        {
+                          "name": "Log4jRCE"
+                        },
+                        {
+                          "name": "NoUserAgent_HEADER"
+                        }
+                      ],
+                      "scope_down_statement": [
+                        {
+                          "geo_match_statement": [
+                            {
+                              "country_codes": [
+                                "US",
+                                "NL"
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ],
+              "visibility_config": [
+                {
+                  "cloudwatch_metrics_enabled": false,
+                  "metric_name": "friendly-rule-metric-name",
+                  "sampled_requests_enabled": false
+                }
+              ]
+            }
+          ],
+          "tags": {
+            "Tag1": "Value1",
+            "Tag2": "Value2"
+          },
+          "visibility_config": [
+            {
+              "cloudwatch_metrics_enabled": false,
+              "metric_name": "friendly-metric-name",
+              "sampled_requests_enabled": false
+            }
+          ],
+          "compiletime_identity": "aws_wafv2_web_acl.example"
+        }
+      }
+    ]
+  },
+  "session_id": "session_1667809951321"
+}

@@ -1,0 +1,403 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorTerraform",
+  "paths": [
+    "/azure/vm/vars.tf",
+    "/azure/vm/provider.tf",
+    "/azure/vm/terraform.tfvars",
+    "/azure/vm/main.tf"
+  ],
+  "timestamp": 1667812871857,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "TRF_TEMPLATE_SNAPSHOT",
+    "type": "terraform",
+    "collection": "terraformtemplate",
+    "paths": [
+      "/azure/vm/vars.tf",
+      "/azure/vm/provider.tf",
+      "/azure/vm/terraform.tfvars",
+      "/azure/vm/main.tf"
+    ],
+    "snapshotId": "TRF_TEMPLATE_SNAPSHOTXaoNk15",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "azurerm_network_interface",
+      "azurerm_virtual_machine",
+      "azurerm_virtual_network",
+      "azurerm_public_ip",
+      "azurerm_availability_set",
+      "azurerm_subnet",
+      "random_id"
+    ]
+  },
+  "snapshotId": "TRF_TEMPLATE_SNAPSHOTXaoNk15",
+  "collection": "terraformtemplate",
+  "json": {
+    "resources": [
+      {
+        "type": "azurerm_virtual_network",
+        "name": "vnet",
+        "properties": {
+          "name": "prancer-vnet",
+          "resource_group_name": "prancer-test-rg",
+          "address_space": [
+            "10.254.0.0/16"
+          ],
+          "location": "eastus2",
+          "tags": {},
+          "compiletime_identity": "module.vnet"
+        }
+      },
+      {
+        "type": "azurerm_subnet",
+        "name": "sub",
+        "properties": {
+          "name": "prancer-subnet",
+          "resource_group_name": "prancer-test-rg",
+          "virtual_network_name": "prancer-vnet",
+          "address_prefixes": [
+            "10.254.0.0/24"
+          ],
+          "compiletime_identity": "module.subnet"
+        }
+      },
+      {
+        "type": "random_id",
+        "name": "vm-sa",
+        "properties": {
+          "keepers": {
+            "vm_hostname": "myvm"
+          },
+          "byte_length": 6,
+          "compiletime_identity": "module.linuxservers"
+        }
+      },
+      {
+        "type": "random_id",
+        "name": "vm-sa",
+        "properties": {
+          "keepers": {
+            "vm_hostname": "prancerwinvm"
+          },
+          "byte_length": 6,
+          "compiletime_identity": "module.windowsservers"
+        }
+      },
+      {
+        "type": "azurerm_virtual_machine",
+        "name": "vm-linux",
+        "properties": {
+          "name": "myvm0",
+          "location": "eastus2",
+          "resource_group_name": "prancer-test-rg",
+          "vm_size": "Standard_DS1_V2",
+          "network_interface_ids": [
+            "element(azurerm_network_interface.vm.*.id,0)"
+          ],
+          "delete_os_disk_on_termination": false,
+          "storage_image_reference": [
+            {
+              "id": "",
+              "publisher": "var.vm_os_id == \"\" ? coalesce(var.vm_os_publisher,module.os.calculated_value_os_publisher) : \"\"",
+              "offer": "var.vm_os_id == \"\" ? coalesce(var.vm_os_offer,module.os.calculated_value_os_offer) : \"\"",
+              "sku": "var.vm_os_id == \"\" ? coalesce(var.vm_os_sku,module.os.calculated_value_os_sku) : \"\"",
+              "version": "latest"
+            }
+          ],
+          "storage_os_disk": [
+            {
+              "name": "osdisk-myvm-0",
+              "create_option": "FromImage",
+              "caching": "ReadWrite",
+              "managed_disk_type": "Premium_LRS"
+            }
+          ],
+          "os_profile": [
+            {
+              "computer_name": "myvm0",
+              "admin_username": "azureuser",
+              "admin_password": ""
+            }
+          ],
+          "os_profile_linux_config": [
+            {
+              "disable_password_authentication": false,
+              "ssh_keys": [
+                {
+                  "path": "/home/azureuser/.ssh/authorized_keys",
+                  "key_data": "${file(var.ssh_key)}"
+                }
+              ]
+            }
+          ],
+          "tags": {
+            "source": "terraform"
+          },
+          "boot_diagnostics": [
+            {
+              "enabled": false,
+              "storage_uri": "var.boot_diagnostics == \"true\" ? join(\",\",azurerm_storage_account.vm-sa.*.primary_blob_endpoint) : \"\""
+            }
+          ],
+          "compiletime_identity": "module.linuxservers"
+        }
+      },
+      {
+        "type": "azurerm_virtual_machine",
+        "name": "vm-windows",
+        "properties": {
+          "name": "myvm",
+          "location": "eastus2",
+          "resource_group_name": "prancer-test-rg",
+          "availability_set_id": "${azurerm_availability_set.vm.id}",
+          "vm_size": "Standard_DS1_V2",
+          "network_interface_ids": [
+            "${element(azurerm_network_interface.vm.*.id)}"
+          ],
+          "delete_os_disk_on_termination": false,
+          "storage_image_reference": [
+            {
+              "id": "",
+              "publisher": "var.vm_os_id == \"\" ? coalesce(var.vm_os_publisher,module.os.calculated_value_os_publisher) : \"\"",
+              "offer": "var.vm_os_id == \"\" ? coalesce(var.vm_os_offer,module.os.calculated_value_os_offer) : \"\"",
+              "sku": "var.vm_os_id == \"\" ? coalesce(var.vm_os_sku,module.os.calculated_value_os_sku) : \"\"",
+              "version": "latest"
+            }
+          ],
+          "storage_os_disk": [
+            {
+              "name": "osdisk-myvm",
+              "create_option": "FromImage",
+              "caching": "ReadWrite",
+              "managed_disk_type": "Premium_LRS"
+            }
+          ],
+          "os_profile": [
+            {
+              "computer_name": "myvm",
+              "admin_username": "azureuser",
+              "admin_password": ""
+            }
+          ],
+          "tags": {
+            "source": "terraform"
+          },
+          "os_profile_windows_config": [
+            {}
+          ],
+          "boot_diagnostics": [
+            {
+              "enabled": false,
+              "storage_uri": "var.boot_diagnostics == \"true\" ? join(\",\",azurerm_storage_account.vm-sa.*.primary_blob_endpoint) : \"\""
+            }
+          ],
+          "compiletime_identity": "module.linuxservers"
+        }
+      },
+      {
+        "type": "azurerm_virtual_machine",
+        "name": "vm-linux",
+        "properties": {
+          "name": "prancerwinvm0",
+          "location": "eastus2",
+          "resource_group_name": "prancer-test-rg",
+          "vm_size": "Standard_DS1_V2",
+          "network_interface_ids": [
+            "element(azurerm_network_interface.vm.*.id,0)"
+          ],
+          "delete_os_disk_on_termination": false,
+          "storage_image_reference": [
+            {
+              "id": "",
+              "publisher": "var.vm_os_id == \"\" ? coalesce(var.vm_os_publisher,module.os.calculated_value_os_publisher) : \"\"",
+              "offer": "var.vm_os_id == \"\" ? coalesce(var.vm_os_offer,module.os.calculated_value_os_offer) : \"\"",
+              "sku": "var.vm_os_id == \"\" ? coalesce(var.vm_os_sku,module.os.calculated_value_os_sku) : \"\"",
+              "version": "latest"
+            }
+          ],
+          "storage_os_disk": [
+            {
+              "name": "osdisk-prancerwinvm-0",
+              "create_option": "FromImage",
+              "caching": "ReadWrite",
+              "managed_disk_type": "Premium_LRS"
+            }
+          ],
+          "os_profile": [
+            {
+              "computer_name": "prancerwinvm0",
+              "admin_username": "azureuser",
+              "admin_password": "nakfocsUfiss0or+"
+            }
+          ],
+          "os_profile_linux_config": [
+            {
+              "disable_password_authentication": false,
+              "ssh_keys": [
+                {
+                  "path": "/home/azureuser/.ssh/authorized_keys",
+                  "key_data": "${file(var.ssh_key)}"
+                }
+              ]
+            }
+          ],
+          "tags": {
+            "source": "terraform"
+          },
+          "boot_diagnostics": [
+            {
+              "enabled": false,
+              "storage_uri": "var.boot_diagnostics == \"true\" ? join(\",\",azurerm_storage_account.vm-sa.*.primary_blob_endpoint) : \"\""
+            }
+          ],
+          "compiletime_identity": "module.windowsservers"
+        }
+      },
+      {
+        "type": "azurerm_virtual_machine",
+        "name": "vm-windows",
+        "properties": {
+          "name": "prancerwinvm",
+          "location": "eastus2",
+          "resource_group_name": "prancer-test-rg",
+          "availability_set_id": "${azurerm_availability_set.vm.id}",
+          "vm_size": "Standard_DS1_V2",
+          "network_interface_ids": [
+            "${element(azurerm_network_interface.vm.*.id)}"
+          ],
+          "delete_os_disk_on_termination": false,
+          "storage_image_reference": [
+            {
+              "id": "",
+              "publisher": "var.vm_os_id == \"\" ? coalesce(var.vm_os_publisher,module.os.calculated_value_os_publisher) : \"\"",
+              "offer": "var.vm_os_id == \"\" ? coalesce(var.vm_os_offer,module.os.calculated_value_os_offer) : \"\"",
+              "sku": "var.vm_os_id == \"\" ? coalesce(var.vm_os_sku,module.os.calculated_value_os_sku) : \"\"",
+              "version": "latest"
+            }
+          ],
+          "storage_os_disk": [
+            {
+              "name": "osdisk-prancerwinvm",
+              "create_option": "FromImage",
+              "caching": "ReadWrite",
+              "managed_disk_type": "Premium_LRS"
+            }
+          ],
+          "os_profile": [
+            {
+              "computer_name": "prancerwinvm",
+              "admin_username": "azureuser",
+              "admin_password": "nakfocsUfiss0or+"
+            }
+          ],
+          "tags": {
+            "source": "terraform"
+          },
+          "os_profile_windows_config": [
+            {}
+          ],
+          "boot_diagnostics": [
+            {
+              "enabled": false,
+              "storage_uri": "var.boot_diagnostics == \"true\" ? join(\",\",azurerm_storage_account.vm-sa.*.primary_blob_endpoint) : \"\""
+            }
+          ],
+          "compiletime_identity": "module.windowsservers"
+        }
+      },
+      {
+        "type": "azurerm_availability_set",
+        "name": "vm",
+        "properties": {
+          "name": "myvm-avset",
+          "location": "eastus2",
+          "resource_group_name": "prancer-test-rg",
+          "platform_fault_domain_count": 2,
+          "platform_update_domain_count": 2,
+          "managed": true,
+          "compiletime_identity": "module.linuxservers"
+        }
+      },
+      {
+        "type": "azurerm_availability_set",
+        "name": "vm",
+        "properties": {
+          "name": "prancerwinvm-avset",
+          "location": "eastus2",
+          "resource_group_name": "prancer-test-rg",
+          "platform_fault_domain_count": 2,
+          "platform_update_domain_count": 2,
+          "managed": true,
+          "compiletime_identity": "module.windowsservers"
+        }
+      },
+      {
+        "type": "azurerm_public_ip",
+        "name": "vm",
+        "properties": {
+          "name": "myvm-0-publicIP",
+          "location": "eastus2",
+          "resource_group_name": "prancer-test-rg",
+          "allocation_method": "Dynamic",
+          "domain_name_label": "prancer-test-linux-vm",
+          "compiletime_identity": "module.linuxservers"
+        }
+      },
+      {
+        "type": "azurerm_public_ip",
+        "name": "vm",
+        "properties": {
+          "name": "prancerwinvm-0-publicIP",
+          "location": "eastus2",
+          "resource_group_name": "prancer-test-rg",
+          "allocation_method": "Dynamic",
+          "domain_name_label": "prancer-test-win-server",
+          "compiletime_identity": "module.windowsservers"
+        }
+      },
+      {
+        "type": "azurerm_network_interface",
+        "name": "vm",
+        "properties": {
+          "name": "nic-myvm-0",
+          "location": "eastus2",
+          "resource_group_name": "prancer-test-rg",
+          "ip_configuration": [
+            {
+              "name": "ipconfig0",
+              "subnet_id": "${module.subnet.subnet_id}",
+              "private_ip_address_allocation": "Dynamic",
+              "public_ip_address_id": "length(azurerm_public_ip.vm.*.id) > 0 ? element(concat(azurerm_public_ip.vm.*.id,list(\"\")),0) : \"\""
+            }
+          ],
+          "compiletime_identity": "module.linuxservers"
+        }
+      },
+      {
+        "type": "azurerm_network_interface",
+        "name": "vm",
+        "properties": {
+          "name": "nic-prancerwinvm-0",
+          "location": "eastus2",
+          "resource_group_name": "prancer-test-rg",
+          "ip_configuration": [
+            {
+              "name": "ipconfig0",
+              "subnet_id": "${module.subnet.subnet_id}",
+              "private_ip_address_allocation": "Dynamic",
+              "public_ip_address_id": "length(azurerm_public_ip.vm.*.id) > 0 ? element(concat(azurerm_public_ip.vm.*.id,list(\"\")),0) : \"\""
+            }
+          ],
+          "compiletime_identity": "module.windowsservers"
+        }
+      }
+    ]
+  },
+  "session_id": "session_1667800207814"
+}

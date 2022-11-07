@@ -1,0 +1,117 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorTerraform",
+  "paths": [
+    "/gcp/target_proxy/main.tf"
+  ],
+  "timestamp": 1667822617495,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "TRF_TEMPLATE_SNAPSHOT",
+    "type": "terraform",
+    "collection": "terraformtemplate",
+    "paths": [
+      "/gcp/target_proxy/main.tf"
+    ],
+    "snapshotId": "TRF_TEMPLATE_SNAPSHOTPBuwZ63",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "google_compute_http_health_check",
+      "google_compute_target_https_proxy",
+      "google_compute_url_map",
+      "google_compute_ssl_certificate",
+      "google_compute_backend_service"
+    ]
+  },
+  "snapshotId": "TRF_TEMPLATE_SNAPSHOTPBuwZ63",
+  "collection": "terraformtemplate",
+  "json": {
+    "resources": [
+      {
+        "type": "google_compute_target_https_proxy",
+        "name": "default",
+        "properties": {
+          "name": "test-proxy",
+          "url_map": "${google_compute_url_map.default.id}",
+          "ssl_certificates": [
+            "${google_compute_ssl_certificate.default.id}"
+          ],
+          "compiletime_identity": "google_compute_target_https_proxy.default"
+        }
+      },
+      {
+        "type": "google_compute_ssl_certificate",
+        "name": "default",
+        "properties": {
+          "name": "my-certificate",
+          "private_key": "${file(\"path/to/private.key\")}",
+          "certificate": "${file(\"path/to/certificate.crt\")}",
+          "compiletime_identity": "google_compute_ssl_certificate.default"
+        }
+      },
+      {
+        "type": "google_compute_url_map",
+        "name": "default",
+        "properties": {
+          "name": "url-map",
+          "description": "a description",
+          "default_service": "${google_compute_backend_service.default.id}",
+          "host_rule": [
+            {
+              "hosts": [
+                "mysite.com"
+              ],
+              "path_matcher": "allpaths"
+            }
+          ],
+          "path_matcher": [
+            {
+              "name": "allpaths",
+              "default_service": "${google_compute_backend_service.default.id}",
+              "path_rule": [
+                {
+                  "paths": [
+                    "/*"
+                  ],
+                  "service": "${google_compute_backend_service.default.id}"
+                }
+              ]
+            }
+          ],
+          "compiletime_identity": "google_compute_url_map.default"
+        }
+      },
+      {
+        "type": "google_compute_backend_service",
+        "name": "default",
+        "properties": {
+          "name": "backend-service",
+          "port_name": "http",
+          "protocol": "HTTP",
+          "timeout_sec": 10,
+          "health_checks": [
+            "${google_compute_http_health_check.default.id}"
+          ],
+          "compiletime_identity": "google_compute_backend_service.default"
+        }
+      },
+      {
+        "type": "google_compute_http_health_check",
+        "name": "default",
+        "properties": {
+          "name": "http-health-check",
+          "request_path": "/",
+          "check_interval_sec": 1,
+          "timeout_sec": 1,
+          "compiletime_identity": "google_compute_http_health_check.default"
+        }
+      }
+    ]
+  },
+  "session_id": "session_1667809951321"
+}

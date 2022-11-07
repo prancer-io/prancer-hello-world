@@ -1,0 +1,200 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorTerraform",
+  "paths": [
+    "/aws/workspaces/variables.tf",
+    "/aws/workspaces/main.tf"
+  ],
+  "timestamp": 1667822617481,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "TRF_TEMPLATE_SNAPSHOT",
+    "type": "terraform",
+    "collection": "terraformtemplate",
+    "paths": [
+      "/aws/workspaces/variables.tf",
+      "/aws/workspaces/main.tf"
+    ],
+    "snapshotId": "TRF_TEMPLATE_SNAPSHOTPBuwZ37",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "aws_workspaces_workspace",
+      "aws_workspaces_ip_group",
+      "aws_vpc",
+      "aws_kms_key",
+      "aws_workspaces_directory",
+      "aws_directory_service_directory",
+      "aws_subnet"
+    ]
+  },
+  "snapshotId": "TRF_TEMPLATE_SNAPSHOTPBuwZ37",
+  "collection": "terraformtemplate",
+  "json": {
+    "terraform": [
+      {
+        "required_version": ">= 0.12"
+      }
+    ],
+    "provider": [
+      {
+        "aws": {
+          "region": "${var.aws_region}"
+        }
+      }
+    ],
+    "data": {
+      "aws_workspaces_bundle": {
+        "value_windows": {
+          "bundle_id": "wsb-bh8rsxt14",
+          "compiletime_identity": "data.aws_workspaces_bundle.value_windows"
+        }
+      },
+      "aws_region": {
+        "current": {
+          "compiletime_identity": "data.aws_region.current"
+        }
+      },
+      "aws_availability_zones": {
+        "available": {
+          "state": "available",
+          "filter": [
+            {
+              "name": "opt-in-status",
+              "values": [
+                "opt-in-not-required"
+              ]
+            }
+          ],
+          "compiletime_identity": "data.aws_availability_zones.available"
+        }
+      }
+    },
+    "locals": [
+      {
+        "region_workspaces_az_id_strings": {
+          "us-east-1": "join(,,formatlist(\"use1-az%d\",['2', '4', '6']))"
+        },
+        "workspaces_az_id_strings": "lookup({'us-east-1': 'join(,,formatlist(\"use1-az%d\",[\\'2\\', \\'4\\', \\'6\\']))'},data.aws_region.current.name,join(\",\",data.aws_availability_zones.available.zone_ids))",
+        "workspaces_az_ids": "split(,,local.workspaces_az_id_strings)"
+      }
+    ],
+    "resources": [
+      {
+        "type": "aws_workspaces_directory",
+        "name": "example",
+        "properties": {
+          "directory_id": "${aws_directory_service_directory.example.id}",
+          "subnet_ids": [
+            "${aws_subnet.private-a.id}",
+            "${aws_subnet.private-b.id}"
+          ],
+          "compiletime_identity": "aws_workspaces_directory.example"
+        }
+      },
+      {
+        "type": "aws_workspaces_workspace",
+        "name": "example",
+        "properties": {
+          "directory_id": "${aws_workspaces_directory.example.id}",
+          "bundle_id": "${data.aws_workspaces_bundle.value_windows.id}",
+          "user_name": "Administrator",
+          "root_volume_encryption_enabled": true,
+          "user_volume_encryption_enabled": true,
+          "volume_encryption_key": "${aws_kms_key.example.arn}",
+          "workspace_properties": [
+            {
+              "compute_type_name": "VALUE",
+              "user_volume_size_gib": 10,
+              "root_volume_size_gib": 80,
+              "running_mode": "AUTO_STOP",
+              "running_mode_auto_stop_timeout_in_minutes": 60
+            }
+          ],
+          "tags": {
+            "Department": "IT"
+          },
+          "compiletime_identity": "aws_workspaces_workspace.example"
+        }
+      },
+      {
+        "type": "aws_workspaces_ip_group",
+        "name": "main",
+        "properties": {
+          "name": "main",
+          "description": "Main IP access control group",
+          "rules": [
+            {
+              "source": "10.10.10.10/16"
+            },
+            {
+              "source": "11.11.11.11/16",
+              "description": "Contractors"
+            }
+          ],
+          "compiletime_identity": "aws_workspaces_ip_group.main"
+        }
+      },
+      {
+        "type": "aws_vpc",
+        "name": "main",
+        "properties": {
+          "cidr_block": "10.0.0.0/16",
+          "compiletime_identity": "aws_vpc.main"
+        }
+      },
+      {
+        "type": "aws_subnet",
+        "name": "private-a",
+        "properties": {
+          "vpc_id": "${aws_vpc.main.id}",
+          "availability_zone_id": "${local.workspaces_az_ids[0]}",
+          "cidr_block": "10.0.1.0/24",
+          "compiletime_identity": "aws_subnet.private-a"
+        }
+      },
+      {
+        "type": "aws_subnet",
+        "name": "private-b",
+        "properties": {
+          "vpc_id": "${aws_vpc.main.id}",
+          "availability_zone_id": "${local.workspaces_az_ids[1]}",
+          "cidr_block": "10.0.2.0/24",
+          "compiletime_identity": "aws_subnet.private-b"
+        }
+      },
+      {
+        "type": "aws_directory_service_directory",
+        "name": "example",
+        "properties": {
+          "name": "workspaces.example.com",
+          "password": "#S1ncerely",
+          "size": "Small",
+          "vpc_settings": [
+            {
+              "vpc_id": "${aws_vpc.main.id}",
+              "subnet_ids": [
+                "${aws_subnet.private-a.id}",
+                "${aws_subnet.private-b.id}"
+              ]
+            }
+          ],
+          "compiletime_identity": "aws_directory_service_directory.example"
+        }
+      },
+      {
+        "type": "aws_kms_key",
+        "name": "example",
+        "properties": {
+          "description": "WorkSpaces example key",
+          "compiletime_identity": "aws_kms_key.example"
+        }
+      }
+    ]
+  },
+  "session_id": "session_1667809951321"
+}

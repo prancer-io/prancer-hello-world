@@ -1,0 +1,80 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorDeploymentmanager",
+  "paths": [
+    "/managedZones/managedZones.yaml"
+  ],
+  "timestamp": 1667799922599,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "GDF_TEMPLATE_SNAPSHOT",
+    "type": "deploymentmanager",
+    "collection": "deploymentmanagertemplate",
+    "paths": [
+      "/managedZones/managedZones.yaml"
+    ],
+    "snapshotId": "GDF_TEMPLATE_SNAPSHOTzIoOn3",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "dns.v1.managedzone",
+      "dns.v1.resourcerecordsets"
+    ]
+  },
+  "snapshotId": "GDF_TEMPLATE_SNAPSHOTzIoOn3",
+  "collection": "deploymentmanagertemplate",
+  "json": {
+    "imports": [
+      {
+        "path": "managedZones.jinja"
+      }
+    ],
+    "resources": [
+      {
+        "name": "dm_testing_zone_1",
+        "type": "dns.v1.managedzone",
+        "properties": {
+          "description": "Managed zone for deployment \n  and zone dm_testing_zone_1\n",
+          "dnsName": "dm-testing-a-record.com",
+          "dnssecConfig": {
+            "state": "off",
+            "defaultKeySpecs": [
+              {
+                "keyType": "keySigning",
+                "algorithm": "rsasha1"
+              },
+              {
+                "keyType": "zoneSigning",
+                "algorithm": "rsasha1"
+              }
+            ],
+            "kind": "dns#managedZoneDnsSecConfig",
+            "nonExistence": "nsec3"
+          }
+        }
+      },
+      {
+        "name": "dm_testing_rrset_1",
+        "type": "dns.v1.resourceRecordSets",
+        "properties": {
+          "name": "dm-testing-a-record.com",
+          "managedZone": "$(ref.dm_testing_zone_1.name)",
+          "records": [
+            {
+              "type": "A",
+              "ttl": 50,
+              "rrdatas": [
+                "10.40.10.0"
+              ]
+            }
+          ]
+        }
+      }
+    ]
+  },
+  "session_id": "session_1667787303138"
+}

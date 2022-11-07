@@ -1,0 +1,208 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorTerraform",
+  "paths": [
+    "/azure/diagnosticsettings/vars.tf",
+    "/azure/diagnosticsettings/provider.tf",
+    "/azure/diagnosticsettings/terraform.tfvars",
+    "/azure/diagnosticsettings/main.tf"
+  ],
+  "timestamp": 1667812871860,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "TRF_TEMPLATE_SNAPSHOT",
+    "type": "terraform",
+    "collection": "terraformtemplate",
+    "paths": [
+      "/azure/diagnosticsettings/vars.tf",
+      "/azure/diagnosticsettings/provider.tf",
+      "/azure/diagnosticsettings/terraform.tfvars",
+      "/azure/diagnosticsettings/main.tf"
+    ],
+    "snapshotId": "TRF_TEMPLATE_SNAPSHOTXaoNk20",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "azurerm_monitor_activity_log_alert",
+      "azurerm_storage_account",
+      "azurerm_monitor_log_profile",
+      "azurerm_resource_group",
+      "azurerm_key_vault",
+      "azurerm_monitor_diagnostic_setting"
+    ]
+  },
+  "snapshotId": "TRF_TEMPLATE_SNAPSHOTXaoNk20",
+  "collection": "terraformtemplate",
+  "json": {
+    "resources": [
+      {
+        "type": "azurerm_resource_group",
+        "name": "main",
+        "properties": {
+          "name": "example-resources",
+          "location": "West Europe",
+          "compiletime_identity": "module.storageAccount"
+        }
+      },
+      {
+        "type": "azurerm_storage_account",
+        "name": "storageAccount",
+        "properties": {
+          "name": "prancerstorageaccount007",
+          "resource_group_name": "example-resources",
+          "location": "eastus2",
+          "account_tier": "Standard",
+          "account_replication_type": "LRS",
+          "enable_https_traffic_only": false,
+          "allow_blob_public_access": "${var.allow_blob_public_access}",
+          "tags": {},
+          "compiletime_identity": "module.storageAccount"
+        }
+      },
+      {
+        "type": "azurerm_monitor_activity_log_alert",
+        "name": "main",
+        "properties": {
+          "name": "example-activitylogalert",
+          "resource_group_name": "example-resources",
+          "scopes": [
+            "${azurerm_resource_group.main.id}"
+          ],
+          "description": "This alert will monitor a specific storage account updates.",
+          "enabled": false,
+          "criteria": [
+            {
+              "resource_id": "${azurerm_storage_account.storageAccount[0].id}",
+              "operation_name": "Microsoft.Storage/storageAccounts/write",
+              "category": "Recommendation"
+            }
+          ],
+          "compiletime_identity": "module.storageAccount"
+        }
+      },
+      {
+        "type": "azurerm_monitor_log_profile",
+        "name": "example",
+        "properties": {
+          "name": "default",
+          "categories": [
+            "Action",
+            "Write"
+          ],
+          "locations": [
+            "westus",
+            "global"
+          ],
+          "storage_account_id": "${azurerm_storage_account.storageAccount[0].id}",
+          "retention_policy": [
+            {
+              "enabled": false,
+              "days": 7
+            }
+          ],
+          "compiletime_identity": "module.storageAccount"
+        }
+      },
+      {
+        "type": "azurerm_key_vault",
+        "name": "keyvault",
+        "properties": {
+          "name": "prancer-key-vault",
+          "location": "eastus2",
+          "resource_group_name": "prancer-test-rg",
+          "sku_name": "standard",
+          "tenant_id": "${data.azurerm_client_config.current.tenant_id}",
+          "access_policy": [
+            {
+              "tenant_id": "${data.azurerm_client_config.current.tenant_id}",
+              "object_id": "${data.azurerm_client_config.current.object_id}",
+              "key_permissions": [
+                "get",
+                "List",
+                "Update",
+                "Create",
+                "Import",
+                "Delete",
+                "Recover",
+                "Backup",
+                "Restore"
+              ],
+              "secret_permissions": [
+                "get",
+                "List",
+                "Set",
+                "Delete",
+                "Recover",
+                "Backup",
+                "Restore"
+              ],
+              "certificate_permissions": [
+                "backup",
+                "create",
+                "delete",
+                "deleteissuers",
+                "get",
+                "getissuers",
+                "import",
+                "list",
+                "listissuers",
+                "managecontacts",
+                "manageissuers",
+                "purge",
+                "recover",
+                "restore",
+                "setissuers",
+                "update"
+              ]
+            }
+          ],
+          "enabled_for_disk_encryption": false,
+          "enabled_for_deployment": false,
+          "enabled_for_template_deployment": false,
+          "tags": {},
+          "compiletime_identity": "module.keyVault"
+        }
+      },
+      {
+        "type": "azurerm_monitor_diagnostic_setting",
+        "name": "diagnosticSettings",
+        "properties": {
+          "name": "prancer-kv-diagnostic",
+          "target_resource_id": "${module.keyVault.vault_Id}",
+          "storage_account_id": "${module.storageAccount.storage_id[0]}",
+          "eventhub_name": null,
+          "log": [
+            {
+              "category": "AuditEvent",
+              "enabled": false,
+              "retention_policy": [
+                {
+                  "enabled": true,
+                  "days": 7
+                }
+              ]
+            }
+          ],
+          "metric": [
+            {
+              "category": "AllMetrics",
+              "enabled": true,
+              "retention_policy": [
+                {
+                  "enabled": true,
+                  "days": 7
+                }
+              ]
+            }
+          ],
+          "compiletime_identity": "module.diagnosticSettings"
+        }
+      }
+    ]
+  },
+  "session_id": "session_1667800207814"
+}

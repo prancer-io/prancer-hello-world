@@ -1,0 +1,199 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorTerraform",
+  "paths": [
+    "/azure/nsg/vars.tf",
+    "/azure/nsg/provider.tf",
+    "/azure/nsg/terraform.tfvars",
+    "/azure/nsg/main.tf"
+  ],
+  "timestamp": 1667812871856,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "TRF_TEMPLATE_SNAPSHOT",
+    "type": "terraform",
+    "collection": "terraformtemplate",
+    "paths": [
+      "/azure/nsg/vars.tf",
+      "/azure/nsg/provider.tf",
+      "/azure/nsg/terraform.tfvars",
+      "/azure/nsg/main.tf"
+    ],
+    "snapshotId": "TRF_TEMPLATE_SNAPSHOTXaoNk13",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "azurerm_network_security_rule",
+      "azurerm_network_security_group"
+    ]
+  },
+  "snapshotId": "TRF_TEMPLATE_SNAPSHOTXaoNk13",
+  "collection": "terraformtemplate",
+  "json": {
+    "resources": [
+      {
+        "type": "azurerm_network_security_group",
+        "name": "nsg",
+        "properties": {
+          "name": "prancer-nsg",
+          "location": "eastus2",
+          "resource_group_name": "prancer-test-rg",
+          "tags": {},
+          "compiletime_identity": "module.nsg"
+        }
+      },
+      {
+        "type": "azurerm_network_security_rule",
+        "name": "nsr",
+        "properties": {
+          "name": "allow-all-tcp",
+          "priority": 100,
+          "direction": "Inbound",
+          "access": "Allow",
+          "protocol": "Tcp",
+          "source_port_range": "*",
+          "destination_port_range": "*",
+          "source_address_prefix": "*",
+          "destination_address_prefix": "*",
+          "resource_group_name": "prancer-test-rg",
+          "network_security_group_name": "prancer-nsg",
+          "depends_on": [
+            "${azurerm_network_security_group.nsg}"
+          ],
+          "compiletime_identity": "module.nsg"
+        }
+      },
+      {
+        "type": "azurerm_network_security_rule",
+        "name": "nsr",
+        "properties": {
+          "name": "allow-port-range",
+          "priority": 101,
+          "direction": "Inbound",
+          "access": "Allow",
+          "protocol": "Tcp",
+          "source_port_range": "*",
+          "destination_port_range": "20-6000",
+          "source_address_prefix": "Internet",
+          "destination_address_prefix": "*",
+          "resource_group_name": "prancer-test-rg",
+          "network_security_group_name": "prancer-nsg",
+          "depends_on": [
+            "${azurerm_network_security_group.nsg}"
+          ],
+          "compiletime_identity": "module.nsg"
+        }
+      },
+      {
+        "type": "azurerm_network_security_rule",
+        "name": "nsr",
+        "properties": {
+          "name": "allow-all-udp",
+          "priority": 102,
+          "direction": "Outbound",
+          "access": "Allow",
+          "protocol": "Udp",
+          "source_port_range": "*",
+          "destination_port_range": "*",
+          "source_address_prefix": "Internet",
+          "destination_address_prefix": "*",
+          "resource_group_name": "prancer-test-rg",
+          "network_security_group_name": "prancer-nsg",
+          "depends_on": [
+            "${azurerm_network_security_group.nsg}"
+          ],
+          "compiletime_identity": "module.nsg"
+        }
+      },
+      {
+        "type": "azurerm_network_security_rule",
+        "name": "nsr",
+        "properties": {
+          "name": "allow-all-tcpinbound",
+          "priority": 103,
+          "direction": "Inbound",
+          "access": "Allow",
+          "protocol": "Tcp",
+          "source_port_range": "*",
+          "destination_port_range": "*",
+          "source_address_prefix": "Internet",
+          "destination_address_prefix": "*",
+          "resource_group_name": "prancer-test-rg",
+          "network_security_group_name": "prancer-nsg",
+          "depends_on": [
+            "${azurerm_network_security_group.nsg}"
+          ],
+          "compiletime_identity": "module.nsg"
+        }
+      },
+      {
+        "type": "azurerm_network_security_rule",
+        "name": "nsr",
+        "properties": {
+          "name": "allow-all-udpinbound",
+          "priority": 104,
+          "direction": "Inbound",
+          "access": "Allow",
+          "protocol": "Udp",
+          "source_port_range": "*",
+          "destination_port_range": "*",
+          "source_address_prefix": "Internet",
+          "destination_address_prefix": "*",
+          "resource_group_name": "prancer-test-rg",
+          "network_security_group_name": "prancer-nsg",
+          "depends_on": [
+            "${azurerm_network_security_group.nsg}"
+          ],
+          "compiletime_identity": "module.nsg"
+        }
+      },
+      {
+        "type": "azurerm_network_security_rule",
+        "name": "nsr",
+        "properties": {
+          "name": "allow-all-inbound",
+          "priority": 105,
+          "direction": "Inbound",
+          "access": "Allow",
+          "protocol": "*",
+          "source_port_range": "*",
+          "destination_port_range": "*",
+          "source_address_prefix": "Internet",
+          "destination_address_prefix": "*",
+          "resource_group_name": "prancer-test-rg",
+          "network_security_group_name": "prancer-nsg",
+          "depends_on": [
+            "${azurerm_network_security_group.nsg}"
+          ],
+          "compiletime_identity": "module.nsg"
+        }
+      },
+      {
+        "type": "azurerm_network_security_rule",
+        "name": "nsr",
+        "properties": {
+          "name": "allow-all-inbound-icmp",
+          "priority": 106,
+          "direction": "Inbound",
+          "access": "Allow",
+          "protocol": "Icmp",
+          "source_port_range": "*",
+          "destination_port_range": "*",
+          "source_address_prefix": "Internet",
+          "destination_address_prefix": "*",
+          "resource_group_name": "prancer-test-rg",
+          "network_security_group_name": "prancer-nsg",
+          "depends_on": [
+            "${azurerm_network_security_group.nsg}"
+          ],
+          "compiletime_identity": "module.nsg"
+        }
+      }
+    ]
+  },
+  "session_id": "session_1667800207814"
+}

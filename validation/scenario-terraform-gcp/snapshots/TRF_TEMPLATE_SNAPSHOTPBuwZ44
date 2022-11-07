@@ -1,0 +1,132 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorTerraform",
+  "paths": [
+    "/aws/ecr/main.tf"
+  ],
+  "timestamp": 1667822617485,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "TRF_TEMPLATE_SNAPSHOT",
+    "type": "terraform",
+    "collection": "terraformtemplate",
+    "paths": [
+      "/aws/ecr/main.tf"
+    ],
+    "snapshotId": "TRF_TEMPLATE_SNAPSHOTPBuwZ44",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "aws_ecr_registry_scanning_configuration",
+      "aws_ecr_repository_policy",
+      "aws_ecr_repository",
+      "aws_ecr_lifecycle_policy"
+    ]
+  },
+  "snapshotId": "TRF_TEMPLATE_SNAPSHOTPBuwZ44",
+  "collection": "terraformtemplate",
+  "json": {
+    "resources": [
+      {
+        "type": "aws_ecr_registry_scanning_configuration",
+        "name": "test",
+        "properties": {
+          "scan_type": "ENHANCED",
+          "rule": [
+            {
+              "scan_frequency": "SCAN_ON_PUSH",
+              "repository_filter": [
+                {
+                  "filter": "*",
+                  "filter_type": "WILDCARD"
+                }
+              ]
+            },
+            {
+              "scan_frequency": "CONTINUOUS_SCAN",
+              "repository_filter": [
+                {
+                  "filter": "example",
+                  "filter_type": "WILDCARD"
+                }
+              ]
+            }
+          ],
+          "compiletime_identity": "aws_ecr_registry_scanning_configuration.test"
+        }
+      },
+      {
+        "type": "aws_ecr_repository",
+        "name": "foo",
+        "properties": {
+          "name": "bar",
+          "compiletime_identity": "aws_ecr_repository.foo"
+        }
+      },
+      {
+        "type": "aws_ecr_repository_policy",
+        "name": "foopolicy",
+        "properties": {
+          "repository": "${aws_ecr_repository.foo.name}",
+          "policy": {
+            "Version": "2008-10-17",
+            "Statement": [
+              {
+                "Sid": "new policy",
+                "Effect": "Allow",
+                "Principal": "*",
+                "Action": [
+                  "ecr:GetDownloadUrlForLayer",
+                  "ecr:BatchGetImage",
+                  "ecr:BatchCheckLayerAvailability",
+                  "ecr:PutImage",
+                  "ecr:InitiateLayerUpload",
+                  "ecr:UploadLayerPart",
+                  "ecr:CompleteLayerUpload",
+                  "ecr:DescribeRepositories",
+                  "ecr:GetRepositoryPolicy",
+                  "ecr:ListImages",
+                  "ecr:DeleteRepository",
+                  "ecr:BatchDeleteImage",
+                  "ecr:SetRepositoryPolicy",
+                  "ecr:DeleteRepositoryPolicy"
+                ]
+              }
+            ]
+          },
+          "compiletime_identity": "aws_ecr_repository_policy.foopolicy"
+        }
+      },
+      {
+        "type": "aws_ecr_lifecycle_policy",
+        "name": "foopolicy",
+        "properties": {
+          "repository": "${aws_ecr_repository.foo.name}",
+          "policy": {
+            "rules": [
+              {
+                "rulePriority": 1,
+                "description": "Expire images older than 14 days",
+                "selection": {
+                  "tagStatus": "untagged",
+                  "countType": "sinceImagePushed",
+                  "countUnit": "days",
+                  "countNumber": 14
+                },
+                "action": {
+                  "type": "expire"
+                }
+              }
+            ]
+          },
+          "compiletime_identity": "aws_ecr_lifecycle_policy.foopolicy"
+        }
+      }
+    ]
+  },
+  "session_id": "session_1667809951321"
+}

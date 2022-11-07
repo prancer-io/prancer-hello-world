@@ -1,0 +1,229 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorTerraform",
+  "paths": [
+    "/aws/rds/vars.tf",
+    "/aws/rds/provider.tf",
+    "/aws/rds/terraform.tfvars",
+    "/aws/rds/main.tf"
+  ],
+  "timestamp": 1667812871869,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "TRF_TEMPLATE_SNAPSHOT",
+    "type": "terraform",
+    "collection": "terraformtemplate",
+    "paths": [
+      "/aws/rds/vars.tf",
+      "/aws/rds/provider.tf",
+      "/aws/rds/terraform.tfvars",
+      "/aws/rds/main.tf"
+    ],
+    "snapshotId": "TRF_TEMPLATE_SNAPSHOTXaoNk35",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "aws_db_instance",
+      "aws_db_event_subscription",
+      "aws_rds_cluster",
+      "aws_db_parameter_group",
+      "aws_rds_global_cluster",
+      "aws_sns_topic"
+    ]
+  },
+  "snapshotId": "TRF_TEMPLATE_SNAPSHOTXaoNk35",
+  "collection": "terraformtemplate",
+  "json": {
+    "resources": [
+      {
+        "type": "aws_rds_cluster",
+        "name": "rdscluster",
+        "properties": {
+          "cluster_identifier": "prancer-rds-cluster",
+          "engine_mode": "multimaster",
+          "master_password": "c9209030ffc53a3fa5663955f65a85de",
+          "master_username": "dbadm",
+          "skip_final_snapshot": true,
+          "kms_key_id": null,
+          "storage_encrypted": false,
+          "backup_retention_period": 0,
+          "compiletime_identity": "module.rdscluster"
+        }
+      },
+      {
+        "type": "aws_rds_cluster",
+        "name": "default",
+        "properties": {
+          "cluster_identifier": "aurora-cluster-demo",
+          "engine": "postgres",
+          "engine_version": 13.2,
+          "availability_zones": [
+            "us-west-2a",
+            "us-west-2b",
+            "us-west-2c"
+          ],
+          "database_name": "mydb",
+          "master_username": "foo",
+          "master_password": "bar",
+          "backup_retention_period": 5,
+          "preferred_backup_window": "07:00-09:00",
+          "compiletime_identity": "module.rds"
+        }
+      },
+      {
+        "type": "aws_db_instance",
+        "name": "rds",
+        "properties": {
+          "identifier": "prancer-rds",
+          "engine": "postgres",
+          "engine_version": 13.2,
+          "instance_class": "db.t2.micro",
+          "allocated_storage": 5,
+          "storage_type": "gp2",
+          "storage_encrypted": false,
+          "kms_key_id": "",
+          "license_model": "",
+          "name": "prancerrdsdb",
+          "username": "prancerdbadmin",
+          "password": "otObicedfobgurEydHef9ofEfjalvib=",
+          "port": 3306,
+          "domain": "",
+          "domain_iam_role_name": "",
+          "iam_database_authentication_enabled": false,
+          "replicate_source_db": "",
+          "snapshot_identifier": "",
+          "vpc_security_group_ids": [],
+          "db_subnet_group_name": "",
+          "parameter_group_name": "",
+          "option_group_name": "",
+          "availability_zone": "",
+          "multi_az": false,
+          "iops": 0,
+          "publicly_accessible": true,
+          "monitoring_interval": 0,
+          "monitoring_role_arn": "",
+          "allow_major_version_upgrade": false,
+          "auto_minor_version_upgrade": false,
+          "apply_immediately": false,
+          "maintenance_window": "sun:03:00-sun:05:00",
+          "skip_final_snapshot": true,
+          "copy_tags_to_snapshot": false,
+          "final_snapshot_identifier": null,
+          "max_allocated_storage": 0,
+          "performance_insights_enabled": false,
+          "performance_insights_retention_period": 7,
+          "backup_retention_period": 0,
+          "backup_window": "05:05-07:05",
+          "timezone": "",
+          "enabled_cloudwatch_logs_exports": [],
+          "deletion_protection": false,
+          "tags": {
+            "environment": "Production",
+            "project": "Prancer"
+          },
+          "timeouts": [
+            {
+              "create": "40m",
+              "delete": "40m",
+              "update": "80m"
+            }
+          ],
+          "compiletime_identity": "module.rds"
+        }
+      },
+      {
+        "type": "aws_sns_topic",
+        "name": "default",
+        "properties": {
+          "name": "rds-events",
+          "compiletime_identity": "module.rds"
+        }
+      },
+      {
+        "type": "aws_db_event_subscription",
+        "name": "default-db-security-group",
+        "properties": {
+          "name": "rds-event-sub",
+          "sns_topic": "${aws_sns_topic.default.arn}",
+          "source_type": "db-security-group",
+          "enabled": false,
+          "event_categories": [
+            "availability",
+            "deletion",
+            "failover",
+            "failure",
+            "low storage",
+            "maintenance",
+            "notification",
+            "read replica",
+            "recovery",
+            "restoration"
+          ],
+          "compiletime_identity": "module.rds"
+        }
+      },
+      {
+        "type": "aws_db_event_subscription",
+        "name": "default-db-instance",
+        "properties": {
+          "name": "rds-event-sub",
+          "sns_topic": "${aws_sns_topic.default.arn}",
+          "source_type": "db-instance",
+          "source_ids": [
+            "${aws_db_instance.rds.id}"
+          ],
+          "enabled": false,
+          "event_categories": [
+            "availability",
+            "deletion",
+            "failover",
+            "failure",
+            "low storage",
+            "maintenance",
+            "notification",
+            "read replica",
+            "recovery",
+            "restoration"
+          ],
+          "compiletime_identity": "module.rds"
+        }
+      },
+      {
+        "type": "aws_db_parameter_group",
+        "name": "default",
+        "properties": {
+          "name": "rds-pg",
+          "family": "mysql5.6",
+          "parameter": [
+            {
+              "name": "character_set_server",
+              "value": "utf8"
+            },
+            {
+              "name": "rds_pgaudit",
+              "value": "utf8"
+            }
+          ],
+          "compiletime_identity": "module.rds"
+        }
+      },
+      {
+        "type": "aws_rds_global_cluster",
+        "name": "example",
+        "properties": {
+          "global_cluster_identifier": "global-test",
+          "engine": "aurora",
+          "engine_version": "5.6.mysql_aurora.1.22.2",
+          "database_name": "example_db",
+          "storage_encrypted": false,
+          "compiletime_identity": "module.rds"
+        }
+      }
+    ]
+  },
+  "session_id": "session_1667800207814"
+}
