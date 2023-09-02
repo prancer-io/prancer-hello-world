@@ -1,0 +1,537 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAwsLabs",
+  "paths": [
+    "/aws/solutions/LambaStaticIP/lambda-static.cfn.yaml"
+  ],
+  "timestamp": 1642972590619,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "CFR_TEMPLATE_SNAPSHOT",
+    "type": "cloudformation",
+    "collection": "cloudformationtemplate",
+    "paths": [
+      "/aws/solutions/LambaStaticIP/lambda-static.cfn.yaml"
+    ],
+    "snapshotId": "CFR_TEMPLATE_SNAPSHOT81",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "aws::ec2::vpc",
+      "aws::ec2::subnet",
+      "aws::ec2::routetable",
+      "aws::iam::role",
+      "aws::ec2::route",
+      "aws::ec2::vpcgatewayattachment",
+      "aws::ec2::internetgateway",
+      "aws::lambda::function",
+      "aws::ec2::subnetroutetableassociation",
+      "aws::ec2::natgateway",
+      "aws::ec2::eip"
+    ]
+  },
+  "snapshotId": "CFR_TEMPLATE_SNAPSHOT81",
+  "collection": "cloudformationtemplate",
+  "json": {
+    "AWSTemplateFormatVersion": "2010-09-09",
+    "Description": "A stack for deploying a simple lambda function that has a static outbound (egress) IP Address",
+    "Parameters": {
+      "ModuleName": {
+        "Type": "String",
+        "Default": "index"
+      }
+    },
+    "Mappings": {
+      "SubnetConfig": {
+        "VPC": {
+          "CIDR": "10.0.0.0/25"
+        },
+        "PublicOne": {
+          "CIDR": "10.0.0.0/28"
+        },
+        "PublicTwo": {
+          "CIDR": "10.0.0.16/28"
+        },
+        "PrivateOne": {
+          "CIDR": "10.0.0.32/28"
+        },
+        "PrivateTwo": {
+          "CIDR": "10.0.0.64/28"
+        }
+      }
+    },
+    "Resources": [
+      {
+        "Type": "AWS::EC2::VPC",
+        "Properties": {
+          "EnableDnsSupport": true,
+          "EnableDnsHostnames": true,
+          "CidrBlock": "10.0.0.0/25"
+        },
+        "Name": "VPC"
+      },
+      {
+        "Type": "AWS::EC2::Subnet",
+        "Properties": {
+          "AvailabilityZone": {
+            "Fn::Select": [
+              0,
+              {
+                "Fn::GetAZs": {
+                  "Ref": "AWS::Region"
+                }
+              }
+            ]
+          },
+          "VpcId": {
+            "Ref": "VPC"
+          },
+          "CidrBlock": "10.0.0.0/28"
+        },
+        "Name": "PublicSubnetOne"
+      },
+      {
+        "Type": "AWS::EC2::Subnet",
+        "Properties": {
+          "AvailabilityZone": {
+            "Fn::Select": [
+              1,
+              {
+                "Fn::GetAZs": {
+                  "Ref": "AWS::Region"
+                }
+              }
+            ]
+          },
+          "VpcId": {
+            "Ref": "VPC"
+          },
+          "CidrBlock": "10.0.0.16/28"
+        },
+        "Name": "PublicSubnetTwo"
+      },
+      {
+        "Type": "AWS::EC2::Subnet",
+        "Properties": {
+          "AvailabilityZone": {
+            "Fn::Select": [
+              0,
+              {
+                "Fn::GetAZs": {
+                  "Ref": "AWS::Region"
+                }
+              }
+            ]
+          },
+          "VpcId": {
+            "Ref": "VPC"
+          },
+          "CidrBlock": "10.0.0.32/28"
+        },
+        "Name": "PrivateSubnetOne"
+      },
+      {
+        "Type": "AWS::EC2::Subnet",
+        "Properties": {
+          "AvailabilityZone": {
+            "Fn::Select": [
+              1,
+              {
+                "Fn::GetAZs": {
+                  "Ref": "AWS::Region"
+                }
+              }
+            ]
+          },
+          "VpcId": {
+            "Ref": "VPC"
+          },
+          "CidrBlock": "10.0.0.64/28"
+        },
+        "Name": "PrivateSubnetTwo"
+      },
+      {
+        "Type": "AWS::EC2::InternetGateway",
+        "Name": "InternetGateway"
+      },
+      {
+        "Type": "AWS::EC2::VPCGatewayAttachment",
+        "Properties": {
+          "VpcId": {
+            "Ref": "VPC"
+          },
+          "InternetGatewayId": {
+            "Ref": "InternetGateway"
+          }
+        },
+        "Name": "GatewayAttachement"
+      },
+      {
+        "Type": "AWS::EC2::RouteTable",
+        "Properties": {
+          "VpcId": {
+            "Ref": "VPC"
+          }
+        },
+        "Name": "PublicRouteTable"
+      },
+      {
+        "Type": "AWS::EC2::Route",
+        "DependsOn": "GatewayAttachement",
+        "Properties": {
+          "RouteTableId": {
+            "Ref": "PublicRouteTable"
+          },
+          "DestinationCidrBlock": "0.0.0.0/0",
+          "GatewayId": {
+            "Ref": "InternetGateway"
+          }
+        },
+        "Name": "PublicRoute"
+      },
+      {
+        "Type": "AWS::EC2::SubnetRouteTableAssociation",
+        "Properties": {
+          "SubnetId": {
+            "Ref": "PublicSubnetOne"
+          },
+          "RouteTableId": {
+            "Ref": "PublicRouteTable"
+          }
+        },
+        "Name": "PublicSubnetOneRouteTableAssociation"
+      },
+      {
+        "Type": "AWS::EC2::SubnetRouteTableAssociation",
+        "Properties": {
+          "SubnetId": {
+            "Ref": "PublicSubnetTwo"
+          },
+          "RouteTableId": {
+            "Ref": "PublicRouteTable"
+          }
+        },
+        "Name": "PublicSubnetTwoRouteTableAssociation"
+      },
+      {
+        "Type": "AWS::EC2::EIP",
+        "DependsOn": "GatewayAttachement",
+        "Properties": {
+          "Domain": "vpc"
+        },
+        "Name": "NatGatewayOneAttachment"
+      },
+      {
+        "Type": "AWS::EC2::EIP",
+        "DependsOn": "GatewayAttachement",
+        "Properties": {
+          "Domain": "vpc"
+        },
+        "Name": "NatGatewayTwoAttachment"
+      },
+      {
+        "Type": "AWS::EC2::NatGateway",
+        "Properties": {
+          "AllocationId": {
+            "Fn::GetAtt": [
+              "NatGatewayOneAttachment",
+              "AllocationId"
+            ]
+          },
+          "SubnetId": {
+            "Ref": "PublicSubnetOne"
+          }
+        },
+        "Name": "NatGatewayOne"
+      },
+      {
+        "Type": "AWS::EC2::NatGateway",
+        "Properties": {
+          "AllocationId": {
+            "Fn::GetAtt": [
+              "NatGatewayTwoAttachment",
+              "AllocationId"
+            ]
+          },
+          "SubnetId": {
+            "Ref": "PublicSubnetTwo"
+          }
+        },
+        "Name": "NatGatewayTwo"
+      },
+      {
+        "Type": "AWS::EC2::RouteTable",
+        "Properties": {
+          "VpcId": {
+            "Ref": "VPC"
+          }
+        },
+        "Name": "PrivateRouteTableOne"
+      },
+      {
+        "Type": "AWS::EC2::Route",
+        "Properties": {
+          "RouteTableId": {
+            "Ref": "PrivateRouteTableOne"
+          },
+          "DestinationCidrBlock": "0.0.0.0/0",
+          "NatGatewayId": {
+            "Ref": "NatGatewayOne"
+          }
+        },
+        "Name": "PrivateRouteOne"
+      },
+      {
+        "Type": "AWS::EC2::SubnetRouteTableAssociation",
+        "Properties": {
+          "RouteTableId": {
+            "Ref": "PrivateRouteTableOne"
+          },
+          "SubnetId": {
+            "Ref": "PrivateSubnetOne"
+          }
+        },
+        "Name": "PrivateRouteTableOneAssociation"
+      },
+      {
+        "Type": "AWS::EC2::RouteTable",
+        "Properties": {
+          "VpcId": {
+            "Ref": "VPC"
+          }
+        },
+        "Name": "PrivateRouteTableTwo"
+      },
+      {
+        "Type": "AWS::EC2::Route",
+        "Properties": {
+          "RouteTableId": {
+            "Ref": "PrivateRouteTableTwo"
+          },
+          "DestinationCidrBlock": "0.0.0.0/0",
+          "NatGatewayId": {
+            "Ref": "NatGatewayTwo"
+          }
+        },
+        "Name": "PrivateRouteTwo"
+      },
+      {
+        "Type": "AWS::EC2::SubnetRouteTableAssociation",
+        "Properties": {
+          "RouteTableId": {
+            "Ref": "PrivateRouteTableTwo"
+          },
+          "SubnetId": {
+            "Ref": "PrivateSubnetTwo"
+          }
+        },
+        "Name": "PrivateRouteTableTwoAssociation"
+      },
+      {
+        "Type": "AWS::IAM::Role",
+        "Properties": {
+          "AssumeRolePolicyDocument": {
+            "Version": "2012-10-17",
+            "Statement": [
+              {
+                "Effect": "Allow",
+                "Principal": {
+                  "Service": "lambda.amazonaws.com"
+                },
+                "Action": "sts:AssumeRole"
+              }
+            ]
+          },
+          "ManagedPolicyArns": [
+            "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+          ],
+          "Path": "/",
+          "Policies": [
+            {
+              "PolicyName": "EC2Permissions",
+              "PolicyDocument": {
+                "Version": "2012-10-17",
+                "Statement": [
+                  {
+                    "Effect": "Allow",
+                    "Action": "ec2:DescribeNetworkInterfaces",
+                    "Resource": "*"
+                  },
+                  {
+                    "Effect": "Allow",
+                    "Action": "ec2:CreateNetworkInterface",
+                    "Resource": "*"
+                  },
+                  {
+                    "Effect": "Allow",
+                    "Action": "ec2:DeleteNetworkInterface",
+                    "Resource": "*"
+                  },
+                  {
+                    "Effect": "Allow",
+                    "Action": "ec2:DescribeInstances",
+                    "Resource": "*"
+                  },
+                  {
+                    "Effect": "Allow",
+                    "Action": "ec2:AttachNetworkInterface",
+                    "Resource": "*"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        "Name": "LambdaRole"
+      },
+      {
+        "Type": "AWS::Lambda::Function",
+        "Properties": {
+          "FunctionName": "StaticExternalIp",
+          "Description": "Lambda Function with code to call an external service",
+          "Code": {
+            "ZipFile": {
+              "Fn::Sub": "const https = require('https');\n\nexports.handler = async (event) => {\n  const url = 'https://api.ipify.org';\n  let data = \"\";\n\n  return new Promise((resolve) => {\n    https.get(url, res => {\n\n    res.on('data', chunk => { data += chunk }) \n\n    res.on('end', () => {\n      resolve(data);\n      })\n    }) \n  })\n};\n"
+            }
+          },
+          "Handler": {
+            "Fn::Sub": "${ModuleName}.handler"
+          },
+          "Runtime": "nodejs12.x",
+          "Timeout": 300,
+          "Role": {
+            "Fn::GetAtt": [
+              "LambdaRole",
+              "Arn"
+            ]
+          },
+          "VpcConfig": {
+            "SecurityGroupIds": [
+              {
+                "Fn::GetAtt": [
+                  "VPC",
+                  "DefaultSecurityGroup"
+                ]
+              }
+            ],
+            "SubnetIds": [
+              {
+                "Ref": "PrivateSubnetOne"
+              },
+              {
+                "Ref": "PrivateSubnetTwo"
+              }
+            ]
+          },
+          "Environment": {
+            "Variables": {
+              "Logging": "Debug"
+            }
+          }
+        },
+        "Name": "LambdaFunction"
+      }
+    ],
+    "Outputs": {
+      "VPCId": {
+        "Description": "The ID of the VPC that this stack is deployed in",
+        "Value": {
+          "Ref": "VPC"
+        },
+        "Export": {
+          "Name": {
+            "Fn::Join": [
+              ":",
+              [
+                {
+                  "Ref": "AWS::StackName"
+                },
+                "VPCId"
+              ]
+            ]
+          }
+        }
+      },
+      "PublicSubnetOne": {
+        "Description": "Public subnet one",
+        "Value": {
+          "Ref": "PublicSubnetOne"
+        },
+        "Export": {
+          "Name": {
+            "Fn::Join": [
+              ":",
+              [
+                {
+                  "Ref": "AWS::StackName"
+                },
+                "PublicSubnetOne"
+              ]
+            ]
+          }
+        }
+      },
+      "PublicSubnetTwo": {
+        "Description": "Public subnet two",
+        "Value": {
+          "Ref": "PublicSubnetTwo"
+        },
+        "Export": {
+          "Name": {
+            "Fn::Join": [
+              ":",
+              [
+                {
+                  "Ref": "AWS::StackName"
+                },
+                "PublicSubnetTwo"
+              ]
+            ]
+          }
+        }
+      },
+      "PrivateSubnetOne": {
+        "Description": "Private subnet one",
+        "Value": {
+          "Ref": "PrivateSubnetOne"
+        },
+        "Export": {
+          "Name": {
+            "Fn::Join": [
+              ":",
+              [
+                {
+                  "Ref": "AWS::StackName"
+                },
+                "PrivateSubnetOne"
+              ]
+            ]
+          }
+        }
+      },
+      "PrivateSubnetTwo": {
+        "Description": "Private subnet two",
+        "Value": {
+          "Ref": "PrivateSubnetTwo"
+        },
+        "Export": {
+          "Name": {
+            "Fn::Join": [
+              ":",
+              [
+                {
+                  "Ref": "AWS::StackName"
+                },
+                "PrivateSubnetTwo"
+              ]
+            ]
+          }
+        }
+      }
+    }
+  }
+}

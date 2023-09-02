@@ -1,0 +1,142 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAzureQuickStart",
+  "paths": [
+    "/quickstarts/microsoft.appconfiguration/app-configuration-store-kv/azuredeploy.json",
+    "/quickstarts/microsoft.appconfiguration/app-configuration-store-kv/azuredeploy.parameters.json"
+  ],
+  "timestamp": 1642962902959,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/quickstarts/microsoft.appconfiguration/app-configuration-store-kv/azuredeploy.json",
+      "/quickstarts/microsoft.appconfiguration/app-configuration-store-kv/azuredeploy.parameters.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT942",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "microsoft.appconfiguration/configurationstores/keyvalues",
+      "microsoft.appconfiguration/configurationstores"
+    ]
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT942",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "configStoreName": {
+        "type": "string",
+        "metadata": {
+          "description": "Specifies the name of the App Configuration store."
+        },
+        "value": "GEN-UNIQUE"
+      },
+      "location": {
+        "type": "string",
+        "defaultValue": "[resourceGroup().location]",
+        "metadata": {
+          "description": "Specifies the Azure location where the app configuration store should be created."
+        }
+      },
+      "keyValueNames": {
+        "type": "array",
+        "defaultValue": [
+          "myKey",
+          "myKey$myLabel"
+        ],
+        "metadata": {
+          "description": "Specifies the names of the key-value resources. The name is a combination of key and label with $ as delimiter. The label is optional."
+        }
+      },
+      "keyValueValues": {
+        "type": "array",
+        "defaultValue": [
+          "Key-value without label",
+          "Key-value with label"
+        ],
+        "metadata": {
+          "description": "Specifies the values of the key-value resources. It's optional"
+        }
+      },
+      "contentType": {
+        "type": "string",
+        "defaultValue": "the-content-type",
+        "metadata": {
+          "description": "Specifies the content type of the key-value resources. For feature flag, the value should be application/vnd.microsoft.appconfig.ff+json;charset=utf-8. For Key Value reference, the value should be application/vnd.microsoft.appconfig.keyvaultref+json;charset=utf-8. Otherwise, it's optional."
+        }
+      },
+      "tags": {
+        "type": "object",
+        "defaultValue": {
+          "tag1": "tag-value-1",
+          "tag2": "tag-value-2"
+        },
+        "metadata": {
+          "description": "Adds tags for the key-value resources. It's optional"
+        }
+      }
+    },
+    "resources": [
+      {
+        "type": "Microsoft.AppConfiguration/configurationStores",
+        "apiVersion": "2020-07-01-preview",
+        "name": "GEN-UNIQUE",
+        "location": "[resourceGroup().location]",
+        "sku": {
+          "name": "standard"
+        }
+      },
+      {
+        "type": "Microsoft.AppConfiguration/configurationStores/keyValues",
+        "apiVersion": "2020-07-01-preview",
+        "name": "[concat(parameters('configStoreName'), '/', parameters('keyValueNames')[copyIndex()])]",
+        "dependsOn": [
+          "GEN-UNIQUE"
+        ],
+        "properties": {
+          "value": "keyValueValues)[copyIndex(",
+          "contentType": "the-content-type",
+          "tags": {
+            "tag1": "tag-value-1",
+            "tag2": "tag-value-2"
+          }
+        }
+      },
+      {
+        "type": "Microsoft.AppConfiguration/configurationStores/keyValues",
+        "apiVersion": "2020-07-01-preview",
+        "name": "[concat(parameters('configStoreName'), '/', parameters('keyValueNames')[copyIndex()])]",
+        "dependsOn": [
+          "GEN-UNIQUE"
+        ],
+        "properties": {
+          "value": "keyValueValues)[copyIndex(",
+          "contentType": "the-content-type",
+          "tags": {
+            "tag1": "tag-value-1",
+            "tag2": "tag-value-2"
+          }
+        }
+      }
+    ],
+    "outputs": {
+      "reference-key-value-value": {
+        "value": "[reference(resourceId('Microsoft.AppConfiguration/configurationStores/keyValues', parameters('configStoreName'), parameters('keyValueNames')[0]), '2020-07-01-preview').value]",
+        "type": "string"
+      },
+      "reference-key-value-object": {
+        "value": "[reference(resourceId('Microsoft.AppConfiguration/configurationStores/keyValues', parameters('configStoreName'), parameters('keyValueNames')[1]), '2020-07-01-preview')]",
+        "type": "object"
+      }
+    },
+    "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+  }
+}

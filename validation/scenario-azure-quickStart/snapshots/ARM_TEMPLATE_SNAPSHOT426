@@ -1,0 +1,423 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAzureQuickStart",
+  "paths": [
+    "/application-workloads/sap/sap-2-tier-marketplace-image/shared/server-Standard_multiNIC_No.json"
+  ],
+  "timestamp": 1642962894737,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/application-workloads/sap/sap-2-tier-marketplace-image/shared/server-Standard_multiNIC_No.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT426",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "microsoft.compute/virtualmachines",
+      "microsoft.compute/virtualmachines/extensions"
+    ]
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT426",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "imageReference": {
+        "type": "object",
+        "metadata": {
+          "description": "imageReference object that should be used to create the virtual machine"
+        }
+      },
+      "osDisk": {
+        "type": "object",
+        "metadata": {
+          "description": "osDisk object that should be used to create the virtual machine"
+        }
+      },
+      "osDiskType": {
+        "type": "string",
+        "allowedValues": [
+          "image",
+          "userImage",
+          "osdisk"
+        ],
+        "metadata": {
+          "description": "The type of OS disk."
+        }
+      },
+      "sidlower": {
+        "type": "string",
+        "metadata": {
+          "description": "SAP System ID in lower case."
+        }
+      },
+      "vmName": {
+        "type": "string",
+        "metadata": {
+          "description": "Prefix of the virtual machine name."
+        }
+      },
+      "vmSize": {
+        "type": "string",
+        "metadata": {
+          "description": "Size of the Virtual Machine."
+        }
+      },
+      "adminUsername": {
+        "type": "string",
+        "metadata": {
+          "description": "Username for the Virtual Machine."
+        }
+      },
+      "adminPassword": {
+        "type": "securestring",
+        "metadata": {
+          "description": "Password for the Virtual Machine."
+        }
+      },
+      "cseExtPublisher": {
+        "type": "string",
+        "metadata": {
+          "description": "Publisher of the CustomScriptExtension."
+        }
+      },
+      "cseExtName": {
+        "type": "string",
+        "metadata": {
+          "description": "Name of the CustomScriptExtension."
+        }
+      },
+      "cseExtVersion": {
+        "type": "string",
+        "metadata": {
+          "description": "Version of the CustomScriptExtension."
+        }
+      },
+      "csExtensionScript": {
+        "type": "string",
+        "metadata": {
+          "description": "Script that should be passed to the CustomScriptExtension."
+        }
+      },
+      "csExtensionscriptCall": {
+        "type": "string",
+        "metadata": {
+          "description": "Script call that should be passed to the CustomScriptExtension."
+        }
+      },
+      "avSetName": {
+        "type": "string",
+        "metadata": {
+          "description": "Name of the availability set."
+        }
+      },
+      "storageAccountName": {
+        "type": "string",
+        "metadata": {
+          "description": "Name of the storage account where the os disk and data disk should be placed."
+        }
+      },
+      "nicName": {
+        "type": "string",
+        "metadata": {
+          "description": "Name of the network interface."
+        }
+      },
+      "location": {
+        "type": "string",
+        "metadata": {
+          "description": "Location for all resources."
+        }
+      }
+    },
+    "variables": {
+      "dbDataLUNs": "0,1,2,3",
+      "dbDataName": "space",
+      "dataDisks": [
+        {
+          "name": "dbdisk1",
+          "lun": 0,
+          "vhd": {
+            "uri": "[concat('http://', parameters('storageAccountName'), '.blob.', environment().suffixes.storage, '/', parameters('vmName'), '/',parameters('sidlower'),'-dbdisk1.vhd')]"
+          },
+          "createOption": "Empty",
+          "caching": "None",
+          "diskSizeGB": 1023
+        },
+        {
+          "name": "dbdisk2",
+          "lun": 1,
+          "vhd": {
+            "uri": "[concat('http://', parameters('storageAccountName'), '.blob.', environment().suffixes.storage, '/', parameters('vmName'), '/',parameters('sidlower'),'-dbdisk2.vhd')]"
+          },
+          "createOption": "Empty",
+          "caching": "None",
+          "diskSizeGB": 1023
+        },
+        {
+          "name": "dbdisk3",
+          "lun": 2,
+          "vhd": {
+            "uri": "[concat('http://', parameters('storageAccountName'), '.blob.', environment().suffixes.storage, '/', parameters('vmName'), '/',parameters('sidlower'),'-dbdisk3.vhd')]"
+          },
+          "createOption": "Empty",
+          "caching": "None",
+          "diskSizeGB": 1023
+        },
+        {
+          "name": "dbdisk4",
+          "lun": 3,
+          "vhd": {
+            "uri": "[concat('http://', parameters('storageAccountName'), '.blob.', environment().suffixes.storage, '/', parameters('vmName'), '/',parameters('sidlower'),'-dbdisk4.vhd')]"
+          },
+          "createOption": "Empty",
+          "caching": "None",
+          "diskSizeGB": 1023
+        }
+      ],
+      "hardwareProfile": {
+        "vmSize": "vmSize"
+      },
+      "networkProfile": {
+        "networkInterfaces": [
+          {
+            "id": "Microsoft.Network/networkInterfaces/nicName"
+          }
+        ]
+      },
+      "availableProperties": {
+        "image": {
+          "availabilitySet": {
+            "id": "Microsoft.Compute/availabilitySets/avSetName"
+          },
+          "hardwareProfile": {
+            "vmSize": "vmSize"
+          },
+          "osProfile": {
+            "computerName": "vmName",
+            "adminUsername": "adminUsername",
+            "adminPassword": "adminPassword"
+          },
+          "storageProfile": {
+            "imageReference": "imageReference",
+            "osDisk": "osDisk",
+            "dataDisks": [
+              {
+                "name": "dbdisk1",
+                "lun": 0,
+                "vhd": {
+                  "uri": "[concat('http://', parameters('storageAccountName'), '.blob.', environment().suffixes.storage, '/', parameters('vmName'), '/',parameters('sidlower'),'-dbdisk1.vhd')]"
+                },
+                "createOption": "Empty",
+                "caching": "None",
+                "diskSizeGB": 1023
+              },
+              {
+                "name": "dbdisk2",
+                "lun": 1,
+                "vhd": {
+                  "uri": "[concat('http://', parameters('storageAccountName'), '.blob.', environment().suffixes.storage, '/', parameters('vmName'), '/',parameters('sidlower'),'-dbdisk2.vhd')]"
+                },
+                "createOption": "Empty",
+                "caching": "None",
+                "diskSizeGB": 1023
+              },
+              {
+                "name": "dbdisk3",
+                "lun": 2,
+                "vhd": {
+                  "uri": "[concat('http://', parameters('storageAccountName'), '.blob.', environment().suffixes.storage, '/', parameters('vmName'), '/',parameters('sidlower'),'-dbdisk3.vhd')]"
+                },
+                "createOption": "Empty",
+                "caching": "None",
+                "diskSizeGB": 1023
+              },
+              {
+                "name": "dbdisk4",
+                "lun": 3,
+                "vhd": {
+                  "uri": "[concat('http://', parameters('storageAccountName'), '.blob.', environment().suffixes.storage, '/', parameters('vmName'), '/',parameters('sidlower'),'-dbdisk4.vhd')]"
+                },
+                "createOption": "Empty",
+                "caching": "None",
+                "diskSizeGB": 1023
+              }
+            ]
+          },
+          "networkProfile": {
+            "networkInterfaces": [
+              {
+                "id": "Microsoft.Network/networkInterfaces/nicName"
+              }
+            ]
+          }
+        },
+        "userImage": {
+          "availabilitySet": {
+            "id": "Microsoft.Compute/availabilitySets/avSetName"
+          },
+          "hardwareProfile": {
+            "vmSize": "vmSize"
+          },
+          "osProfile": {
+            "computerName": "vmName",
+            "adminUsername": "adminUsername",
+            "adminPassword": "adminPassword"
+          },
+          "storageProfile": {
+            "osDisk": "osDisk",
+            "dataDisks": [
+              {
+                "name": "dbdisk1",
+                "lun": 0,
+                "vhd": {
+                  "uri": "[concat('http://', parameters('storageAccountName'), '.blob.', environment().suffixes.storage, '/', parameters('vmName'), '/',parameters('sidlower'),'-dbdisk1.vhd')]"
+                },
+                "createOption": "Empty",
+                "caching": "None",
+                "diskSizeGB": 1023
+              },
+              {
+                "name": "dbdisk2",
+                "lun": 1,
+                "vhd": {
+                  "uri": "[concat('http://', parameters('storageAccountName'), '.blob.', environment().suffixes.storage, '/', parameters('vmName'), '/',parameters('sidlower'),'-dbdisk2.vhd')]"
+                },
+                "createOption": "Empty",
+                "caching": "None",
+                "diskSizeGB": 1023
+              },
+              {
+                "name": "dbdisk3",
+                "lun": 2,
+                "vhd": {
+                  "uri": "[concat('http://', parameters('storageAccountName'), '.blob.', environment().suffixes.storage, '/', parameters('vmName'), '/',parameters('sidlower'),'-dbdisk3.vhd')]"
+                },
+                "createOption": "Empty",
+                "caching": "None",
+                "diskSizeGB": 1023
+              },
+              {
+                "name": "dbdisk4",
+                "lun": 3,
+                "vhd": {
+                  "uri": "[concat('http://', parameters('storageAccountName'), '.blob.', environment().suffixes.storage, '/', parameters('vmName'), '/',parameters('sidlower'),'-dbdisk4.vhd')]"
+                },
+                "createOption": "Empty",
+                "caching": "None",
+                "diskSizeGB": 1023
+              }
+            ]
+          },
+          "networkProfile": {
+            "networkInterfaces": [
+              {
+                "id": "Microsoft.Network/networkInterfaces/nicName"
+              }
+            ]
+          }
+        },
+        "osdisk": {
+          "availabilitySet": {
+            "id": "Microsoft.Compute/availabilitySets/avSetName"
+          },
+          "hardwareProfile": {
+            "vmSize": "vmSize"
+          },
+          "storageProfile": {
+            "osDisk": "osDisk",
+            "dataDisks": [
+              {
+                "name": "dbdisk1",
+                "lun": 0,
+                "vhd": {
+                  "uri": "[concat('http://', parameters('storageAccountName'), '.blob.', environment().suffixes.storage, '/', parameters('vmName'), '/',parameters('sidlower'),'-dbdisk1.vhd')]"
+                },
+                "createOption": "Empty",
+                "caching": "None",
+                "diskSizeGB": 1023
+              },
+              {
+                "name": "dbdisk2",
+                "lun": 1,
+                "vhd": {
+                  "uri": "[concat('http://', parameters('storageAccountName'), '.blob.', environment().suffixes.storage, '/', parameters('vmName'), '/',parameters('sidlower'),'-dbdisk2.vhd')]"
+                },
+                "createOption": "Empty",
+                "caching": "None",
+                "diskSizeGB": 1023
+              },
+              {
+                "name": "dbdisk3",
+                "lun": 2,
+                "vhd": {
+                  "uri": "[concat('http://', parameters('storageAccountName'), '.blob.', environment().suffixes.storage, '/', parameters('vmName'), '/',parameters('sidlower'),'-dbdisk3.vhd')]"
+                },
+                "createOption": "Empty",
+                "caching": "None",
+                "diskSizeGB": 1023
+              },
+              {
+                "name": "dbdisk4",
+                "lun": 3,
+                "vhd": {
+                  "uri": "[concat('http://', parameters('storageAccountName'), '.blob.', environment().suffixes.storage, '/', parameters('vmName'), '/',parameters('sidlower'),'-dbdisk4.vhd')]"
+                },
+                "createOption": "Empty",
+                "caching": "None",
+                "diskSizeGB": 1023
+              }
+            ]
+          },
+          "networkProfile": {
+            "networkInterfaces": [
+              {
+                "id": "Microsoft.Network/networkInterfaces/nicName"
+              }
+            ]
+          }
+        }
+      },
+      "internalProperties": "(availableProperties)[parameters(osDiskType)]"
+    },
+    "resources": [
+      {
+        "type": "Microsoft.Compute/virtualMachines",
+        "name": "vmName",
+        "apiVersion": "2020-12-01",
+        "location": "location",
+        "properties": "(availableProperties)[parameters(osDiskType)]"
+      },
+      {
+        "type": "Microsoft.Compute/virtualMachines/extensions",
+        "name": "vmName/cseExtName",
+        "apiVersion": "2020-12-01",
+        "location": "location",
+        "dependsOn": [
+          "Microsoft.Compute/virtualMachines//vmName"
+        ],
+        "properties": {
+          "publisher": "cseExtPublisher",
+          "type": "cseExtName",
+          "typeHandlerVersion": "cseExtVersion",
+          "autoUpgradeMinorVersion": true,
+          "settings": {
+            "fileUris": [
+              "csExtensionScript"
+            ],
+            "commandToExecute": "csExtensionscriptCall -DBDataLUNS \"0,1,2,3\" -DBLogLUNS \"dbLogLUNs\" -DBDataName \"space\" -DBLogName \"dbLogName\""
+          }
+        }
+      }
+    ],
+    "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+  }
+}

@@ -1,0 +1,128 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "main",
+  "contentType": "json",
+  "source": "gitConnectorAzureTerraHashicorp",
+  "paths": [
+    "/examples/automation-account/outputs.tf",
+    "/examples/automation-account/variables.tf",
+    "/examples/automation-account/main.tf"
+  ],
+  "timestamp": 1642943279636,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "TRF_TEMPLATE_SNAPSHOT",
+    "type": "terraform",
+    "collection": "terraformtemplate",
+    "paths": [
+      "/examples/automation-account/outputs.tf",
+      "/examples/automation-account/variables.tf",
+      "/examples/automation-account/main.tf"
+    ],
+    "snapshotId": "TRF_TEMPLATE_SNAPSHOT23",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "azurerm_automation_job_schedule",
+      "azurerm_automation_runbook",
+      "azurerm_resource_group",
+      "azurerm_automation_account",
+      "azurerm_automation_schedule"
+    ]
+  },
+  "snapshotId": "TRF_TEMPLATE_SNAPSHOT23",
+  "collection": "terraformtemplate",
+  "json": {
+    "provider": [
+      {
+        "azurerm": {
+          "features": [
+            {}
+          ]
+        }
+      }
+    ],
+    "resources": [
+      {
+        "type": "azurerm_resource_group",
+        "name": "example",
+        "properties": {
+          "name": "${var.prefix}-resources",
+          "location": "${var.location}",
+          "compiletime_identity": "azurerm_resource_group.example"
+        }
+      },
+      {
+        "type": "azurerm_automation_account",
+        "name": "example",
+        "properties": {
+          "name": "${var.prefix}-autoacc",
+          "location": "${azurerm_resource_group.example.location}",
+          "resource_group_name": "${azurerm_resource_group.example.name}",
+          "sku": [
+            {
+              "name": "Basic"
+            }
+          ],
+          "compiletime_identity": "azurerm_automation_account.example"
+        }
+      },
+      {
+        "type": "azurerm_automation_runbook",
+        "name": "example",
+        "properties": {
+          "name": "Get-AzureVMTutorial",
+          "location": "${azurerm_resource_group.example.location}",
+          "resource_group_name": "${azurerm_resource_group.example.name}",
+          "account_name": "${azurerm_automation_account.example.name}",
+          "log_verbose": true,
+          "log_progress": true,
+          "description": "This is an example runbook",
+          "runbook_type": "PowerShellWorkflow",
+          "publish_content_link": [
+            {
+              "uri": "https://raw.githubusercontent.com/Azure/azure-quickstart-templates/c4935ffb69246a6058eb24f54640f53f69d3ac9f/101-automation-runbook-getvms/Runbooks/Get-AzureVMTutorial.ps1"
+            }
+          ],
+          "compiletime_identity": "azurerm_automation_runbook.example"
+        }
+      },
+      {
+        "type": "azurerm_automation_schedule",
+        "name": "one-time",
+        "properties": {
+          "name": "${var.prefix}-one-time",
+          "resource_group_name": "${azurerm_resource_group.example.name}",
+          "automation_account_name": "${azurerm_automation_account.example.name}",
+          "frequency": "OneTime",
+          "compiletime_identity": "azurerm_automation_schedule.one-time"
+        }
+      },
+      {
+        "type": "azurerm_automation_schedule",
+        "name": "hour",
+        "properties": {
+          "name": "${var.prefix}-hour",
+          "resource_group_name": "${azurerm_resource_group.example.name}",
+          "automation_account_name": "${azurerm_automation_account.example.name}",
+          "frequency": "Hour",
+          "interval": 2,
+          "compiletime_identity": "azurerm_automation_schedule.hour"
+        }
+      },
+      {
+        "type": "azurerm_automation_job_schedule",
+        "name": "example",
+        "properties": {
+          "resource_group_name": "${azurerm_resource_group.example.name}",
+          "automation_account_name": "${azurerm_automation_account.example.name}",
+          "runbook_name": "${azurerm_automation_runbook.example.name}",
+          "schedule_name": "${azurerm_automation_schedule.hour.name}",
+          "compiletime_identity": "azurerm_automation_job_schedule.example"
+        }
+      }
+    ]
+  }
+}

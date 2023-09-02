@@ -1,0 +1,186 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAzureQuickStart",
+  "paths": [
+    "/quickstarts/microsoft.cache/redis-vnet-geo-replication/azuredeploy.json",
+    "/quickstarts/microsoft.cache/redis-vnet-geo-replication/azuredeploy.parameters.json"
+  ],
+  "timestamp": 1642962903244,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/quickstarts/microsoft.cache/redis-vnet-geo-replication/azuredeploy.json",
+      "/quickstarts/microsoft.cache/redis-vnet-geo-replication/azuredeploy.parameters.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT976",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "microsoft.cache/redis/linkedservers",
+      "microsoft.cache/redis"
+    ]
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT976",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "location": {
+        "type": "string",
+        "defaultValue": "[resourceGroup().location]",
+        "metadata": {
+          "description": "The location of the existing primary virtual network and new primary cache."
+        },
+        "value": "GET-PREREQ-existingPrimaryVirtualNetworkLocation"
+      },
+      "existingPrimaryVirtualNetworkResourceGroupName": {
+        "type": "string",
+        "metadata": {
+          "description": "The name of the resource group of the existing primary virtual network."
+        },
+        "value": "GET-PREREQ-existingPrimaryVirtualNetworkResourceGroupName"
+      },
+      "existingPrimaryVirtualNetworkName": {
+        "type": "string",
+        "metadata": {
+          "description": "The name of the existing primary virtual network."
+        },
+        "value": "GET-PREREQ-existingPrimaryVirtualNetworkName"
+      },
+      "existingPrimaryCacheSubnetName": {
+        "type": "string",
+        "metadata": {
+          "description": "The name of the existing primary cache subnet."
+        },
+        "value": "GET-PREREQ-existingPrimaryCacheSubnetName"
+      },
+      "newPrimaryCacheName": {
+        "type": "string",
+        "metadata": {
+          "description": "The name of the new primary cache."
+        },
+        "value": "GEN-UNIQUE"
+      },
+      "secondaryLocation": {
+        "type": "string",
+        "metadata": {
+          "description": "The location of the existing secondary virtual network and new secondary cache."
+        },
+        "value": "GET-PREREQ-existingSecondaryVirtualNetworkLocation"
+      },
+      "existingSecondaryVirtualNetworkResourceGroupName": {
+        "type": "string",
+        "metadata": {
+          "description": "The name of the resource group of the existing secondary virtual network."
+        },
+        "value": "GET-PREREQ-existingSecondaryVirtualNetworkResourceGroupName"
+      },
+      "existingSecondaryVirtualNetworkName": {
+        "type": "string",
+        "metadata": {
+          "description": "The name of the existing secondary virtual network."
+        },
+        "value": "GET-PREREQ-existingSecondaryVirtualNetworkName"
+      },
+      "existingSecondaryCacheSubnetName": {
+        "type": "string",
+        "metadata": {
+          "description": "The name of the existing secondary cache subnet."
+        },
+        "value": "GET-PREREQ-existingSecondaryCacheSubnetName"
+      },
+      "newSecondaryCacheName": {
+        "type": "string",
+        "metadata": {
+          "description": "The name of the new secondary cache."
+        },
+        "value": "GEN-UNIQUE"
+      }
+    },
+    "variables": {
+      "primarySubnetId": "GET-PREREQ-existingPrimaryVirtualNetworkResourceGroupName/Microsoft.Network/virtualNetworks/subnets/GET-PREREQ-existingPrimaryVirtualNetworkName/GET-PREREQ-existingPrimaryCacheSubnetName",
+      "secondarySubnetId": "GET-PREREQ-existingSecondaryVirtualNetworkResourceGroupName/Microsoft.Network/virtualNetworks/subnets/GET-PREREQ-existingSecondaryVirtualNetworkName/GET-PREREQ-existingSecondaryCacheSubnetName"
+    },
+    "resources": [
+      {
+        "type": "Microsoft.Cache/Redis",
+        "apiVersion": "2020-06-01",
+        "name": "GEN-UNIQUE",
+        "location": "GET-PREREQ-existingPrimaryVirtualNetworkLocation",
+        "properties": {
+          "sku": {
+            "name": "Premium",
+            "family": "P",
+            "capacity": 1
+          },
+          "subnetId": "GET-PREREQ-existingPrimaryVirtualNetworkResourceGroupName/Microsoft.Network/virtualNetworks/subnets/GET-PREREQ-existingPrimaryVirtualNetworkName/GET-PREREQ-existingPrimaryCacheSubnetName"
+        },
+        "comments": "Create a Premium cache in the primary location in the primary virtual network."
+      },
+      {
+        "type": "Microsoft.Cache/Redis",
+        "apiVersion": "2020-06-01",
+        "name": "GEN-UNIQUE",
+        "location": "GET-PREREQ-existingSecondaryVirtualNetworkLocation",
+        "comments": "Create a Premium cache in the secondary location in the secondary virtual network.",
+        "properties": {
+          "sku": {
+            "name": "Premium",
+            "family": "P",
+            "capacity": 1
+          },
+          "subnetId": "GET-PREREQ-existingSecondaryVirtualNetworkResourceGroupName/Microsoft.Network/virtualNetworks/subnets/GET-PREREQ-existingSecondaryVirtualNetworkName/GET-PREREQ-existingSecondaryCacheSubnetName"
+        }
+      },
+      {
+        "type": "Microsoft.Cache/Redis/linkedServers",
+        "apiVersion": "2020-06-01",
+        "name": "GEN-UNIQUE/GEN-UNIQUE",
+        "dependsOn": [
+          "Microsoft.Cache/redis/GEN-UNIQUE",
+          "Microsoft.Cache/redis/GEN-UNIQUE"
+        ],
+        "comments": "Create a geo-replication link. This resource is created as a nested resource of the primary cache. Its name is fixed and cannot be changed. Its properties identifies the secondary cache and labels it as the secondary.",
+        "properties": {
+          "linkedRedisCacheId": "Microsoft.Cache/Redis/GEN-UNIQUE",
+          "linkedRedisCacheLocation": "GET-PREREQ-existingSecondaryVirtualNetworkLocation",
+          "serverRole": "Secondary"
+        }
+      }
+    ],
+    "outputs": {
+      "primaryLocation": {
+        "type": "string",
+        "value": "[parameters('location')]"
+      },
+      "existingPrimaryCacheSubnetId": {
+        "type": "string",
+        "value": "[variables('primarySubnetId')]"
+      },
+      "newPrimaryCacheId": {
+        "type": "string",
+        "value": "[resourceId('Microsoft.Cache/Redis', parameters('newPrimaryCacheName'))]"
+      },
+      "secondaryLocation": {
+        "type": "string",
+        "value": "[parameters('secondaryLocation')]"
+      },
+      "existingSecondaryCacheSubnetId": {
+        "type": "string",
+        "value": "[variables('secondarySubnetId')]"
+      },
+      "newSecondaryCacheId": {
+        "type": "string",
+        "value": "[resourceId('Microsoft.Cache/Redis', parameters('newSecondaryCacheName'))]"
+      }
+    },
+    "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+  }
+}

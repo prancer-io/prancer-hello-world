@@ -1,0 +1,333 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAzureQuickStart",
+  "paths": [
+    "/quickstarts/microsoft.timeseriesinsights/timeseriesinsights-environment-with-eventhub/azuredeploy.json",
+    "/quickstarts/microsoft.timeseriesinsights/timeseriesinsights-environment-with-eventhub/azuredeploy.parameters.json"
+  ],
+  "timestamp": 1642962910747,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/quickstarts/microsoft.timeseriesinsights/timeseriesinsights-environment-with-eventhub/azuredeploy.json",
+      "/quickstarts/microsoft.timeseriesinsights/timeseriesinsights-environment-with-eventhub/azuredeploy.parameters.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT1736",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "microsoft.timeseriesinsights/environments",
+      "microsoft.timeseriesinsights/environments/accesspolicies",
+      "microsoft.eventhub/namespaces"
+    ]
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT1736",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "eventHubNewOrExisting": {
+        "type": "string",
+        "defaultValue": "new",
+        "metadata": {
+          "description": "Determines whether or not a new Event Hub is provisioned."
+        }
+      },
+      "eventHubResourceGroup": {
+        "type": "string",
+        "defaultValue": "[resourceGroup().name]",
+        "metadata": {
+          "description": "If you have an existing Event Hub provide the Resource Group name here."
+        }
+      },
+      "eventHubNamespaceName": {
+        "type": "string",
+        "defaultValue": "tsiquickstartns",
+        "metadata": {
+          "description": "The namespace of the source event hub."
+        },
+        "value": "GEN-UNIQUE"
+      },
+      "eventHubName": {
+        "type": "string",
+        "defaultValue": "tsiquickstarteh",
+        "metadata": {
+          "description": "The name of the source event hub."
+        },
+        "value": "GEN-UNIQUE"
+      },
+      "consumerGroupName": {
+        "type": "string",
+        "defaultValue": "tsiquickstart",
+        "metadata": {
+          "description": "The name of the consumer group that the Time Series Insights service will use to read the data from the event hub. NOTE: To avoid resource contention, this consumer group must be dedicated to the Time Series Insights service and not shared with other readers."
+        },
+        "value": "GEN-UNIQUE"
+      },
+      "environmentName": {
+        "type": "string",
+        "maxLength": 90,
+        "defaultValue": "tsiquickstart",
+        "metadata": {
+          "description": "Name of the environment. The name cannot include:   '<', '>', '%', '&', ':', '\\', '?', '/' and any control characters. All other characters are allowed."
+        },
+        "value": "GEN-UNIQUE"
+      },
+      "environmentDisplayName": {
+        "type": "string",
+        "defaultValue": "tsiquickstart",
+        "maxLength": 90,
+        "metadata": {
+          "description": "An optional friendly name to show in tooling or user interfaces instead of the environment name."
+        }
+      },
+      "environmentSkuName": {
+        "type": "string",
+        "defaultValue": "S1",
+        "allowedValues": [
+          "S1",
+          "S2"
+        ],
+        "metadata": {
+          "description": "The name of the sku. For more information, see https://azure.microsoft.com/pricing/details/time-series-insights/"
+        }
+      },
+      "environmentSkuCapacity": {
+        "type": "int",
+        "defaultValue": 1,
+        "minValue": 1,
+        "maxValue": 10,
+        "metadata": {
+          "description": "The unit capacity of the Sku. For more information, see https://azure.microsoft.com/pricing/details/time-series-insights/"
+        }
+      },
+      "environmentDataRetentionTime": {
+        "type": "string",
+        "defaultValue": "P30D",
+        "metadata": {
+          "description": "The minimum timespan the environment\u2019s events will be available for query. The value must be specified in the ISO 8601 format, e.g. \"P30D\" for a retention policy of 30 days."
+        }
+      },
+      "eventSourceName": {
+        "type": "string",
+        "defaultValue": "tsiquickstart",
+        "maxLength": 90,
+        "metadata": {
+          "description": "Name of the event source child resource. The name cannot include:   '<', '>', '%', '&', ':', '\\', '?', '/' and any control characters. All other characters are allowed."
+        },
+        "value": "GEN-UNIQUE"
+      },
+      "eventSourceDisplayName": {
+        "type": "string",
+        "defaultValue": "tsiquickstart",
+        "maxLength": 90,
+        "metadata": {
+          "description": "An optional friendly name to show in tooling or user interfaces instead of the event source name."
+        }
+      },
+      "eventSourceTimestampPropertyName": {
+        "type": "string",
+        "defaultValue": "",
+        "maxLength": 90,
+        "metadata": {
+          "description": "The event property that will be used as the event source's timestamp. If a value isn't specified for timestampPropertyName, or if null or empty-string is specified, the event creation time will be used."
+        }
+      },
+      "eventSourceKeyName": {
+        "type": "string",
+        "defaultValue": "manage",
+        "metadata": {
+          "description": "The name of the shared access key that the Time Series Insights service will use to connect to the event hub."
+        }
+      },
+      "accessPolicyReaderObjectIds": {
+        "type": "array",
+        "defaultValue": [],
+        "metadata": {
+          "description": "A list of object ids of the users or applications in AAD that should have Reader access to the environment. The service principal objectId can be obtained by calling the Get-AzureRMADUser or the Get-AzureRMADServicePrincipal cmdlets. Creating an access policy for AAD groups is not yet supported."
+        }
+      },
+      "accessPolicyContributorObjectIds": {
+        "type": "array",
+        "defaultValue": [],
+        "metadata": {
+          "description": "A list of object ids of the users or applications in AAD that should have Contributor access to the environment. The service principal objectId can be obtained by calling the Get-AzureRMADUser or the Get-AzureRMADServicePrincipal cmdlets. Creating an access policy for AAD groups is not yet supported."
+        }
+      },
+      "location": {
+        "type": "string",
+        "defaultValue": "[resourceGroup().location]",
+        "metadata": {
+          "description": "Location for all resources."
+        }
+      }
+    },
+    "variables": {
+      "environmentTagsOptions": [
+        null,
+        {
+          "displayName": "tsiquickstart"
+        }
+      ],
+      "environmentTagsValue": "(environmentTagsOptions)[length(take(parameters(environmentDisplayName), 1))]",
+      "eventSourceTagsOptions": [
+        null,
+        {
+          "displayName": "tsiquickstart"
+        }
+      ],
+      "eventSourceTagsValue": "(eventSourceTagsOptions)[length(take(parameters(eventSourceDisplayName), 1))]",
+      "eventSourceResourceId": "[resourceGroup().name]/Microsoft.EventHub/Namespaces/EventHubs/GEN-UNIQUE/GEN-UNIQUE"
+    },
+    "resources": [
+      {
+        "condition": false,
+        "apiVersion": "2021-01-01-preview",
+        "name": "GEN-UNIQUE",
+        "type": "Microsoft.EventHub/namespaces",
+        "location": "[resourceGroup().location]",
+        "sku": {
+          "name": "Standard"
+        },
+        "properties": {
+          "isAutoInflateEnabled": true,
+          "maximumThroughputUnits": 20
+        },
+        "resources": [
+          {
+            "condition": false,
+            "apiVersion": "2017-04-01",
+            "name": "GEN-UNIQUE",
+            "type": "eventhubs",
+            "dependsOn": [
+              "GEN-UNIQUE"
+            ],
+            "properties": {
+              "messageRetentionInDays": 7,
+              "partitionCount": 4
+            },
+            "resources": [
+              {
+                "condition": false,
+                "type": "authorizationRules",
+                "name": "manage",
+                "apiVersion": "2017-04-01",
+                "location": "[resourceGroup().location]",
+                "dependsOn": [
+                  "GEN-UNIQUE"
+                ],
+                "properties": {
+                  "rights": [
+                    "Listen",
+                    "Send",
+                    "Manage"
+                  ]
+                }
+              },
+              {
+                "condition": false,
+                "apiVersion": "2017-04-01",
+                "name": "GEN-UNIQUE",
+                "type": "consumergroups",
+                "dependsOn": [
+                  "GEN-UNIQUE"
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "type": "Microsoft.TimeSeriesInsights/environments",
+        "name": "GEN-UNIQUE",
+        "apiVersion": "2017-11-15",
+        "location": "[resourceGroup().location]",
+        "properties": {
+          "dataRetentionTime": "P30D"
+        },
+        "sku": {
+          "name": "S1",
+          "capacity": 1
+        },
+        "tags": "(environmentTagsOptions)[length(take(parameters(environmentDisplayName), 1))]",
+        "resources": [
+          {
+            "type": "eventsources",
+            "name": "GEN-UNIQUE",
+            "apiVersion": "2017-11-15",
+            "location": "[resourceGroup().location]",
+            "kind": "Microsoft.EventHub",
+            "dependsOn": [
+              "Microsoft.TimeSeriesInsights/environments//GEN-UNIQUE",
+              "Microsoft.EventHub/Namespaces/GEN-UNIQUE",
+              "Microsoft.EventHub/Namespaces/EventHubs/ConsumerGroups/GEN-UNIQUE/GEN-UNIQUE/GEN-UNIQUE",
+              "Microsoft.EventHub/Namespaces/EventHubs/AuthorizationRules/GEN-UNIQUE/GEN-UNIQUE/manage"
+            ],
+            "properties": {
+              "eventSourceResourceId": "[resourceGroup().name]/Microsoft.EventHub/Namespaces/EventHubs/GEN-UNIQUE/GEN-UNIQUE",
+              "eventHubName": "GEN-UNIQUE",
+              "serviceBusNamespace": "GEN-UNIQUE",
+              "consumerGroupName": "GEN-UNIQUE",
+              "keyName": "manage",
+              "sharedAccessKey": "[listkeys(resourceId(parameters('eventHubResourceGroup'), 'Microsoft.EventHub/Namespaces/EventHubs/AuthorizationRules', parameters('eventHubNamespaceName'), parameters('eventHubName'), parameters('eventSourceKeyName')), '2021-01-01-preview').primaryKey]",
+              "timestampPropertyName": ""
+            },
+            "tags": "(eventSourceTagsOptions)[length(take(parameters(eventSourceDisplayName), 1))]"
+          }
+        ]
+      },
+      {
+        "condition": "[not(empty(parameters('accessPolicyReaderObjectIds')))]",
+        "type": "Microsoft.TimeSeriesInsights/environments/accessPolicies",
+        "name": "GEN-UNIQUE/readerAccessPolicycopyIndex()",
+        "copy": {
+          "name": "accessPolicyReaderCopy",
+          "count": "[if(empty(parameters('accessPolicyReaderObjectIds')), 1, length(parameters('accessPolicyReaderObjectIds')))]"
+        },
+        "apiVersion": "2017-11-15",
+        "dependsOn": [
+          "Microsoft.TimeSeriesInsights/environments//GEN-UNIQUE"
+        ],
+        "properties": {
+          "principalObjectId": "accessPolicyReaderObjectIds)[copyIndex(",
+          "roles": [
+            "Reader"
+          ]
+        }
+      },
+      {
+        "condition": "[not(empty(parameters('accessPolicyContributorObjectIds')))]",
+        "type": "Microsoft.TimeSeriesInsights/environments/accessPolicies",
+        "name": "GEN-UNIQUE/contributorAccessPolicycopyIndex()",
+        "copy": {
+          "name": "accessPolicyContributorCopy",
+          "count": "[if(empty(parameters('accessPolicyContributorObjectIds')), 1, length(parameters('accessPolicyContributorObjectIds')))]"
+        },
+        "apiVersion": "2017-11-15",
+        "dependsOn": [
+          "Microsoft.TimeSeriesInsights/environments//GEN-UNIQUE"
+        ],
+        "properties": {
+          "principalObjectId": "accessPolicyContributorObjectIds)[copyIndex(",
+          "roles": [
+            "Contributor"
+          ]
+        }
+      }
+    ],
+    "outputs": {
+      "dataAccessFQDN": {
+        "value": "[reference(resourceId('Microsoft.TimeSeriesInsights/environments', parameters('environmentName'))).dataAccessFQDN]",
+        "type": "string"
+      }
+    },
+    "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+  }
+}

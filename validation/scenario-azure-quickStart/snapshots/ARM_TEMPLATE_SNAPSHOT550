@@ -1,0 +1,162 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAzureQuickStart",
+  "paths": [
+    "/application-workloads/sql/sqlvm-alwayson-cluster/nested/storageAccountVirtualNetworkPublicIP.json"
+  ],
+  "timestamp": 1642962896593,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/application-workloads/sql/sqlvm-alwayson-cluster/nested/storageAccountVirtualNetworkPublicIP.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT550",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "microsoft.network/publicipaddresses",
+      "microsoft.network/virtualnetworks",
+      "microsoft.storage/storageaccounts"
+    ]
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT550",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "sqlStorageAccountName": {
+        "type": "string"
+      },
+      "dcStorageAccountName": {
+        "type": "string"
+      },
+      "location": {
+        "type": "string"
+      },
+      "SqlStorageAccountType": {
+        "type": "string"
+      },
+      "DcStorageAccountType": {
+        "type": "string"
+      },
+      "virtualNetworkName": {
+        "type": "string"
+      },
+      "virtualNetworkAddressRange": {
+        "type": "string"
+      },
+      "subnets": {
+        "type": "array"
+      },
+      "primaryDCIPAddressNameWithSuffix": {
+        "type": "string"
+      },
+      "backupDCIPAddressNameWithSuffix": {
+        "type": "string"
+      },
+      "sql1AddressNameWithSuffix": {
+        "type": "string"
+      },
+      "sql0AddressNameWithSuffix": {
+        "type": "string"
+      }
+    },
+    "resources": [
+      {
+        "name": "sqlStorageAccountName",
+        "type": "Microsoft.Storage/storageAccounts",
+        "apiVersion": "2021-01-01",
+        "location": "location",
+        "sku": {
+          "name": "SqlStorageAccountType"
+        }
+      },
+      {
+        "type": "Microsoft.Storage/storageAccounts",
+        "name": "dcStorageAccountName",
+        "apiVersion": "2021-01-01",
+        "location": "location",
+        "sku": {
+          "name": "DcStorageAccountType"
+        }
+      },
+      {
+        "type": "Microsoft.Storage/storageAccounts",
+        "name": "[concat(uniquestring(parameters('sqlStorageAccountName')), 'fsw')]",
+        "apiVersion": "2021-01-01",
+        "location": "location",
+        "sku": {
+          "name": "Standard_LRS"
+        }
+      },
+      {
+        "type": "Microsoft.Storage/storageAccounts",
+        "name": "[concat(uniquestring(parameters('sqlStorageAccountName')), 'diag')]",
+        "apiVersion": "2021-01-01",
+        "location": "location",
+        "sku": {
+          "name": "Standard_LRS"
+        }
+      },
+      {
+        "apiVersion": "2020-07-01",
+        "type": "Microsoft.Network/publicIPAddresses",
+        "name": "primaryDCIPAddressNameWithSuffix",
+        "location": "location",
+        "properties": {
+          "publicIPAllocationMethod": "dynamic"
+        }
+      },
+      {
+        "apiVersion": "2020-07-01",
+        "type": "Microsoft.Network/publicIPAddresses",
+        "name": "backupDCIPAddressNameWithSuffix",
+        "location": "location",
+        "properties": {
+          "publicIPAllocationMethod": "dynamic"
+        }
+      },
+      {
+        "apiVersion": "2020-07-01",
+        "type": "Microsoft.Network/publicIPAddresses",
+        "name": "sql1AddressNameWithSuffix",
+        "location": "location",
+        "properties": {
+          "publicIPAllocationMethod": "dynamic"
+        }
+      },
+      {
+        "apiVersion": "2020-07-01",
+        "type": "Microsoft.Network/publicIPAddresses",
+        "name": "sql0AddressNameWithSuffix",
+        "location": "location",
+        "properties": {
+          "publicIPAllocationMethod": "dynamic"
+        }
+      },
+      {
+        "name": "virtualNetworkName",
+        "type": "Microsoft.Network/virtualNetworks",
+        "location": "location",
+        "apiVersion": "2020-07-01",
+        "properties": {
+          "addressSpace": {
+            "addressPrefixes": [
+              "virtualNetworkAddressRange"
+            ]
+          },
+          "subnets": "subnets"
+        }
+      }
+    ],
+    "outputs": {},
+    "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+  }
+}

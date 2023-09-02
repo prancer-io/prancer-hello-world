@@ -1,0 +1,96 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "main",
+  "contentType": "json",
+  "source": "gitConnectorAzureTerraHashicorp",
+  "paths": [
+    "/examples/vm-scale-set/windows/ipv6/variables.tf",
+    "/examples/vm-scale-set/windows/ipv6/main.tf"
+  ],
+  "timestamp": 1642943280338,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "TRF_TEMPLATE_SNAPSHOT",
+    "type": "terraform",
+    "collection": "terraformtemplate",
+    "paths": [
+      "/examples/vm-scale-set/windows/ipv6/variables.tf",
+      "/examples/vm-scale-set/windows/ipv6/main.tf"
+    ],
+    "snapshotId": "TRF_TEMPLATE_SNAPSHOT203",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "azurerm_windows_virtual_machine_scale_set",
+      "azurerm_resource_group"
+    ]
+  },
+  "snapshotId": "TRF_TEMPLATE_SNAPSHOT203",
+  "collection": "terraformtemplate",
+  "json": {
+    "provider": [
+      {
+        "azurerm": {
+          "features": [
+            {}
+          ]
+        }
+      }
+    ],
+    "resources": [
+      {
+        "type": "azurerm_resource_group",
+        "name": "main",
+        "properties": {
+          "name": "${var.prefix}-resources",
+          "location": "${var.location}",
+          "compiletime_identity": "azurerm_resource_group.main"
+        }
+      },
+      {
+        "type": "azurerm_windows_virtual_machine_scale_set",
+        "name": "main",
+        "properties": {
+          "name": "${var.prefix}vmss",
+          "resource_group_name": "${azurerm_resource_group.main.name}",
+          "location": "${azurerm_resource_group.main.location}",
+          "sku": "Standard_F2",
+          "instances": 3,
+          "admin_username": "adminuser",
+          "admin_password": "P@ssw0rd1234!",
+          "computer_name_prefix": "${var.prefix}",
+          "source_image_reference": [
+            {
+              "publisher": "MicrosoftWindowsServer",
+              "offer": "WindowsServer",
+              "sku": "2019-Datacenter",
+              "version": "latest"
+            }
+          ],
+          "network_interface": [
+            {
+              "name": "example",
+              "primary": true,
+              "ip_configuration": [
+                {
+                  "name": "internal",
+                  "primary": true,
+                  "version": "IPv6"
+                }
+              ]
+            }
+          ],
+          "os_disk": [
+            {
+              "storage_account_type": "Standard_LRS",
+              "caching": "ReadWrite"
+            }
+          ],
+          "compiletime_identity": "azurerm_windows_virtual_machine_scale_set.main"
+        }
+      }
+    ]
+  }
+}

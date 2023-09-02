@@ -1,0 +1,161 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAzureQuickStart",
+  "paths": [
+    "/application-workloads/ibm-cloud-pak/ibm-cloud-pak-for-data/nested/cloudpakdeploy.json"
+  ],
+  "timestamp": 1642962888960,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/application-workloads/ibm-cloud-pak/ibm-cloud-pak-for-data/nested/cloudpakdeploy.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT160",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "microsoft.compute/virtualmachines/extensions"
+    ]
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT160",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "assembly": {
+        "type": "string",
+        "metadata": {
+          "description": "CloudPak assembly to install"
+        }
+      },
+      "cloudPakDeploymentScriptUrl": {
+        "type": "string",
+        "metadata": {
+          "description": "Bastion prep script Url"
+        }
+      },
+      "cloudPakDeploymentScriptFileName": {
+        "type": "string",
+        "metadata": {
+          "description": "Bastion prep script file name"
+        }
+      },
+      "redHatTags": {
+        "type": "object",
+        "metadata": {
+          "description": "Red Hat Tags"
+        }
+      },
+      "adminUsername": {
+        "type": "string",
+        "metadata": {
+          "description": "Admin Username"
+        }
+      },
+      "ocuser": {
+        "type": "string",
+        "metadata": {
+          "description": "OpenShift Username"
+        }
+      },
+      "ocpassword": {
+        "type": "securestring",
+        "metadata": {
+          "description": "OpenShift Password"
+        }
+      },
+      "storageOption": {
+        "type": "string",
+        "metadata": {
+          "description": "Storage for CPD installation"
+        }
+      },
+      "bastionHostname": {
+        "type": "string",
+        "metadata": {
+          "description": "Bastion Hostname"
+        }
+      },
+      "projectName": {
+        "type": "string",
+        "metadata": {
+          "description": "Project name to deploy CloudPak for Data to"
+        }
+      },
+      "location": {
+        "type": "string",
+        "metadata": {
+          "description": "Region where the resources should be created in"
+        }
+      },
+      "clusterName": {
+        "type": "string",
+        "metadata": {
+          "description": "Cluster resources prefix"
+        }
+      },
+      "domainName": {
+        "type": "string",
+        "metadata": {
+          "description": "Domain name created with the App Service"
+        }
+      },
+      "apiKey": {
+        "type": "securestring",
+        "metadata": {
+          "description": "IBM Container Registry API Key. See README on how to obtain this"
+        }
+      },
+      "subscriptionChannel": {
+        "type": "string",
+        "metadata": {
+          "description": "Subscription channel of the CPD service operator"
+        }
+      },
+      "version": {
+        "type": "string",
+        "metadata": {
+          "description": "CPD service version"
+        }
+      }
+    },
+    "variables": {},
+    "resources": [
+      {
+        "type": "Microsoft.Compute/virtualMachines/extensions",
+        "name": "bastionHostname/deployOpenshift",
+        "location": "location",
+        "apiVersion": "2021-07-01",
+        "tags": {
+          "displayName": "DeployCloudPak",
+          "app": "redHatTags",
+          "version": "redHatTags",
+          "platform": "redHatTags"
+        },
+        "properties": {
+          "publisher": "Microsoft.Azure.Extensions",
+          "type": "CustomScript",
+          "typeHandlerVersion": "2.0",
+          "autoUpgradeMinorVersion": true,
+          "settings": {
+            "fileUris": [
+              "cloudPakDeploymentScriptUrl"
+            ]
+          },
+          "protectedSettings": {
+            "commandToExecute": "bash cloudPakDeploymentScriptFileName \"adminUsername\" \"ocpassword\" \"projectName\" \"storageOption\" \"assembly\" \"clusterName\" \"domainName\" \"ocuser\" \"apiKey\" \"subscriptionChannel\" \"version\""
+          }
+        }
+      }
+    ],
+    "outputs": {},
+    "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+  }
+}

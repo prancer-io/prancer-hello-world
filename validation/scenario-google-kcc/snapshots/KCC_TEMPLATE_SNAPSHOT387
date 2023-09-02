@@ -2,12 +2,12 @@
   "structure": "filesystem",
   "error": null,
   "reference": "master",
-  "contentType": "yaml",
+  "contentType": "json",
   "source": "gitConnectorGoogleKcc",
   "paths": [
-    "/samples/resources/iamcustomrole/project-role/iam_v1beta1_iampolicymember.yaml"
+    "/samples/resources/dnsrecordset/dns-mx-record-set/dns_v1beta1_dnsrecordset.yaml"
   ],
-  "timestamp": 1628765147428,
+  "timestamp": 1642973303970,
   "queryuser": null,
   "checksum": "99914b932bd37a50b983c5e7c90ae93b",
   "node": {
@@ -15,28 +15,37 @@
     "type": "kcc",
     "collection": "kcctemplate",
     "paths": [
-      "/samples/resources/iamcustomrole/project-role/iam_v1beta1_iampolicymember.yaml"
+      "/samples/resources/dnsrecordset/dns-mx-record-set/dns_v1beta1_dnsrecordset.yaml"
     ],
     "snapshotId": "KCC_TEMPLATE_SNAPSHOT387",
     "status": "active",
-    "validate": true
+    "validate": true,
+    "resourceTypes": [
+      "dnsrecordset"
+    ]
   },
   "snapshotId": "KCC_TEMPLATE_SNAPSHOT387",
   "collection": "kcctemplate",
   "json": {
-    "apiVersion": "iam.cnrm.cloud.google.com/v1beta1",
-    "kind": "IAMPolicyMember",
+    "apiVersion": "dns.cnrm.cloud.google.com/v1beta1",
+    "kind": "DNSRecordSet",
     "metadata": {
-      "name": "iampolicymember-sample-projectrole"
+      "name": "dnsrecordset-sample-mx"
     },
     "spec": {
-      "member": "serviceAccount:iamcustomrole-dep-project@${PROJECT_ID?}.iam.gserviceaccount.com",
-      "role": "projects/${PROJECT_ID?}/roles/iamcustomrolesampleproject",
-      "resourceRef": {
-        "apiVersion": "pubsub.cnrm.cloud.google.com/v1beta1",
-        "kind": "PubSubTopic",
-        "name": "iamcustomrole-dep-project"
-      }
+      "name": "mail.example.com.",
+      "type": "MX",
+      "ttl": 300,
+      "managedZoneRef": {
+        "name": "dnsrecordset-dep-mx"
+      },
+      "rrdatas": [
+        "5 gmr-stmp-in.l.google.com.",
+        "10 alt1.gmr-stmp-in.l.google.com.",
+        "10 alt2.gmr-stmp-in.l.google.com.",
+        "10 alt3.gmr-stmp-in.l.google.com.",
+        "10 alt4.gmr-stmp-in.l.google.com."
+      ]
     }
   }
 }

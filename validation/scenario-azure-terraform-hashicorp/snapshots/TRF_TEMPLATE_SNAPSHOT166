@@ -1,0 +1,83 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "main",
+  "contentType": "json",
+  "source": "gitConnectorAzureTerraHashicorp",
+  "paths": [
+    "/examples/virtual-networks/network-security-group-rule/variables.tf",
+    "/examples/virtual-networks/network-security-group-rule/main.tf"
+  ],
+  "timestamp": 1642943280192,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "TRF_TEMPLATE_SNAPSHOT",
+    "type": "terraform",
+    "collection": "terraformtemplate",
+    "paths": [
+      "/examples/virtual-networks/network-security-group-rule/variables.tf",
+      "/examples/virtual-networks/network-security-group-rule/main.tf"
+    ],
+    "snapshotId": "TRF_TEMPLATE_SNAPSHOT166",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "azurerm_network_security_rule",
+      "azurerm_network_security_group",
+      "azurerm_resource_group"
+    ]
+  },
+  "snapshotId": "TRF_TEMPLATE_SNAPSHOT166",
+  "collection": "terraformtemplate",
+  "json": {
+    "provider": [
+      {
+        "azurerm": {
+          "features": [
+            {}
+          ]
+        }
+      }
+    ],
+    "resources": [
+      {
+        "type": "azurerm_resource_group",
+        "name": "example",
+        "properties": {
+          "name": "${var.prefix}-resources",
+          "location": "${var.location}",
+          "compiletime_identity": "azurerm_resource_group.example"
+        }
+      },
+      {
+        "type": "azurerm_network_security_group",
+        "name": "example",
+        "properties": {
+          "name": "${var.prefix}-nsg",
+          "location": "${azurerm_resource_group.example.location}",
+          "resource_group_name": "${azurerm_resource_group.example.name}",
+          "compiletime_identity": "azurerm_network_security_group.example"
+        }
+      },
+      {
+        "type": "azurerm_network_security_rule",
+        "name": "example",
+        "properties": {
+          "name": "${var.prefix}-nsgrule",
+          "network_security_group_name": "${azurerm_network_security_group.example.name}",
+          "resource_group_name": "${azurerm_resource_group.example.name}",
+          "priority": 100,
+          "direction": "Outbound",
+          "access": "Allow",
+          "protocol": "Tcp",
+          "source_port_range": "*",
+          "destination_port_range": "*",
+          "source_address_prefix": "*",
+          "destination_address_prefix": "Sql.WestEurope",
+          "compiletime_identity": "azurerm_network_security_rule.example"
+        }
+      }
+    ]
+  }
+}

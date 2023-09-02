@@ -2,12 +2,12 @@
   "structure": "filesystem",
   "error": null,
   "reference": "master",
-  "contentType": "yaml",
+  "contentType": "json",
   "source": "gitConnectorGoogleKcc",
   "paths": [
-    "/samples/resources/computetargetvpngateway/compute_v1beta1_computetargetvpngateway.yaml"
+    "/samples/resources/computesslpolicy/custom-tls-1-0-ssl-policy/compute_v1beta1_computesslpolicy.yaml"
   ],
-  "timestamp": 1628765144422,
+  "timestamp": 1642973303234,
   "queryuser": null,
   "checksum": "99914b932bd37a50b983c5e7c90ae93b",
   "node": {
@@ -15,26 +15,33 @@
     "type": "kcc",
     "collection": "kcctemplate",
     "paths": [
-      "/samples/resources/computetargetvpngateway/compute_v1beta1_computetargetvpngateway.yaml"
+      "/samples/resources/computesslpolicy/custom-tls-1-0-ssl-policy/compute_v1beta1_computesslpolicy.yaml"
     ],
     "snapshotId": "KCC_TEMPLATE_SNAPSHOT274",
     "status": "active",
-    "validate": true
+    "validate": true,
+    "resourceTypes": [
+      "computesslpolicy"
+    ]
   },
   "snapshotId": "KCC_TEMPLATE_SNAPSHOT274",
   "collection": "kcctemplate",
   "json": {
     "apiVersion": "compute.cnrm.cloud.google.com/v1beta1",
-    "kind": "ComputeTargetVPNGateway",
+    "kind": "ComputeSSLPolicy",
     "metadata": {
-      "name": "computetargetvpngateway-sample"
+      "name": "computesslpolicy-sample-customtls10"
     },
     "spec": {
-      "description": "a test target vpn gateway",
-      "region": "us-central1",
-      "networkRef": {
-        "name": "computetargetvpngateway-dep"
-      }
+      "description": "An SSL Policy with a CUSTOM encryption profile, supporting a custom set of ciphers for TLS 1.0 and up.",
+      "profile": "CUSTOM",
+      "customFeatures": [
+        "TLS_ECDHE_RSA_WITH_CHACHA20_POLY1305_SHA256",
+        "TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384",
+        "TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA",
+        "TLS_RSA_WITH_AES_256_GCM_SHA384",
+        "TLS_RSA_WITH_AES_256_CBC_SHA"
+      ]
     }
   }
 }

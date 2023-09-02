@@ -1,0 +1,131 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAzureQuickStart",
+  "paths": [
+    "/quickstarts/microsoft.insights/datacollectionrule-create-syslog/azuredeploy.json",
+    "/quickstarts/microsoft.insights/datacollectionrule-create-syslog/azuredeploy.parameters.json"
+  ],
+  "timestamp": 1642962907216,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/quickstarts/microsoft.insights/datacollectionrule-create-syslog/azuredeploy.json",
+      "/quickstarts/microsoft.insights/datacollectionrule-create-syslog/azuredeploy.parameters.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT1368",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "microsoft.insights/datacollectionrules"
+    ]
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT1368",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "dcrName": {
+        "type": "string",
+        "minLength": 1,
+        "metadata": {
+          "description": "Name of the data collection rule"
+        },
+        "value": "MySyslogDcr"
+      },
+      "location": {
+        "type": "string",
+        "defaultValue": "[resourceGroup().location]",
+        "metadata": {
+          "description": "Location for data collection rule"
+        }
+      },
+      "workspaceResourceId": {
+        "type": "string",
+        "minLength": 1,
+        "metadata": {
+          "description": "Full Resource ID of the log analitycs workspace that will be used for data destination. For example /subscriptions/00000000-0000-0000-0000-0000-00000000/resourceGroups/ResourceGroupName/providers/Microsoft.operationalinsights/workspaces/ws_xyz"
+        },
+        "value": "GET-PREREQ-workspaceResourceId"
+      }
+    },
+    "resources": [
+      {
+        "type": "Microsoft.Insights/dataCollectionRules",
+        "apiVersion": "2019-11-01-preview",
+        "name": "MySyslogDcr",
+        "location": "[resourceGroup().location]",
+        "kind": "Linux",
+        "properties": {
+          "dataSources": {
+            "syslog": [
+              {
+                "streams": [
+                  "Microsoft-Syslog"
+                ],
+                "facilityNames": [
+                  "auth",
+                  "authpriv",
+                  "cron",
+                  "daemon",
+                  "mark",
+                  "kern",
+                  "local0",
+                  "local1",
+                  "local2",
+                  "local3",
+                  "local4",
+                  "local5",
+                  "local6",
+                  "local7",
+                  "lpr",
+                  "mail",
+                  "news",
+                  "syslog",
+                  "user",
+                  "UUCP"
+                ],
+                "logLevels": [
+                  "Debug",
+                  "Info",
+                  "Notice",
+                  "Warning",
+                  "Error",
+                  "Critical",
+                  "Alert",
+                  "Emergency"
+                ],
+                "name": "sysLogsDataSource"
+              }
+            ]
+          },
+          "destinations": {
+            "logAnalytics": [
+              {
+                "workspaceResourceId": "GET-PREREQ-workspaceResourceId",
+                "name": "la-data-destination"
+              }
+            ]
+          },
+          "dataFlows": [
+            {
+              "streams": [
+                "Microsoft-Syslog"
+              ],
+              "destinations": [
+                "la-data-destination"
+              ]
+            }
+          ]
+        }
+      }
+    ],
+    "\uff04schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#"
+  }
+}

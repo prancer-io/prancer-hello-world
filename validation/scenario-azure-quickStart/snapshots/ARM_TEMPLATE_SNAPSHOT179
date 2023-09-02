@@ -1,0 +1,1319 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAzureQuickStart",
+  "paths": [
+    "/application-workloads/informatica/informatica-adf-hdinsight-powerbi/azuredeploy.json",
+    "/application-workloads/informatica/informatica-adf-hdinsight-powerbi/azuredeploy.parameters.json"
+  ],
+  "timestamp": 1642962889794,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/application-workloads/informatica/informatica-adf-hdinsight-powerbi/azuredeploy.json",
+      "/application-workloads/informatica/informatica-adf-hdinsight-powerbi/azuredeploy.parameters.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT179",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "microsoft.resources/deployments"
+    ]
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT179",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "location": {
+        "type": "string",
+        "defaultValue": "eastus",
+        "allowedValues": [
+          "eastus",
+          "eastus2",
+          "northcentralus",
+          "southcentralus",
+          "westus",
+          "northeurope",
+          "westeurope",
+          "eastasia",
+          "southeastasia",
+          "japaneast",
+          "japanwest",
+          "australiaeast",
+          "australiasoutheast"
+        ],
+        "metadata": {
+          "description": "Deployment location"
+        },
+        "value": "eastus"
+      },
+      "sqlDWDBAdminName": {
+        "type": "string",
+        "metadata": {
+          "description": "SQL Datawarehouse Admin Username"
+        },
+        "value": "GEN-UNIQUE"
+      },
+      "sqlDWAdminPassword": {
+        "type": "securestring",
+        "metadata": {
+          "description": "SQL Datawarehouse Admin password"
+        },
+        "value": "GEN-PASSWORD"
+      },
+      "jobId": {
+        "type": "string",
+        "metadata": {
+          "description": "Job Id of the create table automation Job, use https://www.guidgenerator.com to generate unique jobid Ex:5f32ff4e-a5c5-47af-8b70-981c896a9163"
+        },
+        "value": "GEN-UNIQUE-32"
+      },
+      "jobIdSignup": {
+        "type": "string",
+        "metadata": {
+          "description": "Job Id of the sign-up automation Job, use https://www.guidgenerator.com to generate unique jobid Ex:5f32ff4e-a5c5-47af-8b70-981c896a9163"
+        },
+        "value": "GEN-UNIQUE-32"
+      },
+      "jobIdWorkflow": {
+        "type": "string",
+        "metadata": {
+          "description": "Job Id of the workflow automation Job, use https://www.guidgenerator.com to generate unique jobid Ex:5f32ff4e-a5c5-47af-8b70-981c896a9163"
+        },
+        "value": "GEN-UNIQUE-32"
+      },
+      "jobIdCont": {
+        "type": "string",
+        "metadata": {
+          "description": "Job Id of the workflow automation Job, use https://www.guidgenerator.com to generate unique jobid Ex:5f32ff4e-a5c5-47af-8b70-981c896a9163"
+        },
+        "value": "GEN-UNIQUE-32"
+      },
+      "start": {
+        "type": "string",
+        "metadata": {
+          "description": "Start time of the data slice. ex: 2016-09-23T18:00:00"
+        },
+        "value": "2017-01-01T09:00:00"
+      },
+      "end": {
+        "type": "string",
+        "metadata": {
+          "description": "End time of the data slice. ex: 2016-09-23T19:00:00"
+        },
+        "value": "2017-01-01T10:00:00"
+      },
+      "tag": {
+        "type": "object",
+        "defaultValue": {
+          "value1": "informatica"
+        },
+        "metadata": {
+          "description": "Tags for the resources"
+        },
+        "value": {
+          "value1": "Informatica"
+        }
+      },
+      "azurePortalUsername": {
+        "type": "string",
+        "metadata": {
+          "description": "Valid Username to login into your Azure Portal"
+        },
+        "value": "GEN-UNIQUE"
+      },
+      "azurePortalPassword": {
+        "type": "securestring",
+        "metadata": {
+          "description": "Valid Password to login into your Azure Portal"
+        },
+        "value": "GEN-PASSWORD"
+      },
+      "adminUsernameInformaticaVm": {
+        "type": "string",
+        "metadata": {
+          "description": "Username to login into informatica vm"
+        },
+        "value": "GEN-UNIQUE"
+      },
+      "adminPasswordInformaticaVm": {
+        "type": "securestring",
+        "metadata": {
+          "description": "Password to login into informatica vm"
+        },
+        "value": "GEN-PASSWORD"
+      },
+      "publicIPdnsPrefix": {
+        "defaultValue": "infodns",
+        "type": "string",
+        "metadata": {
+          "description": " Public IP dns prefix"
+        },
+        "value": "infodns"
+      },
+      "userEmail": {
+        "type": "string",
+        "metadata": {
+          "description": "Informatica Cloud Email ID"
+        },
+        "value": "abc@xyz.com"
+      },
+      "informaticaUsername": {
+        "type": "string",
+        "metadata": {
+          "description": "Informatica Cloud Username"
+        },
+        "value": "GEN-UNIQUE"
+      },
+      "informaticaUserPassword": {
+        "type": "securestring",
+        "metadata": {
+          "description": "Informatica Cloud password"
+        },
+        "value": "GEN-PASSWORD"
+      },
+      "userFirstname": {
+        "type": "string",
+        "defaultValue": "tester",
+        "metadata": {
+          "description": "First name for Informatica Sign up"
+        },
+        "value": "Trevor"
+      },
+      "userLastname": {
+        "type": "string",
+        "defaultValue": "master",
+        "metadata": {
+          "description": "Last name for Informatica Sign up"
+        },
+        "value": "Sebastian"
+      },
+      "userTitle": {
+        "type": "string",
+        "defaultValue": "mytitle",
+        "metadata": {
+          "description": "User title for Informatica Sign up"
+        },
+        "value": "Mr"
+      },
+      "userPhone": {
+        "type": "string",
+        "defaultValue": "1234567890",
+        "metadata": {
+          "description": "User phone number for Informatica Sign up. Only numbers Ex: 1234567890"
+        },
+        "value": "9000840469"
+      },
+      "orgName": {
+        "type": "string",
+        "defaultValue": "sysgain",
+        "metadata": {
+          "description": "Organization for Informatica Sign up"
+        },
+        "value": "Testorg"
+      },
+      "orgAddress": {
+        "type": "string",
+        "defaultValue": "myadd",
+        "metadata": {
+          "description": "Organization Address for Informatica Sign up"
+        },
+        "value": "MainSt"
+      },
+      "orgCity": {
+        "type": "string",
+        "defaultValue": "mycity",
+        "metadata": {
+          "description": "Organization city for Informatica Sign up"
+        },
+        "value": "Seattle"
+      },
+      "orgState": {
+        "type": "string",
+        "defaultValue": "CA",
+        "allowedValues": [
+          "AL",
+          "AZ",
+          "AR",
+          "CA",
+          "CT",
+          "HI",
+          "IL",
+          "IN",
+          "KS",
+          "MI",
+          "NE",
+          "NY",
+          "OH",
+          "TX",
+          "UT",
+          "WA",
+          "WI"
+        ],
+        "metadata": {
+          "description": "Organization state for Informatica Sign up, Hint:Pass State Postal Codes Ex:CA"
+        },
+        "value": "WA"
+      },
+      "orgZipcode": {
+        "type": "string",
+        "defaultValue": "98512",
+        "metadata": {
+          "description": "Organization zipcode for Informatica Sign up"
+        },
+        "value": "98102"
+      },
+      "orgCountry": {
+        "type": "string",
+        "defaultValue": "US",
+        "metadata": {
+          "description": "Organization's country for Informatica Sign up, Hint:Pass Country's ISO Codes Ex:US"
+        },
+        "value": "US"
+      },
+      "orgEmployees": {
+        "type": "string",
+        "defaultValue": "5001_",
+        "allowedValues": [
+          "0_10",
+          "11_25",
+          "26_50",
+          "51_100",
+          "101_500",
+          "501_1000",
+          "1001_5000",
+          "5001_"
+        ],
+        "metadata": {
+          "description": "Organization's Employees for Informatica Sign up"
+        },
+        "value": "5001_"
+      },
+      "baseUrl": {
+        "type": "string",
+        "defaultValue": "https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/informatica-adf-hdinsight-powerbi",
+        "metadata": {
+          "description": "Base URL for the reference templates and scripts"
+        },
+        "value": "https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/informatica-adf-hdinsight-powerbi"
+      }
+    },
+    "variables": {
+      "clientID": "xSwkg5OMQCT4PxrIz5HrFOuq0rmiBUAV",
+      "publicIPdns": "[concat(parameters('publicIPdnsPrefix'),uniqueString(resourceGroup().id))]",
+      "hivescript": "",
+      "sysgainMsEmail": "[concat('syshyd',uniqueString(resourceGroup().id),'279@gmail.com')]",
+      "sysgainMsPassword": "[uniqueString(resourceGroup().id)]",
+      "automationLocation": "East US 2",
+      "arguments": "GEN-UNIQUE GEN-PASSWORD",
+      "sqlDWServName": "sqlser",
+      "sqlDWDBName": "testdwdb",
+      "azureRmUsername": "GEN-UNIQUE",
+      "azureRmPassword": "GEN-PASSWORD",
+      "automationAccountName": "createtbl",
+      "accountName": "[concat(variables('automationAccountName'),uniqueString(resourceGroup().id))]",
+      "credentialName": "aocred",
+      "runbookName": "createtable",
+      "dataFactName": "adf",
+      "tableName": "bi9",
+      "vmName": "informvm",
+      "storageAccountName": "infosa",
+      "adfstorageAccountName": "adfsa",
+      "storageAccName": "[concat(variables('storageAccountName'),uniqueString(resourceGroup().id))]",
+      "adfstorageAccName": "[concat(variables('adfstorageAccountName'),uniqueString(resourceGroup().id))]",
+      "sqlDWServerName": "[concat(variables('sqlDWServName'),uniqueString(resourceGroup().id))]",
+      "dataFactoryName": "[concat(variables('dataFactName'),uniqueString(resourceGroup().id))]",
+      "pubicIPAddressName": "informvm-publicIp",
+      "vnetName": "informvm-vnet",
+      "networkInterfaceName": "informvm-nic",
+      "networkSecurityGroupsName": "informvm-nsg",
+      "subnet1Name": "subnet1",
+      "storageLinkedServiceName": "AzureStorageLinkedService",
+      "hdInsightOnDemandLinkedServiceName": "HDInsightOnDemandLinkedService",
+      "azureSqlDWLinkedServiceName": "AzureSqlDWLinkedService",
+      "inforAutomationAccName": "signup",
+      "automationAccName": "[concat(variables('inforAutomationAccName'),uniqueString(resourceGroup().id))]",
+      "credential1Name": "AzureRmCredentials",
+      "wfAutomationAccName": "workflow",
+      "wfaAtomationAccountName": "[concat(variables('wfAutomationAccName'),uniqueString(resourceGroup().id))]",
+      "serviceLevelObjective": "DW100",
+      "ip": "138.91.243.84:10011",
+      "startIpAddress": "0.0.0.0",
+      "endIpAddress": "255.255.255.255",
+      "inputFolderPath": "adfgetstarted/inputdata",
+      "outputFolderPath": "adfgetstarted/partitioneddata",
+      "vnetAddressPrefix": "10.2.0.0/16",
+      "subnet1Prefix": "10.2.0.0/24",
+      "storageAccountType": "Standard_LRS",
+      "vmSize": "Standard_F4s",
+      "storageContainer": "vhds",
+      "imagePublisher": "informatica-cloud",
+      "imageOffer": "informatica-cloud",
+      "imageVersion": "latest",
+      "imageSKU": "informatica_cloud_secure_agent_32_bit",
+      "subnetRef": "Microsoft.Network/virtualNetworks/informvm-vnet/subnets/subnet1",
+      "storageApiVersion": "2015-06-15",
+      "networkApiVersion": "2015-06-15",
+      "computeApiVersion": "2015-06-15",
+      "sqlApiVersion": "2014-04-01",
+      "sqldbApiVersion": "2015-05-01-preview",
+      "sqlfirewallrulesApiVersion": "2014-04-01",
+      "version": "3.2",
+      "sqlVersion": "12.0",
+      "fileUris": "https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/informatica-adf-hdinsight-powerbi/scripts/ICExtentionScript.ps1",
+      "apiVersion": "2015-10-01",
+      "blobInputDataset": "AzureBlobInput",
+      "blobOutputDataset": "AzureBlobOutput",
+      "sqlDWOutputDataset": "AzureSqlDWOutput",
+      "azureSqlDWLinkedServiceConnectionString": "[concat('Server=tcp:',variables('sqlDWServerName'),'.database.windows.net,1433;Database=', variables('sqlDWDBName'), ';Trusted_Connection=False;User ID=',parameters('sqlDWDBAdminName'),'@',variables('sqlDWServerName'),';Password=',parameters('sqlDWAdminPassword'),';Connection Timeout=30;Encrypt=True')]",
+      "clusterSize": 1,
+      "timeToLive": "00:45:00",
+      "frequency": "Hour",
+      "armBaseUrl": "https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/informatica-adf-hdinsight-powerbi",
+      "interval": 1,
+      "writeBatchSize": 0,
+      "writeBatchTimeout": "00:00:00",
+      "timeout": "01:00:00",
+      "automationScriptUri": "https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/informatica-adf-hdinsight-powerbi/scripts/createTable.ps1",
+      "runbookDescription": "Create a Database Table in User provided Datawarehouse",
+      "sku": "Basic",
+      "sqldwlocation": "eastus",
+      "collation": "SQL_Latin1_General_CP1_CI_AS",
+      "maxSizeBytes": "10995116277760",
+      "credSetupRunbookName": "inforunbook1",
+      "wfrunbookName": "inforunbook2",
+      "ccrunbookName": "container1",
+      "wfrunbookUrl": "https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/informatica-adf-hdinsight-powerbi/runbooks/info-restapi-workflow.ps1",
+      "containerPsUri": "https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/informatica-adf-hdinsight-powerbi/runbooks/info-container-crt.ps1",
+      "credsrunbookUrl": "https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/informatica-adf-hdinsight-powerbi/runbooks/info-restapi-signup.ps1",
+      "publicIpAddressUrl": "https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/informatica-adf-hdinsight-powerbi/nested/public-ip.json",
+      "storageAccountUrl": "https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/informatica-adf-hdinsight-powerbi/nested/storage.json",
+      "virtualNetworkUrl": "https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/informatica-adf-hdinsight-powerbi/nested/vnet-subnet.json",
+      "networkInterfaceUrl": "https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/informatica-adf-hdinsight-powerbi/nested/network-interface.json",
+      "networkSecurityGroupUrl": "https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/informatica-adf-hdinsight-powerbi/nested/info-nsg.json",
+      "virtualMachineUrl": "https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/informatica-adf-hdinsight-powerbi/nested/virtual-machine-with-plan.json",
+      "virtualMachineExtUrl": "https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/informatica-adf-hdinsight-powerbi/nested/info-csa-extension.json",
+      "sqlDataWareHouseSetupURL": "https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/informatica-adf-hdinsight-powerbi/nested/sqldatawarehouse.json",
+      "createTableAutomationSetupURL": "https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/informatica-adf-hdinsight-powerbi/nested/createtableautomationjob.json",
+      "adfSetupURL": "https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/informatica-adf-hdinsight-powerbi/nested/azuredatafactory.json",
+      "workflowAutomationSetupURL": "https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/informatica-adf-hdinsight-powerbi/nested/workflow-automation.json",
+      "credentialsAutomationSetupURL": "https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/informatica-adf-hdinsight-powerbi/nested/info-signup-automation.json",
+      "createContainerAutomationSetupUrl": "https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/informatica-adf-hdinsight-powerbi/nested/contcreate-automation.json",
+      "informaticaTags": {
+        "type": "object",
+        "provider": "AACF690D-C725-4C78-9B1E-E586595B369F"
+      },
+      "quickstartTags": {
+        "type": "object",
+        "name": "informatica-adf-hdinsight-powerbi"
+      }
+    },
+    "resources": [
+      {
+        "name": "publicIpAddressDeploy",
+        "type": "Microsoft.Resources/deployments",
+        "apiVersion": "2015-01-01",
+        "properties": {
+          "mode": "Incremental",
+          "templateLink": {
+            "uri": "https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/informatica-adf-hdinsight-powerbi/nested/public-ip.json",
+            "contentVersion": "1.0.0.0"
+          },
+          "parameters": {
+            "location": {
+              "value": "eastus"
+            },
+            "networkApiVersion": {
+              "value": "2015-06-15"
+            },
+            "publicIPAddressName": {
+              "value": "informvm-publicIp"
+            },
+            "publicIPdnsPrefix": {
+              "value": "[variables('publicIPdns')]"
+            },
+            "tag": {
+              "value": {
+                "key1": "Public IP Address",
+                "value1": "Informatica"
+              }
+            },
+            "informaticaTags": {
+              "value": {
+                "type": "object",
+                "provider": "AACF690D-C725-4C78-9B1E-E586595B369F"
+              }
+            },
+            "quickstartTags": {
+              "value": {
+                "type": "object",
+                "name": "informatica-adf-hdinsight-powerbi"
+              }
+            }
+          }
+        }
+      },
+      {
+        "name": "storageAccountDeploy",
+        "type": "Microsoft.Resources/deployments",
+        "apiVersion": "2015-01-01",
+        "properties": {
+          "mode": "Incremental",
+          "templateLink": {
+            "uri": "https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/informatica-adf-hdinsight-powerbi/nested/storage.json",
+            "contentVersion": "1.0.0.0"
+          },
+          "parameters": {
+            "location": {
+              "value": "eastus"
+            },
+            "storageApiVersion": {
+              "value": "2015-06-15"
+            },
+            "storageAccountType": {
+              "value": "Standard_LRS"
+            },
+            "storageAccountName": {
+              "value": "[variables('storageAccName')]"
+            },
+            "tag": {
+              "value": {
+                "key1": "Storage Account",
+                "value1": "Informatica"
+              }
+            },
+            "informaticaTags": {
+              "value": {
+                "type": "object",
+                "provider": "AACF690D-C725-4C78-9B1E-E586595B369F"
+              }
+            },
+            "quickstartTags": {
+              "value": {
+                "type": "object",
+                "name": "informatica-adf-hdinsight-powerbi"
+              }
+            }
+          }
+        }
+      },
+      {
+        "name": "adfstorageAccountDeploy",
+        "type": "Microsoft.Resources/deployments",
+        "apiVersion": "2015-01-01",
+        "properties": {
+          "mode": "Incremental",
+          "templateLink": {
+            "uri": "https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/informatica-adf-hdinsight-powerbi/nested/storage.json",
+            "contentVersion": "1.0.0.0"
+          },
+          "parameters": {
+            "location": {
+              "value": "eastus"
+            },
+            "storageApiVersion": {
+              "value": "2015-06-15"
+            },
+            "storageAccountType": {
+              "value": "Standard_LRS"
+            },
+            "storageAccountName": {
+              "value": "[variables('adfstorageAccName')]"
+            },
+            "tag": {
+              "value": {
+                "key1": "Storage Account",
+                "value1": "Informatica"
+              }
+            },
+            "informaticaTags": {
+              "value": {
+                "type": "object",
+                "provider": "AACF690D-C725-4C78-9B1E-E586595B369F"
+              }
+            },
+            "quickstartTags": {
+              "value": {
+                "type": "object",
+                "name": "informatica-adf-hdinsight-powerbi"
+              }
+            }
+          }
+        }
+      },
+      {
+        "name": "virtualNetworkDeploy",
+        "type": "Microsoft.Resources/deployments",
+        "apiVersion": "2015-01-01",
+        "properties": {
+          "mode": "Incremental",
+          "templateLink": {
+            "uri": "https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/informatica-adf-hdinsight-powerbi/nested/vnet-subnet.json",
+            "contentVersion": "1.0.0.0"
+          },
+          "parameters": {
+            "location": {
+              "value": "eastus"
+            },
+            "networkApiVersion": {
+              "value": "2015-06-15"
+            },
+            "vnetName": {
+              "value": "informvm-vnet"
+            },
+            "subnet1Name": {
+              "value": "subnet1"
+            },
+            "vnetAddressPrefix": {
+              "value": "10.2.0.0/16"
+            },
+            "subnet1Prefix": {
+              "value": "10.2.0.0/24"
+            },
+            "tag": {
+              "value": {
+                "key1": "Virtual Network",
+                "value1": "Informatica"
+              }
+            },
+            "informaticaTags": {
+              "value": {
+                "type": "object",
+                "provider": "AACF690D-C725-4C78-9B1E-E586595B369F"
+              }
+            },
+            "quickstartTags": {
+              "value": {
+                "type": "object",
+                "name": "informatica-adf-hdinsight-powerbi"
+              }
+            }
+          }
+        }
+      },
+      {
+        "name": "networkInterfaceDeploy",
+        "type": "Microsoft.Resources/deployments",
+        "apiVersion": "2015-01-01",
+        "dependsOn": [
+          "virtualNetworkDeploy",
+          "networkSecurityGroupDeploy",
+          "publicIpAddressDeploy"
+        ],
+        "properties": {
+          "mode": "Incremental",
+          "templateLink": {
+            "uri": "https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/informatica-adf-hdinsight-powerbi/nested/network-interface.json",
+            "contentVersion": "1.0.0.0"
+          },
+          "parameters": {
+            "location": {
+              "value": "eastus"
+            },
+            "networkApiVersion": {
+              "value": "2015-06-15"
+            },
+            "networkInterfaceName": {
+              "value": "informvm-nic"
+            },
+            "networkSecurityGroupName": {
+              "value": "informvm-nsg"
+            },
+            "publicIPAddressName": {
+              "value": "informvm-publicIp"
+            },
+            "subnetRef": {
+              "value": "Microsoft.Network/virtualNetworks/informvm-vnet/subnets/subnet1"
+            },
+            "tag": {
+              "value": {
+                "key1": "Network Interface",
+                "value1": "Informatica"
+              }
+            },
+            "informaticaTags": {
+              "value": {
+                "type": "object",
+                "provider": "AACF690D-C725-4C78-9B1E-E586595B369F"
+              }
+            },
+            "quickstartTags": {
+              "value": {
+                "type": "object",
+                "name": "informatica-adf-hdinsight-powerbi"
+              }
+            }
+          }
+        }
+      },
+      {
+        "name": "networkSecurityGroupDeploy",
+        "type": "Microsoft.Resources/deployments",
+        "apiVersion": "2015-01-01",
+        "properties": {
+          "mode": "Incremental",
+          "templateLink": {
+            "uri": "https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/informatica-adf-hdinsight-powerbi/nested/info-nsg.json",
+            "contentVersion": "1.0.0.0"
+          },
+          "parameters": {
+            "location": {
+              "value": "eastus"
+            },
+            "networkApiVersion": {
+              "value": "2015-06-15"
+            },
+            "networkSecurityGroupsName": {
+              "value": "informvm-nsg"
+            },
+            "tag": {
+              "value": {
+                "key1": "Network Security Group",
+                "value1": "Informatica"
+              }
+            },
+            "informaticaTags": {
+              "value": {
+                "type": "object",
+                "provider": "AACF690D-C725-4C78-9B1E-E586595B369F"
+              }
+            },
+            "quickstartTags": {
+              "value": {
+                "type": "object",
+                "name": "informatica-adf-hdinsight-powerbi"
+              }
+            }
+          }
+        }
+      },
+      {
+        "name": "virtualMachineDeploy",
+        "type": "Microsoft.Resources/deployments",
+        "apiVersion": "2015-01-01",
+        "dependsOn": [
+          "storageAccountDeploy",
+          "networkInterfaceDeploy"
+        ],
+        "properties": {
+          "mode": "Incremental",
+          "templateLink": {
+            "uri": "https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/informatica-adf-hdinsight-powerbi/nested/virtual-machine-with-plan.json",
+            "contentVersion": "1.0.0.0"
+          },
+          "parameters": {
+            "location": {
+              "value": "eastus"
+            },
+            "computeApiVersion": {
+              "value": "2015-06-15"
+            },
+            "vmName": {
+              "value": "informvm"
+            },
+            "storageAccountName": {
+              "value": "[variables('storageAccName')]"
+            },
+            "vmStorageAccountContainerName": {
+              "value": "vhds"
+            },
+            "vmSize": {
+              "value": "Standard_F4s"
+            },
+            "imagePublisher": {
+              "value": "informatica-cloud"
+            },
+            "imageOffer": {
+              "value": "informatica-cloud"
+            },
+            "imageVersion": {
+              "value": "latest"
+            },
+            "imageSKU": {
+              "value": "informatica_cloud_secure_agent_32_bit"
+            },
+            "adminUsername": {
+              "value": "GEN-UNIQUE"
+            },
+            "adminPassword": {
+              "value": "GEN-PASSWORD"
+            },
+            "networkInterfaceName": {
+              "value": "informvm-nic"
+            },
+            "tag": {
+              "value": {
+                "key1": "Virtual Machine",
+                "value1": "Informatica"
+              }
+            },
+            "informaticaTags": {
+              "value": {
+                "type": "object",
+                "provider": "AACF690D-C725-4C78-9B1E-E586595B369F"
+              }
+            },
+            "quickstartTags": {
+              "value": {
+                "type": "object",
+                "name": "informatica-adf-hdinsight-powerbi"
+              }
+            }
+          }
+        }
+      },
+      {
+        "name": "virtualMachineExtDeploy",
+        "dependsOn": [
+          "virtualMachineDeploy",
+          "informaticaCredentialsAutomationSetup"
+        ],
+        "type": "Microsoft.Resources/deployments",
+        "apiVersion": "2015-01-01",
+        "properties": {
+          "mode": "Incremental",
+          "templateLink": {
+            "uri": "https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/informatica-adf-hdinsight-powerbi/nested/info-csa-extension.json"
+          },
+          "parameters": {
+            "vmName": {
+              "value": "informvm"
+            },
+            "location": {
+              "value": "eastus"
+            },
+            "fileUris": {
+              "value": "https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/informatica-adf-hdinsight-powerbi/scripts/ICExtentionScript.ps1"
+            },
+            "arguments": {
+              "value": "GEN-UNIQUE GEN-PASSWORD"
+            },
+            "informaticaTags": {
+              "value": {
+                "type": "object",
+                "provider": "AACF690D-C725-4C78-9B1E-E586595B369F"
+              }
+            },
+            "quickstartTags": {
+              "value": {
+                "type": "object",
+                "name": "informatica-adf-hdinsight-powerbi"
+              }
+            }
+          }
+        }
+      },
+      {
+        "name": "informaticaCredentialsAutomationSetup",
+        "apiVersion": "2015-01-01",
+        "type": "Microsoft.Resources/deployments",
+        "properties": {
+          "mode": "Incremental",
+          "templateLink": {
+            "uri": "https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/informatica-adf-hdinsight-powerbi/nested/info-signup-automation.json",
+            "contentVersion": "1.0.0.0"
+          },
+          "parameters": {
+            "jobIdSignup": {
+              "value": "GEN-UNIQUE-32"
+            },
+            "automationAccountName": {
+              "value": "[variables('automationAccName')]"
+            },
+            "credential1Name": {
+              "value": "AzureRmCredentials"
+            },
+            "cred1Username": {
+              "value": "GEN-UNIQUE"
+            },
+            "cred1Password": {
+              "value": "GEN-PASSWORD"
+            },
+            "runbookName": {
+              "value": "inforunbook1"
+            },
+            "location": {
+              "value": "East US 2"
+            },
+            "runbookUrl": {
+              "value": "https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/informatica-adf-hdinsight-powerbi/runbooks/info-restapi-signup.ps1"
+            },
+            "sku": {
+              "value": "Basic"
+            },
+            "ip": {
+              "value": "138.91.243.84:10011"
+            },
+            "sysgain_ms_email": {
+              "value": "[variables('sysgainMsEmail')]"
+            },
+            "sysgain_ms_password": {
+              "value": "[uniqueString(resourceGroup().id)]"
+            },
+            "user_email": {
+              "value": "abc@xyz.com"
+            },
+            "informatica_user_name": {
+              "value": "GEN-UNIQUE"
+            },
+            "informatica_user_password": {
+              "value": "GEN-PASSWORD"
+            },
+            "user_firstname": {
+              "value": "Trevor"
+            },
+            "user_lastname": {
+              "value": "Sebastian"
+            },
+            "user_title": {
+              "value": "Mr"
+            },
+            "user_phone": {
+              "value": "9000840469"
+            },
+            "org_name": {
+              "value": "Testorg"
+            },
+            "org_address": {
+              "value": "MainSt"
+            },
+            "org_city": {
+              "value": "Seattle"
+            },
+            "org_state": {
+              "value": "WA"
+            },
+            "org_zipcode": {
+              "value": "98102"
+            },
+            "org_country": {
+              "value": "US"
+            },
+            "org_employees": {
+              "value": "5001_"
+            },
+            "client_id": {
+              "value": "xSwkg5OMQCT4PxrIz5HrFOuq0rmiBUAV"
+            },
+            "informaticaTags": {
+              "value": {
+                "type": "object",
+                "provider": "AACF690D-C725-4C78-9B1E-E586595B369F"
+              }
+            },
+            "quickstartTags": {
+              "value": {
+                "type": "object",
+                "name": "informatica-adf-hdinsight-powerbi"
+              }
+            }
+          }
+        }
+      },
+      {
+        "name": "workflowAutomationSetup",
+        "apiVersion": "2015-01-01",
+        "type": "Microsoft.Resources/deployments",
+        "dependsOn": [
+          "informaticaCredentialsAutomationSetup",
+          "virtualMachineExtDeploy",
+          "sqlDataWarehoueSetup",
+          "adfstorageAccountDeploy",
+          "createContainerAutomationSetup"
+        ],
+        "properties": {
+          "mode": "Incremental",
+          "templateLink": {
+            "uri": "https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/informatica-adf-hdinsight-powerbi/nested/workflow-automation.json",
+            "contentVersion": "1.0.0.0"
+          },
+          "parameters": {
+            "jobIdWorkflow": {
+              "value": "GEN-UNIQUE-32"
+            },
+            "automationAccountName": {
+              "value": "[variables('wfaAtomationAccountName')]"
+            },
+            "credential1Name": {
+              "value": "AzureRmCredentials"
+            },
+            "cred1Username": {
+              "value": "GEN-UNIQUE"
+            },
+            "cred1Password": {
+              "value": "GEN-PASSWORD"
+            },
+            "runbookName": {
+              "value": "inforunbook2"
+            },
+            "location": {
+              "value": "East US 2"
+            },
+            "runbookUrl": {
+              "value": "https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/informatica-adf-hdinsight-powerbi/runbooks/info-restapi-workflow.ps1"
+            },
+            "sku": {
+              "value": "Basic"
+            },
+            "ip": {
+              "value": "138.91.243.84:10011"
+            },
+            "sysgain_ms_email": {
+              "value": "[variables('sysgainMsEmail')]"
+            },
+            "sysgain_ms_password": {
+              "value": "[uniqueString(resourceGroup().id)]"
+            },
+            "informatica_user_name": {
+              "value": "GEN-UNIQUE"
+            },
+            "informatica_user_password": {
+              "value": "GEN-PASSWORD"
+            },
+            "informatica_csa_vmname": {
+              "value": "informvm"
+            },
+            "client_id": {
+              "value": "xSwkg5OMQCT4PxrIz5HrFOuq0rmiBUAV"
+            },
+            "adfStorageAccName": {
+              "value": "[variables('adfstorageAccName')]"
+            },
+            "adfStorageAccKey": {
+              "value": "[reference('adfstorageAccountDeploy').outputs.primaryKey.value]"
+            },
+            "informaticaTags": {
+              "value": {
+                "type": "object",
+                "provider": "AACF690D-C725-4C78-9B1E-E586595B369F"
+              }
+            },
+            "quickstartTags": {
+              "value": {
+                "type": "object",
+                "name": "informatica-adf-hdinsight-powerbi"
+              }
+            }
+          }
+        }
+      },
+      {
+        "name": "sqlDataWarehoueSetup",
+        "apiVersion": "2015-01-01",
+        "type": "Microsoft.Resources/deployments",
+        "properties": {
+          "mode": "Incremental",
+          "templateLink": {
+            "uri": "https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/informatica-adf-hdinsight-powerbi/nested/sqldatawarehouse.json",
+            "contentVersion": "1.0.0.0"
+          },
+          "parameters": {
+            "location": {
+              "value": "eastus"
+            },
+            "sqlDWServerName": {
+              "value": "[variables('sqlDWServerName')]"
+            },
+            "sqlDWDBAdminName": {
+              "value": "GEN-UNIQUE"
+            },
+            "sqlDWAdminPassword": {
+              "value": "GEN-PASSWORD"
+            },
+            "sqlDWDBName": {
+              "value": "testdwdb"
+            },
+            "serviceLevelObjective": {
+              "value": "DW100"
+            },
+            "startIpAddress": {
+              "value": "0.0.0.0"
+            },
+            "endIpAddress": {
+              "value": "255.255.255.255"
+            },
+            "sql-api-version": {
+              "value": "2014-04-01"
+            },
+            "sqldb-api-version": {
+              "value": "2015-05-01-preview"
+            },
+            "sqlfirewallrules-api-version": {
+              "value": "2014-04-01"
+            },
+            "collation": {
+              "value": "SQL_Latin1_General_CP1_CI_AS"
+            },
+            "maxSizeBytes": {
+              "value": "10995116277760"
+            },
+            "version": {
+              "value": "12.0"
+            },
+            "informaticaTags": {
+              "value": {
+                "type": "object",
+                "provider": "AACF690D-C725-4C78-9B1E-E586595B369F"
+              }
+            },
+            "quickstartTags": {
+              "value": {
+                "type": "object",
+                "name": "informatica-adf-hdinsight-powerbi"
+              }
+            }
+          }
+        }
+      },
+      {
+        "name": "createTableAutomationSetup",
+        "apiVersion": "2015-01-01",
+        "type": "Microsoft.Resources/deployments",
+        "dependsOn": [
+          "sqlDataWarehoueSetup"
+        ],
+        "properties": {
+          "mode": "Incremental",
+          "templateLink": {
+            "uri": "https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/informatica-adf-hdinsight-powerbi/nested/createtableautomationjob.json",
+            "contentVersion": "1.0.0.0"
+          },
+          "parameters": {
+            "sqlDWServerName": {
+              "value": "[variables('sqlDWServerName')]"
+            },
+            "sqlDWDBAdminName": {
+              "value": "GEN-UNIQUE"
+            },
+            "sqlDWAdminPassword": {
+              "value": "GEN-PASSWORD"
+            },
+            "sqlDWDBName": {
+              "value": "testdwdb"
+            },
+            "jobId": {
+              "value": "GEN-UNIQUE-32"
+            },
+            "accountName": {
+              "value": "[variables('accountName')]"
+            },
+            "credentialName": {
+              "value": "aocred"
+            },
+            "runbookName": {
+              "value": "createtable"
+            },
+            "location": {
+              "value": "East US 2"
+            },
+            "scriptUri": {
+              "value": "https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/informatica-adf-hdinsight-powerbi/scripts/createTable.ps1"
+            },
+            "runbookDescription": {
+              "value": "Create a Database Table in User provided Datawarehouse"
+            },
+            "sku": {
+              "value": "Basic"
+            },
+            "informaticaTags": {
+              "value": {
+                "type": "object",
+                "provider": "AACF690D-C725-4C78-9B1E-E586595B369F"
+              }
+            },
+            "quickstartTags": {
+              "value": {
+                "type": "object",
+                "name": "informatica-adf-hdinsight-powerbi"
+              }
+            }
+          }
+        }
+      },
+      {
+        "name": "createContainerAutomationSetup",
+        "apiVersion": "2015-01-01",
+        "type": "Microsoft.Resources/deployments",
+        "dependsOn": [
+          "adfstorageAccountDeploy"
+        ],
+        "properties": {
+          "mode": "Incremental",
+          "templateLink": {
+            "uri": "https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/informatica-adf-hdinsight-powerbi/nested/contcreate-automation.json",
+            "contentVersion": "1.0.0.0"
+          },
+          "parameters": {
+            "adfStorageAccName": {
+              "value": "[variables('adfstorageAccName')]"
+            },
+            "adfStorageAccKey": {
+              "value": "[reference('adfstorageAccountDeploy').outputs.primaryKey.value]"
+            },
+            "jobIdCont": {
+              "value": "GEN-UNIQUE-32"
+            },
+            "automationAccountName": {
+              "value": "[variables('wfaAtomationAccountName')]"
+            },
+            "credential1Name": {
+              "value": "AzureRmCredentials"
+            },
+            "cred1Username": {
+              "value": "GEN-UNIQUE"
+            },
+            "cred1Password": {
+              "value": "GEN-PASSWORD"
+            },
+            "runbookName": {
+              "value": "container1"
+            },
+            "location": {
+              "value": "East US 2"
+            },
+            "scriptUri": {
+              "value": "https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/informatica-adf-hdinsight-powerbi/runbooks/info-container-crt.ps1"
+            },
+            "sku": {
+              "value": "Basic"
+            },
+            "informaticaTags": {
+              "value": {
+                "type": "object",
+                "provider": "AACF690D-C725-4C78-9B1E-E586595B369F"
+              }
+            },
+            "quickstartTags": {
+              "value": {
+                "type": "object",
+                "name": "informatica-adf-hdinsight-powerbi"
+              }
+            }
+          }
+        }
+      },
+      {
+        "name": "dataFactorySetup",
+        "apiVersion": "2015-01-01",
+        "type": "Microsoft.Resources/deployments",
+        "dependsOn": [
+          "sqlDataWarehoueSetup",
+          "createContainerAutomationSetup"
+        ],
+        "properties": {
+          "mode": "Incremental",
+          "templateLink": {
+            "uri": "https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/informatica-adf-hdinsight-powerbi/nested/azuredatafactory.json",
+            "contentVersion": "1.0.0.0"
+          },
+          "parameters": {
+            "sqlDWServerName": {
+              "value": "[variables('sqlDWServerName')]"
+            },
+            "sqlDWDBAdminName": {
+              "value": "GEN-UNIQUE"
+            },
+            "sqlDWAdminPassword": {
+              "value": "GEN-PASSWORD"
+            },
+            "sqlDWDBName": {
+              "value": "testdwdb"
+            },
+            "dataFactoryName": {
+              "value": "[variables('dataFactoryName')]"
+            },
+            "start": {
+              "value": "2017-01-01T09:00:00"
+            },
+            "end": {
+              "value": "2017-01-01T10:00:00"
+            },
+            "tableName": {
+              "value": "bi9"
+            },
+            "inputFolderPath": {
+              "value": "adfgetstarted/inputdata"
+            },
+            "adfstorageAccountName": {
+              "value": "[variables('adfstorageAccName')]"
+            },
+            "outputFolderPath": {
+              "value": "adfgetstarted/partitioneddata"
+            },
+            "apiVersion": {
+              "value": "2015-10-01"
+            },
+            "storageLinkedServiceName": {
+              "value": "AzureStorageLinkedService"
+            },
+            "hdInsightOnDemandLinkedServiceName": {
+              "value": "HDInsightOnDemandLinkedService"
+            },
+            "azureSqlDWLinkedServiceName": {
+              "value": "AzureSqlDWLinkedService"
+            },
+            "blobInputDataset": {
+              "value": "AzureBlobInput"
+            },
+            "blobOutputDataset": {
+              "value": "AzureBlobOutput"
+            },
+            "sqlDWOutputDataset": {
+              "value": "AzureSqlDWOutput"
+            },
+            "azureSqlDWLinkedServiceConnectionString": {
+              "value": "[variables('azureSqlDWLinkedServiceConnectionString')]"
+            },
+            "clusterSize": {
+              "value": 1
+            },
+            "version": {
+              "value": "3.2"
+            },
+            "timeToLive": {
+              "value": "00:45:00"
+            },
+            "frequency": {
+              "value": "Hour"
+            },
+            "interval": {
+              "value": 1
+            },
+            "writeBatchSize": {
+              "value": 0
+            },
+            "writeBatchTimeout": {
+              "value": "00:00:00"
+            },
+            "timeout": {
+              "value": "01:00:00"
+            },
+            "script": {
+              "value": ""
+            },
+            "informaticaTags": {
+              "value": {
+                "type": "object",
+                "provider": "AACF690D-C725-4C78-9B1E-E586595B369F"
+              }
+            },
+            "quickstartTags": {
+              "value": {
+                "type": "object",
+                "name": "informatica-adf-hdinsight-powerbi"
+              }
+            }
+          }
+        }
+      }
+    ],
+    "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+  }
+}

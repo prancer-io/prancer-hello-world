@@ -2,12 +2,12 @@
   "structure": "filesystem",
   "error": null,
   "reference": "master",
-  "contentType": "yaml",
+  "contentType": "json",
   "source": "gitConnectorGoogleKcc",
   "paths": [
-    "/samples/resources/networksecurityservertlspolicy/networksecurity_v1beta1_networksecurityservertlspolicy.yaml"
+    "/samples/resources/iampolicymember/policy-member-with-member-reference/iam_v1beta1_iampolicymember.yaml"
   ],
-  "timestamp": 1628765149688,
+  "timestamp": 1642973304364,
   "queryuser": null,
   "checksum": "99914b932bd37a50b983c5e7c90ae93b",
   "node": {
@@ -15,40 +15,34 @@
     "type": "kcc",
     "collection": "kcctemplate",
     "paths": [
-      "/samples/resources/networksecurityservertlspolicy/networksecurity_v1beta1_networksecurityservertlspolicy.yaml"
+      "/samples/resources/iampolicymember/policy-member-with-member-reference/iam_v1beta1_iampolicymember.yaml"
     ],
     "snapshotId": "KCC_TEMPLATE_SNAPSHOT475",
     "status": "active",
-    "validate": true
+    "validate": true,
+    "resourceTypes": [
+      "iampolicymember"
+    ]
   },
   "snapshotId": "KCC_TEMPLATE_SNAPSHOT475",
   "collection": "kcctemplate",
   "json": {
-    "apiVersion": "networksecurity.cnrm.cloud.google.com/v1beta1",
-    "kind": "NetworkSecurityServerTLSPolicy",
+    "apiVersion": "iam.cnrm.cloud.google.com/v1beta1",
+    "kind": "IAMPolicyMember",
     "metadata": {
-      "name": "networksecurityservertlspolicy-sample",
-      "labels": {
-        "label-one": "value-one"
-      }
+      "name": "iampolicymember-sample-memberref"
     },
     "spec": {
-      "description": "Sample global server TLS policy",
-      "location": "global",
-      "allowOpen": true,
-      "serverCertificate": {
-        "certificateProviderInstance": {
-          "pluginInstance": "google_cloud_private_spiffe"
+      "memberFrom": {
+        "serviceAccountRef": {
+          "name": "iampolicymember-dep-memberref"
         }
       },
-      "mtlsPolicy": {
-        "clientValidationCa": [
-          {
-            "certificateProviderInstance": {
-              "pluginInstance": "google_cloud_private_spiffe"
-            }
-          }
-        ]
+      "role": "roles/editor",
+      "resourceRef": {
+        "apiVersion": "pubsub.cnrm.cloud.google.com/v1beta1",
+        "kind": "PubSubTopic",
+        "name": "iampolicymember-dep-memberref"
       }
     }
   }

@@ -1,0 +1,116 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "main",
+  "contentType": "json",
+  "source": "gitConnectorAwsTerraHashicorp",
+  "paths": [
+    "/examples/eip/outputs.tf",
+    "/examples/eip/terraform.template.tfvars",
+    "/examples/eip/variables.tf",
+    "/examples/eip/main.tf"
+  ],
+  "timestamp": 1642967657655,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "TRF_TEMPLATE_SNAPSHOT",
+    "type": "terraform",
+    "collection": "terraformtemplate",
+    "paths": [
+      "/examples/eip/outputs.tf",
+      "/examples/eip/terraform.template.tfvars",
+      "/examples/eip/variables.tf",
+      "/examples/eip/main.tf"
+    ],
+    "snapshotId": "TRF_TEMPLATE_SNAPSHOT13",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "aws_security_group",
+      "aws_eip",
+      "aws_instance"
+    ]
+  },
+  "snapshotId": "TRF_TEMPLATE_SNAPSHOT13",
+  "collection": "terraformtemplate",
+  "json": {
+    "terraform": [
+      {
+        "required_version": ">= 0.12"
+      }
+    ],
+    "provider": [
+      {
+        "aws": {
+          "region": "${var.aws_region}"
+        }
+      }
+    ],
+    "resources": [
+      {
+        "type": "aws_eip",
+        "name": "default",
+        "properties": {
+          "instance": "${aws_instance.web.id}",
+          "vpc": true,
+          "compiletime_identity": "aws_eip.default"
+        }
+      },
+      {
+        "type": "aws_security_group",
+        "name": "default",
+        "properties": {
+          "name": "eip_example",
+          "description": "Used in the terraform",
+          "ingress": [
+            {
+              "from_port": 22,
+              "to_port": 22,
+              "protocol": "tcp",
+              "cidr_blocks": [
+                "0.0.0.0/0"
+              ]
+            },
+            {
+              "from_port": 80,
+              "to_port": 80,
+              "protocol": "tcp",
+              "cidr_blocks": [
+                "0.0.0.0/0"
+              ]
+            }
+          ],
+          "egress": [
+            {
+              "from_port": 0,
+              "to_port": 0,
+              "protocol": -1,
+              "cidr_blocks": [
+                "0.0.0.0/0"
+              ]
+            }
+          ],
+          "compiletime_identity": "aws_security_group.default"
+        }
+      },
+      {
+        "type": "aws_instance",
+        "name": "web",
+        "properties": {
+          "instance_type": "t2.micro",
+          "ami": "${var.aws_amis[var.aws_region]}",
+          "key_name": "terraform-aws-provider-example",
+          "security_groups": [
+            "${aws_security_group.default.name}"
+          ],
+          "user_data": "${file(\"userdata.sh\")}",
+          "tags": {
+            "Name": "eip-example"
+          },
+          "compiletime_identity": "aws_instance.web"
+        }
+      }
+    ]
+  }
+}

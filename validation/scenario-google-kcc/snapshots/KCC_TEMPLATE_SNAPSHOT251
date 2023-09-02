@@ -2,12 +2,12 @@
   "structure": "filesystem",
   "error": null,
   "reference": "master",
-  "contentType": "yaml",
+  "contentType": "json",
   "source": "gitConnectorGoogleKcc",
   "paths": [
-    "/samples/resources/computetargetinstance/compute_v1beta1_computenetwork.yaml"
+    "/samples/resources/computerouterpeer/compute_v1beta1_computerouterpeer.yaml"
   ],
-  "timestamp": 1628765143856,
+  "timestamp": 1642973303144,
   "queryuser": null,
   "checksum": "99914b932bd37a50b983c5e7c90ae93b",
   "node": {
@@ -15,22 +15,37 @@
     "type": "kcc",
     "collection": "kcctemplate",
     "paths": [
-      "/samples/resources/computetargetinstance/compute_v1beta1_computenetwork.yaml"
+      "/samples/resources/computerouterpeer/compute_v1beta1_computerouterpeer.yaml"
     ],
     "snapshotId": "KCC_TEMPLATE_SNAPSHOT251",
     "status": "active",
-    "validate": true
+    "validate": true,
+    "resourceTypes": [
+      "computerouterpeer"
+    ]
   },
   "snapshotId": "KCC_TEMPLATE_SNAPSHOT251",
   "collection": "kcctemplate",
   "json": {
     "apiVersion": "compute.cnrm.cloud.google.com/v1beta1",
-    "kind": "ComputeNetwork",
+    "kind": "ComputeRouterPeer",
     "metadata": {
-      "name": "computetargetinstance-dep"
+      "name": "computerouterpeer-sample"
     },
     "spec": {
-      "autoCreateSubnetworks": false
+      "region": "us-central1",
+      "peerIpAddress": "169.254.0.2",
+      "peerAsn": 65513,
+      "ipAddress": {
+        "external": "169.254.0.1"
+      },
+      "advertisedRoutePriority": 1,
+      "routerRef": {
+        "name": "computerouterpeer-dep"
+      },
+      "routerInterfaceRef": {
+        "name": "computerouterpeer-dep"
+      }
     }
   }
 }

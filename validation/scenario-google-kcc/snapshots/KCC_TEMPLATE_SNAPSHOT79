@@ -2,12 +2,12 @@
   "structure": "filesystem",
   "error": null,
   "reference": "master",
-  "contentType": "yaml",
+  "contentType": "json",
   "source": "gitConnectorGoogleKcc",
   "paths": [
-    "/samples/resources/computebackendbucket/cdn-enabled-backend-bucket/compute_v1beta1_computebackendbucket.yaml"
+    "/samples/resources/cloudbuildtrigger/build-trigger-with-template-file/cloudbuild_v1beta1_cloudbuildtrigger.yaml"
   ],
-  "timestamp": 1628765139904,
+  "timestamp": 1642973302137,
   "queryuser": null,
   "checksum": "99914b932bd37a50b983c5e7c90ae93b",
   "node": {
@@ -15,31 +15,45 @@
     "type": "kcc",
     "collection": "kcctemplate",
     "paths": [
-      "/samples/resources/computebackendbucket/cdn-enabled-backend-bucket/compute_v1beta1_computebackendbucket.yaml"
+      "/samples/resources/cloudbuildtrigger/build-trigger-with-template-file/cloudbuild_v1beta1_cloudbuildtrigger.yaml"
     ],
     "snapshotId": "KCC_TEMPLATE_SNAPSHOT79",
     "status": "active",
-    "validate": true
+    "validate": true,
+    "resourceTypes": [
+      "cloudbuildtrigger"
+    ]
   },
   "snapshotId": "KCC_TEMPLATE_SNAPSHOT79",
   "collection": "kcctemplate",
   "json": {
-    "apiVersion": "compute.cnrm.cloud.google.com/v1beta1",
-    "kind": "ComputeBackendBucket",
+    "apiVersion": "cloudbuild.cnrm.cloud.google.com/v1beta1",
+    "kind": "CloudBuildTrigger",
     "metadata": {
-      "name": "computebackendbucket-sample-cdnenabled",
-      "labels": {
-        "label-one": "value-one"
-      }
+      "name": "cloudbuildtrigger-sample-withtemplatefile"
     },
     "spec": {
-      "bucketRef": {
-        "name": "${PROJECT_ID?}-backendbucket-dep-cdn"
+      "description": "Cloud Build Trigger with a build template file. Builds the master branch of the referenced Cloud Source Repository.",
+      "disabled": false,
+      "triggerTemplate": {
+        "repoRef": {
+          "name": "cloudbuildtrigger-dep-withtemplatefile"
+        },
+        "dir": "team-a/service-b",
+        "branchName": "master"
       },
-      "description": "contains a reference to a bucket for use with HTTP(S) load-balancing and integrated CDN, caching on endpoints for only 1/10th the default time",
-      "enableCdn": true,
-      "cdnPolicy": {
-        "signedUrlCacheMaxAgeSec": 360
+      "ignoredFiles": [
+        "**/*.md"
+      ],
+      "includedFiles": [
+        "src/**"
+      ],
+      "substitutions": {
+        "_SERVICE_NAME": "service-name"
+      },
+      "filename": "cloudbuild.yaml",
+      "serviceAccountRef": {
+        "name": "cbt-dep-withtemplatefile"
       }
     }
   }

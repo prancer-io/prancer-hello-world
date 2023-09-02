@@ -1,0 +1,140 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "main",
+  "contentType": "json",
+  "source": "gitConnectorAzureTerraHashicorp",
+  "paths": [
+    "/examples/kubernetes/monitoring-log-analytics/outputs.tf",
+    "/examples/kubernetes/monitoring-log-analytics/variables.tf",
+    "/examples/kubernetes/monitoring-log-analytics/main.tf"
+  ],
+  "timestamp": 1642943279744,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "TRF_TEMPLATE_SNAPSHOT",
+    "type": "terraform",
+    "collection": "terraformtemplate",
+    "paths": [
+      "/examples/kubernetes/monitoring-log-analytics/outputs.tf",
+      "/examples/kubernetes/monitoring-log-analytics/variables.tf",
+      "/examples/kubernetes/monitoring-log-analytics/main.tf"
+    ],
+    "snapshotId": "TRF_TEMPLATE_SNAPSHOT54",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "azurerm_kubernetes_cluster",
+      "azurerm_resource_group",
+      "azurerm_log_analytics_workspace",
+      "azurerm_log_analytics_solution"
+    ]
+  },
+  "snapshotId": "TRF_TEMPLATE_SNAPSHOT54",
+  "collection": "terraformtemplate",
+  "json": {
+    "provider": [
+      {
+        "azurerm": {
+          "features": [
+            {}
+          ]
+        }
+      }
+    ],
+    "resources": [
+      {
+        "type": "azurerm_resource_group",
+        "name": "example",
+        "properties": {
+          "name": "${var.prefix}-k8s-resources",
+          "location": "${var.location}",
+          "compiletime_identity": "azurerm_resource_group.example"
+        }
+      },
+      {
+        "type": "azurerm_log_analytics_workspace",
+        "name": "example",
+        "properties": {
+          "name": "${var.prefix}-law",
+          "resource_group_name": "${azurerm_resource_group.example.name}",
+          "location": "${azurerm_resource_group.example.location}",
+          "sku": "PerGB2018",
+          "compiletime_identity": "azurerm_log_analytics_workspace.example"
+        }
+      },
+      {
+        "type": "azurerm_log_analytics_solution",
+        "name": "example",
+        "properties": {
+          "solution_name": "Containers",
+          "workspace_resource_id": "${azurerm_log_analytics_workspace.example.id}",
+          "workspace_name": "${azurerm_log_analytics_workspace.example.name}",
+          "location": "${azurerm_resource_group.example.location}",
+          "resource_group_name": "${azurerm_resource_group.example.name}",
+          "plan": [
+            {
+              "publisher": "Microsoft",
+              "product": "OMSGallery/Containers"
+            }
+          ],
+          "compiletime_identity": "azurerm_log_analytics_solution.example"
+        }
+      },
+      {
+        "type": "azurerm_kubernetes_cluster",
+        "name": "example",
+        "properties": {
+          "name": "${var.prefix}-k8s",
+          "location": "${azurerm_resource_group.example.location}",
+          "resource_group_name": "${azurerm_resource_group.example.name}",
+          "dns_prefix": "${var.prefix}-k8s",
+          "default_node_pool": [
+            {
+              "name": "default",
+              "node_count": 1,
+              "vm_size": "Standard_DS2_v2"
+            }
+          ],
+          "identity": [
+            {
+              "type": "SystemAssigned"
+            }
+          ],
+          "addon_profile": [
+            {
+              "aci_connector_linux": [
+                {
+                  "enabled": false
+                }
+              ],
+              "azure_policy": [
+                {
+                  "enabled": false
+                }
+              ],
+              "http_application_routing": [
+                {
+                  "enabled": false
+                }
+              ],
+              "kube_dashboard": [
+                {
+                  "enabled": true
+                }
+              ],
+              "oms_agent": [
+                {
+                  "enabled": true,
+                  "log_analytics_workspace_id": "${azurerm_log_analytics_workspace.example.id}"
+                }
+              ]
+            }
+          ],
+          "compiletime_identity": "azurerm_kubernetes_cluster.example"
+        }
+      }
+    ]
+  }
+}

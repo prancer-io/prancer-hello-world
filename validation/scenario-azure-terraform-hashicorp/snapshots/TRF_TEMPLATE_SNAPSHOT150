@@ -1,0 +1,722 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "main",
+  "contentType": "json",
+  "source": "gitConnectorAzureTerraHashicorp",
+  "paths": [
+    "/examples/virtual-machines/virtual_machine/spark-and-cassandra-on-centos/outputs.tf",
+    "/examples/virtual-machines/virtual_machine/spark-and-cassandra-on-centos/variables.tf",
+    "/examples/virtual-machines/virtual_machine/spark-and-cassandra-on-centos/main.tf"
+  ],
+  "timestamp": 1642943280129,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "TRF_TEMPLATE_SNAPSHOT",
+    "type": "terraform",
+    "collection": "terraformtemplate",
+    "paths": [
+      "/examples/virtual-machines/virtual_machine/spark-and-cassandra-on-centos/outputs.tf",
+      "/examples/virtual-machines/virtual_machine/spark-and-cassandra-on-centos/variables.tf",
+      "/examples/virtual-machines/virtual_machine/spark-and-cassandra-on-centos/main.tf"
+    ],
+    "snapshotId": "TRF_TEMPLATE_SNAPSHOT150",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "azurerm_subnet",
+      "azurerm_virtual_network",
+      "azurerm_resource_group",
+      "azurerm_availability_set",
+      "azurerm_network_interface",
+      "azurerm_network_security_group",
+      "azurerm_storage_container",
+      "azurerm_virtual_machine",
+      "azurerm_public_ip",
+      "azurerm_storage_account"
+    ]
+  },
+  "snapshotId": "TRF_TEMPLATE_SNAPSHOT150",
+  "collection": "terraformtemplate",
+  "json": {
+    "provider": [
+      {
+        "azurerm": {
+          "features": [
+            {}
+          ]
+        }
+      }
+    ],
+    "resources": [
+      {
+        "type": "azurerm_resource_group",
+        "name": "rg",
+        "properties": {
+          "name": "${var.resource_group}",
+          "location": "southcentralus",
+          "compiletime_identity": "azurerm_resource_group.rg"
+        }
+      },
+      {
+        "type": "azurerm_network_security_group",
+        "name": "primary",
+        "properties": {
+          "name": "nsg-spark-primary",
+          "resource_group_name": "${azurerm_resource_group.rg.name}",
+          "location": "${azurerm_resource_group.rg.location}",
+          "security_rule": [
+            {
+              "name": "ssh",
+              "description": "Allow SSH",
+              "priority": 100,
+              "direction": "Inbound",
+              "access": "Allow",
+              "protocol": "Tcp",
+              "source_port_range": "*",
+              "destination_port_range": 22,
+              "source_address_prefix": "Internet",
+              "destination_address_prefix": "*"
+            },
+            {
+              "name": "http_webui_spark",
+              "description": "Allow Web UI Access to Spark",
+              "priority": 101,
+              "direction": "Inbound",
+              "access": "Allow",
+              "protocol": "Tcp",
+              "source_port_range": "*",
+              "destination_port_range": 8080,
+              "source_address_prefix": "Internet",
+              "destination_address_prefix": "*"
+            },
+            {
+              "name": "http_rest_spark",
+              "description": "Allow REST API Access to Spark",
+              "priority": 102,
+              "direction": "Inbound",
+              "access": "Allow",
+              "protocol": "Tcp",
+              "source_port_range": "*",
+              "destination_port_range": 6066,
+              "source_address_prefix": "Internet",
+              "destination_address_prefix": "*"
+            }
+          ],
+          "compiletime_identity": "azurerm_network_security_group.primary"
+        }
+      },
+      {
+        "type": "azurerm_network_security_group",
+        "name": "secondary",
+        "properties": {
+          "name": "nsg-spark-secondary",
+          "resource_group_name": "${azurerm_resource_group.rg.name}",
+          "location": "${azurerm_resource_group.rg.location}",
+          "security_rule": [
+            {
+              "name": "ssh",
+              "description": "Allow SSH",
+              "priority": 100,
+              "direction": "Inbound",
+              "access": "Allow",
+              "protocol": "Tcp",
+              "source_port_range": "*",
+              "destination_port_range": 22,
+              "source_address_prefix": "Internet",
+              "destination_address_prefix": "*"
+            }
+          ],
+          "compiletime_identity": "azurerm_network_security_group.secondary"
+        }
+      },
+      {
+        "type": "azurerm_network_security_group",
+        "name": "cassandra",
+        "properties": {
+          "name": "nsg-cassandra",
+          "resource_group_name": "${azurerm_resource_group.rg.name}",
+          "location": "${azurerm_resource_group.rg.location}",
+          "security_rule": [
+            {
+              "name": "ssh",
+              "description": "Allow SSH",
+              "priority": 100,
+              "direction": "Inbound",
+              "access": "Allow",
+              "protocol": "Tcp",
+              "source_port_range": "*",
+              "destination_port_range": 22,
+              "source_address_prefix": "Internet",
+              "destination_address_prefix": "*"
+            }
+          ],
+          "compiletime_identity": "azurerm_network_security_group.cassandra"
+        }
+      },
+      {
+        "type": "azurerm_virtual_network",
+        "name": "spark",
+        "properties": {
+          "name": "vnet-spark",
+          "resource_group_name": "${azurerm_resource_group.rg.name}",
+          "location": "${azurerm_resource_group.rg.location}",
+          "address_space": [
+            "10.0.0.0/16"
+          ],
+          "compiletime_identity": "azurerm_virtual_network.spark"
+        }
+      },
+      {
+        "type": "azurerm_subnet",
+        "name": "subnet1",
+        "properties": {
+          "name": "Subnet-Primary",
+          "virtual_network_name": "${azurerm_virtual_network.spark.name}",
+          "resource_group_name": "${azurerm_resource_group.rg.name}",
+          "address_prefixes": [
+            "10.0.0.0/24"
+          ],
+          "network_security_group_id": "${azurerm_network_security_group.primary.id}",
+          "depends_on": [
+            "azurerm_virtual_network.spark"
+          ],
+          "compiletime_identity": "azurerm_subnet.subnet1"
+        }
+      },
+      {
+        "type": "azurerm_subnet",
+        "name": "subnet2",
+        "properties": {
+          "name": "Subnet-Secondary",
+          "virtual_network_name": "${azurerm_virtual_network.spark.name}",
+          "resource_group_name": "${azurerm_resource_group.rg.name}",
+          "address_prefixes": [
+            "10.0.1.0/24"
+          ],
+          "compiletime_identity": "azurerm_subnet.subnet2"
+        }
+      },
+      {
+        "type": "azurerm_subnet",
+        "name": "subnet3",
+        "properties": {
+          "name": "Subnet-Cassandra",
+          "virtual_network_name": "${azurerm_virtual_network.spark.name}",
+          "resource_group_name": "${azurerm_resource_group.rg.name}",
+          "address_prefixes": [
+            "10.0.2.0/24"
+          ],
+          "compiletime_identity": "azurerm_subnet.subnet3"
+        }
+      },
+      {
+        "type": "azurerm_public_ip",
+        "name": "primary",
+        "properties": {
+          "name": "public-ip-primary",
+          "location": "${azurerm_resource_group.rg.location}",
+          "resource_group_name": "${azurerm_resource_group.rg.name}",
+          "allocation_method": "Static",
+          "compiletime_identity": "azurerm_public_ip.primary"
+        }
+      },
+      {
+        "type": "azurerm_public_ip",
+        "name": "secondary",
+        "properties": {
+          "name": "public-ip-secondary-0",
+          "location": "${azurerm_resource_group.rg.location}",
+          "resource_group_name": "${azurerm_resource_group.rg.name}",
+          "allocation_method": "Static",
+          "compiletime_identity": "azurerm_public_ip.secondary"
+        }
+      },
+      {
+        "type": "azurerm_public_ip",
+        "name": "secondary",
+        "properties": {
+          "name": "public-ip-secondary-1",
+          "location": "${azurerm_resource_group.rg.location}",
+          "resource_group_name": "${azurerm_resource_group.rg.name}",
+          "allocation_method": "Static",
+          "compiletime_identity": "azurerm_public_ip.secondary"
+        }
+      },
+      {
+        "type": "azurerm_public_ip",
+        "name": "cassandra",
+        "properties": {
+          "name": "public-ip-cassandra",
+          "location": "${azurerm_resource_group.rg.location}",
+          "resource_group_name": "${azurerm_resource_group.rg.name}",
+          "allocation_method": "Static",
+          "compiletime_identity": "azurerm_public_ip.cassandra"
+        }
+      },
+      {
+        "type": "azurerm_network_interface",
+        "name": "primary",
+        "properties": {
+          "name": "nic-primary",
+          "location": "${azurerm_resource_group.rg.location}",
+          "resource_group_name": "${azurerm_resource_group.rg.name}",
+          "network_security_group_id": "${azurerm_network_security_group.primary.id}",
+          "depends_on": [
+            "azurerm_virtual_network.spark",
+            "azurerm_public_ip.primary",
+            "azurerm_network_security_group.primary"
+          ],
+          "ip_configuration": [
+            {
+              "name": "ipconfig1",
+              "subnet_id": "${azurerm_subnet.subnet1.id}",
+              "private_ip_address_allocation": "Static",
+              "private_ip_address": "10.0.0.5",
+              "public_ip_address_id": "${azurerm_public_ip.primary.id}"
+            }
+          ],
+          "compiletime_identity": "azurerm_network_interface.primary"
+        }
+      },
+      {
+        "type": "azurerm_network_interface",
+        "name": "secondary",
+        "properties": {
+          "name": "nic-secondary-0",
+          "location": "${azurerm_resource_group.rg.location}",
+          "resource_group_name": "${azurerm_resource_group.rg.name}",
+          "network_security_group_id": "${azurerm_network_security_group.secondary.id}",
+          "depends_on": [
+            "azurerm_virtual_network.spark",
+            "azurerm_public_ip.secondary",
+            "azurerm_network_security_group.secondary"
+          ],
+          "ip_configuration": [
+            {
+              "name": "ipconfig1",
+              "subnet_id": "${azurerm_subnet.subnet2.id}",
+              "private_ip_address_allocation": "Static",
+              "private_ip_address": "10.0.1.${5 + count.index}",
+              "public_ip_address_id": "element(azurerm_public_ip.secondary.*.id,0)"
+            }
+          ],
+          "compiletime_identity": "azurerm_network_interface.secondary"
+        }
+      },
+      {
+        "type": "azurerm_network_interface",
+        "name": "secondary",
+        "properties": {
+          "name": "nic-secondary-1",
+          "location": "${azurerm_resource_group.rg.location}",
+          "resource_group_name": "${azurerm_resource_group.rg.name}",
+          "network_security_group_id": "${azurerm_network_security_group.secondary.id}",
+          "depends_on": [
+            "azurerm_virtual_network.spark",
+            "azurerm_public_ip.secondary",
+            "azurerm_network_security_group.secondary"
+          ],
+          "ip_configuration": [
+            {
+              "name": "ipconfig1",
+              "subnet_id": "${azurerm_subnet.subnet2.id}",
+              "private_ip_address_allocation": "Static",
+              "private_ip_address": "10.0.1.${5 + count.index}",
+              "public_ip_address_id": "element(azurerm_public_ip.secondary.*.id,1)"
+            }
+          ],
+          "compiletime_identity": "azurerm_network_interface.secondary"
+        }
+      },
+      {
+        "type": "azurerm_network_interface",
+        "name": "cassandra",
+        "properties": {
+          "name": "nic-cassandra",
+          "location": "${azurerm_resource_group.rg.location}",
+          "resource_group_name": "${azurerm_resource_group.rg.name}",
+          "network_security_group_id": "${azurerm_network_security_group.cassandra.id}",
+          "depends_on": [
+            "azurerm_virtual_network.spark",
+            "azurerm_public_ip.cassandra",
+            "azurerm_network_security_group.cassandra"
+          ],
+          "ip_configuration": [
+            {
+              "name": "ipconfig1",
+              "subnet_id": "${azurerm_subnet.subnet3.id}",
+              "private_ip_address_allocation": "Static",
+              "private_ip_address": "10.0.2.5",
+              "public_ip_address_id": "${azurerm_public_ip.cassandra.id}"
+            }
+          ],
+          "compiletime_identity": "azurerm_network_interface.cassandra"
+        }
+      },
+      {
+        "type": "azurerm_availability_set",
+        "name": "secondary",
+        "properties": {
+          "name": "availability-secondary",
+          "location": "${azurerm_resource_group.rg.location}",
+          "resource_group_name": "${azurerm_resource_group.rg.name}",
+          "platform_update_domain_count": 5,
+          "platform_fault_domain_count": 2,
+          "compiletime_identity": "azurerm_availability_set.secondary"
+        }
+      },
+      {
+        "type": "azurerm_storage_account",
+        "name": "primary",
+        "properties": {
+          "name": "primary${var.unique_prefix}",
+          "resource_group_name": "${azurerm_resource_group.rg.name}",
+          "location": "${azurerm_resource_group.rg.location}",
+          "account_tier": "Standard",
+          "account_replication_type": "LRS",
+          "compiletime_identity": "azurerm_storage_account.primary"
+        }
+      },
+      {
+        "type": "azurerm_storage_account",
+        "name": "secondary",
+        "properties": {
+          "name": "secondary${var.unique_prefix}0",
+          "resource_group_name": "${azurerm_resource_group.rg.name}",
+          "location": "${azurerm_resource_group.rg.location}",
+          "account_tier": "Standard",
+          "account_replication_type": "LRS",
+          "compiletime_identity": "azurerm_storage_account.secondary"
+        }
+      },
+      {
+        "type": "azurerm_storage_account",
+        "name": "secondary",
+        "properties": {
+          "name": "secondary${var.unique_prefix}1",
+          "resource_group_name": "${azurerm_resource_group.rg.name}",
+          "location": "${azurerm_resource_group.rg.location}",
+          "account_tier": "Standard",
+          "account_replication_type": "LRS",
+          "compiletime_identity": "azurerm_storage_account.secondary"
+        }
+      },
+      {
+        "type": "azurerm_storage_account",
+        "name": "cassandra",
+        "properties": {
+          "name": "cassandra${var.unique_prefix}",
+          "resource_group_name": "${azurerm_resource_group.rg.name}",
+          "location": "${azurerm_resource_group.rg.location}",
+          "account_tier": "Standard",
+          "account_replication_type": "LRS",
+          "compiletime_identity": "azurerm_storage_account.cassandra"
+        }
+      },
+      {
+        "type": "azurerm_storage_container",
+        "name": "primary",
+        "properties": {
+          "name": "vhds",
+          "resource_group_name": "${azurerm_resource_group.rg.name}",
+          "storage_account_name": "${azurerm_storage_account.primary.name}",
+          "container_access_type": "private",
+          "depends_on": [
+            "azurerm_storage_account.primary"
+          ],
+          "compiletime_identity": "azurerm_storage_container.primary"
+        }
+      },
+      {
+        "type": "azurerm_storage_container",
+        "name": "secondary",
+        "properties": {
+          "name": "vhds${count.index}",
+          "storage_account_name": "element(azurerm_storage_account.secondary.*.name,count.index)",
+          "container_access_type": "private",
+          "depends_on": [
+            "azurerm_storage_account.secondary"
+          ],
+          "compiletime_identity": "azurerm_storage_container.secondary"
+        }
+      },
+      {
+        "type": "azurerm_storage_container",
+        "name": "cassandra",
+        "properties": {
+          "name": "vhds",
+          "storage_account_name": "${azurerm_storage_account.cassandra.name}",
+          "container_access_type": "private",
+          "depends_on": [
+            "azurerm_storage_account.cassandra"
+          ],
+          "compiletime_identity": "azurerm_storage_container.cassandra"
+        }
+      },
+      {
+        "type": "azurerm_virtual_machine",
+        "name": "primary",
+        "properties": {
+          "name": "spark-primary",
+          "resource_group_name": "${azurerm_resource_group.rg.name}",
+          "location": "${azurerm_resource_group.rg.location}",
+          "vm_size": "Standard_D1_v2",
+          "network_interface_ids": [
+            "${azurerm_network_interface.primary.id}"
+          ],
+          "depends_on": [
+            "azurerm_storage_account.primary",
+            "azurerm_network_interface.primary",
+            "azurerm_storage_container.primary"
+          ],
+          "storage_image_reference": [
+            {
+              "publisher": "OpenLogic",
+              "offer": "CentOS",
+              "sku": "7.3",
+              "version": "latest"
+            }
+          ],
+          "storage_os_disk": [
+            {
+              "name": "vmPrimaryOSDisk",
+              "vhd_uri": "http://${azurerm_storage_account.primary.name}.blob.core.windows.net/${azurerm_storage_container.primary.name}/vmPrimaryOSDisk.vhd",
+              "create_option": "FromImage",
+              "caching": "ReadWrite"
+            }
+          ],
+          "os_profile": [
+            {
+              "computer_name": "spark-primary",
+              "admin_username": "${var.vm_admin_username}",
+              "admin_password": "${var.vm_admin_password}"
+            }
+          ],
+          "os_profile_linux_config": [
+            {
+              "disable_password_authentication": false
+            }
+          ],
+          "connection": [
+            {
+              "type": "ssh",
+              "host": "${azurerm_public_ip.primary.ip_address}",
+              "user": "${var.vm_admin_username}",
+              "password": "${var.vm_admin_password}"
+            }
+          ],
+          "provisioner": [
+            {
+              "remote-exec": {
+                "inline": [
+                  "wget https://raw.githubusercontent.com/Azure/azure-quickstart-templates/primary/spark-and-cassandra-on-centos/CustomScripts/scriptSparkProvisioner.sh",
+                  "echo ${var.vm_admin_password} | sudo -S sh ./scriptSparkProvisioner.sh -runas=primary -primary=10.0.0.5"
+                ]
+              }
+            }
+          ],
+          "compiletime_identity": "azurerm_virtual_machine.primary"
+        }
+      },
+      {
+        "type": "azurerm_virtual_machine",
+        "name": "secondary",
+        "properties": {
+          "name": "spark-secondary-0",
+          "resource_group_name": "${azurerm_resource_group.rg.name}",
+          "location": "${azurerm_resource_group.rg.location}",
+          "vm_size": "Standard_D3_v2",
+          "network_interface_ids": [
+            "element(azurerm_network_interface.secondary.*.id,0)"
+          ],
+          "availability_set_id": "${azurerm_availability_set.secondary.id}",
+          "depends_on": [
+            "azurerm_storage_account.secondary",
+            "azurerm_network_interface.secondary",
+            "azurerm_storage_container.secondary"
+          ],
+          "storage_image_reference": [
+            {
+              "publisher": "OpenLogic",
+              "offer": "CentOS",
+              "sku": "7.3",
+              "version": "latest"
+            }
+          ],
+          "storage_os_disk": [
+            {
+              "name": "vmSecondaryOSDisk-0",
+              "vhd_uri": "http://element(azurerm_storage_account.secondary.*.name,0).blob.core.windows.net/element(azurerm_storage_container.secondary.*.name,0)/vmSecondaryOSDisk-.vhd",
+              "create_option": "FromImage",
+              "caching": "ReadWrite"
+            }
+          ],
+          "os_profile": [
+            {
+              "computer_name": "spark-secondary-0",
+              "admin_username": "${var.vm_admin_username}",
+              "admin_password": "${var.vm_admin_password}"
+            }
+          ],
+          "os_profile_linux_config": [
+            {
+              "disable_password_authentication": false
+            }
+          ],
+          "connection": [
+            {
+              "type": "ssh",
+              "host": "element(azurerm_public_ip.secondary.*.ip_address,0)",
+              "user": "${var.vm_admin_username}",
+              "password": "${var.vm_admin_password}"
+            }
+          ],
+          "provisioner": [
+            {
+              "remote-exec": {
+                "inline": [
+                  "wget https://raw.githubusercontent.com/Azure/azure-quickstart-templates/primary/spark-and-cassandra-on-centos/CustomScripts/scriptSparkProvisioner.sh",
+                  "echo ${var.vm_admin_password} | sudo -S sh ./scriptSparkProvisioner.sh -runas=secondary -primary=10.0.0.5"
+                ]
+              }
+            }
+          ],
+          "compiletime_identity": "azurerm_virtual_machine.secondary"
+        }
+      },
+      {
+        "type": "azurerm_virtual_machine",
+        "name": "secondary",
+        "properties": {
+          "name": "spark-secondary-1",
+          "resource_group_name": "${azurerm_resource_group.rg.name}",
+          "location": "${azurerm_resource_group.rg.location}",
+          "vm_size": "Standard_D3_v2",
+          "network_interface_ids": [
+            "element(azurerm_network_interface.secondary.*.id,1)"
+          ],
+          "availability_set_id": "${azurerm_availability_set.secondary.id}",
+          "depends_on": [
+            "azurerm_storage_account.secondary",
+            "azurerm_network_interface.secondary",
+            "azurerm_storage_container.secondary"
+          ],
+          "storage_image_reference": [
+            {
+              "publisher": "OpenLogic",
+              "offer": "CentOS",
+              "sku": "7.3",
+              "version": "latest"
+            }
+          ],
+          "storage_os_disk": [
+            {
+              "name": "vmSecondaryOSDisk-1",
+              "vhd_uri": "http://element(azurerm_storage_account.secondary.*.name,1).blob.core.windows.net/element(azurerm_storage_container.secondary.*.name,1)/vmSecondaryOSDisk-.vhd",
+              "create_option": "FromImage",
+              "caching": "ReadWrite"
+            }
+          ],
+          "os_profile": [
+            {
+              "computer_name": "spark-secondary-1",
+              "admin_username": "${var.vm_admin_username}",
+              "admin_password": "${var.vm_admin_password}"
+            }
+          ],
+          "os_profile_linux_config": [
+            {
+              "disable_password_authentication": false
+            }
+          ],
+          "connection": [
+            {
+              "type": "ssh",
+              "host": "element(azurerm_public_ip.secondary.*.ip_address,1)",
+              "user": "${var.vm_admin_username}",
+              "password": "${var.vm_admin_password}"
+            }
+          ],
+          "provisioner": [
+            {
+              "remote-exec": {
+                "inline": [
+                  "wget https://raw.githubusercontent.com/Azure/azure-quickstart-templates/primary/spark-and-cassandra-on-centos/CustomScripts/scriptSparkProvisioner.sh",
+                  "echo ${var.vm_admin_password} | sudo -S sh ./scriptSparkProvisioner.sh -runas=secondary -primary=10.0.0.5"
+                ]
+              }
+            }
+          ],
+          "compiletime_identity": "azurerm_virtual_machine.secondary"
+        }
+      },
+      {
+        "type": "azurerm_virtual_machine",
+        "name": "cassandra",
+        "properties": {
+          "name": "cassandra",
+          "resource_group_name": "${azurerm_resource_group.rg.name}",
+          "location": "${azurerm_resource_group.rg.location}",
+          "vm_size": "Standard_D3_v2",
+          "network_interface_ids": [
+            "${azurerm_network_interface.cassandra.id}"
+          ],
+          "depends_on": [
+            "azurerm_storage_account.cassandra",
+            "azurerm_network_interface.cassandra",
+            "azurerm_storage_container.cassandra"
+          ],
+          "storage_image_reference": [
+            {
+              "publisher": "OpenLogic",
+              "offer": "CentOS",
+              "sku": "7.3",
+              "version": "latest"
+            }
+          ],
+          "storage_os_disk": [
+            {
+              "name": "vmCassandraOSDisk",
+              "vhd_uri": "http://${azurerm_storage_account.cassandra.name}.blob.core.windows.net/${azurerm_storage_container.cassandra.name}/vmCassandraOSDisk.vhd",
+              "create_option": "FromImage",
+              "caching": "ReadWrite"
+            }
+          ],
+          "os_profile": [
+            {
+              "computer_name": "cassandra",
+              "admin_username": "${var.vm_admin_username}",
+              "admin_password": "${var.vm_admin_password}"
+            }
+          ],
+          "os_profile_linux_config": [
+            {
+              "disable_password_authentication": false
+            }
+          ],
+          "connection": [
+            {
+              "type": "ssh",
+              "host": "${azurerm_public_ip.cassandra.ip_address}",
+              "user": "${var.vm_admin_username}",
+              "password": "${var.vm_admin_password}"
+            }
+          ],
+          "provisioner": [
+            {
+              "remote-exec": {
+                "inline": [
+                  "wget https://raw.githubusercontent.com/Azure/azure-quickstart-templates/primary/spark-and-cassandra-on-centos/CustomScripts/scriptCassandraProvisioner.sh",
+                  "echo ${var.vm_admin_password} | sudo -S sh ./scriptCassandraProvisioner.sh"
+                ]
+              }
+            }
+          ],
+          "compiletime_identity": "azurerm_virtual_machine.cassandra"
+        }
+      }
+    ]
+  }
+}

@@ -2,12 +2,12 @@
   "structure": "filesystem",
   "error": null,
   "reference": "master",
-  "contentType": "yaml",
+  "contentType": "json",
   "source": "gitConnectorGoogleKcc",
   "paths": [
-    "/samples/resources/storagetransferjob/storagetransfer_v1beta1_storagetransferjob.yaml"
+    "/samples/resources/monitoringservicelevelobjective/request-based-distribution-cut/monitoring_v1beta1_monitoringservicelevelobjective.yaml"
   ],
-  "timestamp": 1628765151574,
+  "timestamp": 1642973304638,
   "queryuser": null,
   "checksum": "99914b932bd37a50b983c5e7c90ae93b",
   "node": {
@@ -15,59 +15,45 @@
     "type": "kcc",
     "collection": "kcctemplate",
     "paths": [
-      "/samples/resources/storagetransferjob/storagetransfer_v1beta1_storagetransferjob.yaml"
+      "/samples/resources/monitoringservicelevelobjective/request-based-distribution-cut/monitoring_v1beta1_monitoringservicelevelobjective.yaml"
     ],
     "snapshotId": "KCC_TEMPLATE_SNAPSHOT538",
     "status": "active",
-    "validate": true
+    "validate": true,
+    "resourceTypes": [
+      "monitoringservicelevelobjective"
+    ]
   },
   "snapshotId": "KCC_TEMPLATE_SNAPSHOT538",
   "collection": "kcctemplate",
   "json": {
-    "apiVersion": "storagetransfer.cnrm.cloud.google.com/v1beta1",
-    "kind": "StorageTransferJob",
+    "apiVersion": "monitoring.cnrm.cloud.google.com/v1beta1",
+    "kind": "MonitoringServiceLevelObjective",
     "metadata": {
-      "name": "storagetransferjob-sample"
+      "name": "monitoringservicelevelobjective-sample-requestbaseddistributioncut",
+      "labels": {
+        "test1": "value1"
+      }
     },
     "spec": {
-      "description": "Sample storage transfer job",
-      "schedule": {
-        "startTimeOfDay": {
-          "seconds": 0,
-          "hours": 0,
-          "minutes": 0,
-          "nanos": 0
-        },
-        "scheduleEndDate": {
-          "day": 31,
-          "month": 12,
-          "year": 9999
-        },
-        "scheduleStartDate": {
-          "day": 28,
-          "month": 1,
-          "year": 2020
-        }
+      "projectRef": {
+        "external": "projects/${PROJECT_ID?}"
       },
-      "status": "ENABLED",
-      "transferSpec": {
-        "gcsDataSink": {
-          "bucketRef": {
-            "name": "${PROJECT_ID?}-storagetransferjob-dep1"
+      "serviceRef": {
+        "external": "monitoringservicelevelobjective-dep-requestbaseddistributioncut"
+      },
+      "displayName": "A request based distribution cut filter",
+      "goal": 0.9,
+      "rollingPeriod": "86400s",
+      "serviceLevelIndicator": {
+        "requestBased": {
+          "distributionCut": {
+            "distributionFilter": "metric.type=\"serviceruntime.googleapis.com/api/request_latencies\" \n resource.type=\"api\"  ",
+            "range": {
+              "min": 50,
+              "max": 100
+            }
           }
-        },
-        "gcsDataSource": {
-          "bucketRef": {
-            "name": "${PROJECT_ID?}-storagetransferjob-dep2"
-          }
-        },
-        "objectConditions": {
-          "maxTimeElapsedSinceLastModification": "5s",
-          "minTimeElapsedSinceLastModification": "2s"
-        },
-        "transferOptions": {
-          "deleteObjectsUniqueInSink": false,
-          "overwriteObjectsAlreadyExistingInSink": true
         }
       }
     }

@@ -2,12 +2,12 @@
   "structure": "filesystem",
   "error": null,
   "reference": "master",
-  "contentType": "yaml",
+  "contentType": "json",
   "source": "gitConnectorGoogleKcc",
   "paths": [
-    "/samples/resources/sqlsslcert/sql_v1beta1_sqlinstance.yaml"
+    "/samples/resources/memcacheinstance/servicenetworking_v1beta1_servicenetworkingconnection.yaml"
   ],
-  "timestamp": 1628765151118,
+  "timestamp": 1642973304563,
   "queryuser": null,
   "checksum": "99914b932bd37a50b983c5e7c90ae93b",
   "node": {
@@ -15,26 +15,33 @@
     "type": "kcc",
     "collection": "kcctemplate",
     "paths": [
-      "/samples/resources/sqlsslcert/sql_v1beta1_sqlinstance.yaml"
+      "/samples/resources/memcacheinstance/servicenetworking_v1beta1_servicenetworkingconnection.yaml"
     ],
     "snapshotId": "KCC_TEMPLATE_SNAPSHOT522",
     "status": "active",
-    "validate": true
+    "validate": true,
+    "resourceTypes": [
+      "servicenetworkingconnection"
+    ]
   },
   "snapshotId": "KCC_TEMPLATE_SNAPSHOT522",
   "collection": "kcctemplate",
   "json": {
-    "apiVersion": "sql.cnrm.cloud.google.com/v1beta1",
-    "kind": "SQLInstance",
+    "apiVersion": "servicenetworking.cnrm.cloud.google.com/v1beta1",
+    "kind": "ServiceNetworkingConnection",
     "metadata": {
-      "name": "sqlsslcert-dep"
+      "name": "memcacheinstance-dep"
     },
     "spec": {
-      "databaseVersion": "MYSQL_5_7",
-      "region": "us-central1",
-      "settings": {
-        "tier": "db-f1-micro"
-      }
+      "networkRef": {
+        "name": "memcacheinstance-dep"
+      },
+      "reservedPeeringRanges": [
+        {
+          "name": "memcacheinstance-dep"
+        }
+      ],
+      "service": "servicenetworking.googleapis.com"
     }
   }
 }

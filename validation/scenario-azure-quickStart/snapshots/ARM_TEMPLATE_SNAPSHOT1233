@@ -1,0 +1,242 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAzureQuickStart",
+  "paths": [
+    "/quickstarts/microsoft.datafactory/data-factory-v2-onprem-sql-to-blob-copy/azuredeploy.json",
+    "/quickstarts/microsoft.datafactory/data-factory-v2-onprem-sql-to-blob-copy/azuredeploy.parameters.json"
+  ],
+  "timestamp": 1642962905779,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/quickstarts/microsoft.datafactory/data-factory-v2-onprem-sql-to-blob-copy/azuredeploy.json",
+      "/quickstarts/microsoft.datafactory/data-factory-v2-onprem-sql-to-blob-copy/azuredeploy.parameters.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT1233",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "microsoft.datafactory/factories"
+    ]
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT1233",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "dataFactoryName": {
+        "type": "string",
+        "metadata": {
+          "description": "Name of the data factory. Must be globally unique."
+        },
+        "value": "GEN-UNIQUE"
+      },
+      "dataFactoryLocation": {
+        "type": "string",
+        "allowedValues": [
+          "East US",
+          "East US 2",
+          "West Europe",
+          "Southeast Asia"
+        ],
+        "metadata": {
+          "description": "Location of the data factory."
+        },
+        "value": "East US"
+      },
+      "onPremSqlServerConnectionString": {
+        "type": "string",
+        "metadata": {
+          "description": "Connnection string for the on-premsies SQL Server database."
+        },
+        "value": "GEN-UNIQUE"
+      },
+      "sqlTableName": {
+        "type": "string",
+        "metadata": {
+          "description": "Name of the target table in the Azure SQL database."
+        },
+        "value": "[dbo].[emp]"
+      },
+      "blobContainer": {
+        "type": "string",
+        "metadata": {
+          "description": "Name of the blob container in the Azure Storage account."
+        },
+        "value": "adftutorial"
+      },
+      "outputBlobFolder": {
+        "type": "string",
+        "metadata": {
+          "description": "The folder in the blob container to which the data is copied."
+        },
+        "value": "fromonpremsql"
+      },
+      "storageAccountName": {
+        "type": "string",
+        "metadata": {
+          "description": "Storage AccountName"
+        },
+        "value": "GET-PREREQ-storageAccountName"
+      }
+    },
+    "variables": {
+      "azureStorageLinkedServiceName": "Tutorial3-AzureStorageLinkedService",
+      "selfHostedIRName": "Tutorial3-SelfHostedIR",
+      "onPremSqlServerLinkedServiceName": "Tutorial3-OnPremSqlServerLinkedService",
+      "inputDatasetName": "Tutorial3-InputBlobDataset",
+      "outputDatasetName": "Tutorial3-OutputSqlDataset",
+      "pipelineName": "Tutorial3-CopyFromOnPremSqlToBlobPipeline",
+      "storageAccountId": "Microsoft.Storage/storageAccounts/GET-PREREQ-storageAccountName"
+    },
+    "resources": [
+      {
+        "name": "GEN-UNIQUE",
+        "apiVersion": "2018-06-01",
+        "type": "Microsoft.DataFactory/factories",
+        "location": "East US",
+        "properties": {},
+        "resources": [
+          {
+            "type": "linkedservices",
+            "name": "Tutorial3-AzureStorageLinkedService",
+            "dependsOn": [
+              "GEN-UNIQUE"
+            ],
+            "apiVersion": "2018-06-01",
+            "properties": {
+              "type": "AzureStorage",
+              "description": "Azure Storage linked service",
+              "typeProperties": {
+                "connectionString": {
+                  "value": "[concat('DefaultEndpointsProtocol=https;AccountName=',parameters('storageAccountName'),';AccountKey=',listKeys(variables('storageAccountId'), '2021-01-01').keys[0].value)]",
+                  "type": "SecureString"
+                }
+              }
+            }
+          },
+          {
+            "name": "Tutorial3-SelfHostedIR",
+            "type": "integrationRuntimes",
+            "apiVersion": "2018-06-01",
+            "properties": {
+              "type": "SelfHosted"
+            },
+            "dependsOn": [
+              "GEN-UNIQUE"
+            ]
+          },
+          {
+            "name": "Tutorial3-OnPremSqlServerLinkedService",
+            "type": "linkedServices",
+            "apiVersion": "2018-06-01",
+            "properties": {
+              "type": "SqlServer",
+              "typeProperties": {
+                "connectionString": {
+                  "type": "SecureString",
+                  "value": "GEN-UNIQUE"
+                }
+              },
+              "connectVia": {
+                "referenceName": "Tutorial3-SelfHostedIR",
+                "type": "IntegrationRuntimeReference"
+              }
+            },
+            "dependsOn": [
+              "GEN-UNIQUE",
+              "Tutorial3-SelfHostedIR"
+            ]
+          },
+          {
+            "name": "Tutorial3-InputBlobDataset",
+            "type": "datasets",
+            "apiVersion": "2018-06-01",
+            "properties": {
+              "linkedServiceName": {
+                "referenceName": "Tutorial3-OnPremSqlServerLinkedService",
+                "type": "LinkedServiceReference"
+              },
+              "type": "SqlServerTable",
+              "typeProperties": {
+                "tableName": "[dbo].[emp]"
+              }
+            },
+            "dependsOn": [
+              "GEN-UNIQUE",
+              "Tutorial3-OnPremSqlServerLinkedService"
+            ]
+          },
+          {
+            "name": "Tutorial3-OutputSqlDataset",
+            "type": "datasets",
+            "apiVersion": "2018-06-01",
+            "properties": {
+              "linkedServiceName": {
+                "referenceName": "Tutorial3-AzureStorageLinkedService",
+                "type": "LinkedServiceReference"
+              },
+              "type": "AzureBlob",
+              "typeProperties": {
+                "fileName": "@CONCAT(pipeline().RunId, '.txt')",
+                "folderPath": "adftutorial\\fromonpremsql"
+              }
+            },
+            "dependsOn": [
+              "GEN-UNIQUE",
+              "Tutorial3-AzureStorageLinkedService"
+            ]
+          },
+          {
+            "type": "pipelines",
+            "name": "Tutorial3-CopyFromOnPremSqlToBlobPipeline",
+            "dependsOn": [
+              "GEN-UNIQUE",
+              "Tutorial3-InputBlobDataset",
+              "Tutorial3-OutputSqlDataset"
+            ],
+            "apiVersion": "2018-06-01",
+            "properties": {
+              "activities": [
+                {
+                  "type": "Copy",
+                  "typeProperties": {
+                    "source": {
+                      "type": "BlobSource",
+                      "recursive": true
+                    },
+                    "sink": {
+                      "type": "SqlSink",
+                      "writeBatchSize": 10000
+                    }
+                  },
+                  "name": "MyCopyActivity",
+                  "inputs": [
+                    {
+                      "referenceName": "Tutorial3-InputBlobDataset",
+                      "type": "DatasetReference"
+                    }
+                  ],
+                  "outputs": [
+                    {
+                      "referenceName": "Tutorial3-OutputSqlDataset",
+                      "type": "DatasetReference"
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        ]
+      }
+    ],
+    "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+  }
+}

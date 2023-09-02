@@ -1,0 +1,305 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAzureQuickStart",
+  "paths": [
+    "/quickstarts/microsoft.compute/dsc-linux-public-storage-on-ubuntu/azuredeploy.json",
+    "/quickstarts/microsoft.compute/dsc-linux-public-storage-on-ubuntu/azuredeploy.parameters.json"
+  ],
+  "timestamp": 1642962903653,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/quickstarts/microsoft.compute/dsc-linux-public-storage-on-ubuntu/azuredeploy.json",
+      "/quickstarts/microsoft.compute/dsc-linux-public-storage-on-ubuntu/azuredeploy.parameters.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT1020",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "microsoft.network/publicipaddresses",
+      "microsoft.network/virtualnetworks",
+      "microsoft.network/networkinterfaces",
+      "microsoft.compute/virtualmachines/extensions",
+      "microsoft.compute/virtualmachines",
+      "microsoft.storage/storageaccounts"
+    ]
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT1020",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "username": {
+        "type": "string",
+        "metadata": {
+          "description": "Username for the Virtual Machine."
+        },
+        "value": "GEN-UNIQUE"
+      },
+      "newStorageAccountName": {
+        "type": "string",
+        "metadata": {
+          "description": "Unique DNS Name for the Storage Account where the Virtual Machine's disks will be placed."
+        },
+        "value": "GEN-UNIQUE"
+      },
+      "vmName": {
+        "type": "string",
+        "metadata": {
+          "description": "Name of the vm, will be used as DNS Name for the Public IP used to access the Virtual Machine."
+        },
+        "value": "GEN-UNIQUE"
+      },
+      "vmSize": {
+        "type": "string",
+        "defaultValue": "Standard_D2_v3",
+        "metadata": {
+          "description": "VM size"
+        }
+      },
+      "ubuntuOSVersion": {
+        "type": "string",
+        "defaultValue": "14.04.5-LTS",
+        "metadata": {
+          "description": "The Ubuntu version"
+        },
+        "allowedValues": [
+          "14.04.5-LTS",
+          "12.04.5-LTS"
+        ],
+        "value": "14.04.5-LTS"
+      },
+      "mode": {
+        "type": "string",
+        "defaultValue": "Push",
+        "metadata": {
+          "description": "The functional mode, push MOF configuration (Push), distribute MOF configuration (Pull), install custom DSC module (Install)"
+        },
+        "allowedValues": [
+          "Push",
+          "Pull",
+          "Install",
+          "Register"
+        ],
+        "value": "Install"
+      },
+      "fileUri": {
+        "type": "string",
+        "defaultValue": "",
+        "metadata": {
+          "description": "The uri of the MOF file/Meta MOF file/resource ZIP file"
+        },
+        "value": "https://github.com/Microsoft/PowerShell-DSC-for-Linux/releases/download/v1.1.1-70/nxComputerManagement_1.0.zip"
+      },
+      "registrationUrl": {
+        "type": "string",
+        "defaultValue": "",
+        "metadata": {
+          "description": "The URL of the Azure Automation account"
+        }
+      },
+      "registrationKey": {
+        "type": "string",
+        "defaultValue": "",
+        "metadata": {
+          "description": "The access key of the Azure Automation account"
+        }
+      },
+      "location": {
+        "type": "string",
+        "defaultValue": "[resourceGroup().location]",
+        "metadata": {
+          "description": "Location for all resources."
+        }
+      },
+      "authenticationType": {
+        "type": "string",
+        "defaultValue": "sshPublicKey",
+        "allowedValues": [
+          "sshPublicKey",
+          "password"
+        ],
+        "metadata": {
+          "description": "Type of authentication to use on the Virtual Machine. SSH key is recommended."
+        }
+      },
+      "adminPasswordOrKey": {
+        "type": "securestring",
+        "metadata": {
+          "description": "SSH Key or password for the Virtual Machine. SSH key is recommended."
+        },
+        "value": "GEN-SSH-PUB-KEY"
+      }
+    },
+    "variables": {
+      "virtualNetworkName": "vnet-dsc",
+      "nicName": "GEN-UNIQUE",
+      "publicIPAddressName": "GEN-UNIQUE",
+      "vnetAddressPrefix": "10.0.0.0/16",
+      "subnetName": "dsc",
+      "subnetPrefix": "10.0.0.0/24",
+      "publicIPAddressType": "Dynamic",
+      "subnetRef": "Microsoft.Network/virtualNetworks/subnets/vnet-dsc/dsc",
+      "vmStorageAccountContainerName": "vhds",
+      "storageAccountType": "Standard_LRS",
+      "imagePublisher": "Canonical",
+      "imageOffer": "UbuntuServer",
+      "OSDiskName": "osdiskfordsc",
+      "linuxConfiguration": {
+        "disablePasswordAuthentication": true,
+        "ssh": {
+          "publicKeys": [
+            {
+              "path": "/home/GEN-UNIQUE/.ssh/authorized_keys",
+              "keyData": "GEN-SSH-PUB-KEY"
+            }
+          ]
+        }
+      }
+    },
+    "resources": [
+      {
+        "apiVersion": "2021-01-01",
+        "type": "Microsoft.Storage/storageAccounts",
+        "name": "GEN-UNIQUE",
+        "location": "[resourceGroup().location]",
+        "sku": {
+          "name": "Standard_LRS"
+        }
+      },
+      {
+        "apiVersion": "2015-05-01-preview",
+        "type": "Microsoft.Network/publicIPAddresses",
+        "name": "GEN-UNIQUE",
+        "location": "[resourceGroup().location]",
+        "properties": {
+          "publicIPAllocationMethod": "Dynamic",
+          "dnsSettings": {
+            "domainNameLabel": "GEN-UNIQUE"
+          }
+        }
+      },
+      {
+        "apiVersion": "2015-05-01-preview",
+        "type": "Microsoft.Network/virtualNetworks",
+        "name": "vnet-dsc",
+        "location": "[resourceGroup().location]",
+        "properties": {
+          "addressSpace": {
+            "addressPrefixes": [
+              "10.0.0.0/16"
+            ]
+          },
+          "subnets": [
+            {
+              "name": "dsc",
+              "properties": {
+                "addressPrefix": "10.0.0.0/24"
+              }
+            }
+          ]
+        }
+      },
+      {
+        "apiVersion": "2015-05-01-preview",
+        "type": "Microsoft.Network/networkInterfaces",
+        "name": "GEN-UNIQUE",
+        "location": "[resourceGroup().location]",
+        "dependsOn": [
+          "Microsoft.Network/publicIPAddresses//GEN-UNIQUE",
+          "Microsoft.Network/virtualNetworks//vnet-dsc"
+        ],
+        "properties": {
+          "ipConfigurations": [
+            {
+              "name": "ipconfig1",
+              "properties": {
+                "privateIPAllocationMethod": "Dynamic",
+                "publicIPAddress": {
+                  "id": "Microsoft.Network/publicIPAddresses/GEN-UNIQUE"
+                },
+                "subnet": {
+                  "id": "Microsoft.Network/virtualNetworks/subnets/vnet-dsc/dsc"
+                }
+              }
+            }
+          ]
+        }
+      },
+      {
+        "apiVersion": "2015-05-01-preview",
+        "type": "Microsoft.Compute/virtualMachines",
+        "name": "GEN-UNIQUE",
+        "location": "[resourceGroup().location]",
+        "dependsOn": [
+          "Microsoft.Storage/storageAccounts//GEN-UNIQUE",
+          "Microsoft.Network/networkInterfaces//GEN-UNIQUE"
+        ],
+        "properties": {
+          "hardwareProfile": {
+            "vmSize": "Standard_D2_v3"
+          },
+          "osProfile": {
+            "computerName": "GEN-UNIQUE",
+            "adminUsername": "GEN-UNIQUE",
+            "adminPassword": "GEN-SSH-PUB-KEY",
+            "linuxConfiguration": "[if(equals(parameters('authenticationType'), 'password'), json('null'), variables('linuxConfiguration'))]"
+          },
+          "storageProfile": {
+            "imageReference": {
+              "publisher": "Canonical",
+              "offer": "UbuntuServer",
+              "sku": "14.04.5-LTS",
+              "version": "latest"
+            },
+            "osDisk": {
+              "name": "osdisk1",
+              "vhd": {
+                "uri": "[uri(reference(resourceId('Microsoft.Storage/storageAccounts', parameters('newStorageAccountName')), '2021-01-01').primaryEndpoints['blob'], concat('/', variables('vmStorageAccountContainerName'),'/',variables('OSDiskName'),'.vhd'))]"
+              },
+              "caching": "ReadWrite",
+              "createOption": "FromImage"
+            }
+          },
+          "networkProfile": {
+            "networkInterfaces": [
+              {
+                "id": "Microsoft.Network/networkInterfaces/GEN-UNIQUE"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "apiVersion": "2015-05-01-preview",
+        "type": "Microsoft.Compute/virtualMachines/extensions",
+        "name": "GEN-UNIQUE/enabledsc",
+        "location": "[resourceGroup().location]",
+        "dependsOn": [
+          "Microsoft.Compute/virtualMachines//GEN-UNIQUE"
+        ],
+        "properties": {
+          "publisher": "Microsoft.OSTCExtensions",
+          "type": "DSCForLinux",
+          "typeHandlerVersion": "2.0",
+          "settings": {
+            "Mode": "Install",
+            "FileUri": "https://github.com/Microsoft/PowerShell-DSC-for-Linux/releases/download/v1.1.1-70/nxComputerManagement_1.0.zip"
+          },
+          "protectedSettings": {
+            "RegistrationUrl": "",
+            "RegistrationKey": ""
+          }
+        }
+      }
+    ],
+    "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+  }
+}

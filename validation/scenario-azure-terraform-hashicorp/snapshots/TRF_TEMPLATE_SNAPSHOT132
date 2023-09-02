@@ -1,0 +1,396 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "main",
+  "contentType": "json",
+  "source": "gitConnectorAzureTerraHashicorp",
+  "paths": [
+    "/examples/virtual-machines/virtual_machine/encrypt-running-linux-vm/outputs.tf",
+    "/examples/virtual-machines/virtual_machine/encrypt-running-linux-vm/variables.tf",
+    "/examples/virtual-machines/virtual_machine/encrypt-running-linux-vm/main.tf"
+  ],
+  "timestamp": 1642943280051,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "TRF_TEMPLATE_SNAPSHOT",
+    "type": "terraform",
+    "collection": "terraformtemplate",
+    "paths": [
+      "/examples/virtual-machines/virtual_machine/encrypt-running-linux-vm/outputs.tf",
+      "/examples/virtual-machines/virtual_machine/encrypt-running-linux-vm/variables.tf",
+      "/examples/virtual-machines/virtual_machine/encrypt-running-linux-vm/main.tf"
+    ],
+    "snapshotId": "TRF_TEMPLATE_SNAPSHOT132",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "azurerm_subnet",
+      "azurerm_virtual_network",
+      "azurerm_resource_group",
+      "azurerm_network_interface",
+      "azurerm_virtual_machine",
+      "azurerm_template_deployment",
+      "azurerm_storage_account"
+    ]
+  },
+  "snapshotId": "TRF_TEMPLATE_SNAPSHOT132",
+  "collection": "terraformtemplate",
+  "json": {
+    "provider": [
+      {
+        "azurerm": {
+          "features": [
+            {}
+          ]
+        }
+      }
+    ],
+    "resources": [
+      {
+        "type": "azurerm_resource_group",
+        "name": "rg",
+        "properties": {
+          "name": "${var.resource_group}",
+          "location": "southcentralus",
+          "compiletime_identity": "azurerm_resource_group.rg"
+        }
+      },
+      {
+        "type": "azurerm_virtual_network",
+        "name": "vnet",
+        "properties": {
+          "name": "${var.hostname}vnet",
+          "location": "southcentralus",
+          "address_space": [
+            "10.0.0.0/24"
+          ],
+          "resource_group_name": "${azurerm_resource_group.rg.name}",
+          "compiletime_identity": "azurerm_virtual_network.vnet"
+        }
+      },
+      {
+        "type": "azurerm_subnet",
+        "name": "subnet",
+        "properties": {
+          "name": "${var.hostname}subnet",
+          "virtual_network_name": "${azurerm_virtual_network.vnet.name}",
+          "resource_group_name": "${azurerm_resource_group.rg.name}",
+          "address_prefixes": [
+            "10.0.0.0/24"
+          ],
+          "compiletime_identity": "azurerm_subnet.subnet"
+        }
+      },
+      {
+        "type": "azurerm_network_interface",
+        "name": "nic",
+        "properties": {
+          "name": "nic",
+          "location": "southcentralus",
+          "resource_group_name": "${azurerm_resource_group.rg.name}",
+          "ip_configuration": [
+            {
+              "name": "ipconfig",
+              "subnet_id": "${azurerm_subnet.subnet.id}",
+              "private_ip_address_allocation": "Dynamic"
+            }
+          ],
+          "compiletime_identity": "azurerm_network_interface.nic"
+        }
+      },
+      {
+        "type": "azurerm_storage_account",
+        "name": "stor",
+        "properties": {
+          "name": "${var.hostname}stor",
+          "resource_group_name": "${azurerm_resource_group.rg.name}",
+          "location": "${azurerm_resource_group.rg.location}",
+          "account_tier": "Standard",
+          "account_replication_type": "LRS",
+          "compiletime_identity": "azurerm_storage_account.stor"
+        }
+      },
+      {
+        "type": "azurerm_virtual_machine",
+        "name": "vm",
+        "properties": {
+          "name": "${var.hostname}",
+          "location": "southcentralus",
+          "resource_group_name": "${azurerm_resource_group.rg.name}",
+          "vm_size": "Standard_F2",
+          "network_interface_ids": [
+            "${azurerm_network_interface.nic.id}"
+          ],
+          "storage_image_reference": [
+            {
+              "publisher": "Canonical",
+              "offer": "UbuntuServer",
+              "sku": "16.04-LTS",
+              "version": "latest"
+            }
+          ],
+          "storage_os_disk": [
+            {
+              "name": "${var.hostname}osdisk",
+              "create_option": "FromImage",
+              "disk_size_gb": 30
+            }
+          ],
+          "os_profile": [
+            {
+              "computer_name": "${var.hostname}",
+              "admin_username": "vmadmin",
+              "admin_password": "${var.admin_password}"
+            }
+          ],
+          "os_profile_linux_config": [
+            {
+              "disable_password_authentication": false
+            }
+          ],
+          "compiletime_identity": "azurerm_virtual_machine.vm"
+        }
+      },
+      {
+        "type": "azurerm_template_deployment",
+        "name": "linux_vm",
+        "properties": {
+          "name": "encrypt",
+          "resource_group_name": "${azurerm_resource_group.rg.name}",
+          "deployment_mode": "Incremental",
+          "depends_on": [
+            "azurerm_virtual_machine.vm"
+          ],
+          "template_body": {
+            "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+            "contentVersion": "1.0.0.0",
+            "parameters": {
+              "aadClientID": {
+                "defaultValue": "${var.aad_client_id}",
+                "type": "string"
+              },
+              "aadClientSecret": {
+                "defaultValue": "${var.aad_client_secret}",
+                "type": "string"
+              },
+              "diskFormatQuery": {
+                "defaultValue": "",
+                "type": "string"
+              },
+              "encryptionOperation": {
+                "allowedValues": [
+                  "EnableEncryption",
+                  "EnableEncryptionFormat"
+                ],
+                "defaultValue": "EnableEncryption",
+                "type": "string"
+              },
+              "volumeType": {
+                "allowedValues": [
+                  "OS",
+                  "Data",
+                  "All"
+                ],
+                "defaultValue": "All",
+                "type": "string"
+              },
+              "keyEncryptionKeyURL": {
+                "defaultValue": "${var.key_encryption_key_url}",
+                "type": "string"
+              },
+              "keyVaultName": {
+                "defaultValue": "${var.key_vault_name}",
+                "type": "string"
+              },
+              "keyVaultResourceGroup": {
+                "defaultValue": "${azurerm_resource_group.rg.name}",
+                "type": "string"
+              },
+              "passphrase": {
+                "defaultValue": "${var.passphrase}",
+                "type": "string"
+              },
+              "sequenceVersion": {
+                "defaultValue": 1,
+                "type": "string"
+              },
+              "useKek": {
+                "allowedValues": [
+                  "nokek",
+                  "kek"
+                ],
+                "defaultValue": "kek",
+                "type": "string"
+              },
+              "vmName": {
+                "defaultValue": "${azurerm_virtual_machine.vm.name}",
+                "type": "string"
+              },
+              "_artifactsLocation": {
+                "type": "string",
+                "defaultValue": "https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master"
+              },
+              "_artifactsLocationSasToken": {
+                "type": "string",
+                "defaultValue": ""
+              }
+            },
+            "variables": {
+              "extensionName": "AzureDiskEncryptionForLinux",
+              "extensionVersion": 0.1,
+              "keyEncryptionAlgorithm": "RSA-OAEP",
+              "keyVaultURL": "https://${var.key_vault_name}.vault.azure.net/",
+              "keyVaultResourceID": "${var.key_vault_resource_id}",
+              "updateVmUrl": "https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/201-encrypt-running-linux-vm/updatevm-kek.json"
+            },
+            "resources": [
+              {
+                "type": "Microsoft.Compute/virtualMachines/extensions",
+                "name": [
+                  [
+                    "p",
+                    "a",
+                    "r",
+                    "a",
+                    "m",
+                    "e",
+                    "t",
+                    "e",
+                    "r",
+                    "s",
+                    "(",
+                    "",
+                    "v",
+                    "m",
+                    "N",
+                    "a",
+                    "m",
+                    "e",
+                    "",
+                    ")",
+                    "/",
+                    "v",
+                    "a",
+                    "r",
+                    "i",
+                    "a",
+                    "b",
+                    "l",
+                    "e",
+                    "s",
+                    "(",
+                    "",
+                    "e",
+                    "x",
+                    "t",
+                    "e",
+                    "n",
+                    "s",
+                    "i",
+                    "o",
+                    "n",
+                    "N",
+                    "a",
+                    "m",
+                    "e",
+                    "",
+                    ")"
+                  ]
+                ],
+                "apiVersion": "2015-06-15",
+                "location": "[resourceGroup().location]",
+                "properties": {
+                  "protectedSettings": {
+                    "AADClientSecret": "[parameters('aadClientSecret')]",
+                    "Passphrase": "[parameters('passphrase')]"
+                  },
+                  "publisher": "Microsoft.Azure.Security",
+                  "settings": {
+                    "AADClientID": "[parameters('aadClientID')]",
+                    "DiskFormatQuery": "[parameters('diskFormatQuery')]",
+                    "EncryptionOperation": "[parameters('encryptionOperation')]",
+                    "KeyEncryptionAlgorithm": "[variables('keyEncryptionAlgorithm')]",
+                    "KeyEncryptionKeyURL": "[parameters('keyEncryptionKeyURL')]",
+                    "KeyVaultURL": "[variables('keyVaultURL')]",
+                    "SequenceVersion": "[parameters('sequenceVersion')]",
+                    "VolumeType": "[parameters('volumeType')]"
+                  },
+                  "type": "AzureDiskEncryptionForLinux",
+                  "typeHandlerVersion": "[variables('extensionVersion')]"
+                }
+              },
+              {
+                "apiVersion": "2015-01-01",
+                "dependsOn": [
+                  "[resourceId('Microsoft.Compute/virtualMachines/extensions',  parameters('vmName'), variables('extensionName'))]"
+                ],
+                "name": [
+                  [
+                    "p",
+                    "a",
+                    "r",
+                    "a",
+                    "m",
+                    "e",
+                    "t",
+                    "e",
+                    "r",
+                    "s",
+                    "(",
+                    "",
+                    "v",
+                    "m",
+                    "N",
+                    "a",
+                    "m",
+                    "e",
+                    "",
+                    ")",
+                    "u",
+                    "p",
+                    "d",
+                    "a",
+                    "t",
+                    "e",
+                    "V",
+                    "m"
+                  ]
+                ],
+                "type": "Microsoft.Resources/deployments",
+                "properties": {
+                  "mode": "Incremental",
+                  "parameters": {
+                    "keyEncryptionKeyURL": {
+                      "value": "[parameters('keyEncryptionKeyURL')]"
+                    },
+                    "keyVaultResourceID": {
+                      "value": "[variables('keyVaultResourceID')]"
+                    },
+                    "keyVaultSecretUrl": {
+                      "value": "[reference(resourceId('Microsoft.Compute/virtualMachines/extensions',  parameters('vmName'), variables('extensionName'))).instanceView.statuses[0].message]"
+                    },
+                    "vmName": {
+                      "value": "[parameters('vmName')]"
+                    }
+                  },
+                  "templateLink": {
+                    "contentVersion": "1.0.0.0",
+                    "uri": "[variables('updateVmUrl')]"
+                  }
+                }
+              }
+            ],
+            "outputs": {
+              "BitLockerKey": {
+                "type": "string",
+                "value": "[reference(resourceId('Microsoft.Compute/virtualMachines/extensions',  parameters('vmName'), variables('extensionName'))).instanceView.statuses[0].message]"
+              }
+            }
+          },
+          "compiletime_identity": "azurerm_template_deployment.linux_vm"
+        }
+      }
+    ]
+  }
+}

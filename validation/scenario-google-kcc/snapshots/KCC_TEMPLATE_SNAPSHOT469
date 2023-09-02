@@ -2,12 +2,12 @@
   "structure": "filesystem",
   "error": null,
   "reference": "master",
-  "contentType": "yaml",
+  "contentType": "json",
   "source": "gitConnectorGoogleKcc",
   "paths": [
-    "/samples/resources/monitoringnotificationchannel/basicauth-webhook-monitoring-notification-channel/monitoring_v1beta1_monitoringnotificationchannel.yaml"
+    "/samples/resources/iampolicymember/kms-policy-member-with-condition/iam_v1beta1_iampolicymember.yaml"
   ],
-  "timestamp": 1628765149534,
+  "timestamp": 1642973304340,
   "queryuser": null,
   "checksum": "99914b932bd37a50b983c5e7c90ae93b",
   "node": {
@@ -15,40 +15,35 @@
     "type": "kcc",
     "collection": "kcctemplate",
     "paths": [
-      "/samples/resources/monitoringnotificationchannel/basicauth-webhook-monitoring-notification-channel/monitoring_v1beta1_monitoringnotificationchannel.yaml"
+      "/samples/resources/iampolicymember/kms-policy-member-with-condition/iam_v1beta1_iampolicymember.yaml"
     ],
     "snapshotId": "KCC_TEMPLATE_SNAPSHOT469",
     "status": "active",
-    "validate": true
+    "validate": true,
+    "resourceTypes": [
+      "iampolicymember"
+    ]
   },
   "snapshotId": "KCC_TEMPLATE_SNAPSHOT469",
   "collection": "kcctemplate",
   "json": {
-    "apiVersion": "monitoring.cnrm.cloud.google.com/v1beta1",
-    "kind": "MonitoringNotificationChannel",
+    "apiVersion": "iam.cnrm.cloud.google.com/v1beta1",
+    "kind": "IAMPolicyMember",
     "metadata": {
-      "labels": {
-        "response-priority": "all",
-        "target-user": "automation"
-      },
-      "name": "monitoringnotificationchannel-sample-basicauth-webhook"
+      "name": "iampolicymember-sample-condition"
     },
     "spec": {
-      "type": "webhook_basicauth",
-      "labels": {
-        "url": "http://hooks.example.com/notifications",
-        "username": "admin"
+      "member": "serviceAccount:iampolicymember-dep-condition@${PROJECT_ID?}.iam.gserviceaccount.com",
+      "role": "roles/cloudkms.admin",
+      "condition": {
+        "title": "expires_after_2019_12_31",
+        "description": "Expires at midnight of 2019-12-31",
+        "expression": "request.time < timestamp(\"2020-01-01T00:00:00Z\")"
       },
-      "description": "Sends notifications to indicated webhook URL using HTTP-standard basic authentication. Should be used in conjunction with SSL/TLS to reduce the risk of attackers snooping the credentials.",
-      "sensitiveLabels": {
-        "password": {
-          "valueFrom": {
-            "secretKeyRef": {
-              "key": "password",
-              "name": "monitoringnotificationchannel-dep-basicauthwebhook"
-            }
-          }
-        }
+      "resourceRef": {
+        "apiVersion": "kms.cnrm.cloud.google.com/v1beta1",
+        "kind": "KMSKeyRing",
+        "name": "iampolicymember-dep-condition"
       }
     }
   }

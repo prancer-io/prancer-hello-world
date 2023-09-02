@@ -2,12 +2,12 @@
   "structure": "filesystem",
   "error": null,
   "reference": "master",
-  "contentType": "yaml",
+  "contentType": "json",
   "source": "gitConnectorGoogleKcc",
   "paths": [
-    "/samples/resources/computeforwardingrule/regional-forwarding-rule/compute_v1beta1_computetargetvpngateway.yaml"
+    "/samples/resources/computefirewallpolicyrule/compute_v1beta1_computefirewallpolicyrule.yaml"
   ],
-  "timestamp": 1628765140826,
+  "timestamp": 1642973302472,
   "queryuser": null,
   "checksum": "99914b932bd37a50b983c5e7c90ae93b",
   "node": {
@@ -15,26 +15,53 @@
     "type": "kcc",
     "collection": "kcctemplate",
     "paths": [
-      "/samples/resources/computeforwardingrule/regional-forwarding-rule/compute_v1beta1_computetargetvpngateway.yaml"
+      "/samples/resources/computefirewallpolicyrule/compute_v1beta1_computefirewallpolicyrule.yaml"
     ],
     "snapshotId": "KCC_TEMPLATE_SNAPSHOT124",
     "status": "active",
-    "validate": true
+    "validate": true,
+    "resourceTypes": [
+      "computefirewallpolicyrule"
+    ]
   },
   "snapshotId": "KCC_TEMPLATE_SNAPSHOT124",
   "collection": "kcctemplate",
   "json": {
     "apiVersion": "compute.cnrm.cloud.google.com/v1beta1",
-    "kind": "ComputeTargetVPNGateway",
+    "kind": "ComputeFirewallPolicyRule",
     "metadata": {
-      "name": "computeforwardingrule-dep-regional"
+      "name": "firewallpolicyrule-sample"
     },
     "spec": {
-      "description": "a regional target vpn gateway",
-      "region": "us-central1",
-      "networkRef": {
-        "name": "computeforwardingrule-dep-regional"
-      }
+      "action": "deny",
+      "description": "A Firewall Policy Rule",
+      "direction": "INGRESS",
+      "disabled": false,
+      "enableLogging": false,
+      "firewallPolicyRef": {
+        "name": "firewallpolicyrule-dep"
+      },
+      "match": {
+        "layer4Configs": [
+          {
+            "ipProtocol": "tcp"
+          }
+        ],
+        "srcIPRanges": [
+          "10.100.0.1/32"
+        ]
+      },
+      "priority": 9000,
+      "targetResources": [
+        {
+          "name": "firewallpolicyrule-dep"
+        }
+      ],
+      "targetServiceAccounts": [
+        {
+          "name": "firewallpolicyrule-dep"
+        }
+      ]
     }
   }
 }

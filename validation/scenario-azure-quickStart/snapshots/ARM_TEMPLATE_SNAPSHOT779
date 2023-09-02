@@ -1,0 +1,241 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAzureQuickStart",
+  "paths": [
+    "/demos/oms-servicebus-solution/nestedtemplates/addMultipleSubscriptions.json"
+  ],
+  "timestamp": 1642962901085,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/demos/oms-servicebus-solution/nestedtemplates/addMultipleSubscriptions.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT779",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "microsoft.automation/automationaccounts"
+    ]
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT779",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "OMSWorkspaceId": {
+        "type": "string",
+        "metadata": {
+          "description": "Specify the OMS workspace ID"
+        }
+      },
+      "OMSWorkspaceKey": {
+        "type": "string",
+        "metadata": {
+          "description": "Specify the OMS workspace key"
+        }
+      },
+      "omsAutomationAccountName": {
+        "type": "string",
+        "metadata": {
+          "description": "Specify the name of your Automation Account"
+        }
+      },
+      "location": {
+        "type": "string",
+        "metadata": {
+          "description": "Specify region for your automation account"
+        }
+      },
+      "jobGuid": {
+        "type": "string",
+        "defaultValue": "",
+        "metadata": {
+          "description": "GUID for the schedule creation - create a unique before deploy"
+        }
+      },
+      "_artifactsLocation": {
+        "type": "string",
+        "metadata": {
+          "description": "The base URI where artifacts required by this template are located including a trailing '/'"
+        }
+      },
+      "_artifactsLocationSasToken": {
+        "type": "securestring",
+        "metadata": {
+          "description": "The sasToken required to access _artifactsLocation.  When the template is deployed using the accompanying scripts, a sasToken will be automatically generated. Use the defaultValue if the staging location is not secured."
+        },
+        "defaultValue": ""
+      }
+    },
+    "variables": {
+      "assets": {
+        "psModules": {
+          "ingestionAPI": {
+            "name": "OMSIngestionAPI",
+            "uri": "https://raw.githubusercontent.com/tianderturpijn/OMS/master/ServiceBus/modules/OMSIngestionAPI.zip"
+          }
+        },
+        "aaVariables": {
+          "OMSWorkspaceId": {
+            "name": "OMSWorkspaceId",
+            "description": "Workspace ID for the Log Analytics workspace"
+          },
+          "OMSWorkspaceKey": {
+            "name": "OMSWorkspaceKey",
+            "description": "Primary key for the Log Analytics workspace"
+          },
+          "AzureSubscriptionId": {
+            "name": "AzureSubscriptionId",
+            "description": "Azure subscription Id"
+          }
+        },
+        "runbooks": {
+          "servicebusManagement": {
+            "description": "",
+            "Id": "",
+            "ingestFrequency": "hour",
+            "ingestInterval": 1,
+            "ingestScheduleName": "IngestAPISchedule",
+            "name": "servicebusIngestion",
+            "type": "PowerShell",
+            "url": "[uri(parameters('_artifactsLocation'), concat('scripts/servicebusIngestion.ps1', parameters('_artifactsLocationSasToken')))]",
+            "version": "1.0.0.0"
+          }
+        }
+      }
+    },
+    "resources": [
+      {
+        "name": "omsAutomationAccountName",
+        "type": "Microsoft.Automation/automationAccounts",
+        "apiVersion": "2015-10-31",
+        "location": "location",
+        "properties": {
+          "sku": {
+            "name": "Basic"
+          }
+        },
+        "resources": [
+          {
+            "name": "OMSWorkspaceId",
+            "type": "variables",
+            "apiVersion": "2015-10-31",
+            "dependsOn": [
+              "Microsoft.Automation/automationAccounts//omsAutomationAccountName"
+            ],
+            "properties": {
+              "description": "(assets).aaVariables.OMSWorkspaceId.description",
+              "value": "\"OMSWorkspaceId\""
+            }
+          },
+          {
+            "name": "OMSWorkspaceKey",
+            "type": "variables",
+            "apiVersion": "2015-10-31",
+            "dependsOn": [
+              "Microsoft.Automation/automationAccounts//omsAutomationAccountName"
+            ],
+            "properties": {
+              "description": "",
+              "value": "\"OMSWorkspaceKey\""
+            }
+          },
+          {
+            "name": "(assets).aaVariables.AzureSubscriptionId.name",
+            "type": "variables",
+            "apiVersion": "2015-10-31",
+            "dependsOn": [
+              "Microsoft.Automation/automationAccounts//omsAutomationAccountName"
+            ],
+            "properties": {
+              "description": "(assets).aaVariables.AzureSubscriptionId.description",
+              "value": "[concat('\"',subscription().subscriptionId,'\"')]"
+            }
+          },
+          {
+            "name": "(assets).psModules.ingestionAPI.name",
+            "type": "Modules",
+            "apiVersion": "2015-10-31",
+            "dependsOn": [
+              "Microsoft.Automation/automationAccounts//omsAutomationAccountName",
+              "Microsoft.Automation/automationAccounts/Variables/omsAutomationAccountName/(assets).aaVariables.OMSWorkspaceId.name",
+              "Microsoft.Automation/automationAccounts/Variables/omsAutomationAccountName/(assets).aaVariables.OMSWorkspaceKey.name"
+            ],
+            "properties": {
+              "contentLink": {
+                "uri": "(assets).psModules.ingestionAPI.uri"
+              }
+            }
+          },
+          {
+            "name": "(assets).runbooks.servicebusManagement.name",
+            "type": "runbooks",
+            "apiVersion": "2015-10-31",
+            "location": "location",
+            "dependsOn": [
+              "Microsoft.Automation/automationAccounts//omsAutomationAccountName",
+              "Microsoft.Automation/automationAccounts/Modules/omsAutomationAccountName/(assets).psModules.ingestionAPI.name",
+              "Microsoft.Automation/automationAccounts/Variables/omsAutomationAccountName/(assets).aaVariables.OMSWorkspaceId.name",
+              "Microsoft.Automation/automationAccounts/Variables/omsAutomationAccountName/(assets).aaVariables.OMSWorkspaceKey.name"
+            ],
+            "properties": {
+              "runbookType": "(assets).runbooks.servicebusManagement.type",
+              "logProgress": true,
+              "logVerbose": false,
+              "description": "(assets).runbooks.servicebusManagement.description",
+              "publishContentLink": {
+                "uri": "(assets).runbooks.servicebusManagement.url",
+                "version": "(assets).runbooks.servicebusManagement.version"
+              }
+            }
+          },
+          {
+            "name": "(assets).runbooks.servicebusManagement.ingestScheduleName",
+            "type": "schedules",
+            "apiVersion": "2015-10-31",
+            "location": "location",
+            "dependsOn": [
+              "Microsoft.Automation/automationAccounts//omsAutomationAccountName",
+              "Microsoft.Automation/automationAccounts/runbooks/omsAutomationAccountName/(assets).runbooks.servicebusManagement.name"
+            ],
+            "properties": {
+              "description": "OMS Ingestion API Scheduler",
+              "startTime": "",
+              "isEnabled": true,
+              "interval": "(assets).runbooks.servicebusManagement.ingestInterval",
+              "frequency": "(assets).runbooks.servicebusManagement.ingestFrequency"
+            }
+          },
+          {
+            "name": "",
+            "type": "jobSchedules",
+            "apiVersion": "2015-10-31",
+            "location": "location",
+            "dependsOn": [
+              "Microsoft.Automation/automationAccounts/schedules/omsAutomationAccountName/(assets).runbooks.servicebusManagement.ingestScheduleName",
+              "Microsoft.Automation/automationAccounts/runbooks/omsAutomationAccountName/(assets).runbooks.servicebusManagement.name",
+              "Microsoft.Automation/automationAccounts//omsAutomationAccountName"
+            ],
+            "properties": {
+              "schedule": {
+                "name": "(assets).runbooks.servicebusManagement.ingestScheduleName"
+              },
+              "runbook": {
+                "name": "(assets).runbooks.servicebusManagement.name"
+              }
+            }
+          }
+        ]
+      }
+    ],
+    "outputs": {},
+    "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+  }
+}

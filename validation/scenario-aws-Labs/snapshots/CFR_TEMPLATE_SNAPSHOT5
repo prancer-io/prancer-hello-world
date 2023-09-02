@@ -1,0 +1,60 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAwsLabs",
+  "paths": [
+    "/aws/services/CloudFormation/MacrosExamples/Count/template.yaml"
+  ],
+  "timestamp": 1642972590289,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "CFR_TEMPLATE_SNAPSHOT",
+    "type": "cloudformation",
+    "collection": "cloudformationtemplate",
+    "paths": [
+      "/aws/services/CloudFormation/MacrosExamples/Count/template.yaml"
+    ],
+    "snapshotId": "CFR_TEMPLATE_SNAPSHOT5",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "aws::cloudformation::macro",
+      "aws::serverless::function"
+    ]
+  },
+  "snapshotId": "CFR_TEMPLATE_SNAPSHOT5",
+  "collection": "cloudformationtemplate",
+  "json": {
+    "AWSTemplateFormatVersion": "2010-09-09",
+    "Transform": "AWS::Serverless-2016-10-31",
+    "Description": "Count macro A simple iterator for creating multipledentical resources\n",
+    "Resources": [
+      {
+        "Type": "AWS::CloudFormation::Macro",
+        "Properties": {
+          "Name": "Count",
+          "FunctionName": {
+            "Fn::GetAtt": [
+              "CountMacroFunction",
+              "Arn"
+            ]
+          }
+        },
+        "Name": "Macro"
+      },
+      {
+        "Type": "AWS::Serverless::Function",
+        "Properties": {
+          "CodeUri": "src",
+          "Handler": "index.handler",
+          "Runtime": "python3.6",
+          "Timeout": 5
+        },
+        "Name": "CountMacroFunction"
+      }
+    ]
+  }
+}

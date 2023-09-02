@@ -1,0 +1,158 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAzureQuickStart",
+  "paths": [
+    "/application-workloads/mongo/mongodb-high-availability/shared-resources.json",
+    "/application-workloads/mongo/mongodb-high-availability/azuredeploy.parameters.json"
+  ],
+  "timestamp": 1642962891547,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/application-workloads/mongo/mongodb-high-availability/shared-resources.json",
+      "/application-workloads/mongo/mongodb-high-availability/azuredeploy.parameters.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT261",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "microsoft.network/virtualnetworks",
+      "microsoft.storage/storageaccounts",
+      "microsoft.compute/availabilitysets"
+    ]
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT261",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "commonSettings": {
+        "type": "object",
+        "metadata": {
+          "Description": "Common settings object"
+        }
+      },
+      "storageSettings": {
+        "type": "object",
+        "metadata": {
+          "Description": "Storage settings object"
+        }
+      },
+      "networkSettings": {
+        "type": "object",
+        "metadata": {
+          "Description": "Network settings object"
+        }
+      },
+      "location": {
+        "type": "string",
+        "metadata": {
+          "description": "Location for all resources."
+        }
+      },
+      "adminUsername": {
+        "value": "GEN-UNIQUE"
+      },
+      "adminPassword": {
+        "value": "GEN-PASSWORD"
+      },
+      "storageAccountNamePrefix": {
+        "value": "GEN-UNIQUE-8"
+      },
+      "storageAccountType": {
+        "value": "Standard_LRS"
+      },
+      "vmSeries": {
+        "value": "D"
+      },
+      "virtualNetworkName": {
+        "value": "GEN-VNET-NAME"
+      },
+      "subnetName": {
+        "value": "GEN-VNET-SUBNET1-NAME"
+      },
+      "addressPrefix": {
+        "value": "10.0.0.0/16"
+      },
+      "subnetPrefix": {
+        "value": "10.0.0.0/24"
+      },
+      "nodeAddressPrefix": {
+        "value": "10.0.0.1"
+      },
+      "jumpbox": {
+        "value": "Disabled"
+      },
+      "tshirtSize": {
+        "value": "XSmall"
+      },
+      "osFamily": {
+        "value": "Ubuntu"
+      },
+      "replicaSetName": {
+        "value": "rs0"
+      },
+      "replicaSetKey": {
+        "value": "GEN-UNIQUE-8"
+      }
+    },
+    "resources": [
+      {
+        "type": "Microsoft.Storage/storageAccounts",
+        "name": "storageSettingscopyindex()",
+        "apiVersion": "2021-02-01",
+        "location": "location",
+        "copy": {
+          "name": "storageAccountsLoop",
+          "count": "storageSettings"
+        },
+        "sku": {
+          "name": "storageSettings"
+        },
+        "kind": "StorageV2"
+      },
+      {
+        "apiVersion": "2020-12-01",
+        "type": "Microsoft.Compute/availabilitySets",
+        "name": "commonSettings",
+        "location": "location",
+        "sku": {
+          "name": "Aligned"
+        },
+        "properties": {
+          "platformFaultDomainCount": 2,
+          "platformUpdateDomainCount": 5
+        }
+      },
+      {
+        "apiVersion": "2020-11-01",
+        "type": "Microsoft.Network/virtualNetworks",
+        "name": "networkSettings",
+        "location": "location",
+        "properties": {
+          "addressSpace": {
+            "addressPrefixes": [
+              "networkSettings"
+            ]
+          },
+          "subnets": [
+            {
+              "name": "networkSettings",
+              "properties": {
+                "addressPrefix": "networkSettings"
+              }
+            }
+          ]
+        }
+      }
+    ],
+    "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+  }
+}

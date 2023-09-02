@@ -1,0 +1,342 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAzureQuickStart",
+  "paths": [
+    "/demos/private-endpoint-sql-from-appservice/azuredeploy.json",
+    "/demos/private-endpoint-sql-from-appservice/azuredeploy.parameters.json"
+  ],
+  "timestamp": 1642962901329,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/demos/private-endpoint-sql-from-appservice/azuredeploy.json",
+      "/demos/private-endpoint-sql-from-appservice/azuredeploy.parameters.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT788",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "microsoft.network/privatednszones",
+      "microsoft.network/virtualnetworks",
+      "microsoft.web/sites",
+      "microsoft.sql/servers/databases",
+      "microsoft.network/privatednszones/virtualnetworklinks",
+      "microsoft.sql/servers",
+      "microsoft.network/privateendpoints",
+      "microsoft.network/privateendpoints/privatednszonegroups",
+      "microsoft.web/serverfarms"
+    ]
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT788",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "sqlAdministratorLogin": {
+        "type": "string",
+        "metadata": {
+          "description": "The administrator username of the SQL logical server"
+        },
+        "value": "GEN-UNIQUE"
+      },
+      "sqlAdministratorLoginPassword": {
+        "type": "securestring",
+        "metadata": {
+          "description": "The administrator password of the SQL logical server."
+        },
+        "value": "GEN-PASSWORD"
+      },
+      "location": {
+        "type": "string",
+        "defaultValue": "[resourceGroup().location]",
+        "metadata": {
+          "description": "Location for all resources."
+        }
+      },
+      "_artifactsLocation": {
+        "type": "string",
+        "metadata": {
+          "description": "The base URI where artifacts required by this template are located."
+        },
+        "defaultValue": "[deployment().properties.templatelink.uri]"
+      },
+      "_artifactsLocationSasToken": {
+        "type": "securestring",
+        "metadata": {
+          "description": "The sasToken required to access _artifactsLocation.  When the template is deployed using the accompanying scripts, a sasToken will be automatically generated. Use the defaultValue if the staging location is not secured."
+        },
+        "defaultValue": ""
+      },
+      "privateDnsZoneName": {
+        "type": "string",
+        "metadata": {
+          "description": "Private Dns Zone Name "
+        },
+        "value": "privatelink.database.windows.net"
+      }
+    },
+    "variables": {
+      "vnetName": "myVirtualNetwork",
+      "vnetAddressPrefix": "10.0.0.0/16",
+      "subnet1Prefix": "10.0.0.0/24",
+      "subnet1Name": "mySubnet",
+      "subnetAppServicePrefix": "10.0.1.0/24",
+      "subnetAppServiceName": "subnetAppService",
+      "sqlServerName": "[concat('sqlserver', uniqueString(resourceGroup().id))]",
+      "databaseName": "[concat(variables('sqlServerName'),'/sample-db')]",
+      "privateEndpointName": "myPrivateEndpoint",
+      "pvtendpointdnsgroupname": "myPrivateEndpoint/mydnsgroupname",
+      "websitename": "[take(concat('webapppvl', uniqueString(resourceGroup().id)),15)]",
+      "appServicePlanName": "[take(concat('appSrvPln', uniqueString(resourceGroup().id)),15)]"
+    },
+    "resources": [
+      {
+        "type": "Microsoft.Sql/servers",
+        "apiVersion": "2020-11-01-preview",
+        "name": "[variables('sqlServerName')]",
+        "location": "[resourceGroup().location]",
+        "tags": {
+          "displayName": "[variables('sqlServerName')]"
+        },
+        "kind": "v12.0",
+        "properties": {
+          "administratorLogin": "GEN-UNIQUE",
+          "administratorLoginPassword": "GEN-PASSWORD",
+          "version": "12.0",
+          "publicNetworkAccess": "Disabled"
+        }
+      },
+      {
+        "type": "Microsoft.Sql/servers/databases",
+        "apiVersion": "2020-11-01-preview",
+        "name": "[variables('databaseName')]",
+        "location": "[resourceGroup().location]",
+        "tags": {
+          "displayName": "[variables('databaseName')]"
+        },
+        "dependsOn": [
+          "[resourceId('Microsoft.Sql/servers', variables('sqlServerName'))]"
+        ],
+        "sku": {
+          "name": "Basic",
+          "tier": "Basic",
+          "capacity": 5
+        },
+        "properties": {
+          "collation": "SQL_Latin1_General_CP1_CI_AS",
+          "edition": "Basic",
+          "maxSizeBytes": 104857600,
+          "requestedServiceObjectiveName": "Basic",
+          "sampleName": "AdventureWorksLT"
+        }
+      },
+      {
+        "type": "Microsoft.Network/virtualNetworks",
+        "apiVersion": "2020-07-01",
+        "name": "myVirtualNetwork",
+        "location": "[resourceGroup().location]",
+        "properties": {
+          "addressSpace": {
+            "addressPrefixes": [
+              "10.0.0.0/16"
+            ]
+          },
+          "subnets": [
+            {
+              "name": "mySubnet",
+              "properties": {
+                "addressPrefix": "10.0.0.0/24",
+                "privateEndpointNetworkPolicies": "Disabled"
+              }
+            },
+            {
+              "name": "subnetAppService",
+              "properties": {
+                "addressPrefix": "10.0.1.0/24",
+                "delegations": [
+                  {
+                    "name": "delegation",
+                    "properties": {
+                      "serviceName": "Microsoft.Web/serverfarms"
+                    }
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      },
+      {
+        "type": "Microsoft.Network/privateEndpoints",
+        "apiVersion": "2020-07-01",
+        "name": "myPrivateEndpoint",
+        "location": "[resourceGroup().location]",
+        "dependsOn": [
+          "[variables('vnetName')]",
+          "[variables('sqlServerName')]"
+        ],
+        "properties": {
+          "subnet": {
+            "id": "Microsoft.Network/virtualNetworks/subnets/myVirtualNetwork/mySubnet"
+          },
+          "privateLinkServiceConnections": [
+            {
+              "name": "myPrivateEndpoint",
+              "properties": {
+                "privateLinkServiceId": "[resourceId('Microsoft.Sql/servers',variables('sqlServerName'))]",
+                "groupIds": [
+                  "sqlServer"
+                ]
+              }
+            }
+          ]
+        }
+      },
+      {
+        "type": "Microsoft.Network/privateDnsZones",
+        "apiVersion": "2020-06-01",
+        "name": "privatelink.database.windows.net",
+        "location": "global",
+        "dependsOn": [
+          "myVirtualNetwork"
+        ]
+      },
+      {
+        "type": "Microsoft.Network/privateDnsZones/virtualNetworkLinks",
+        "apiVersion": "2020-06-01",
+        "name": "privatelink.database.windows.net/privatelink.database.windows.net-link",
+        "location": "global",
+        "dependsOn": [
+          "Microsoft.Network/privateDnsZones/privatelink.database.windows.net",
+          "Microsoft.Network/virtualNetworks/myVirtualNetwork"
+        ],
+        "properties": {
+          "registrationEnabled": false,
+          "virtualNetwork": {
+            "id": "Microsoft.Network/virtualNetworks/myVirtualNetwork"
+          }
+        }
+      },
+      {
+        "type": "Microsoft.Network/privateEndpoints/privateDnsZoneGroups",
+        "apiVersion": "2020-07-01",
+        "name": "myPrivateEndpoint/mydnsgroupname",
+        "location": "[resourceGroup().location]",
+        "dependsOn": [
+          "Microsoft.Network/privateDnsZones/privatelink.database.windows.net",
+          "myPrivateEndpoint"
+        ],
+        "properties": {
+          "privateDnsZoneConfigs": [
+            {
+              "name": "config1",
+              "properties": {
+                "privateDnsZoneId": "Microsoft.Network/privateDnsZones/privatelink.database.windows.net"
+              }
+            }
+          ]
+        }
+      },
+      {
+        "type": "Microsoft.Web/serverfarms",
+        "apiVersion": "2020-12-01",
+        "name": "[take(concat('appSrvPln', uniqueString(resourceGroup().id)),15)]",
+        "location": "[resourceGroup().location]",
+        "sku": {
+          "name": "P1v2",
+          "capacity": 1
+        },
+        "tags": {
+          "displayName": "[take(concat('appSrvPln', uniqueString(resourceGroup().id)),15)]"
+        },
+        "properties": {
+          "name": "[take(concat('appSrvPln', uniqueString(resourceGroup().id)),15)]"
+        }
+      },
+      {
+        "name": "[take(concat('webapppvl', uniqueString(resourceGroup().id)),15)]",
+        "type": "Microsoft.Web/sites",
+        "apiVersion": "2020-12-01",
+        "location": "[resourceGroup().location]",
+        "tags": {
+          "displayName": "[take(concat('webapppvl', uniqueString(resourceGroup().id)),15)]"
+        },
+        "dependsOn": [
+          "Microsoft.Web/serverfarms/[take(concat('appSrvPln', uniqueString(resourceGroup().id)),15)]"
+        ],
+        "properties": {
+          "name": "[take(concat('webapppvl', uniqueString(resourceGroup().id)),15)]",
+          "serverFarmId": "Microsoft.Web/serverfarms/[take(concat('appSrvPln', uniqueString(resourceGroup().id)),15)]",
+          "siteConfig": {
+            "connectionStrings": [
+              {
+                "name": "sampledbContext",
+                "connectionString": "[concat('Server=tcp:', reference(variables('sqlServerName')).fullyQualifiedDomainName, ',1433;Initial Catalog=sample-db;Persist Security Info=False;User ID=', parameters('sqlAdministratorLogin'), ';Password=', parameters('sqlAdministratorLoginPassword'), ';MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;')]",
+                "type": "SQLAzure"
+              }
+            ]
+          }
+        },
+        "resources": [
+          {
+            "apiVersion": "2019-08-01",
+            "type": "config",
+            "name": "appsettings",
+            "dependsOn": [
+              "Microsoft.Web/Sites//[take(concat('webapppvl', uniqueString(resourceGroup().id)),15)]",
+              "MSDeploy"
+            ],
+            "tags": {
+              "displayName": "WebAppSettings"
+            },
+            "properties": {
+              "WEBSITE_VNET_ROUTE_ALL": "1",
+              "WEBSITE_DNS_SERVER": "168.63.129.16"
+            }
+          },
+          {
+            "name": "MSDeploy",
+            "type": "extensions",
+            "apiVersion": "2019-08-01",
+            "location": "[resourceGroup().location]",
+            "dependsOn": [
+              "Microsoft.Web/sites/[take(concat('webapppvl', uniqueString(resourceGroup().id)),15)]"
+            ],
+            "tags": {
+              "displayName": "Web Deploy for webapppvtlink"
+            },
+            "properties": {
+              "packageUri": "[uri(parameters('_artifactsLocation'), concat('artifacts/AdventureWorks.Web.zip', parameters('_artifactsLocationSasToken')))]",
+              "dbType": "None",
+              "setParameters": {
+                "IIS Web Application Name": "[take(concat('webapppvl', uniqueString(resourceGroup().id)),15)]"
+              }
+            }
+          },
+          {
+            "apiVersion": "2019-08-01",
+            "type": "networkConfig",
+            "name": "virtualNetwork",
+            "location": "[resourceGroup().location]",
+            "dependsOn": [
+              "Microsoft.Web/sites/[take(concat('webapppvl', uniqueString(resourceGroup().id)),15)]",
+              "MSDeploy"
+            ],
+            "properties": {
+              "subnetResourceId": "Microsoft.Network/virtualNetworks/subnets/myVirtualNetwork/subnetAppService",
+              "swiftSupported": true
+            }
+          }
+        ]
+      }
+    ],
+    "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+  }
+}

@@ -2,12 +2,12 @@
   "structure": "filesystem",
   "error": null,
   "reference": "master",
-  "contentType": "yaml",
+  "contentType": "json",
   "source": "gitConnectorGoogleKcc",
   "paths": [
-    "/samples/resources/computetargetsslproxy/compute_v1beta1_computesslpolicy.yaml"
+    "/samples/resources/computesnapshot/compute_v1beta1_computedisk.yaml"
   ],
-  "timestamp": 1628765144239,
+  "timestamp": 1642973303202,
   "queryuser": null,
   "checksum": "99914b932bd37a50b983c5e7c90ae93b",
   "node": {
@@ -15,19 +15,35 @@
     "type": "kcc",
     "collection": "kcctemplate",
     "paths": [
-      "/samples/resources/computetargetsslproxy/compute_v1beta1_computesslpolicy.yaml"
+      "/samples/resources/computesnapshot/compute_v1beta1_computedisk.yaml"
     ],
     "snapshotId": "KCC_TEMPLATE_SNAPSHOT267",
     "status": "active",
-    "validate": true
+    "validate": true,
+    "resourceTypes": [
+      "computedisk"
+    ]
   },
   "snapshotId": "KCC_TEMPLATE_SNAPSHOT267",
   "collection": "kcctemplate",
   "json": {
     "apiVersion": "compute.cnrm.cloud.google.com/v1beta1",
-    "kind": "ComputeSSLPolicy",
+    "kind": "ComputeDisk",
     "metadata": {
-      "name": "computetargetsslproxy-dep"
+      "name": "computesnapshot-dep"
+    },
+    "spec": {
+      "location": "us-west1-c",
+      "diskEncryptionKey": {
+        "rawKey": {
+          "valueFrom": {
+            "secretKeyRef": {
+              "name": "computesnapshot-dep",
+              "key": "sourceDiskEncryptionKey"
+            }
+          }
+        }
+      }
     }
   }
 }

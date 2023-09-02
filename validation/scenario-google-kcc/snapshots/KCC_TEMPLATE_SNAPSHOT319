@@ -2,12 +2,12 @@
   "structure": "filesystem",
   "error": null,
   "reference": "master",
-  "contentType": "yaml",
+  "contentType": "json",
   "source": "gitConnectorGoogleKcc",
   "paths": [
-    "/samples/resources/datafusioninstance/datafusion_v1beta1_datafusioninstance.yaml"
+    "/samples/resources/computeurlmap/global-compute-url-map/compute_v1beta1_computebackendservice_multiple_yaml_1.yaml"
   ],
-  "timestamp": 1628765145613,
+  "timestamp": 1642973303457,
   "queryuser": null,
   "checksum": "99914b932bd37a50b983c5e7c90ae93b",
   "node": {
@@ -15,40 +15,32 @@
     "type": "kcc",
     "collection": "kcctemplate",
     "paths": [
-      "/samples/resources/datafusioninstance/datafusion_v1beta1_datafusioninstance.yaml"
+      "/samples/resources/computeurlmap/global-compute-url-map/compute_v1beta1_computebackendservice_multiple_yaml_1.yaml"
     ],
     "snapshotId": "KCC_TEMPLATE_SNAPSHOT319",
     "status": "active",
-    "validate": true
+    "validate": true,
+    "resourceTypes": [
+      "computebackendservice"
+    ]
   },
   "snapshotId": "KCC_TEMPLATE_SNAPSHOT319",
   "collection": "kcctemplate",
   "json": {
-    "apiVersion": "datafusion.cnrm.cloud.google.com/v1beta1",
-    "kind": "DataFusionInstance",
+    "apiVersion": "compute.cnrm.cloud.google.com/v1beta1",
+    "kind": "ComputeBackendService",
     "metadata": {
-      "labels": {
-        "label-one": "value-one"
-      },
-      "name": "datafusioninstance-sample"
+      "name": "computeurlmap-dep2"
     },
     "spec": {
-      "description": "A sample DataFusion instance.",
-      "displayName": "Sample DataFusion Instance",
-      "location": "us-central1",
-      "type": "BASIC",
-      "enableStackdriverMonitoring": true,
-      "enableStackdriverLogging": true,
-      "privateInstance": true,
-      "networkConfig": {
-        "networkRef": {
-          "name": "datafusioninstance-dep"
-        },
-        "ipAllocation": "10.89.48.0/22"
-      },
-      "dataprocServiceAccountRef": {
-        "name": "datafusioninstance-dep"
-      }
+      "healthChecks": [
+        {
+          "healthCheckRef": {
+            "name": "computeurlmap-dep"
+          }
+        }
+      ],
+      "location": "global"
     }
   }
 }

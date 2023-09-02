@@ -1,0 +1,211 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAzureQuickStart",
+  "paths": [
+    "/demos/arm-asm-s2s/azuredeploy.json",
+    "/demos/arm-asm-s2s/azuredeploy.parameters.json"
+  ],
+  "timestamp": 1642962898046,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/demos/arm-asm-s2s/azuredeploy.json",
+      "/demos/arm-asm-s2s/azuredeploy.parameters.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT613",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "microsoft.network/publicipaddresses",
+      "microsoft.network/virtualnetworks",
+      "microsoft.network/localnetworkgateways",
+      "microsoft.network/virtualnetworkgateways"
+    ]
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT613",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "localGatewayName": {
+        "type": "string",
+        "metadata": {
+          "description": "Name for gateway connected to other VNet/on-prem network"
+        },
+        "value": "GEN-UNIQUE-8"
+      },
+      "localGatewayIpAddress": {
+        "type": "string",
+        "metadata": {
+          "description": "Public IP address for the gateway to connect to (from other VNet/on-prem)"
+        },
+        "value": "137.117.100.62"
+      },
+      "localGatewayAddressPrefix": {
+        "type": "string",
+        "metadata": {
+          "description": "CIDR block for remote network"
+        },
+        "value": "10.1.0.0/16"
+      },
+      "virtualNetworkName": {
+        "type": "string",
+        "metadata": {
+          "description": "Name for new virtual network"
+        },
+        "value": "GEN-UNIQUE-8"
+      },
+      "addressPrefix": {
+        "type": "string",
+        "metadata": {
+          "description": "Name for new virtual network"
+        },
+        "value": "10.3.0.0/16"
+      },
+      "subnet1Name": {
+        "type": "string",
+        "defaultValue": "Subnet1",
+        "metadata": {
+          "description": "Name for VM subnet in the new VNet"
+        }
+      },
+      "gatewaySubnet": {
+        "type": "string",
+        "defaultValue": "GatewaySubnet",
+        "metadata": {
+          "description": "Name for gateway subnet in new VNet"
+        },
+        "allowedValues": [
+          "GatewaySubnet"
+        ]
+      },
+      "subnet1Prefix": {
+        "type": "string",
+        "metadata": {
+          "description": "CIDR block for VM subnet"
+        },
+        "value": "10.3.0.0/24"
+      },
+      "gatewaySubnetPrefix": {
+        "type": "string",
+        "metadata": {
+          "description": "CIDR block for gateway subnet"
+        },
+        "value": "10.3.200.0/29"
+      },
+      "gatewayPublicIPName": {
+        "type": "string",
+        "metadata": {
+          "description": "Name for public IP object used for the new gateway"
+        },
+        "value": "GEN-UNIQUE-8"
+      },
+      "gatewayName": {
+        "type": "string",
+        "metadata": {
+          "description": "Name for the new gateway"
+        },
+        "value": "GEN-UNIQUE-8"
+      },
+      "location": {
+        "type": "string",
+        "defaultValue": "[resourceGroup().location]",
+        "metadata": {
+          "description": "Location where resources reside."
+        }
+      }
+    },
+    "variables": {
+      "gatewaySubnetRef": "Microsoft.Network/virtualNetworks/subnets//GEN-UNIQUE-8/GatewaySubnet"
+    },
+    "resources": [
+      {
+        "apiVersion": "2021-02-01",
+        "type": "Microsoft.Network/localNetworkGateways",
+        "name": "GEN-UNIQUE-8",
+        "location": "[resourceGroup().location]",
+        "properties": {
+          "localNetworkAddressSpace": {
+            "addressPrefixes": [
+              "10.1.0.0/16"
+            ]
+          },
+          "gatewayIpAddress": "137.117.100.62"
+        }
+      },
+      {
+        "apiVersion": "2015-05-01-preview",
+        "type": "Microsoft.Network/virtualNetworks",
+        "name": "GEN-UNIQUE-8",
+        "location": "[resourceGroup().location]",
+        "properties": {
+          "addressSpace": {
+            "addressPrefixes": [
+              "10.3.0.0/16"
+            ]
+          },
+          "subnets": [
+            {
+              "name": "Subnet1",
+              "properties": {
+                "addressPrefix": "10.3.0.0/24"
+              }
+            },
+            {
+              "name": "GatewaySubnet",
+              "properties": {
+                "addressPrefix": "10.3.200.0/29"
+              }
+            }
+          ]
+        }
+      },
+      {
+        "apiVersion": "2015-05-01-preview",
+        "type": "Microsoft.Network/publicIPAddresses",
+        "name": "GEN-UNIQUE-8",
+        "location": "[resourceGroup().location]",
+        "properties": {
+          "publicIPAllocationMethod": "Dynamic"
+        }
+      },
+      {
+        "apiVersion": "2015-05-01-preview",
+        "type": "Microsoft.Network/virtualNetworkGateways",
+        "name": "GEN-UNIQUE-8",
+        "location": "[resourceGroup().location]",
+        "dependsOn": [
+          "Microsoft.Network/publicIPAddresses//GEN-UNIQUE-8",
+          "Microsoft.Network/virtualNetworks//GEN-UNIQUE-8"
+        ],
+        "properties": {
+          "ipConfigurations": [
+            {
+              "properties": {
+                "privateIPAllocationMethod": "Dynamic",
+                "subnet": {
+                  "id": "Microsoft.Network/virtualNetworks/subnets//GEN-UNIQUE-8/GatewaySubnet"
+                },
+                "publicIPAddress": {
+                  "id": "Microsoft.Network/publicIPAddresses/GEN-UNIQUE-8"
+                }
+              },
+              "name": "vnetGatewayConfig"
+            }
+          ],
+          "gatewayType": "Vpn",
+          "vpnType": "RouteBased",
+          "enableBgp": false
+        }
+      }
+    ],
+    "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+  }
+}

@@ -1,0 +1,161 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "main",
+  "contentType": "json",
+  "source": "gitConnectorAwsTerraHashicorp",
+  "paths": [
+    "/examples/asg/outputs.tf",
+    "/examples/asg/terraform.template.tfvars",
+    "/examples/asg/variables.tf",
+    "/examples/asg/main.tf"
+  ],
+  "timestamp": 1642967657630,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "TRF_TEMPLATE_SNAPSHOT",
+    "type": "terraform",
+    "collection": "terraformtemplate",
+    "paths": [
+      "/examples/asg/outputs.tf",
+      "/examples/asg/terraform.template.tfvars",
+      "/examples/asg/variables.tf",
+      "/examples/asg/main.tf"
+    ],
+    "snapshotId": "TRF_TEMPLATE_SNAPSHOT7",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "aws_autoscaling_group",
+      "aws_security_group",
+      "aws_elb",
+      "aws_launch_configuration"
+    ]
+  },
+  "snapshotId": "TRF_TEMPLATE_SNAPSHOT7",
+  "collection": "terraformtemplate",
+  "json": {
+    "terraform": [
+      {
+        "required_version": ">= 0.12"
+      }
+    ],
+    "provider": [
+      {
+        "aws": {
+          "region": "${var.aws_region}"
+        }
+      }
+    ],
+    "locals": [
+      {
+        "availability_zones": "${split(\",\",var.availability_zones)}"
+      }
+    ],
+    "resources": [
+      {
+        "type": "aws_elb",
+        "name": "web-elb",
+        "properties": {
+          "name": "terraform-example-elb",
+          "availability_zones": "${local.availability_zones}",
+          "listener": [
+            {
+              "instance_port": 80,
+              "instance_protocol": "http",
+              "lb_port": 80,
+              "lb_protocol": "http"
+            }
+          ],
+          "health_check": [
+            {
+              "healthy_threshold": 2,
+              "unhealthy_threshold": 2,
+              "timeout": 3,
+              "target": "HTTP:80/",
+              "interval": 30
+            }
+          ],
+          "compiletime_identity": "aws_elb.web-elb"
+        }
+      },
+      {
+        "type": "aws_autoscaling_group",
+        "name": "web-asg",
+        "properties": {
+          "availability_zones": "${local.availability_zones}",
+          "name": "terraform-example-asg",
+          "max_size": "2",
+          "min_size": "1",
+          "desired_capacity": "1",
+          "force_delete": true,
+          "launch_configuration": "${aws_launch_configuration.web-lc.name}",
+          "load_balancers": [
+            "${aws_elb.web-elb.name}"
+          ],
+          "tag": [
+            {
+              "key": "Name",
+              "value": "web-asg",
+              "propagate_at_launch": true
+            }
+          ],
+          "compiletime_identity": "aws_autoscaling_group.web-asg"
+        }
+      },
+      {
+        "type": "aws_launch_configuration",
+        "name": "web-lc",
+        "properties": {
+          "name": "terraform-example-lc",
+          "image_id": "${var.aws_amis[var.aws_region]}",
+          "instance_type": "t2.micro",
+          "security_groups": [
+            "${aws_security_group.default.id}"
+          ],
+          "user_data": "${file(\"userdata.sh\")}",
+          "key_name": "terraform-aws-provider-example",
+          "compiletime_identity": "aws_launch_configuration.web-lc"
+        }
+      },
+      {
+        "type": "aws_security_group",
+        "name": "default",
+        "properties": {
+          "name": "terraform_example_sg",
+          "description": "Used in the terraform",
+          "ingress": [
+            {
+              "from_port": 22,
+              "to_port": 22,
+              "protocol": "tcp",
+              "cidr_blocks": [
+                "0.0.0.0/0"
+              ]
+            },
+            {
+              "from_port": 80,
+              "to_port": 80,
+              "protocol": "tcp",
+              "cidr_blocks": [
+                "0.0.0.0/0"
+              ]
+            }
+          ],
+          "egress": [
+            {
+              "from_port": 0,
+              "to_port": 0,
+              "protocol": -1,
+              "cidr_blocks": [
+                "0.0.0.0/0"
+              ]
+            }
+          ],
+          "compiletime_identity": "aws_security_group.default"
+        }
+      }
+    ]
+  }
+}

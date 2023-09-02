@@ -2,12 +2,12 @@
   "structure": "filesystem",
   "error": null,
   "reference": "master",
-  "contentType": "yaml",
+  "contentType": "json",
   "source": "gitConnectorGoogleKcc",
   "paths": [
-    "/samples/resources/computetargetsslproxy/compute_v1beta1_computetargetsslproxy.yaml"
+    "/samples/resources/computesnapshot/compute_v1beta1_computesnapshot.yaml"
   ],
-  "timestamp": 1628765144257,
+  "timestamp": 1642973303206,
   "queryuser": null,
   "checksum": "99914b932bd37a50b983c5e7c90ae93b",
   "node": {
@@ -15,32 +15,51 @@
     "type": "kcc",
     "collection": "kcctemplate",
     "paths": [
-      "/samples/resources/computetargetsslproxy/compute_v1beta1_computetargetsslproxy.yaml"
+      "/samples/resources/computesnapshot/compute_v1beta1_computesnapshot.yaml"
     ],
     "snapshotId": "KCC_TEMPLATE_SNAPSHOT268",
     "status": "active",
-    "validate": true
+    "validate": true,
+    "resourceTypes": [
+      "computesnapshot"
+    ]
   },
   "snapshotId": "KCC_TEMPLATE_SNAPSHOT268",
   "collection": "kcctemplate",
   "json": {
     "apiVersion": "compute.cnrm.cloud.google.com/v1beta1",
-    "kind": "ComputeTargetSSLProxy",
+    "kind": "ComputeSnapshot",
     "metadata": {
-      "name": "computetargetsslproxy-sample"
+      "name": "computesnapshot-sample",
+      "labels": {
+        "label-one": "value-one"
+      }
     },
     "spec": {
-      "description": "A sample SSL proxy configured with a default SSL policy.",
-      "backendServiceRef": {
-        "name": "computetargetsslproxy-dep"
+      "description": "ComputeSnapshot Sample",
+      "zone": "us-west1-c",
+      "sourceDiskRef": {
+        "name": "computesnapshot-dep"
       },
-      "sslCertificates": [
-        {
-          "name": "computetargetsslproxy-dep"
+      "snapshotEncryptionKey": {
+        "rawKey": {
+          "valueFrom": {
+            "secretKeyRef": {
+              "name": "computesnapshot-dep",
+              "key": "snapshotEncryptionKey"
+            }
+          }
         }
-      ],
-      "sslPolicyRef": {
-        "name": "computetargetsslproxy-dep"
+      },
+      "sourceDiskEncryptionKey": {
+        "rawKey": {
+          "valueFrom": {
+            "secretKeyRef": {
+              "name": "computesnapshot-dep",
+              "key": "sourceDiskEncryptionKey"
+            }
+          }
+        }
       }
     }
   }

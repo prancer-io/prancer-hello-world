@@ -1,0 +1,189 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAzureQuickStart",
+  "paths": [
+    "/test/ci-gen-setup/azuredeploy.json",
+    "/test/ci-gen-setup/azuredeploy.parameters.us.json"
+  ],
+  "timestamp": 1642962911626,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/test/ci-gen-setup/azuredeploy.json",
+      "/test/ci-gen-setup/azuredeploy.parameters.us.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT1823",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "microsoft.authorization/roleassignments",
+      "microsoft.network/dnszones/txt",
+      "microsoft.network/dnszones/cname",
+      "microsoft.network/dnszones/a",
+      "microsoft.network/dnszones"
+    ]
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT1823",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "zoneName": {
+        "type": "string",
+        "metadata": {
+          "description": "The name of the DNS zone to be created.  Must have at least 2 segements, e.g. hostname.org"
+        },
+        "value": "azurequickstarts.us"
+      },
+      "CNAMEs": {
+        "type": "array",
+        "metadata": {
+          "description": "object array for cname record values",
+          "sampleValue": {
+            "name": "name of the record",
+            "value": "record value",
+            "TTL": "TTL"
+          }
+        },
+        "value": [
+          {
+            "name": "awverify",
+            "value": "awverify.azurequickstarts-ci.azurewebsites.us",
+            "TTL": 3600
+          }
+        ]
+      },
+      "As": {
+        "type": "array",
+        "metadata": {
+          "description": "object array for A record values",
+          "sampleValue": {
+            "name": "name of the record",
+            "value": "record value",
+            "TTL": "TTL"
+          }
+        },
+        "value": [
+          {
+            "name": "@",
+            "value": "parked",
+            "TTL": 600
+          }
+        ]
+      },
+      "TXTs": {
+        "type": "array",
+        "metadata": {
+          "description": "object array for TXT record values",
+          "sampleValue": {
+            "name": "name of the record",
+            "value": "record value",
+            "TTL": "TTL"
+          }
+        },
+        "value": []
+      },
+      "principalId": {
+        "type": "string",
+        "metadata": {
+          "description": "The principalId of the limit service principal used to deploy templates"
+        },
+        "value": "61408169-5ecb-4236-b154-d518d9d5b48b"
+      }
+    },
+    "variables": {
+      "DNSZoneContributor": "[subscriptionResourceId('Microsoft.Authorization/roleAssignments', 'befefa01-2a29-4197-83a8-272ff33ce314')]",
+      "roleAssignmentName": "[guid(parameters('principalId'), variables('DNSZoneContributor'), resourceId('Microsoft.Network/dnsZones', parameters('zoneName')))]"
+    },
+    "resources": [
+      {
+        "type": "Microsoft.Network/dnsZones",
+        "apiVersion": "2018-05-01",
+        "name": "azurequickstarts.us",
+        "location": "global",
+        "properties": {}
+      },
+      {
+        "type": "Microsoft.Network/dnsZones/A",
+        "apiVersion": "2018-05-01",
+        "name": "[concat(parameters('zoneName'), '/', parameters('As')[copyIndex()].name)]",
+        "location": "global",
+        "dependsOn": [
+          "Microsoft.Network/dnsZones/azurequickstarts.us"
+        ],
+        "properties": {
+          "TTL": 3600,
+          "Arecords": [
+            {
+              "ipv4Address": "As)[copyIndex("
+            }
+          ]
+        }
+      },
+      {
+        "type": "Microsoft.Network/dnszones/TXT",
+        "name": "[concat(parameters('zoneName'), '/', parameters('TXTs')[copyIndex()].name)]",
+        "apiVersion": "2016-04-01",
+        "dependsOn": [
+          "Microsoft.Network/dnsZones/azurequickstarts.us"
+        ],
+        "copy": {
+          "name": "TXTs",
+          "count": 18
+        },
+        "properties": {
+          "TTL": "TXTs)[copyIndex(",
+          "TXTRecords": [
+            {
+              "value": [
+                "TXTs)[copyIndex("
+              ]
+            }
+          ]
+        }
+      },
+      {
+        "type": "Microsoft.Network/dnszones/CNAME",
+        "name": "[concat(parameters('zoneName'),'/', parameters('CNAMEs')[copyIndex()].name)]",
+        "apiVersion": "2018-05-01",
+        "dependsOn": [
+          "Microsoft.Network/dnsZones/azurequickstarts.us"
+        ],
+        "properties": {
+          "TTL": "CNAMEs)[copyIndex(",
+          "CNAMERecord": {
+            "cname": "CNAMEs)[copyIndex("
+          }
+        }
+      },
+      {
+        "scope": "Microsoft.Network/dnsZones/azurequickstarts.us",
+        "type": "Microsoft.Authorization/roleAssignments",
+        "apiVersion": "2021-04-01-preview",
+        "name": "[guid(parameters('principalId'), variables('DNSZoneContributor'), resourceId('Microsoft.Network/dnsZones', parameters('zoneName')))]",
+        "dependsOn": [
+          "Microsoft.Network/dnsZones/azurequickstarts.us"
+        ],
+        "properties": {
+          "principalId": "61408169-5ecb-4236-b154-d518d9d5b48b",
+          "roleDefinitionId": "[subscriptionResourceId('Microsoft.Authorization/roleAssignments', 'befefa01-2a29-4197-83a8-272ff33ce314')]",
+          "principalType": "ServicePrincipal"
+        }
+      }
+    ],
+    "outputs": {
+      "nameServers": {
+        "type": "array",
+        "value": "[reference(parameters('zoneName')).nameServers]"
+      }
+    },
+    "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+  }
+}

@@ -2,12 +2,12 @@
   "structure": "filesystem",
   "error": null,
   "reference": "master",
-  "contentType": "yaml",
+  "contentType": "json",
   "source": "gitConnectorGoogleKcc",
   "paths": [
-    "/samples/resources/computeinstance/cloud-machine-instance/compute_v1beta1_computedisk_multiple_yaml_0.yaml"
+    "/samples/resources/computeforwardingrule/global-forwarding-rule-with-target-http-proxy/compute_v1beta1_computeforwardingrule.yaml"
   ],
-  "timestamp": 1628765141012,
+  "timestamp": 1642973302553,
   "queryuser": null,
   "checksum": "99914b932bd37a50b983c5e7c90ae93b",
   "node": {
@@ -15,36 +15,37 @@
     "type": "kcc",
     "collection": "kcctemplate",
     "paths": [
-      "/samples/resources/computeinstance/cloud-machine-instance/compute_v1beta1_computedisk_multiple_yaml_0.yaml"
+      "/samples/resources/computeforwardingrule/global-forwarding-rule-with-target-http-proxy/compute_v1beta1_computeforwardingrule.yaml"
     ],
     "snapshotId": "KCC_TEMPLATE_SNAPSHOT132",
     "status": "active",
-    "validate": true
+    "validate": true,
+    "resourceTypes": [
+      "computeforwardingrule"
+    ]
   },
   "snapshotId": "KCC_TEMPLATE_SNAPSHOT132",
   "collection": "kcctemplate",
   "json": {
     "apiVersion": "compute.cnrm.cloud.google.com/v1beta1",
-    "kind": "ComputeDisk",
+    "kind": "ComputeForwardingRule",
     "metadata": {
-      "name": "computeinstance-dep1-cloudmachine"
+      "labels": {
+        "label-one": "value-one"
+      },
+      "name": "computeforwardingrule-sample-global-with-target-http-proxy"
     },
     "spec": {
-      "description": "a sample encrypted, blank disk",
-      "diskEncryptionKey": {
-        "rawKey": {
-          "valueFrom": {
-            "secretKeyRef": {
-              "key": "diskEncryptionKey",
-              "name": "computeinstance-dep-cloudmachine"
-            }
-          }
+      "description": "A global forwarding rule",
+      "target": {
+        "targetHTTPProxyRef": {
+          "name": "computeforwardingrule-dep-global-with-target-http-proxy"
         }
       },
-      "location": "us-west1-a",
-      "physicalBlockSizeBytes": 4096,
-      "size": 1,
-      "type": "pd-ssd"
+      "portRange": "80",
+      "ipProtocol": "TCP",
+      "ipVersion": "IPV4",
+      "location": "global"
     }
   }
 }

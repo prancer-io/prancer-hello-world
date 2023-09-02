@@ -1,0 +1,136 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "main",
+  "contentType": "json",
+  "source": "gitConnectorAzureTerraHashicorp",
+  "paths": [
+    "/examples/app-service-environment-v3/main.tf"
+  ],
+  "timestamp": 1642943279634,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "TRF_TEMPLATE_SNAPSHOT",
+    "type": "terraform",
+    "collection": "terraformtemplate",
+    "paths": [
+      "/examples/app-service-environment-v3/main.tf"
+    ],
+    "snapshotId": "TRF_TEMPLATE_SNAPSHOT22",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "azurerm_app_service_environment_v3",
+      "azurerm_subnet",
+      "azurerm_virtual_network",
+      "azurerm_resource_group"
+    ]
+  },
+  "snapshotId": "TRF_TEMPLATE_SNAPSHOT22",
+  "collection": "terraformtemplate",
+  "json": {
+    "terraform": [
+      {
+        "required_providers": [
+          {
+            "azurerm": {
+              "version": ">=2.76.0"
+            },
+            "random": {
+              "version": "3.1.0"
+            }
+          }
+        ]
+      }
+    ],
+    "provider": [
+      {
+        "azurerm": {
+          "features": [
+            {}
+          ]
+        }
+      }
+    ],
+    "resources": [
+      {
+        "type": "azurerm_resource_group",
+        "name": "example",
+        "properties": {
+          "name": "exampleRG1",
+          "location": "West Europe",
+          "compiletime_identity": "azurerm_resource_group.example"
+        }
+      },
+      {
+        "type": "azurerm_virtual_network",
+        "name": "example",
+        "properties": {
+          "name": "example-vnet",
+          "location": "${azurerm_resource_group.example.location}",
+          "resource_group_name": "${azurerm_resource_group.example.name}",
+          "address_space": [
+            "10.0.0.0/16"
+          ],
+          "compiletime_identity": "azurerm_virtual_network.example"
+        }
+      },
+      {
+        "type": "azurerm_subnet",
+        "name": "example",
+        "properties": {
+          "name": "example-subnet",
+          "resource_group_name": "${azurerm_resource_group.example.name}",
+          "virtual_network_name": "${azurerm_virtual_network.example.name}",
+          "address_prefixes": [
+            "10.0.2.0/24"
+          ],
+          "delegation": [
+            {
+              "name": "Microsoft.Web.hostingEnvironments",
+              "service_delegation": [
+                {
+                  "name": "Microsoft.Web/hostingEnvironments",
+                  "actions": [
+                    "Microsoft.Network/virtualNetworks/subnets/action"
+                  ]
+                }
+              ]
+            }
+          ],
+          "compiletime_identity": "azurerm_subnet.example"
+        }
+      },
+      {
+        "type": "azurerm_app_service_environment_v3",
+        "name": "example",
+        "properties": {
+          "name": "example-asev3",
+          "resource_group_name": "${azurerm_resource_group.example.name}",
+          "subnet_id": "${azurerm_subnet.example.id}",
+          "internal_load_balancing_mode": "Web, Publishing",
+          "cluster_setting": [
+            {
+              "name": "DisableTls1.0",
+              "value": 1
+            },
+            {
+              "name": "InternalEncryption",
+              "value": true
+            },
+            {
+              "name": "FrontEndSSLCipherSuiteOrder",
+              "value": "TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384,TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256"
+            }
+          ],
+          "tags": {
+            "env": "production",
+            "terraformed": true
+          },
+          "compiletime_identity": "azurerm_app_service_environment_v3.example"
+        }
+      }
+    ]
+  }
+}

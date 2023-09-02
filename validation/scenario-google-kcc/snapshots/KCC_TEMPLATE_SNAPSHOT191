@@ -2,12 +2,12 @@
   "structure": "filesystem",
   "error": null,
   "reference": "master",
-  "contentType": "yaml",
+  "contentType": "json",
   "source": "gitConnectorGoogleKcc",
   "paths": [
-    "/samples/resources/computeresourcepolicy/weekly-resource-policy-schedule/compute_v1alpha3_computeresourcepolicy.yaml"
+    "/samples/resources/computeinstancetemplate/compute_v1beta1_computeimage.yaml"
   ],
-  "timestamp": 1628765142291,
+  "timestamp": 1642973302908,
   "queryuser": null,
   "checksum": "99914b932bd37a50b983c5e7c90ae93b",
   "node": {
@@ -15,54 +15,27 @@
     "type": "kcc",
     "collection": "kcctemplate",
     "paths": [
-      "/samples/resources/computeresourcepolicy/weekly-resource-policy-schedule/compute_v1alpha3_computeresourcepolicy.yaml"
+      "/samples/resources/computeinstancetemplate/compute_v1beta1_computeimage.yaml"
     ],
     "snapshotId": "KCC_TEMPLATE_SNAPSHOT191",
     "status": "active",
-    "validate": true
+    "validate": true,
+    "resourceTypes": [
+      "computeimage"
+    ]
   },
   "snapshotId": "KCC_TEMPLATE_SNAPSHOT191",
   "collection": "kcctemplate",
   "json": {
     "apiVersion": "compute.cnrm.cloud.google.com/v1beta1",
-    "kind": "ComputeResourcePolicy",
+    "kind": "ComputeImage",
     "metadata": {
-      "name": "computeresourcepolicy-sample-weeklyschedule"
+      "name": "instancetemplate-dep"
     },
     "spec": {
-      "region": "us-central1",
-      "snapshotSchedulePolicy": {
-        "schedule": {
-          "weeklySchedule": {
-            "dayOfWeeks": [
-              {
-                "startTime": "08:00",
-                "day": "MONDAY"
-              },
-              {
-                "startTime": "15:00",
-                "day": "WEDNESDAY"
-              },
-              {
-                "startTime": "23:00",
-                "day": "FRIDAY"
-              }
-            ]
-          }
-        },
-        "retentionPolicy": {
-          "maxRetentionDays": 12
-        },
-        "snapshotProperties": {
-          "storageLocations": [
-            "us"
-          ],
-          "guestFlush": false,
-          "labels": {
-            "autodeleted": "false",
-            "interval": "weekly"
-          }
-        }
+      "description": "A sample image created from an empty disk resource",
+      "diskRef": {
+        "name": "instancetemplate-dep"
       }
     }
   }

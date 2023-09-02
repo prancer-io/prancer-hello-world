@@ -1,0 +1,170 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAzureQuickStart",
+  "paths": [
+    "/application-workloads/intel-lustre/intel-lustre-client-server/monitoring.json",
+    "/application-workloads/intel-lustre/intel-lustre-client-server/azuredeploy.parameters.json"
+  ],
+  "timestamp": 1642962889885,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/application-workloads/intel-lustre/intel-lustre-client-server/monitoring.json",
+      "/application-workloads/intel-lustre/intel-lustre-client-server/azuredeploy.parameters.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT181",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "microsoft.compute/virtualmachines/extensions"
+    ]
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT181",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "location": {
+        "type": "string",
+        "metadata": {
+          "description": "Location for the Lustre nodes"
+        },
+        "value": "Japan East"
+      },
+      "vmNamePrefix": {
+        "type": "string",
+        "metadata": {
+          "description": "Prefix that will be used for all virtual machines in this Lustre cluster (e.g. lustre)"
+        }
+      },
+      "ossCount": {
+        "type": "int",
+        "metadata": {
+          "description": "The number of virtual machines instances to provision for OSS servers"
+        }
+      },
+      "filesystemName": {
+        "type": "string",
+        "metadata": {
+          "description": "Name of the Lustre filesytem (e.g. scratch, lustre, shared_data) that will mountable from clients as mgsip@tcp0:/filesystemname"
+        }
+      },
+      "scriptUrlMonitoring": {
+        "type": "string",
+        "metadata": {
+          "description": "URL of the script to setup Ganglia and Lustre Monitoring Tool on the nodes"
+        }
+      },
+      "mgsip": {
+        "type": "string",
+        "metadata": {
+          "description": "Management Server private IP address"
+        }
+      },
+      "mdsip0": {
+        "type": "string",
+        "metadata": {
+          "description": "Metadata Server private IP address"
+        }
+      },
+      "ossip0": {
+        "type": "string",
+        "metadata": {
+          "description": "Object Storage Server #0 private IP address"
+        }
+      },
+      "artifactsBaseUrl": {
+        "value": "https://raw.githubusercontent.com/lustrehpc/azure-quickstart-templates/master/101-lustre-client-server-create"
+      },
+      "adminUsername": {
+        "value": "azureuser"
+      },
+      "dnsNamePrefix": {
+        "value": "uniqdnsname"
+      },
+      "existingSubnetClientsName": {
+        "value": "subnet-lustre-clients"
+      },
+      "vnetName": {
+        "value": "vnettest"
+      },
+      "clientlocation": {
+        "value": "Japan East"
+      },
+      "clientadminUsername": {
+        "value": "azureclientuser"
+      },
+      "dnsNamePrefixForClient": {
+        "value": "clntdnsname"
+      }
+    },
+    "resources": [
+      {
+        "apiVersion": "2015-05-01-preview",
+        "type": "Microsoft.Compute/virtualMachines/extensions",
+        "name": "vmNamePrefixmds/init",
+        "location": "Japan East",
+        "properties": {
+          "publisher": "Microsoft.Azure.Extensions",
+          "type": "CustomScript",
+          "typeHandlerVersion": "2.0",
+          "autoUpgradeMinorVersion": true,
+          "settings": {
+            "fileUris": [
+              "scriptUrlMonitoring"
+            ],
+            "commandToExecute": "sh monitoring.sh -n MDS -i 0 -d 1 -m mgsip -l 0.0.0.0 -f filesystemName -g mdsip0 -h ossip0"
+          }
+        }
+      },
+      {
+        "apiVersion": "2015-05-01-preview",
+        "type": "Microsoft.Compute/virtualMachines/extensions",
+        "name": "vmNamePrefixosscopyIndex()/init",
+        "location": "Japan East",
+        "copy": {
+          "name": "ossExtensionsCopy",
+          "count": "ossCount"
+        },
+        "properties": {
+          "publisher": "Microsoft.Azure.Extensions",
+          "type": "CustomScript",
+          "typeHandlerVersion": "2.0",
+          "autoUpgradeMinorVersion": true,
+          "settings": {
+            "fileUris": [
+              "scriptUrlMonitoring"
+            ],
+            "commandToExecute": "sh monitoring.sh -n OSS -i copyIndex() -d 3 -m mgsip -l 0.0.0.0 -f filesystemName -g mdsip0 -h ossip0"
+          }
+        }
+      },
+      {
+        "apiVersion": "2015-05-01-preview",
+        "type": "Microsoft.Compute/virtualMachines/extensions",
+        "name": "vmNamePrefixmgs/init",
+        "location": "Japan East",
+        "properties": {
+          "publisher": "Microsoft.Azure.Extensions",
+          "type": "CustomScript",
+          "typeHandlerVersion": "2.0",
+          "autoUpgradeMinorVersion": true,
+          "settings": {
+            "fileUris": [
+              "scriptUrlMonitoring"
+            ],
+            "commandToExecute": "sh monitoring.sh -n MGS -i 0 -d 2 -m mgsip -l 0.0.0.0 -f filesystemName -g mdsip0 -h ossip0"
+          }
+        }
+      }
+    ],
+    "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+  }
+}

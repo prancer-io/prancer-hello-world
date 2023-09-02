@@ -1,0 +1,981 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAzureQuickStart",
+  "paths": [
+    "/demos/vmss-win-iis-app-ssl/azuredeploy.json",
+    "/demos/vmss-win-iis-app-ssl/azuredeploy.parameters.json"
+  ],
+  "timestamp": 1642962902326,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/demos/vmss-win-iis-app-ssl/azuredeploy.json",
+      "/demos/vmss-win-iis-app-ssl/azuredeploy.parameters.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT862",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "microsoft.network/publicipaddresses",
+      "microsoft.network/virtualnetworks",
+      "microsoft.network/loadbalancers",
+      "microsoft.compute/virtualmachinescalesets",
+      "microsoft.insights/autoscalesettings",
+      "microsoft.network/networksecuritygroups"
+    ]
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT862",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "appStorageType": {
+        "type": "string",
+        "defaultValue": "StandardSSD_LRS",
+        "allowedValues": [
+          "Standard_LRS",
+          "StandardSSD_LRS",
+          "Premium_LRS"
+        ],
+        "metadata": {
+          "description": "Set this value for the storage account type"
+        }
+      },
+      "frontEndVMSSName": {
+        "type": "string",
+        "minLength": 1,
+        "metadata": {
+          "description": "Set this value for the frontend vmss name"
+        },
+        "value": "<frontend VMSS name> e.g. appfevmss"
+      },
+      "serviceVMSSName": {
+        "type": "string",
+        "minLength": 1,
+        "metadata": {
+          "description": "Set this value for the backend or service vmss name"
+        },
+        "value": "<service VMSS name> e.g. appwcfvmss"
+      },
+      "appVMAdminUserName": {
+        "type": "string",
+        "minLength": 1,
+        "metadata": {
+          "description": "Set this value for the admin user name to the vmss"
+        },
+        "value": "<vm admin user name> e.g adminuser"
+      },
+      "appVMAdminPassword": {
+        "type": "securestring",
+        "metadata": {
+          "description": "Set this value for the password for the admin user to the vmss"
+        }
+      },
+      "appVMWindowsOSVersion": {
+        "type": "string",
+        "defaultValue": "2012-R2-Datacenter",
+        "allowedValues": [
+          "2008-R2-SP1",
+          "2012-Datacenter",
+          "2012-R2-Datacenter",
+          "Windows-Server-Technical-Preview"
+        ],
+        "metadata": {
+          "description": "Set this value for the windows os version"
+        }
+      },
+      "frontEndVMSize": {
+        "type": "string",
+        "defaultValue": "Standard_D8s_v3",
+        "allowedValues": [
+          "Standard_D2_v3",
+          "Standard_D2_v3",
+          "Standard_D4_v3",
+          "Standard_D8_v3",
+          "Standard_D4_v3",
+          "Standard_D4_v3",
+          "Standard_D8_v3",
+          "Standard_D16_v3",
+          "Standard_D2s_v3",
+          "Standard_D2s_v3",
+          "Standard_D4s_v3",
+          "Standard_D8s_v3",
+          "Standard_D16s_v3",
+          "Standard_D4s_v3",
+          "Standard_D4s_v3",
+          "Standard_D8s_v3",
+          "Standard_D16s_v3",
+          "Standard_D32s_v3"
+        ],
+        "metadata": {
+          "description": "Set this value for the frontend vmss size"
+        }
+      },
+      "serviceVMSize": {
+        "type": "string",
+        "defaultValue": "Standard_D8s_v3",
+        "allowedValues": [
+          "Standard_D2_v3",
+          "Standard_D2_v3",
+          "Standard_D4_v3",
+          "Standard_D8_v3",
+          "Standard_D4_v3",
+          "Standard_D4_v3",
+          "Standard_D8_v3",
+          "Standard_D16_v3",
+          "Standard_D2s_v3",
+          "Standard_D2s_v3",
+          "Standard_D4s_v3",
+          "Standard_D8s_v3",
+          "Standard_D16s_v3",
+          "Standard_D4s_v3",
+          "Standard_D4s_v3",
+          "Standard_D8s_v3",
+          "Standard_D16s_v3",
+          "Standard_D32s_v3"
+        ],
+        "metadata": {
+          "description": "Set this value for the service or backend vmss size"
+        }
+      },
+      "appPublicIPDnsName": {
+        "type": "string",
+        "minLength": 1,
+        "metadata": {
+          "description": "Set this value for the dns name of the frontend public ip"
+        },
+        "value": "<dns name for the frontend load balancer> e.g. mytestvmdns"
+      },
+      "servicePublicIPDnsName": {
+        "type": "string",
+        "minLength": 1,
+        "metadata": {
+          "description": "Set this value for the dns name of the backend public ip"
+        },
+        "value": "<dns name for the backend/service load balancer> e.g. appwcfdns"
+      },
+      "_artifactsLocation": {
+        "type": "string",
+        "defaultValue": "[deployment().properties.templateLink.uri]",
+        "metadata": {
+          "description": "Auto-generated container in staging storage account to receive post-build staging folder upload"
+        }
+      },
+      "_artifactsLocationSasToken": {
+        "type": "securestring",
+        "defaultValue": "",
+        "metadata": {
+          "description": "Auto-generated token to access _artifactsLocation"
+        }
+      },
+      "appDSCUpdateTagVersion": {
+        "type": "string",
+        "defaultValue": "1.0",
+        "metadata": {
+          "description": "This value must be changed from a previous deployment to ensure the extension will run"
+        }
+      },
+      "appWebPackage": {
+        "type": "string",
+        "defaultValue": "https://computeteststore.blob.core.windows.net/deploypackage/deployPackage.zip?sv=2015-04-05&ss=bfqt&srt=sco&sp=r&se=2099-10-16T02:03:39Z&st=2016-10-15T18:03:39Z&spr=https&sig=aSH6yNPEGPWXk6PxTPzS6fyEXMD1ZYIkI0j5E9Hu5%2Fk%3D",
+        "metadata": {
+          "description": "Set this value for the signed uri to download the frontend deployment package"
+        }
+      },
+      "appServicePackage": {
+        "type": "string",
+        "defaultValue": "https://computeteststore.blob.core.windows.net/deploypackage/SampleWcfServices.zip?sv=2015-04-05&ss=bfqt&srt=sco&sp=r&se=2099-10-16T02:03:39Z&st=2016-10-15T18:03:39Z&spr=https&sig=aSH6yNPEGPWXk6PxTPzS6fyEXMD1ZYIkI0j5E9Hu5%2Fk%3D",
+        "metadata": {
+          "description": "Set this value for the signed uri to download the service deployment package"
+        }
+      },
+      "instanceCount": {
+        "type": "string",
+        "metadata": {
+          "description": "Number of VM instances in the vmss"
+        },
+        "value": "2"
+      },
+      "frontEndDSCVMSSUpdateTagVersion": {
+        "type": "string",
+        "defaultValue": "1.0",
+        "metadata": {
+          "description": "This value must be changed from a previous deployment to ensure the extension will run"
+        }
+      },
+      "serviceDSCVMSSUpdateTagVersion": {
+        "type": "string",
+        "defaultValue": "1.0",
+        "metadata": {
+          "description": "This value must be changed from a previous deployment to ensure the extension will run"
+        }
+      },
+      "vaultName": {
+        "type": "string",
+        "metadata": {
+          "description": "The Azure Key vault where SSL certificates are stored"
+        },
+        "value": "<azure keyValut name> e.g. myKeyVault"
+      },
+      "vaultResourceGroup": {
+        "type": "string",
+        "metadata": {
+          "description": "Resource Group of the key vault"
+        },
+        "value": "<azure keyvalut resource group name> e.g. myKeyVault-rg"
+      },
+      "httpssecretUrlWithVersion": {
+        "type": "string",
+        "metadata": {
+          "description": "full Key Vault Id to the secret that stores the SSL cert"
+        },
+        "value": "<uri with version of the pfx cert secret> e.g https://mykeyvault.vault.azure.net/secrets/myPfxCert2/11f95456772549a2b6b0ba38bd1b319a"
+      },
+      "httpssecretCaUrlWithVersion": {
+        "type": "string",
+        "metadata": {
+          "description": "full Key Vault Id to the secret that stores the CA cert"
+        },
+        "value": "<uri with version of the pfx cert secret> e.g https://mykeyvault.vault.azure.net/secrets/myPfxCert2/11f95456772549a2b6b0ba38bd1b319a"
+      },
+      "certificateStore": {
+        "type": "string",
+        "metadata": {
+          "description": "name of the certificate key secret"
+        },
+        "value": "<certificate store name on the target vm> e.g. myPfxCert2"
+      },
+      "certificateDomain": {
+        "type": "string",
+        "metadata": {
+          "description": "name of the domain the certificate is created for"
+        },
+        "value": "<fully qualified domain name for which the certificate is installed> e.g. www.mycompany.com or *.mycompany.com for wildcard domains"
+      },
+      "location": {
+        "type": "string",
+        "defaultValue": "[resourceGroup().location]",
+        "metadata": {
+          "description": "Location for all resources."
+        }
+      }
+    },
+    "variables": {
+      "appVnetPrefix": "10.0.0.0/16",
+      "appVnetSubnet1Name": "FrontEndSubNet",
+      "appVnetSubnet1Prefix": "10.0.0.0/24",
+      "appVnetSubnet2Name": "ServiceSubNet",
+      "appVnetSubnet2Prefix": "10.0.1.0/24",
+      "appVMImagePublisher": "MicrosoftWindowsServer",
+      "appVMImageOffer": "WindowsServer",
+      "frontEndVMSize": "Standard_D8s_v3",
+      "serviceVMSize": "Standard_D8s_v3",
+      "appVMSubnetRef": "Microsoft.Network/virtualNetworks/subnets/FrontEndSubNet",
+      "serviceVMSubnetRef": "Microsoft.Network/virtualNetworks/subnets/FrontEndSubNet",
+      "appPublicIPName": "appPublicIP",
+      "servicePublicIPName": "servicePublicIP",
+      "frontEndVMSSName": "<frontend VMSS name> e.g. appfevmss",
+      "serviceVMSSName": "<service VMSS name> e.g. appwcfvmss",
+      "publicIPAddressID": "Microsoft.Network/publicIPAddresses/appPublicIP",
+      "publicIPAddressID2": "Microsoft.Network/publicIPAddresses/servicePublicIP",
+      "lbName": "loadBalancer1",
+      "lbServiceName": "loadBalancer2",
+      "lbID": "Microsoft.Network/loadBalancers/loadBalancer1",
+      "lbServiceID": "Microsoft.Network/loadBalancers/loadBalancer2",
+      "lbFEName": "loadBalancerFrontEndWeb",
+      "lbFEServiceName": "loadBalancerFrontEndService",
+      "lbWebProbeName": "loadBalancerWebProbe",
+      "lbWebServiceProbeName": "loadBalancerWebServiceProbe",
+      "lbBEAddressPool": "loadBalancerBEAddressPool",
+      "lbBEServiceAddressPool": "loadBalancerBEServiceAddressPool",
+      "lbFEIPConfigID": "Microsoft.Network/loadBalancers/loadBalancer1/frontendIPConfigurations/loadBalancerFrontEndWeb",
+      "lbFEServiceIPConfigID": "Microsoft.Network/loadBalancers/loadBalancer2/frontendIPConfigurations/loadBalancerFrontEndService",
+      "lbBEAddressPoolID": "Microsoft.Network/loadBalancers/loadBalancer1/backendAddressPools/loadBalancerBEAddressPool",
+      "lbBEServiceAddressPoolID": "Microsoft.Network/loadBalancers/loadBalancer2/backendAddressPools/loadBalancerBEServiceAddressPool",
+      "lbWebServiceProbeID": "Microsoft.Network/loadBalancers/loadBalancer2/probes/loadBalancerWebServiceProbe",
+      "frontEndDSCVMSSArchiveFolder": "dsc",
+      "frontEndDSCVMSSArchiveFileName": "frontEndDSCVMSS.zip",
+      "serviceDSCVMSSArchiveFolder": "dsc",
+      "serviceDSCVMSSArchiveFileName": "serviceDSCVMSS.zip",
+      "natPoolNameFrontEnd": "natpoolfe",
+      "natStartPortFrontEnd": 50000,
+      "natEndPortFrontEnd": 50119,
+      "natBackendPortFrontEnd": 3389,
+      "natPoolNameService": "natpoolsvc",
+      "natStartPortService": 51000,
+      "natEndPortService": 51119,
+      "natBackendPortService": 3389,
+      "frontEndIPConfigIDWeb": "Microsoft.Network/loadBalancers/loadBalancer1/frontendIPConfigurations/loadBalancerFrontEndWeb",
+      "frontEndIPConfigIDService": "Microsoft.Network/loadBalancers/loadBalancer2/frontendIPConfigurations/loadBalancerFrontEndService",
+      "lbWebInboundNatPoolId": "Microsoft.Network/loadBalancers/loadBalancer1/inboundNatPools/natpoolfe",
+      "lbServiceInboundNatPoolId": "Microsoft.Network/loadBalancers/loadBalancer2/inboundNatPools/natpoolsvc",
+      "wadProcessorMetricName2": "Percentage CPU",
+      "wadProcessorMetricName3": "Percentage CPU",
+      "lbWebHttpsProbeName": "loadBalancerWebHttpsProbe",
+      "lbWebHttpsProbeID": "Microsoft.Network/loadBalancers/loadBalancer1/probes/loadBalancerWebHttpsProbe"
+    },
+    "resources": [
+      {
+        "apiVersion": "2015-06-15",
+        "name": "loadBalancer1",
+        "type": "Microsoft.Network/loadBalancers",
+        "location": "[resourceGroup().location]",
+        "dependsOn": [
+          "Microsoft.Network/publicIPAddresses/appPublicIP"
+        ],
+        "properties": {
+          "frontendIPConfigurations": [
+            {
+              "name": "loadBalancerFrontEndWeb",
+              "properties": {
+                "publicIPAddress": {
+                  "id": "Microsoft.Network/publicIPAddresses/appPublicIP"
+                }
+              }
+            }
+          ],
+          "backendAddressPools": [
+            {
+              "name": "loadBalancerBEAddressPool"
+            }
+          ],
+          "loadBalancingRules": [
+            {
+              "name": "weblb",
+              "properties": {
+                "backendAddressPool": {
+                  "id": "Microsoft.Network/loadBalancers/loadBalancer1/backendAddressPools/loadBalancerBEAddressPool"
+                },
+                "backendPort": 80,
+                "enableFloatingIP": false,
+                "frontendIPConfiguration": {
+                  "id": "Microsoft.Network/loadBalancers/loadBalancer1/frontendIPConfigurations/loadBalancerFrontEndWeb"
+                },
+                "frontendPort": 80,
+                "probe": {
+                  "id": "Microsoft.Network/loadBalancers/loadBalancer1/probes/loadBalancerWebHttpsProbe"
+                },
+                "protocol": "Tcp",
+                "loadDistribution": "SourceIP"
+              }
+            },
+            {
+              "name": "webhttpslb",
+              "properties": {
+                "backendAddressPool": {
+                  "id": "Microsoft.Network/loadBalancers/loadBalancer1/backendAddressPools/loadBalancerBEAddressPool"
+                },
+                "backendPort": 443,
+                "enableFloatingIP": false,
+                "frontendIPConfiguration": {
+                  "id": "Microsoft.Network/loadBalancers/loadBalancer1/frontendIPConfigurations/loadBalancerFrontEndWeb"
+                },
+                "frontendPort": 443,
+                "probe": {
+                  "id": "Microsoft.Network/loadBalancers/loadBalancer1/probes/loadBalancerWebHttpsProbe"
+                },
+                "protocol": "Tcp",
+                "loadDistribution": "SourceIP"
+              }
+            }
+          ],
+          "probes": [
+            {
+              "name": "loadBalancerWebProbe",
+              "properties": {
+                "protocol": "Http",
+                "port": 80,
+                "intervalInSeconds": 15,
+                "numberOfProbes": 5,
+                "requestPath": "hostingstart.html"
+              }
+            },
+            {
+              "name": "loadBalancerWebHttpsProbe",
+              "properties": {
+                "protocol": "Tcp",
+                "port": 443,
+                "intervalInSeconds": 15,
+                "numberOfProbes": 5
+              }
+            }
+          ],
+          "inboundNatPools": [
+            {
+              "name": "natpoolfe",
+              "properties": {
+                "frontendIPConfiguration": {
+                  "id": "Microsoft.Network/loadBalancers/loadBalancer1/frontendIPConfigurations/loadBalancerFrontEndWeb"
+                },
+                "protocol": "Tcp",
+                "frontendPortRangeStart": 50000,
+                "frontendPortRangeEnd": 50119,
+                "backendPort": 3389
+              }
+            }
+          ]
+        }
+      },
+      {
+        "apiVersion": "2015-06-15",
+        "name": "loadBalancer2",
+        "type": "Microsoft.Network/loadBalancers",
+        "location": "[resourceGroup().location]",
+        "dependsOn": [
+          "Microsoft.Network/publicIPAddresses/servicePublicIP"
+        ],
+        "properties": {
+          "frontendIPConfigurations": [
+            {
+              "name": "loadBalancerFrontEndService",
+              "properties": {
+                "publicIPAddress": {
+                  "id": "Microsoft.Network/publicIPAddresses/servicePublicIP"
+                }
+              }
+            }
+          ],
+          "backendAddressPools": [
+            {
+              "name": "loadBalancerBEServiceAddressPool"
+            }
+          ],
+          "loadBalancingRules": [
+            {
+              "name": "wcflb",
+              "properties": {
+                "backendAddressPool": {
+                  "id": "Microsoft.Network/loadBalancers/loadBalancer2/backendAddressPools/loadBalancerBEServiceAddressPool"
+                },
+                "backendPort": 80,
+                "enableFloatingIP": false,
+                "frontendIPConfiguration": {
+                  "id": "Microsoft.Network/loadBalancers/loadBalancer2/frontendIPConfigurations/loadBalancerFrontEndService"
+                },
+                "frontendPort": 80,
+                "probe": {
+                  "id": "Microsoft.Network/loadBalancers/loadBalancer2/probes/loadBalancerWebServiceProbe"
+                },
+                "protocol": "Tcp",
+                "loadDistribution": "Default"
+              }
+            }
+          ],
+          "probes": [
+            {
+              "name": "loadBalancerWebServiceProbe",
+              "properties": {
+                "protocol": "Http",
+                "port": 80,
+                "intervalInSeconds": 15,
+                "numberOfProbes": 5,
+                "requestPath": "hostingstart.html"
+              }
+            }
+          ],
+          "inboundNatPools": [
+            {
+              "name": "natpoolsvc",
+              "properties": {
+                "frontendIPConfiguration": {
+                  "id": "Microsoft.Network/loadBalancers/loadBalancer2/frontendIPConfigurations/loadBalancerFrontEndService"
+                },
+                "protocol": "Tcp",
+                "frontendPortRangeStart": 51000,
+                "frontendPortRangeEnd": 51119,
+                "backendPort": 3389
+              }
+            }
+          ]
+        }
+      },
+      {
+        "type": "Microsoft.Compute/virtualMachineScaleSets",
+        "apiVersion": "2016-04-30-preview",
+        "name": "<frontend VMSS name> e.g. appfevmss",
+        "location": "[resourceGroup().location]",
+        "tags": {
+          "vmsstag1": "Rev VMSS FE"
+        },
+        "dependsOn": [
+          "Microsoft.Network/loadBalancers/loadBalancer1",
+          "Microsoft.Network/virtualNetworks/appVnet"
+        ],
+        "sku": {
+          "name": "Standard_D8s_v3",
+          "tier": "Standard",
+          "capacity": "2"
+        },
+        "properties": {
+          "upgradePolicy": {
+            "mode": "Manual"
+          },
+          "virtualMachineProfile": {
+            "storageProfile": {
+              "osDisk": {
+                "caching": "ReadWrite",
+                "createOption": "FromImage",
+                "managedDisk": {
+                  "storageAccountType": "StandardSSD_LRS"
+                }
+              },
+              "imageReference": {
+                "publisher": "MicrosoftWindowsServer",
+                "offer": "WindowsServer",
+                "sku": "2012-R2-Datacenter",
+                "version": "latest"
+              }
+            },
+            "osProfile": {
+              "computerNamePrefix": "<frontend VMSS name> e.g. appfevmss",
+              "adminUsername": "<vm admin user name> e.g adminuser",
+              "adminPassword": "appVMAdminPassword",
+              "secrets": [
+                {
+                  "sourceVault": {
+                    "id": "<azure keyvalut resource group name> e.g. myKeyVault-rg/Microsoft.KeyVault/vaults/<azure keyValut name> e.g. myKeyVault"
+                  },
+                  "vaultCertificates": [
+                    {
+                      "certificateUrl": "<uri with version of the pfx cert secret> e.g https://mykeyvault.vault.azure.net/secrets/myPfxCert2/11f95456772549a2b6b0ba38bd1b319a",
+                      "certificateStore": "<certificate store name on the target vm> e.g. myPfxCert2"
+                    }
+                  ]
+                }
+              ]
+            },
+            "networkProfile": {
+              "networkInterfaceConfigurations": [
+                {
+                  "name": "nic1",
+                  "properties": {
+                    "primary": true,
+                    "ipConfigurations": [
+                      {
+                        "name": "ip1",
+                        "properties": {
+                          "subnet": {
+                            "id": "Microsoft.Network/virtualNetworks/subnets/FrontEndSubNet"
+                          },
+                          "loadBalancerBackendAddressPools": [
+                            {
+                              "id": "Microsoft.Network/loadBalancers/loadBalancer1/backendAddressPools/loadBalancerBEAddressPool"
+                            }
+                          ],
+                          "loadBalancerInboundNatPools": [
+                            {
+                              "id": "Microsoft.Network/loadBalancers/loadBalancer1/inboundNatPools/natpoolfe"
+                            }
+                          ]
+                        }
+                      }
+                    ]
+                  }
+                }
+              ]
+            },
+            "extensionProfile": {
+              "extensions": [
+                {
+                  "name": "Microsoft.Powershell.DSC",
+                  "properties": {
+                    "publisher": "Microsoft.Powershell",
+                    "type": "DSC",
+                    "typeHandlerVersion": "2.9",
+                    "autoUpgradeMinorVersion": true,
+                    "forceUpdateTag": "1.0",
+                    "settings": {
+                      "configuration": {
+                        "url": "[deployment().properties.templateLink.uri]/dsc/frontEndDSCVMSS.zip",
+                        "script": "frontEndDSCVMSS.ps1",
+                        "function": "Main"
+                      },
+                      "configurationArguments": {
+                        "nodeName": "localhost",
+                        "webDeployPackage": "https://computeteststore.blob.core.windows.net/deploypackage/deployPackage.zip?sv=2015-04-05&ss=bfqt&srt=sco&sp=r&se=2099-10-16T02:03:39Z&st=2016-10-15T18:03:39Z&spr=https&sig=aSH6yNPEGPWXk6PxTPzS6fyEXMD1ZYIkI0j5E9Hu5%2Fk%3D",
+                        "certStoreName": "<certificate store name on the target vm> e.g. myPfxCert2",
+                        "certDomain": "<fully qualified domain name for which the certificate is installed> e.g. www.mycompany.com or *.mycompany.com for wildcard domains"
+                      }
+                    },
+                    "protectedSettings": {
+                      "configurationUrlSasToken": ""
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        }
+      },
+      {
+        "type": "Microsoft.Compute/virtualMachineScaleSets",
+        "apiVersion": "2016-04-30-preview",
+        "name": "<service VMSS name> e.g. appwcfvmss",
+        "location": "[resourceGroup().location]",
+        "tags": {
+          "vmsstag1": "rev Service"
+        },
+        "dependsOn": [
+          "Microsoft.Network/loadBalancers/loadBalancer2",
+          "Microsoft.Network/virtualNetworks/appVnet"
+        ],
+        "sku": {
+          "name": "Standard_D8s_v3",
+          "tier": "Standard",
+          "capacity": "2"
+        },
+        "properties": {
+          "upgradePolicy": {
+            "mode": "Manual"
+          },
+          "virtualMachineProfile": {
+            "storageProfile": {
+              "osDisk": {
+                "caching": "ReadWrite",
+                "createOption": "FromImage",
+                "managedDisk": {
+                  "storageAccountType": "StandardSSD_LRS"
+                }
+              },
+              "imageReference": {
+                "publisher": "MicrosoftWindowsServer",
+                "offer": "WindowsServer",
+                "sku": "2012-R2-Datacenter",
+                "version": "latest"
+              }
+            },
+            "osProfile": {
+              "computerNamePrefix": "<service VMSS name> e.g. appwcfvmss",
+              "adminUsername": "<vm admin user name> e.g adminuser",
+              "adminPassword": "appVMAdminPassword"
+            },
+            "networkProfile": {
+              "networkInterfaceConfigurations": [
+                {
+                  "name": "nics1",
+                  "properties": {
+                    "primary": true,
+                    "ipConfigurations": [
+                      {
+                        "name": "ips1",
+                        "properties": {
+                          "subnet": {
+                            "id": "Microsoft.Network/virtualNetworks/subnets/FrontEndSubNet"
+                          },
+                          "loadBalancerBackendAddressPools": [
+                            {
+                              "id": "Microsoft.Network/loadBalancers/loadBalancer2/backendAddressPools/loadBalancerBEServiceAddressPool"
+                            }
+                          ],
+                          "loadBalancerInboundNatPools": [
+                            {
+                              "id": "Microsoft.Network/loadBalancers/loadBalancer2/inboundNatPools/natpoolsvc"
+                            }
+                          ]
+                        }
+                      }
+                    ]
+                  }
+                }
+              ]
+            },
+            "extensionProfile": {
+              "extensions": [
+                {
+                  "name": "Microsoft.Powershell.DSC",
+                  "properties": {
+                    "publisher": "Microsoft.Powershell",
+                    "type": "DSC",
+                    "typeHandlerVersion": "2.9",
+                    "autoUpgradeMinorVersion": true,
+                    "forceUpdateTag": "1.0",
+                    "settings": {
+                      "configuration": {
+                        "url": "[deployment().properties.templateLink.uri]/dsc/serviceDSCVMSS.zip",
+                        "script": "serviceDSCVMSS.ps1",
+                        "function": "Main"
+                      },
+                      "configurationArguments": {
+                        "nodeName": "localhost",
+                        "webDeployPackage": "https://computeteststore.blob.core.windows.net/deploypackage/SampleWcfServices.zip?sv=2015-04-05&ss=bfqt&srt=sco&sp=r&se=2099-10-16T02:03:39Z&st=2016-10-15T18:03:39Z&spr=https&sig=aSH6yNPEGPWXk6PxTPzS6fyEXMD1ZYIkI0j5E9Hu5%2Fk%3D"
+                      }
+                    },
+                    "protectedSettings": {
+                      "configurationUrlSasToken": ""
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        }
+      },
+      {
+        "apiVersion": "2015-06-15",
+        "type": "Microsoft.Network/networkSecurityGroups",
+        "name": "appNetworkSecurityGroup",
+        "location": "[resourceGroup().location]",
+        "properties": {
+          "securityRules": [
+            {
+              "name": "webrule",
+              "properties": {
+                "description": "This rule allows traffic in on port 80",
+                "protocol": "Tcp",
+                "sourcePortRange": "*",
+                "destinationPortRange": "80",
+                "sourceAddressPrefix": "INTERNET",
+                "destinationAddressPrefix": "10.0.0.0/24",
+                "access": "Allow",
+                "priority": 100,
+                "direction": "Inbound"
+              }
+            },
+            {
+              "name": "webHttpsRule",
+              "properties": {
+                "description": "This rule allows traffic in on port 443",
+                "protocol": "Tcp",
+                "sourcePortRange": "*",
+                "destinationPortRange": "443",
+                "sourceAddressPrefix": "INTERNET",
+                "destinationAddressPrefix": "10.0.0.0/24",
+                "access": "Allow",
+                "priority": 110,
+                "direction": "Inbound"
+              }
+            },
+            {
+              "name": "rdprule",
+              "properties": {
+                "description": "This rule allows traffic on port 3389 from the web",
+                "protocol": "Tcp",
+                "sourcePortRange": "*",
+                "destinationPortRange": "3389",
+                "sourceAddressPrefix": "INTERNET",
+                "destinationAddressPrefix": "10.0.0.0/24",
+                "access": "Allow",
+                "priority": 200,
+                "direction": "Inbound"
+              }
+            }
+          ]
+        }
+      },
+      {
+        "name": "appVnet",
+        "type": "Microsoft.Network/virtualNetworks",
+        "location": "[resourceGroup().location]",
+        "apiVersion": "2015-06-15",
+        "dependsOn": [
+          "Microsoft.Network/networkSecurityGroups/appNetworkSecurityGroup"
+        ],
+        "tags": {
+          "displayName": "appVnet"
+        },
+        "properties": {
+          "addressSpace": {
+            "addressPrefixes": [
+              "10.0.0.0/16"
+            ]
+          },
+          "subnets": [
+            {
+              "name": "FrontEndSubNet",
+              "properties": {
+                "addressPrefix": "10.0.0.0/24",
+                "networkSecurityGroup": {
+                  "id": "Microsoft.Network/networkSecurityGroups/appNetworkSecurityGroup"
+                }
+              }
+            },
+            {
+              "name": "ServiceSubNet",
+              "properties": {
+                "addressPrefix": "10.0.1.0/24",
+                "networkSecurityGroup": {
+                  "id": "Microsoft.Network/networkSecurityGroups/appNetworkSecurityGroup"
+                }
+              }
+            }
+          ]
+        }
+      },
+      {
+        "name": "appPublicIP",
+        "type": "Microsoft.Network/publicIPAddresses",
+        "location": "[resourceGroup().location]",
+        "apiVersion": "2015-06-15",
+        "dependsOn": [],
+        "tags": {
+          "displayName": "appPublicIP"
+        },
+        "properties": {
+          "publicIPAllocationMethod": "Dynamic",
+          "dnsSettings": {
+            "domainNameLabel": "<dns name for the frontend load balancer> e.g. mytestvmdns"
+          }
+        }
+      },
+      {
+        "name": "servicePublicIP",
+        "type": "Microsoft.Network/publicIPAddresses",
+        "location": "[resourceGroup().location]",
+        "apiVersion": "2015-06-15",
+        "dependsOn": [],
+        "tags": {
+          "displayName": "servicePublicIP"
+        },
+        "properties": {
+          "publicIPAllocationMethod": "Dynamic",
+          "dnsSettings": {
+            "domainNameLabel": "<dns name for the backend/service load balancer> e.g. appwcfdns"
+          }
+        }
+      },
+      {
+        "apiVersion": "2015-04-01",
+        "dependsOn": [
+          "Microsoft.Compute/virtualMachineScaleSets/<frontend VMSS name> e.g. appfevmss"
+        ],
+        "location": "[resourceGroup().location]",
+        "name": "<frontend VMSS name> e.g. appfevmssautoscale",
+        "properties": {
+          "name": "<frontend VMSS name> e.g. appfevmssautoscale",
+          "targetResourceUri": "[concat('/subscriptions/', subscription().subscriptionId, '/resourceGroups/', resourceGroup().name, '/providers/Microsoft.Compute/virtualMachineScaleSets/', variables('frontEndVMSSName'))]",
+          "enabled": true,
+          "profiles": [
+            {
+              "name": "Profile1",
+              "capacity": {
+                "default": "2",
+                "maximum": "10",
+                "minimum": "2"
+              },
+              "rules": [
+                {
+                  "metricTrigger": {
+                    "metricName": "Percentage CPU",
+                    "metricNamespace": "",
+                    "metricResourceUri": "[concat('/subscriptions/', subscription().subscriptionId, '/resourceGroups/', resourceGroup().name, '/providers/Microsoft.Compute/virtualMachineScaleSets/', variables('frontEndVMSSName'))]",
+                    "timeGrain": "PT1M",
+                    "statistic": "Average",
+                    "timeWindow": "PT5M",
+                    "timeAggregation": "Average",
+                    "operator": "GreaterThan",
+                    "threshold": 50
+                  },
+                  "scaleAction": {
+                    "direction": "Increase",
+                    "type": "ChangeCount",
+                    "value": "1",
+                    "cooldown": "PT5M"
+                  }
+                },
+                {
+                  "metricTrigger": {
+                    "metricName": "Percentage CPU",
+                    "metricNamespace": "",
+                    "metricResourceUri": "[concat('/subscriptions/', subscription().subscriptionId, '/resourceGroups/', resourceGroup().name, '/providers/Microsoft.Compute/virtualMachineScaleSets/', variables('frontEndVMSSName'))]",
+                    "timeGrain": "PT1M",
+                    "statistic": "Average",
+                    "timeWindow": "PT5M",
+                    "timeAggregation": "Average",
+                    "operator": "LessThan",
+                    "threshold": 30
+                  },
+                  "scaleAction": {
+                    "direction": "Decrease",
+                    "type": "ChangeCount",
+                    "value": "1",
+                    "cooldown": "PT1M"
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        "tags": {
+          "displayName": "<frontend VMSS name> e.g. appfevmssautoscale"
+        },
+        "type": "Microsoft.Insights/autoscaleSettings"
+      },
+      {
+        "name": "<service VMSS name> e.g. appwcfvmssautoscale",
+        "type": "Microsoft.Insights/autoscaleSettings",
+        "location": "[resourceGroup().location]",
+        "apiVersion": "2015-04-01",
+        "dependsOn": [
+          "Microsoft.Compute/virtualMachineScaleSets/<service VMSS name> e.g. appwcfvmss"
+        ],
+        "tags": {
+          "displayName": "<service VMSS name> e.g. appwcfvmssautoscale"
+        },
+        "properties": {
+          "name": "<service VMSS name> e.g. appwcfvmssautoscale",
+          "targetResourceUri": "[concat('/subscriptions/', subscription().subscriptionId, '/resourceGroups/', resourceGroup().name, '/providers/Microsoft.Compute/virtualMachineScaleSets/', variables('serviceVMSSName'))]",
+          "enabled": true,
+          "profiles": [
+            {
+              "name": "Profile1",
+              "capacity": {
+                "minimum": "2",
+                "maximum": "10",
+                "default": "2"
+              },
+              "rules": [
+                {
+                  "metricTrigger": {
+                    "metricName": "Percentage CPU",
+                    "metricNamespace": "",
+                    "metricResourceUri": "[concat('/subscriptions/', subscription().subscriptionId, '/resourceGroups/', resourceGroup().name, '/providers/Microsoft.Compute/virtualMachineScaleSets/', variables('serviceVMSSName'))]",
+                    "timeGrain": "PT1M",
+                    "statistic": "Average",
+                    "timeWindow": "PT5M",
+                    "timeAggregation": "Average",
+                    "operator": "GreaterThan",
+                    "threshold": 50
+                  },
+                  "scaleAction": {
+                    "direction": "Increase",
+                    "type": "ChangeCount",
+                    "value": "1",
+                    "cooldown": "PT5M"
+                  }
+                },
+                {
+                  "metricTrigger": {
+                    "metricName": "Percentage CPU",
+                    "metricNamespace": "",
+                    "metricResourceUri": "[concat('/subscriptions/', subscription().subscriptionId, '/resourceGroups/', resourceGroup().name, '/providers/Microsoft.Compute/virtualMachineScaleSets/', variables('serviceVMSSName'))]",
+                    "timeGrain": "PT1M",
+                    "statistic": "Average",
+                    "timeWindow": "PT5M",
+                    "timeAggregation": "Average",
+                    "operator": "LessThan",
+                    "threshold": 30
+                  },
+                  "scaleAction": {
+                    "direction": "Decrease",
+                    "type": "ChangeCount",
+                    "value": "1",
+                    "cooldown": "PT1M"
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      }
+    ],
+    "outputs": {},
+    "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+  }
+}

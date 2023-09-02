@@ -2,12 +2,12 @@
   "structure": "filesystem",
   "error": null,
   "reference": "master",
-  "contentType": "yaml",
+  "contentType": "json",
   "source": "gitConnectorGoogleKcc",
   "paths": [
-    "/samples/resources/storagetransferjob/iam_v1beta1_iampolicymember_multiple_yaml_0.yaml"
+    "/samples/resources/monitoringservice/monitoring_v1beta1_monitoringservice.yaml"
   ],
-  "timestamp": 1628765151522,
+  "timestamp": 1642973304625,
   "queryuser": null,
   "checksum": "99914b932bd37a50b983c5e7c90ae93b",
   "node": {
@@ -15,28 +15,34 @@
     "type": "kcc",
     "collection": "kcctemplate",
     "paths": [
-      "/samples/resources/storagetransferjob/iam_v1beta1_iampolicymember_multiple_yaml_0.yaml"
+      "/samples/resources/monitoringservice/monitoring_v1beta1_monitoringservice.yaml"
     ],
     "snapshotId": "KCC_TEMPLATE_SNAPSHOT536",
     "status": "active",
-    "validate": true
+    "validate": true,
+    "resourceTypes": [
+      "monitoringservice"
+    ]
   },
   "snapshotId": "KCC_TEMPLATE_SNAPSHOT536",
   "collection": "kcctemplate",
   "json": {
-    "apiVersion": "iam.cnrm.cloud.google.com/v1beta1",
-    "kind": "IAMPolicyMember",
+    "apiVersion": "monitoring.cnrm.cloud.google.com/v1beta1",
+    "kind": "MonitoringService",
     "metadata": {
-      "name": "storagetransferjob-dep1"
+      "name": "monitoringservice-sample",
+      "labels": {
+        "test1": "value1"
+      }
     },
     "spec": {
-      "member": "serviceAccount:project-${PROJECT_NUMBER?}@storage-transfer-service.iam.gserviceaccount.com",
-      "resourceRef": {
-        "apiVersion": "storage.cnrm.cloud.google.com/v1beta1",
-        "kind": "StorageBucket",
-        "name": "${PROJECT_ID?}-storagetransferjob-dep1"
+      "projectRef": {
+        "external": "projects/${PROJECT_ID?}"
       },
-      "role": "roles/storage.admin"
+      "displayName": "A basic monitoring service.",
+      "telemetry": {
+        "resourceName": "//storage.googleapis.com/buckets/bucket-id1"
+      }
     }
   }
 }

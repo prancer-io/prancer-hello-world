@@ -1,0 +1,194 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "main",
+  "contentType": "json",
+  "source": "gitConnectorAzureTerraHashicorp",
+  "paths": [
+    "/examples/storage/storage_adls_acls/variables.tf",
+    "/examples/storage/storage_adls_acls/main.tf"
+  ],
+  "timestamp": 1642943279981,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "TRF_TEMPLATE_SNAPSHOT",
+    "type": "terraform",
+    "collection": "terraformtemplate",
+    "paths": [
+      "/examples/storage/storage_adls_acls/variables.tf",
+      "/examples/storage/storage_adls_acls/main.tf"
+    ],
+    "snapshotId": "TRF_TEMPLATE_SNAPSHOT115",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "azurerm_resource_group",
+      "azurerm_role_assignment",
+      "azurerm_storage_data_lake_gen2_path",
+      "azurerm_storage_account",
+      "azurerm_storage_data_lake_gen2_filesystem",
+      "azurerm_user_assigned_identity"
+    ]
+  },
+  "snapshotId": "TRF_TEMPLATE_SNAPSHOT115",
+  "collection": "terraformtemplate",
+  "json": {
+    "provider": [
+      {
+        "azurerm": {
+          "features": [
+            {}
+          ]
+        }
+      }
+    ],
+    "data": {
+      "azurerm_client_config": {
+        "current": {
+          "compiletime_identity": "data.azurerm_client_config.current"
+        }
+      }
+    },
+    "resources": [
+      {
+        "type": "azurerm_resource_group",
+        "name": "example",
+        "properties": {
+          "name": "${var.prefix}-resources",
+          "location": "${var.location}",
+          "compiletime_identity": "azurerm_resource_group.example"
+        }
+      },
+      {
+        "type": "azurerm_user_assigned_identity",
+        "name": "example",
+        "properties": {
+          "name": "search-api",
+          "resource_group_name": "${azurerm_resource_group.example.name}",
+          "location": "${azurerm_resource_group.example.location}",
+          "compiletime_identity": "azurerm_user_assigned_identity.example"
+        }
+      },
+      {
+        "type": "azurerm_storage_account",
+        "name": "example",
+        "properties": {
+          "name": "${var.prefix}storageacct",
+          "resource_group_name": "${azurerm_resource_group.example.name}",
+          "location": "${azurerm_resource_group.example.location}",
+          "account_tier": "Standard",
+          "account_kind": "StorageV2",
+          "account_replication_type": "LRS",
+          "is_hns_enabled": true,
+          "compiletime_identity": "azurerm_storage_account.example"
+        }
+      },
+      {
+        "type": "azurerm_role_assignment",
+        "name": "storageAccountRoleAssignment",
+        "properties": {
+          "scope": "${azurerm_storage_account.example.id}",
+          "role_definition_name": "Storage Blob Data Contributor",
+          "principal_id": "${data.azurerm_client_config.current.object_id}",
+          "compiletime_identity": "azurerm_role_assignment.storageAccountRoleAssignment"
+        }
+      },
+      {
+        "type": "azurerm_storage_data_lake_gen2_filesystem",
+        "name": "example",
+        "properties": {
+          "name": "example",
+          "storage_account_id": "${azurerm_storage_account.example.id}",
+          "ace": [
+            {
+              "type": "user",
+              "permissions": "rwx"
+            },
+            {
+              "type": "user",
+              "id": "${azurerm_user_assigned_identity.example.principal_id}",
+              "permissions": "--x"
+            },
+            {
+              "type": "group",
+              "permissions": "r-x"
+            },
+            {
+              "type": "mask",
+              "permissions": "r-x"
+            },
+            {
+              "type": "other",
+              "permissions": "---"
+            }
+          ],
+          "depends_on": [
+            "${azurerm_role_assignment.storageAccountRoleAssignment}"
+          ],
+          "compiletime_identity": "azurerm_storage_data_lake_gen2_filesystem.example"
+        }
+      },
+      {
+        "type": "azurerm_storage_data_lake_gen2_path",
+        "name": "example",
+        "properties": {
+          "storage_account_id": "${azurerm_storage_account.example.id}",
+          "filesystem_name": "${azurerm_storage_data_lake_gen2_filesystem.example.name}",
+          "path": "testpath",
+          "resource": "directory",
+          "ace": [
+            {
+              "type": "user",
+              "permissions": "r-x"
+            },
+            {
+              "type": "user",
+              "id": "${azurerm_user_assigned_identity.example.principal_id}",
+              "permissions": "r-x"
+            },
+            {
+              "type": "group",
+              "permissions": "-wx"
+            },
+            {
+              "type": "mask",
+              "permissions": "--x"
+            },
+            {
+              "type": "other",
+              "permissions": "--x"
+            },
+            {
+              "scope": "default",
+              "type": "user",
+              "permissions": "r-x"
+            },
+            {
+              "scope": "default",
+              "type": "user",
+              "id": "${azurerm_user_assigned_identity.example.principal_id}",
+              "permissions": "r-x"
+            },
+            {
+              "scope": "default",
+              "type": "group",
+              "permissions": "-wx"
+            },
+            {
+              "scope": "default",
+              "type": "mask",
+              "permissions": "--x"
+            },
+            {
+              "scope": "default",
+              "type": "other",
+              "permissions": "--x"
+            }
+          ],
+          "compiletime_identity": "azurerm_storage_data_lake_gen2_path.example"
+        }
+      }
+    ]
+  }
+}

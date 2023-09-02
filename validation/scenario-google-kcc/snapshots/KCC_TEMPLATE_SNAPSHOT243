@@ -2,12 +2,12 @@
   "structure": "filesystem",
   "error": null,
   "reference": "master",
-  "contentType": "yaml",
+  "contentType": "json",
   "source": "gitConnectorGoogleKcc",
   "paths": [
-    "/samples/resources/computetargethttpsproxy/compute_v1beta1_computebackendservice.yaml"
+    "/samples/resources/computerouternat/router-nat-for-list-of-subnets/compute_v1beta1_computesubnetwork.yaml"
   ],
-  "timestamp": 1628765143656,
+  "timestamp": 1642973303117,
   "queryuser": null,
   "checksum": "99914b932bd37a50b983c5e7c90ae93b",
   "node": {
@@ -15,29 +15,33 @@
     "type": "kcc",
     "collection": "kcctemplate",
     "paths": [
-      "/samples/resources/computetargethttpsproxy/compute_v1beta1_computebackendservice.yaml"
+      "/samples/resources/computerouternat/router-nat-for-list-of-subnets/compute_v1beta1_computesubnetwork.yaml"
     ],
     "snapshotId": "KCC_TEMPLATE_SNAPSHOT243",
     "status": "active",
-    "validate": true
+    "validate": true,
+    "resourceTypes": [
+      "computesubnetwork"
+    ]
   },
   "snapshotId": "KCC_TEMPLATE_SNAPSHOT243",
   "collection": "kcctemplate",
   "json": {
     "apiVersion": "compute.cnrm.cloud.google.com/v1beta1",
-    "kind": "ComputeBackendService",
+    "kind": "ComputeSubnetwork",
     "metadata": {
-      "name": "computetargethttpsproxy-dep"
+      "labels": {
+        "label-one": "value-one"
+      },
+      "name": "computerouternat-dep-forlistofsubnets"
     },
     "spec": {
-      "healthChecks": [
-        {
-          "healthCheckRef": {
-            "name": "computetargethttpsproxy-dep"
-          }
-        }
-      ],
-      "location": "global"
+      "description": "My subnet",
+      "ipCidrRange": "10.1.0.0/16",
+      "region": "us-west1",
+      "networkRef": {
+        "name": "computerouternat-dep-forlistofsubnets"
+      }
     }
   }
 }

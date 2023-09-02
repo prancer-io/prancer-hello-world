@@ -2,12 +2,12 @@
   "structure": "filesystem",
   "error": null,
   "reference": "master",
-  "contentType": "yaml",
+  "contentType": "json",
   "source": "gitConnectorGoogleKcc",
   "paths": [
-    "/samples/resources/monitoringdashboard/monitoring_v1beta1_monitoringdashboard.yaml"
+    "/samples/resources/iampolicymember/external-organization-level-policy-member/iam_v1beta1_iampolicymember.yaml"
   ],
-  "timestamp": 1628765149395,
+  "timestamp": 1642973304323,
   "queryuser": null,
   "checksum": "99914b932bd37a50b983c5e7c90ae93b",
   "node": {
@@ -15,84 +15,30 @@
     "type": "kcc",
     "collection": "kcctemplate",
     "paths": [
-      "/samples/resources/monitoringdashboard/monitoring_v1beta1_monitoringdashboard.yaml"
+      "/samples/resources/iampolicymember/external-organization-level-policy-member/iam_v1beta1_iampolicymember.yaml"
     ],
     "snapshotId": "KCC_TEMPLATE_SNAPSHOT465",
     "status": "active",
-    "validate": true
+    "validate": true,
+    "resourceTypes": [
+      "iampolicymember"
+    ]
   },
   "snapshotId": "KCC_TEMPLATE_SNAPSHOT465",
   "collection": "kcctemplate",
   "json": {
-    "apiVersion": "monitoring.cnrm.cloud.google.com/v1beta1",
-    "kind": "MonitoringDashboard",
+    "apiVersion": "iam.cnrm.cloud.google.com/v1beta1",
+    "kind": "IAMPolicyMember",
     "metadata": {
-      "name": "monitoringdashboard-sample"
+      "name": "iampolicymember-sample-orglevel"
     },
     "spec": {
-      "displayName": "monitoringdashboard-sample",
-      "columnLayout": {
-        "columns": [
-          {
-            "weight": 2,
-            "widgets": [
-              {
-                "title": "Widget 1",
-                "xyChart": {
-                  "dataSets": [
-                    {
-                      "timeSeriesQuery": {
-                        "timeSeriesFilter": {
-                          "filter": "metric.type=\"agent.googleapis.com/nginx/connections/accepted_count\"",
-                          "aggregation": {
-                            "perSeriesAligner": "ALIGN_RATE"
-                          }
-                        },
-                        "unitOverride": "1"
-                      },
-                      "plotType": "LINE"
-                    }
-                  ],
-                  "timeshiftDuration": "0s",
-                  "yAxis": {
-                    "label": "y1Axis",
-                    "scale": "LINEAR"
-                  }
-                }
-              },
-              {
-                "text": {
-                  "content": "Widget 2",
-                  "format": "MARKDOWN"
-                }
-              },
-              {
-                "title": "Widget 3",
-                "xyChart": {
-                  "dataSets": [
-                    {
-                      "timeSeriesQuery": {
-                        "timeSeriesFilter": {
-                          "filter": "metric.type=\"agent.googleapis.com/nginx/connections/accepted_count\"",
-                          "aggregation": {
-                            "perSeriesAligner": "ALIGN_RATE"
-                          }
-                        },
-                        "unitOverride": "1"
-                      },
-                      "plotType": "STACKED_BAR"
-                    }
-                  ],
-                  "timeshiftDuration": "0s",
-                  "yAxis": {
-                    "label": "y1Axis",
-                    "scale": "LINEAR"
-                  }
-                }
-              }
-            ]
-          }
-        ]
+      "member": "serviceAccount:iampolicymember-dep-orglevel@${PROJECT_ID?}.iam.gserviceaccount.com",
+      "role": "roles/storage.admin",
+      "resourceRef": {
+        "apiVersion": "resourcemanager.cnrm.cloud.google.com/v1beta1",
+        "kind": "Organization",
+        "external": "${ORG_ID?}"
       }
     }
   }

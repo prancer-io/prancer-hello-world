@@ -1,0 +1,669 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAzureQuickStart",
+  "paths": [
+    "/application-workloads/cohesive/cohesive-vns3-free-try-now/azuredeploy.json",
+    "/application-workloads/cohesive/cohesive-vns3-free-try-now/azuredeploy.parameters.json"
+  ],
+  "timestamp": 1642962886446,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/application-workloads/cohesive/cohesive-vns3-free-try-now/azuredeploy.json",
+      "/application-workloads/cohesive/cohesive-vns3-free-try-now/azuredeploy.parameters.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT101",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "microsoft.network/publicipaddresses",
+      "microsoft.network/virtualnetworks",
+      "microsoft.network/networkinterfaces",
+      "microsoft.compute/virtualmachines/extensions",
+      "microsoft.compute/virtualmachines",
+      "microsoft.network/networksecuritygroups",
+      "microsoft.network/virtualnetworks/subnets",
+      "microsoft.storage/storageaccounts",
+      "microsoft.network/routetables",
+      "microsoft.network/routetables/routes"
+    ]
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT101",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "adminUsername": {
+        "type": "string",
+        "metadata": {
+          "description": "User Name for VM's (required but not used for VNS3)"
+        },
+        "value": "GEN-UNIQUE"
+      },
+      "adminPassword": {
+        "type": "securestring",
+        "metadata": {
+          "description": "Admin Password for VM's"
+        },
+        "value": "GEN-PASSWORD"
+      },
+      "numberOfInstances": {
+        "type": "int",
+        "defaultValue": 3,
+        "minValue": 1,
+        "maxValue": 5,
+        "metadata": {
+          "description": "Hosts to deploy"
+        }
+      },
+      "location": {
+        "type": "string",
+        "defaultValue": "[resourceGroup().location]",
+        "metadata": {
+          "description": "Deployment location"
+        }
+      },
+      "virtualMachineOs": {
+        "type": "string",
+        "defaultValue": "ubuntu",
+        "allowedValues": [
+          "ubuntu",
+          "windows"
+        ],
+        "metadata": {
+          "description": "Virtual Machine Operating System, Ubuntu or Windows"
+        }
+      },
+      "instanceSize": {
+        "type": "string",
+        "defaultValue": "small",
+        "allowedValues": [
+          "small",
+          "medium",
+          "large"
+        ],
+        "metadata": {
+          "description": "Size of VM instance, defaults to Standard_B1ms to keep within core limits while giving reasonable performance"
+        }
+      },
+      "_artifactsLocation": {
+        "type": "string",
+        "metadata": {
+          "description": "The base URI where artifacts required by this template are located including a trailing '/'"
+        },
+        "defaultValue": "[deployment().properties.templateLink.uri]"
+      },
+      "_artifactsLocationSasToken": {
+        "type": "securestring",
+        "metadata": {
+          "description": "The sasToken required to access _artifactsLocation.  When the template is deployed using the accompanying scripts, a sasToken will be automatically generated. Use the defaultValue if the staging location is not secured."
+        },
+        "defaultValue": ""
+      }
+    },
+    "variables": {
+      "suffix": "[uniqueString(resourceGroup().id, parameters('location'))]",
+      "resourceGroupName": "[toLower(resourceGroup().name)]",
+      "storageAccount": "[substring(concat(parameters('location'),'storage', variables('suffix')), 0, 24)]",
+      "virtualNetworkName": "[toLower(resourceGroup().name)]-vnet",
+      "vnetSubnet": "10.10.10.0/24",
+      "vnetPublicSubnet": "10.10.10.0/28",
+      "vnetPrivateSubnet": "10.10.10.16/28",
+      "publicSubnet": "publicsubnet",
+      "privateSubnet": "privatesubnet",
+      "vns3LicenseType": "free",
+      "vns3ControllerName": "VNS3Controller",
+      "networkInterfaceName": "[toLower(concat(variables('vns3ControllerName'), '-nic'))]",
+      "publicIPAddresseName": "VNS3Controller-ip",
+      "networkSecurityGroupName": "VNS3Controller-nsg",
+      "routeTableName": "private-subnet-routes",
+      "vnsPlanType": "[toLower(concat(variables('vns3LicenseType'), 'Plan'))]",
+      "osScript": "[toLower(concat(parameters('virtualMachineOs'), 'Script'))]",
+      "vnsStaticIp": "10.10.10.10",
+      "vnsVersion": {
+        "free": {
+          "imageReference": {
+            "publisher": "cohesive",
+            "offer": "cohesive-vns3-5_0_x",
+            "sku": "cohesive-vns3-5_0_x-free",
+            "version": "latest"
+          }
+        }
+      },
+      "planType": {
+        "freePlan": {
+          "plan": {
+            "name": "cohesive-vns3-5_0_x-free",
+            "publisher": "cohesive",
+            "product": "cohesive-vns3-5_0_x"
+          }
+        }
+      },
+      "CustomScriptForLinux": "CustomScript",
+      "linuxScriptFileUri": "[uri(parameters('_artifactsLocation'), concat('scripts/customextensionlinux.sh', parameters('_artifactsLocationSasToken')))]",
+      "linuxScriptCommandToExecute": "sudo bash customextensionlinux.sh",
+      "windowsScriptFileUri": "[uri(parameters('_artifactsLocation'), concat('scripts/CustomExtensionWindows.ps1', parameters('_artifactsLocationSasToken')))]",
+      "windowsScriptCommandToExecute": "powershell -ExecutionPolicy Unrestricted -File CustomExtensionWindows.ps1 ",
+      "OS": {
+        "ubuntu": {
+          "image": {
+            "publisher": "Canonical",
+            "offer": "UbuntuServer",
+            "sku": "18.04-LTS",
+            "version": "latest"
+          }
+        },
+        "windows": {
+          "image": {
+            "publisher": "MicrosoftWindowsServer",
+            "offer": "WindowsServer",
+            "sku": "2019-Datacenter",
+            "version": "latest"
+          }
+        }
+      },
+      "VM": {
+        "small": {
+          "VMsize": "Standard_B1s"
+        },
+        "medium": {
+          "VMsize": "Standard_B2s"
+        },
+        "large": {
+          "VMsize": "Standard_A2_V2"
+        }
+      },
+      "vmName": "ubuntu",
+      "vmNic": "[toLower(concat(variables('vmName'), '-nic'))]",
+      "vmNsg": "[toLower(concat(variables('vmName'), '-nsg'))]",
+      "vmPip": "[toLower(concat(variables('vmName'), '-pip'))]",
+      "osScriptToRun": {
+        "ubuntuScript": {
+          "properties": {
+            "publisher": "Microsoft.Azure.Extensions",
+            "type": "CustomScript",
+            "typeHandlerVersion": "2.0",
+            "autoUpgradeMinorVersion": true,
+            "settings": {
+              "fileUris": [
+                "[uri(parameters('_artifactsLocation'), concat('scripts/customextensionlinux.sh', parameters('_artifactsLocationSasToken')))]"
+              ],
+              "commandToExecute": "sudo bash customextensionlinux.sh"
+            }
+          }
+        },
+        "windowsScript": {
+          "properties": {
+            "publisher": "Microsoft.Compute",
+            "type": "CustomScriptExtension",
+            "typeHandlerVersion": "1.10",
+            "autoUpgradeMinorVersion": true,
+            "settings": {
+              "fileUris": [
+                "[uri(parameters('_artifactsLocation'), concat('scripts/CustomExtensionWindows.ps1', parameters('_artifactsLocationSasToken')))]"
+              ],
+              "commandToExecute": "powershell -ExecutionPolicy Unrestricted -File CustomExtensionWindows.ps1 "
+            }
+          }
+        }
+      }
+    },
+    "resources": [
+      {
+        "type": "Microsoft.Compute/virtualMachines",
+        "apiVersion": "2020-12-01",
+        "name": "VNS3Controller",
+        "location": "[resourceGroup().location]",
+        "plan": "(planType)[variables(vnsPlanType)].plan",
+        "dependsOn": [
+          "Microsoft.Network/networkInterfaces/[toLower(concat(variables('vns3ControllerName'), '-nic'))]",
+          "Microsoft.Storage/storageAccounts/[substring(concat(parameters('location'),'storage', variables('suffix')), 0, 24)]"
+        ],
+        "tags": {
+          "Name": "VNS3 Controller"
+        },
+        "properties": {
+          "hardwareProfile": {
+            "vmSize": "(VM)[parameters(instanceSize)].VMsize"
+          },
+          "storageProfile": {
+            "osDisk": {
+              "name": "VNS3Controller-disc",
+              "createOption": "FromImage",
+              "managedDisk": {
+                "storageAccountType": "StandardSSD_LRS"
+              },
+              "diskSizeGB": 30
+            },
+            "imageReference": "(vnsVersion)[variables(vns3LicenseType)].imageReference"
+          },
+          "osProfile": {
+            "computerName": "VNS3Controller",
+            "adminUsername": "adminUserName",
+            "adminPassword": "GEN-PASSWORD",
+            "linuxConfiguration": {
+              "disablePasswordAuthentication": false,
+              "provisionVMAgent": true
+            },
+            "allowExtensionOperations": true
+          },
+          "networkProfile": {
+            "networkInterfaces": [
+              {
+                "id": "Microsoft.Network/networkInterfaces/[toLower(concat(variables('vns3ControllerName'), '-nic'))]"
+              }
+            ]
+          },
+          "diagnosticsProfile": {
+            "bootDiagnostics": {
+              "enabled": true,
+              "storageUri": "[reference(variables('storageAccount'),'2021-01-01').primaryEndpoints['blob']]"
+            }
+          }
+        }
+      },
+      {
+        "type": "Microsoft.Network/networkInterfaces",
+        "apiVersion": "2020-08-01",
+        "name": "[toLower(concat(variables('vns3ControllerName'), '-nic'))]",
+        "location": "[resourceGroup().location]",
+        "dependsOn": [
+          "Microsoft.Network/publicIPAddresses/VNS3Controller-ip",
+          "Microsoft.Network/virtualNetworks/subnets/[toLower(resourceGroup().name)]-vnet/privatesubnet",
+          "Microsoft.Network/virtualNetworks/subnets/[toLower(resourceGroup().name)]-vnet/publicsubnet",
+          "Microsoft.Network/networkSecurityGroups/VNS3Controller-nsg"
+        ],
+        "tags": {
+          "Name": "VNS3 Controller"
+        },
+        "properties": {
+          "ipConfigurations": [
+            {
+              "name": "ipconfig1",
+              "properties": {
+                "privateIPAllocationMethod": "Static",
+                "privateIPAddress": "10.10.10.10",
+                "publicIPAddress": {
+                  "id": "Microsoft.Network/publicIPAddresses/VNS3Controller-ip"
+                },
+                "subnet": {
+                  "id": "Microsoft.Network/virtualNetworks/subnets/[toLower(resourceGroup().name)]-vnet/publicsubnet"
+                },
+                "privateIPAddressVersion": "IPv4"
+              }
+            }
+          ],
+          "enableAcceleratedNetworking": false,
+          "enableIPForwarding": true,
+          "networkSecurityGroup": {
+            "id": "Microsoft.Network/networkSecurityGroups/VNS3Controller-nsg"
+          }
+        }
+      },
+      {
+        "type": "Microsoft.Network/networkSecurityGroups",
+        "apiVersion": "2020-08-01",
+        "name": "VNS3Controller-nsg",
+        "location": "[resourceGroup().location]",
+        "tags": {
+          "Name": "VNS3 Controller"
+        },
+        "properties": {
+          "securityRules": [
+            {
+              "name": "VNS3_Web_API_Port",
+              "properties": {
+                "protocol": "Tcp",
+                "sourcePortRange": "*",
+                "destinationPortRange": "8000",
+                "sourceAddressPrefix": "*",
+                "destinationAddressPrefix": "*",
+                "access": "Allow",
+                "priority": 100,
+                "direction": "Inbound"
+              }
+            },
+            {
+              "name": "VNS3_UDP_1194",
+              "properties": {
+                "protocol": "Udp",
+                "sourcePortRange": "1194",
+                "destinationPortRange": "1194",
+                "sourceAddressPrefix": "VirtualNetwork",
+                "destinationAddressPrefix": "VirtualNetwork",
+                "access": "Allow",
+                "priority": 200,
+                "direction": "Inbound"
+              }
+            },
+            {
+              "name": "VNS3_UDP_500",
+              "properties": {
+                "protocol": "Udp",
+                "sourcePortRange": "500",
+                "destinationPortRange": "500",
+                "sourceAddressPrefix": "Internet",
+                "destinationAddressPrefix": "*",
+                "access": "Allow",
+                "priority": 300,
+                "direction": "Inbound"
+              }
+            },
+            {
+              "name": "VNS3_NAT_T",
+              "properties": {
+                "protocol": "Udp",
+                "sourcePortRange": "4500",
+                "destinationPortRange": "4500",
+                "sourceAddressPrefix": "1.2.3.4/32",
+                "destinationAddressPrefix": "*",
+                "access": "Allow",
+                "priority": 400,
+                "direction": "Inbound"
+              }
+            }
+          ]
+        }
+      },
+      {
+        "type": "Microsoft.Network/publicIPAddresses",
+        "apiVersion": "2020-08-01",
+        "name": "VNS3Controller-ip",
+        "location": "[resourceGroup().location]",
+        "sku": {
+          "name": "Basic",
+          "tier": "Regional"
+        },
+        "tags": {
+          "Name": "VNS3 Controller"
+        },
+        "properties": {
+          "publicIPAddressVersion": "IPv4",
+          "publicIPAllocationMethod": "Static",
+          "idleTimeoutInMinutes": 4
+        }
+      },
+      {
+        "type": "Microsoft.Network/virtualNetworks",
+        "apiVersion": "2020-08-01",
+        "name": "[toLower(resourceGroup().name)]-vnet",
+        "location": "[resourceGroup().location]",
+        "properties": {
+          "addressSpace": {
+            "addressPrefixes": [
+              "10.10.10.0/24"
+            ]
+          },
+          "subnets": [
+            {
+              "name": "publicsubnet",
+              "properties": {
+                "addressPrefix": "10.10.10.0/28"
+              }
+            },
+            {
+              "name": "privatesubnet",
+              "properties": {
+                "addressPrefix": "10.10.10.16/28"
+              }
+            }
+          ],
+          "enableDdosProtection": false,
+          "enableVmProtection": false
+        }
+      },
+      {
+        "type": "Microsoft.Storage/storageAccounts",
+        "apiVersion": "2021-01-01",
+        "name": "[substring(concat(parameters('location'),'storage', variables('suffix')), 0, 24)]",
+        "location": "[resourceGroup().location]",
+        "sku": {
+          "name": "Standard_LRS",
+          "tier": "Standard"
+        },
+        "kind": "Storage",
+        "properties": {
+          "networkAcls": {
+            "bypass": "AzureServices",
+            "defaultAction": "Allow"
+          },
+          "supportsHttpsTrafficOnly": false,
+          "encryption": {
+            "services": {
+              "file": {
+                "enabled": true
+              },
+              "blob": {
+                "enabled": true
+              }
+            },
+            "keySource": "Microsoft.Storage"
+          }
+        }
+      },
+      {
+        "type": "Microsoft.Network/virtualNetworks/subnets",
+        "apiVersion": "2020-06-01",
+        "name": "[toLower(resourceGroup().name)]-vnet/publicsubnet",
+        "dependsOn": [
+          "Microsoft.Network/virtualNetworks/[toLower(resourceGroup().name)]-vnet"
+        ],
+        "properties": {
+          "addressPrefix": "10.10.10.0/28"
+        }
+      },
+      {
+        "type": "Microsoft.Network/virtualNetworks/subnets",
+        "apiVersion": "2020-06-01",
+        "name": "[toLower(resourceGroup().name)]-vnet/privatesubnet",
+        "dependsOn": [
+          "Microsoft.Network/virtualNetworks/[toLower(resourceGroup().name)]-vnet"
+        ],
+        "properties": {
+          "addressPrefix": "10.10.10.16/28",
+          "routeTable": {
+            "id": "Microsoft.Network/routeTables/private-subnet-routes"
+          }
+        }
+      },
+      {
+        "type": "Microsoft.Network/routeTables",
+        "apiVersion": "2020-11-01",
+        "name": "private-subnet-routes",
+        "location": "[resourceGroup().location]",
+        "properties": {
+          "disableBgpRoutePropagation": false,
+          "routes": [
+            {
+              "name": "natgateway",
+              "properties": {
+                "addressPrefix": "0.0.0.0/0",
+                "nextHopType": "VirtualAppliance",
+                "nextHopIpAddress": "10.10.10.10",
+                "hasBgpOverride": false
+              }
+            }
+          ]
+        }
+      },
+      {
+        "type": "Microsoft.Network/routeTables/routes",
+        "apiVersion": "2020-06-01",
+        "name": "private-subnet-routes/natgateway",
+        "dependsOn": [
+          "Microsoft.Network/routeTables/private-subnet-routes",
+          "Microsoft.Network/virtualNetworks/[toLower(resourceGroup().name)]-vnet"
+        ],
+        "properties": {
+          "addressPrefix": "0.0.0.0/0",
+          "nextHopType": "Internet",
+          "hasBgpOverride": false
+        }
+      },
+      {
+        "type": "Microsoft.Network/publicIPAddresses",
+        "apiVersion": "2020-08-01",
+        "name": "[toLower(concat(variables('vmName'), '-pip'))]copyindex()",
+        "location": "[resourceGroup().location]",
+        "sku": {
+          "name": "Basic",
+          "tier": "Regional"
+        },
+        "copy": {
+          "name": "PublicIpLoop",
+          "count": 3
+        },
+        "tags": {
+          "Name": "VNS3 Controller"
+        },
+        "properties": {
+          "publicIPAddressVersion": "IPv4",
+          "publicIPAllocationMethod": "Static",
+          "idleTimeoutInMinutes": 4
+        }
+      },
+      {
+        "type": "Microsoft.Network/networkInterfaces",
+        "apiVersion": "2020-08-01",
+        "name": "[toLower(concat(variables('vmName'), '-nic'))]copyindex()",
+        "location": "[resourceGroup().location]",
+        "copy": {
+          "name": "NicLoop",
+          "count": 3
+        },
+        "dependsOn": [
+          "Microsoft.Network/virtualNetworks/subnets/[toLower(resourceGroup().name)]-vnet/privatesubnet",
+          "SecurityLoop",
+          "PublicIpLoop"
+        ],
+        "properties": {
+          "ipConfigurations": [
+            {
+              "name": "ipconfig1",
+              "properties": {
+                "privateIPAllocationMethod": "Dynamic",
+                "publicIPAddress": {
+                  "id": "Microsoft.Network/publicIPAddresses/[toLower(concat(variables('vmName'), '-pip'))]copyindex()"
+                },
+                "subnet": {
+                  "id": "Microsoft.Network/virtualNetworks/subnets/[toLower(resourceGroup().name)]-vnet/privatesubnet"
+                }
+              }
+            }
+          ],
+          "networkSecurityGroup": {
+            "id": "Microsoft.Network/networkSecurityGroups/[toLower(concat(variables('vmName'), '-nsg'))]copyindex()"
+          }
+        }
+      },
+      {
+        "type": "Microsoft.Network/networkSecurityGroups",
+        "apiVersion": "2020-08-01",
+        "name": "[toLower(concat(variables('vmName'), '-nsg'))]copyindex()",
+        "location": "[resourceGroup().location]",
+        "copy": {
+          "name": "SecurityLoop",
+          "count": 3
+        },
+        "tags": {
+          "Name": "VNS3 Controller"
+        },
+        "properties": {
+          "securityRules": [
+            {
+              "name": "SSH",
+              "properties": {
+                "protocol": "Tcp",
+                "sourcePortRange": "*",
+                "destinationPortRange": "22",
+                "sourceAddressPrefix": "*",
+                "destinationAddressPrefix": "*",
+                "access": "Allow",
+                "priority": 300,
+                "direction": "Inbound"
+              }
+            },
+            {
+              "name": "RDP",
+              "properties": {
+                "protocol": "Tcp",
+                "sourcePortRange": "*",
+                "destinationPortRange": "3389",
+                "sourceAddressPrefix": "*",
+                "destinationAddressPrefix": "*",
+                "access": "Allow",
+                "priority": 400,
+                "direction": "Inbound"
+              }
+            }
+          ]
+        }
+      },
+      {
+        "type": "Microsoft.Compute/virtualMachines",
+        "apiVersion": "2020-12-01",
+        "name": "ubuntucopyIndex()",
+        "location": "[resourceGroup().location]",
+        "copy": {
+          "name": "virtualMachineLoop",
+          "count": 3
+        },
+        "dependsOn": [
+          "NicLoop"
+        ],
+        "properties": {
+          "hardwareProfile": {
+            "vmSize": "(VM)[parameters(instanceSize)].VMsize"
+          },
+          "osProfile": {
+            "computerName": "ubuntucopyIndex()",
+            "adminUsername": "GEN-UNIQUE",
+            "adminPassword": "GEN-PASSWORD"
+          },
+          "storageProfile": {
+            "imageReference": "(OS)[parameters(virtualMachineOs)].image",
+            "osDisk": {
+              "createOption": "FromImage"
+            }
+          },
+          "networkProfile": {
+            "networkInterfaces": [
+              {
+                "id": "Microsoft.Network/networkInterfaces/[toLower(concat(variables('vmName'), '-nic'))]copyindex()"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "type": "Microsoft.Compute/virtualMachines/extensions",
+        "apiVersion": "2020-12-01",
+        "name": "ubuntucopyIndex()/[toLower(concat(parameters('virtualMachineOs'), 'Script'))]",
+        "location": "[resourceGroup().location]",
+        "copy": {
+          "name": "CustomScriptLoop",
+          "count": 3
+        },
+        "dependsOn": [
+          "Microsoft.Compute/virtualMachines/VNS3Controller",
+          "virtualMachineLoop"
+        ],
+        "properties": "(osScriptToRun)[variables(osScript)].properties"
+      }
+    ],
+    "outputs": {
+      "privateIPAddress": {
+        "type": "string",
+        "value": "[resourceId('Microsoft.Network/privateIPAddresses', variables('vnsStaticIp'))]"
+      }
+    },
+    "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+  }
+}

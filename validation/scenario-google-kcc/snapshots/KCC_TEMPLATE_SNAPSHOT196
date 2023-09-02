@@ -2,12 +2,12 @@
   "structure": "filesystem",
   "error": null,
   "reference": "master",
-  "contentType": "yaml",
+  "contentType": "json",
   "source": "gitConnectorGoogleKcc",
   "paths": [
-    "/samples/resources/computerouterinterface/compute_v1beta1_computeaddress.yaml"
+    "/samples/resources/computeinterconnectattachment/compute_v1beta1_computeinterconnectattachment.yaml"
   ],
-  "timestamp": 1628765142389,
+  "timestamp": 1642973302927,
   "queryuser": null,
   "checksum": "99914b932bd37a50b983c5e7c90ae93b",
   "node": {
@@ -15,26 +15,37 @@
     "type": "kcc",
     "collection": "kcctemplate",
     "paths": [
-      "/samples/resources/computerouterinterface/compute_v1beta1_computeaddress.yaml"
+      "/samples/resources/computeinterconnectattachment/compute_v1beta1_computeinterconnectattachment.yaml"
     ],
     "snapshotId": "KCC_TEMPLATE_SNAPSHOT196",
     "status": "active",
-    "validate": true
+    "validate": true,
+    "resourceTypes": [
+      "computeinterconnectattachment"
+    ]
   },
   "snapshotId": "KCC_TEMPLATE_SNAPSHOT196",
   "collection": "kcctemplate",
   "json": {
     "apiVersion": "compute.cnrm.cloud.google.com/v1beta1",
-    "kind": "ComputeAddress",
+    "kind": "ComputeInterconnectAttachment",
     "metadata": {
-      "name": "computerouterinterface-dep",
-      "labels": {
-        "label-one": "value-one"
-      }
+      "name": "computeinterconnectattachment-sample"
     },
     "spec": {
-      "location": "us-central1",
-      "description": "a test regional address"
+      "description": "example interconnect attachment description",
+      "interconnect": "https://www.googleapis.com/compute/v1/projects/my-project/global/interconnects/my-interconnect",
+      "adminEnabled": true,
+      "bandwidth": "BPS_50M",
+      "type": "DEDICATED",
+      "candidateSubnets": [
+        "169.254.0.0/16"
+      ],
+      "region": "us-west1",
+      "vlanTag8021q": 1024,
+      "routerRef": {
+        "name": "computeinterconnectattachment-dep"
+      }
     }
   }
 }

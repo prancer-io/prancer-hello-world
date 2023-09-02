@@ -1,0 +1,429 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAzureQuickStart",
+  "paths": [
+    "/quickstarts/microsoft.web/web-app-vm-dsc/azuredeploy.json",
+    "/quickstarts/microsoft.web/web-app-vm-dsc/azuredeploy.parameters.json"
+  ],
+  "timestamp": 1642962911408,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/quickstarts/microsoft.web/web-app-vm-dsc/azuredeploy.json",
+      "/quickstarts/microsoft.web/web-app-vm-dsc/azuredeploy.parameters.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT1797",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "microsoft.network/publicipaddresses",
+      "microsoft.network/virtualnetworks",
+      "microsoft.network/networkinterfaces",
+      "microsoft.sql/servers",
+      "microsoft.compute/virtualmachines",
+      "microsoft.network/networksecuritygroups"
+    ]
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT1797",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "vmName": {
+        "type": "string",
+        "metadata": {
+          "description": "This is the name of the Virtual Machine"
+        },
+        "value": "GEN-UNIQUE-10"
+      },
+      "vmSize": {
+        "type": "string",
+        "defaultValue": "Standard_A0",
+        "metadata": {
+          "description": "This is the size of the Virtual Machine"
+        }
+      },
+      "imagePublisher": {
+        "type": "string",
+        "defaultValue": "MicrosoftWindowsServer",
+        "metadata": {
+          "description": "Image Publisher"
+        }
+      },
+      "imageOffer": {
+        "type": "string",
+        "defaultValue": "WindowsServer",
+        "metadata": {
+          "description": "Image Offer"
+        }
+      },
+      "imageSKU": {
+        "type": "string",
+        "defaultValue": "2012-R2-Datacenter",
+        "metadata": {
+          "description": "Image SKU"
+        }
+      },
+      "adminUsername": {
+        "type": "string",
+        "metadata": {
+          "description": "This is the Virtual Machine administrator login name"
+        },
+        "value": "GEN-UNIQUE-8"
+      },
+      "adminPassword": {
+        "type": "securestring",
+        "metadata": {
+          "description": "This is the Virtual Machine administrator login password"
+        },
+        "value": "GEN-PASSWORD"
+      },
+      "dnsName": {
+        "type": "string",
+        "metadata": {
+          "description": "This is the DNS name of the Virtual Machine"
+        },
+        "value": "GEN-UNIQUE-10"
+      },
+      "configurationFunction": {
+        "type": "string",
+        "metadata": {
+          "description": "This is the link to the Web Deploy package to be deployed to the Virtual Machine. It is a github URL in this example."
+        },
+        "value": "ConfigureWebServer.ps1\\Main"
+      },
+      "DatabaseServerName": {
+        "type": "string",
+        "metadata": {
+          "description": "This is database server name"
+        },
+        "value": "GEN-UNIQUE"
+      },
+      "DatabaseServerLocation": {
+        "type": "string",
+        "metadata": {
+          "description": "This is database server location"
+        },
+        "value": "westus"
+      },
+      "databaseServerAdminLogin": {
+        "type": "string",
+        "metadata": {
+          "description": "This is database server administrator login name"
+        },
+        "value": "GEN-UNIQUE-8"
+      },
+      "databaseServerAdminLoginPassword": {
+        "type": "securestring",
+        "metadata": {
+          "description": "This is database server administrator login password"
+        },
+        "value": "GEN-PASSWORD"
+      },
+      "databaseName": {
+        "type": "string",
+        "metadata": {
+          "description": "This is name of the database hosted in the database server"
+        },
+        "value": "GEN-UNIQUE"
+      },
+      "databaseCollation": {
+        "type": "string",
+        "defaultValue": "SQL_Latin1_General_CP1_CI_AS",
+        "metadata": {
+          "description": "This is database collation - rule for comparing the encodings in the database"
+        }
+      },
+      "databaseEdition": {
+        "type": "string",
+        "allowedValues": [
+          "Basic",
+          "Standard",
+          "Premium"
+        ],
+        "metadata": {
+          "description": "This is database edition"
+        },
+        "value": "Basic"
+      },
+      "modulesUrl": {
+        "type": "string",
+        "metadata": {
+          "description": "This is the URL for downloading the PowerShell DSC module. In this case it should be the link to a zip file hosted under an Azure storage container"
+        },
+        "value": "https://github.com/Azure/azure-quickstart-templates/raw/master/quickstarts/microsoft.web/web-app-vm-dsc/ConfigureWebServer.ps1.zip"
+      },
+      "webdeploypkg": {
+        "type": "string",
+        "metadata": {
+          "description": "This is the link to the Web Deploy package for the website that's going to be deployed to the Virtual Machine"
+        },
+        "value": "https://github.com/Azure/azure-quickstart-templates/raw/master/quickstarts/microsoft.web/web-app-vm-dsc/WebApplication3.zip"
+      }
+    },
+    "variables": {
+      "virtualNetworkName": "GEN-UNIQUE-10-VNET",
+      "vnetID": "Microsoft.Network/virtualNetworks/GEN-UNIQUE-10-VNET",
+      "nicName": "GEN-UNIQUE-10-NIC",
+      "addressPrefix": "10.0.0.0/16",
+      "subnet1Name": "Subnet-1",
+      "subnet2Name": "Subnet-2",
+      "subnet1Prefix": "10.0.0.0/24",
+      "subnet2Prefix": "10.0.1.0/24",
+      "subnet1Ref": "Microsoft.Network/virtualNetworks/GEN-UNIQUE-10-VNET/subnets/Subnet-1",
+      "publicIPAddressName": "GEN-UNIQUE-10-PublicIP-VM",
+      "storageAccountType": "Standard_LRS",
+      "networkSecurityGroupName": "default-NSG"
+    },
+    "resources": [
+      {
+        "apiVersion": "2015-05-01-preview",
+        "type": "Microsoft.Network/publicIPAddresses",
+        "name": "GEN-UNIQUE-10-PublicIP-VM",
+        "location": "[resourceGroup().location]",
+        "tags": {
+          "displayName": "PublicIPAddress"
+        },
+        "properties": {
+          "publicIPAllocationMethod": "Dynamic",
+          "dnsSettings": {
+            "domainNameLabel": "GEN-UNIQUE-10"
+          }
+        }
+      },
+      {
+        "comments": "Default Network Security Group for template",
+        "type": "Microsoft.Network/networkSecurityGroups",
+        "apiVersion": "2019-08-01",
+        "name": "default-NSG",
+        "location": "[resourceGroup().location]",
+        "properties": {
+          "securityRules": [
+            {
+              "name": "default-allow-80",
+              "properties": {
+                "priority": 1000,
+                "access": "Allow",
+                "direction": "Inbound",
+                "destinationPortRange": "80",
+                "protocol": "Tcp",
+                "sourceAddressPrefix": "*",
+                "sourcePortRange": "*",
+                "destinationAddressPrefix": "*"
+              }
+            },
+            {
+              "name": "default-allow-3389",
+              "properties": {
+                "priority": 1001,
+                "access": "Allow",
+                "direction": "Inbound",
+                "destinationPortRange": "3389",
+                "protocol": "Tcp",
+                "sourceAddressPrefix": "*",
+                "sourcePortRange": "*",
+                "destinationAddressPrefix": "*"
+              }
+            }
+          ]
+        }
+      },
+      {
+        "apiVersion": "2015-05-01-preview",
+        "type": "Microsoft.Network/virtualNetworks",
+        "name": "GEN-UNIQUE-10-VNET",
+        "location": "[resourceGroup().location]",
+        "dependsOn": [
+          "Microsoft.Network/networkSecurityGroups/default-NSG"
+        ],
+        "tags": {
+          "displayName": "VirtualNetwork"
+        },
+        "properties": {
+          "addressSpace": {
+            "addressPrefixes": [
+              "10.0.0.0/16"
+            ]
+          },
+          "subnets": [
+            {
+              "name": "Subnet-1",
+              "properties": {
+                "addressPrefix": "10.0.0.0/24",
+                "networkSecurityGroup": {
+                  "id": "Microsoft.Network/networkSecurityGroups/default-NSG"
+                }
+              }
+            },
+            {
+              "name": "Subnet-2",
+              "properties": {
+                "addressPrefix": "10.0.1.0/24"
+              }
+            }
+          ]
+        }
+      },
+      {
+        "apiVersion": "2015-05-01-preview",
+        "type": "Microsoft.Network/networkInterfaces",
+        "name": "GEN-UNIQUE-10-NIC",
+        "location": "[resourceGroup().location]",
+        "tags": {
+          "displayName": "NetworkInterface"
+        },
+        "dependsOn": [
+          "Microsoft.Network/publicIPAddresses/GEN-UNIQUE-10-PublicIP-VM",
+          "Microsoft.Network/virtualNetworks/GEN-UNIQUE-10-VNET"
+        ],
+        "properties": {
+          "ipConfigurations": [
+            {
+              "name": "ipconfig1",
+              "properties": {
+                "privateIPAllocationMethod": "Dynamic",
+                "publicIPAddress": {
+                  "id": "Microsoft.Network/publicIPAddresses/GEN-UNIQUE-10-PublicIP-VM"
+                },
+                "subnet": {
+                  "id": "Microsoft.Network/virtualNetworks/GEN-UNIQUE-10-VNET/subnets/Subnet-1"
+                }
+              }
+            }
+          ]
+        }
+      },
+      {
+        "apiVersion": "2017-03-30",
+        "type": "Microsoft.Compute/virtualMachines",
+        "name": "GEN-UNIQUE-10",
+        "location": "[resourceGroup().location]",
+        "tags": {
+          "displayName": "VirtualMachine"
+        },
+        "dependsOn": [
+          "Microsoft.Network/networkInterfaces/GEN-UNIQUE-10-NIC"
+        ],
+        "properties": {
+          "hardwareProfile": {
+            "vmSize": "Standard_A0"
+          },
+          "osProfile": {
+            "computerName": "GEN-UNIQUE-10",
+            "adminUsername": "GEN-UNIQUE-8",
+            "adminPassword": "GEN-PASSWORD"
+          },
+          "storageProfile": {
+            "imageReference": {
+              "publisher": "MicrosoftWindowsServer",
+              "offer": "WindowsServer",
+              "sku": "2012-R2-Datacenter",
+              "version": "latest"
+            },
+            "osDisk": {
+              "name": "GEN-UNIQUE-10_OSDisk",
+              "caching": "ReadWrite",
+              "createOption": "FromImage"
+            }
+          },
+          "networkProfile": {
+            "networkInterfaces": [
+              {
+                "id": "Microsoft.Network/networkInterfaces/GEN-UNIQUE-10-NIC"
+              }
+            ]
+          }
+        },
+        "resources": [
+          {
+            "name": "DSCExt1",
+            "type": "extensions",
+            "location": "[resourceGroup().location]",
+            "apiVersion": "2015-05-01-preview",
+            "dependsOn": [
+              "Microsoft.Compute/virtualMachines/GEN-UNIQUE-10"
+            ],
+            "tags": {
+              "displayName": "DSCExt1"
+            },
+            "properties": {
+              "publisher": "Microsoft.Powershell",
+              "type": "DSC",
+              "typeHandlerVersion": "2.19",
+              "autoUpgradeMinorVersion": true,
+              "settings": {
+                "modulesUrl": "https://github.com/Azure/azure-quickstart-templates/raw/master/quickstarts/microsoft.web/web-app-vm-dsc/ConfigureWebServer.ps1.zip",
+                "configurationFunction": "ConfigureWebServer.ps1\\Main",
+                "properties": {
+                  "MachineName": "GEN-UNIQUE-10",
+                  "WebDeployPackagePath": "https://github.com/Azure/azure-quickstart-templates/raw/master/quickstarts/microsoft.web/web-app-vm-dsc/WebApplication3.zip",
+                  "UserName": "GEN-UNIQUE-8",
+                  "Password": "GEN-PASSWORD",
+                  "DbServerName": "GEN-UNIQUE",
+                  "DbName": "GEN-UNIQUE",
+                  "DbUserName": "GEN-UNIQUE-8",
+                  "DbPassword": "GEN-PASSWORD"
+                }
+              },
+              "protectedSettings": {}
+            }
+          }
+        ]
+      },
+      {
+        "name": "GEN-UNIQUE",
+        "type": "Microsoft.Sql/servers",
+        "location": "westus",
+        "apiVersion": "2014-04-01-preview",
+        "dependsOn": [],
+        "tags": {
+          "displayName": "GEN-UNIQUE"
+        },
+        "properties": {
+          "administratorLogin": "GEN-UNIQUE-8",
+          "administratorLoginPassword": "GEN-PASSWORD"
+        },
+        "resources": [
+          {
+            "name": "AllowAllWindowsAzureIps",
+            "type": "firewallrules",
+            "location": "westus",
+            "apiVersion": "2014-04-01-preview",
+            "dependsOn": [
+              "Microsoft.Sql/servers/GEN-UNIQUE"
+            ],
+            "properties": {
+              "startIpAddress": "0.0.0.0",
+              "endIpAddress": "0.0.0.0"
+            }
+          },
+          {
+            "name": "GEN-UNIQUE",
+            "type": "databases",
+            "location": "westus",
+            "apiVersion": "2014-04-01-preview",
+            "dependsOn": [
+              "GEN-UNIQUE"
+            ],
+            "tags": {
+              "displayName": "cawadb1"
+            },
+            "properties": {
+              "collation": "SQL_Latin1_General_CP1_CI_AS",
+              "edition": "Basic",
+              "maxSizeBytes": "1073741824"
+            }
+          }
+        ]
+      }
+    ],
+    "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+  }
+}

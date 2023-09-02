@@ -1,0 +1,153 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "main",
+  "contentType": "json",
+  "source": "gitConnectorAwsTerraHashicorp",
+  "paths": [
+    "/examples/networking/region/outputs.tf",
+    "/examples/networking/region/terraform.template.tfvars",
+    "/examples/networking/region/variables.tf",
+    "/examples/networking/region/versions.tf",
+    "/examples/networking/region/subnets.tf"
+  ],
+  "timestamp": 1642967657702,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "TRF_TEMPLATE_SNAPSHOT",
+    "type": "terraform",
+    "collection": "terraformtemplate",
+    "paths": [
+      "/examples/networking/region/outputs.tf",
+      "/examples/networking/region/terraform.template.tfvars",
+      "/examples/networking/region/variables.tf",
+      "/examples/networking/region/versions.tf",
+      "/examples/networking/region/subnets.tf"
+    ],
+    "snapshotId": "TRF_TEMPLATE_SNAPSHOT24",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "aws_route_table_association",
+      "aws_subnet",
+      "aws_security_group",
+      "aws_route_table"
+    ]
+  },
+  "snapshotId": "TRF_TEMPLATE_SNAPSHOT24",
+  "collection": "terraformtemplate",
+  "json": {
+    "data": {
+      "aws_availability_zones": {
+        "all": {
+          "compiletime_identity": "data.aws_availability_zones.all"
+        }
+      }
+    },
+    "resources": [
+      {
+        "type": "aws_security_group",
+        "name": "az",
+        "properties": {
+          "name": "az-${data.aws_availability_zone.target.name}",
+          "description": "Open access within the AZ ${data.aws_availability_zone.target.name}",
+          "vpc_id": "${aws_vpc.main.id}",
+          "ingress": [
+            {
+              "from_port": 0,
+              "to_port": 0,
+              "protocol": -1,
+              "cidr_blocks": [
+                "${aws_subnet.main.cidr_block}"
+              ]
+            }
+          ],
+          "availability_zone": "${data.aws_availability_zones.all.names[0]}",
+          "compiletime_identity": "module.primary_subnet"
+        }
+      },
+      {
+        "type": "aws_security_group",
+        "name": "az",
+        "properties": {
+          "name": "az-${data.aws_availability_zone.target.name}",
+          "description": "Open access within the AZ ${data.aws_availability_zone.target.name}",
+          "vpc_id": "${aws_vpc.main.id}",
+          "ingress": [
+            {
+              "from_port": 0,
+              "to_port": 0,
+              "protocol": -1,
+              "cidr_blocks": [
+                "${aws_subnet.main.cidr_block}"
+              ]
+            }
+          ],
+          "availability_zone": "${data.aws_availability_zones.all.names[1]}",
+          "compiletime_identity": "module.secondary_subnet"
+        }
+      },
+      {
+        "type": "aws_subnet",
+        "name": "main",
+        "properties": {
+          "cidr_block": "${cidrsubnet(data.aws_vpc.target.cidr_block,2,var.az_numbers[data.aws_availability_zone.target.name_suffix])}",
+          "vpc_id": "${aws_vpc.main.id}",
+          "availability_zone": "${data.aws_availability_zones.all.names[0]}",
+          "compiletime_identity": "module.primary_subnet"
+        }
+      },
+      {
+        "type": "aws_subnet",
+        "name": "main",
+        "properties": {
+          "cidr_block": "${cidrsubnet(data.aws_vpc.target.cidr_block,2,var.az_numbers[data.aws_availability_zone.target.name_suffix])}",
+          "vpc_id": "${aws_vpc.main.id}",
+          "availability_zone": "${data.aws_availability_zones.all.names[1]}",
+          "compiletime_identity": "module.secondary_subnet"
+        }
+      },
+      {
+        "type": "aws_route_table",
+        "name": "main",
+        "properties": {
+          "vpc_id": "${aws_vpc.main.id}",
+          "availability_zone": "${data.aws_availability_zones.all.names[0]}",
+          "compiletime_identity": "module.primary_subnet"
+        }
+      },
+      {
+        "type": "aws_route_table",
+        "name": "main",
+        "properties": {
+          "vpc_id": "${aws_vpc.main.id}",
+          "availability_zone": "${data.aws_availability_zones.all.names[1]}",
+          "compiletime_identity": "module.secondary_subnet"
+        }
+      },
+      {
+        "type": "aws_route_table_association",
+        "name": "main",
+        "properties": {
+          "subnet_id": "${aws_subnet.main.id}",
+          "route_table_id": "${aws_route_table.main.id}",
+          "vpc_id": "${aws_vpc.main.id}",
+          "availability_zone": "${data.aws_availability_zones.all.names[0]}",
+          "compiletime_identity": "module.primary_subnet"
+        }
+      },
+      {
+        "type": "aws_route_table_association",
+        "name": "main",
+        "properties": {
+          "subnet_id": "${aws_subnet.main.id}",
+          "route_table_id": "${aws_route_table.main.id}",
+          "vpc_id": "${aws_vpc.main.id}",
+          "availability_zone": "${data.aws_availability_zones.all.names[1]}",
+          "compiletime_identity": "module.secondary_subnet"
+        }
+      }
+    ]
+  }
+}

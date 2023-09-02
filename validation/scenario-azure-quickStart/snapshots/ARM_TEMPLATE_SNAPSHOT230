@@ -1,0 +1,277 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAzureQuickStart",
+  "paths": [
+    "/application-workloads/mahara/mahara-autoscale-cache/nested/controller.json"
+  ],
+  "timestamp": 1642962891049,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/application-workloads/mahara/mahara-autoscale-cache/nested/controller.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT230",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "microsoft.resources/deployments",
+      "microsoft.network/networkinterfaces",
+      "microsoft.compute/virtualmachines",
+      "microsoft.network/networksecuritygroups"
+    ]
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT230",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "maharaCommon": {
+        "metadata": {
+          "description": "Common Mahara values"
+        },
+        "type": "object"
+      },
+      "ctlrPubIpId": {
+        "metadata": {
+          "description": "Resource ID of the controller VM public IP address"
+        },
+        "type": "string"
+      },
+      "siteFQDN": {
+        "metadata": {
+          "description": "FQDN of public IP address"
+        },
+        "type": "string"
+      },
+      "dbLoginPassword": {
+        "metadata": {
+          "description": "Database admin password"
+        },
+        "type": "securestring"
+      },
+      "maharaAdminPass": {
+        "metadata": {
+          "description": "Mahara admin password"
+        },
+        "type": "securestring"
+      },
+      "maharaDbPass": {
+        "metadata": {
+          "description": "Mahara database password"
+        },
+        "type": "securestring"
+      }
+    },
+    "resources": [
+      {
+        "type": "Microsoft.Network/networkSecurityGroups",
+        "apiVersion": "2020-11-01",
+        "location": "maharaCommon",
+        "name": "maharaCommon",
+        "properties": {
+          "securityRules": [
+            {
+              "name": "Allow_SSH",
+              "properties": {
+                "access": "Allow",
+                "destinationAddressPrefix": "*",
+                "destinationPortRange": "22",
+                "direction": "Inbound",
+                "priority": 1000,
+                "protocol": "Tcp",
+                "sourceAddressPrefix": "*",
+                "sourcePortRange": "*"
+              }
+            },
+            {
+              "name": "Allow_http",
+              "properties": {
+                "access": "Allow",
+                "destinationAddressPrefix": "*",
+                "destinationPortRange": "80",
+                "direction": "Inbound",
+                "priority": 1005,
+                "protocol": "Tcp",
+                "sourceAddressPrefix": "*",
+                "sourcePortRange": "*"
+              }
+            }
+          ]
+        },
+        "tags": {
+          "displayName": "Controller NSG"
+        }
+      },
+      {
+        "type": "Microsoft.Network/networkInterfaces",
+        "apiVersion": "2020-11-01",
+        "dependsOn": [
+          "Microsoft.Network/networkSecurityGroups//maharaCommon"
+        ],
+        "location": "maharaCommon",
+        "name": "maharaCommon",
+        "properties": {
+          "networkSecurityGroup": {
+            "id": "Microsoft.Network/networkSecurityGroups/maharaCommon"
+          },
+          "ipConfigurations": [
+            {
+              "name": "ipcfgctlr",
+              "properties": {
+                "privateIPAllocationMethod": "Dynamic",
+                "publicIPAddress": {
+                  "id": "ctlrPubIpId"
+                },
+                "subnet": {
+                  "id": "Microsoft.Network/virtualNetworks/subnets/maharaCommon/maharaCommon"
+                }
+              }
+            }
+          ]
+        },
+        "tags": {
+          "displayName": "ctlrNic"
+        }
+      },
+      {
+        "type": "Microsoft.Compute/virtualMachines",
+        "apiVersion": "2020-12-01",
+        "dependsOn": [
+          "Microsoft.Network/networkInterfaces//maharaCommon"
+        ],
+        "location": "maharaCommon",
+        "name": "maharaCommon",
+        "properties": {
+          "hardwareProfile": {
+            "vmSize": "maharaCommon"
+          },
+          "networkProfile": {
+            "networkInterfaces": [
+              {
+                "id": "Microsoft.Network/networkInterfaces/maharaCommon"
+              }
+            ]
+          },
+          "osProfile": {
+            "adminUsername": "maharaCommon",
+            "computerName": "maharaCommon",
+            "secrets": "maharaCommon",
+            "linuxConfiguration": {
+              "disablePasswordAuthentication": true,
+              "ssh": {
+                "publicKeys": [
+                  {
+                    "path": "/home/maharaCommon/.ssh/authorized_keys",
+                    "keyData": "maharaCommon"
+                  }
+                ]
+              }
+            }
+          },
+          "storageProfile": {
+            "imageReference": "maharaCommon",
+            "osDisk": {
+              "createOption": "FromImage",
+              "managedDisk": {
+                "storageAccountType": "StandardSSD_LRS"
+              },
+              "name": "maharaCommon"
+            },
+            "dataDisks": "[take(variables('nfsDiskArray'),if(equals(parameters('maharaCommon').fileServerType,'nfs'), parameters('maharaCommon').fileServerDiskCount, 0))]"
+          }
+        },
+        "tags": {
+          "displayName": "Controller Virtual Machine"
+        }
+      },
+      {
+        "condition": "maharaCommon",
+        "type": "Microsoft.Resources/deployments",
+        "apiVersion": "2020-10-01",
+        "dependsOn": [
+          "Microsoft.Compute/virtualMachines//maharaCommon"
+        ],
+        "name": "maharaCommon-ScriptProcessor",
+        "properties": {
+          "mode": "Incremental",
+          "parameters": {
+            "maharaCommon": {
+              "value": "maharaCommon"
+            },
+            "siteFQDN": {
+              "value": "siteFQDN"
+            },
+            "dbLoginPassword": {
+              "value": "dbLoginPassword"
+            },
+            "maharaDbPass": {
+              "value": "maharaDbPass"
+            },
+            "maharaAdminPass": {
+              "value": "maharaAdminPass"
+            }
+          },
+          "templateLink": {
+            "uri": "maharaCommoncontrollerconfig.jsonmaharaCommon"
+          }
+        }
+      },
+      {
+        "condition": "maharaCommon",
+        "type": "Microsoft.Resources/deployments",
+        "apiVersion": "2020-10-01",
+        "dependsOn": [
+          "Microsoft.Compute/virtualMachines//maharaCommon"
+        ],
+        "name": "maharaCommon-Backup",
+        "properties": {
+          "mode": "Incremental",
+          "parameters": {
+            "maharaCommon": {
+              "value": "maharaCommon"
+            },
+            "vmName": {
+              "value": "maharaCommon"
+            }
+          },
+          "templateLink": {
+            "uri": "maharaCommonrecoveryservicesEnlist.jsonmaharaCommon"
+          }
+        }
+      }
+    ],
+    "variables": {
+      "nicRef": "Microsoft.Network/networkInterfaces/maharaCommon",
+      "nsgRef": "Microsoft.Network/networkSecurityGroups/maharaCommon",
+      "subnetWebRef": "Microsoft.Network/virtualNetworks/subnets/maharaCommon/maharaCommon",
+      "copy": [
+        {
+          "name": "nfsDiskArray",
+          "count": 8,
+          "input": {
+            "managedDisk": {
+              "storageAccountType": "Premium_LRS"
+            },
+            "diskSizeGB": "maharaCommon",
+            "lun": "[copyIndex('nfsDiskArray')]",
+            "createOption": "Empty"
+          }
+        }
+      ]
+    },
+    "outputs": {
+      "controllerIP": {
+        "value": "[reference(resourceId('Microsoft.Network/publicIPAddresses', parameters('maharaCommon').ctlrPipName), '2020-11-01').ipAddress]",
+        "type": "string"
+      }
+    },
+    "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+  }
+}

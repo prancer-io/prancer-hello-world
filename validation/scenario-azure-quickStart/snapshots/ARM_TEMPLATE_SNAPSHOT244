@@ -1,0 +1,238 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAzureQuickStart",
+  "paths": [
+    "/application-workloads/mahara/mahara-autoscale-cache/nested/webvmss.json"
+  ],
+  "timestamp": 1642962891239,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/application-workloads/mahara/mahara-autoscale-cache/nested/webvmss.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT244",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "microsoft.insights/autoscalesettings",
+      "microsoft.storage/storageaccounts",
+      "microsoft.compute/virtualmachinescalesets"
+    ]
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT244",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "maharaCommon": {
+        "metadata": {
+          "description": "Common Mahara values"
+        },
+        "type": "object"
+      },
+      "siteFQDN": {
+        "metadata": {
+          "description": "FQDN of public IP address"
+        },
+        "type": "string"
+      },
+      "resourceGroupName": {
+        "type": "string",
+        "defaultValue": "[resourceGroup().name]"
+      }
+    },
+    "resources": [
+      {
+        "type": "Microsoft.Storage/storageAccounts",
+        "apiVersion": "2021-02-01",
+        "location": "maharaCommon",
+        "name": "maharaCommon",
+        "kind": "Storage",
+        "sku": {
+          "name": "Standard_LRS"
+        }
+      },
+      {
+        "type": "Microsoft.Compute/virtualMachineScaleSets",
+        "apiVersion": "2020-12-01",
+        "dependsOn": [
+          "Microsoft.Storage/storageAccounts//maharaCommon"
+        ],
+        "location": "maharaCommon",
+        "name": "maharaCommon",
+        "properties": {
+          "overprovision": true,
+          "upgradePolicy": {
+            "mode": "Manual"
+          },
+          "virtualMachineProfile": {
+            "extensionProfile": {
+              "extensions": [
+                {
+                  "name": "setup_mahara",
+                  "properties": {
+                    "autoUpgradeMinorVersion": true,
+                    "publisher": "Microsoft.Azure.Extensions",
+                    "settings": {
+                      "fileUris": [
+                        "maharaCommonmaharaCommonmaharaCommon",
+                        "maharaCommon"
+                      ]
+                    },
+                    "protectedSettings": {
+                      "commandToExecute": "[concat('bash ', parameters('maharaCommon').webServerSetupScriptFilename, ' ', concat(parameters('maharaCommon').gfsNameRoot, '0'), ' data ', parameters('maharaCommon').siteURL, ' ', parameters('maharaCommon').httpsTermination, ' ', concat('controller-vm-',parameters('maharaCommon').resourcesPrefix), ' ', parameters('maharaCommon').webServerType, ' ', parameters('maharaCommon').fileServerType, ' ', parameters('maharaCommon').storageAccountName, ' ', listKeys(variables('storageAccountId'), '2021-02-01').keys[0].value, ' ', parameters('maharaCommon').ctlrVmName, ' ', parameters('maharaCommon').htmlLocalCopySwitch, ' ' , parameters('siteFQDN'))]"
+                    },
+                    "type": "CustomScript",
+                    "typeHandlerVersion": "2.0"
+                  }
+                }
+              ]
+            },
+            "networkProfile": {
+              "networkInterfaceConfigurations": [
+                {
+                  "name": "vmssnic",
+                  "properties": {
+                    "ipConfigurations": [
+                      {
+                        "name": "ipcfg_lb",
+                        "properties": {
+                          "loadBalancerBackendAddressPools": [
+                            {
+                              "id": "Microsoft.Network/loadBalancers/backendAddressPools//maharaCommon/maharaCommon"
+                            }
+                          ],
+                          "subnet": {
+                            "id": "[resourceGroup().name]/Microsoft.Network/virtualNetworks/subnets/maharaCommon/maharaCommon"
+                          }
+                        }
+                      }
+                    ],
+                    "primary": true
+                  }
+                }
+              ]
+            },
+            "osProfile": {
+              "adminUsername": "maharaCommon",
+              "computerNamePrefix": "maharaCommon",
+              "linuxConfiguration": {
+                "disablePasswordAuthentication": true,
+                "ssh": {
+                  "publicKeys": [
+                    {
+                      "path": "/home/maharaCommon/.ssh/authorized_keys",
+                      "keyData": "maharaCommon"
+                    }
+                  ]
+                }
+              }
+            },
+            "storageProfile": {
+              "imageReference": "maharaCommon",
+              "osDisk": {
+                "caching": "ReadOnly",
+                "createOption": "FromImage",
+                "managedDisk": {
+                  "storageAccountType": "StandardSSD_LRS"
+                }
+              }
+            }
+          }
+        },
+        "sku": {
+          "capacity": 1,
+          "name": "maharaCommon",
+          "tier": "Standard"
+        },
+        "tags": {
+          "displayName": "webfarm"
+        }
+      },
+      {
+        "type": "Microsoft.Insights/autoscaleSettings",
+        "apiVersion": "2015-04-01",
+        "dependsOn": [
+          "Microsoft.Compute/virtualMachineScaleSets//maharaCommon"
+        ],
+        "location": "maharaCommon",
+        "name": "autoscalewad",
+        "properties": {
+          "enabled": true,
+          "name": "autoscalewad",
+          "profiles": [
+            {
+              "capacity": {
+                "default": "1",
+                "maximum": "maharaCommon",
+                "minimum": "1"
+              },
+              "name": "Profile1",
+              "rules": [
+                {
+                  "metricTrigger": {
+                    "metricName": "Percentage CPU",
+                    "metricResourceUri": "Microsoft.Compute/virtualMachineScaleSets/maharaCommon",
+                    "operator": "GreaterThan",
+                    "statistic": "Average",
+                    "threshold": 60,
+                    "timeAggregation": "Average",
+                    "timeGrain": "PT1M",
+                    "timeWindow": "PT5M"
+                  },
+                  "scaleAction": {
+                    "cooldown": "PT10M",
+                    "direction": "Increase",
+                    "type": "ChangeCount",
+                    "value": "1"
+                  }
+                },
+                {
+                  "metricTrigger": {
+                    "metricName": "Percentage CPU",
+                    "metricResourceUri": "Microsoft.Compute/virtualMachineScaleSets/maharaCommon",
+                    "operator": "LessThan",
+                    "statistic": "Average",
+                    "threshold": 30,
+                    "timeAggregation": "Average",
+                    "timeGrain": "PT1M",
+                    "timeWindow": "PT5M"
+                  },
+                  "scaleAction": {
+                    "cooldown": "PT10M",
+                    "direction": "Decrease",
+                    "type": "ChangeCount",
+                    "value": "1"
+                  }
+                }
+              ]
+            }
+          ],
+          "targetResourceUri": "Microsoft.Compute/virtualMachineScaleSets/maharaCommon"
+        }
+      }
+    ],
+    "variables": {
+      "extBeID": "Microsoft.Network/loadBalancers/backendAddressPools//maharaCommon/maharaCommon",
+      "scriptUri": "maharaCommonmaharaCommonmaharaCommon",
+      "subnetWebRef": "[resourceGroup().name]/Microsoft.Network/virtualNetworks/subnets/maharaCommon/maharaCommon",
+      "storageAccountId": "Microsoft.Storage/storageAccounts/maharaCommon",
+      "vmssID": "Microsoft.Compute/virtualMachineScaleSets/maharaCommon",
+      "webvmss1NIC": "Microsoft.Compute/virtualMachineScaleSets/virtualMachines/networkInterfaces/maharaCommon/0/vmssnic"
+    },
+    "outputs": {
+      "webvm1IP": {
+        "value": "[reference(variables('webvmss1NIC'), '2020-12-01').ipConfigurations[0].properties.privateIPAddress]",
+        "type": "string"
+      }
+    },
+    "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+  }
+}

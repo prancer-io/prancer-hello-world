@@ -1,0 +1,88 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAzureQuickStart",
+  "paths": [
+    "/demos/subnet-driven-deployment/Storage.json",
+    "/demos/subnet-driven-deployment/azuredeploy.parameters.json"
+  ],
+  "timestamp": 1642962902052,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/demos/subnet-driven-deployment/Storage.json",
+      "/demos/subnet-driven-deployment/azuredeploy.parameters.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT831",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "microsoft.storage/storageaccounts"
+    ]
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT831",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.1.0.0",
+    "parameters": {
+      "storageAccountSuffix": {
+        "type": "string",
+        "metadata": {
+          "description": "Suffix for the storage account"
+        }
+      },
+      "location": {
+        "type": "string",
+        "metadata": {
+          "description": "Location for all resources."
+        }
+      },
+      "dnsLabelPrefix": {
+        "value": "GEN-UNIQUE-8"
+      },
+      "adminUsername": {
+        "value": "zeAdmin"
+      },
+      "adminPassword": {
+        "value": "GEN-PASSWORD"
+      },
+      "storageCategory": {
+        "value": "Premium"
+      },
+      "numberOfSubnets": {
+        "value": 4
+      },
+      "memberServersPerSubnet": {
+        "value": 1
+      }
+    },
+    "variables": {
+      "storageName": "[concat(uniqueString(resourceGroup().id),parameters('storageAccountSuffix'))]"
+    },
+    "resources": [
+      {
+        "type": "Microsoft.Storage/storageAccounts",
+        "name": "[variables('storageName')]",
+        "apiVersion": "2021-02-01",
+        "location": "location",
+        "sku": {
+          "name": "Standard_LRS"
+        },
+        "kind": "Storage"
+      }
+    ],
+    "outputs": {
+      "storageAccountName": {
+        "type": "string",
+        "value": "[variables('storageName')]"
+      }
+    },
+    "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+  }
+}

@@ -1,0 +1,289 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAzureQuickStart",
+  "paths": [
+    "/quickstarts/microsoft.cdn/cdn-with-ruleseengine-urlsigning/azuredeploy.json",
+    "/quickstarts/microsoft.cdn/cdn-with-ruleseengine-urlsigning/azuredeploy.parameters.json"
+  ],
+  "timestamp": 1642962903289,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/quickstarts/microsoft.cdn/cdn-with-ruleseengine-urlsigning/azuredeploy.json",
+      "/quickstarts/microsoft.cdn/cdn-with-ruleseengine-urlsigning/azuredeploy.parameters.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT982",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "microsoft.cdn/profiles/endpoints",
+      "microsoft.cdn/profiles"
+    ]
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT982",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.0.0.0",
+    "metadata": {
+      "_generator": {
+        "name": "bicep",
+        "version": "0.4.1008.15138",
+        "templateHash": "5800695290300643626"
+      }
+    },
+    "parameters": {
+      "profileName": {
+        "type": "string",
+        "metadata": {
+          "description": "Name of the CDN Profile"
+        },
+        "value": "GEN-UNIQUE"
+      },
+      "endpointName": {
+        "type": "string",
+        "metadata": {
+          "description": "Name of the CDN Endpoint"
+        },
+        "value": "GEN-UNIQUE"
+      },
+      "originUrl": {
+        "type": "string",
+        "metadata": {
+          "description": "Url of the origin"
+        },
+        "value": "www.microsoft.com"
+      },
+      "urlSigningKeysSubId": {
+        "type": "string",
+        "metadata": {
+          "description": "Subscription Id of UrlSigning Keys"
+        },
+        "value": "GEN-KEYVAULT-SUBSCRIPTION-ID"
+      },
+      "urlSigningKeysResourceGroup": {
+        "type": "string",
+        "metadata": {
+          "description": "Resourcegroup of UrlSigning Keys"
+        },
+        "value": "KEYVAULT-RESOURCEGROUP-NAME"
+      },
+      "urlSigningKeysVaultName": {
+        "type": "string",
+        "metadata": {
+          "description": "Keyvault of UrlSigning Keys"
+        },
+        "value": "GEN-KEYVAULT-NAME"
+      },
+      "urlSigningKeysSecret1Name": {
+        "type": "string",
+        "metadata": {
+          "description": "UrlSigning keys secret1 Name"
+        },
+        "value": "GEN-KEYVAULT-URLSIGN-SECRET1-NAME"
+      },
+      "urlSigningKeysSecret1Version": {
+        "type": "string",
+        "metadata": {
+          "description": "UrlSigning keys secret1 version"
+        },
+        "value": "GEN-KEYVAULT-URLSIGN-SECRET1-VERSION"
+      },
+      "urlSigningKeysSecret2Name": {
+        "type": "string",
+        "metadata": {
+          "description": "UrlSigning keys secret2 Name"
+        },
+        "value": "GEN-KEYVAULT-URLSIGN-SECRET2-NAME"
+      },
+      "urlSigningKeysSecret2Version": {
+        "type": "string",
+        "metadata": {
+          "description": "UrlSigning keys secret2 version"
+        },
+        "value": "GEN-KEYVAULT-URLSIGN-SECRET2-VERSION"
+      },
+      "CDNSku": {
+        "type": "string",
+        "defaultValue": "Standard_Microsoft",
+        "allowedValues": [
+          "Standard_Akamai",
+          "Standard_Verizon",
+          "Premium_Verizon",
+          "Standard_Microsoft"
+        ],
+        "metadata": {
+          "description": "CDN SKU names"
+        }
+      },
+      "location": {
+        "type": "string",
+        "defaultValue": "[resourceGroup().location]",
+        "metadata": {
+          "description": "Location for all resources."
+        }
+      }
+    },
+    "functions": [],
+    "resources": [
+      {
+        "type": "Microsoft.Cdn/profiles",
+        "apiVersion": "2020-09-01",
+        "name": "GEN-UNIQUE",
+        "location": "[resourceGroup().location]",
+        "sku": {
+          "name": "Standard_Microsoft"
+        }
+      },
+      {
+        "type": "Microsoft.Cdn/profiles/endpoints",
+        "apiVersion": "2020-09-01",
+        "name": "[format('{0}/{1}', parameters('profileName'), parameters('endpointName'))]",
+        "location": "[resourceGroup().location]",
+        "properties": {
+          "originHostHeader": "www.microsoft.com",
+          "isHttpAllowed": true,
+          "isHttpsAllowed": true,
+          "queryStringCachingBehavior": "UseQueryString",
+          "contentTypesToCompress": [
+            "text/plain",
+            "text/html",
+            "text/css",
+            "application/x-javascript",
+            "text/javascript"
+          ],
+          "isCompressionEnabled": true,
+          "origins": [
+            {
+              "name": "origin1",
+              "properties": {
+                "hostName": "www.microsoft.com"
+              }
+            }
+          ],
+          "urlSigningKeys": [
+            {
+              "keyId": "key1",
+              "keySourceParameters": {
+                "@odata.type": "#Microsoft.Azure.Cdn.Models.KeyVaultSigningKeyParameters",
+                "subscriptionId": "GEN-KEYVAULT-SUBSCRIPTION-ID",
+                "resourceGroupName": "KEYVAULT-RESOURCEGROUP-NAME",
+                "vaultName": "GEN-KEYVAULT-NAME",
+                "secretName": "GEN-KEYVAULT-URLSIGN-SECRET1-NAME",
+                "secretVersion": "GEN-KEYVAULT-URLSIGN-SECRET1-VERSION"
+              }
+            },
+            {
+              "keyId": "key2",
+              "keySourceParameters": {
+                "@odata.type": "#Microsoft.Azure.Cdn.Models.KeyVaultSigningKeyParameters",
+                "subscriptionId": "GEN-KEYVAULT-SUBSCRIPTION-ID",
+                "resourceGroupName": "KEYVAULT-RESOURCEGROUP-NAME",
+                "vaultName": "GEN-KEYVAULT-NAME",
+                "secretName": "GEN-KEYVAULT-URLSIGN-SECRET2-NAME",
+                "secretVersion": "GEN-KEYVAULT-URLSIGN-SECRET2-VERSION"
+              }
+            }
+          ],
+          "deliveryPolicy": {
+            "description": "UrlSigning",
+            "rules": [
+              {
+                "name": "rule1",
+                "order": 1,
+                "conditions": [
+                  {
+                    "name": "UrlPath",
+                    "parameters": {
+                      "operator": "Equal",
+                      "matchValues": [
+                        "/urlsigning/test"
+                      ],
+                      "@odata.type": "#Microsoft.Azure.Cdn.Models.DeliveryRuleUrlPathMatchConditionParameters"
+                    }
+                  }
+                ],
+                "actions": [
+                  {
+                    "name": "UrlSigning",
+                    "parameters": {
+                      "keyId": "key1",
+                      "algorithm": "SHA256",
+                      "@odata.type": "#Microsoft.Azure.Cdn.Models.DeliveryRuleUrlSigningActionParameters"
+                    }
+                  },
+                  {
+                    "name": "CacheKeyQueryString",
+                    "parameters": {
+                      "queryStringBehavior": "Exclude",
+                      "queryParameters": "expires,keyid,signature",
+                      "@odata.type": "#Microsoft.Azure.Cdn.Models.DeliveryRuleCacheKeyQueryStringBehaviorActionParameters"
+                    }
+                  }
+                ]
+              },
+              {
+                "name": "rule2",
+                "order": 2,
+                "conditions": [
+                  {
+                    "name": "UrlPath",
+                    "parameters": {
+                      "operator": "Equal",
+                      "matchValues": [
+                        "/urlsigning/test2"
+                      ],
+                      "@odata.type": "#Microsoft.Azure.Cdn.Models.DeliveryRuleUrlPathMatchConditionParameters"
+                    }
+                  }
+                ],
+                "actions": [
+                  {
+                    "name": "UrlSigning",
+                    "parameters": {
+                      "keyId": "key2",
+                      "algorithm": "SHA256",
+                      "parameterNameOverride": [
+                        {
+                          "paramIndicator": "Expires",
+                          "paramName": "oexpires"
+                        },
+                        {
+                          "paramIndicator": "KeyId",
+                          "paramName": "okeyid"
+                        },
+                        {
+                          "paramIndicator": "Signature",
+                          "paramName": "osignature"
+                        }
+                      ],
+                      "@odata.type": "#Microsoft.Azure.Cdn.Models.DeliveryRuleUrlSigningActionParameters"
+                    }
+                  },
+                  {
+                    "name": "CacheKeyQueryString",
+                    "parameters": {
+                      "queryStringBehavior": "Exclude",
+                      "queryParameters": "oexpires,okeyid,osignature",
+                      "@odata.type": "#Microsoft.Azure.Cdn.Models.DeliveryRuleCacheKeyQueryStringBehaviorActionParameters"
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        "dependsOn": [
+          "Microsoft.Cdn/profiles/GEN-UNIQUE"
+        ]
+      }
+    ],
+    "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+  }
+}

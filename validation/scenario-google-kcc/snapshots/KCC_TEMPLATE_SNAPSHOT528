@@ -2,12 +2,12 @@
   "structure": "filesystem",
   "error": null,
   "reference": "master",
-  "contentType": "yaml",
+  "contentType": "json",
   "source": "gitConnectorGoogleKcc",
   "paths": [
-    "/samples/resources/storagebucketaccesscontrol/storage_v1beta1_storagebucket.yaml"
+    "/samples/resources/monitoringdashboard/monitoring_v1beta1_monitoringdashboard.yaml"
   ],
-  "timestamp": 1628765151343,
+  "timestamp": 1642973304586,
   "queryuser": null,
   "checksum": "99914b932bd37a50b983c5e7c90ae93b",
   "node": {
@@ -15,19 +15,91 @@
     "type": "kcc",
     "collection": "kcctemplate",
     "paths": [
-      "/samples/resources/storagebucketaccesscontrol/storage_v1beta1_storagebucket.yaml"
+      "/samples/resources/monitoringdashboard/monitoring_v1beta1_monitoringdashboard.yaml"
     ],
     "snapshotId": "KCC_TEMPLATE_SNAPSHOT528",
     "status": "active",
-    "validate": true
+    "validate": true,
+    "resourceTypes": [
+      "monitoringdashboard"
+    ]
   },
   "snapshotId": "KCC_TEMPLATE_SNAPSHOT528",
   "collection": "kcctemplate",
   "json": {
-    "apiVersion": "storage.cnrm.cloud.google.com/v1beta1",
-    "kind": "StorageBucket",
+    "apiVersion": "monitoring.cnrm.cloud.google.com/v1beta1",
+    "kind": "MonitoringDashboard",
     "metadata": {
-      "name": "${PROJECT_ID?}-bucketaccesscontrol-dep"
+      "name": "monitoringdashboard-sample"
+    },
+    "spec": {
+      "projectRef": {
+        "external": "projects/${PROJECT_ID?}"
+      },
+      "displayName": "monitoringdashboard-sample",
+      "columnLayout": {
+        "columns": [
+          {
+            "weight": 2,
+            "widgets": [
+              {
+                "title": "Widget 1",
+                "xyChart": {
+                  "dataSets": [
+                    {
+                      "timeSeriesQuery": {
+                        "timeSeriesFilter": {
+                          "filter": "metric.type=\"agent.googleapis.com/nginx/connections/accepted_count\"",
+                          "aggregation": {
+                            "perSeriesAligner": "ALIGN_RATE"
+                          }
+                        },
+                        "unitOverride": "1"
+                      },
+                      "plotType": "LINE"
+                    }
+                  ],
+                  "timeshiftDuration": "0s",
+                  "yAxis": {
+                    "label": "y1Axis",
+                    "scale": "LINEAR"
+                  }
+                }
+              },
+              {
+                "text": {
+                  "content": "Widget 2",
+                  "format": "MARKDOWN"
+                }
+              },
+              {
+                "title": "Widget 3",
+                "xyChart": {
+                  "dataSets": [
+                    {
+                      "timeSeriesQuery": {
+                        "timeSeriesFilter": {
+                          "filter": "metric.type=\"agent.googleapis.com/nginx/connections/accepted_count\"",
+                          "aggregation": {
+                            "perSeriesAligner": "ALIGN_RATE"
+                          }
+                        },
+                        "unitOverride": "1"
+                      },
+                      "plotType": "STACKED_BAR"
+                    }
+                  ],
+                  "timeshiftDuration": "0s",
+                  "yAxis": {
+                    "label": "y1Axis",
+                    "scale": "LINEAR"
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      }
     }
   }
 }

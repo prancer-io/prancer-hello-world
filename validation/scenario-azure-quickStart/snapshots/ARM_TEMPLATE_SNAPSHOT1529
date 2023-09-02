@@ -1,0 +1,192 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAzureQuickStart",
+  "paths": [
+    "/quickstarts/microsoft.network/front-door-custom-domain/azuredeploy.json",
+    "/quickstarts/microsoft.network/front-door-custom-domain/azuredeploy.parameters.json"
+  ],
+  "timestamp": 1642962908810,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/quickstarts/microsoft.network/front-door-custom-domain/azuredeploy.json",
+      "/quickstarts/microsoft.network/front-door-custom-domain/azuredeploy.parameters.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT1529",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "microsoft.network/frontdoors",
+      "microsoft.network/frontdoors/frontendendpoints/customhttpsconfiguration"
+    ]
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT1529",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.0.0.0",
+    "metadata": {
+      "_generator": {
+        "name": "bicep",
+        "version": "0.4.613.9944",
+        "templateHash": "14804954580338012947"
+      }
+    },
+    "parameters": {
+      "frontDoorName": {
+        "type": "string",
+        "metadata": {
+          "description": "The name of the Front Door resource."
+        },
+        "value": "GEN-FRONTDOOR-NAME"
+      },
+      "customDomainName": {
+        "type": "string",
+        "metadata": {
+          "description": "The custom domain name to associate with your Front Door."
+        },
+        "value": "GEN-FRONTDOOR-CUSTOM-HOSTNAME"
+      },
+      "backendAddress": {
+        "type": "string",
+        "metadata": {
+          "description": "The hostname of the backend. Must be a public IP address or FQDN."
+        },
+        "value": "GEN-STATIC-WEBSITE-HOST-NAME"
+      }
+    },
+    "functions": [],
+    "variables": {
+      "frontEndEndpointDefaultHostName": "[format('{0}.azurefd.net', parameters('frontDoorName'))]",
+      "frontEndEndpointDefaultName": "[replace(variables('frontEndEndpointDefaultHostName'), '.', '-')]",
+      "frontEndEndpointCustomName": "[replace(parameters('customDomainName'), '.', '-')]",
+      "loadBalancingSettingsName": "loadBalancingSettings",
+      "healthProbeSettingsName": "healthProbeSettings",
+      "routingRuleName": "routingRule",
+      "backendPoolName": "backendPool"
+    },
+    "resources": [
+      {
+        "type": "Microsoft.Network/frontDoors",
+        "apiVersion": "2020-01-01",
+        "name": "GEN-FRONTDOOR-NAME",
+        "location": "global",
+        "properties": {
+          "enabledState": "Enabled",
+          "frontendEndpoints": [
+            {
+              "name": "[replace(variables('frontEndEndpointDefaultHostName'), '.', '-')]",
+              "properties": {
+                "hostName": "[format('{0}.azurefd.net', parameters('frontDoorName'))]",
+                "sessionAffinityEnabledState": "Disabled"
+              }
+            },
+            {
+              "name": "[replace(parameters('customDomainName'), '.', '-')]",
+              "properties": {
+                "hostName": "GEN-FRONTDOOR-CUSTOM-HOSTNAME",
+                "sessionAffinityEnabledState": "Disabled"
+              }
+            }
+          ],
+          "loadBalancingSettings": [
+            {
+              "name": "loadBalancingSettings",
+              "properties": {
+                "sampleSize": 4,
+                "successfulSamplesRequired": 2
+              }
+            }
+          ],
+          "healthProbeSettings": [
+            {
+              "name": "healthProbeSettings",
+              "properties": {
+                "path": "/",
+                "protocol": "Http",
+                "intervalInSeconds": 120
+              }
+            }
+          ],
+          "backendPools": [
+            {
+              "name": "backendPool",
+              "properties": {
+                "backends": [
+                  {
+                    "address": "GEN-STATIC-WEBSITE-HOST-NAME",
+                    "backendHostHeader": "GEN-STATIC-WEBSITE-HOST-NAME",
+                    "httpPort": 80,
+                    "httpsPort": 443,
+                    "weight": 50,
+                    "priority": 1,
+                    "enabledState": "Enabled"
+                  }
+                ],
+                "loadBalancingSettings": {
+                  "id": "Microsoft.Network/frontDoors/loadBalancingSettings/GEN-FRONTDOOR-NAME/loadBalancingSettings"
+                },
+                "healthProbeSettings": {
+                  "id": "Microsoft.Network/frontDoors/healthProbeSettings/GEN-FRONTDOOR-NAME/healthProbeSettings"
+                }
+              }
+            }
+          ],
+          "routingRules": [
+            {
+              "name": "routingRule",
+              "properties": {
+                "frontendEndpoints": [
+                  {
+                    "id": "Microsoft.Network/frontDoors/frontEndEndpoints/GEN-FRONTDOOR-NAME/[replace(variables('frontEndEndpointDefaultHostName'), '.', '-')]"
+                  },
+                  {
+                    "id": "Microsoft.Network/frontDoors/frontEndEndpoints/GEN-FRONTDOOR-NAME/[replace(parameters('customDomainName'), '.', '-')]"
+                  }
+                ],
+                "acceptedProtocols": [
+                  "Http",
+                  "Https"
+                ],
+                "patternsToMatch": [
+                  "/*"
+                ],
+                "routeConfiguration": {
+                  "@odata.type": "#Microsoft.Azure.FrontDoor.Models.FrontdoorForwardingConfiguration",
+                  "forwardingProtocol": "MatchRequest",
+                  "backendPool": {
+                    "id": "Microsoft.Network/frontDoors/backEndPools/GEN-FRONTDOOR-NAME/backendPool"
+                  }
+                },
+                "enabledState": "Enabled"
+              }
+            }
+          ]
+        }
+      },
+      {
+        "type": "Microsoft.Network/frontdoors/frontendEndpoints/customHttpsConfiguration",
+        "apiVersion": "2020-07-01",
+        "name": "[format('{0}/{1}/{2}', parameters('frontDoorName'), variables('frontEndEndpointCustomName'), 'default')]",
+        "properties": {
+          "protocolType": "ServerNameIndication",
+          "certificateSource": "FrontDoor",
+          "frontDoorCertificateSourceParameters": {
+            "certificateType": "Dedicated"
+          },
+          "minimumTlsVersion": "1.2"
+        },
+        "dependsOn": [
+          "Microsoft.Network/frontDoors/GEN-FRONTDOOR-NAME"
+        ]
+      }
+    ],
+    "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+  }
+}

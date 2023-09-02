@@ -1,0 +1,859 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAzureQuickStart",
+  "paths": [
+    "/application-workloads/bosh/bosh-cf-crossregion/azuredeploy.json",
+    "/application-workloads/bosh/bosh-cf-crossregion/azuredeploy.parameters.json"
+  ],
+  "timestamp": 1642962883629,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/application-workloads/bosh/bosh-cf-crossregion/azuredeploy.json",
+      "/application-workloads/bosh/bosh-cf-crossregion/azuredeploy.parameters.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT37",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "microsoft.network/publicipaddresses",
+      "microsoft.network/virtualnetworks",
+      "microsoft.network/networkinterfaces",
+      "microsoft.compute/virtualmachines/extensions",
+      "microsoft.network/virtualnetworkgateways",
+      "microsoft.network/connections",
+      "microsoft.network/networksecuritygroups",
+      "microsoft.compute/virtualmachines",
+      "microsoft.storage/storageaccounts"
+    ]
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT37",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "vmName": {
+        "type": "string",
+        "metadata": {
+          "description": "name of the vm, will be used as DNS Name for the Public IP used to access the Virtual Machine"
+        },
+        "value": "GEN-UNIQUE"
+      },
+      "adminUsername": {
+        "type": "string",
+        "metadata": {
+          "description": "User name for the Virtual Machine"
+        },
+        "value": "GEN-UNIQUE"
+      },
+      "sshKeyData": {
+        "type": "string",
+        "metadata": {
+          "description": "Please copy the content of your SSH RSA public key and paste it here. You can use \"ssh-keygen -t rsa -b 2048\" to generate your SSH key pairs."
+        },
+        "value": "GEN-SSH-PUB-KEY"
+      },
+      "environment": {
+        "type": "string",
+        "allowedValues": [
+          "AzureCloud"
+        ],
+        "metadata": {
+          "description": "AzureCloud is Global Azure"
+        },
+        "value": "AzureCloud"
+      },
+      "tenantID": {
+        "type": "string",
+        "minLength": 36,
+        "maxLength": 36,
+        "metadata": {
+          "description": "ID of the tenant. See https://github.com/cloudfoundry-incubator/bosh-azure-cpi-release/blob/master/docs/guidance.md"
+        },
+        "value": "GEN-UNIQUE-18GEN-UNIQUE-18"
+      },
+      "clientID": {
+        "type": "string",
+        "minLength": 36,
+        "maxLength": 36,
+        "metadata": {
+          "description": "ID of the client. See https://github.com/cloudfoundry-incubator/bosh-azure-cpi-release/blob/master/docs/guidance.md"
+        },
+        "value": "GEN-UNIQUE-18GEN-UNIQUE-18"
+      },
+      "clientSecret": {
+        "type": "securestring",
+        "metadata": {
+          "description": "secret of the client. See https://github.com/cloudfoundry-incubator/bosh-azure-cpi-release/blob/master/docs/guidance.md"
+        },
+        "value": "GEN-PASSWORD"
+      },
+      "autoDeployBosh": {
+        "type": "string",
+        "defaultValue": "enabled",
+        "allowedValues": [
+          "enabled",
+          "disabled"
+        ],
+        "metadata": {
+          "description": "The flag that enables automatic deployment of Bosh"
+        },
+        "value": "disabled"
+      },
+      "primaryLocation": {
+        "type": "string",
+        "allowedValues": [
+          "North Europe",
+          "West Europe",
+          "East US",
+          "West US"
+        ],
+        "metadata": {
+          "description": "The primary location to provision resources for Bosh and CF"
+        },
+        "value": "East US"
+      },
+      "secondaryLocation": {
+        "type": "string",
+        "allowedValues": [
+          "North Europe",
+          "West Europe",
+          "East US",
+          "West US"
+        ],
+        "metadata": {
+          "description": "The secondary location to provision resources for Bosh and CF"
+        },
+        "value": "West US"
+      },
+      "vpnGwSharedKey": {
+        "type": "string",
+        "defaultValue": "youshould2changethisvalueforsure1time",
+        "metadata": {
+          "description": "Please provide a shared key for the VPN gateway. This field should not be blank."
+        }
+      },
+      "systemdomain": {
+        "type": "string",
+        "metadata": {
+          "description": "Domain name used for Cloud Foundry system domain"
+        },
+        "value": "mydomain.com"
+      },
+      "dbendpoint": {
+        "type": "string",
+        "metadata": {
+          "description": "Database host endpoint that has ccdb and uaadb provisioned with default admin account used in this template"
+        },
+        "value": "database host endpoint that has ccdb and uaadb"
+      },
+      "nfsendpoint": {
+        "type": "string",
+        "metadata": {
+          "description": "NFS endpoint for Cloud Foundry"
+        },
+        "value": "nfs endpoint"
+      }
+    },
+    "variables": {
+      "apiVersion": "2015-06-15",
+      "defaultprimaryStorageAccountName": "[concat('defprisa', uniqueString(resourceGroup().id))]",
+      "primaryStorageAccountName": "[concat('prisa', uniqueString(resourceGroup().id))]",
+      "defaultsecondaryStorageAccountName": "[concat('defsecsa', uniqueString(resourceGroup().id))]",
+      "secondaryStorageAccountName": "[concat('secsa', uniqueString(resourceGroup().id))]",
+      "defaultstorageAccountType": "Standard_RAGRS",
+      "storageAccountType": "Premium_LRS",
+      "vmStorageAccountContainerName": "vhds",
+      "primaryStorageid": "[resourceId('Microsoft.Storage/storageAccounts', variables('primaryStorageAccountName'))]",
+      "defaultprimaryStorageid": "[resourceId('Microsoft.Storage/storageAccounts', variables('defaultprimaryStorageAccountName'))]",
+      "secondaryStorageid": "[resourceId('Microsoft.Storage/storageAccounts', variables('secondaryStorageAccountName'))]",
+      "defaultsecondaryStorageid": "[resourceId('Microsoft.Storage/storageAccounts', variables('defaultsecondaryStorageAccountName'))]",
+      "primaryVirtualNetworkName": "primaryboshvnet-crp",
+      "secondaryVirtualNetworkName": "secondaryboshvnet-crp",
+      "primaryVirtualNetworkAddressSpace": "10.0.0.0/16",
+      "secondaryVirtualNetworkAddressSpace": "10.2.0.0/16",
+      "primaryVnetID": "Microsoft.Network/virtualNetworks/primaryboshvnet-crp",
+      "secondaryVnetID": "Microsoft.Network/virtualNetworks/secondaryboshvnet-crp",
+      "subnetNameForBosh": "Bosh",
+      "subnetAddressRangeForBosh": "10.0.0.0/24",
+      "subnetRefForBosh": "Microsoft.Network/virtualNetworks/primaryboshvnet-crp/subnets/Bosh",
+      "subnetNameForCloudFoundry": "CloudFoundry",
+      "primarySubnetAddressRangeForCloudFoundry": "10.0.16.0/20",
+      "secondarySubnetAddressRangeForCloudFoundry": "10.2.16.0/20",
+      "subnetNameForGateway": "GatewaySubnet",
+      "primarySubnetAddressRangeForGateway": "10.0.254.0/24",
+      "primarySubnetGatewayRef": "Microsoft.Network/virtualNetworks/primaryboshvnet-crp/subnets/GatewaySubnet",
+      "secondarySubnetAddressRangeForGateway": "10.2.254.0/24",
+      "secondarySubnetGatewayRef": "Microsoft.Network/virtualNetworks/secondaryboshvnet-crp/subnets/GatewaySubnet",
+      "primaryVpnGatewayName": "primaryboshvnet-crp-gw",
+      "primaryVpnGatewayPublicIPName": "primaryboshvnet-crp-gw-publicip",
+      "secondaryVpnGatewayName": "secondaryboshvnet-crp-gw",
+      "secondaryVpnGatewayPublicIPName": "secondaryboshvnet-crp-gw-publicip",
+      "vpnGwSku": "HighPerformance",
+      "primaryVpnGwConnectionName": "Primary2Second",
+      "secondaryVpnGwConnectionName": "Secondary2Primary",
+      "vpnType": "RouteBased",
+      "subnetNameForDiego": "Diego",
+      "primarySubnetAddressRangeForDiego": "10.0.32.0/20",
+      "secondarySubnetAddressRangeForDiego": "10.2.32.0/20",
+      "devboxNetworkSecurityGroup": "nsg-devbox",
+      "boshNetworkSecurityGroup": "nsg-bosh",
+      "primaryCfNetworkSecurityGroup": "primarynsg-cf",
+      "secondaryCfNetworkSecurityGroup": "secondarynsg-cf",
+      "vmSize": "Standard_D2s_v3",
+      "primaryNicName": "primaryGEN-UNIQUE",
+      "secondaryNicName": "secondaryGEN-UNIQUE",
+      "devboxPrivateIPAddress": "10.0.0.100",
+      "imagePublisher": "Canonical",
+      "imageOffer": "UbuntuServer",
+      "ubuntuOSVersion": "14.04.5-LTS",
+      "sshKeyPath": "/home/GEN-UNIQUE/.ssh/authorized_keys",
+      "baseUriAzureCloud": "https://raw.githubusercontent.com/ritazh/azure-quickstart-templates/cfcrossregion/application-workloads/bosh/bosh-cf-crossregion/",
+      "baseUriAzureChinaCloud": "https://cloudfoundry.blob.core.chinacloudapi.cn/",
+      "filesToDownloadAzureCloud": [
+        "[uri(variables('baseUriAzureCloud'), 'scripts/setup_env')]",
+        "[uri(variables('baseUriAzureCloud'), 'scripts/setup_env.py')]",
+        "[uri(variables('baseUriAzureCloud'), 'scripts/create_cert.sh')]",
+        "[uri(variables('baseUriAzureCloud'), 'scripts/init.sh')]",
+        "[uri(variables('baseUriAzureCloud'), 'scripts/deploy_bosh.sh')]",
+        "[uri(variables('baseUriAzureCloud'), 'scripts/deploy_cloudfoundry.sh')]",
+        "[uri(variables('baseUriAzureCloud'), 'manifests/bosh.yml')]",
+        "[uri(variables('baseUriAzureCloud'), 'manifests/cross.yml')]",
+        "http://go-cli.s3-website-us-east-1.amazonaws.com/releases/v6.14.1/cf-cli-installer_6.14.1_x86-64.deb"
+      ],
+      "filesToDownloadAzureChinaCloud": [
+        "[uri(variables('baseUriAzureChinaCloud'), 'scripts/setup_env')]",
+        "[uri(variables('baseUriAzureChinaCloud'), 'scripts/setup_env.py')]",
+        "[uri(variables('baseUriAzureChinaCloud'), 'scripts/create_cert.sh')]",
+        "[uri(variables('baseUriAzureChinaCloud'), 'scripts/init.sh')]",
+        "[uri(variables('baseUriAzureChinaCloud'), 'scripts/deploy_bosh.sh')]",
+        "[uri(variables('baseUriAzureChinaCloud'), 'scripts/deploy_cloudfoundry.sh')]",
+        "[uri(variables('baseUriAzureChinaCloud'), 'manifests/bosh.yml')]",
+        "[uri(variables('baseUriAzureChinaCloud'), 'manifests/cross.yml')]",
+        "[uri(variables('baseUriAzureChinaCloud'), 'cf-cli/cf.deb')]"
+      ],
+      "filesToDownload": "concat(filesToDownload, parameters(environment))",
+      "environmentAzureCloud": {
+        "serviceHostBase": "core.windows.net",
+        "boshReleaseUrl": "https://bosh.io/d/github.com/cloudfoundry/bosh?v=256.2",
+        "boshReleaseSha1": "ff2f4e16e02f66b31c595196052a809100cfd5a8",
+        "boshAzureCPIReleaseUrl": "https://bosh.io/d/github.com/cloudfoundry-incubator/bosh-azure-cpi-release?v=10",
+        "boshAzureCPIReleaseSha1": "48725899f8b3f0f625bdb3bcff97bc0d6bf193e1",
+        "stemcellUrl": "https://bosh.io/d/stemcells/bosh-azure-hyperv-ubuntu-trusty-go_agent?v=3169",
+        "stemcellSha1": "ff13c47ac7ce121dee6153c1564bd8965edf9f59",
+        "boshInitUrl": "https://s3.amazonaws.com/bosh-init-artifacts/bosh-init-0.0.81-linux-amd64",
+        "cfReleaseUrl": "https://bosh.io/d/github.com/cloudfoundry/cf-release?v=231"
+      },
+      "environmentAzureChinaCloud": {
+        "serviceHostBase": "core.chinacloudapi.cn",
+        "boshReleaseUrl": "[uri(variables('baseUriAzureChinaCloud'), 'releases/bosh-256.2.tgz')]",
+        "boshReleaseSha1": "ff2f4e16e02f66b31c595196052a809100cfd5a8",
+        "boshAzureCPIReleaseUrl": "[uri(variables('baseUriAzureChinaCloud'), 'releases/bosh-azure-cpi-release-10.tgz')]",
+        "boshAzureCPIReleaseSha1": "48725899f8b3f0f625bdb3bcff97bc0d6bf193e1",
+        "stemcellUrl": "[uri(variables('baseUriAzureChinaCloud'), 'stemcells/bosh-stemcell-3169-azure-hyperv-ubuntu-trusty-go_agent.tgz')]",
+        "stemcellSha1": "ff13c47ac7ce121dee6153c1564bd8965edf9f59",
+        "boshInitUrl": "[uri(variables('baseUriAzureChinaCloud'), 'bosh-init/bosh-init-0.0.81-linux-amd64')]",
+        "cfReleaseUrl": "[uri(variables('baseUriAzureChinaCloud'), 'releases/cf-release-231.tgz')]"
+      },
+      "environment": "concat(environment, parameters(environment))",
+      "keepUnreachableVMs": "false"
+    },
+    "resources": [
+      {
+        "apiVersion": "2015-06-15",
+        "type": "Microsoft.Network/networkSecurityGroups",
+        "name": "nsg-bosh",
+        "location": "East US",
+        "properties": {
+          "securityRules": [
+            {
+              "name": "ssh",
+              "properties": {
+                "description": "Allow SSH",
+                "protocol": "Tcp",
+                "sourcePortRange": "*",
+                "destinationPortRange": "22",
+                "sourceAddressPrefix": "*",
+                "destinationAddressPrefix": "*",
+                "access": "Allow",
+                "priority": 200,
+                "direction": "Inbound"
+              }
+            },
+            {
+              "name": "bosh-agent",
+              "properties": {
+                "description": "Allow bosh-agent",
+                "protocol": "Tcp",
+                "sourcePortRange": "*",
+                "destinationPortRange": "6868",
+                "sourceAddressPrefix": "*",
+                "destinationAddressPrefix": "*",
+                "access": "Allow",
+                "priority": 201,
+                "direction": "Inbound"
+              }
+            },
+            {
+              "name": "bosh-director",
+              "properties": {
+                "description": "Allow bosh-director",
+                "protocol": "Tcp",
+                "sourcePortRange": "*",
+                "destinationPortRange": "25555",
+                "sourceAddressPrefix": "*",
+                "destinationAddressPrefix": "*",
+                "access": "Allow",
+                "priority": 202,
+                "direction": "Inbound"
+              }
+            },
+            {
+              "name": "dns",
+              "properties": {
+                "description": "Allow DNS",
+                "protocol": "*",
+                "sourcePortRange": "*",
+                "destinationPortRange": "53",
+                "sourceAddressPrefix": "*",
+                "destinationAddressPrefix": "*",
+                "access": "Allow",
+                "priority": 203,
+                "direction": "Inbound"
+              }
+            }
+          ]
+        }
+      },
+      {
+        "apiVersion": "2015-06-15",
+        "type": "Microsoft.Network/networkSecurityGroups",
+        "name": "nsg-devbox",
+        "location": "East US",
+        "properties": {
+          "securityRules": [
+            {
+              "name": "ssh",
+              "properties": {
+                "description": "Allow SSH",
+                "protocol": "Tcp",
+                "sourcePortRange": "*",
+                "destinationPortRange": "22",
+                "sourceAddressPrefix": "*",
+                "destinationAddressPrefix": "*",
+                "access": "Allow",
+                "priority": 200,
+                "direction": "Inbound"
+              }
+            }
+          ]
+        }
+      },
+      {
+        "apiVersion": "2015-06-15",
+        "type": "Microsoft.Network/networkSecurityGroups",
+        "name": "primarynsg-cf",
+        "location": "East US",
+        "properties": {
+          "securityRules": [
+            {
+              "name": "cf-https",
+              "properties": {
+                "description": "Allow cf-https",
+                "protocol": "Tcp",
+                "sourcePortRange": "*",
+                "destinationPortRange": "443",
+                "sourceAddressPrefix": "*",
+                "destinationAddressPrefix": "*",
+                "access": "Allow",
+                "priority": 200,
+                "direction": "Inbound"
+              }
+            },
+            {
+              "name": "cf-log",
+              "properties": {
+                "description": "Allow cf-log",
+                "protocol": "Tcp",
+                "sourcePortRange": "*",
+                "destinationPortRange": "4443",
+                "sourceAddressPrefix": "*",
+                "destinationAddressPrefix": "*",
+                "access": "Allow",
+                "priority": 201,
+                "direction": "Inbound"
+              }
+            }
+          ]
+        }
+      },
+      {
+        "apiVersion": "2015-06-15",
+        "type": "Microsoft.Network/networkSecurityGroups",
+        "name": "secondarynsg-cf",
+        "location": "West US",
+        "properties": {
+          "securityRules": [
+            {
+              "name": "cf-https",
+              "properties": {
+                "description": "Allow cf-https",
+                "protocol": "Tcp",
+                "sourcePortRange": "*",
+                "destinationPortRange": "443",
+                "sourceAddressPrefix": "*",
+                "destinationAddressPrefix": "*",
+                "access": "Allow",
+                "priority": 200,
+                "direction": "Inbound"
+              }
+            },
+            {
+              "name": "cf-log",
+              "properties": {
+                "description": "Allow cf-log",
+                "protocol": "Tcp",
+                "sourcePortRange": "*",
+                "destinationPortRange": "4443",
+                "sourceAddressPrefix": "*",
+                "destinationAddressPrefix": "*",
+                "access": "Allow",
+                "priority": 201,
+                "direction": "Inbound"
+              }
+            }
+          ]
+        }
+      },
+      {
+        "type": "Microsoft.Storage/storageAccounts",
+        "name": "[variables('primaryStorageAccountName')]",
+        "apiVersion": "2015-06-15",
+        "location": "East US",
+        "properties": {
+          "accountType": "Premium_LRS"
+        }
+      },
+      {
+        "type": "Microsoft.Storage/storageAccounts",
+        "name": "[variables('defaultprimaryStorageAccountName')]",
+        "apiVersion": "2015-06-15",
+        "location": "East US",
+        "properties": {
+          "accountType": "Standard_RAGRS"
+        }
+      },
+      {
+        "type": "Microsoft.Storage/storageAccounts",
+        "name": "[variables('secondaryStorageAccountName')]",
+        "apiVersion": "2015-06-15",
+        "location": "West US",
+        "properties": {
+          "accountType": "Premium_LRS"
+        }
+      },
+      {
+        "type": "Microsoft.Storage/storageAccounts",
+        "name": "[variables('defaultsecondaryStorageAccountName')]",
+        "apiVersion": "2015-06-15",
+        "location": "West US",
+        "properties": {
+          "accountType": "Standard_RAGRS"
+        }
+      },
+      {
+        "apiVersion": "2015-06-15",
+        "type": "Microsoft.Network/publicIPAddresses",
+        "name": "GEN-UNIQUE-devbox",
+        "location": "East US",
+        "properties": {
+          "publicIPAllocationMethod": "Dynamic",
+          "dnsSettings": {
+            "domainNameLabel": "[concat(toLower(parameters('vmName')), '-', uniqueString(resourceGroup().id))]"
+          }
+        }
+      },
+      {
+        "apiVersion": "2015-06-15",
+        "type": "Microsoft.Network/publicIPAddresses",
+        "name": "GEN-UNIQUE-bosh",
+        "location": "East US",
+        "properties": {
+          "publicIPAllocationMethod": "Static"
+        }
+      },
+      {
+        "apiVersion": "2015-06-15",
+        "type": "Microsoft.Network/publicIPAddresses",
+        "name": "GEN-UNIQUE-cf-primary",
+        "location": "East US",
+        "properties": {
+          "publicIPAllocationMethod": "Static"
+        }
+      },
+      {
+        "apiVersion": "2015-06-15",
+        "type": "Microsoft.Network/publicIPAddresses",
+        "name": "GEN-UNIQUE-cf-secondary",
+        "location": "West US",
+        "properties": {
+          "publicIPAllocationMethod": "Static"
+        }
+      },
+      {
+        "apiVersion": "2015-06-15",
+        "type": "Microsoft.Network/publicIPAddresses",
+        "name": "primaryboshvnet-crp-gw-publicip",
+        "location": "East US",
+        "properties": {
+          "publicIPAllocationMethod": "Dynamic"
+        }
+      },
+      {
+        "apiVersion": "2015-06-15",
+        "type": "Microsoft.Network/publicIPAddresses",
+        "name": "secondaryboshvnet-crp-gw-publicip",
+        "location": "West US",
+        "properties": {
+          "publicIPAllocationMethod": "Dynamic"
+        }
+      },
+      {
+        "apiVersion": "2015-06-15",
+        "type": "Microsoft.Network/virtualNetworks",
+        "name": "primaryboshvnet-crp",
+        "location": "East US",
+        "properties": {
+          "addressSpace": {
+            "addressPrefixes": [
+              "10.0.0.0/16"
+            ]
+          },
+          "subnets": [
+            {
+              "name": "Bosh",
+              "properties": {
+                "addressPrefix": "10.0.0.0/24"
+              }
+            },
+            {
+              "name": "CloudFoundry",
+              "properties": {
+                "addressPrefix": "10.0.16.0/20"
+              }
+            },
+            {
+              "name": "Diego",
+              "properties": {
+                "addressPrefix": "10.0.32.0/20"
+              }
+            },
+            {
+              "name": "GatewaySubnet",
+              "properties": {
+                "addressPrefix": "10.0.254.0/24"
+              }
+            }
+          ]
+        }
+      },
+      {
+        "apiVersion": "2015-06-15",
+        "type": "Microsoft.Network/virtualNetworks",
+        "name": "secondaryboshvnet-crp",
+        "location": "West US",
+        "properties": {
+          "addressSpace": {
+            "addressPrefixes": [
+              "10.2.0.0/16"
+            ]
+          },
+          "subnets": [
+            {
+              "name": "CloudFoundry",
+              "properties": {
+                "addressPrefix": "10.2.16.0/20"
+              }
+            },
+            {
+              "name": "Diego",
+              "properties": {
+                "addressPrefix": "10.2.32.0/20"
+              }
+            },
+            {
+              "name": "GatewaySubnet",
+              "properties": {
+                "addressPrefix": "10.2.254.0/24"
+              }
+            }
+          ]
+        }
+      },
+      {
+        "apiVersion": "2015-06-15",
+        "type": "Microsoft.Network/networkInterfaces",
+        "name": "primaryGEN-UNIQUE",
+        "location": "East US",
+        "dependsOn": [
+          "Microsoft.Network/publicIPAddresses/GEN-UNIQUE-devbox",
+          "Microsoft.Network/virtualNetworks/primaryboshvnet-crp",
+          "Microsoft.Network/networkSecurityGroups/nsg-devbox"
+        ],
+        "properties": {
+          "networkSecurityGroup": {
+            "id": "Microsoft.Network/networkSecurityGroups/nsg-devbox"
+          },
+          "ipConfigurations": [
+            {
+              "name": "ipconfig1",
+              "properties": {
+                "privateIPAllocationMethod": "Static",
+                "privateIPAddress": "10.0.0.100",
+                "publicIPAddress": {
+                  "id": "Microsoft.Network/publicIPAddresses/GEN-UNIQUE-devbox"
+                },
+                "subnet": {
+                  "id": "Microsoft.Network/virtualNetworks/primaryboshvnet-crp/subnets/Bosh"
+                }
+              }
+            }
+          ]
+        }
+      },
+      {
+        "apiVersion": "2015-06-15",
+        "type": "Microsoft.Network/virtualNetworkGateways",
+        "name": "primaryboshvnet-crp-gw",
+        "location": "East US",
+        "dependsOn": [
+          "Microsoft.Network/publicIPAddresses/primaryboshvnet-crp-gw-publicip",
+          "Microsoft.Network/virtualNetworks/primaryboshvnet-crp"
+        ],
+        "properties": {
+          "ipConfigurations": [
+            {
+              "properties": {
+                "privateIPAllocationMethod": "Dynamic",
+                "subnet": {
+                  "id": "Microsoft.Network/virtualNetworks/primaryboshvnet-crp/subnets/GatewaySubnet"
+                },
+                "publicIPAddress": {
+                  "id": "Microsoft.Network/publicIPAddresses/primaryboshvnet-crp-gw-publicip"
+                }
+              },
+              "name": "vnetGatewayConfigMain"
+            }
+          ],
+          "sku": {
+            "name": "HighPerformance",
+            "tier": "HighPerformance"
+          },
+          "gatewayType": "Vpn",
+          "vpnType": "RouteBased",
+          "enableBgp": "false"
+        }
+      },
+      {
+        "apiVersion": "2015-06-15",
+        "type": "Microsoft.Network/virtualNetworkGateways",
+        "name": "secondaryboshvnet-crp-gw",
+        "location": "West US",
+        "dependsOn": [
+          "Microsoft.Network/publicIPAddresses/secondaryboshvnet-crp-gw-publicip",
+          "Microsoft.Network/virtualNetworks/secondaryboshvnet-crp"
+        ],
+        "properties": {
+          "ipConfigurations": [
+            {
+              "properties": {
+                "privateIPAllocationMethod": "Dynamic",
+                "subnet": {
+                  "id": "Microsoft.Network/virtualNetworks/secondaryboshvnet-crp/subnets/GatewaySubnet"
+                },
+                "publicIPAddress": {
+                  "id": "Microsoft.Network/publicIPAddresses/secondaryboshvnet-crp-gw-publicip"
+                }
+              },
+              "name": "vnetGatewayConfigMain"
+            }
+          ],
+          "sku": {
+            "name": "HighPerformance",
+            "tier": "HighPerformance"
+          },
+          "gatewayType": "Vpn",
+          "vpnType": "RouteBased",
+          "enableBgp": "false"
+        }
+      },
+      {
+        "apiVersion": "2015-06-15",
+        "type": "Microsoft.Network/connections",
+        "name": "Primary2Second",
+        "location": "East US",
+        "dependsOn": [
+          "Microsoft.Network/virtualNetworkGateways/primaryboshvnet-crp-gw",
+          "Microsoft.Network/virtualNetworkGateways/secondaryboshvnet-crp-gw"
+        ],
+        "properties": {
+          "virtualNetworkGateway1": {
+            "id": "Microsoft.Network/virtualNetworkGateways/primaryboshvnet-crp-gw"
+          },
+          "virtualNetworkGateway2": {
+            "id": "Microsoft.Network/virtualNetworkGateways/secondaryboshvnet-crp-gw"
+          },
+          "connectionType": "Vnet2Vnet",
+          "routingWeight": 3,
+          "sharedKey": "youshould2changethisvalueforsure1time"
+        }
+      },
+      {
+        "apiVersion": "2015-06-15",
+        "type": "Microsoft.Network/connections",
+        "name": "Secondary2Primary",
+        "location": "West US",
+        "dependsOn": [
+          "Microsoft.Network/virtualNetworkGateways/primaryboshvnet-crp-gw",
+          "Microsoft.Network/virtualNetworkGateways/secondaryboshvnet-crp-gw"
+        ],
+        "properties": {
+          "virtualNetworkGateway1": {
+            "id": "Microsoft.Network/virtualNetworkGateways/secondaryboshvnet-crp-gw"
+          },
+          "virtualNetworkGateway2": {
+            "id": "Microsoft.Network/virtualNetworkGateways/primaryboshvnet-crp-gw"
+          },
+          "connectionType": "Vnet2Vnet",
+          "routingWeight": 3,
+          "sharedKey": "youshould2changethisvalueforsure1time"
+        }
+      },
+      {
+        "apiVersion": "2017-03-30",
+        "type": "Microsoft.Compute/virtualMachines",
+        "name": "GEN-UNIQUE",
+        "location": "East US",
+        "dependsOn": [
+          "Microsoft.Network/networkInterfaces/primaryGEN-UNIQUE"
+        ],
+        "properties": {
+          "hardwareProfile": {
+            "vmSize": "Standard_D2s_v3"
+          },
+          "osProfile": {
+            "computerName": "GEN-UNIQUE",
+            "adminUsername": "GEN-UNIQUE",
+            "linuxConfiguration": {
+              "disablePasswordAuthentication": true,
+              "ssh": {
+                "publicKeys": [
+                  {
+                    "path": "/home/GEN-UNIQUE/.ssh/authorized_keys",
+                    "keyData": "GEN-SSH-PUB-KEY"
+                  }
+                ]
+              }
+            }
+          },
+          "storageProfile": {
+            "imageReference": {
+              "publisher": "Canonical",
+              "offer": "UbuntuServer",
+              "sku": "14.04.5-LTS",
+              "version": "latest"
+            },
+            "osDisk": {
+              "name": "GEN-UNIQUE_OSDisk",
+              "caching": "ReadWrite",
+              "createOption": "FromImage"
+            }
+          },
+          "networkProfile": {
+            "networkInterfaces": [
+              {
+                "id": "Microsoft.Network/networkInterfaces/primaryGEN-UNIQUE"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "type": "Microsoft.Compute/virtualMachines/extensions",
+        "name": "GEN-UNIQUE/initdevbox",
+        "apiVersion": "2017-03-30",
+        "location": "East US",
+        "dependsOn": [
+          "Microsoft.Compute/virtualMachines/GEN-UNIQUE"
+        ],
+        "properties": {
+          "publisher": "Microsoft.OSTCExtensions",
+          "type": "CustomScriptForLinux",
+          "typeHandlerVersion": "1.5",
+          "settings": {
+            "fileUris": "concat(filesToDownload, parameters(environment))",
+            "enableInternalDNSCheck": false,
+            "VNET_NAME": "primaryboshvnet-crp",
+            "SUBNET_NAME_FOR_BOSH": "Bosh",
+            "SUBNET_ADDRESS_RANGE_FOR_BOSH": "10.0.0.0/24",
+            "SUBNET_NAME_FOR_CLOUD_FOUNDRY": "CloudFoundry",
+            "SUBNET_ADDRESS_RANGE_FOR_CLOUD_FOUNDRY": "10.0.16.0/20",
+            "CLOUD_FOUNDRY_PUBLIC_IP": "[reference(concat(parameters('vmName'),'-cf-primary')).ipAddress]",
+            "BOSH_PUBLIC_IP": "[reference(concat(parameters('vmName'),'-bosh')).ipAddress]",
+            "NSG_NAME_FOR_BOSH": "nsg-bosh",
+            "NSG_NAME_FOR_CLOUD_FOUNDRY": "primarynsg-cf",
+            "SUBSCRIPTION_ID": "[subscription().subscriptionId]",
+            "RESOURCE_GROUP_NAME": "[resourceGroup().name]",
+            "DEFAULT_STORAGE_ACCOUNT_NAME": "[variables('defaultprimaryStorageAccountName')]",
+            "STORAGE_ACCESS_KEY": "[listKeys(variables('defaultprimaryStorageid'), variables('apiVersion')).key1]",
+            "ADMIN_USER_NAME": "GEN-UNIQUE",
+            "ENVIRONMENT": "AzureCloud",
+            "SERVICE_HOST_BASE": "(environment).serviceHostBase",
+            "BOSH_RELEASE_URL": "(environment).boshReleaseUrl",
+            "BOSH_RELEASE_SHA1": "(environment).boshReleaseSha1",
+            "BOSH_AZURE_CPI_RELEASE_URL": "(environment).boshAzureCPIReleaseUrl",
+            "BOSH_AZURE_CPI_RELEASE_SHA1": "(environment).boshAzureCPIReleaseSha1",
+            "STEMCELL_URL": "(environment).stemcellUrl",
+            "STEMCELL_SHA1": "(environment).stemcellSha1",
+            "CF_RELEASE_URL": "(environment).cfReleaseUrl",
+            "BOSH_INIT_URL": "(environment).boshInitUrl",
+            "KEEP_UNREACHABLE_VMS": "false",
+            "AUTO_DEPLOY_BOSH": "disabled",
+            "CUSTOM_SYSTEM_DOMAIN": "mydomain.com",
+            "EXTERNAL_DATABASE_ENDPOINT": "database host endpoint that has ccdb and uaadb",
+            "EXTERNAL_NFS_ENDPOINT": "nfs endpoint",
+            "CLOUD_FOUNDRY_PUBLIC_IP_SECONDARY": "[reference(concat(parameters('vmName'),'-cf-secondary')).ipAddress]",
+            "STORAGE_ACCOUNT_NAME_PRIMARY": "[variables('primaryStorageAccountName')]",
+            "STORAGE_ACCESS_KEY_PRIMARY": "[listKeys(variables('primaryStorageid'), variables('apiVersion')).key1]",
+            "STORAGE_ACCOUNT_NAME_SECONDARY": "[variables('secondaryStorageAccountName')]",
+            "STORAGE_ACCESS_KEY_SECONDARY": "[listKeys(variables('secondaryStorageid'), variables('apiVersion')).key1]",
+            "DEFAULT_STORAGE_ACCOUNT_NAME_SECONDARY": "[variables('defaultsecondaryStorageAccountName')]",
+            "DEFAULT_STORAGE_ACCESS_KEY_SECONDARY": "[listKeys(variables('defaultsecondaryStorageid'), variables('apiVersion')).key1]",
+            "VNET_NAME_SECONDARY": "secondaryboshvnet-crp"
+          },
+          "protectedSettings": {
+            "commandToExecute": "./setup_env GEN-UNIQUE-18GEN-UNIQUE-18 GEN-UNIQUE-18GEN-UNIQUE-18 \"GEN-PASSWORD\""
+          }
+        }
+      }
+    ],
+    "outputs": {
+      "sshDevBox": {
+        "type": "string",
+        "value": "[concat('ssh ', parameters('adminUsername'), '@', reference(concat('Microsoft.Network/publicIPAddresses/', parameters('vmName'), '-devbox')).dnsSettings.fqdn)]"
+      },
+      "cloudFoundryIP": {
+        "type": "string",
+        "value": "[reference(concat(parameters('vmName'),'-cf-primary')).ipAddress]"
+      }
+    },
+    "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+  }
+}

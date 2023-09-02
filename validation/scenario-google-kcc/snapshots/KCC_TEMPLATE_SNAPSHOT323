@@ -2,12 +2,12 @@
   "structure": "filesystem",
   "error": null,
   "reference": "master",
-  "contentType": "yaml",
+  "contentType": "json",
   "source": "gitConnectorGoogleKcc",
   "paths": [
-    "/samples/resources/dataproccluster/dataproc_v1beta1_dataproccluster.yaml"
+    "/samples/resources/computeurlmap/global-compute-url-map/storage_v1beta1_storagebucket.yaml"
   ],
-  "timestamp": 1628765145750,
+  "timestamp": 1642973303479,
   "queryuser": null,
   "checksum": "99914b932bd37a50b983c5e7c90ae93b",
   "node": {
@@ -15,69 +15,22 @@
     "type": "kcc",
     "collection": "kcctemplate",
     "paths": [
-      "/samples/resources/dataproccluster/dataproc_v1beta1_dataproccluster.yaml"
+      "/samples/resources/computeurlmap/global-compute-url-map/storage_v1beta1_storagebucket.yaml"
     ],
     "snapshotId": "KCC_TEMPLATE_SNAPSHOT323",
     "status": "active",
-    "validate": true
+    "validate": true,
+    "resourceTypes": [
+      "storagebucket"
+    ]
   },
   "snapshotId": "KCC_TEMPLATE_SNAPSHOT323",
   "collection": "kcctemplate",
   "json": {
-    "apiVersion": "dataproc.cnrm.cloud.google.com/v1beta1",
-    "kind": "DataprocCluster",
+    "apiVersion": "storage.cnrm.cloud.google.com/v1beta1",
+    "kind": "StorageBucket",
     "metadata": {
-      "annotations": {
-        "cnrm.cloud.google.com/management-conflict-prevention-policy": "none"
-      },
-      "name": "dataproccluster-sample",
-      "labels": {
-        "label-one": "value-one"
-      }
-    },
-    "spec": {
-      "location": "us-central1",
-      "config": {
-        "autoscalingConfig": {
-          "policyRef": {
-            "name": "dataproccluster-dep"
-          }
-        },
-        "stagingBucketRef": {
-          "name": "dataproccluster-dep-staging"
-        },
-        "masterConfig": {
-          "diskConfig": {
-            "bootDiskSizeGb": 30,
-            "bootDiskType": "pd-standard"
-          },
-          "machineType": "n2-standard-2",
-          "numInstances": 1
-        },
-        "workerConfig": {
-          "numInstances": 2,
-          "machineType": "n2-standard-2",
-          "diskConfig": {
-            "bootDiskSizeGb": 30,
-            "numLocalSsds": 1
-          }
-        },
-        "softwareConfig": {
-          "imageVersion": "2.0.2-debian10"
-        },
-        "gceClusterConfig": {
-          "tags": [
-            "foo",
-            "bar"
-          ]
-        },
-        "initializationActions": [
-          {
-            "executableFile": "gs://dataproc-initialization-actions/stackdriver/stackdriver.sh",
-            "executionTimeout": "500s"
-          }
-        ]
-      }
+      "name": "${PROJECT_ID?}-computeurl-dep"
     }
   }
 }

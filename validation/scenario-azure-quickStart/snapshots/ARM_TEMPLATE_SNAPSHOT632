@@ -1,0 +1,80 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAzureQuickStart",
+  "paths": [
+    "/demos/azure-governance-operations-automation/nested/OMSCommon/OMSCommon.json"
+  ],
+  "timestamp": 1642962898386,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/demos/azure-governance-operations-automation/nested/OMSCommon/OMSCommon.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT632",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "microsoft.operationalinsights/workspaces"
+    ]
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT632",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "workspaceName": {
+        "type": "string",
+        "metadata": {
+          "description": "workspaceName"
+        }
+      },
+      "serviceTier": {
+        "type": "string",
+        "allowedValues": [
+          "Free",
+          "Standard",
+          "Premium"
+        ],
+        "metadata": {
+          "description": "Service Tier: Free, Standard, or Premium"
+        }
+      },
+      "omsRegion": {
+        "type": "string"
+      },
+      "quickstartTags": {
+        "type": "object"
+      }
+    },
+    "resources": [
+      {
+        "apiVersion": "2020-10-01",
+        "type": "Microsoft.OperationalInsights/workspaces",
+        "name": "workspaceName",
+        "location": "omsRegion",
+        "tags": {
+          "quickstartName": "quickstartTags"
+        },
+        "properties": {
+          "sku": {
+            "Name": "serviceTier"
+          }
+        }
+      }
+    ],
+    "outputs": {
+      "workspaceIdOutput": {
+        "value": "[reference(resourceId('Microsoft.OperationalInsights/workspaces/', parameters('workspaceName')), '2020-10-01').customerId]",
+        "type": "string"
+      }
+    },
+    "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+  }
+}

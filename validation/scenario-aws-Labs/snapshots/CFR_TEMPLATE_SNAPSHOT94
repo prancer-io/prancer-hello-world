@@ -1,0 +1,85 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAwsLabs",
+  "paths": [
+    "/aws/solutions/StackSetsResource/TestResources/events.yaml"
+  ],
+  "timestamp": 1642972590676,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "CFR_TEMPLATE_SNAPSHOT",
+    "type": "cloudformation",
+    "collection": "cloudformationtemplate",
+    "paths": [
+      "/aws/solutions/StackSetsResource/TestResources/events.yaml"
+    ],
+    "snapshotId": "CFR_TEMPLATE_SNAPSHOT94",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "aws::sqs::queue",
+      "aws::dynamodb::table"
+    ]
+  },
+  "snapshotId": "CFR_TEMPLATE_SNAPSHOT94",
+  "collection": "cloudformationtemplate",
+  "json": {
+    "AWSTemplateFormatVersion": "2010-09-09",
+    "Description": "A simple NoSQL event database",
+    "Parameters": {
+      "ReadCapacity": {
+        "Type": "Number",
+        "Default": 20,
+        "Description": "Read Capacity Units"
+      },
+      "WriteCapacity": {
+        "Type": "Number",
+        "Default": 20,
+        "Description": "Write Capacity Units"
+      }
+    },
+    "Resources": [
+      {
+        "Type": "AWS::DynamoDB::Table",
+        "Properties": {
+          "KeySchema": [
+            {
+              "AttributeName": "EventId",
+              "KeyType": "HASH"
+            }
+          ],
+          "AttributeDefinitions": [
+            {
+              "AttributeName": "EventId",
+              "AttributeType": "S"
+            }
+          ],
+          "ProvisionedThroughput": {
+            "ReadCapacityUnits": 20,
+            "WriteCapacityUnits": 20
+          }
+        },
+        "Name": "Events"
+      },
+      {
+        "Type": "AWS::SQS::Queue",
+        "Name": "EventQueue"
+      }
+    ],
+    "Outputs": {
+      "EventTableARN": {
+        "Value": {
+          "Fn::GetAtt": [
+            "Events",
+            "Arn"
+          ]
+        },
+        "Description": "ARN for the DynamoDB table"
+      }
+    }
+  }
+}

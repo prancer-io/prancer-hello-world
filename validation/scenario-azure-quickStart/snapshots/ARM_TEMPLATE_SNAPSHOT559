@@ -1,0 +1,638 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAzureQuickStart",
+  "paths": [
+    "/application-workloads/swarm/docker-swarm-cluster/azuredeploy.json",
+    "/application-workloads/swarm/docker-swarm-cluster/azuredeploy.parameters.json"
+  ],
+  "timestamp": 1642962896754,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/application-workloads/swarm/docker-swarm-cluster/azuredeploy.json",
+      "/application-workloads/swarm/docker-swarm-cluster/azuredeploy.parameters.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT559",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "microsoft.network/publicipaddresses",
+      "microsoft.network/virtualnetworks",
+      "microsoft.network/loadbalancers",
+      "microsoft.network/networkinterfaces",
+      "microsoft.compute/virtualmachines/extensions",
+      "microsoft.compute/virtualmachines",
+      "microsoft.network/networksecuritygroups",
+      "microsoft.network/loadbalancers/inboundnatrules",
+      "microsoft.storage/storageaccounts",
+      "microsoft.compute/availabilitysets"
+    ]
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT559",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "sshPublicKey": {
+        "type": "securestring",
+        "metadata": {
+          "description": "SSH public key for the Virtual Machines."
+        },
+        "value": "GEN-SSH-PUB-KEY"
+      },
+      "nodeCount": {
+        "type": "int",
+        "defaultValue": 3,
+        "metadata": {
+          "description": "Number of Swarm worker nodes in the cluster."
+        },
+        "value": 3
+      },
+      "location": {
+        "type": "string",
+        "defaultValue": "[resourceGroup().location]",
+        "metadata": {
+          "description": "Location for all resources."
+        }
+      },
+      "adminUsername": {
+        "type": "string",
+        "defaultValue": "azureuser",
+        "metadata": {
+          "description": "Admin Username."
+        }
+      },
+      "vmSizeMaster": {
+        "type": "string",
+        "defaultValue": "Standard_A0",
+        "metadata": {
+          "description": "Default Master VM Size"
+        }
+      },
+      "vmSizeNode": {
+        "type": "string",
+        "defaultValue": "Standard_A2",
+        "metadata": {
+          "description": "Default Node VM Size"
+        }
+      }
+    },
+    "variables": {
+      "masterCount": 3,
+      "vmNameMaster": "swarm-master-",
+      "vmNameNode": "swarm-node-",
+      "availabilitySetMasters": "swarm-masters-set",
+      "availabilitySetNodes": "swarm-nodes-set",
+      "osImagePublisher": "Canonical",
+      "osImageOffer": "UbuntuServer",
+      "osImageSKU": "16.04-LTS",
+      "managementPublicIPAddrName": "swarm-lb-masters-ip",
+      "nodesPublicIPAddrName": "swarm-lb-nodes-ip",
+      "virtualNetworkName": "swarm-vnet",
+      "subnetNameMasters": "subnet-masters",
+      "subnetNameNodes": "subnet-nodes",
+      "addressPrefixMasters": "10.0.0.0/16",
+      "addressPrefixNodes": "192.168.0.0/16",
+      "subnetPrefixMasters": "10.0.0.0/24",
+      "subnetPrefixNodes": "192.168.0.0/24",
+      "mastersNsgName": "swarm-masters-firewall",
+      "nodesNsgName": "swarm-nodes-firewall",
+      "newStorageAccountName": "[uniqueString(resourceGroup().id, deployment().name)]",
+      "clusterFqdn": "[concat('swarm-',uniqueString(resourceGroup().id, deployment().name))]",
+      "storageAccountType": "Standard_LRS",
+      "mastersLbName": "swarm-lb-masters",
+      "mastersLbIPConfigName": "MastersLBFrontEnd",
+      "mastersLbBackendPoolName": "swarm-masters-pool",
+      "nodesLbName": "swarm-lb-nodes",
+      "nodesLbBackendPoolName": "swarm-nodes-pool",
+      "sshKeyPath": "/home/azureuser/.ssh/authorized_keys",
+      "consulServerArgs": [
+        "-advertise 10.0.0.4 -bootstrap-expect 3 -retry-join 10.0.0.5 -retry-join 10.0.0.6",
+        "-advertise 10.0.0.5 -retry-join 10.0.0.4 -retry-join 10.0.0.6",
+        "-advertise 10.0.0.6 -retry-join 10.0.0.4 -retry-join 10.0.0.5"
+      ]
+    },
+    "resources": [
+      {
+        "type": "Microsoft.Storage/storageAccounts",
+        "name": "[uniqueString(resourceGroup().id, deployment().name)]",
+        "apiVersion": "2021-01-01",
+        "location": "[resourceGroup().location]",
+        "sku": {
+          "name": "Standard_LRS"
+        }
+      },
+      {
+        "type": "Microsoft.Compute/availabilitySets",
+        "name": "swarm-masters-set",
+        "apiVersion": "2017-12-01",
+        "location": "[resourceGroup().location]",
+        "sku": {
+          "name": "Aligned"
+        },
+        "properties": {
+          "platformFaultDomainCount": 2,
+          "platformUpdateDomainCount": 5
+        }
+      },
+      {
+        "type": "Microsoft.Compute/availabilitySets",
+        "name": "swarm-nodes-set",
+        "apiVersion": "2017-12-01",
+        "location": "[resourceGroup().location]",
+        "sku": {
+          "name": "Aligned"
+        },
+        "properties": {
+          "platformFaultDomainCount": 2,
+          "platformUpdateDomainCount": 5
+        }
+      },
+      {
+        "apiVersion": "2015-06-15",
+        "type": "Microsoft.Network/publicIPAddresses",
+        "name": "swarm-lb-masters-ip",
+        "location": "[resourceGroup().location]",
+        "properties": {
+          "publicIPAllocationMethod": "Dynamic",
+          "dnsSettings": {
+            "domainNameLabel": "[concat(variables('clusterFqdn'), '-manage')]"
+          }
+        }
+      },
+      {
+        "apiVersion": "2015-06-15",
+        "type": "Microsoft.Network/publicIPAddresses",
+        "name": "swarm-lb-nodes-ip",
+        "location": "[resourceGroup().location]",
+        "properties": {
+          "publicIPAllocationMethod": "Dynamic",
+          "dnsSettings": {
+            "domainNameLabel": "[variables('clusterFqdn')]"
+          }
+        }
+      },
+      {
+        "apiVersion": "2015-06-15",
+        "type": "Microsoft.Network/virtualNetworks",
+        "name": "swarm-vnet",
+        "location": "[resourceGroup().location]",
+        "dependsOn": [
+          "Microsoft.Network/networkSecurityGroups/swarm-masters-firewall",
+          "Microsoft.Network/networkSecurityGroups/swarm-nodes-firewall"
+        ],
+        "properties": {
+          "addressSpace": {
+            "addressPrefixes": [
+              "10.0.0.0/16",
+              "192.168.0.0/16"
+            ]
+          },
+          "subnets": [
+            {
+              "name": "subnet-masters",
+              "properties": {
+                "addressPrefix": "10.0.0.0/24",
+                "networkSecurityGroup": {
+                  "id": "Microsoft.Network/networkSecurityGroups/swarm-masters-firewall"
+                }
+              }
+            },
+            {
+              "name": "subnet-nodes",
+              "properties": {
+                "addressPrefix": "192.168.0.0/24",
+                "networkSecurityGroup": {
+                  "id": "Microsoft.Network/networkSecurityGroups/swarm-nodes-firewall"
+                }
+              }
+            }
+          ]
+        }
+      },
+      {
+        "apiVersion": "2015-06-15",
+        "type": "Microsoft.Network/networkSecurityGroups",
+        "name": "swarm-masters-firewall",
+        "location": "[resourceGroup().location]",
+        "properties": {
+          "securityRules": [
+            {
+              "name": "ssh",
+              "properties": {
+                "protocol": "Tcp",
+                "sourcePortRange": "*",
+                "destinationPortRange": "22",
+                "sourceAddressPrefix": "*",
+                "destinationAddressPrefix": "*",
+                "access": "Allow",
+                "priority": 1000,
+                "direction": "Inbound"
+              }
+            }
+          ]
+        }
+      },
+      {
+        "apiVersion": "2015-06-15",
+        "type": "Microsoft.Network/networkSecurityGroups",
+        "name": "swarm-nodes-firewall",
+        "location": "[resourceGroup().location]",
+        "properties": {
+          "securityRules": [
+            {
+              "name": "AllowAny",
+              "properties": {
+                "description": "Swarm node ports need to be configured on the load balancer to be reachable",
+                "protocol": "*",
+                "sourcePortRange": "*",
+                "destinationPortRange": "*",
+                "sourceAddressPrefix": "*",
+                "destinationAddressPrefix": "*",
+                "access": "Allow",
+                "priority": 1000,
+                "direction": "Inbound"
+              }
+            }
+          ]
+        }
+      },
+      {
+        "apiVersion": "2015-06-15",
+        "type": "Microsoft.Network/networkInterfaces",
+        "name": "swarm-master-copyIndex()-nic",
+        "location": "[resourceGroup().location]",
+        "copy": {
+          "name": "nicLoopMaster",
+          "count": 3
+        },
+        "dependsOn": [
+          "Microsoft.Network/loadBalancers//swarm-lb-masters",
+          "Microsoft.Network/virtualNetworks//swarm-vnet",
+          "Microsoft.Network/loadBalancers/inboundNatRules/swarm-lb-masters/SSH-swarm-master-copyIndex()"
+        ],
+        "properties": {
+          "ipConfigurations": [
+            {
+              "name": "ipConfigMaster",
+              "properties": {
+                "privateIPAllocationMethod": "Static",
+                "privateIPAddress": "[concat('10.0.0.', copyIndex(4))]",
+                "subnet": {
+                  "id": "Microsoft.Network/virtualNetworks/subnets/swarm-vnet/subnet-masters"
+                },
+                "loadBalancerBackendAddressPools": [
+                  {
+                    "id": "Microsoft.Network/loadBalancers/backendAddressPools/swarm-lb-masters/swarm-masters-pool"
+                  }
+                ],
+                "loadBalancerInboundNatRules": [
+                  {
+                    "id": "Microsoft.Network/loadBalancers/inboundNatRules/swarm-lb-masters/SSH-swarm-master-copyindex()"
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      },
+      {
+        "apiVersion": "2015-06-15",
+        "name": "swarm-lb-masters",
+        "type": "Microsoft.Network/loadBalancers",
+        "location": "[resourceGroup().location]",
+        "dependsOn": [
+          "Microsoft.Network/publicIPAddresses//swarm-lb-masters-ip"
+        ],
+        "properties": {
+          "frontendIPConfigurations": [
+            {
+              "name": "MastersLBFrontEnd",
+              "properties": {
+                "publicIPAddress": {
+                  "id": "Microsoft.Network/publicIPAddresses/swarm-lb-masters-ip"
+                }
+              }
+            }
+          ],
+          "backendAddressPools": [
+            {
+              "name": "swarm-masters-pool"
+            }
+          ]
+        }
+      },
+      {
+        "apiVersion": "2015-06-15",
+        "type": "Microsoft.Network/loadBalancers/inboundNatRules",
+        "name": "swarm-lb-masters/SSH-swarm-master-copyIndex()",
+        "location": "[resourceGroup().location]",
+        "copy": {
+          "name": "lbNatLoopMaster",
+          "count": 3
+        },
+        "dependsOn": [
+          "Microsoft.Network/loadBalancers//swarm-lb-masters"
+        ],
+        "properties": {
+          "frontendIPConfiguration": {
+            "id": "Microsoft.Network/loadBalancers/frontendIPConfigurations/swarm-lb-masters/MastersLBFrontEnd"
+          },
+          "protocol": "Tcp",
+          "frontendPort": "[copyIndex(2200)]",
+          "backendPort": 22,
+          "enableFloatingIP": false
+        }
+      },
+      {
+        "apiVersion": "2015-06-15",
+        "name": "swarm-lb-nodes",
+        "type": "Microsoft.Network/loadBalancers",
+        "location": "[resourceGroup().location]",
+        "dependsOn": [
+          "Microsoft.Network/publicIPAddresses//swarm-lb-nodes-ip"
+        ],
+        "properties": {
+          "frontendIPConfigurations": [
+            {
+              "name": "LoadBalancerFrontEnd",
+              "properties": {
+                "publicIPAddress": {
+                  "id": "Microsoft.Network/publicIPAddresses/swarm-lb-nodes-ip"
+                }
+              }
+            }
+          ],
+          "backendAddressPools": [
+            {
+              "name": "swarm-nodes-pool"
+            }
+          ]
+        }
+      },
+      {
+        "apiVersion": "2015-06-15",
+        "type": "Microsoft.Network/networkInterfaces",
+        "name": "swarm-node-copyIndex()-nic",
+        "location": "[resourceGroup().location]",
+        "copy": {
+          "name": "nicLoopNode",
+          "count": 3
+        },
+        "dependsOn": [
+          "Microsoft.Network/loadBalancers//swarm-lb-nodes",
+          "Microsoft.Network/virtualNetworks//swarm-vnet"
+        ],
+        "properties": {
+          "ipConfigurations": [
+            {
+              "name": "ipConfigNode",
+              "properties": {
+                "privateIPAllocationMethod": "Dynamic",
+                "subnet": {
+                  "id": "Microsoft.Network/virtualNetworks/subnets/swarm-vnet/subnet-nodes"
+                },
+                "loadBalancerBackendAddressPools": [
+                  {
+                    "id": "Microsoft.Network/loadBalancers/backendAddressPools/swarm-lb-nodes/swarm-nodes-pool"
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      },
+      {
+        "apiVersion": "2017-03-30",
+        "type": "Microsoft.Compute/virtualMachines",
+        "name": "swarm-master-copyIndex()",
+        "location": "[resourceGroup().location]",
+        "copy": {
+          "name": "vmLoopMaster",
+          "count": 3
+        },
+        "dependsOn": [
+          "Microsoft.Storage/storageAccounts//[uniqueString(resourceGroup().id, deployment().name)]",
+          "Microsoft.Network/networkInterfaces//swarm-master-copyIndex()-nic",
+          "Microsoft.Compute/availabilitySets//swarm-masters-set"
+        ],
+        "properties": {
+          "availabilitySet": {
+            "id": "Microsoft.Compute/availabilitySets/swarm-masters-set"
+          },
+          "hardwareProfile": {
+            "vmSize": "Standard_A0"
+          },
+          "osProfile": {
+            "computerName": "swarm-master-copyIndex()",
+            "adminUsername": "azureuser",
+            "linuxConfiguration": {
+              "disablePasswordAuthentication": true,
+              "ssh": {
+                "publicKeys": [
+                  {
+                    "path": "/home/azureuser/.ssh/authorized_keys",
+                    "keyData": "GEN-SSH-PUB-KEY"
+                  }
+                ]
+              }
+            }
+          },
+          "storageProfile": {
+            "imageReference": {
+              "publisher": "Canonical",
+              "offer": "UbuntuServer",
+              "sku": "16.04-LTS",
+              "version": "latest"
+            },
+            "osDisk": {
+              "name": "swarm-master-copyIndex()_OSDisk",
+              "caching": "ReadWrite",
+              "createOption": "FromImage"
+            }
+          },
+          "networkProfile": {
+            "networkInterfaces": [
+              {
+                "id": "Microsoft.Network/networkInterfaces/swarm-master-copyIndex()-nic"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "apiVersion": "2017-03-30",
+        "type": "Microsoft.Compute/virtualMachines",
+        "name": "swarm-node-copyIndex()",
+        "location": "[resourceGroup().location]",
+        "copy": {
+          "name": "vmLoopNode",
+          "count": 3
+        },
+        "dependsOn": [
+          "Microsoft.Storage/storageAccounts//[uniqueString(resourceGroup().id, deployment().name)]",
+          "Microsoft.Network/networkInterfaces//swarm-node-copyIndex()-nic"
+        ],
+        "properties": {
+          "availabilitySet": {
+            "id": "Microsoft.Compute/availabilitySets/swarm-nodes-set"
+          },
+          "hardwareProfile": {
+            "vmSize": "Standard_A2"
+          },
+          "osProfile": {
+            "computerName": "swarm-node-copyIndex()",
+            "adminUsername": "azureuser",
+            "linuxConfiguration": {
+              "disablePasswordAuthentication": true,
+              "ssh": {
+                "publicKeys": [
+                  {
+                    "path": "/home/azureuser/.ssh/authorized_keys",
+                    "keyData": "GEN-SSH-PUB-KEY"
+                  }
+                ]
+              }
+            }
+          },
+          "storageProfile": {
+            "imageReference": {
+              "publisher": "Canonical",
+              "offer": "UbuntuServer",
+              "sku": "16.04-LTS",
+              "version": "latest"
+            },
+            "osDisk": {
+              "name": "swarm-node-copyIndex()_OSDisk",
+              "caching": "ReadWrite",
+              "createOption": "FromImage"
+            }
+          },
+          "networkProfile": {
+            "networkInterfaces": [
+              {
+                "id": "Microsoft.Network/networkInterfaces/swarm-node-copyindex()-nic"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "type": "Microsoft.Compute/virtualMachines/extensions",
+        "name": "swarm-master-copyIndex()/DockerExtension",
+        "apiVersion": "2015-06-15",
+        "location": "[resourceGroup().location]",
+        "copy": {
+          "name": "extensionLoopMaster",
+          "count": 3
+        },
+        "dependsOn": [
+          "Microsoft.Compute/virtualMachines//swarm-master-copyIndex()"
+        ],
+        "properties": {
+          "publisher": "Microsoft.Azure.Extensions",
+          "type": "DockerExtension",
+          "typeHandlerVersion": "1.0",
+          "autoUpgradeMinorVersion": true,
+          "settings": {
+            "compose": {
+              "consul": {
+                "image": "progrium/consul",
+                "command": "[concat('-server -node master', copyIndex(), ' ', variables('consulServerArgs')[copyIndex()])]",
+                "ports": [
+                  "8500:8500",
+                  "8300:8300",
+                  "8301:8301",
+                  "8301:8301/udp",
+                  "8302:8302",
+                  "8302:8302/udp",
+                  "8400:8400"
+                ],
+                "volumes": [
+                  "/data/consul:/data"
+                ],
+                "restart": "always"
+              },
+              "swarm": {
+                "image": "swarm",
+                "command": "[concat('manage --replication --advertise ', reference(resourceId('Microsoft.Network/networkInterfaces',concat(variables('vmNameMaster'), copyIndex(), '-nic'))).ipConfigurations[0].properties.privateIPAddress, ':2375 --discovery-opt kv.path=docker/nodes consul://10.0.0.4:8500')]",
+                "ports": [
+                  "2375:2375"
+                ],
+                "links": [
+                  "consul"
+                ],
+                "volumes": [
+                  "/etc/docker:/etc/docker"
+                ],
+                "restart": "always"
+              }
+            }
+          }
+        }
+      },
+      {
+        "type": "Microsoft.Compute/virtualMachines/extensions",
+        "name": "swarm-node-copyIndex()/DockerExtension",
+        "apiVersion": "2015-06-15",
+        "location": "[resourceGroup().location]",
+        "copy": {
+          "name": "extensionLoopNode",
+          "count": 3
+        },
+        "dependsOn": [
+          "Microsoft.Compute/virtualMachines//swarm-node-copyIndex()"
+        ],
+        "properties": {
+          "publisher": "Microsoft.Azure.Extensions",
+          "type": "DockerExtension",
+          "typeHandlerVersion": "1.0",
+          "autoUpgradeMinorVersion": true,
+          "settings": {
+            "docker": {
+              "port": "2375",
+              "options": [
+                "--cluster-store=consul://10.0.0.4:8500",
+                "--cluster-advertise=eth0:2375"
+              ]
+            }
+          }
+        }
+      }
+    ],
+    "outputs": {
+      "sshTunnelCmd": {
+        "type": "string",
+        "value": "[concat('ssh -L 2375:swarm-master-0:2375 -N ', parameters('adminUsername'), '@', reference(variables('managementPublicIPAddrName')).dnsSettings.fqdn, ' -p 2200')]"
+      },
+      "dockerCmd": {
+        "type": "string",
+        "value": "docker -H tcp://localhost:2375 info"
+      },
+      "swarmNodesLoadBalancerAddress": {
+        "type": "string",
+        "value": "[reference(variables('nodesPublicIPAddrName')).dnsSettings.fqdn]"
+      },
+      "sshMaster0": {
+        "type": "string",
+        "value": "[concat('ssh ', parameters('adminUsername'), '@', reference(variables('managementPublicIPAddrName')).dnsSettings.fqdn, ' -A -p 2200')]"
+      },
+      "sshMaster1": {
+        "type": "string",
+        "value": "[concat('ssh ', parameters('adminUsername'), '@', reference(variables('managementPublicIPAddrName')).dnsSettings.fqdn, ' -A -p 2201')]"
+      },
+      "sshMaster2": {
+        "type": "string",
+        "value": "[concat('ssh ', parameters('adminUsername'), '@', reference(variables('managementPublicIPAddrName')).dnsSettings.fqdn, ' -A -p 2202')]"
+      }
+    },
+    "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+  }
+}

@@ -1,0 +1,318 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAzureQuickStart",
+  "paths": [
+    "/quickstarts/microsoft.containerinstance/aks-advanced-networking-aad/azuredeploy.json",
+    "/quickstarts/microsoft.containerinstance/aks-advanced-networking-aad/azuredeploy.parameters.json"
+  ],
+  "timestamp": 1642962905467,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/quickstarts/microsoft.containerinstance/aks-advanced-networking-aad/azuredeploy.json",
+      "/quickstarts/microsoft.containerinstance/aks-advanced-networking-aad/azuredeploy.parameters.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT1195",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "microsoft.containerservice/managedclusters",
+      "microsoft.resources/deployments"
+    ]
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT1195",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "resourceName": {
+        "type": "string",
+        "defaultValue": "aksadcluster",
+        "metadata": {
+          "description": "The name of the Managed Cluster resource."
+        },
+        "value": "GEN-UNIQUE"
+      },
+      "location": {
+        "type": "string",
+        "defaultValue": "[resourceGroup().location]",
+        "metadata": {
+          "description": "The Azure location of the AKS resource."
+        }
+      },
+      "dnsPrefix": {
+        "type": "string",
+        "defaultValue": "aksadcluster",
+        "metadata": {
+          "description": "Optional DNS prefix to use with hosted Kubernetes API server FQDN."
+        },
+        "value": "GEN-UNIQUE"
+      },
+      "osDiskSizeGB": {
+        "defaultValue": 500,
+        "minValue": 0,
+        "maxValue": 1023,
+        "type": "int",
+        "metadata": {
+          "description": "Disk size (in GB) to provision for each of the agent pool nodes. This value ranges from 0 to 1023. Specifying 0 will apply the default disk size for that agentVMSize."
+        }
+      },
+      "agentCount": {
+        "defaultValue": 3,
+        "minValue": 1,
+        "maxValue": 50,
+        "type": "int",
+        "metadata": {
+          "description": "The number of agent nodes for the cluster. Production workloads have a recommended minimum of 3."
+        }
+      },
+      "agentVMSize": {
+        "defaultValue": "Standard_D2_v3",
+        "type": "string",
+        "metadata": {
+          "description": "The size of the Virtual Machine."
+        }
+      },
+      "existingServicePrincipalObjectId": {
+        "type": "securestring",
+        "metadata": {
+          "description": "Oject ID against which the Network Contributor roles will be assigned on the subnet"
+        },
+        "value": "GEN-GUID"
+      },
+      "existingServicePrincipalClientId": {
+        "type": "securestring",
+        "metadata": {
+          "description": "Client ID (used by cloudprovider)"
+        },
+        "value": "GEN-GUID"
+      },
+      "existingServicePrincipalClientSecret": {
+        "type": "securestring",
+        "metadata": {
+          "description": "The Service Principal Client Secret."
+        },
+        "value": "GEN-PASSWORD"
+      },
+      "osType": {
+        "defaultValue": "Linux",
+        "allowedValues": [
+          "Linux"
+        ],
+        "type": "string",
+        "metadata": {
+          "description": "The type of operating system."
+        }
+      },
+      "kubernetesVersion": {
+        "defaultValue": "1.12.6",
+        "type": "string",
+        "metadata": {
+          "description": "The version of Kubernetes."
+        }
+      },
+      "enableHttpApplicationRouting": {
+        "defaultValue": false,
+        "type": "bool",
+        "metadata": {
+          "description": "boolean flag to turn on and off of http application routing"
+        }
+      },
+      "networkPlugin": {
+        "allowedValues": [
+          "azure",
+          "kubenet"
+        ],
+        "defaultValue": "azure",
+        "type": "string",
+        "metadata": {
+          "description": "Network plugin used for building Kubernetes network."
+        }
+      },
+      "maxPods": {
+        "defaultValue": 30,
+        "type": "int",
+        "metadata": {
+          "description": "Maximum number of pods that can run on a node."
+        }
+      },
+      "enableRBAC": {
+        "defaultValue": true,
+        "type": "bool",
+        "metadata": {
+          "description": "boolean flag to turn on and off of RBAC"
+        }
+      },
+      "existingVirtualNetworkName": {
+        "type": "string",
+        "metadata": {
+          "description": "Name of an existing VNET that will contain this AKS deployment."
+        },
+        "value": "VNET-NAME"
+      },
+      "existingVirtualNetworkResourceGroup": {
+        "type": "string",
+        "metadata": {
+          "description": "Name of the existing VNET resource group"
+        },
+        "value": "VNET-RESOURCE-GROUP-NAME"
+      },
+      "existingSubnetName": {
+        "type": "string",
+        "metadata": {
+          "description": "Subnet name that will contain the App Service Environment"
+        },
+        "value": "SUBNET-NAME"
+      },
+      "existingSubnetRoleAssignmentName": {
+        "type": "string",
+        "defaultValue": "[newGuid()]",
+        "metadata": {
+          "description": "Name of the Role Assignment created for the Service Principal in the existing Subnet"
+        }
+      },
+      "serviceCidr": {
+        "type": "string",
+        "defaultValue": "10.0.0.0/16",
+        "metadata": {
+          "description": "A CIDR notation IP range from which to assign service cluster IPs."
+        }
+      },
+      "dnsServiceIP": {
+        "type": "string",
+        "defaultValue": "10.0.0.10",
+        "metadata": {
+          "description": "Containers DNS server IP address."
+        }
+      },
+      "dockerBridgeCidr": {
+        "type": "string",
+        "defaultValue": "172.17.0.1/16",
+        "metadata": {
+          "description": "A CIDR notation IP for Docker bridge."
+        }
+      },
+      "AAD_ClientAppID": {
+        "type": "securestring",
+        "metadata": {
+          "description": "The Application ID for the Client App Service Principal"
+        },
+        "value": "CLIENT-APP-ID-FROM-AZURE-AD"
+      },
+      "AAD_ServerAppID": {
+        "type": "securestring",
+        "metadata": {
+          "description": "The Application ID for the Server App Service Principal"
+        },
+        "value": "SERVER-APP-ID-FROM-AZURE-AD"
+      },
+      "AAD_TenantID": {
+        "type": "securestring",
+        "metadata": {
+          "description": "The Azure AD Tenant where the cluster will reside"
+        },
+        "value": "AZURE-AD-TENANT"
+      },
+      "AAD_ServerAppSecret": {
+        "type": "securestring",
+        "metadata": {
+          "description": "The Service Principal Secret for the Client App Service Principal"
+        },
+        "value": "SERVER-APP-SECRET-FROM-AZURE-AD"
+      }
+    },
+    "variables": {
+      "vnetSubnetId": "VNET-RESOURCE-GROUP-NAME/Microsoft.Network/virtualNetworks/subnets/VNET-NAME/SUBNET-NAME"
+    },
+    "resources": [
+      {
+        "type": "Microsoft.ContainerService/managedClusters",
+        "name": "GEN-UNIQUE",
+        "apiVersion": "2018-03-31",
+        "location": "[resourceGroup().location]",
+        "dependsOn": [
+          "Microsoft.Resources/deployments/ClusterSubnetRoleAssignmentDeployment"
+        ],
+        "properties": {
+          "kubernetesVersion": "1.12.6",
+          "enableRBAC": true,
+          "dnsPrefix": "GEN-UNIQUE",
+          "aadProfile": {
+            "clientAppID": "CLIENT-APP-ID-FROM-AZURE-AD",
+            "serverAppID": "SERVER-APP-ID-FROM-AZURE-AD",
+            "tenantID": "AZURE-AD-TENANT",
+            "serverAppSecret": "SERVER-APP-SECRET-FROM-AZURE-AD"
+          },
+          "addonProfiles": {
+            "httpApplicationRouting": {
+              "enabled": false
+            }
+          },
+          "agentPoolProfiles": [
+            {
+              "name": "agentpool",
+              "osDiskSizeGB": 500,
+              "count": 3,
+              "vmSize": "Standard_D2_v3",
+              "osType": "Linux",
+              "storageProfile": "ManagedDisks",
+              "vnetSubnetID": "vnetSubnetID",
+              "maxPods": 30
+            }
+          ],
+          "servicePrincipalProfile": {
+            "clientId": "GEN-GUID",
+            "secret": "GEN-PASSWORD"
+          },
+          "networkProfile": {
+            "networkPlugin": "azure",
+            "serviceCidr": "10.0.0.0/16",
+            "dnsServiceIP": "10.0.0.10",
+            "dockerBridgeCidr": "172.17.0.1/16"
+          }
+        }
+      },
+      {
+        "type": "Microsoft.Resources/deployments",
+        "name": "ClusterSubnetRoleAssignmentDeployment",
+        "apiVersion": "2017-05-10",
+        "resourceGroup": "VNET-RESOURCE-GROUP-NAME",
+        "properties": {
+          "mode": "Incremental",
+          "template": {
+            "contentVersion": "1.0.0.0",
+            "parameters": {},
+            "variables": {},
+            "resources": [
+              {
+                "type": "Microsoft.Network/virtualNetworks/subnets/providers/roleAssignments",
+                "apiVersion": "2017-05-01",
+                "name": "[newGuid()]",
+                "properties": {
+                  "roleDefinitionId": "[concat('/subscriptions/', subscription().subscriptionId, '/providers/Microsoft.Authorization/roleDefinitions/', '4d97b98b-1d4f-4787-a291-c67834d212e7')]",
+                  "principalId": "GEN-GUID",
+                  "scope": "VNET-RESOURCE-GROUP-NAME/Microsoft.Network/virtualNetworks/subnets/VNET-NAME/SUBNET-NAME"
+                }
+              }
+            ],
+            "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+          }
+        }
+      }
+    ],
+    "outputs": {
+      "controlPlaneFQDN": {
+        "type": "string",
+        "value": "[reference(concat('Microsoft.ContainerService/managedClusters/', parameters('resourceName'))).fqdn]"
+      }
+    },
+    "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+  }
+}

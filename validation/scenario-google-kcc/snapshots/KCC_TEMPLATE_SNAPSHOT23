@@ -2,12 +2,12 @@
   "structure": "filesystem",
   "error": null,
   "reference": "master",
-  "contentType": "yaml",
+  "contentType": "json",
   "source": "gitConnectorGoogleKcc",
   "paths": [
-    "/samples/resources/bigqueryjob/extract-bigquery-job/bigquery_v1beta1_bigquerytable.yaml"
+    "/samples/resources/bigqueryjob/extract-bigquery-job/bigquery_v1beta1_bigqueryjob.yaml"
   ],
-  "timestamp": 1628765138718,
+  "timestamp": 1642973301767,
   "queryuser": null,
   "checksum": "99914b932bd37a50b983c5e7c90ae93b",
   "node": {
@@ -15,26 +15,43 @@
     "type": "kcc",
     "collection": "kcctemplate",
     "paths": [
-      "/samples/resources/bigqueryjob/extract-bigquery-job/bigquery_v1beta1_bigquerytable.yaml"
+      "/samples/resources/bigqueryjob/extract-bigquery-job/bigquery_v1beta1_bigqueryjob.yaml"
     ],
     "snapshotId": "KCC_TEMPLATE_SNAPSHOT23",
     "status": "active",
-    "validate": true
+    "validate": true,
+    "resourceTypes": [
+      "bigqueryjob"
+    ]
   },
   "snapshotId": "KCC_TEMPLATE_SNAPSHOT23",
   "collection": "kcctemplate",
   "json": {
     "apiVersion": "bigquery.cnrm.cloud.google.com/v1beta1",
-    "kind": "BigQueryTable",
+    "kind": "BigQueryJob",
     "metadata": {
-      "name": "bigqueryjobdepextract"
+      "labels": {
+        "label-one": "value-one"
+      },
+      "name": "bigqueryjob-sample-extract"
     },
     "spec": {
-      "friendlyName": "bigqueryjob-dep-extract",
-      "datasetRef": {
-        "name": "bigqueryjobdepextract"
-      },
-      "schema": "[\n  {\n    \"name\": \"name\",\n    \"type\": \"STRING\",\n    \"mode\": \"NULLABLE\"\n  },\n  {\n    \"name\": \"post_abbr\",\n    \"type\": \"STRING\",\n    \"mode\": \"NULLABLE\"\n  },\n  {\n    \"name\": \"date\",\n    \"type\": \"DATE\",\n    \"mode\": \"NULLABLE\"\n  }\n]"
+      "location": "US",
+      "jobTimeoutMs": "600000",
+      "extract": {
+        "sourceTable": {
+          "tableRef": {
+            "name": "bigqueryjobdepextract"
+          }
+        },
+        "destinationUris": [
+          "gs://${PROJECT_ID?}-bigqueryjob-dep-extract/extract"
+        ],
+        "destinationFormat": "CSV",
+        "compression": "GZIP",
+        "printHeader": true,
+        "fieldDelimiter": ","
+      }
     }
   }
 }

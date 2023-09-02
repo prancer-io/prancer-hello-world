@@ -1,0 +1,411 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAzureQuickStart",
+  "paths": [
+    "/quickstarts/microsoft.compute/vm-linux-dynamic-data-disks/azuredeploy.json",
+    "/quickstarts/microsoft.compute/vm-linux-dynamic-data-disks/azuredeploy.parameters.json"
+  ],
+  "timestamp": 1642962904243,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/quickstarts/microsoft.compute/vm-linux-dynamic-data-disks/azuredeploy.json",
+      "/quickstarts/microsoft.compute/vm-linux-dynamic-data-disks/azuredeploy.parameters.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT1081",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "microsoft.network/publicipaddresses",
+      "microsoft.network/virtualnetworks",
+      "microsoft.network/networkinterfaces",
+      "microsoft.compute/virtualmachines/extensions",
+      "microsoft.compute/virtualmachines",
+      "microsoft.network/networksecuritygroups",
+      "microsoft.compute/availabilitysets"
+    ]
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT1081",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "_artifactsLocation": {
+        "type": "string",
+        "metadata": {
+          "description": "The base URI where artifacts required by this template are located. When the template is deployed using the accompanying scripts, a private location in the subscription will be used and this value will be automatically generated."
+        },
+        "defaultValue": "[deployment().properties.templateLink.uri]"
+      },
+      "_artifactsLocationSasToken": {
+        "type": "securestring",
+        "metadata": {
+          "description": "The sasToken required to access _artifactsLocation.  When the template is deployed using the accompanying scripts, a sasToken will be automatically generated."
+        },
+        "defaultValue": ""
+      },
+      "dnsLabelPrefix": {
+        "type": "string",
+        "metadata": {
+          "description": "Unique public dns prefix where the  node will be exposed"
+        },
+        "value": "GEN-UNIQUE"
+      },
+      "adminUsername": {
+        "type": "string",
+        "defaultValue": "azureuser",
+        "metadata": {
+          "description": "User name for the Virtual Machine. Pick a valid username otherwise there will be a BadRequest error."
+        },
+        "value": "GEN-UNIQUE"
+      },
+      "imagePublisher": {
+        "type": "string",
+        "defaultValue": "openlogic",
+        "allowedValues": [
+          "Canonical",
+          "openlogic"
+        ],
+        "metadata": {
+          "description": "openlogic/Canonical are the respective CentOS/Ubuntu Distributor in Azure Market Place"
+        },
+        "value": "openlogic"
+      },
+      "imageOffer": {
+        "type": "string",
+        "defaultValue": "CentOS",
+        "allowedValues": [
+          "CentOS",
+          "UbuntuServer"
+        ],
+        "metadata": {
+          "description": "New CentOS/UbuntuServer Image Offer"
+        },
+        "value": "CentOS"
+      },
+      "imageSku": {
+        "type": "string",
+        "defaultValue": "7.2",
+        "allowedValues": [
+          "16.04.0-LTS",
+          "6.5",
+          "6.6",
+          "7.1",
+          "7.2"
+        ],
+        "metadata": {
+          "description": "P.S: OpenLogic CentOS version to use **docker usage Only for 7.1/7.2 kernels 3.10 and above **"
+        },
+        "value": "7.2"
+      },
+      "sshPublicKey": {
+        "type": "securestring",
+        "metadata": {
+          "description": "This field must be a valid SSH public key. ssh with this RSA public key"
+        },
+        "value": "GEN-SSH-PUB-KEY"
+      },
+      "mountFolder": {
+        "type": "string",
+        "defaultValue": "/data",
+        "metadata": {
+          "description": "The Folder system to be auto-mounted."
+        },
+        "value": "/data"
+      },
+      "nodeSize": {
+        "type": "string",
+        "defaultValue": "Standard_D2s_v3",
+        "metadata": {
+          "description": "Size of the node."
+        }
+      },
+      "dockerVer": {
+        "type": "string",
+        "defaultValue": "1.12",
+        "metadata": {
+          "description": "The docker version **Only for 7.1/7.2 kernels 3.10 and above **"
+        },
+        "value": "1.12"
+      },
+      "dockerComposeVer": {
+        "type": "string",
+        "defaultValue": "1.9.0-rc2",
+        "metadata": {
+          "description": "The Docker Compose Version **Only for 7.1/7.2 kernels 3.10 and above **"
+        },
+        "value": "1.9.0-rc2"
+      },
+      "dockerMachineVer": {
+        "type": "string",
+        "defaultValue": "0.8.2",
+        "metadata": {
+          "description": "The docker-machine version **Only for 7.1/7.2 kernels 3.10 and above **"
+        },
+        "value": "0.8.2"
+      },
+      "dataDiskSize": {
+        "type": "int",
+        "defaultValue": 10,
+        "metadata": {
+          "description": "The size in GB of each data disk that is attached to the VM.  A MDADM RAID0  is created with all data disks auto-mounted,  that is dataDiskSize * dataDiskCount in size n the Storage ."
+        },
+        "value": 10
+      },
+      "masterVMName": {
+        "type": "string",
+        "defaultValue": "centos",
+        "allowedValues": [
+          "centos",
+          "ubuntuserver"
+        ],
+        "metadata": {
+          "description": "The Name of the VM."
+        },
+        "value": "centos"
+      },
+      "numDataDisks": {
+        "type": "int",
+        "defaultValue": "4",
+        "minValue": 0,
+        "maxValue": 64,
+        "metadata": {
+          "description": "This parameter allows the user to select the number of disks wanted"
+        },
+        "value": 4
+      },
+      "location": {
+        "type": "string",
+        "defaultValue": "[resourceGroup().location]",
+        "metadata": {
+          "description": "Location for all resources."
+        }
+      }
+    },
+    "variables": {
+      "avSetName": "avSet",
+      "diskCaching": "ReadWrite",
+      "networkSettings": {
+        "virtualNetworkName": "virtualnetwork",
+        "addressPrefix": "10.0.0.0/16",
+        "subnet": {
+          "dse": {
+            "name": "dse",
+            "prefix": "10.0.0.0/24",
+            "vnet": "virtualnetwork"
+          }
+        },
+        "statics": {
+          "master": "10.0.0.254"
+        }
+      },
+      "nicName": "nic",
+      "publicIPAddressName": "publicips",
+      "publicIPAddressType": "Dynamic",
+      "subnetRef": "Microsoft.Network/virtualNetworks/subnets/(networkSettings).virtualNetworkName/(networkSettings).subnet.dse.name",
+      "installationCLI": "bash azuredeploy.sh centos /data 4 1.12 1.9.0-rc2 GEN-UNIQUE 7.2 0.8.2",
+      "sshKeyPath": "/home/GEN-UNIQUE/.ssh/authorized_keys",
+      "networkSecurityGroupName": "default-NSG"
+    },
+    "resources": [
+      {
+        "type": "Microsoft.Compute/availabilitySets",
+        "name": "avSet",
+        "apiVersion": "2020-12-01",
+        "location": "[resourceGroup().location]",
+        "sku": {
+          "name": "Aligned"
+        },
+        "properties": {
+          "platformFaultDomainCount": 2,
+          "platformUpdateDomainCount": 5
+        }
+      },
+      {
+        "comments": "Default Network Security Group for template",
+        "type": "Microsoft.Network/networkSecurityGroups",
+        "apiVersion": "2020-11-01",
+        "name": "default-NSG",
+        "location": "[resourceGroup().location]",
+        "properties": {
+          "securityRules": [
+            {
+              "name": "default-allow-22",
+              "properties": {
+                "priority": 1000,
+                "access": "Allow",
+                "direction": "Inbound",
+                "destinationPortRange": "22",
+                "protocol": "Tcp",
+                "sourceAddressPrefix": "*",
+                "sourcePortRange": "*",
+                "destinationAddressPrefix": "*"
+              }
+            }
+          ]
+        }
+      },
+      {
+        "apiVersion": "2020-11-01",
+        "type": "Microsoft.Network/virtualNetworks",
+        "name": "(networkSettings).virtualNetworkName",
+        "location": "[resourceGroup().location]",
+        "dependsOn": [
+          "Microsoft.Network/networkSecurityGroups/default-NSG"
+        ],
+        "properties": {
+          "addressSpace": {
+            "addressPrefixes": [
+              "(networkSettings).addressPrefix"
+            ]
+          },
+          "subnets": [
+            {
+              "name": "(networkSettings).subnet.dse.name",
+              "properties": {
+                "addressPrefix": "(networkSettings).subnet.dse.prefix",
+                "networkSecurityGroup": {
+                  "id": "Microsoft.Network/networkSecurityGroups/default-NSG"
+                }
+              }
+            }
+          ]
+        }
+      },
+      {
+        "type": "Microsoft.Network/publicIPAddresses",
+        "apiVersion": "2020-11-01",
+        "name": "publicips",
+        "location": "[resourceGroup().location]",
+        "properties": {
+          "publicIPAllocationMethod": "Dynamic",
+          "dnsSettings": {
+            "domainNameLabel": "GEN-UNIQUE"
+          }
+        }
+      },
+      {
+        "apiVersion": "2020-11-01",
+        "type": "Microsoft.Network/networkInterfaces",
+        "name": "nic",
+        "location": "[resourceGroup().location]",
+        "dependsOn": [
+          "Microsoft.Network/publicIPAddresses//publicips",
+          "Microsoft.Network/virtualNetworks//(networkSettings).virtualNetworkName"
+        ],
+        "properties": {
+          "ipConfigurations": [
+            {
+              "name": "ipconfig1",
+              "properties": {
+                "privateIPAllocationMethod": "Static",
+                "privateIPAddress": "(networkSettings).statics.master",
+                "publicIPAddress": {
+                  "id": "Microsoft.Network/publicIPAddresses/publicips"
+                },
+                "subnet": {
+                  "id": "Microsoft.Network/virtualNetworks/subnets/(networkSettings).virtualNetworkName/(networkSettings).subnet.dse.name"
+                }
+              }
+            }
+          ]
+        }
+      },
+      {
+        "apiVersion": "2020-12-01",
+        "type": "Microsoft.Compute/virtualMachines",
+        "name": "centos",
+        "location": "[resourceGroup().location]",
+        "dependsOn": [
+          "Microsoft.Network/networkInterfaces//nic",
+          "Microsoft.Compute/availabilitySets//avSet"
+        ],
+        "properties": {
+          "availabilitySet": {
+            "id": "Microsoft.Compute/availabilitySets/avSet"
+          },
+          "hardwareProfile": {
+            "vmSize": "Standard_D2s_v3"
+          },
+          "osProfile": {
+            "computerName": "centos",
+            "adminUsername": "GEN-UNIQUE",
+            "linuxConfiguration": {
+              "disablePasswordAuthentication": true,
+              "ssh": {
+                "publicKeys": [
+                  {
+                    "path": "/home/GEN-UNIQUE/.ssh/authorized_keys",
+                    "keyData": "GEN-SSH-PUB-KEY"
+                  }
+                ]
+              }
+            }
+          },
+          "storageProfile": {
+            "imageReference": {
+              "publisher": "openlogic",
+              "offer": "CentOS",
+              "sku": "7.2",
+              "version": "latest"
+            },
+            "osDisk": {
+              "name": "centos_OSDisk",
+              "caching": "ReadWrite",
+              "createOption": "FromImage"
+            },
+            "copy": [
+              {
+                "name": "dataDisks",
+                "count": 4,
+                "input": {
+                  "caching": "ReadWrite",
+                  "diskSizeGB": 10,
+                  "lun": "[copyIndex('dataDisks')]",
+                  "name": "[concat(parameters('masterVMName'),'-datadisk',copyIndex('dataDisks'))]",
+                  "createOption": "Empty"
+                }
+              }
+            ]
+          },
+          "networkProfile": {
+            "networkInterfaces": [
+              {
+                "id": "Microsoft.Network/networkInterfaces/nic"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "apiVersion": "2020-12-01",
+        "type": "Microsoft.Compute/virtualMachines/extensions",
+        "name": "centos/Installation",
+        "location": "[resourceGroup().location]",
+        "dependsOn": [
+          "Microsoft.Compute/virtualMachines//centos"
+        ],
+        "properties": {
+          "publisher": "Microsoft.Azure.Extensions",
+          "type": "CustomScript",
+          "typeHandlerVersion": "2.0",
+          "autoUpgradeMinorVersion": true,
+          "settings": {
+            "fileUris": [
+              "[uri(parameters('_artifactsLocation'), concat('azuredeploy.sh', parameters('_artifactsLocationSasToken')))]"
+            ],
+            "commandToExecute": "bash azuredeploy.sh centos /data 4 1.12 1.9.0-rc2 GEN-UNIQUE 7.2 0.8.2"
+          }
+        }
+      }
+    ],
+    "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+  }
+}

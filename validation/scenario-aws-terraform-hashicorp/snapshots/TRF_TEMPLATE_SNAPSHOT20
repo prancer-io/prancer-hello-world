@@ -1,0 +1,87 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "main",
+  "contentType": "json",
+  "source": "gitConnectorAwsTerraHashicorp",
+  "paths": [
+    "/examples/events/sns/outputs.tf",
+    "/examples/events/sns/variables.tf",
+    "/examples/events/sns/main.tf"
+  ],
+  "timestamp": 1642967657685,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "TRF_TEMPLATE_SNAPSHOT",
+    "type": "terraform",
+    "collection": "terraformtemplate",
+    "paths": [
+      "/examples/events/sns/outputs.tf",
+      "/examples/events/sns/variables.tf",
+      "/examples/events/sns/main.tf"
+    ],
+    "snapshotId": "TRF_TEMPLATE_SNAPSHOT20",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "aws_cloudwatch_event_target",
+      "aws_sns_topic",
+      "aws_cloudwatch_event_rule"
+    ]
+  },
+  "snapshotId": "TRF_TEMPLATE_SNAPSHOT20",
+  "collection": "terraformtemplate",
+  "json": {
+    "terraform": [
+      {
+        "required_version": ">= 0.12"
+      }
+    ],
+    "provider": [
+      {
+        "aws": {
+          "region": "${var.aws_region}"
+        }
+      }
+    ],
+    "resources": [
+      {
+        "type": "aws_cloudwatch_event_rule",
+        "name": "foo",
+        "properties": {
+          "name": "tf-example-cloudwatch-event-rule-for-sns",
+          "event_pattern": {
+            "detail-type": [
+              "AWS API Call via CloudTrail"
+            ],
+            "detail": {
+              "eventSource": [
+                "cloudtrail.amazonaws.com"
+              ]
+            }
+          },
+          "compiletime_identity": "aws_cloudwatch_event_rule.foo"
+        }
+      },
+      {
+        "type": "aws_cloudwatch_event_target",
+        "name": "bar",
+        "properties": {
+          "rule": "${aws_cloudwatch_event_rule.foo.name}",
+          "target_id": "tf-example-cloudwatch-event-target-for-sns",
+          "arn": "${aws_sns_topic.foo.arn}",
+          "compiletime_identity": "aws_cloudwatch_event_target.bar"
+        }
+      },
+      {
+        "type": "aws_sns_topic",
+        "name": "foo",
+        "properties": {
+          "name": "tf-example-sns-topic",
+          "compiletime_identity": "aws_sns_topic.foo"
+        }
+      }
+    ]
+  }
+}

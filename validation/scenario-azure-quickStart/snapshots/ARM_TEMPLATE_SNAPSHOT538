@@ -1,0 +1,157 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAzureQuickStart",
+  "paths": [
+    "/application-workloads/sql/sqlvm-alwayson-cluster/nested/configuringAlwaysOn.json"
+  ],
+  "timestamp": 1642962896468,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/application-workloads/sql/sqlvm-alwayson-cluster/nested/configuringAlwaysOn.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT538",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "microsoft.compute/virtualmachines/extensions"
+    ]
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT538",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "sqlVMName": {
+        "type": "string"
+      },
+      "location": {
+        "type": "string"
+      },
+      "adminUsername": {
+        "type": "string"
+      },
+      "adminPassword": {
+        "type": "securestring"
+      },
+      "domainName": {
+        "type": "string"
+      },
+      "sqlAOEPName": {
+        "type": "string"
+      },
+      "sqlServerServiceAccountUserName": {
+        "type": "string"
+      },
+      "sqlServerServiceAccountPassword": {
+        "type": "securestring"
+      },
+      "createClusterModulesURL": {
+        "type": "string"
+      },
+      "createClusterConfigurationFunction": {
+        "type": "string"
+      },
+      "clusterName": {
+        "type": "string"
+      },
+      "sharePath": {
+        "type": "string"
+      },
+      "sqlAOAGName": {
+        "type": "string"
+      },
+      "sqlAOListenerName": {
+        "type": "string"
+      },
+      "sqlAOListenerPort": {
+        "type": "string"
+      },
+      "sqlLBName": {
+        "type": "string"
+      },
+      "sqlLBIPAddress": {
+        "type": "string"
+      },
+      "adPDCVMName": {
+        "type": "string"
+      },
+      "sqlwVMName": {
+        "type": "string"
+      },
+      "numberOfDisks": {
+        "type": "string"
+      },
+      "workloadType": {
+        "type": "string"
+      }
+    },
+    "resources": [
+      {
+        "type": "Microsoft.Compute/virtualMachines/extensions",
+        "name": "sqlVMName1/configuringAlwaysOn",
+        "apiVersion": "2021-07-01",
+        "location": "location",
+        "properties": {
+          "publisher": "Microsoft.Powershell",
+          "type": "DSC",
+          "typeHandlerVersion": "2.75",
+          "autoUpgradeMinorVersion": true,
+          "settings": {
+            "modulesURL": "createClusterModulesURL",
+            "configurationFunction": "createClusterConfigurationFunction",
+            "properties": {
+              "domainName": "domainName",
+              "clusterName": "clusterName",
+              "sharePath": "\\\\sqlwVMName\\sharePath",
+              "nodes": [
+                "sqlVMName0",
+                "sqlVMName1"
+              ],
+              "sqlAlwaysOnEndpointName": "sqlAOEPName",
+              "sqlAlwaysOnAvailabilityGroupName": "sqlAOAGName",
+              "sqlAlwaysOnAvailabilityGroupListenerName": "sqlAOListenerName",
+              "SqlAlwaysOnAvailabilityGroupListenerPort": "sqlAOListenerPort",
+              "databaseNames": "AutoHa-sample",
+              "lbName": "sqlLBName",
+              "lbAddress": "sqlLBIPAddress",
+              "primaryReplica": "sqlVMName1",
+              "secondaryReplica": "sqlVMName0",
+              "dnsServerName": "adPDCVMName",
+              "adminCreds": {
+                "userName": "adminUsername",
+                "password": "privateSettingsRef:adminPassword"
+              },
+              "sqlServiceCreds": {
+                "userName": "sqlServerServiceAccountUserName",
+                "password": "privateSettingsRef:sqlServerServiceAccountPassword"
+              },
+              "SQLAuthCreds": {
+                "userName": "sqlsa",
+                "password": "privateSettingsRef:sqlAuthPassword"
+              },
+              "NumberOfDisks": "numberOfDisks",
+              "WorkloadType": "workloadType"
+            }
+          },
+          "protectedSettings": {
+            "items": {
+              "adminPassword": "adminPassword",
+              "sqlServerServiceAccountPassword": "sqlServerServiceAccountPassword",
+              "sqlAuthPassword": "sqlServerServiceAccountPassword"
+            }
+          }
+        }
+      }
+    ],
+    "outputs": {},
+    "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+  }
+}

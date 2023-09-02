@@ -1,0 +1,169 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAzureQuickStart",
+  "paths": [
+    "/quickstarts/microsoft.network/azure-bastion/azuredeploy.json",
+    "/quickstarts/microsoft.network/azure-bastion/azuredeploy.parameters.json"
+  ],
+  "timestamp": 1642962908483,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/quickstarts/microsoft.network/azure-bastion/azuredeploy.json",
+      "/quickstarts/microsoft.network/azure-bastion/azuredeploy.parameters.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT1500",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "microsoft.network/publicipaddresses",
+      "microsoft.network/virtualnetworks",
+      "microsoft.network/virtualnetworks/subnets",
+      "microsoft.network/bastionhosts"
+    ]
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT1500",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.0.0.0",
+    "metadata": {
+      "_generator": {
+        "name": "bicep",
+        "version": "0.4.1.14562",
+        "templateHash": "739219365683048694"
+      }
+    },
+    "parameters": {
+      "vnetName": {
+        "type": "string",
+        "defaultValue": "vnet01",
+        "metadata": {
+          "description": "Name of new or existing vnet to which Azure Bastion should be deployed"
+        }
+      },
+      "vnetIpPrefix": {
+        "type": "string",
+        "defaultValue": "10.1.0.0/16",
+        "metadata": {
+          "description": "IP prefix for available addresses in vnet address space"
+        }
+      },
+      "vnetNewOrExisting": {
+        "type": "string",
+        "defaultValue": "new",
+        "allowedValues": [
+          "new",
+          "existing"
+        ],
+        "metadata": {
+          "description": "Specify whether to provision new vnet or deploy to existing vnet"
+        }
+      },
+      "bastionSubnetIpPrefix": {
+        "type": "string",
+        "defaultValue": "10.1.1.0/27",
+        "metadata": {
+          "description": "Bastion subnet IP prefix MUST be within vnet IP prefix address space"
+        }
+      },
+      "bastionHostName": {
+        "type": "string",
+        "metadata": {
+          "description": "Name of Azure Bastion resource"
+        },
+        "value": "GEN-UNIQUE-8"
+      },
+      "location": {
+        "type": "string",
+        "defaultValue": "[resourceGroup().location]",
+        "metadata": {
+          "description": "Azure region for Bastion and virtual network"
+        }
+      }
+    },
+    "functions": [],
+    "variables": {
+      "publicIpAddressName": "[format('{0}-pip', parameters('bastionHostName'))]",
+      "bastionSubnetName": "AzureBastionSubnet"
+    },
+    "resources": [
+      {
+        "type": "Microsoft.Network/publicIPAddresses",
+        "apiVersion": "2020-05-01",
+        "name": "[format('{0}-pip', parameters('bastionHostName'))]",
+        "location": "[resourceGroup().location]",
+        "sku": {
+          "name": "Standard"
+        },
+        "properties": {
+          "publicIPAllocationMethod": "Static"
+        }
+      },
+      {
+        "condition": false,
+        "type": "Microsoft.Network/virtualNetworks",
+        "apiVersion": "2020-05-01",
+        "name": "vnet01",
+        "location": "[resourceGroup().location]",
+        "properties": {
+          "addressSpace": {
+            "addressPrefixes": [
+              "10.1.0.0/16"
+            ]
+          },
+          "subnets": [
+            {
+              "name": "AzureBastionSubnet",
+              "properties": {
+                "addressPrefix": "10.1.1.0/27"
+              }
+            }
+          ]
+        }
+      },
+      {
+        "condition": false,
+        "type": "Microsoft.Network/virtualNetworks/subnets",
+        "apiVersion": "2020-05-01",
+        "name": "[format('{0}/{1}', parameters('vnetName'), variables('bastionSubnetName'))]",
+        "properties": {
+          "addressPrefix": "10.1.1.0/27"
+        }
+      },
+      {
+        "type": "Microsoft.Network/bastionHosts",
+        "apiVersion": "2020-05-01",
+        "name": "GEN-UNIQUE-8",
+        "location": "[resourceGroup().location]",
+        "properties": {
+          "ipConfigurations": [
+            {
+              "name": "IpConf",
+              "properties": {
+                "subnet": {
+                  "id": "Microsoft.Network/virtualNetworks/subnets/vnet01/AzureBastionSubnet"
+                },
+                "publicIPAddress": {
+                  "id": "Microsoft.Network/publicIPAddresses/[format('{0}-pip', parameters('bastionHostName'))]"
+                }
+              }
+            }
+          ]
+        },
+        "dependsOn": [
+          "Microsoft.Network/virtualNetworks/vnet01",
+          "Microsoft.Network/publicIPAddresses/[format('{0}-pip', parameters('bastionHostName'))]",
+          "Microsoft.Network/virtualNetworks/subnets/vnet01/AzureBastionSubnet"
+        ]
+      }
+    ],
+    "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+  }
+}

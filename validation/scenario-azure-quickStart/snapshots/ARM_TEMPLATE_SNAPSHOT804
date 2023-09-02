@@ -1,0 +1,56 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAzureQuickStart",
+  "paths": [
+    "/demos/sql-injection-attack-prevention/nested/microsoft.sql/servers.auditingsettings.json"
+  ],
+  "timestamp": 1642962901717,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/demos/sql-injection-attack-prevention/nested/microsoft.sql/servers.auditingsettings.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT804",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "microsoft.sql/servers/auditingsettings"
+    ]
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT804",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "sqlServerName": {
+        "type": "string"
+      },
+      "storageAccountName": {
+        "type": "string"
+      }
+    },
+    "resources": [
+      {
+        "apiVersion": "2020-02-02-preview",
+        "type": "Microsoft.Sql/servers/auditingSettings",
+        "name": "sqlServerName/default",
+        "properties": {
+          "state": "Enabled",
+          "storageEndpoint": "[reference(resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccountName')), '2021-01-01').PrimaryEndpoints.Blob]",
+          "storageAccountAccessKey": "[listKeys(resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccountName')), '2021-01-01').keys[0].value]",
+          "retentionDays": 0,
+          "storageAccountSubscriptionId": "[subscription().subscriptionId]",
+          "isStorageSecondaryKeyInUse": false
+        }
+      }
+    ],
+    "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+  }
+}

@@ -1,0 +1,150 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "main",
+  "contentType": "json",
+  "source": "gitConnectorAzureTerraHashicorp",
+  "paths": [
+    "/examples/sql-azure/sql_auditing_log_analytics/variables.tf",
+    "/examples/sql-azure/sql_auditing_log_analytics/main.tf"
+  ],
+  "timestamp": 1642943279966,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "TRF_TEMPLATE_SNAPSHOT",
+    "type": "terraform",
+    "collection": "terraformtemplate",
+    "paths": [
+      "/examples/sql-azure/sql_auditing_log_analytics/variables.tf",
+      "/examples/sql-azure/sql_auditing_log_analytics/main.tf"
+    ],
+    "snapshotId": "TRF_TEMPLATE_SNAPSHOT111",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "azurerm_mssql_server",
+      "azurerm_log_analytics_workspace",
+      "azurerm_resource_group",
+      "azurerm_mssql_server_extended_auditing_policy",
+      "azurerm_mssql_database",
+      "azurerm_monitor_diagnostic_setting",
+      "azurerm_mssql_database_extended_auditing_policy"
+    ]
+  },
+  "snapshotId": "TRF_TEMPLATE_SNAPSHOT111",
+  "collection": "terraformtemplate",
+  "json": {
+    "provider": [
+      {
+        "azurerm": {
+          "features": [
+            {}
+          ]
+        }
+      }
+    ],
+    "resources": [
+      {
+        "type": "azurerm_resource_group",
+        "name": "example",
+        "properties": {
+          "name": "${var.prefix}-resources",
+          "location": "${var.location}",
+          "compiletime_identity": "azurerm_resource_group.example"
+        }
+      },
+      {
+        "type": "azurerm_mssql_server",
+        "name": "example",
+        "properties": {
+          "name": "${var.prefix}-server-primary",
+          "resource_group_name": "${azurerm_resource_group.example.name}",
+          "location": "${var.location}",
+          "version": 12.0,
+          "administrator_login": "mradministrator",
+          "administrator_login_password": "thisIsDog11",
+          "compiletime_identity": "azurerm_mssql_server.example"
+        }
+      },
+      {
+        "type": "azurerm_mssql_database",
+        "name": "example",
+        "properties": {
+          "name": "${var.prefix}-db-primary",
+          "server_id": "${azurerm_mssql_server.example.id}",
+          "compiletime_identity": "azurerm_mssql_database.example"
+        }
+      },
+      {
+        "type": "azurerm_log_analytics_workspace",
+        "name": "example",
+        "properties": {
+          "name": "${var.prefix}-LAW",
+          "location": "${var.location}",
+          "resource_group_name": "${azurerm_resource_group.example.name}",
+          "sku": "PerGB2018",
+          "retention_in_days": 30,
+          "compiletime_identity": "azurerm_log_analytics_workspace.example"
+        }
+      },
+      {
+        "type": "azurerm_monitor_diagnostic_setting",
+        "name": "example",
+        "properties": {
+          "name": "${var.prefix}-DS",
+          "target_resource_id": "${azurerm_mssql_server.example.id}/databases/master",
+          "log_analytics_workspace_id": "${azurerm_log_analytics_workspace.example.id}",
+          "log": [
+            {
+              "category": "SQLSecurityAuditEvents",
+              "enabled": true,
+              "retention_policy": [
+                {
+                  "enabled": false
+                }
+              ]
+            }
+          ],
+          "metric": [
+            {
+              "category": "AllMetrics",
+              "retention_policy": [
+                {
+                  "enabled": false
+                }
+              ]
+            }
+          ],
+          "lifecycle": [
+            {
+              "ignore_changes": [
+                "log",
+                "metric"
+              ]
+            }
+          ],
+          "compiletime_identity": "azurerm_monitor_diagnostic_setting.example"
+        }
+      },
+      {
+        "type": "azurerm_mssql_database_extended_auditing_policy",
+        "name": "example",
+        "properties": {
+          "database_id": "${azurerm_mssql_server.example.id}/databases/master",
+          "log_monitoring_enabled": true,
+          "compiletime_identity": "azurerm_mssql_database_extended_auditing_policy.example"
+        }
+      },
+      {
+        "type": "azurerm_mssql_server_extended_auditing_policy",
+        "name": "example",
+        "properties": {
+          "server_id": "${azurerm_mssql_server.example.id}",
+          "log_monitoring_enabled": true,
+          "compiletime_identity": "azurerm_mssql_server_extended_auditing_policy.example"
+        }
+      }
+    ]
+  }
+}

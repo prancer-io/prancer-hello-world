@@ -2,12 +2,12 @@
   "structure": "filesystem",
   "error": null,
   "reference": "master",
-  "contentType": "yaml",
+  "contentType": "json",
   "source": "gitConnectorGoogleKcc",
   "paths": [
-    "/samples/resources/dnsrecordset/dnssec-ds-record-set/dns_v1beta1_dnsmanagedzone.yaml"
+    "/samples/resources/containernodepool/basic-node-pool/container_v1beta1_containernodepool.yaml"
   ],
-  "timestamp": 1628765146359,
+  "timestamp": 1642973303796,
   "queryuser": null,
   "checksum": "99914b932bd37a50b983c5e7c90ae93b",
   "node": {
@@ -15,24 +15,62 @@
     "type": "kcc",
     "collection": "kcctemplate",
     "paths": [
-      "/samples/resources/dnsrecordset/dnssec-ds-record-set/dns_v1beta1_dnsmanagedzone.yaml"
+      "/samples/resources/containernodepool/basic-node-pool/container_v1beta1_containernodepool.yaml"
     ],
     "snapshotId": "KCC_TEMPLATE_SNAPSHOT347",
     "status": "active",
-    "validate": true
+    "validate": true,
+    "resourceTypes": [
+      "containernodepool"
+    ]
   },
   "snapshotId": "KCC_TEMPLATE_SNAPSHOT347",
   "collection": "kcctemplate",
   "json": {
-    "apiVersion": "dns.cnrm.cloud.google.com/v1beta1",
-    "kind": "DNSManagedZone",
+    "apiVersion": "container.cnrm.cloud.google.com/v1beta1",
+    "kind": "ContainerNodePool",
     "metadata": {
-      "name": "dnsrecordset-dep-dnssecds"
+      "labels": {
+        "label-one": "value-one"
+      },
+      "name": "containernodepool-sample-basic"
     },
     "spec": {
-      "dnsName": "secure.example.com.",
-      "dnssecConfig": {
-        "state": "on"
+      "location": "us-east1-c",
+      "autoscaling": {
+        "minNodeCount": 1,
+        "maxNodeCount": 3
+      },
+      "nodeConfig": {
+        "machineType": "n1-standard-1",
+        "diskSizeGb": 100,
+        "diskType": "pd-standard",
+        "tags": [
+          "tagone",
+          "tagtwo"
+        ],
+        "preemptible": false,
+        "minCpuPlatform": "Intel Haswell",
+        "oauthScopes": [
+          "https://www.googleapis.com/auth/logging.write",
+          "https://www.googleapis.com/auth/monitoring"
+        ],
+        "guestAccelerator": [
+          {
+            "type": "nvidia-tesla-k80",
+            "count": 1
+          }
+        ],
+        "metadata": {
+          "disable-legacy-endpoints": "true"
+        }
+      },
+      "management": {
+        "autoRepair": true,
+        "autoUpgrade": true
+      },
+      "clusterRef": {
+        "name": "containernodepool-dep-basic"
       }
     }
   }

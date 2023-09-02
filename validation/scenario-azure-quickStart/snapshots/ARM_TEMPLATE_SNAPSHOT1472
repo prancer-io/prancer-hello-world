@@ -1,0 +1,135 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAzureQuickStart",
+  "paths": [
+    "/quickstarts/microsoft.migrate/migrate-project-create/azuredeploy.json",
+    "/quickstarts/microsoft.migrate/migrate-project-create/azuredeploy.parameters.json"
+  ],
+  "timestamp": 1642962908128,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/quickstarts/microsoft.migrate/migrate-project-create/azuredeploy.json",
+      "/quickstarts/microsoft.migrate/migrate-project-create/azuredeploy.parameters.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT1472",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "microsoft.migrate/migrateprojects/solutions",
+      "microsoft.migrate/migrateprojects"
+    ]
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT1472",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "migrateProjectName": {
+        "type": "string",
+        "maxLength": 13,
+        "metadata": {
+          "description": "Specifies a name for creating the migrate project."
+        },
+        "value": "SampleProject"
+      },
+      "location": {
+        "type": "string",
+        "allowedValues": [
+          "centralus",
+          "eastasia",
+          "northeurope",
+          "westeurope",
+          "westus2",
+          "australiasoutheast",
+          "uksouth",
+          "ukwest",
+          "canadacentral",
+          "centralindia",
+          "southindia",
+          "japaneast",
+          "japanwest",
+          "brazilsouth",
+          "koreasouth",
+          "koreacentral",
+          "francecentral",
+          "switzerlandnorth",
+          "australiaeast",
+          "southeastasia",
+          "centraluseuap",
+          "eastus2euap",
+          "canadaeast",
+          "southcentralus",
+          "usgovvirginia",
+          "usgovarizona"
+        ],
+        "metadata": {
+          "description": "Specifies the location for all resources."
+        },
+        "value": "westus2"
+      }
+    },
+    "resources": [
+      {
+        "type": "Microsoft.Migrate/MigrateProjects",
+        "apiVersion": "2020-05-01",
+        "name": "SampleProject",
+        "location": "westus2",
+        "tags": {
+          "Migrate Project": "SampleProject"
+        },
+        "properties": {}
+      },
+      {
+        "type": "Microsoft.Migrate/MigrateProjects/Solutions",
+        "apiVersion": "2020-05-01",
+        "name": "SampleProject/Servers-Assessment-ServerAssessment",
+        "dependsOn": [
+          "Microsoft.Migrate/MigrateProjects/SampleProject"
+        ],
+        "properties": {
+          "tool": "ServerAssessment",
+          "purpose": "Assessment",
+          "goal": "Servers",
+          "status": "Active"
+        }
+      },
+      {
+        "type": "Microsoft.Migrate/MigrateProjects/Solutions",
+        "apiVersion": "2020-05-01",
+        "name": "SampleProject/Servers-Discovery-ServerDiscovery",
+        "dependsOn": [
+          "Microsoft.Migrate/MigrateProjects/SampleProject"
+        ],
+        "properties": {
+          "tool": "ServerDiscovery",
+          "purpose": "Discovery",
+          "goal": "Servers",
+          "status": "Inactive"
+        }
+      },
+      {
+        "type": "Microsoft.Migrate/MigrateProjects/Solutions",
+        "apiVersion": "2020-05-01",
+        "name": "SampleProject/Servers-Migration-ServerMigration",
+        "dependsOn": [
+          "Microsoft.Migrate/MigrateProjects/SampleProject"
+        ],
+        "properties": {
+          "tool": "ServerMigration",
+          "purpose": "Migration",
+          "goal": "Servers",
+          "status": "Active"
+        }
+      }
+    ],
+    "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+  }
+}

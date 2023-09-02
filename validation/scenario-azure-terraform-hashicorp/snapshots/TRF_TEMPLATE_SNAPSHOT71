@@ -1,0 +1,93 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "main",
+  "contentType": "json",
+  "source": "gitConnectorAzureTerraHashicorp",
+  "paths": [
+    "/examples/media-services/basic/variables.tf",
+    "/examples/media-services/basic/main.tf"
+  ],
+  "timestamp": 1642943279805,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "TRF_TEMPLATE_SNAPSHOT",
+    "type": "terraform",
+    "collection": "terraformtemplate",
+    "paths": [
+      "/examples/media-services/basic/variables.tf",
+      "/examples/media-services/basic/main.tf"
+    ],
+    "snapshotId": "TRF_TEMPLATE_SNAPSHOT71",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "azurerm_storage_account",
+      "azurerm_media_services_account",
+      "azurerm_resource_group"
+    ]
+  },
+  "snapshotId": "TRF_TEMPLATE_SNAPSHOT71",
+  "collection": "terraformtemplate",
+  "json": {
+    "provider": [
+      {
+        "azurerm": {
+          "features": [
+            {}
+          ]
+        }
+      }
+    ],
+    "output": [
+      {
+        "rendered": {
+          "value": "${azurerm_media_services_account.example.id}"
+        }
+      }
+    ],
+    "resources": [
+      {
+        "type": "azurerm_resource_group",
+        "name": "example",
+        "properties": {
+          "name": "${var.prefix}-resources",
+          "location": "${var.location}",
+          "compiletime_identity": "azurerm_resource_group.example"
+        }
+      },
+      {
+        "type": "azurerm_storage_account",
+        "name": "example",
+        "properties": {
+          "name": "${var.prefix}storacc",
+          "resource_group_name": "${azurerm_resource_group.example.name}",
+          "location": "${azurerm_resource_group.example.location}",
+          "account_tier": "Standard",
+          "account_replication_type": "GRS",
+          "tags": {
+            "environment": "staging"
+          },
+          "compiletime_identity": "azurerm_storage_account.example"
+        }
+      },
+      {
+        "type": "azurerm_media_services_account",
+        "name": "example",
+        "properties": {
+          "name": "${var.prefix}mediasvc",
+          "location": "${azurerm_resource_group.example.location}",
+          "resource_group_name": "${azurerm_resource_group.example.name}",
+          "storage_account": [
+            {
+              "id": "${azurerm_storage_account.example.id}",
+              "is_primary": true
+            }
+          ],
+          "compiletime_identity": "azurerm_media_services_account.example"
+        }
+      }
+    ]
+  }
+}

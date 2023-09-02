@@ -1,0 +1,450 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAzureQuickStart",
+  "paths": [
+    "/application-workloads/chef/datameer-trend-chef-riskanalysis/nested/trendp2p-splunkenterprise.json",
+    "/application-workloads/chef/datameer-trend-chef-riskanalysis/nested/datameer-hdinsight.parameters.json"
+  ],
+  "timestamp": 1642962884775,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/application-workloads/chef/datameer-trend-chef-riskanalysis/nested/trendp2p-splunkenterprise.json",
+      "/application-workloads/chef/datameer-trend-chef-riskanalysis/nested/datameer-hdinsight.parameters.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT69",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "microsoft.network/publicipaddresses",
+      "microsoft.network/networkinterfaces",
+      "microsoft.compute/virtualmachines/extensions",
+      "microsoft.compute/virtualmachines",
+      "microsoft.network/networksecuritygroups"
+    ]
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT69",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "location": {
+        "type": "string",
+        "defaultValue": "[resourceGroup().location]",
+        "value": "westus"
+      },
+      "network-api-version": {
+        "type": "string",
+        "defaultValue": ""
+      },
+      "compute-api-version": {
+        "type": "string",
+        "defaultValue": ""
+      },
+      "vmNameSplunkEnterprise": {
+        "type": "string",
+        "defaultValue": ""
+      },
+      "vmAdminUsernameSplunkEnterprise": {
+        "defaultValue": "",
+        "type": "string"
+      },
+      "vmAdminPasswordSplunkEnterprise": {
+        "defaultValue": "",
+        "type": "SecureString"
+      },
+      "splunkAdminPassword": {
+        "defaultValue": "",
+        "type": "SecureString"
+      },
+      "publicIPAddressSettingsSplunk": {
+        "type": "object",
+        "metadata": {
+          "description": "Public IP address settings object"
+        }
+      },
+      "networkSecurityGroupNameSplunkEnterprise": {
+        "type": "string",
+        "defaultValue": ""
+      },
+      "networkInterfaceNameSplunkEnterprise": {
+        "defaultValue": "",
+        "type": "string"
+      },
+      "machineSettings": {
+        "type": "object"
+      },
+      "subnet3Ref": {
+        "type": "string"
+      },
+      "osSettingsSplunk": {
+        "type": "object"
+      },
+      "tagvalues": {
+        "type": "object",
+        "defaultValue": {
+          "program": "p2p",
+          "project": "TrendMicro"
+        }
+      },
+      "udpPort": {
+        "defaultValue": "",
+        "type": "string"
+      },
+      "storageAccountName": {
+        "defaultValue": "",
+        "type": "string"
+      },
+      "clusterName": {
+        "value": "hdi-datameer-avyan-cluster"
+      },
+      "clusterType": {
+        "value": "hadoop"
+      },
+      "clusterLoginUserName": {
+        "value": "hdiadmin"
+      },
+      "clusterLoginPassword": {
+        "value": "GEN-PASSWORD"
+      },
+      "sshUserName": {
+        "value": "hdiuser"
+      },
+      "sshPassword": {
+        "value": "GEN-PASSWORD"
+      },
+      "storageAccount": {
+        "value": "stgmsignite2016"
+      },
+      "clusterVNetName": {
+        "value": "datameerP2PVnet"
+      },
+      "clusterVnetAddressSpace": {
+        "value": "10.7.0.0/16"
+      },
+      "clusterVNetSubnetAddressRange": {
+        "value": "10.7.4.0/24"
+      },
+      "clusterVNetSubnetName": {
+        "value": "hdi-datameer-avyan-clustersubnet"
+      }
+    },
+    "variables": {
+      "publicIpName": "machineSettings",
+      "splunkServerRole": "splunk_server",
+      "singleQuote": "'",
+      "clusterMasterIp": "machineSettings"
+    },
+    "resources": [
+      {
+        "apiVersion": "2017-06-01",
+        "type": "Microsoft.Network/publicIPAddresses",
+        "name": "[concat(parameters('publicIPAddressSettingsSplunk').name, parameters('publicIPAddressSettingsSplunk').map[copyindex()])]",
+        "copy": {
+          "name": "publicIPAddressLoop",
+          "count": "publicIPAddressSettingsSplunk"
+        },
+        "location": "westus",
+        "tags": {
+          "program": "p2p",
+          "project": "TrendMicro"
+        },
+        "properties": {
+          "publicIPAllocationMethod": "Dynamic",
+          "dnsSettings": {
+            "domainNameLabel": "[concat(parameters('publicIPAddressSettingsSplunk').domainNamePrefix, parameters('publicIPAddressSettingsSplunk').map[copyindex()])]"
+          }
+        }
+      },
+      {
+        "apiVersion": "2017-06-01",
+        "type": "Microsoft.Network/networkSecurityGroups",
+        "name": "",
+        "location": "westus",
+        "tags": {
+          "program": "p2p",
+          "project": "TrendMicro"
+        },
+        "properties": {
+          "securityRules": [
+            {
+              "name": "Allow-SSH",
+              "properties": {
+                "description": "Allows SSH traffic",
+                "protocol": "Tcp",
+                "sourcePortRange": "*",
+                "destinationPortRange": "22",
+                "sourceAddressPrefix": "machineSettings",
+                "destinationAddressPrefix": "*",
+                "access": "Allow",
+                "priority": 100,
+                "direction": "Inbound"
+              }
+            },
+            {
+              "name": "Allow-HTTP",
+              "properties": {
+                "description": "Allows HTTP traffic on port 8000",
+                "protocol": "Tcp",
+                "sourcePortRange": "*",
+                "destinationPortRange": "8000",
+                "sourceAddressPrefix": "*",
+                "destinationAddressPrefix": "*",
+                "access": "Allow",
+                "priority": 110,
+                "direction": "Inbound"
+              }
+            },
+            {
+              "name": "Allow-HTTPS",
+              "properties": {
+                "description": "Allows HTTPS traffic on port 443",
+                "protocol": "Tcp",
+                "sourcePortRange": "*",
+                "destinationPortRange": "443",
+                "sourceAddressPrefix": "*",
+                "destinationAddressPrefix": "*",
+                "access": "Allow",
+                "priority": 120,
+                "direction": "Inbound"
+              }
+            },
+            {
+              "name": "Allow-HTTP-Event-Collector",
+              "properties": {
+                "description": "Allows HTTP(S) Event Collector traffic on port 8088",
+                "protocol": "Tcp",
+                "sourcePortRange": "*",
+                "destinationPortRange": "8088",
+                "sourceAddressPrefix": "*",
+                "destinationAddressPrefix": "*",
+                "access": "Allow",
+                "priority": 130,
+                "direction": "Inbound"
+              }
+            },
+            {
+              "name": "Allow-Receiver-TCP",
+              "properties": {
+                "description": "Allows receiver TCP traffic on port 9997",
+                "protocol": "Tcp",
+                "sourcePortRange": "*",
+                "destinationPortRange": "9997",
+                "sourceAddressPrefix": "machineSettings",
+                "destinationAddressPrefix": "*",
+                "access": "Allow",
+                "priority": 140,
+                "direction": "Inbound"
+              }
+            },
+            {
+              "name": "Allow-Mgmt-From-VNET",
+              "properties": {
+                "description": "Allows mgmt on port 8089 from VNET only",
+                "protocol": "Tcp",
+                "sourcePortRange": "*",
+                "destinationPortRange": "8089",
+                "sourceAddressPrefix": "VirtualNetwork",
+                "destinationAddressPrefix": "*",
+                "access": "Allow",
+                "priority": 150,
+                "direction": "Inbound"
+              }
+            },
+            {
+              "name": "Allow-Custom-UDP",
+              "properties": {
+                "description": "Allows UDP port entered by user",
+                "protocol": "Udp",
+                "sourcePortRange": "*",
+                "destinationPortRange": "",
+                "sourceAddressPrefix": "*",
+                "destinationAddressPrefix": "*",
+                "access": "Allow",
+                "priority": 160,
+                "direction": "Inbound"
+              }
+            }
+          ]
+        }
+      },
+      {
+        "apiVersion": "2017-06-01",
+        "type": "Microsoft.Network/networkInterfaces",
+        "name": "",
+        "location": "westus",
+        "dependsOn": [
+          "Microsoft.Network/networkSecurityGroups/ parameters('networkSecurityGroupNameSplunkEnterprise')",
+          "Microsoft.Network/publicIPAddresses/machineSettings"
+        ],
+        "tags": {
+          "program": "p2p",
+          "project": "TrendMicro"
+        },
+        "properties": {
+          "networkSecurityGroup": {
+            "id": "Microsoft.Network/networkSecurityGroups/ parameters('networkSecurityGroupNameSplunkEnterprise')"
+          },
+          "ipConfigurations": [
+            {
+              "name": "ipconfig1",
+              "properties": {
+                "privateIPAllocationMethod": "Static",
+                "privateIPAddress": "machineSettings",
+                "publicIPAddress": {
+                  "id": "Microsoft.Network/publicIPAddresses/machineSettings"
+                },
+                "subnet": {
+                  "id": "subnet3Ref"
+                }
+              }
+            }
+          ]
+        }
+      },
+      {
+        "apiVersion": "2017-03-30",
+        "type": "Microsoft.Compute/virtualMachines",
+        "name": "",
+        "location": "westus",
+        "tags": {
+          "program": "p2p",
+          "project": "TrendMicro"
+        },
+        "plan": {
+          "name": "osSettingsSplunk",
+          "publisher": "osSettingsSplunk",
+          "product": "osSettingsSplunk"
+        },
+        "dependsOn": [
+          "Microsoft.Network/networkInterfaces/ parameters('networkInterfaceNameSplunkEnterprise')"
+        ],
+        "properties": {
+          "availabilitySet": {
+            "id": "Microsoft.Compute/availabilitySets/machineSettings"
+          },
+          "hardwareProfile": {
+            "vmSize": "machineSettings"
+          },
+          "osProfile": {
+            "computerName": "",
+            "adminUsername": "",
+            "adminPassword": ""
+          },
+          "storageProfile": {
+            "imageReference": "osSettingsSplunk",
+            "osDisk": {
+              "name": "parameters('vmNameSplunkEnterprise')_OSDisk",
+              "caching": "ReadWrite",
+              "createOption": "FromImage"
+            },
+            "dataDisks": [
+              {
+                "name": "parameters('vmNameSplunkEnterprise')_DataDisk1",
+                "diskSizeGB": "machineSettings",
+                "lun": 0,
+                "caching": "ReadOnly",
+                "createOption": "Empty"
+              },
+              {
+                "name": "parameters('vmNameSplunkEnterprise')_DataDisk2",
+                "diskSizeGB": "machineSettings",
+                "lun": 1,
+                "caching": "ReadOnly",
+                "createOption": "Empty"
+              },
+              {
+                "name": "parameters('vmNameSplunkEnterprise')_DataDisk3",
+                "diskSizeGB": "machineSettings",
+                "lun": 2,
+                "caching": "ReadOnly",
+                "createOption": "Empty"
+              },
+              {
+                "name": "parameters('vmNameSplunkEnterprise')_DataDisk4",
+                "diskSizeGB": "machineSettings",
+                "lun": 3,
+                "caching": "ReadOnly",
+                "createOption": "Empty"
+              },
+              {
+                "name": "parameters('vmNameSplunkEnterprise')_DataDisk5",
+                "diskSizeGB": "machineSettings",
+                "lun": 4,
+                "caching": "ReadOnly",
+                "createOption": "Empty"
+              },
+              {
+                "name": "parameters('vmNameSplunkEnterprise')_DataDisk6",
+                "diskSizeGB": "machineSettings",
+                "lun": 5,
+                "caching": "ReadOnly",
+                "createOption": "Empty"
+              },
+              {
+                "name": "parameters('vmNameSplunkEnterprise')_DataDisk7",
+                "diskSizeGB": "machineSettings",
+                "lun": 6,
+                "caching": "ReadOnly",
+                "createOption": "Empty"
+              },
+              {
+                "name": "parameters('vmNameSplunkEnterprise')_DataDisk8",
+                "diskSizeGB": "machineSettings",
+                "lun": 7,
+                "caching": "ReadOnly",
+                "createOption": "Empty"
+              }
+            ]
+          },
+          "networkProfile": {
+            "networkInterfaces": [
+              {
+                "id": "Microsoft.Network/networkInterfaces/ parameters('networkInterfaceNameSplunkEnterprise')"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "apiVersion": "2015-05-01-preview",
+        "type": "Microsoft.Compute/virtualMachines/extensions",
+        "name": "parameters('vmNameSplunkEnterprise')/node-setup",
+        "location": "westus",
+        "tags": {
+          "program": "p2p",
+          "project": "TrendMicro"
+        },
+        "dependsOn": [
+          "Microsoft.Compute/virtualMachines/ parameters('vmNameSplunkEnterprise')",
+          "Microsoft.Network/networkInterfaces/ parameters('networkInterfaceNameSplunkEnterprise')"
+        ],
+        "properties": {
+          "publisher": "Microsoft.OSTCExtensions",
+          "type": "CustomScriptForLinux",
+          "typeHandlerVersion": "1.5",
+          "settings": {
+            "fileUris": "osSettingsSplunk"
+          },
+          "protectedSettings": {
+            "commandToExecute": "bash node-setup.sh -r splunk_server -c machineSettings -u  parameters('udpPort') -p ' parameters('splunkAdminPassword')'"
+          }
+        }
+      }
+    ],
+    "outputs": {
+      "splunkenterpriseUri": {
+        "type": "string",
+        "value": "[concat('https://',reference(resourceId('Microsoft.Network/publicIPAddresses',parameters('publicIPAddressSettingsSplunk').name)).dnsSettings.fqdn)]"
+      }
+    },
+    "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+  }
+}

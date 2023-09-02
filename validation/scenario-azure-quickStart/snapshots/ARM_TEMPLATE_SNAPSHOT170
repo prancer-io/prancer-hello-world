@@ -1,0 +1,133 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAzureQuickStart",
+  "paths": [
+    "/application-workloads/informatica/informatica-adf-hdinsight-powerbi/nested/info-nsg.json"
+  ],
+  "timestamp": 1642962889250,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/application-workloads/informatica/informatica-adf-hdinsight-powerbi/nested/info-nsg.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT170",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "microsoft.network/networksecuritygroups"
+    ]
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT170",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "location": {
+        "type": "string",
+        "defaultValue": "westus",
+        "allowedValues": [
+          "brazilsouth",
+          "eastasia",
+          "eastus",
+          "japaneast",
+          "japanwest",
+          "northcentralus",
+          "northeurope",
+          "southcentralus",
+          "westeurope",
+          "westus",
+          "southeastasia",
+          "centralus",
+          "eastus2"
+        ],
+        "metadata": {
+          "description": "Deployments Location"
+        }
+      },
+      "networkApiVersion": {
+        "type": "string",
+        "defaultValue": "2016-03-30",
+        "allowedValues": [
+          "2015-05-01-preview",
+          "2015-06-15",
+          "2016-03-30"
+        ],
+        "metadata": {
+          "description": "API Version for the Network Resources"
+        }
+      },
+      "tag": {
+        "type": "object",
+        "defaultValue": {
+          "key1": "key",
+          "value1": "value"
+        }
+      },
+      "networkSecurityGroupsName": {
+        "type": "string",
+        "defaultValue": "wowza-nsg",
+        "metadata": {
+          "description": " Virtual machine name"
+        }
+      },
+      "informaticaTags": {
+        "type": "object"
+      },
+      "quickstartTags": {
+        "type": "object"
+      }
+    },
+    "variables": {},
+    "resources": [
+      {
+        "type": "Microsoft.Network/networkSecurityGroups",
+        "name": "wowza-nsg",
+        "apiVersion": "2016-03-30",
+        "location": "westus",
+        "tags": {
+          "[parameters('tag').key1]": "value",
+          "quickstartName": "quickstartTags",
+          "provider": "informaticaTags"
+        },
+        "properties": {
+          "securityRules": [
+            {
+              "name": "HTTP",
+              "properties": {
+                "priority": 1010,
+                "sourceAddressPrefix": "*",
+                "protocol": "Tcp",
+                "destinationPortRange": "80",
+                "access": "Allow",
+                "direction": "Inbound",
+                "sourcePortRange": "*",
+                "destinationAddressPrefix": "*"
+              }
+            },
+            {
+              "name": "default-allow-rdp",
+              "properties": {
+                "priority": 1020,
+                "sourceAddressPrefix": "*",
+                "protocol": "Tcp",
+                "destinationPortRange": "3389",
+                "access": "Allow",
+                "direction": "Inbound",
+                "sourcePortRange": "*",
+                "destinationAddressPrefix": "*"
+              }
+            }
+          ]
+        }
+      }
+    ],
+    "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+  }
+}

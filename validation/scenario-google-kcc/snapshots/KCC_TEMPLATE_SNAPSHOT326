@@ -2,12 +2,12 @@
   "structure": "filesystem",
   "error": null,
   "reference": "master",
-  "contentType": "yaml",
+  "contentType": "json",
   "source": "gitConnectorGoogleKcc",
   "paths": [
-    "/samples/resources/dataprocworkflowtemplate/dataproc_v1beta1_dataprocworkflowtemplate.yaml"
+    "/samples/resources/computeurlmap/regional-compute-url-map-l7-ilb-path/compute_v1beta1_computeurlmap.yaml"
   ],
-  "timestamp": 1628765145822,
+  "timestamp": 1642973303529,
   "queryuser": null,
   "checksum": "99914b932bd37a50b983c5e7c90ae93b",
   "node": {
@@ -15,77 +15,150 @@
     "type": "kcc",
     "collection": "kcctemplate",
     "paths": [
-      "/samples/resources/dataprocworkflowtemplate/dataproc_v1beta1_dataprocworkflowtemplate.yaml"
+      "/samples/resources/computeurlmap/regional-compute-url-map-l7-ilb-path/compute_v1beta1_computeurlmap.yaml"
     ],
     "snapshotId": "KCC_TEMPLATE_SNAPSHOT326",
     "status": "active",
-    "validate": true
+    "validate": true,
+    "resourceTypes": [
+      "computeurlmap"
+    ]
   },
   "snapshotId": "KCC_TEMPLATE_SNAPSHOT326",
   "collection": "kcctemplate",
   "json": {
-    "apiVersion": "dataproc.cnrm.cloud.google.com/v1beta1",
-    "kind": "DataprocWorkflowTemplate",
+    "apiVersion": "compute.cnrm.cloud.google.com/v1beta1",
+    "kind": "ComputeURLMap",
     "metadata": {
-      "labels": {
-        "label-one": "value-one"
-      },
-      "name": "dataprocworkflowtemplate-sample"
+      "name": "computeurlmap-sample"
     },
     "spec": {
+      "description": "Regional ComputeURLMap L7 Ilb Path",
       "location": "us-central1",
-      "placement": {
-        "managedCluster": {
-          "clusterName": "test-cluster",
-          "config": {
-            "autoscalingConfig": {
-              "policyRef": {
-                "name": "dataprocworkflowtemplate-dep"
-              }
-            },
-            "masterConfig": {
-              "diskConfig": {
-                "bootDiskSizeGb": 30,
-                "bootDiskType": "pd-standard"
-              },
-              "machineType": "n2-standard-8",
-              "numInstances": 1
-            },
-            "workerConfig": {
-              "numInstances": 2,
-              "machineType": "n2-standard-8",
-              "diskConfig": {
-                "bootDiskSizeGb": 30,
-                "numLocalSsds": 1
-              }
-            },
-            "softwareConfig": {
-              "imageVersion": "2.0.2-debian10"
-            },
-            "gceClusterConfig": {
-              "tags": [
-                "foo",
-                "bar"
-              ]
-            }
-          }
+      "defaultService": {
+        "backendServiceRef": {
+          "name": "computeurlmap-dep"
         }
       },
-      "jobs": [
+      "hostRule": [
         {
-          "stepId": "someJob",
-          "sparkJob": {
-            "mainClass": "SomeClass"
-          }
-        },
-        {
-          "stepId": "otherJob",
-          "prerequisiteStepIds": [
-            "someJob"
+          "hosts": [
+            "mysite.com"
           ],
-          "prestoJob": {
-            "queryFileUri": "someUri"
-          }
+          "pathMatcher": "allpaths"
+        }
+      ],
+      "pathMatcher": [
+        {
+          "name": "allpaths",
+          "defaultService": {
+            "backendServiceRef": {
+              "name": "computeurlmap-dep"
+            }
+          },
+          "pathRule": [
+            {
+              "paths": [
+                "/home"
+              ],
+              "routeAction": {
+                "corsPolicy": {
+                  "allowCredentials": true,
+                  "allowHeaders": [
+                    "Allowed content"
+                  ],
+                  "allowMethods": [
+                    "GET"
+                  ],
+                  "allowOrigins": [
+                    "Allowed origin"
+                  ],
+                  "exposeHeaders": [
+                    "Exposed header"
+                  ],
+                  "maxAge": 30,
+                  "disabled": false
+                },
+                "faultInjectionPolicy": {
+                  "abort": {
+                    "httpStatus": 234,
+                    "percentage": 5.6
+                  },
+                  "delay": {
+                    "fixedDelay": {
+                      "seconds": "0",
+                      "nanos": 50000
+                    },
+                    "percentage": 7.8
+                  }
+                },
+                "requestMirrorPolicy": {
+                  "backendServiceRef": {
+                    "name": "computeurlmap-dep"
+                  }
+                },
+                "retryPolicy": {
+                  "numRetries": 4,
+                  "retryTimeout": {
+                    "seconds": "30"
+                  },
+                  "retryConditions": [
+                    "5xx",
+                    "deadline-exceeded"
+                  ]
+                },
+                "timeout": {
+                  "seconds": "20",
+                  "nanos": 750000000
+                },
+                "urlRewrite": {
+                  "hostRewrite": "A replacement header",
+                  "pathPrefixRewrite": "A replacement path"
+                },
+                "weightedBackendServices": [
+                  {
+                    "backendServiceRef": {
+                      "name": "computeurlmap-dep"
+                    },
+                    "weight": 400,
+                    "headerAction": {
+                      "requestHeadersToRemove": [
+                        "RemoveMe"
+                      ],
+                      "requestHeadersToAdd": [
+                        {
+                          "headerName": "AddMe",
+                          "headerValue": "MyValue",
+                          "replace": true
+                        }
+                      ],
+                      "responseHeadersToRemove": [
+                        "RemoveMe"
+                      ],
+                      "responseHeadersToAdd": [
+                        {
+                          "headerName": "AddMe",
+                          "headerValue": "MyValue",
+                          "replace": false
+                        }
+                      ]
+                    }
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      ],
+      "test": [
+        {
+          "service": {
+            "backendServiceRef": {
+              "name": "computeurlmap-dep"
+            }
+          },
+          "host": "hi.com",
+          "path": "/home"
         }
       ]
     }

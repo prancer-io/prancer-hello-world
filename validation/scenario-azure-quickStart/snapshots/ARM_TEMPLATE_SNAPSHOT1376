@@ -1,0 +1,187 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAzureQuickStart",
+  "paths": [
+    "/quickstarts/microsoft.insights/monitoring-static-metric-alert/azuredeploy.json",
+    "/quickstarts/microsoft.insights/monitoring-static-metric-alert/azuredeploy.parameters.json"
+  ],
+  "timestamp": 1642962907267,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/quickstarts/microsoft.insights/monitoring-static-metric-alert/azuredeploy.json",
+      "/quickstarts/microsoft.insights/monitoring-static-metric-alert/azuredeploy.parameters.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT1376",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "microsoft.insights/metricalerts"
+    ]
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT1376",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "alertName": {
+        "type": "string",
+        "minLength": 1,
+        "metadata": {
+          "description": "Name of the alert"
+        },
+        "value": "New Metric Alert"
+      },
+      "alertDescription": {
+        "type": "string",
+        "defaultValue": "This is a metric alert",
+        "metadata": {
+          "description": "Description of alert"
+        }
+      },
+      "alertSeverity": {
+        "type": "int",
+        "defaultValue": 3,
+        "allowedValues": [
+          0,
+          1,
+          2,
+          3,
+          4
+        ],
+        "metadata": {
+          "description": "Severity of alert {0,1,2,3,4}"
+        }
+      },
+      "isEnabled": {
+        "type": "bool",
+        "defaultValue": true,
+        "metadata": {
+          "description": "Specifies whether the alert is enabled"
+        }
+      },
+      "resourceId": {
+        "type": "string",
+        "minLength": 1,
+        "metadata": {
+          "description": "Full Resource ID of the resource emitting the metric that will be used for the comparison. For example /subscriptions/00000000-0000-0000-0000-0000-00000000/resourceGroups/ResourceGroupName/providers/Microsoft.compute/virtualMachines/VM_xyz"
+        },
+        "value": "GET-PREREQ-virtualMachineResourceId"
+      },
+      "metricName": {
+        "type": "string",
+        "defaultValue": "Percentage CPU",
+        "minLength": 1,
+        "metadata": {
+          "description": "Name of the metric used in the comparison to activate the alert."
+        }
+      },
+      "operator": {
+        "type": "string",
+        "defaultValue": "GreaterThan",
+        "allowedValues": [
+          "Equals",
+          "NotEquals",
+          "GreaterThan",
+          "GreaterThanOrEqual",
+          "LessThan",
+          "LessThanOrEqual"
+        ],
+        "metadata": {
+          "description": "Operator comparing the current value with the threshold value."
+        }
+      },
+      "threshold": {
+        "type": "string",
+        "defaultValue": "0",
+        "metadata": {
+          "description": "The threshold value at which the alert is activated."
+        }
+      },
+      "timeAggregation": {
+        "type": "string",
+        "defaultValue": "Average",
+        "allowedValues": [
+          "Average",
+          "Minimum",
+          "Maximum",
+          "Total",
+          "Count"
+        ],
+        "metadata": {
+          "description": "How the data that is collected should be combined over time."
+        }
+      },
+      "windowSize": {
+        "type": "string",
+        "defaultValue": "PT5M",
+        "allowedValues": [
+          "PT1M",
+          "PT5M",
+          "PT15M",
+          "PT30M",
+          "PT1H",
+          "PT6H",
+          "PT12H",
+          "PT24H"
+        ],
+        "metadata": {
+          "description": "Period of time used to monitor alert activity based on the threshold. Must be between one minute and one day. ISO 8601 duration format."
+        }
+      },
+      "evaluationFrequency": {
+        "type": "string",
+        "defaultValue": "PT1M",
+        "allowedValues": [
+          "PT1M",
+          "PT5M",
+          "PT15M",
+          "PT30M",
+          "PT1H"
+        ],
+        "metadata": {
+          "description": "how often the metric alert is evaluated represented in ISO 8601 duration format"
+        }
+      }
+    },
+    "variables": {},
+    "resources": [
+      {
+        "name": "New Metric Alert",
+        "type": "Microsoft.Insights/metricAlerts",
+        "location": "global",
+        "apiVersion": "2018-03-01",
+        "properties": {
+          "description": "This is a metric alert",
+          "severity": 3,
+          "enabled": true,
+          "scopes": [
+            "GET-PREREQ-virtualMachineResourceId"
+          ],
+          "evaluationFrequency": "PT1M",
+          "windowSize": "PT5M",
+          "criteria": {
+            "odata.type": "Microsoft.Azure.Monitor.SingleResourceMultipleMetricCriteria",
+            "allOf": [
+              {
+                "name": "1st criterion",
+                "metricName": "Percentage CPU",
+                "operator": "GreaterThan",
+                "threshold": "0",
+                "timeAggregation": "Average"
+              }
+            ]
+          }
+        }
+      }
+    ],
+    "\uff04schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#"
+  }
+}

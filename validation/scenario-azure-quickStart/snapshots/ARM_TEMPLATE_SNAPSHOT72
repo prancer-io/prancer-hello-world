@@ -1,0 +1,1478 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAzureQuickStart",
+  "paths": [
+    "/application-workloads/chef/datameer-trend-chef-riskanalysis/azuredeploy.json",
+    "/application-workloads/chef/datameer-trend-chef-riskanalysis/azuredeploy.parameters.json"
+  ],
+  "timestamp": 1642962885308,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/application-workloads/chef/datameer-trend-chef-riskanalysis/azuredeploy.json",
+      "/application-workloads/chef/datameer-trend-chef-riskanalysis/azuredeploy.parameters.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT72",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "microsoft.resources/deployments"
+    ]
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT72",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "location": {
+        "type": "string",
+        "defaultValue": "westus",
+        "allowedValues": [
+          "westus",
+          "eastus",
+          "centralus"
+        ],
+        "metadata": {
+          "description": "Location where all the resources deploy"
+        },
+        "value": "westus"
+      },
+      "hdiclusterType": {
+        "type": "string",
+        "defaultValue": "hadoop",
+        "allowedValues": [
+          "hadoop",
+          "hbase",
+          "storm",
+          "spark"
+        ],
+        "metadata": {
+          "description": "The type of the HDInsight cluster to create."
+        },
+        "value": "hadoop"
+      },
+      "hdiclusterName": {
+        "type": "string",
+        "defaultValue": "datameerhdi",
+        "metadata": {
+          "description": "The name of the HDInsight cluster to create."
+        },
+        "value": "datameerhdi"
+      },
+      "hdiclusterLoginUserName": {
+        "type": "string",
+        "defaultValue": "demo",
+        "metadata": {
+          "description": "These credentials can be used to submit jobs to the cluster and to log into cluster dashboards."
+        },
+        "value": "demo"
+      },
+      "hdiclusterLoginPassword": {
+        "type": "securestring",
+        "metadata": {
+          "description": "The password must be at least 8 characters in length and must contain at least one digit, one non-alphanumeric character, and one upper or lower case letter."
+        },
+        "value": "GEN-PASSWORD"
+      },
+      "hdisshUserName": {
+        "type": "string",
+        "defaultValue": "demo",
+        "metadata": {
+          "description": "These credentials can be used to remotely access the cluster."
+        },
+        "value": "demo"
+      },
+      "hdisshPassword": {
+        "type": "securestring",
+        "metadata": {
+          "description": "The password must be at least 8 characters in length and must contain at least one digit, one non-alphanumeric character, and one upper or lower case letter."
+        },
+        "value": "GEN-PASSWORD"
+      },
+      "hdistorageAccount": {
+        "type": "string",
+        "defaultValue": "hadoopstgacc",
+        "metadata": {
+          "description": "The name of the storage account to use"
+        },
+        "value": "GEN-UNIQUE"
+      },
+      "authenticationType": {
+        "type": "string",
+        "defaultValue": "sshPublicKey",
+        "allowedValues": [
+          "sshPublicKey",
+          "password"
+        ],
+        "metadata": {
+          "description": "Type of authentication to use on all Linux Virtual Machines. SSH key is recommended."
+        }
+      },
+      "vmAdminNameTrendDSM": {
+        "type": "string",
+        "defaultValue": "demo",
+        "metadata": {
+          "description": "TrendMicro Deep Security Manager Virtual Machine admin username"
+        },
+        "value": "GEN-UNIQUE"
+      },
+      "vmAdminPasswordOrPublicKeyTrendDSM": {
+        "type": "securestring",
+        "metadata": {
+          "description": "TrendMicro Deep Security Manager Virtual Machine admin password or SSH public key. SSH key is recommended."
+        },
+        "value": "GEN-SSH-PUB-KEY"
+      },
+      "vmSizeTrendDSM": {
+        "type": "string",
+        "defaultValue": "Standard_D2_v3",
+        "allowedValues": [
+          "Standard_D2_v3",
+          "Standard_D4_v3",
+          "Standard_D8_v3",
+          "Standard_D16_v3"
+        ],
+        "metadata": {
+          "description": "TrendMicro Deep Security Manager Virtual Machine size"
+        },
+        "value": "Standard_D2_v3"
+      },
+      "dsmAdminName": {
+        "type": "string",
+        "defaultValue": "demo",
+        "metadata": {
+          "description": "TrendMicro Deep Security Manager application username (To login to Trend DSM from browser)"
+        },
+        "value": "demo"
+      },
+      "dsmAdminPassword": {
+        "type": "securestring",
+        "metadata": {
+          "description": "TrendMicro Deep Security Manager application password (To login to Trend DSM from browser)"
+        },
+        "value": "GEN-PASSWORD"
+      },
+      "dbName": {
+        "type": "string",
+        "defaultValue": "dsm",
+        "metadata": {
+          "description": "TrendMicro Deep Security Manager database name"
+        },
+        "value": "dsm"
+      },
+      "dbAdminName": {
+        "type": "string",
+        "defaultValue": "demo",
+        "metadata": {
+          "description": "TrendMicro Deep Security Manager database admin user"
+        },
+        "value": "demo"
+      },
+      "dbAdminPassword": {
+        "type": "securestring",
+        "metadata": {
+          "description": "TrendMicro Deep Security Manager database admin password"
+        },
+        "value": "GEN-PASSWORD"
+      },
+      "publicIPDomainNameLabelTrendDSM": {
+        "type": "string",
+        "defaultValue": "publicdnstrenddsm",
+        "metadata": {
+          "description": "TrendMicro Deep Security Manager unique public DNS prefix"
+        },
+        "value": "GEN-UNIQUE"
+      },
+      "managerPortTrendDSM": {
+        "type": "string",
+        "defaultValue": "443",
+        "metadata": {
+          "description": "TrendMicro Deep Security Manager management port"
+        },
+        "value": "443"
+      },
+      "heartbeatPortTrendDSM": {
+        "type": "string",
+        "defaultValue": "4120",
+        "metadata": {
+          "description": "TrendMicro Deep Security Manager heartbeat port"
+        },
+        "value": "4120"
+      },
+      "vmAdminUsernameOrchServer": {
+        "defaultValue": "demo",
+        "type": "string",
+        "metadata": {
+          "description": "Orchestrator Server Virtual Machine admin username"
+        },
+        "value": "GEN-UNIQUE"
+      },
+      "vmAdminPasswordOrPublicKeyOrchServer": {
+        "type": "securestring",
+        "metadata": {
+          "description": "Orchestrator Server Virtual Machine admin password or SSH public key. SSH key is recommended."
+        },
+        "value": "GEN-SSH-PUB-KEY"
+      },
+      "publicIPDomainNameLabelOrchServer": {
+        "defaultValue": "publicdnsorcserver",
+        "type": "string",
+        "metadata": {
+          "description": "Orchestrator Server unique public DNS prefix"
+        },
+        "value": "GEN-UNIQUE"
+      },
+      "vmAdminUsernameChefServer": {
+        "defaultValue": "demo",
+        "type": "string",
+        "metadata": {
+          "description": "Chef Server Virtual Machine admin username"
+        },
+        "value": "GEN-UNIQUE"
+      },
+      "vmAdminPasswordOrPublicKeyChefServer": {
+        "type": "securestring",
+        "metadata": {
+          "description": "Chef Server Virtual Machine admin password or SSH public key. SSH key is recommended."
+        },
+        "value": "GEN-SSH-PUB-KEY"
+      },
+      "vmSizeChefServer": {
+        "type": "string",
+        "defaultValue": "Standard_D2_v3",
+        "allowedValues": [
+          "Standard_D2_v3",
+          "Standard_D4_v3",
+          "Standard_D8_v3",
+          "Standard_D2_v3",
+          "Standard_D4_v3",
+          "Standard_D8_v3"
+        ],
+        "metadata": {
+          "description": "Chef Server Virtual Machine size"
+        },
+        "value": "Standard_D2_v3"
+      },
+      "publicIPDomainNameLabelChefServer": {
+        "type": "string",
+        "defaultValue": "publicdnschefserver",
+        "metadata": {
+          "description": "Chef Server unique public DNS prefix"
+        },
+        "value": "GEN-UNIQUE"
+      },
+      "chefUserName": {
+        "type": "string",
+        "defaultValue": "chefuser",
+        "metadata": {
+          "description": "Chef user name"
+        },
+        "value": "chefuser"
+      },
+      "chefUserFirstName": {
+        "type": "string",
+        "defaultValue": "chef",
+        "metadata": {
+          "description": "Chef user first name"
+        },
+        "value": "chef"
+      },
+      "chefUserLastName": {
+        "type": "string",
+        "defaultValue": "user",
+        "metadata": {
+          "description": "Chef user last name"
+        },
+        "value": "user"
+      },
+      "chefUserEmail": {
+        "type": "string",
+        "defaultValue": "chef@noone.com",
+        "metadata": {
+          "description": "Chef user email"
+        },
+        "value": "chef@noone.com"
+      },
+      "chefUserPassword": {
+        "type": "securestring",
+        "metadata": {
+          "description": "Chef user password"
+        },
+        "value": "GEN-PASSWORD"
+      },
+      "chefOrgShortName": {
+        "type": "string",
+        "defaultValue": "ct",
+        "metadata": {
+          "description": "Chef org short name"
+        },
+        "value": "ct"
+      },
+      "chefOrgFullName": {
+        "type": "string",
+        "defaultValue": "Chef Test Inc",
+        "metadata": {
+          "description": "Chef Org full name"
+        },
+        "value": "Chef Test Inc"
+      },
+      "adminUsernameChefWorkstation": {
+        "type": "string",
+        "defaultValue": "demo",
+        "metadata": {
+          "description": "Chef Workstation Virtual Machine admin username"
+        },
+        "value": "demo"
+      },
+      "adminPasswordChefWorkstation": {
+        "type": "securestring",
+        "metadata": {
+          "description": "Chef Workstation Virtual Machine admin password"
+        },
+        "value": "GEN-PASSWORD"
+      },
+      "vmSizeChefWorkstation": {
+        "type": "string",
+        "defaultValue": "Standard_D2_v3",
+        "allowedValues": [
+          "Standard_D2_v3",
+          "Standard_D4_v3",
+          "Standard_D8_v3"
+        ],
+        "metadata": {
+          "description": "Chef Workstation Virtual Machine size"
+        },
+        "value": "Standard_D2_v3"
+      },
+      "publicIPDomainNameLabelChefWorkstation": {
+        "type": "string",
+        "defaultValue": "publicdnschefws",
+        "metadata": {
+          "description": "Chef Workstation unique public DNS prefix"
+        },
+        "value": "GEN-UNIQUE"
+      },
+      "adminUsernameDSAgentWindows": {
+        "type": "string",
+        "defaultValue": "demo",
+        "metadata": {
+          "description": "Windows Deep Security Agent Virtual Machine admin username"
+        },
+        "value": "demo"
+      },
+      "adminPasswordDSAgentWindows": {
+        "type": "securestring",
+        "metadata": {
+          "description": "Windows Deep Security Agent Virtual Machine admin password"
+        },
+        "value": "GEN-PASSWORD"
+      },
+      "publicIPDomainNameLabelDSAgentWindows": {
+        "type": "string",
+        "defaultValue": "dnsdsagwin",
+        "metadata": {
+          "description": "Windows Deep Security Agent unique public DNS prefix"
+        },
+        "value": "GEN-UNIQUE"
+      },
+      "windowsvmcount": {
+        "type": "int",
+        "defaultValue": 1,
+        "metadata": {
+          "description": "Count of Windows Deep Security Agents to deploy"
+        },
+        "value": 1
+      },
+      "adminUsernameDSAgent": {
+        "type": "string",
+        "defaultValue": "demo",
+        "metadata": {
+          "description": "Linux Deep Security Agent Virtual Machine admin username"
+        },
+        "value": "GEN-UNIQUE"
+      },
+      "adminPasswordOrPublicKeyDSAgent": {
+        "type": "securestring",
+        "metadata": {
+          "description": "Linux Deep Security Agent Virtual Machine admin password or SSH public key. SSH key recommended"
+        },
+        "value": "GEN-SSH-PUB-KEY"
+      },
+      "publicIPDomainNameLabelDSAgent": {
+        "type": "string",
+        "defaultValue": "dnsdsaglinux",
+        "metadata": {
+          "description": "Linux Deep Security Agent unique public DNS prefix"
+        },
+        "value": "GEN-UNIQUE"
+      },
+      "linuxvmcount": {
+        "type": "int",
+        "defaultValue": 1,
+        "metadata": {
+          "description": "Count of Linux Deep Security Agents to deploy"
+        },
+        "value": 1
+      },
+      "_artifactsLocation": {
+        "type": "string",
+        "metadata": {
+          "description": "Artifactslocation"
+        },
+        "defaultValue": "https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/application-workloads/chef/datameer-trend-chef-riskanalysis/"
+      },
+      "_artifactsLocationSasToken": {
+        "type": "securestring",
+        "defaultValue": "",
+        "metadata": {
+          "description": "Reserved for deploying using Visual Studio. Please keep it as an empty string"
+        }
+      }
+    },
+    "variables": {
+      "location": "westus",
+      "vmNameTrendDSM": "trendMicroDSM",
+      "vmNameChefServer": "chefServer",
+      "vmNameChefWorkstation": "chefWS",
+      "vmNameDSAWindows": "dsawindows",
+      "vmNameDSAgent": "dsalinux",
+      "vmNameOrchServer": "orchestratorServer",
+      "nicNameTrendDSM": "trendMicroDSM-nic",
+      "networkInterfaceNameChefServer": "chefServer-nic",
+      "networkInterfaceNameOrchServer": "orchestratorServer-nic",
+      "securityGroupNameTrendDSM": "trendMicroDSM-nic-nsg",
+      "networkSecurityGroupNameChefServer": "chefServer-nic-nsg",
+      "networkSecurityGroupNameOrchServer": "orchestratorServer-nic-nsg",
+      "virtualNetworkName": "datameerP2PVnet",
+      "vnetAddressPrefix": "10.7.0.0/16",
+      "subnet1Name": "trendMicroDSMsubnet",
+      "subnet1Prefix": "10.7.0.0/24",
+      "subnet2Name": "chefServersubnet",
+      "subnet2Prefix": "10.7.1.0/24",
+      "subnet3StartAddress": "10.7.2.5",
+      "subnet4Name": "vmsubnet",
+      "subnet4Prefix": "10.7.3.0/24",
+      "subnet3Name": "(datameerHDInsightCluster).clusterNamesubnet",
+      "subnet3Prefix": "10.7.4.0/24",
+      "publicIPAddressType": "Dynamic",
+      "publicIPAddressNameTrendDSM": "publicIPTrendDSM",
+      "publicIPAddressNameChefServer": "publicIPChefServer",
+      "vnetID": "Microsoft.Network/virtualNetworks/datameerP2PVnet",
+      "subnet1Ref": "Microsoft.Network/virtualNetworks/datameerP2PVnet/subnets/trendMicroDSMsubnet",
+      "subnet2Ref": "Microsoft.Network/virtualNetworks/datameerP2PVnet/subnets/chefServersubnet",
+      "subnet3Ref": "Microsoft.Network/virtualNetworks/datameerP2PVnet/subnets/(datameerHDInsightCluster).clusterNamesubnet",
+      "subnet4Ref": "Microsoft.Network/virtualNetworks/datameerP2PVnet/subnets/vmsubnet",
+      "storageAccountName": "[tolower(concat(trim(substring(concat(variables('vmNameTrendDSM'),'       '),0,6)),uniquestring(resourceGroup().id)))]",
+      "storageAccountType": "Standard_LRS",
+      "vmStorageAccountContainerName": "vhds",
+      "newsqlServerName": "[tolower(concat(variables('vmNameTrendDSM'),uniquestring(resourceGroup().id),'-sql'))]",
+      "storage-api-version": "2015-06-15",
+      "deployment-api-version": "2015-11-01",
+      "deployment-api-version2": "2015-01-01",
+      "network-api-version": "2015-06-15",
+      "compute-api-version": "2015-06-15",
+      "automation-api-version": "2015-01-01-preview",
+      "automation-api-version2": "2015-10-31",
+      "publisherTrendDSM": "trendmicro",
+      "publisherChefServer": "chef-software",
+      "licenseMode": "10",
+      "databaseOption": "new",
+      "offerChoosedTrendDSM": "concat(offer, parameters(vmSizeTrendDSM))",
+      "offerChoosedChefServer": "concat(offer, parameters(vmSizeChefServer))",
+      "offerStandard_D2_v2": {
+        "vmSize": "Standard_D2_v3",
+        "vmSku": "dxxn25d2v2",
+        "product": "deep-security-vm"
+      },
+      "offerStandard_D3_v2": {
+        "vmSize": "Standard_D4_v3",
+        "vmSku": "dxxn50d3v2",
+        "product": "deep-security-vm"
+      },
+      "offerStandard_D4_v2": {
+        "vmSize": "Standard_D8_v3",
+        "vmSku": "dxxn100d4v2",
+        "product": "deep-security-vm"
+      },
+      "offerStandard_D5_v2": {
+        "vmSize": "Standard_D16_v3",
+        "vmSku": "dxxn200d5v2",
+        "product": "deep-security-vm"
+      },
+      "offerBYOL": {
+        "vmSize": "Standard_D2_v3",
+        "vmSku": "dxxnbyol",
+        "product": "deep-security-vm-byol"
+      },
+      "offerStandard_D2": {
+        "vmSize": "Standard_D2_v3",
+        "vmSku": "azure_marketplace_25",
+        "product": "chef-server"
+      },
+      "availabilitySetSettings": {
+        "name": "datameerP2PVnet-aset",
+        "count": 1,
+        "fdCount": 3,
+        "udCount": 5
+      },
+      "sshFrom": "0.0.0.0/0",
+      "forwardedDataFrom": "0.0.0.0/0",
+      "emptyTemplateUrl": "[uri(parameters('_artifactsLocation'), concat('nested/empty-resources.json', parameters('_artifactsLocationSasToken')))]",
+      "availabilitySetCount": 1,
+      "imagePublisherWindows": "MicrosoftWindowsServer",
+      "imageOfferWindows": "WindowsServer",
+      "imagePublisherLinux": "Canonical",
+      "imageOfferLinux": "UbuntuServer",
+      "TenantIdentifier": "NA",
+      "TenantActivationPassword": "NA",
+      "tagvalues": {
+        "program": "PushToPilot",
+        "project": "DatameerTrendHDInsightChef"
+      },
+      "existingSQLServerName": "",
+      "networkExists": "new",
+      "ManagerAddress": "GEN-UNIQUE[uniquestring(resourceGroup().id)].westus.cloudapp.azure.com",
+      "udpPort": "5005",
+      "chefServerScriptUrl": "[uri(parameters('_artifactsLocation'), concat('scripts/chefserver.sh', parameters('_artifactsLocationSasToken')))]",
+      "chefprefix": "chef",
+      "vmSizeDSAWindows": "Standard_D2_v3",
+      "windowsOSVersion": "2012-R2-Datacenter",
+      "vmSizeDSAgent": "Standard_D2_v3",
+      "ubuntuOSVersion": "14.04.2-LTS",
+      "uniqueString": "[uniquestring(resourceGroup().id)]",
+      "keyName": "validatorkey",
+      "resourcegroupName": "[resourceGroup().name]",
+      "kmServerUrl": "GEN-UNIQUE[uniquestring(resourceGroup().id)].westus.cloudapp.azure.com",
+      "chef_node_name": "chefnodedsagent",
+      "chef_server_url": "https://GEN-UNIQUE[uniquestring(resourceGroup().id)].westus.cloudapp.azure.com/organizations/ct",
+      "validation_client_name": "ct-validator",
+      "validation_key_format": "base64encoded",
+      "runlist": "recipe[trendmicro]",
+      "vmSizeOrcServer": "Standard_D2_v3",
+      "orcServerubuntuOSVersion": "14.04.2-LTS",
+      "installOrchTemplateurl": "[uri(parameters('_artifactsLocation'), concat('nested/orchestrator-server-setup-trend.json', parameters('_artifactsLocationSasToken')))]",
+      "chefnodeCustomScripturl": "[uri(parameters('_artifactsLocation'), concat('scripts/p2pchefnodebootstrap.sh', parameters('_artifactsLocationSasToken')))]",
+      "vnetstorageSciptrul": "[uri(parameters('_artifactsLocation'), concat('nested/trendp2p-vnetstorage.json', parameters('_artifactsLocationSasToken')))]",
+      "datameerHDInsightCluster": {
+        "defaultApiVersion": "2015-05-01-preview",
+        "clusterName": "[tolower(concat(trim(substring(concat(parameters('hdiclusterName'),'       '),0,6)),uniquestring(resourceGroup().id)))]",
+        "standaloneTemplateUrl": "[uri(parameters('_artifactsLocation'), concat('nested/datameer-hdinsight.json', parameters('_artifactsLocationSasToken')))]",
+        "clusterType": "hadoop",
+        "clusterLoginUserName": "demo",
+        "clusterLoginPassword": "GEN-PASSWORD",
+        "sshUserName": "demo",
+        "sshPassword": "GEN-PASSWORD",
+        "storageAccount": "[tolower(concat(trim(substring(concat(parameters('hdistorageAccount'),'       '),0,6)),uniquestring(resourceGroup().id)))]"
+      },
+      "datameerTags": {
+        "type": "object",
+        "provider": "ED5CBF45-2AA4-4408-B52D-1C76DFCA0BD7"
+      },
+      "trendmicroTags": {
+        "type": "object",
+        "provider": "F0253A01-8156-4D41-BD91-E182158D4972"
+      },
+      "chefSoftwareTags": {
+        "type": "object",
+        "provider": "33194f91-eb5f-4110-827a-e95f640a9e46"
+      },
+      "quickstartTags": {
+        "type": "object",
+        "name": "datameer-trend-chef-riskanalysis"
+      }
+    },
+    "resources": [
+      {
+        "comments": "Common",
+        "name": "vnetstorage",
+        "type": "Microsoft.Resources/deployments",
+        "apiVersion": "2015-01-01",
+        "properties": {
+          "mode": "Incremental",
+          "templateLink": {
+            "uri": "[uri(parameters('_artifactsLocation'), concat('nested/trendp2p-vnetstorage.json', parameters('_artifactsLocationSasToken')))]",
+            "contentVersion": "1.0.0.0"
+          },
+          "parameters": {
+            "storageAccountName": {
+              "value": "[tolower(concat(trim(substring(concat(variables('vmNameTrendDSM'),'       '),0,6)),uniquestring(resourceGroup().id)))]"
+            },
+            "storage-api-version": {
+              "value": "2015-06-15"
+            },
+            "storageAccountType": {
+              "value": "Standard_LRS"
+            },
+            "location": {
+              "value": "westus"
+            },
+            "network-api-version": {
+              "value": "2015-06-15"
+            },
+            "virtualNetworkName": {
+              "value": "datameerP2PVnet"
+            },
+            "vnetAddressPrefix": {
+              "value": "10.7.0.0/16"
+            },
+            "subnet1Name": {
+              "value": "trendMicroDSMsubnet"
+            },
+            "subnet1Prefix": {
+              "value": "10.7.0.0/24"
+            },
+            "subnet2Name": {
+              "value": "chefServersubnet"
+            },
+            "subnet2Prefix": {
+              "value": "10.7.1.0/24"
+            },
+            "subnet3Name": {
+              "value": "(datameerHDInsightCluster).clusterNamesubnet"
+            },
+            "subnet3Prefix": {
+              "value": "10.7.4.0/24"
+            },
+            "subnet4Name": {
+              "value": "vmsubnet"
+            },
+            "subnet4Prefix": {
+              "value": "10.7.3.0/24"
+            },
+            "tagvalues": {
+              "value": {
+                "program": "PushToPilot",
+                "project": "DatameerTrendHDInsightChef"
+              }
+            },
+            "availabilitySetSettings": {
+              "value": {
+                "name": "datameerP2PVnet-aset",
+                "count": 1,
+                "fdCount": 3,
+                "udCount": 5
+              }
+            },
+            "datameerTags": {
+              "value": {
+                "type": "object",
+                "provider": "ED5CBF45-2AA4-4408-B52D-1C76DFCA0BD7"
+              }
+            },
+            "trendmicroTags": {
+              "value": {
+                "type": "object",
+                "provider": "F0253A01-8156-4D41-BD91-E182158D4972"
+              }
+            },
+            "chefSoftwareTags": {
+              "value": {
+                "type": "object",
+                "provider": "33194f91-eb5f-4110-827a-e95f640a9e46"
+              }
+            },
+            "quickstartTags": {
+              "value": {
+                "type": "object",
+                "name": "datameer-trend-chef-riskanalysis"
+              }
+            }
+          }
+        }
+      },
+      {
+        "name": "trendmicrodsm",
+        "type": "Microsoft.Resources/deployments",
+        "apiVersion": "2015-01-01",
+        "dependsOn": [
+          "Microsoft.Resources/deployments/vnetstorage"
+        ],
+        "properties": {
+          "mode": "Incremental",
+          "templateLink": {
+            "uri": "[uri(parameters('_artifactsLocation'), concat('nested/trendp2p-trenddsm.json', parameters('_artifactsLocationSasToken')))]",
+            "contentVersion": "1.0.0.0"
+          },
+          "parameters": {
+            "storageAccountName": {
+              "value": "[tolower(concat(trim(substring(concat(variables('vmNameTrendDSM'),'       '),0,6)),uniquestring(resourceGroup().id)))]"
+            },
+            "vmStorageAccountContainerName": {
+              "value": "vhds"
+            },
+            "location": {
+              "value": "westus"
+            },
+            "network-api-version": {
+              "value": "2015-06-15"
+            },
+            "compute-api-version": {
+              "value": "2015-06-15"
+            },
+            "tagvalues": {
+              "value": {
+                "program": "PushToPilot",
+                "project": "DatameerTrendHDInsightChef"
+              }
+            },
+            "publicIPDomainNameLabelTrendDSM": {
+              "value": "GEN-UNIQUE[uniquestring(resourceGroup().id)]"
+            },
+            "publicIPAddressType": {
+              "value": "Dynamic"
+            },
+            "publicIPAddressNameTrendDSM": {
+              "value": "publicIPTrendDSM"
+            },
+            "nicNameTrendDSM": {
+              "value": "trendMicroDSM-nic"
+            },
+            "virtualNetworkName": {
+              "value": "datameerP2PVnet"
+            },
+            "subnet1Ref": {
+              "value": "Microsoft.Network/virtualNetworks/datameerP2PVnet/subnets/trendMicroDSMsubnet"
+            },
+            "securityGroupNameTrendDSM": {
+              "value": "trendMicroDSM-nic-nsg"
+            },
+            "managerPortTrendDSM": {
+              "value": "443"
+            },
+            "heartbeatPortTrendDSM": {
+              "value": "4120"
+            },
+            "vmNameTrendDSM": {
+              "value": "trendMicroDSM"
+            },
+            "publisherTrendDSM": {
+              "value": "trendmicro"
+            },
+            "offerChoosedTrendDSM": {
+              "value": "concat(offer, parameters(vmSizeTrendDSM))"
+            },
+            "vmAdminNameTrendDSM": {
+              "value": "GEN-UNIQUE"
+            },
+            "vmAdminPasswordOrPublicKeyTrendDSM": {
+              "value": "GEN-SSH-PUB-KEY"
+            },
+            "linuxConfigurationChoosenTrendDSM": {
+              "value": "linuxConfigurationChoosenTrendDSM"
+            },
+            "deployment-api-version": {
+              "value": "2015-11-01"
+            },
+            "baseUrl": {
+              "value": "https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/application-workloads/chef/datameer-trend-chef-riskanalysis/"
+            },
+            "databaseOption": {
+              "value": "new"
+            },
+            "newsqlServerName": {
+              "value": "[tolower(concat(variables('vmNameTrendDSM'),uniquestring(resourceGroup().id),'-sql'))]"
+            },
+            "existingSQLServerName": {
+              "value": ""
+            },
+            "dbAdminName": {
+              "value": "demo"
+            },
+            "dbAdminPassword": {
+              "value": "GEN-PASSWORD"
+            },
+            "dbName": {
+              "value": "dsm"
+            },
+            "dsmAdminName": {
+              "value": "demo"
+            },
+            "dsmAdminPassword": {
+              "value": "GEN-PASSWORD"
+            },
+            "datameerTags": {
+              "value": {
+                "type": "object",
+                "provider": "ED5CBF45-2AA4-4408-B52D-1C76DFCA0BD7"
+              }
+            },
+            "trendmicroTags": {
+              "value": {
+                "type": "object",
+                "provider": "F0253A01-8156-4D41-BD91-E182158D4972"
+              }
+            },
+            "chefSoftwareTags": {
+              "value": {
+                "type": "object",
+                "provider": "33194f91-eb5f-4110-827a-e95f640a9e46"
+              }
+            },
+            "quickstartTags": {
+              "value": {
+                "type": "object",
+                "name": "datameer-trend-chef-riskanalysis"
+              }
+            },
+            "authenticationType": {
+              "value": "sshPublicKey"
+            }
+          }
+        }
+      },
+      {
+        "name": "orchestrator",
+        "type": "Microsoft.Resources/deployments",
+        "apiVersion": "2015-01-01",
+        "dependsOn": [
+          "Microsoft.Resources/deployments/vnetstorage"
+        ],
+        "properties": {
+          "mode": "Incremental",
+          "templateLink": {
+            "uri": "[uri(parameters('_artifactsLocation'), concat('nested/trendp2p-orchestrator.json', parameters('_artifactsLocationSasToken')))]",
+            "contentVersion": "1.0.0.0"
+          },
+          "parameters": {
+            "storageAccountName": {
+              "value": "[tolower(concat(trim(substring(concat(variables('vmNameTrendDSM'),'       '),0,6)),uniquestring(resourceGroup().id)))]"
+            },
+            "location": {
+              "value": "westus"
+            },
+            "network-api-version": {
+              "value": "2015-06-15"
+            },
+            "compute-api-version": {
+              "value": "2015-06-15"
+            },
+            "deployment-api-version2": {
+              "value": "2015-01-01"
+            },
+            "tagvalues": {
+              "value": {
+                "program": "PushToPilot",
+                "project": "DatameerTrendHDInsightChef"
+              }
+            },
+            "publicIPDomainNameLabelOrchServer": {
+              "value": "GEN-UNIQUE[uniquestring(resourceGroup().id)]"
+            },
+            "vmNameOrchServer": {
+              "value": "orchestratorServer"
+            },
+            "networkInterfaceNameOrchServer": {
+              "value": "orchestratorServer-nic"
+            },
+            "networkSecurityGroupNameOrchServer": {
+              "value": "orchestratorServer-nic-nsg"
+            },
+            "vmAdminUsernameOrchServer": {
+              "value": "GEN-UNIQUE"
+            },
+            "vmAdminPasswordOrPublicKeyOrchServer": {
+              "value": "GEN-SSH-PUB-KEY"
+            },
+            "vmStorageAccountContainerName": {
+              "value": "vhds"
+            },
+            "imagePublisherLinux": {
+              "value": "Canonical"
+            },
+            "imageOfferLinux": {
+              "value": "UbuntuServer"
+            },
+            "orcServerubuntuOSVersion": {
+              "value": "14.04.2-LTS"
+            },
+            "vmSizeOrcServer": {
+              "value": "Standard_D2_v3"
+            },
+            "subnet2Ref": {
+              "value": "Microsoft.Network/virtualNetworks/datameerP2PVnet/subnets/chefServersubnet"
+            },
+            "installOrchTemplateurl": {
+              "value": "[uri(parameters('_artifactsLocation'), concat('nested/orchestrator-server-setup-trend.json', parameters('_artifactsLocationSasToken')))]"
+            },
+            "datameerTags": {
+              "value": {
+                "type": "object",
+                "provider": "ED5CBF45-2AA4-4408-B52D-1C76DFCA0BD7"
+              }
+            },
+            "trendmicroTags": {
+              "value": {
+                "type": "object",
+                "provider": "F0253A01-8156-4D41-BD91-E182158D4972"
+              }
+            },
+            "chefSoftwareTags": {
+              "value": {
+                "type": "object",
+                "provider": "33194f91-eb5f-4110-827a-e95f640a9e46"
+              }
+            },
+            "quickstartTags": {
+              "value": {
+                "type": "object",
+                "name": "datameer-trend-chef-riskanalysis"
+              }
+            },
+            "authenticationType": {
+              "value": "sshPublicKey"
+            }
+          }
+        }
+      },
+      {
+        "name": "chefserver",
+        "type": "Microsoft.Resources/deployments",
+        "apiVersion": "2015-01-01",
+        "dependsOn": [
+          "Microsoft.Resources/deployments/vnetstorage",
+          "Microsoft.Resources/deployments/trendmicrodsm",
+          "Microsoft.Resources/deployments/orchestrator"
+        ],
+        "properties": {
+          "mode": "Incremental",
+          "templateLink": {
+            "uri": "[uri(parameters('_artifactsLocation'), concat('nested/trendp2p-chefserver.json', parameters('_artifactsLocationSasToken')))]",
+            "contentVersion": "1.0.0.0"
+          },
+          "parameters": {
+            "storageAccountName": {
+              "value": "[tolower(concat(trim(substring(concat(variables('vmNameTrendDSM'),'       '),0,6)),uniquestring(resourceGroup().id)))]"
+            },
+            "publicIPAddressNameChefServer": {
+              "value": "publicIPChefServer"
+            },
+            "publicIPDomainNameLabelChefServer": {
+              "value": "GEN-UNIQUE[uniquestring(resourceGroup().id)]"
+            },
+            "networkSecurityGroupNameChefServer": {
+              "value": "chefServer-nic-nsg"
+            },
+            "networkInterfaceNameChefServer": {
+              "value": "chefServer-nic"
+            },
+            "vmNameChefServer": {
+              "value": "chefServer"
+            },
+            "vmAdminUsernameChefServer": {
+              "value": "GEN-UNIQUE"
+            },
+            "vmAdminPasswordOrPublicKeyChefServer": {
+              "value": "GEN-SSH-PUB-KEY"
+            },
+            "vmStorageAccountContainerName": {
+              "value": "vhds"
+            },
+            "location": {
+              "value": "westus"
+            },
+            "network-api-version": {
+              "value": "2015-06-15"
+            },
+            "compute-api-version": {
+              "value": "2015-06-15"
+            },
+            "tagvalues": {
+              "value": {
+                "program": "PushToPilot",
+                "project": "DatameerTrendHDInsightChef"
+              }
+            },
+            "publisherChefServer": {
+              "value": "chef-software"
+            },
+            "offerChoosedChefServer": {
+              "value": "concat(offer, parameters(vmSizeChefServer))"
+            },
+            "subnet2Ref": {
+              "value": "Microsoft.Network/virtualNetworks/datameerP2PVnet/subnets/chefServersubnet"
+            },
+            "publicIPAddressType": {
+              "value": "Dynamic"
+            },
+            "chefUserName": {
+              "value": "chefuser"
+            },
+            "chefUserFirstName": {
+              "value": "chef"
+            },
+            "chefUserLastName": {
+              "value": "user"
+            },
+            "chefUserEmail": {
+              "value": "chef@noone.com"
+            },
+            "chefUserPassword": {
+              "value": "GEN-PASSWORD"
+            },
+            "chefOrgShortName": {
+              "value": "ct"
+            },
+            "chefOrgFullName": {
+              "value": "Chef Test Inc"
+            },
+            "chefServerScriptUrl": {
+              "value": "[uri(parameters('_artifactsLocation'), concat('scripts/chefserver.sh', parameters('_artifactsLocationSasToken')))]"
+            },
+            "publicIPDomainNameLabelOrchServer": {
+              "value": "GEN-UNIQUE[uniquestring(resourceGroup().id)]"
+            },
+            "datameerTags": {
+              "value": {
+                "type": "object",
+                "provider": "ED5CBF45-2AA4-4408-B52D-1C76DFCA0BD7"
+              }
+            },
+            "trendmicroTags": {
+              "value": {
+                "type": "object",
+                "provider": "F0253A01-8156-4D41-BD91-E182158D4972"
+              }
+            },
+            "chefSoftwareTags": {
+              "value": {
+                "type": "object",
+                "provider": "33194f91-eb5f-4110-827a-e95f640a9e46"
+              }
+            },
+            "quickstartTags": {
+              "value": {
+                "type": "object",
+                "name": "datameer-trend-chef-riskanalysis"
+              }
+            },
+            "authenticationType": {
+              "value": "sshPublicKey"
+            }
+          }
+        }
+      },
+      {
+        "apiVersion": "2015-01-01",
+        "type": "Microsoft.Resources/deployments",
+        "name": "dsagents",
+        "dependsOn": [
+          "Microsoft.Resources/deployments/vnetstorage",
+          "Microsoft.Resources/deployments/trendmicrodsm",
+          "Microsoft.Resources/deployments/chefserver"
+        ],
+        "properties": {
+          "mode": "Incremental",
+          "templateLink": {
+            "uri": "[uri(parameters('_artifactsLocation'), concat('nested/trendp2p-dsagents.json', parameters('_artifactsLocationSasToken')))]",
+            "contentVersion": "1.0.0.0"
+          },
+          "parameters": {
+            "location": {
+              "value": "westus"
+            },
+            "network-api-version": {
+              "value": "2015-06-15"
+            },
+            "compute-api-version": {
+              "value": "2015-06-15"
+            },
+            "vmNameDSAWindows": {
+              "value": "dsawindows"
+            },
+            "vmSizeDSAWindows": {
+              "value": "Standard_D2_v3"
+            },
+            "adminUsernameDSAgentWindows": {
+              "value": "demo"
+            },
+            "adminPasswordDSAgentWindows": {
+              "value": "GEN-PASSWORD"
+            },
+            "publicIPDomainNameLabelDSAgentWindows": {
+              "value": "GEN-UNIQUE[uniquestring(resourceGroup().id)]"
+            },
+            "windowsOSVersion": {
+              "value": "2012-R2-Datacenter"
+            },
+            "windowsvmcount": {
+              "value": 1
+            },
+            "vmNameDSAgent": {
+              "value": "dsalinux"
+            },
+            "vmSizeDSAgent": {
+              "value": "Standard_D2_v3"
+            },
+            "adminUsernameDSAgent": {
+              "value": "GEN-UNIQUE"
+            },
+            "adminPasswordOrPublicKeyDSAgent": {
+              "value": "GEN-SSH-PUB-KEY"
+            },
+            "publicIPDomainNameLabelDSAgent": {
+              "value": "GEN-UNIQUE[uniquestring(resourceGroup().id)]"
+            },
+            "ubuntuOSVersion": {
+              "value": "14.04.2-LTS"
+            },
+            "linuxvmcount": {
+              "value": 1
+            },
+            "ManagerAddress": {
+              "value": "GEN-UNIQUE[uniquestring(resourceGroup().id)].westus.cloudapp.azure.com"
+            },
+            "subnet4Ref": {
+              "value": "Microsoft.Network/virtualNetworks/datameerP2PVnet/subnets/vmsubnet"
+            },
+            "imagePublisherWindows": {
+              "value": "MicrosoftWindowsServer"
+            },
+            "imageOfferWindows": {
+              "value": "WindowsServer"
+            },
+            "imagePublisherLinux": {
+              "value": "Canonical"
+            },
+            "imageOfferLinux": {
+              "value": "UbuntuServer"
+            },
+            "storageAccountName": {
+              "value": "[tolower(concat(trim(substring(concat(variables('vmNameTrendDSM'),'       '),0,6)),uniquestring(resourceGroup().id)))]"
+            },
+            "vmStorageAccountContainerName": {
+              "value": "vhds"
+            },
+            "ActivationPort": {
+              "value": "4120"
+            },
+            "TenantIdentifier": {
+              "value": "NA"
+            },
+            "TenantActivationPassword": {
+              "value": "NA"
+            },
+            "tagvalues": {
+              "value": {
+                "program": "PushToPilot",
+                "project": "DatameerTrendHDInsightChef"
+              }
+            },
+            "datameerTags": {
+              "value": {
+                "type": "object",
+                "provider": "ED5CBF45-2AA4-4408-B52D-1C76DFCA0BD7"
+              }
+            },
+            "trendmicroTags": {
+              "value": {
+                "type": "object",
+                "provider": "F0253A01-8156-4D41-BD91-E182158D4972"
+              }
+            },
+            "chefSoftwareTags": {
+              "value": {
+                "type": "object",
+                "provider": "33194f91-eb5f-4110-827a-e95f640a9e46"
+              }
+            },
+            "quickstartTags": {
+              "value": {
+                "type": "object",
+                "name": "datameer-trend-chef-riskanalysis"
+              }
+            },
+            "authenticationType": {
+              "value": "sshPublicKey"
+            }
+          }
+        }
+      },
+      {
+        "apiVersion": "2015-01-01",
+        "type": "Microsoft.Resources/deployments",
+        "name": "chefnodes",
+        "dependsOn": [
+          "Microsoft.Resources/deployments/vnetstorage",
+          "Microsoft.Resources/deployments/trendmicrodsm",
+          "Microsoft.Resources/deployments/chefserver"
+        ],
+        "properties": {
+          "mode": "Incremental",
+          "templateLink": {
+            "uri": "[uri(parameters('_artifactsLocation'), concat('nested/trendp2p-chefnodes.json', parameters('_artifactsLocationSasToken')))]",
+            "contentVersion": "1.0.0.0"
+          },
+          "parameters": {
+            "location": {
+              "value": "westus"
+            },
+            "network-api-version": {
+              "value": "2015-06-15"
+            },
+            "compute-api-version": {
+              "value": "2015-06-15"
+            },
+            "deployment-api-version2": {
+              "value": "2015-01-01"
+            },
+            "vmNameChefWorkstation": {
+              "value": "chefWS"
+            },
+            "vmSizeChefWorkstation": {
+              "value": "Standard_D2_v3"
+            },
+            "adminUsernameChefWorkstation": {
+              "value": "demo"
+            },
+            "adminPasswordChefWorkstation": {
+              "value": "GEN-PASSWORD"
+            },
+            "publicIPDomainNameLabelChefWorkstation": {
+              "value": "GEN-UNIQUE[uniquestring(resourceGroup().id)]"
+            },
+            "vmNameDSAWindows": {
+              "value": "dsawindows"
+            },
+            "vmSizeDSAWindows": {
+              "value": "Standard_D2_v3"
+            },
+            "adminUsernameDSAgentWindows": {
+              "value": "demo"
+            },
+            "adminPasswordDSAgentWindows": {
+              "value": "GEN-PASSWORD"
+            },
+            "publicIPDomainNameLabelDSAgentWindows": {
+              "value": "GEN-UNIQUE[uniquestring(resourceGroup().id)]"
+            },
+            "windowsOSVersion": {
+              "value": "2012-R2-Datacenter"
+            },
+            "windowsvmcount": {
+              "value": 1
+            },
+            "vmNameDSAgent": {
+              "value": "dsalinux"
+            },
+            "vmSizeDSAgent": {
+              "value": "Standard_D2_v3"
+            },
+            "adminUsernameDSAgent": {
+              "value": "GEN-UNIQUE"
+            },
+            "adminPasswordOrPublicKeyDSAgent": {
+              "value": "GEN-SSH-PUB-KEY"
+            },
+            "publicIPDomainNameLabelDSAgent": {
+              "value": "GEN-UNIQUE[uniquestring(resourceGroup().id)]"
+            },
+            "ubuntuOSVersion": {
+              "value": "14.04.2-LTS"
+            },
+            "linuxvmcount": {
+              "value": 1
+            },
+            "ManagerAddress": {
+              "value": "GEN-UNIQUE[uniquestring(resourceGroup().id)].westus.cloudapp.azure.com"
+            },
+            "subnet4Ref": {
+              "value": "Microsoft.Network/virtualNetworks/datameerP2PVnet/subnets/vmsubnet"
+            },
+            "imagePublisherWindows": {
+              "value": "MicrosoftWindowsServer"
+            },
+            "imageOfferWindows": {
+              "value": "WindowsServer"
+            },
+            "imagePublisherLinux": {
+              "value": "Canonical"
+            },
+            "imageOfferLinux": {
+              "value": "UbuntuServer"
+            },
+            "storageAccountName": {
+              "value": "[tolower(concat(trim(substring(concat(variables('vmNameTrendDSM'),'       '),0,6)),uniquestring(resourceGroup().id)))]"
+            },
+            "vmStorageAccountContainerName": {
+              "value": "vhds"
+            },
+            "ActivationPort": {
+              "value": "4120"
+            },
+            "TenantIdentifier": {
+              "value": "NA"
+            },
+            "TenantActivationPassword": {
+              "value": "NA"
+            },
+            "tagvalues": {
+              "value": {
+                "program": "PushToPilot",
+                "project": "DatameerTrendHDInsightChef"
+              }
+            },
+            "chefprefix": {
+              "value": "chef"
+            },
+            "keyName": {
+              "value": "validatorkey"
+            },
+            "kmServerUrl": {
+              "value": "GEN-UNIQUE[uniquestring(resourceGroup().id)].westus.cloudapp.azure.com"
+            },
+            "chef_node_name": {
+              "value": "chefnodedsagent"
+            },
+            "chef_server_url": {
+              "value": "https://GEN-UNIQUE[uniquestring(resourceGroup().id)].westus.cloudapp.azure.com/organizations/ct"
+            },
+            "validation_client_name": {
+              "value": "ct-validator"
+            },
+            "validation_key_format": {
+              "value": "base64encoded"
+            },
+            "runlist": {
+              "value": "recipe[trendmicro]"
+            },
+            "resourcegroupName": {
+              "value": "[resourceGroup().name]"
+            },
+            "chefnodeCustomScripturl": {
+              "value": "[uri(parameters('_artifactsLocation'), concat('scripts/p2pchefnodebootstrap.sh', parameters('_artifactsLocationSasToken')))]"
+            },
+            "baseUrl": {
+              "value": "https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/application-workloads/chef/datameer-trend-chef-riskanalysis/"
+            },
+            "datameerTags": {
+              "value": {
+                "type": "object",
+                "provider": "ED5CBF45-2AA4-4408-B52D-1C76DFCA0BD7"
+              }
+            },
+            "trendmicroTags": {
+              "value": {
+                "type": "object",
+                "provider": "F0253A01-8156-4D41-BD91-E182158D4972"
+              }
+            },
+            "chefSoftwareTags": {
+              "value": {
+                "type": "object",
+                "provider": "33194f91-eb5f-4110-827a-e95f640a9e46"
+              }
+            },
+            "quickstartTags": {
+              "value": {
+                "type": "object",
+                "name": "datameer-trend-chef-riskanalysis"
+              }
+            },
+            "authenticationType": {
+              "value": "sshPublicKey"
+            }
+          }
+        }
+      },
+      {
+        "apiVersion": "2015-01-01",
+        "type": "Microsoft.Resources/deployments",
+        "name": "datameerhdinsight",
+        "dependsOn": [
+          "Microsoft.Resources/deployments/vnetstorage"
+        ],
+        "properties": {
+          "mode": "Incremental",
+          "templateLink": {
+            "uri": "(datameerHDInsightCluster).standaloneTemplateUrl",
+            "contentVersion": "1.0.0.0"
+          },
+          "parameters": {
+            "location": {
+              "value": "westus"
+            },
+            "clusterName": {
+              "value": "(datameerHDInsightCluster).clusterName"
+            },
+            "clusterType": {
+              "value": "(datameerHDInsightCluster).clusterType"
+            },
+            "clusterLoginUserName": {
+              "value": "(datameerHDInsightCluster).clusterLoginUserName"
+            },
+            "clusterLoginPassword": {
+              "value": "(datameerHDInsightCluster).clusterLoginPassword"
+            },
+            "sshUserName": {
+              "value": "(datameerHDInsightCluster).sshUserName"
+            },
+            "sshPassword": {
+              "value": "(datameerHDInsightCluster).sshPassword"
+            },
+            "storageAccount": {
+              "value": "(datameerHDInsightCluster).storageAccount"
+            },
+            "clusterVNetName": {
+              "value": "datameerP2PVnet"
+            },
+            "clusterVnetAddressSpace": {
+              "value": "10.7.0.0/16"
+            },
+            "clusterVNetSubnetAddressRange": {
+              "value": "10.7.4.0/24"
+            },
+            "clusterVNetSubnetName": {
+              "value": "(datameerHDInsightCluster).clusterNamesubnet"
+            },
+            "datameerTags": {
+              "value": {
+                "type": "object",
+                "provider": "ED5CBF45-2AA4-4408-B52D-1C76DFCA0BD7"
+              }
+            },
+            "trendmicroTags": {
+              "value": {
+                "type": "object",
+                "provider": "F0253A01-8156-4D41-BD91-E182158D4972"
+              }
+            },
+            "chefSoftwareTags": {
+              "value": {
+                "type": "object",
+                "provider": "33194f91-eb5f-4110-827a-e95f640a9e46"
+              }
+            },
+            "quickstartTags": {
+              "value": {
+                "type": "object",
+                "name": "datameer-trend-chef-riskanalysis"
+              }
+            }
+          }
+        }
+      }
+    ],
+    "outputs": {
+      "TrendMicro DSM URI": {
+        "type": "string",
+        "value": "[reference('trendmicrodsm').outputs.trendmicrodsmUri.value]"
+      },
+      "Chef Server URI": {
+        "type": "string",
+        "value": "[reference('chefserver').outputs.chefserverUri.value]"
+      },
+      "Datameer App URI": {
+        "type": "string",
+        "value": "[reference('datameerhdinsight').outputs.datameerAppURL.value]"
+      }
+    },
+    "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+  }
+}

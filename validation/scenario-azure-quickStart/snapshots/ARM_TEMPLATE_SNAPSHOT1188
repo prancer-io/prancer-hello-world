@@ -1,0 +1,170 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAzureQuickStart",
+  "paths": [
+    "/quickstarts/microsoft.containerinstance/aci-sftp-files-existing-storage/azuredeploy.json",
+    "/quickstarts/microsoft.containerinstance/aci-sftp-files-existing-storage/azuredeploy.parameters.json"
+  ],
+  "timestamp": 1642962905412,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/quickstarts/microsoft.containerinstance/aci-sftp-files-existing-storage/azuredeploy.json",
+      "/quickstarts/microsoft.containerinstance/aci-sftp-files-existing-storage/azuredeploy.parameters.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT1188",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "microsoft.resources/deployments",
+      "microsoft.containerinstance/containergroups"
+    ]
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT1188",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "existingStorageAccountResourceGroupName": {
+        "type": "string",
+        "metadata": {
+          "description": "Resource group for existing storage account"
+        },
+        "value": "GET-PREREQ-existingStgAcctRGName"
+      },
+      "existingStorageAccountName": {
+        "type": "string",
+        "metadata": {
+          "description": "Name of existing storage account"
+        },
+        "value": "GET-PREREQ-existingStgAcctName"
+      },
+      "existingFileShareName": {
+        "type": "string",
+        "metadata": {
+          "description": "Name of existing file share to be mounted"
+        },
+        "value": "GET-PREREQ-existingFileShareName"
+      },
+      "sftpUser": {
+        "type": "string",
+        "metadata": {
+          "description": "Username to use for SFTP access"
+        },
+        "value": "GEN-UNIQUE-6"
+      },
+      "sftpPassword": {
+        "type": "securestring",
+        "metadata": {
+          "description": "Password to use for SFTP access"
+        },
+        "value": "GEN-PASSWORD"
+      },
+      "location": {
+        "type": "string",
+        "defaultValue": "[resourceGroup().location]",
+        "metadata": {
+          "description": "Primary location for resources"
+        }
+      }
+    },
+    "variables": {
+      "sftpContainerName": "sftp",
+      "sftpContainerGroupName": "sftp-group",
+      "sftpContainerImage": "atmoz/sftp:latest",
+      "sftpEnvVariable": "GEN-UNIQUE-6:GEN-PASSWORD:1001",
+      "storageAccountId": "GET-PREREQ-existingStgAcctRGName/Microsoft.Storage/storageAccounts/GET-PREREQ-existingStgAcctName"
+    },
+    "resources": [
+      {
+        "type": "Microsoft.Resources/deployments",
+        "name": "pid-18f281fe-d1e1-502c-8b87-d945383dc75b",
+        "apiVersion": "2019-09-01",
+        "properties": {
+          "mode": "Incremental",
+          "template": {
+            "contentVersion": "1.0.0.0",
+            "resources": [],
+            "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+          }
+        }
+      },
+      {
+        "type": "Microsoft.ContainerInstance/containerGroups",
+        "name": "sftp-group",
+        "apiVersion": "2019-12-01",
+        "location": "[resourceGroup().location]",
+        "properties": {
+          "containers": [
+            {
+              "name": "sftp",
+              "properties": {
+                "image": "atmoz/sftp:latest",
+                "environmentVariables": [
+                  {
+                    "name": "SFTP_USERS",
+                    "value": "GEN-UNIQUE-6:GEN-PASSWORD:1001"
+                  }
+                ],
+                "resources": {
+                  "requests": {
+                    "cpu": 2,
+                    "memoryInGB": 1
+                  }
+                },
+                "ports": [
+                  {
+                    "port": 22
+                  }
+                ],
+                "volumeMounts": [
+                  {
+                    "mountPath": "/home/GEN-UNIQUE-6/upload",
+                    "name": "sftpvolume",
+                    "readOnly": false
+                  }
+                ]
+              }
+            }
+          ],
+          "osType": "Linux",
+          "ipAddress": {
+            "type": "Public",
+            "ports": [
+              {
+                "protocol": "Tcp",
+                "port": 22
+              }
+            ]
+          },
+          "restartPolicy": "OnFailure",
+          "volumes": [
+            {
+              "name": "sftpvolume",
+              "azureFile": {
+                "readOnly": false,
+                "shareName": "GET-PREREQ-existingFileShareName",
+                "storageAccountName": "GET-PREREQ-existingStgAcctName",
+                "storageAccountKey": "[listKeys(variables('storageAccountId'),'2018-02-01').keys[0].value]"
+              }
+            }
+          ]
+        }
+      }
+    ],
+    "outputs": {
+      "containerIPv4Address": {
+        "type": "string",
+        "value": "[reference(resourceId('Microsoft.ContainerInstance/containerGroups/', variables('sftpContainerGroupName'))).ipAddress.ip]"
+      }
+    },
+    "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+  }
+}

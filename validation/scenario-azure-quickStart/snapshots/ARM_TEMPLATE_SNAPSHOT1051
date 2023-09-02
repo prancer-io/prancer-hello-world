@@ -1,0 +1,168 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAzureQuickStart",
+  "paths": [
+    "/quickstarts/microsoft.compute/multi-vmss-windows/azuredeploy.json",
+    "/quickstarts/microsoft.compute/multi-vmss-windows/azuredeploy.parameters.json"
+  ],
+  "timestamp": 1642962903976,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/quickstarts/microsoft.compute/multi-vmss-windows/azuredeploy.json",
+      "/quickstarts/microsoft.compute/multi-vmss-windows/azuredeploy.parameters.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT1051",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "microsoft.network/virtualnetworks",
+      "microsoft.resources/deployments"
+    ]
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT1051",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "adminUsername": {
+        "type": "string",
+        "metadata": {
+          "description": "Admin username for all VMs"
+        },
+        "value": "GEN-UNIQUE"
+      },
+      "adminPassword": {
+        "type": "securestring",
+        "metadata": {
+          "description": "Admin password for all VMs"
+        },
+        "value": "GEN-PASSWORD"
+      },
+      "numberOfVMSS": {
+        "type": "int",
+        "metadata": {
+          "description": "Number of VMSSes to deploy"
+        },
+        "value": 3
+      },
+      "singlePlacementGroup": {
+        "type": "bool",
+        "defaultValue": true,
+        "metadata": {
+          "description": "Documentation here: https://docs.microsoft.com/en-us/azure/virtual-machine-scale-sets/virtual-machine-scale-sets-placement-groups"
+        }
+      },
+      "instanceCountPerVMSS": {
+        "type": "int",
+        "maxValue": 1000,
+        "minValue": 3,
+        "metadata": {
+          "description": "Number of VM instances per scale set; if singlePlacementGroup is true (the default), then this value must be 100 or less; if singlePlacementGroup is false, then this value must be 1000 or less"
+        },
+        "value": 3
+      },
+      "_artifactsLocation": {
+        "type": "string",
+        "metadata": {
+          "description": "The base URI where artifacts required by this template are located. When the template is deployed using the accompanying scripts, a private location in the subscription will be used and this value will be automatically generated."
+        },
+        "defaultValue": "[deployment().properties.templateLink.uri]"
+      },
+      "location": {
+        "type": "string",
+        "defaultValue": "[resourceGroup().location]",
+        "metadata": {
+          "description": "Default location"
+        }
+      },
+      "_artifactsLocationSasToken": {
+        "type": "securestring",
+        "metadata": {
+          "description": "The sasToken required to access _artifactsLocation.  When the template is deployed using the accompanying scripts, a sasToken will be automatically generated."
+        },
+        "defaultValue": ""
+      }
+    },
+    "variables": {
+      "VMSSPrefix": "vmss-w",
+      "newVNETName": "vmss-w-vnet",
+      "addressPrefix": "10.0.0.0/16",
+      "subnetName": "subnet",
+      "subnetPrefix": "10.0.0.0/16"
+    },
+    "resources": [
+      {
+        "apiVersion": "2020-08-01",
+        "type": "Microsoft.Network/virtualNetworks",
+        "name": "vmss-w-vnet",
+        "location": "[resourceGroup().location]",
+        "properties": {
+          "addressSpace": {
+            "addressPrefixes": [
+              "10.0.0.0/16"
+            ]
+          },
+          "subnets": [
+            {
+              "name": "subnet",
+              "properties": {
+                "addressPrefix": "10.0.0.0/16"
+              }
+            }
+          ]
+        }
+      },
+      {
+        "name": "clusterSetcopyindex()",
+        "type": "Microsoft.Resources/deployments",
+        "apiVersion": "2016-09-01",
+        "copy": {
+          "name": "deploymentLoop",
+          "count": 3
+        },
+        "dependsOn": [
+          "Microsoft.Network/virtualNetworks//vmss-w-vnet"
+        ],
+        "properties": {
+          "mode": "Incremental",
+          "templateLink": {
+            "uri": "[uri(parameters('_artifactsLocation'), concat('nestedtemplates/base.json', parameters('_artifactsLocationSasToken')))]",
+            "contentVersion": "1.0.0.0"
+          },
+          "parameters": {
+            "VMSSName": {
+              "value": "[concat(variables('VMSSPrefix'), padLeft(copyindex(), 2, '0'))]"
+            },
+            "singlePlacementGroup": {
+              "value": true
+            },
+            "instanceCount": {
+              "value": 3
+            },
+            "subnetId": {
+              "value": "Microsoft.Network/virtualNetworks/subnets/newVnetName/subnet"
+            },
+            "location": {
+              "value": "[resourceGroup().location]"
+            },
+            "adminUsername": {
+              "value": "GEN-UNIQUE"
+            },
+            "adminPassword": {
+              "value": "GEN-PASSWORD"
+            }
+          }
+        }
+      }
+    ],
+    "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+  }
+}

@@ -1,0 +1,374 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAzureQuickStart",
+  "paths": [
+    "/quickstarts/microsoft.network/nat-gateway-1-vm/azuredeploy.json",
+    "/quickstarts/microsoft.network/nat-gateway-1-vm/azuredeploy.parameters.json"
+  ],
+  "timestamp": 1642962909238,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/quickstarts/microsoft.network/nat-gateway-1-vm/azuredeploy.json",
+      "/quickstarts/microsoft.network/nat-gateway-1-vm/azuredeploy.parameters.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT1567",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "microsoft.network/publicipaddresses",
+      "microsoft.network/virtualnetworks",
+      "microsoft.network/networkinterfaces",
+      "microsoft.compute/virtualmachines",
+      "microsoft.network/networksecuritygroups",
+      "microsoft.network/publicipprefixes",
+      "microsoft.network/natgateways",
+      "microsoft.network/virtualnetworks/subnets"
+    ]
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT1567",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "vmname": {
+        "defaultValue": "myVM",
+        "type": "String",
+        "metadata": {
+          "description": "Name of the virtual machine"
+        }
+      },
+      "vmsize": {
+        "defaultValue": "Standard_D2s_v3",
+        "type": "String",
+        "metadata": {
+          "description": "Size of the virtual machine"
+        }
+      },
+      "vnetname": {
+        "defaultValue": "myVnet",
+        "type": "String",
+        "metadata": {
+          "description": "Name of the virtual network"
+        }
+      },
+      "subnetname": {
+        "defaultValue": "mySubnet",
+        "type": "String",
+        "metadata": {
+          "description": "Name of the subnet for virtual network"
+        }
+      },
+      "vnetaddressspace": {
+        "defaultValue": "192.168.0.0/16",
+        "type": "String",
+        "metadata": {
+          "description": "Address space for virtual network"
+        }
+      },
+      "vnetsubnetprefix": {
+        "defaultValue": "192.168.0.0/24",
+        "type": "String",
+        "metadata": {
+          "description": "Subnet prefix for virtual network"
+        }
+      },
+      "natgatewayname": {
+        "defaultValue": "myNATgateway",
+        "type": "String",
+        "metadata": {
+          "description": "Name of the NAT gateway"
+        }
+      },
+      "networkinterfacename": {
+        "defaultValue": "myvmNIC",
+        "type": "String",
+        "metadata": {
+          "description": "Name of the virtual machine nic"
+        }
+      },
+      "publicipname": {
+        "defaultValue": "myPublicIP",
+        "type": "String",
+        "metadata": {
+          "description": "Name of the NAT gateway public IP"
+        }
+      },
+      "nsgname": {
+        "defaultValue": "myVMnsg",
+        "type": "String",
+        "metadata": {
+          "description": "Name of the virtual machine NSG"
+        }
+      },
+      "publicipvmname": {
+        "defaultValue": "myPublicIPVM",
+        "type": "String",
+        "metadata": {
+          "description": "Name of the virtual machine public IP"
+        }
+      },
+      "publicipprefixname": {
+        "defaultValue": "myPublicIPPrefix",
+        "type": "String",
+        "metadata": {
+          "description": "Name of the NAT gateway public IP"
+        }
+      },
+      "adminusername": {
+        "type": "String",
+        "metadata": {
+          "description": "Administrator username for virtual machine"
+        },
+        "value": "GEN-UNIQUE"
+      },
+      "adminpassword": {
+        "type": "secureString",
+        "metadata": {
+          "description": "Administrator password for virtual machine"
+        },
+        "value": "GEN-PASSWORD"
+      },
+      "location": {
+        "defaultValue": "[resourceGroup().location]",
+        "type": "String",
+        "metadata": {
+          "description": "Name of resource group"
+        }
+      }
+    },
+    "variables": {},
+    "resources": [
+      {
+        "type": "Microsoft.Network/networkSecurityGroups",
+        "apiVersion": "2020-06-01",
+        "name": "myVMnsg",
+        "location": "[resourceGroup().location]",
+        "properties": {
+          "securityRules": [
+            {
+              "name": "SSH",
+              "properties": {
+                "protocol": "TCP",
+                "sourcePortRange": "*",
+                "destinationPortRange": "22",
+                "sourceAddressPrefix": "*",
+                "destinationAddressPrefix": "*",
+                "access": "Allow",
+                "priority": 300,
+                "direction": "Inbound"
+              }
+            }
+          ]
+        }
+      },
+      {
+        "type": "Microsoft.Network/publicIPAddresses",
+        "apiVersion": "2020-06-01",
+        "name": "myPublicIP",
+        "location": "[resourceGroup().location]",
+        "sku": {
+          "name": "Standard"
+        },
+        "properties": {
+          "publicIPAddressVersion": "IPv4",
+          "publicIPAllocationMethod": "Static",
+          "idleTimeoutInMinutes": 4
+        }
+      },
+      {
+        "type": "Microsoft.Network/publicIPAddresses",
+        "apiVersion": "2020-06-01",
+        "name": "myPublicIPVM",
+        "location": "[resourceGroup().location]",
+        "sku": {
+          "name": "Standard"
+        },
+        "properties": {
+          "publicIPAddressVersion": "IPv4",
+          "publicIPAllocationMethod": "Static",
+          "idleTimeoutInMinutes": 4
+        }
+      },
+      {
+        "type": "Microsoft.Network/publicIPPrefixes",
+        "apiVersion": "2020-06-01",
+        "name": "myPublicIPPrefix",
+        "location": "[resourceGroup().location]",
+        "sku": {
+          "name": "Standard"
+        },
+        "properties": {
+          "prefixLength": 31,
+          "publicIPAddressVersion": "IPv4"
+        }
+      },
+      {
+        "type": "Microsoft.Compute/virtualMachines",
+        "apiVersion": "2020-06-01",
+        "name": "myVM",
+        "location": "[resourceGroup().location]",
+        "dependsOn": [
+          "Microsoft.Network/networkInterfaces/myvmNIC"
+        ],
+        "properties": {
+          "hardwareProfile": {
+            "vmSize": "Standard_D2s_v3"
+          },
+          "storageProfile": {
+            "imageReference": {
+              "publisher": "Canonical",
+              "offer": "UbuntuServer",
+              "sku": "18.04-LTS",
+              "version": "latest"
+            },
+            "osDisk": {
+              "osType": "Linux",
+              "name": "myVM_disk1",
+              "createOption": "FromImage",
+              "caching": "ReadWrite",
+              "managedDisk": {
+                "storageAccountType": "Premium_LRS"
+              },
+              "diskSizeGB": 30
+            }
+          },
+          "osProfile": {
+            "computerName": "myVM",
+            "adminUsername": "GEN-UNIQUE",
+            "adminPassword": "GEN-PASSWORD",
+            "linuxConfiguration": {
+              "disablePasswordAuthentication": false,
+              "provisionVMAgent": true
+            },
+            "allowExtensionOperations": true
+          },
+          "networkProfile": {
+            "networkInterfaces": [
+              {
+                "id": "Microsoft.Network/networkInterfaces/myvmNIC"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "type": "Microsoft.Network/virtualNetworks",
+        "apiVersion": "2020-06-01",
+        "name": "myVnet",
+        "location": "[resourceGroup().location]",
+        "dependsOn": [
+          "Microsoft.Network/natGateways/myNATgateway"
+        ],
+        "properties": {
+          "addressSpace": {
+            "addressPrefixes": [
+              "192.168.0.0/16"
+            ]
+          },
+          "subnets": [
+            {
+              "name": "mySubnet",
+              "properties": {
+                "addressPrefix": "192.168.0.0/24",
+                "natGateway": {
+                  "id": "Microsoft.Network/natGateways/myNATgateway"
+                },
+                "privateEndpointNetworkPolicies": "Enabled",
+                "privateLinkServiceNetworkPolicies": "Enabled"
+              }
+            }
+          ],
+          "enableDdosProtection": false,
+          "enableVmProtection": false
+        }
+      },
+      {
+        "type": "Microsoft.Network/natGateways",
+        "apiVersion": "2020-06-01",
+        "name": "myNATgateway",
+        "location": "[resourceGroup().location]",
+        "sku": {
+          "name": "Standard"
+        },
+        "dependsOn": [
+          "Microsoft.Network/publicIPAddresses/myPublicIP",
+          "Microsoft.Network/publicIPPrefixes/myPublicIPPrefix"
+        ],
+        "properties": {
+          "idleTimeoutInMinutes": 4,
+          "publicIpAddresses": [
+            {
+              "id": "Microsoft.Network/publicIPAddresses/myPublicIP"
+            }
+          ],
+          "publicIpPrefixes": [
+            {
+              "id": "Microsoft.Network/publicIPPrefixes/myPublicIPPrefix"
+            }
+          ]
+        }
+      },
+      {
+        "type": "Microsoft.Network/virtualNetworks/subnets",
+        "apiVersion": "2020-05-01",
+        "name": "myVnet/mySubnet",
+        "dependsOn": [
+          "Microsoft.Network/virtualNetworks/myVnet",
+          "Microsoft.Network/natGateways/myNATgateway"
+        ],
+        "properties": {
+          "addressPrefix": "192.168.0.0/24",
+          "natGateway": {
+            "id": "Microsoft.Network/natGateways/myNATgateway"
+          },
+          "privateEndpointNetworkPolicies": "Enabled",
+          "privateLinkServiceNetworkPolicies": "Enabled"
+        }
+      },
+      {
+        "type": "Microsoft.Network/networkInterfaces",
+        "apiVersion": "2020-06-01",
+        "name": "myvmNIC",
+        "location": "[resourceGroup().location]",
+        "dependsOn": [
+          "Microsoft.Network/publicIPAddresses/myPublicIPVM",
+          "Microsoft.Network/virtualNetworks/subnets/myVnet/mySubnet",
+          "Microsoft.Network/networkSecurityGroups/myVMnsg"
+        ],
+        "properties": {
+          "ipConfigurations": [
+            {
+              "name": "ipconfig1",
+              "properties": {
+                "privateIPAddress": "192.168.0.4",
+                "privateIPAllocationMethod": "Dynamic",
+                "publicIPAddress": {
+                  "id": "Microsoft.Network/publicIPAddresses/myPublicIPVM"
+                },
+                "subnet": {
+                  "id": "Microsoft.Network/virtualNetworks/subnets/myVnet/mySubnet"
+                },
+                "primary": true,
+                "privateIPAddressVersion": "IPv4"
+              }
+            }
+          ],
+          "enableAcceleratedNetworking": false,
+          "enableIPForwarding": false,
+          "networkSecurityGroup": {
+            "id": "Microsoft.Network/networkSecurityGroups/myVMnsg"
+          }
+        }
+      }
+    ],
+    "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+  }
+}

@@ -1,0 +1,70 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAzureQuickStart",
+  "paths": [
+    "/demos/resourcegraph-sharedquery-countos/azuredeploy.json",
+    "/demos/resourcegraph-sharedquery-countos/azuredeploy.parameters.json"
+  ],
+  "timestamp": 1642962901496,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/demos/resourcegraph-sharedquery-countos/azuredeploy.json",
+      "/demos/resourcegraph-sharedquery-countos/azuredeploy.parameters.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT790",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "microsoft.resourcegraph/queries"
+    ]
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT790",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "queryName": {
+        "defaultValue": "Count VMs by OS",
+        "type": "String",
+        "metadata": {
+          "description": "The name of the shared query."
+        }
+      },
+      "queryCode": {
+        "defaultValue": "Resources | where type =~ 'Microsoft.Compute/virtualMachines' | summarize count() by tostring(properties.storageProfile.osDisk.osType)",
+        "type": "String",
+        "metadata": {
+          "description": "The Azure Resource Graph query to be saved to the shared query."
+        }
+      },
+      "queryDescription": {
+        "defaultValue": "This shared query counts all virtual machine resources and summarizes by the OS type.",
+        "type": "String",
+        "metadata": {
+          "description": "The description of the saved Azure Resource Graph query."
+        }
+      }
+    },
+    "resources": [
+      {
+        "type": "Microsoft.ResourceGraph/queries",
+        "apiVersion": "2018-09-01-preview",
+        "name": "Count VMs by OS",
+        "location": "global",
+        "properties": {
+          "query": "Resources | where type =~ 'Microsoft.Compute/virtualMachines' | summarize count() by tostring(properties.storageProfile.osDisk.osType)",
+          "description": "This shared query counts all virtual machine resources and summarizes by the OS type."
+        }
+      }
+    ],
+    "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+  }
+}

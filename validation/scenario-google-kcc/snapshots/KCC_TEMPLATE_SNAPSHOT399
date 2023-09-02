@@ -2,12 +2,12 @@
   "structure": "filesystem",
   "error": null,
   "reference": "master",
-  "contentType": "yaml",
+  "contentType": "json",
   "source": "gitConnectorGoogleKcc",
   "paths": [
-    "/samples/resources/iampolicy/kms-policy-with-condition/iam_v1beta1_iampolicy.yaml"
+    "/samples/resources/dnsrecordset/dnssec-ipsecvpnkey-record-set/dns_v1beta1_dnsrecordset.yaml"
   ],
-  "timestamp": 1628765147726,
+  "timestamp": 1642973304057,
   "queryuser": null,
   "checksum": "99914b932bd37a50b983c5e7c90ae93b",
   "node": {
@@ -15,41 +15,32 @@
     "type": "kcc",
     "collection": "kcctemplate",
     "paths": [
-      "/samples/resources/iampolicy/kms-policy-with-condition/iam_v1beta1_iampolicy.yaml"
+      "/samples/resources/dnsrecordset/dnssec-ipsecvpnkey-record-set/dns_v1beta1_dnsrecordset.yaml"
     ],
     "snapshotId": "KCC_TEMPLATE_SNAPSHOT399",
     "status": "active",
-    "validate": true
+    "validate": true,
+    "resourceTypes": [
+      "dnsrecordset"
+    ]
   },
   "snapshotId": "KCC_TEMPLATE_SNAPSHOT399",
   "collection": "kcctemplate",
   "json": {
-    "apiVersion": "iam.cnrm.cloud.google.com/v1beta1",
-    "kind": "IAMPolicy",
+    "apiVersion": "dns.cnrm.cloud.google.com/v1beta1",
+    "kind": "DNSRecordSet",
     "metadata": {
-      "labels": {
-        "label-one": "value-one"
-      },
-      "name": "iampolicy-sample-condition"
+      "name": "dnsrecordset-sample-dnssecipsecvpnkey"
     },
     "spec": {
-      "resourceRef": {
-        "apiVersion": "kms.cnrm.cloud.google.com/v1beta1",
-        "kind": "KMSKeyRing",
-        "name": "iampolicy-dep-condition"
+      "name": "service.secure.example.com.",
+      "type": "IPSECKEY",
+      "ttl": 300,
+      "managedZoneRef": {
+        "name": "dnsrecordset-dep-dnssecipsecvpnkey"
       },
-      "bindings": [
-        {
-          "role": "roles/cloudkms.admin",
-          "condition": {
-            "title": "expires_after_2019_12_31",
-            "description": "Expires at midnight of 2019-12-31",
-            "expression": "request.time < timestamp(\"2020-01-01T00:00:00Z\")"
-          },
-          "members": [
-            "serviceAccount:iampolicy-dep-condition@${PROJECT_ID?}.iam.gserviceaccount.com"
-          ]
-        }
+      "rrdatas": [
+        "10 1 2 192.0.2.3 AQNRU3mG7TVTO2BkR47usntb102uFJtugbo6BSGvgqt4AQ=="
       ]
     }
   }

@@ -1,0 +1,93 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "main",
+  "contentType": "json",
+  "source": "gitConnectorAzureTerraHashicorp",
+  "paths": [
+    "/examples/virtual-machines/virtual_machine/unmanaged-disks/basic/variables.tf",
+    "/examples/virtual-machines/virtual_machine/unmanaged-disks/basic/main.tf"
+  ],
+  "timestamp": 1642943280139,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "TRF_TEMPLATE_SNAPSHOT",
+    "type": "terraform",
+    "collection": "terraformtemplate",
+    "paths": [
+      "/examples/virtual-machines/virtual_machine/unmanaged-disks/basic/variables.tf",
+      "/examples/virtual-machines/virtual_machine/unmanaged-disks/basic/main.tf"
+    ],
+    "snapshotId": "TRF_TEMPLATE_SNAPSHOT152",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "azurerm_virtual_machine"
+    ]
+  },
+  "snapshotId": "TRF_TEMPLATE_SNAPSHOT152",
+  "collection": "terraformtemplate",
+  "json": {
+    "locals": [
+      {
+        "storage_account_base_uri": "${azurerm_storage_account.example.primary_blob_endpoint}${azurerm_storage_container.example.name}"
+      }
+    ],
+    "resources": [
+      {
+        "type": "azurerm_virtual_machine",
+        "name": "example",
+        "properties": {
+          "name": "${var.prefix}-vm",
+          "location": "${azurerm_resource_group.example.location}",
+          "resource_group_name": "${azurerm_resource_group.example.name}",
+          "network_interface_ids": [
+            "${azurerm_network_interface.example.id}"
+          ],
+          "vm_size": "Standard_F2",
+          "delete_os_disk_on_termination": true,
+          "delete_data_disks_on_termination": true,
+          "storage_image_reference": [
+            {
+              "publisher": "Canonical",
+              "offer": "UbuntuServer",
+              "sku": "16.04-LTS",
+              "version": "latest"
+            }
+          ],
+          "storage_os_disk": [
+            {
+              "name": "osdisk",
+              "vhd_uri": "${local.storage_account_base_uri}/osdisk.vhd",
+              "caching": "ReadWrite",
+              "create_option": "FromImage"
+            }
+          ],
+          "storage_data_disk": [
+            {
+              "name": "datadisk1",
+              "vhd_uri": "${local.storage_account_base_uri}/datadisk1.vhd",
+              "disk_size_gb": 1023,
+              "create_option": "Empty",
+              "lun": 0
+            }
+          ],
+          "os_profile": [
+            {
+              "computer_name": "hostname",
+              "admin_username": "testadmin",
+              "admin_password": "Password1234!"
+            }
+          ],
+          "os_profile_linux_config": [
+            {
+              "disable_password_authentication": false
+            }
+          ],
+          "compiletime_identity": "azurerm_virtual_machine.example"
+        }
+      }
+    ]
+  }
+}

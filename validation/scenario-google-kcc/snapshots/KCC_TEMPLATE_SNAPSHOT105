@@ -2,12 +2,12 @@
   "structure": "filesystem",
   "error": null,
   "reference": "master",
-  "contentType": "yaml",
+  "contentType": "json",
   "source": "gitConnectorGoogleKcc",
   "paths": [
-    "/samples/resources/computeforwardingrule/global-forwarding-rule-with-target-grpc-proxy/compute_v1beta1_computeurlmap.yaml"
+    "/samples/resources/computebackendservice/external-load-balancing-backend-service/compute_v1beta1_computenetworkendpointgroup.yaml"
   ],
-  "timestamp": 1628765140429,
+  "timestamp": 1642973302343,
   "queryuser": null,
   "checksum": "99914b932bd37a50b983c5e7c90ae93b",
   "node": {
@@ -15,27 +15,31 @@
     "type": "kcc",
     "collection": "kcctemplate",
     "paths": [
-      "/samples/resources/computeforwardingrule/global-forwarding-rule-with-target-grpc-proxy/compute_v1beta1_computeurlmap.yaml"
+      "/samples/resources/computebackendservice/external-load-balancing-backend-service/compute_v1beta1_computenetworkendpointgroup.yaml"
     ],
     "snapshotId": "KCC_TEMPLATE_SNAPSHOT105",
     "status": "active",
-    "validate": true
+    "validate": true,
+    "resourceTypes": [
+      "computenetworkendpointgroup"
+    ]
   },
   "snapshotId": "KCC_TEMPLATE_SNAPSHOT105",
   "collection": "kcctemplate",
   "json": {
     "apiVersion": "compute.cnrm.cloud.google.com/v1beta1",
-    "kind": "ComputeURLMap",
+    "kind": "ComputeNetworkEndpointGroup",
     "metadata": {
-      "name": "computeforwardingrule-dep-global-with-grpc-proxy"
+      "name": "computebackendservice-dep-externalloadbalancing"
     },
     "spec": {
-      "location": "global",
-      "defaultService": {
-        "backendServiceRef": {
-          "name": "computeforwardingrule-dep-global-with-grpc-proxy"
-        }
-      }
+      "networkRef": {
+        "name": "computebackendservice-dep-externalloadbalancing"
+      },
+      "subnetworkRef": {
+        "name": "computebackendservice-dep-externalloadbalancing"
+      },
+      "location": "us-west1-a"
     }
   }
 }

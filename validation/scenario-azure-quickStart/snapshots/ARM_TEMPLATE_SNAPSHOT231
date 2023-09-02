@@ -1,0 +1,95 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAzureQuickStart",
+  "paths": [
+    "/application-workloads/mahara/mahara-autoscale-cache/nested/controllerconfig.json"
+  ],
+  "timestamp": 1642962891059,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/application-workloads/mahara/mahara-autoscale-cache/nested/controllerconfig.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT231",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "microsoft.compute/virtualmachines/extensions"
+    ]
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT231",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "maharaCommon": {
+        "metadata": {
+          "description": "Common Mahara values"
+        },
+        "type": "object"
+      },
+      "siteFQDN": {
+        "metadata": {
+          "description": "FQDN of public IP address"
+        },
+        "type": "string"
+      },
+      "dbLoginPassword": {
+        "metadata": {
+          "description": "Database admin password"
+        },
+        "type": "securestring"
+      },
+      "maharaDbPass": {
+        "metadata": {
+          "description": "Mahara database password"
+        },
+        "type": "securestring"
+      },
+      "maharaAdminPass": {
+        "metadata": {
+          "description": "Mahara admin password"
+        },
+        "type": "securestring"
+      }
+    },
+    "resources": [
+      {
+        "type": "Microsoft.Compute/virtualMachines/extensions",
+        "apiVersion": "2020-12-01",
+        "location": "maharaCommon",
+        "name": "maharaCommon/install_mahara",
+        "properties": {
+          "autoUpgradeMinorVersion": true,
+          "publisher": "Microsoft.Azure.Extensions",
+          "settings": {
+            "fileUris": [
+              "maharaCommonmaharaCommonmaharaCommon",
+              "maharaCommon"
+            ]
+          },
+          "protectedSettings": {
+            "commandToExecute": "[concat('bash ', parameters('maharaCommon').maharaInstallScriptFilename, ' ', parameters('maharaCommon').maharaVersion, ' ', concat(parameters('maharaCommon').gfsNameRoot, '0'), ' ', 'data', ' ', parameters('maharaCommon').siteURL, ' ', parameters('maharaCommon').httpsTermination, ' ', parameters('maharaCommon').dbDNS, ' ', parameters('maharaCommon').maharaDbName, ' ', parameters('maharaCommon').maharaDbUser, ' ', parameters('maharaDbPass'), ' ', parameters('maharaAdminPass'), ' ', concat(parameters('maharaCommon').dbLogin, '@', parameters('maharaCommon').dbServerType, '-', parameters('maharaCommon').resourcesPrefix), ' ', parameters('dbLoginPassword'), ' ', parameters('maharaCommon').storageAccountName, ' ', listKeys(variables('storageAccountId'), '2021-02-01').keys[0].value, ' ', parameters('maharaCommon').maharaDbUserAzure, ' ', parameters('maharaCommon').elasticVm1IP, ' ', parameters('maharaCommon').dbServerType, ' ', parameters('maharaCommon').fileServerType , ' ', parameters('maharaCommon').thumbprintSslCert, ' ', parameters('maharaCommon').thumbprintCaCert, ' ', parameters('maharaCommon').searchType, ' ' , parameters('siteFQDN'))]"
+          },
+          "type": "CustomScript",
+          "typeHandlerVersion": "2.0"
+        },
+        "tags": {
+          "displayName": "install_mahara"
+        }
+      }
+    ],
+    "variables": {
+      "scriptUri": "maharaCommonmaharaCommonmaharaCommon",
+      "storageAccountId": "Microsoft.Storage/storageAccounts/maharaCommon"
+    },
+    "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+  }
+}

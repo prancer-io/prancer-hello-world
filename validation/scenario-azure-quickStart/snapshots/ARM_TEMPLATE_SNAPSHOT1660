@@ -1,0 +1,145 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAzureQuickStart",
+  "paths": [
+    "/quickstarts/microsoft.securityinsights/sentinel-automation-rule/azuredeploy.json",
+    "/quickstarts/microsoft.securityinsights/sentinel-automation-rule/azuredeploy.parameters.json"
+  ],
+  "timestamp": 1642962910114,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/quickstarts/microsoft.securityinsights/sentinel-automation-rule/azuredeploy.json",
+      "/quickstarts/microsoft.securityinsights/sentinel-automation-rule/azuredeploy.parameters.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT1660",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "microsoft.securityinsights/automationrules"
+    ]
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT1660",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "existingWorkspaceName": {
+        "type": "string",
+        "metadata": {
+          "description": "The name of the Sentinel workspace where the automation rule will be deployed"
+        },
+        "value": "GET-PREREQ-workspaceName"
+      },
+      "automationRuleName": {
+        "type": "string",
+        "metadata": {
+          "description": "The name of the automation rule that will be deployed"
+        },
+        "value": "GEN-UNIQUE"
+      },
+      "existingRuleId": {
+        "type": "string",
+        "metadata": {
+          "description": "The analytics rule GUID that is used in the triggering conditions. Feel free to remove the condition below if you don't need it."
+        },
+        "value": "GET-PREREQ-ruleId"
+      }
+    },
+    "variables": {
+      "automationRuleGuid": "[uniqueString(parameters('automationRuleName'))]"
+    },
+    "resources": [
+      {
+        "type": "Microsoft.SecurityInsights/automationRules",
+        "name": "[uniqueString(parameters('automationRuleName'))]",
+        "scope": "Microsoft.OperationalInsights/workspaces/GET-PREREQ-workspaceName",
+        "apiVersion": "2019-01-01-preview",
+        "properties": {
+          "displayName": "GEN-UNIQUE",
+          "order": 2,
+          "triggeringLogic": {
+            "isEnabled": true,
+            "expirationTimeUtc": null,
+            "triggersOn": "Incidents",
+            "triggersWhen": "Created",
+            "conditions": [
+              {
+                "conditionType": "Property",
+                "conditionProperties": {
+                  "propertyName": "IncidentRelatedAnalyticRuleIds",
+                  "operator": "Contains",
+                  "propertyValues": [
+                    "Microsoft.OperationalInsights/workspaces/providers/alertRules/GET-PREREQ-workspaceName/Microsoft.SecurityInsights/GET-PREREQ-ruleId"
+                  ]
+                }
+              },
+              {
+                "conditionType": "Property",
+                "conditionProperties": {
+                  "propertyName": "IncidentSeverity",
+                  "operator": "Equals",
+                  "propertyValues": [
+                    "High"
+                  ]
+                }
+              },
+              {
+                "conditionType": "Property",
+                "conditionProperties": {
+                  "propertyName": "IncidentTactics",
+                  "operator": "Contains",
+                  "propertyValues": [
+                    "InitialAccess",
+                    "Execution"
+                  ]
+                }
+              },
+              {
+                "conditionType": "Property",
+                "conditionProperties": {
+                  "propertyName": "IncidentTitle",
+                  "operator": "Contains",
+                  "propertyValues": [
+                    "urgent"
+                  ]
+                }
+              }
+            ]
+          },
+          "actions": [
+            {
+              "order": 2,
+              "actionType": "ModifyProperties",
+              "actionConfiguration": {
+                "status": "Closed",
+                "classification": "Undetermined",
+                "classificationReason": null
+              }
+            },
+            {
+              "order": 3,
+              "actionType": "ModifyProperties",
+              "actionConfiguration": {
+                "labels": [
+                  {
+                    "labelName": "tag"
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      }
+    ],
+    "outputs": {},
+    "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+  }
+}

@@ -1,0 +1,125 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAzureQuickStart",
+  "paths": [
+    "/demos/monitor-autoscale-failed-alert/azuredeploy.json",
+    "/demos/monitor-autoscale-failed-alert/azuredeploy.parameters.json"
+  ],
+  "timestamp": 1642962899796,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/demos/monitor-autoscale-failed-alert/azuredeploy.json",
+      "/demos/monitor-autoscale-failed-alert/azuredeploy.parameters.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT731",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "microsoft.insights/activitylogalerts",
+      "microsoft.insights/actiongroups"
+    ]
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT731",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "actionGroupName": {
+        "type": "string",
+        "defaultValue": "autoscaleActionGroup",
+        "minLength": 1,
+        "metadata": {
+          "description": "Name for the Action group."
+        },
+        "value": "autoscaleActionGroup"
+      },
+      "actionGroupShortName": {
+        "type": "string",
+        "defaultValue": "autoscaleAG",
+        "minLength": 1,
+        "maxLength": 12,
+        "metadata": {
+          "description": "Short name for the Action group."
+        },
+        "value": "autoscaleAG"
+      },
+      "emailAddress": {
+        "type": "string",
+        "metadata": {
+          "description": "Email address."
+        },
+        "value": "someemail@contoso.com"
+      },
+      "activityLogAlertName": {
+        "type": "string",
+        "defaultValue": "autoscaleFailedAlert",
+        "minLength": 1,
+        "metadata": {
+          "description": "Name for the Activity log alert."
+        },
+        "value": "autoscaleFailedAlert"
+      }
+    },
+    "resources": [
+      {
+        "type": "Microsoft.Insights/actionGroups",
+        "apiVersion": "2019-06-01",
+        "name": "autoscaleActionGroup",
+        "location": "Global",
+        "properties": {
+          "groupShortName": "autoscaleAG",
+          "enabled": true,
+          "emailReceivers": [
+            {
+              "name": "emailReceiver",
+              "emailAddress": "someemail@contoso.com"
+            }
+          ]
+        }
+      },
+      {
+        "type": "Microsoft.Insights/activityLogAlerts",
+        "apiVersion": "2017-04-01",
+        "name": "autoscaleFailedAlert",
+        "location": "Global",
+        "dependsOn": [
+          "autoscaleActionGroup"
+        ],
+        "properties": {
+          "enabled": true,
+          "scopes": [
+            "[subscription().id]"
+          ],
+          "condition": {
+            "allOf": [
+              {
+                "field": "Category",
+                "equals": "Autoscale"
+              },
+              {
+                "field": "Status",
+                "equals": "Failed"
+              }
+            ]
+          },
+          "actions": {
+            "actionGroups": [
+              {
+                "actionGroupId": "Microsoft.Insights/actionGroups/autoscaleActionGroup"
+              }
+            ]
+          }
+        }
+      }
+    ],
+    "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+  }
+}

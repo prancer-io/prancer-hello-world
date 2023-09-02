@@ -1,0 +1,180 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAzureQuickStart",
+  "paths": [
+    "/application-workloads/sql/sql-encryption-protector-byok/azuredeploy.json",
+    "/application-workloads/sql/sql-encryption-protector-byok/azuredeploy.parameters.json"
+  ],
+  "timestamp": 1642962896418,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/application-workloads/sql/sql-encryption-protector-byok/azuredeploy.json",
+      "/application-workloads/sql/sql-encryption-protector-byok/azuredeploy.parameters.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT532",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "microsoft.sql/servers",
+      "microsoft.resources/deployments",
+      "microsoft.sql/servers/keys",
+      "microsoft.sql/servers/encryptionprotector"
+    ]
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT532",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "sqlServerName": {
+        "type": "string",
+        "defaultValue": "sql-server",
+        "metadata": {
+          "description": "Azure SQL server name to create"
+        },
+        "value": "GEN-UNIQUE"
+      },
+      "sqlServerAdministrator": {
+        "type": "string",
+        "metadata": {
+          "description": "Azure SQL server administrator name"
+        },
+        "value": "GEN-UNIQUE"
+      },
+      "sqlServerAdministratorPwd": {
+        "type": "securestring",
+        "metadata": {
+          "description": "Azure SQL server administrator password"
+        },
+        "value": "GEN-PASSWORD"
+      },
+      "keyVaultName": {
+        "type": "string",
+        "metadata": {
+          "description": "Key vault name where the key to use is stored"
+        },
+        "value": "GET-PREREQ-keyVaultName"
+      },
+      "keyVaultResourceGroupName": {
+        "type": "string",
+        "metadata": {
+          "description": "Key vault resource group name where it is stored"
+        },
+        "value": "GET-PREREQ-keyVaultResourceGroupName"
+      },
+      "keyName": {
+        "type": "string",
+        "metadata": {
+          "description": "Key name in the key vault to use as encryption protector"
+        },
+        "value": "GET-PREREQ-keyName"
+      },
+      "keyVersion": {
+        "type": "string",
+        "metadata": {
+          "description": "Version of the key in the key vault to use as encryption protector"
+        },
+        "value": "GET-PREREQ-keyVersion"
+      },
+      "location": {
+        "type": "string",
+        "defaultValue": "[resourceGroup().location]",
+        "metadata": {
+          "description": "Location for all resources."
+        }
+      }
+    },
+    "variables": {
+      "sqlServerKeyName": "GET-PREREQ-keyVaultName_GET-PREREQ-keyName_GET-PREREQ-keyVersion"
+    },
+    "resources": [
+      {
+        "name": "GEN-UNIQUE",
+        "type": "Microsoft.Sql/servers",
+        "apiVersion": "2020-02-02-preview",
+        "location": "[resourceGroup().location]",
+        "identity": {
+          "type": "SystemAssigned"
+        },
+        "properties": {
+          "administratorLogin": "GEN-UNIQUE",
+          "administratorLoginPassword": "GEN-PASSWORD",
+          "version": "12.0"
+        }
+      },
+      {
+        "type": "Microsoft.Resources/deployments",
+        "apiVersion": "2020-06-01",
+        "name": "addAccessPolicy",
+        "resourceGroup": "GET-PREREQ-keyVaultResourceGroupName",
+        "dependsOn": [
+          "Microsoft.Sql/servers/GEN-UNIQUE"
+        ],
+        "properties": {
+          "mode": "Incremental",
+          "template": {
+            "contentVersion": "1.0.0.0",
+            "resources": [
+              {
+                "type": "Microsoft.KeyVault/vaults/accessPolicies",
+                "name": "GET-PREREQ-keyVaultName/add",
+                "apiVersion": "2019-09-01",
+                "properties": {
+                  "accessPolicies": [
+                    {
+                      "tenantId": "[subscription().tenantId]",
+                      "objectId": "[reference(resourceId('Microsoft.Sql/servers/', parameters('sqlServerName')), '2019-06-01-preview', 'Full').identity.principalId]",
+                      "permissions": {
+                        "keys": [
+                          "get",
+                          "wrapKey",
+                          "unwrapKey"
+                        ]
+                      }
+                    }
+                  ]
+                }
+              }
+            ],
+            "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+          }
+        }
+      },
+      {
+        "name": "GEN-UNIQUE/GET-PREREQ-keyVaultName_GET-PREREQ-keyName_GET-PREREQ-keyVersion",
+        "type": "Microsoft.Sql/servers/keys",
+        "apiVersion": "2020-02-02-preview",
+        "dependsOn": [
+          "addAccessPolicy",
+          "Microsoft.Sql/servers/GEN-UNIQUE"
+        ],
+        "properties": {
+          "serverKeyType": "AzureKeyVault",
+          "uri": "[concat(reference(resourceId(parameters('keyVaultResourceGroupName'), 'Microsoft.KeyVault/vaults/', parameters('keyVaultName')), '2018-02-14-preview', 'Full').properties.vaultUri, 'keys/', parameters('keyName'), '/', parameters('keyVersion'))]"
+        }
+      },
+      {
+        "name": "GEN-UNIQUE/current",
+        "type": "Microsoft.Sql/servers/encryptionProtector",
+        "apiVersion": "2020-02-02-preview",
+        "kind": "azurekeyvault",
+        "dependsOn": [
+          "Microsoft.SQL/servers/keys/GEN-UNIQUE/GET-PREREQ-keyVaultName_GET-PREREQ-keyName_GET-PREREQ-keyVersion"
+        ],
+        "properties": {
+          "serverKeyName": "GET-PREREQ-keyVaultName_GET-PREREQ-keyName_GET-PREREQ-keyVersion",
+          "serverKeyType": "AzureKeyVault"
+        }
+      }
+    ],
+    "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+  }
+}

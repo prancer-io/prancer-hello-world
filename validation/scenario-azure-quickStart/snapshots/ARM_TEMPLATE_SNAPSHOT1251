@@ -1,0 +1,371 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAzureQuickStart",
+  "paths": [
+    "/quickstarts/microsoft.datalakestore/yash-datalake/nested/elasticSearchKibana.json"
+  ],
+  "timestamp": 1642962906059,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/quickstarts/microsoft.datalakestore/yash-datalake/nested/elasticSearchKibana.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT1251",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "microsoft.network/publicipaddresses",
+      "microsoft.network/virtualnetworks",
+      "microsoft.network/networkinterfaces",
+      "microsoft.compute/virtualmachines/extensions",
+      "microsoft.compute/virtualmachines",
+      "microsoft.network/networksecuritygroups"
+    ]
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT1251",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "location": {
+        "type": "String",
+        "metadata": {
+          "description": "Location for all resources."
+        }
+      },
+      "vmSize": {
+        "allowedValues": [
+          "Standard_A1",
+          "Standard_A2",
+          "Standard_A3",
+          "Standard_A4",
+          "Standard_D2_v3",
+          "Standard_D2_v3",
+          "Standard_D4_v3",
+          "Standard_D8_v3"
+        ],
+        "type": "String",
+        "metadata": {
+          "description": "Size of vm"
+        }
+      },
+      "username": {
+        "type": "String",
+        "metadata": {
+          "description": "Username for the Virtual Machine."
+        }
+      },
+      "password": {
+        "type": "SecureString",
+        "metadata": {
+          "description": "Password for the Virtual Machine."
+        }
+      },
+      "dnsLabelPrefix": {
+        "type": "String",
+        "metadata": {
+          "description": "Unique DNS Name for the Public IP used to access the Virtual Machine."
+        }
+      },
+      "_artifactsLocation": {
+        "type": "string",
+        "metadata": {
+          "description": "The base URI where artifacts required by this template are located including a trailing '/'"
+        }
+      },
+      "_artifactsLocationSasToken": {
+        "type": "SecureString",
+        "metadata": {
+          "description": "The base URI where artifacts required by this template are located including a trailing '/'"
+        }
+      }
+    },
+    "variables": {
+      "networkSecurityGroupName": "customdatalakeSecurrityGroup",
+      "extensionName": "CustomScript",
+      "scenarioPrefix": "customscriptLinux",
+      "imagePublisher": "Canonical",
+      "imageOffer": "UbuntuServer",
+      "ubuntuOSVersion": "16.04-LTS",
+      "nicName": "customscriptLinuxNic",
+      "vnetAddressPrefix": "10.0.0.0/16",
+      "subnetName": "customscriptLinuxSubnet",
+      "subnetPrefix": "10.0.0.0/24",
+      "publicIPAddressName": "customscriptLinuxPublicIp",
+      "publicIPAddressType": "Dynamic",
+      "vmName": "customscriptLinuxVM",
+      "virtualNetworkName": "customscriptLinuxVnet",
+      "subnetRef": "Microsoft.Network/virtualNetworks/subnets/customscriptLinuxVnet/customscriptLinuxSubnet",
+      "scriptFolder": "scripts",
+      "scriptFilename": "kibana_install_script.sh"
+    },
+    "resources": [
+      {
+        "type": "Microsoft.Network/publicIPAddresses",
+        "name": "customscriptLinuxPublicIp",
+        "apiVersion": "2020-08-01",
+        "location": "location",
+        "properties": {
+          "publicIPAllocationMethod": "Dynamic",
+          "dnsSettings": {
+            "domainNameLabel": "dnsLabelPrefix"
+          }
+        }
+      },
+      {
+        "type": "Microsoft.Network/virtualNetworks",
+        "name": "customscriptLinuxVnet",
+        "apiVersion": "2020-08-01",
+        "location": "location",
+        "properties": {
+          "addressSpace": {
+            "addressPrefixes": [
+              "10.0.0.0/16"
+            ]
+          },
+          "subnets": [
+            {
+              "name": "customscriptLinuxSubnet",
+              "properties": {
+                "addressPrefix": "10.0.0.0/24"
+              }
+            }
+          ]
+        }
+      },
+      {
+        "type": "Microsoft.Network/networkInterfaces",
+        "name": "customscriptLinuxNic",
+        "apiVersion": "2020-08-01",
+        "location": "location",
+        "dependsOn": [
+          "Microsoft.Network/publicIPAddresses//customscriptLinuxPublicIp",
+          "Microsoft.Network/virtualNetworks//customscriptLinuxVnet"
+        ],
+        "properties": {
+          "ipConfigurations": [
+            {
+              "name": "ipconfig1",
+              "properties": {
+                "privateIPAllocationMethod": "Dynamic",
+                "publicIPAddress": {
+                  "id": "Microsoft.Network/publicIPAddresses/customscriptLinuxPublicIp"
+                },
+                "subnet": {
+                  "id": "Microsoft.Network/virtualNetworks/subnets/customscriptLinuxVnet/customscriptLinuxSubnet"
+                }
+              }
+            }
+          ],
+          "networkSecurityGroup": {
+            "id": "Microsoft.Network/networkSecurityGroups/customdatalakeSecurrityGroup"
+          }
+        }
+      },
+      {
+        "type": "Microsoft.Compute/virtualMachines",
+        "name": "customscriptLinuxVM",
+        "apiVersion": "2020-12-01",
+        "location": "location",
+        "dependsOn": [
+          "Microsoft.Network/networkInterfaces//customscriptLinuxNic"
+        ],
+        "properties": {
+          "hardwareProfile": {
+            "vmSize": "vmSize"
+          },
+          "osProfile": {
+            "computerName": "customscriptLinuxVM",
+            "adminUsername": "username",
+            "adminPassword": "password"
+          },
+          "storageProfile": {
+            "imageReference": {
+              "publisher": "Canonical",
+              "offer": "UbuntuServer",
+              "sku": "16.04-LTS",
+              "version": "latest"
+            },
+            "osDisk": {
+              "name": "osdisk1",
+              "createOption": "FromImage",
+              "managedDisk": {
+                "storageAccountType": "StandardSSD_LRS"
+              },
+              "caching": "ReadWrite"
+            }
+          },
+          "networkProfile": {
+            "networkInterfaces": [
+              {
+                "id": "Microsoft.Network/networkInterfaces/customscriptLinuxNic"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "type": "Microsoft.Network/networkSecurityGroups",
+        "name": "customdatalakeSecurrityGroup",
+        "apiVersion": "2020-08-01",
+        "location": "location",
+        "properties": {
+          "securityRules": [
+            {
+              "name": "default-allow-ssh",
+              "properties": {
+                "priority": 1000,
+                "protocol": "TCP",
+                "access": "Allow",
+                "direction": "Inbound",
+                "sourceAddressPrefix": "*",
+                "sourcePortRange": "*",
+                "destinationAddressPrefix": "*",
+                "destinationPortRange": "22"
+              }
+            },
+            {
+              "name": "elasticsearch-inbound-access",
+              "properties": {
+                "priority": 1020,
+                "protocol": "TCP",
+                "access": "Allow",
+                "direction": "Inbound",
+                "sourceAddressPrefix": "*",
+                "sourcePortRange": "*",
+                "destinationAddressPrefix": "*",
+                "destinationPortRange": "9200-9300"
+              }
+            },
+            {
+              "name": "kibana-inbound-access",
+              "properties": {
+                "priority": 1015,
+                "protocol": "*",
+                "access": "Allow",
+                "direction": "Inbound",
+                "sourceAddressPrefix": "*",
+                "sourcePortRange": "*",
+                "destinationAddressPrefix": "*",
+                "destinationPortRange": "5601"
+              }
+            },
+            {
+              "name": "elasticsearch-outbound-access",
+              "properties": {
+                "priority": 110,
+                "protocol": "TCP",
+                "access": "Allow",
+                "direction": "Outbound",
+                "sourceAddressPrefix": "*",
+                "sourcePortRange": "*",
+                "destinationAddressPrefix": "*",
+                "destinationPortRange": "9200-9300"
+              }
+            },
+            {
+              "name": "kibana-outbound-access",
+              "properties": {
+                "priority": 105,
+                "protocol": "*",
+                "access": "Allow",
+                "direction": "Outbound",
+                "sourceAddressPrefix": "*",
+                "sourcePortRange": "*",
+                "destinationAddressPrefix": "*",
+                "destinationPortRange": "5601"
+              }
+            },
+            {
+              "name": "neo4j-inbound-access",
+              "properties": {
+                "priority": 1030,
+                "protocol": "*",
+                "access": "Allow",
+                "direction": "Inbound",
+                "sourceAddressPrefix": "*",
+                "sourcePortRange": "*",
+                "destinationAddressPrefix": "*",
+                "destinationPortRange": "7474"
+              }
+            },
+            {
+              "name": "neo4j-outbound-access",
+              "properties": {
+                "priority": 120,
+                "protocol": "*",
+                "access": "Allow",
+                "direction": "Outbound",
+                "sourceAddressPrefix": "*",
+                "sourcePortRange": "*",
+                "destinationAddressPrefix": "*",
+                "destinationPortRange": "7474"
+              }
+            },
+            {
+              "name": "neo4j-bolt-inbound-access",
+              "properties": {
+                "priority": 1040,
+                "protocol": "*",
+                "access": "Allow",
+                "direction": "Inbound",
+                "sourceAddressPrefix": "*",
+                "sourcePortRange": "*",
+                "destinationAddressPrefix": "*",
+                "destinationPortRange": "7687"
+              }
+            },
+            {
+              "name": "neo4j-bolt-outbound-access",
+              "properties": {
+                "priority": 130,
+                "protocol": "*",
+                "access": "Allow",
+                "direction": "Outbound",
+                "sourceAddressPrefix": "*",
+                "sourcePortRange": "*",
+                "destinationAddressPrefix": "*",
+                "destinationPortRange": "7687"
+              }
+            }
+          ]
+        }
+      },
+      {
+        "type": "Microsoft.Compute/virtualMachines/extensions",
+        "name": "customscriptLinuxVM/CustomScript",
+        "apiVersion": "2020-12-01",
+        "location": "location",
+        "dependsOn": [
+          "Microsoft.Compute/virtualMachines//customscriptLinuxVM"
+        ],
+        "properties": {
+          "publisher": "Microsoft.Azure.Extensions",
+          "type": "CustomScript",
+          "typeHandlerVersion": "2.0",
+          "autoUpgradeMinorVersion": true,
+          "settings": {
+            "fileUris": [
+              "[uri(parameters('_artifactsLocation'),concat(variables('scriptFolder'),'/',variables('scriptFilename'),parameters('_artifactsLocationSasToken')))]"
+            ],
+            "commandToExecute": "sh kibana_install_script.sh >> /home/testingDataFileLog.txt"
+          }
+        }
+      }
+    ],
+    "outputs": {
+      "publicIpAddress": {
+        "type": "String",
+        "value": "[reference(variables('publicIPAddressName')).dnsSettings.fqdn]"
+      }
+    },
+    "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+  }
+}

@@ -1,0 +1,76 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAzureQuickStart",
+  "paths": [
+    "/demos/ddos-attack-prevention/nested/microsoft.network/publicipaddress.json"
+  ],
+  "timestamp": 1642962899132,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/demos/ddos-attack-prevention/nested/microsoft.network/publicipaddress.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT691",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "microsoft.network/publicipaddresses"
+    ]
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT691",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "publicIPAddressName": {
+        "type": "string"
+      },
+      "publicIPAddressType": {
+        "type": "string",
+        "defaultValue": "Dynamic"
+      },
+      "dnsNameForPublicIP": {
+        "type": "string"
+      },
+      "location": {
+        "type": "string"
+      },
+      "tags": {
+        "type": "object"
+      }
+    },
+    "resources": [
+      {
+        "apiVersion": "2018-06-01",
+        "type": "Microsoft.Network/publicIPAddresses",
+        "name": "publicIPAddressName",
+        "location": "location",
+        "tags": "tags",
+        "properties": {
+          "publicIPAllocationMethod": "Dynamic",
+          "dnsSettings": {
+            "domainNameLabel": "dnsNameForPublicIP"
+          }
+        }
+      }
+    ],
+    "outputs": {
+      "publicIPAddressName": {
+        "type": "string",
+        "value": "[parameters('publicIPAddressName')]"
+      },
+      "publicIPResourceId": {
+        "type": "string",
+        "value": "[resourceId('Microsoft.Network/publicIPAddresses',parameters('publicIPAddressName'))]"
+      }
+    },
+    "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+  }
+}

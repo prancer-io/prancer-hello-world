@@ -1,0 +1,85 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAzureQuickStart",
+  "paths": [
+    "/quickstarts/microsoft.compute/decrypt-vmss-windows/azuredeploy.json",
+    "/quickstarts/microsoft.compute/decrypt-vmss-windows/azuredeploy.parameters.json"
+  ],
+  "timestamp": 1642962903605,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/quickstarts/microsoft.compute/decrypt-vmss-windows/azuredeploy.json",
+      "/quickstarts/microsoft.compute/decrypt-vmss-windows/azuredeploy.parameters.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT1015",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "microsoft.compute/virtualmachinescalesets/extensions"
+    ]
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT1015",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "vmssName": {
+        "type": "string",
+        "metadata": {
+          "description": "Name of VMSS to be decrypted"
+        },
+        "maxLength": 61,
+        "value": "GET-PREREQ-vmssName"
+      },
+      "volumeType": {
+        "type": "string",
+        "defaultValue": "All",
+        "metadata": {
+          "description": "Type of the volume OS or Data to perform encryption operation"
+        }
+      },
+      "location": {
+        "type": "string",
+        "defaultValue": "[resourceGroup().location]",
+        "metadata": {
+          "description": "Default location"
+        }
+      },
+      "forceUpdateTag": {
+        "type": "string",
+        "defaultValue": "[uniqueString(resourceGroup().id, deployment().name)]",
+        "metadata": {
+          "description": "Pass in an unique value like a GUID everytime the operation needs to be force run"
+        }
+      }
+    },
+    "resources": [
+      {
+        "type": "Microsoft.Compute/virtualMachineScaleSets/extensions",
+        "name": "GET-PREREQ-vmssName/AzureDiskEncryption",
+        "location": "[resourceGroup().location]",
+        "apiVersion": "2020-12-01",
+        "properties": {
+          "publisher": "Microsoft.Azure.Security",
+          "type": "AzureDiskEncryption",
+          "typeHandlerVersion": "2.2",
+          "autoUpgradeMinorVersion": true,
+          "forceUpdateTag": "[uniqueString(resourceGroup().id, deployment().name)]",
+          "settings": {
+            "EncryptionOperation": "DisableEncryption",
+            "VolumeType": "All"
+          }
+        }
+      }
+    ],
+    "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+  }
+}

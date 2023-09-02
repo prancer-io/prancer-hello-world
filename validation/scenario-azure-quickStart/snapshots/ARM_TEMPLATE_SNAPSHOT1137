@@ -1,0 +1,113 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAzureQuickStart",
+  "paths": [
+    "/quickstarts/microsoft.compute/vm-with-data-management-gateway/nested/yesIncomingRemote.json"
+  ],
+  "timestamp": 1642962904725,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/quickstarts/microsoft.compute/vm-with-data-management-gateway/nested/yesIncomingRemote.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT1137",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "microsoft.network/publicipaddresses",
+      "microsoft.network/networksecuritygroups"
+    ]
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT1137",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "vmName": {
+        "type": "string"
+      },
+      "networkSecurityGroupName": {
+        "type": "string"
+      },
+      "publicIPAddressName": {
+        "type": "string"
+      },
+      "existingVnetLocation": {
+        "type": "string"
+      }
+    },
+    "variables": {
+      "dnsLabelPrefix": "[concat(toLower(parameters('vmName')), uniquestring(resourceGroup().id, parameters('vmName')))]"
+    },
+    "resources": [
+      {
+        "apiVersion": "2016-03-30",
+        "type": "Microsoft.Network/publicIPAddresses",
+        "name": "publicIPAddressName",
+        "location": "existingVnetLocation",
+        "tags": {
+          "vmname": "vmName"
+        },
+        "properties": {
+          "publicIPAllocationMethod": "Dynamic",
+          "dnsSettings": {
+            "domainNameLabel": "[variables('dnsLabelPrefix')]"
+          }
+        }
+      },
+      {
+        "name": "networkSecurityGroupName",
+        "type": "Microsoft.Network/networkSecurityGroups",
+        "apiVersion": "2016-09-01",
+        "location": "existingVnetLocation",
+        "tags": {
+          "vmname": "vmName"
+        },
+        "properties": {
+          "securityRules": [
+            {
+              "name": "default-allow-rdp",
+              "properties": {
+                "priority": 1000,
+                "sourceAddressPrefix": "*",
+                "protocol": "Tcp",
+                "destinationPortRange": "3389",
+                "access": "Allow",
+                "direction": "Inbound",
+                "sourcePortRange": "*",
+                "destinationAddressPrefix": "*"
+              }
+            },
+            {
+              "name": "ResourceManager",
+              "properties": {
+                "priority": 1010,
+                "sourceAddressPrefix": "*",
+                "protocol": "Tcp",
+                "destinationPortRange": "8050",
+                "access": "Allow",
+                "direction": "Inbound",
+                "sourcePortRange": "*",
+                "destinationAddressPrefix": "*"
+              }
+            }
+          ]
+        }
+      }
+    ],
+    "outputs": {
+      "hostname": {
+        "type": "string",
+        "value": "[reference(parameters('publicIPAddressName')).dnsSettings.fqdn]"
+      }
+    },
+    "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+  }
+}

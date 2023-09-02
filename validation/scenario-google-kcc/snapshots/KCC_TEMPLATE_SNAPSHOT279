@@ -2,12 +2,12 @@
   "structure": "filesystem",
   "error": null,
   "reference": "master",
-  "contentType": "yaml",
+  "contentType": "json",
   "source": "gitConnectorGoogleKcc",
   "paths": [
-    "/samples/resources/computeurlmap/global-compute-url-map/compute_v1beta1_computehealthcheck.yaml"
+    "/samples/resources/computetargetgrpcproxy/compute_v1beta1_computetargetgrpcproxy.yaml"
   ],
-  "timestamp": 1628765144541,
+  "timestamp": 1642973303254,
   "queryuser": null,
   "checksum": "99914b932bd37a50b983c5e7c90ae93b",
   "node": {
@@ -15,26 +15,29 @@
     "type": "kcc",
     "collection": "kcctemplate",
     "paths": [
-      "/samples/resources/computeurlmap/global-compute-url-map/compute_v1beta1_computehealthcheck.yaml"
+      "/samples/resources/computetargetgrpcproxy/compute_v1beta1_computetargetgrpcproxy.yaml"
     ],
     "snapshotId": "KCC_TEMPLATE_SNAPSHOT279",
     "status": "active",
-    "validate": true
+    "validate": true,
+    "resourceTypes": [
+      "computetargetgrpcproxy"
+    ]
   },
   "snapshotId": "KCC_TEMPLATE_SNAPSHOT279",
   "collection": "kcctemplate",
   "json": {
     "apiVersion": "compute.cnrm.cloud.google.com/v1beta1",
-    "kind": "ComputeHealthCheck",
+    "kind": "ComputeTargetGRPCProxy",
     "metadata": {
-      "name": "computeurlmap-dep"
+      "name": "computetargetgrpcproxy-sample"
     },
     "spec": {
-      "checkIntervalSec": 10,
-      "httpHealthCheck": {
-        "port": 80
+      "description": "A target gRPC proxy intended for load balancing gRPC traffic, referenced by global forwarding rules. References a URL map which specifies how traffic routes to gRPC backend services.",
+      "urlMapRef": {
+        "name": "computetargetgrpcproxy-dep"
       },
-      "location": "global"
+      "validateForProxyless": true
     }
   }
 }

@@ -1,0 +1,239 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAzureQuickStart",
+  "paths": [
+    "/application-workloads/ibm-cloud-pak/ibm-cloud-pak-for-data/prereqs/prereq.azuredeploy.json",
+    "/application-workloads/ibm-cloud-pak/ibm-cloud-pak-for-data/prereqs/prereq.azuredeploy.parameters.json"
+  ],
+  "timestamp": 1642962889004,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/application-workloads/ibm-cloud-pak/ibm-cloud-pak-for-data/prereqs/prereq.azuredeploy.json",
+      "/application-workloads/ibm-cloud-pak/ibm-cloud-pak-for-data/prereqs/prereq.azuredeploy.parameters.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT164",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "microsoft.domainregistration/domains",
+      "microsoft.network/dnszones"
+    ]
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT164",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "key1": {
+        "type": "string",
+        "value": "DNRA"
+      },
+      "key2": {
+        "type": "string",
+        "value": "DNPA"
+      },
+      "AgreedBy": {
+        "type": "string",
+        "value": "172.1.0.168:5000"
+      },
+      "AgreedAt": {
+        "type": "string",
+        "value": "2020-07-09T15:52:14.3666389Z"
+      },
+      "Address1": {
+        "type": "string",
+        "value": "123 address line1"
+      },
+      "Address2": {
+        "type": "string",
+        "value": ""
+      },
+      "City": {
+        "type": "string",
+        "value": "San Jose"
+      },
+      "Country": {
+        "type": "string",
+        "value": "US"
+      },
+      "PostalCode": {
+        "type": "string",
+        "value": "95134"
+      },
+      "State": {
+        "type": "string",
+        "value": "California"
+      },
+      "Email": {
+        "type": "string",
+        "value": "abc_email@gmail.com"
+      },
+      "Fax": {
+        "type": "string",
+        "value": ""
+      },
+      "JobTitle": {
+        "type": "string",
+        "value": ""
+      },
+      "NameFirst": {
+        "type": "string",
+        "value": "tim"
+      },
+      "NameLast": {
+        "type": "string",
+        "value": "watson"
+      },
+      "NameMiddle": {
+        "type": "string",
+        "value": ""
+      },
+      "Organization": {
+        "type": "string",
+        "value": "IBM"
+      },
+      "Phone": {
+        "type": "string",
+        "value": "+1.1234567890"
+      },
+      "autoRenew": {
+        "type": "bool",
+        "value": false
+      },
+      "targetDnsType": {
+        "type": "string",
+        "value": "AzureDns"
+      },
+      "dnsZoneName": {
+        "type": "string",
+        "defaultValue": "[concat(uniqueString(resourceGroup().id), '.net')]"
+      }
+    },
+    "variables": {
+      "dnsZoneRG": "[resourceGroup().name]"
+    },
+    "resources": [
+      {
+        "type": "Microsoft.DomainRegistration/domains",
+        "apiVersion": "2020-10-01",
+        "dependsOn": [
+          "Microsoft.Network/dnszones/[concat(uniqueString(resourceGroup().id), '.net')]"
+        ],
+        "name": "[concat(uniqueString(resourceGroup().id), '.net')]",
+        "location": "global",
+        "Properties": {
+          "Consent": {
+            "AgreementKeys": [
+              "DNRA",
+              "DNPA"
+            ],
+            "AgreedBy": "172.1.0.168:5000",
+            "AgreedAt": "2020-07-09T15:52:14.3666389Z"
+          },
+          "ContactAdmin": {
+            "AddressMailing": {
+              "Address1": "123 address line1",
+              "Address2": "",
+              "City": "San Jose",
+              "Country": "US",
+              "PostalCode": "95134",
+              "State": "California"
+            },
+            "Email": "abc_email@gmail.com",
+            "Fax": "",
+            "JobTitle": "",
+            "NameFirst": "tim",
+            "NameLast": "watson",
+            "NameMiddle": "",
+            "Organization": "IBM",
+            "Phone": "+1.1234567890"
+          },
+          "ContactBilling": {
+            "AddressMailing": {
+              "Address1": "123 address line1",
+              "Address2": "",
+              "City": "San Jose",
+              "Country": "US",
+              "PostalCode": "95134",
+              "State": "California"
+            },
+            "Email": "abc_email@gmail.com",
+            "Fax": "",
+            "JobTitle": "",
+            "NameFirst": "tim",
+            "NameLast": "watson",
+            "NameMiddle": "",
+            "Organization": "IBM",
+            "Phone": "+1.1234567890"
+          },
+          "ContactRegistrant": {
+            "AddressMailing": {
+              "Address1": "123 address line1",
+              "Address2": "",
+              "City": "San Jose",
+              "Country": "US",
+              "PostalCode": "95134",
+              "State": "California"
+            },
+            "Email": "abc_email@gmail.com",
+            "Fax": "",
+            "JobTitle": "",
+            "NameFirst": "tim",
+            "NameLast": "watson",
+            "NameMiddle": "",
+            "Organization": "IBM",
+            "Phone": "+1.1234567890"
+          },
+          "ContactTech": {
+            "AddressMailing": {
+              "Address1": "123 address line1",
+              "Address2": "",
+              "City": "San Jose",
+              "Country": "US",
+              "PostalCode": "95134",
+              "State": "California"
+            },
+            "Email": "abc_email@gmail.com",
+            "Fax": "",
+            "JobTitle": "",
+            "NameFirst": "tim",
+            "NameLast": "watson",
+            "NameMiddle": "",
+            "Organization": "IBM",
+            "Phone": "+1.1234567890"
+          },
+          "privacy": true,
+          "autoRenew": false,
+          "targetDnsType": "AzureDns",
+          "dnsZoneId": "Microsoft.Network/dnszones/[concat(uniqueString(resourceGroup().id), '.net')]"
+        }
+      },
+      {
+        "type": "Microsoft.Network/dnszones",
+        "name": "[concat(uniqueString(resourceGroup().id), '.net')]",
+        "apiVersion": "2018-05-01",
+        "location": "global",
+        "properties": {}
+      }
+    ],
+    "outputs": {
+      "dnsZone": {
+        "type": "string",
+        "value": "[parameters('dnsZoneName')]"
+      },
+      "dnsZoneRG": {
+        "type": "string",
+        "value": "[variables('dnsZoneRG')]"
+      }
+    },
+    "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+  }
+}

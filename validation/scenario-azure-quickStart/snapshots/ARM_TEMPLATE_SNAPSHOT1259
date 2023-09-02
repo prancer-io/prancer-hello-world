@@ -1,0 +1,82 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAzureQuickStart",
+  "paths": [
+    "/quickstarts/microsoft.dataprotection/backup-vault-basic/azuredeploy.json",
+    "/quickstarts/microsoft.dataprotection/backup-vault-basic/azuredeploy.parameters.json"
+  ],
+  "timestamp": 1642962906181,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/quickstarts/microsoft.dataprotection/backup-vault-basic/azuredeploy.json",
+      "/quickstarts/microsoft.dataprotection/backup-vault-basic/azuredeploy.parameters.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT1259",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "microsoft.dataprotection/backupvaults"
+    ]
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT1259",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "vaultName": {
+        "type": "string",
+        "defaultValue": "BackupVault",
+        "metadata": {
+          "description": "Name of the Vault"
+        }
+      },
+      "vaultStorageRedundancy": {
+        "type": "string",
+        "defaultValue": "GeoRedundant",
+        "allowedValues": [
+          "LocallyRedundant",
+          "GeoRedundant"
+        ],
+        "metadata": {
+          "description": "Change Vault Storage Type (not allowed if the vault has registered backups)"
+        }
+      },
+      "location": {
+        "type": "string",
+        "defaultValue": "[resourceGroup().location]",
+        "metadata": {
+          "description": "Location for all resources."
+        }
+      }
+    },
+    "functions": [],
+    "resources": [
+      {
+        "type": "Microsoft.DataProtection/BackupVaults",
+        "apiVersion": "2021-01-01",
+        "name": "BackupVault",
+        "location": "[resourceGroup().location]",
+        "identity": {
+          "type": "systemAssigned"
+        },
+        "properties": {
+          "storageSettings": [
+            {
+              "datastoreType": "VaultStore",
+              "type": "GeoRedundant"
+            }
+          ]
+        }
+      }
+    ],
+    "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+  }
+}

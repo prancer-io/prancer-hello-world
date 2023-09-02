@@ -1,0 +1,72 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "main",
+  "contentType": "json",
+  "source": "gitConnectorAzureTerraHashicorp",
+  "paths": [
+    "/examples/redis-cache/standard/variables.tf",
+    "/examples/redis-cache/standard/main.tf"
+  ],
+  "timestamp": 1642943279912,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "TRF_TEMPLATE_SNAPSHOT",
+    "type": "terraform",
+    "collection": "terraformtemplate",
+    "paths": [
+      "/examples/redis-cache/standard/variables.tf",
+      "/examples/redis-cache/standard/main.tf"
+    ],
+    "snapshotId": "TRF_TEMPLATE_SNAPSHOT97",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "azurerm_redis_cache",
+      "azurerm_resource_group"
+    ]
+  },
+  "snapshotId": "TRF_TEMPLATE_SNAPSHOT97",
+  "collection": "terraformtemplate",
+  "json": {
+    "provider": [
+      {
+        "azurerm": {
+          "features": [
+            {}
+          ]
+        }
+      }
+    ],
+    "resources": [
+      {
+        "type": "azurerm_resource_group",
+        "name": "example",
+        "properties": {
+          "name": "${var.prefix}-resources",
+          "location": "${var.location}",
+          "compiletime_identity": "azurerm_resource_group.example"
+        }
+      },
+      {
+        "type": "azurerm_redis_cache",
+        "name": "example",
+        "properties": {
+          "name": "${var.prefix}-cache",
+          "location": "${azurerm_resource_group.example.location}",
+          "resource_group_name": "${azurerm_resource_group.example.name}",
+          "capacity": 2,
+          "family": "C",
+          "sku_name": "Standard",
+          "enable_non_ssl_port": false,
+          "minimum_tls_version": 1.2,
+          "redis_configuration": [
+            {}
+          ],
+          "compiletime_identity": "azurerm_redis_cache.example"
+        }
+      }
+    ]
+  }
+}

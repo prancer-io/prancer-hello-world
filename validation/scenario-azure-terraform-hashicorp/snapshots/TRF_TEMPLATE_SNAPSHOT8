@@ -1,0 +1,115 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "main",
+  "contentType": "json",
+  "source": "gitConnectorAzureTerraHashicorp",
+  "paths": [
+    "/examples/app-service/function-basic/outputs.tf",
+    "/examples/app-service/function-basic/variables.tf",
+    "/examples/app-service/function-basic/main.tf"
+  ],
+  "timestamp": 1642943279590,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "TRF_TEMPLATE_SNAPSHOT",
+    "type": "terraform",
+    "collection": "terraformtemplate",
+    "paths": [
+      "/examples/app-service/function-basic/outputs.tf",
+      "/examples/app-service/function-basic/variables.tf",
+      "/examples/app-service/function-basic/main.tf"
+    ],
+    "snapshotId": "TRF_TEMPLATE_SNAPSHOT8",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "azurerm_application_insights",
+      "azurerm_resource_group",
+      "azurerm_app_service_plan",
+      "azurerm_storage_account",
+      "azurerm_function_app"
+    ]
+  },
+  "snapshotId": "TRF_TEMPLATE_SNAPSHOT8",
+  "collection": "terraformtemplate",
+  "json": {
+    "provider": [
+      {
+        "azurerm": {
+          "features": [
+            {}
+          ]
+        }
+      }
+    ],
+    "resources": [
+      {
+        "type": "azurerm_resource_group",
+        "name": "main",
+        "properties": {
+          "name": "${var.prefix}-resources",
+          "location": "${var.location}",
+          "compiletime_identity": "azurerm_resource_group.main"
+        }
+      },
+      {
+        "type": "azurerm_storage_account",
+        "name": "main",
+        "properties": {
+          "name": "${var.prefix}storageacct",
+          "resource_group_name": "${azurerm_resource_group.main.name}",
+          "location": "${azurerm_resource_group.main.location}",
+          "account_tier": "Standard",
+          "account_replication_type": "LRS",
+          "compiletime_identity": "azurerm_storage_account.main"
+        }
+      },
+      {
+        "type": "azurerm_application_insights",
+        "name": "main",
+        "properties": {
+          "name": "${var.prefix}-appinsights",
+          "resource_group_name": "${azurerm_resource_group.main.name}",
+          "location": "${azurerm_resource_group.main.location}",
+          "application_type": "web",
+          "compiletime_identity": "azurerm_application_insights.main"
+        }
+      },
+      {
+        "type": "azurerm_app_service_plan",
+        "name": "main",
+        "properties": {
+          "name": "${var.prefix}-asp",
+          "resource_group_name": "${azurerm_resource_group.main.name}",
+          "location": "${azurerm_resource_group.main.location}",
+          "kind": "FunctionApp",
+          "sku": [
+            {
+              "tier": "Dynamic",
+              "size": "Y1"
+            }
+          ],
+          "compiletime_identity": "azurerm_app_service_plan.main"
+        }
+      },
+      {
+        "type": "azurerm_function_app",
+        "name": "main",
+        "properties": {
+          "name": "${var.prefix}-function",
+          "resource_group_name": "${azurerm_resource_group.main.name}",
+          "location": "${azurerm_resource_group.main.location}",
+          "app_service_plan_id": "${azurerm_app_service_plan.main.id}",
+          "storage_account_name": "${azurerm_storage_account.main.name}",
+          "storage_account_access_key": "${azurerm_storage_account.main.primary_access_key}",
+          "app_settings": {
+            "AppInsights_InstrumentationKey": "${azurerm_application_insights.main.instrumentation_key}"
+          },
+          "compiletime_identity": "azurerm_function_app.main"
+        }
+      }
+    ]
+  }
+}

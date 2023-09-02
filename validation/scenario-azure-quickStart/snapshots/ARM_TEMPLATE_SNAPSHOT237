@@ -1,0 +1,112 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAzureQuickStart",
+  "paths": [
+    "/application-workloads/mahara/mahara-autoscale-cache/nested/mysql.json"
+  ],
+  "timestamp": 1642962891133,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/application-workloads/mahara/mahara-autoscale-cache/nested/mysql.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT237",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "microsoft.dbformysql/servers"
+    ]
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT237",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "maharaCommon": {
+        "metadata": {
+          "description": "Common Mahara values"
+        },
+        "type": "object"
+      },
+      "lbPubIp": {
+        "metadata": {
+          "description": "Public IP address of the deployed load balancer"
+        },
+        "type": "string"
+      },
+      "ctlrPubIp": {
+        "metadata": {
+          "description": "Public IP address of the deployed controller VM"
+        },
+        "type": "string"
+      },
+      "dbLoginPassword": {
+        "metadata": {
+          "description": "Database admin password"
+        },
+        "type": "securestring"
+      }
+    },
+    "resources": [
+      {
+        "type": "Microsoft.DBforMySQL/servers",
+        "apiVersion": "2017-12-01",
+        "location": "maharaCommon",
+        "name": "maharaCommon",
+        "properties": {
+          "administratorLogin": "maharaCommon",
+          "administratorLoginPassword": "dbLoginPassword",
+          "sslEnforcement": "maharaCommon",
+          "storageProfile": {
+            "storageMB": "[mul(parameters('maharaCommon').mysqlPgresStgSizeGB, 1024)]",
+            "backupRetentionDays": 35,
+            "geoRedundantBackup": "Enabled"
+          },
+          "version": "maharaCommon"
+        },
+        "sku": {
+          "capacity": "maharaCommon",
+          "name": "maharaCommon",
+          "tier": "maharaCommon",
+          "family": "maharaCommon"
+        },
+        "resources": [
+          {
+            "apiVersion": "2017-12-01",
+            "dependsOn": [
+              "Microsoft.DBforMySQL/servers//maharaCommon"
+            ],
+            "location": "maharaCommon",
+            "name": "mysql-firewall-allow-lb",
+            "properties": {
+              "startIpAddress": "lbPubIp",
+              "endIpAddress": "lbPubIp"
+            },
+            "type": "firewallRules"
+          },
+          {
+            "apiVersion": "2017-12-01",
+            "dependsOn": [
+              "Microsoft.DBforMySQL/servers//maharaCommon"
+            ],
+            "location": "maharaCommon",
+            "name": "mysql-firewall-allow-ctlr",
+            "properties": {
+              "startIpAddress": "ctlrPubIp",
+              "endIpAddress": "ctlrPubIp"
+            },
+            "type": "firewallRules"
+          }
+        ]
+      }
+    ],
+    "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+  }
+}

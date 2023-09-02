@@ -1,0 +1,195 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAzureQuickStart",
+  "paths": [
+    "/quickstarts/microsoft.hdinsight/hdinsight-linux-ssh-publickey-metastore-vnet/prereqs/prereq.azuredeploy.json",
+    "/quickstarts/microsoft.hdinsight/hdinsight-linux-ssh-publickey-metastore-vnet/prereqs/prereq.azuredeploy.parameters.json"
+  ],
+  "timestamp": 1642962907096,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/quickstarts/microsoft.hdinsight/hdinsight-linux-ssh-publickey-metastore-vnet/prereqs/prereq.azuredeploy.json",
+      "/quickstarts/microsoft.hdinsight/hdinsight-linux-ssh-publickey-metastore-vnet/prereqs/prereq.azuredeploy.parameters.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT1353",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "microsoft.sql/servers",
+      "microsoft.network/virtualnetworks",
+      "microsoft.storage/storageaccounts"
+    ]
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT1353",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "databaseAdminUsername": {
+        "type": "string",
+        "metadata": {
+          "description": "Username for DB Admin"
+        },
+        "value": "GEN-UNIQUE"
+      },
+      "databaseAdminPassword": {
+        "type": "securestring",
+        "metadata": {
+          "description": "Password for DB Admin"
+        }
+      },
+      "location": {
+        "type": "string",
+        "defaultValue": "[resourceGroup().location]",
+        "metadata": {
+          "description": "Location for all resources."
+        }
+      }
+    },
+    "variables": {
+      "storageAccountName": "[concat('storage', uniqueString(resourceGroup().id))]",
+      "storageAccountType": "Standard_LRS",
+      "vNetName": "vNet",
+      "vNetPrefix": "10.0.0.0/16",
+      "SubnetName": "Subnet-1",
+      "SubnetPrefix": "10.0.0.0/24",
+      "serverName": "[concat('server', uniqueString(resourceGroup().id))]",
+      "dataBaseName": "DB",
+      "dataBaseCollation": "SQL_Latin1_General_CP1_CI_AS",
+      "dataBaseEdition": "Basic",
+      "dataBaseRequestedServiceObjectiveName": "Basic"
+    },
+    "resources": [
+      {
+        "name": "[variables('storageAccountName')]",
+        "type": "Microsoft.Storage/storageAccounts",
+        "location": "[resourceGroup().location]",
+        "apiVersion": "2021-04-01",
+        "sku": {
+          "name": "Standard_LRS"
+        },
+        "tags": {
+          "displayName": "storageAccount"
+        },
+        "kind": "Storage"
+      },
+      {
+        "name": "vNet",
+        "type": "Microsoft.Network/virtualNetworks",
+        "location": "[resourceGroup().location]",
+        "apiVersion": "2021-02-01",
+        "tags": {
+          "displayName": "vNet"
+        },
+        "properties": {
+          "addressSpace": {
+            "addressPrefixes": [
+              "10.0.0.0/16"
+            ]
+          },
+          "subnets": [
+            {
+              "name": "Subnet-1",
+              "properties": {
+                "addressPrefix": "10.0.0.0/24"
+              }
+            }
+          ]
+        }
+      },
+      {
+        "name": "[variables('serverName')]",
+        "type": "Microsoft.Sql/servers",
+        "location": "[resourceGroup().location]",
+        "apiVersion": "2021-02-01-preview",
+        "tags": {
+          "displayName": "server"
+        },
+        "properties": {
+          "administratorLogin": "GEN-UNIQUE",
+          "administratorLoginPassword": "databaseAdminPassword"
+        },
+        "resources": [
+          {
+            "name": "AllowAllWindowsAzureIps",
+            "type": "firewallrules",
+            "location": "[resourceGroup().location]",
+            "apiVersion": "2021-02-01-preview",
+            "dependsOn": [
+              "[resourceId('Microsoft.Sql/servers', variables('serverName'))]"
+            ],
+            "properties": {
+              "startIpAddress": "0.0.0.0",
+              "endIpAddress": "0.0.0.0"
+            }
+          },
+          {
+            "name": "DB",
+            "type": "databases",
+            "location": "[resourceGroup().location]",
+            "apiVersion": "2021-02-01-preview",
+            "dependsOn": [
+              "[resourceId('Microsoft.Sql/servers', variables('serverName'))]"
+            ],
+            "tags": {
+              "displayName": "dataBase"
+            },
+            "properties": {
+              "collation": "SQL_Latin1_General_CP1_CI_AS",
+              "edition": "Basic",
+              "maxSizeBytes": "1073741824",
+              "requestedServiceObjectiveName": "Basic"
+            }
+          }
+        ]
+      }
+    ],
+    "outputs": {
+      "existingClusterStorageResourceGroup": {
+        "type": "string",
+        "value": "[resourceGroup().name]"
+      },
+      "existingClusterStorageAccountName": {
+        "type": "string",
+        "value": "[variables('storageAccountName')]"
+      },
+      "existingVirtualNetworkName": {
+        "type": "string",
+        "value": "[variables('vNetName')]"
+      },
+      "existingHiveMetastoreServerResourceGroupName": {
+        "type": "string",
+        "value": "[resourceGroup().name]"
+      },
+      "existingHiveMetastoreServerName": {
+        "type": "string",
+        "value": "[variables('serverName')]"
+      },
+      "existingHiveMetastoreDatabaseName": {
+        "type": "string",
+        "value": "[variables('dataBaseName')]"
+      },
+      "existingHiveMetastoreUsername": {
+        "type": "string",
+        "value": "[parameters('databaseAdminUsername')]"
+      },
+      "existingVirtualNetworkResourceGroup": {
+        "type": "string",
+        "value": "[resourceGroup().name]"
+      },
+      "existingVirtualNetworkSubnetName": {
+        "type": "string",
+        "value": "[variables('SubnetName')]"
+      }
+    },
+    "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+  }
+}

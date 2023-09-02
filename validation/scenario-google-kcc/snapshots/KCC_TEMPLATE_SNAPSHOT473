@@ -2,12 +2,12 @@
   "structure": "filesystem",
   "error": null,
   "reference": "master",
-  "contentType": "yaml",
+  "contentType": "json",
   "source": "gitConnectorGoogleKcc",
   "paths": [
-    "/samples/resources/networksecurityauthorizationpolicy/networksecurity_v1beta1_networksecurityauthorizationpolicy.yaml"
+    "/samples/resources/iampolicymember/org-level-iam-custom-role-policy-member/iam_v1beta1_iampolicymember.yaml"
   ],
-  "timestamp": 1628765149644,
+  "timestamp": 1642973304354,
   "queryuser": null,
   "checksum": "99914b932bd37a50b983c5e7c90ae93b",
   "node": {
@@ -15,79 +15,31 @@
     "type": "kcc",
     "collection": "kcctemplate",
     "paths": [
-      "/samples/resources/networksecurityauthorizationpolicy/networksecurity_v1beta1_networksecurityauthorizationpolicy.yaml"
+      "/samples/resources/iampolicymember/org-level-iam-custom-role-policy-member/iam_v1beta1_iampolicymember.yaml"
     ],
     "snapshotId": "KCC_TEMPLATE_SNAPSHOT473",
     "status": "active",
-    "validate": true
+    "validate": true,
+    "resourceTypes": [
+      "iampolicymember"
+    ]
   },
   "snapshotId": "KCC_TEMPLATE_SNAPSHOT473",
   "collection": "kcctemplate",
   "json": {
-    "apiVersion": "networksecurity.cnrm.cloud.google.com/v1beta1",
-    "kind": "NetworkSecurityAuthorizationPolicy",
+    "apiVersion": "iam.cnrm.cloud.google.com/v1beta1",
+    "kind": "IAMPolicyMember",
     "metadata": {
-      "labels": {
-        "key-one": "value-one"
-      },
-      "name": "networksecurityauthorizationpolicy-sample"
+      "name": "iampolicymember-sample-orgrole"
     },
     "spec": {
-      "location": "global",
-      "action": "ALLOW",
-      "description": "Test Authorization Policy",
-      "rules": [
-        {
-          "sources": [
-            {
-              "ipBlocks": [
-                "1.2.3.4"
-              ],
-              "principals": [
-                "*"
-              ]
-            }
-          ],
-          "destinations": [
-            {
-              "hosts": [
-                "demo-service"
-              ],
-              "ports": [
-                8080
-              ],
-              "methods": [
-                "POST"
-              ]
-            }
-          ]
-        },
-        {
-          "sources": [
-            {
-              "ipBlocks": [
-                "1.2.3.5"
-              ],
-              "principals": [
-                "*"
-              ]
-            }
-          ],
-          "destinations": [
-            {
-              "hosts": [
-                "test-service"
-              ],
-              "ports": [
-                8081
-              ],
-              "methods": [
-                "GET"
-              ]
-            }
-          ]
-        }
-      ]
+      "member": "serviceAccount:iampolicymember-dep-orgrole@${PROJECT_ID?}.iam.gserviceaccount.com",
+      "role": "organizations/${ORG_ID?}/roles/iampolicymemberdeporgrole",
+      "resourceRef": {
+        "apiVersion": "resourcemanager.cnrm.cloud.google.com/v1beta1",
+        "kind": "Project",
+        "external": "projects/${PROJECT_ID?}"
+      }
     }
   }
 }

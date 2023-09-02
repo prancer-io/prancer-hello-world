@@ -1,0 +1,154 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAzureQuickStart",
+  "paths": [
+    "/application-workloads/wordpress/wordpress-mysql-replication/nested/website.json"
+  ],
+  "timestamp": 1642962897532,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/application-workloads/wordpress/wordpress-mysql-replication/nested/website.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT592",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "microsoft.web/sites",
+      "microsoft.web/serverfarms"
+    ]
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT592",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "siteName": {
+        "type": "string"
+      },
+      "hostingPlanName": {
+        "type": "string"
+      },
+      "sku": {
+        "type": "string",
+        "allowedValues": [
+          "Free",
+          "Shared",
+          "Basic",
+          "Standard",
+          "Premium"
+        ],
+        "defaultValue": "Free"
+      },
+      "workerSize": {
+        "type": "string",
+        "defaultValue": "0"
+      },
+      "dbServer": {
+        "type": "string"
+      },
+      "dbName": {
+        "type": "string"
+      },
+      "dbAdminPassword": {
+        "type": "securestring"
+      },
+      "location": {
+        "type": "string",
+        "metadata": {
+          "description": "Location for all resources."
+        }
+      }
+    },
+    "variables": {
+      "repoUrl": "https://github.com/azureappserviceoss/wordpress-azure",
+      "branch": "master",
+      "workerSize": "0",
+      "sku": "Free",
+      "hostingPlanName": "hostingPlanName"
+    },
+    "resources": [
+      {
+        "apiVersion": "2019-08-01",
+        "name": "hostingPlanName",
+        "type": "Microsoft.Web/serverfarms",
+        "location": "location",
+        "properties": {
+          "name": "hostingPlanName",
+          "workerSize": "0",
+          "numberOfWorkers": 0
+        },
+        "sku": {
+          "tier": "Free",
+          "name": "F1"
+        }
+      },
+      {
+        "apiVersion": "2019-08-01",
+        "name": "siteName",
+        "type": "Microsoft.Web/sites",
+        "location": "location",
+        "tags": {
+          "[concat('hidden-related:', '/subscriptions/', subscription().subscriptionId,'/resourcegroups/', resourceGroup().name, '/providers/Microsoft.Web/serverfarms/', variables('hostingPlanName'))]": "empty"
+        },
+        "dependsOn": [
+          "Microsoft.Web/serverfarms//hostingPlanName"
+        ],
+        "properties": {
+          "name": "siteName",
+          "serverFarmId": "Microsoft.Web/serverfarms//hostingPlanName"
+        },
+        "resources": [
+          {
+            "apiVersion": "2019-08-01",
+            "name": "connectionstrings",
+            "type": "config",
+            "dependsOn": [
+              "Microsoft.Web/Sites//siteName"
+            ],
+            "properties": {
+              "defaultConnection": {
+                "value": "Database=dbName;Data Source=dbServer;User Id=admin;Password=dbAdminPassword",
+                "type": "MySql"
+              }
+            }
+          },
+          {
+            "apiVersion": "2019-08-01",
+            "name": "web",
+            "type": "config",
+            "dependsOn": [
+              "Microsoft.Web/Sites//siteName"
+            ],
+            "properties": {
+              "phpVersion": "5.6"
+            }
+          },
+          {
+            "apiVersion": "2020-12-01",
+            "name": "web",
+            "type": "sourcecontrols",
+            "dependsOn": [
+              "Microsoft.Web/Sites/siteName",
+              "Microsoft.Web/Sites/config//siteName/connectionstrings",
+              "Microsoft.Web/Sites/config//siteName/web"
+            ],
+            "properties": {
+              "RepoUrl": "https://github.com/azureappserviceoss/wordpress-azure",
+              "branch": "master",
+              "IsManualIntegration": true
+            }
+          }
+        ]
+      }
+    ],
+    "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+  }
+}

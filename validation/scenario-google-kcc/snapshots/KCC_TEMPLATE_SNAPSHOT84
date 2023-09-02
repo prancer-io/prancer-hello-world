@@ -2,12 +2,12 @@
   "structure": "filesystem",
   "error": null,
   "reference": "master",
-  "contentType": "yaml",
+  "contentType": "json",
   "source": "gitConnectorGoogleKcc",
   "paths": [
-    "/samples/resources/computebackendservice/external-load-balancing-backend-service/compute_v1beta1_computenetwork.yaml"
+    "/samples/resources/cloudidentitymembership/membership-with-expiration-date/cloudidentity_v1beta1_cloudidentitymembership.yaml"
   ],
-  "timestamp": 1628765140008,
+  "timestamp": 1642973302171,
   "queryuser": null,
   "checksum": "99914b932bd37a50b983c5e7c90ae93b",
   "node": {
@@ -15,23 +15,40 @@
     "type": "kcc",
     "collection": "kcctemplate",
     "paths": [
-      "/samples/resources/computebackendservice/external-load-balancing-backend-service/compute_v1beta1_computenetwork.yaml"
+      "/samples/resources/cloudidentitymembership/membership-with-expiration-date/cloudidentity_v1beta1_cloudidentitymembership.yaml"
     ],
     "snapshotId": "KCC_TEMPLATE_SNAPSHOT84",
     "status": "active",
-    "validate": true
+    "validate": true,
+    "resourceTypes": [
+      "cloudidentitymembership"
+    ]
   },
   "snapshotId": "KCC_TEMPLATE_SNAPSHOT84",
   "collection": "kcctemplate",
   "json": {
-    "apiVersion": "compute.cnrm.cloud.google.com/v1beta1",
-    "kind": "ComputeNetwork",
+    "apiVersion": "cloudidentity.cnrm.cloud.google.com/v1beta1",
+    "kind": "CloudIdentityMembership",
     "metadata": {
-      "name": "computebackendservice-dep-externalloadbalancing"
+      "name": "cloudidentitymembership-sample-expirationdate"
     },
     "spec": {
-      "routingMode": "GLOBAL",
-      "autoCreateSubnetworks": false
+      "groupRef": {
+        "name": "cloudidentitymembership-dep-expirationdate"
+      },
+      "preferredMemberKey": {
+        "id": "test-member@example.com"
+      },
+      "roles": [
+        {
+          "name": "MEMBER",
+          "expiryDetail": {
+            "expireTime": {
+              "$date": 7976070083000
+            }
+          }
+        }
+      ]
     }
   }
 }

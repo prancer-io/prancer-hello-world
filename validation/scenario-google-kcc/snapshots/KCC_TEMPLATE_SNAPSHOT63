@@ -2,12 +2,12 @@
   "structure": "filesystem",
   "error": null,
   "reference": "master",
-  "contentType": "yaml",
+  "contentType": "json",
   "source": "gitConnectorGoogleKcc",
   "paths": [
-    "/samples/resources/cloudbuildtrigger/build-trigger-for-github-repo/cloudbuild_v1beta1_cloudbuildtrigger.yaml"
+    "/samples/resources/binaryauthorizationpolicy/service-account-policy/binaryauthorization_v1beta1_binaryauthorizationpolicy.yaml"
   ],
-  "timestamp": 1628765139590,
+  "timestamp": 1642973302009,
   "queryuser": null,
   "checksum": "99914b932bd37a50b983c5e7c90ae93b",
   "node": {
@@ -15,91 +15,54 @@
     "type": "kcc",
     "collection": "kcctemplate",
     "paths": [
-      "/samples/resources/cloudbuildtrigger/build-trigger-for-github-repo/cloudbuild_v1beta1_cloudbuildtrigger.yaml"
+      "/samples/resources/binaryauthorizationpolicy/service-account-policy/binaryauthorization_v1beta1_binaryauthorizationpolicy.yaml"
     ],
     "snapshotId": "KCC_TEMPLATE_SNAPSHOT63",
     "status": "active",
-    "validate": true
+    "validate": true,
+    "resourceTypes": [
+      "binaryauthorizationpolicy"
+    ]
   },
   "snapshotId": "KCC_TEMPLATE_SNAPSHOT63",
   "collection": "kcctemplate",
   "json": {
-    "apiVersion": "cloudbuild.cnrm.cloud.google.com/v1beta1",
-    "kind": "CloudBuildTrigger",
+    "apiVersion": "binaryauthorization.cnrm.cloud.google.com/v1beta1",
+    "kind": "BinaryAuthorizationPolicy",
     "metadata": {
-      "name": "cloudbuildtrigger-sample-github"
+      "name": "binaryauthorizationpolicy-sample-serviceaccount"
     },
     "spec": {
-      "description": "Cloud Build Trigger for building the master branch of the GitHub repository at github.com/owner_name/repo_name",
-      "disabled": false,
-      "github": {
-        "owner": "owner_name",
-        "name": "repo_name",
-        "push": {
-          "branch": "master"
+      "projectRef": {
+        "name": "binauthzpolicy-dep-sa"
+      },
+      "admissionWhitelistPatterns": [
+        {
+          "namePattern": "gcr.io/*"
+        }
+      ],
+      "kubernetesServiceAccountAdmissionRules": {
+        "test-namespace:default": {
+          "evaluationMode": "REQUIRE_ATTESTATION",
+          "requireAttestationsBy": [
+            {
+              "name": "binaryauthorizationpolicy-dep-serviceaccount"
+            }
+          ],
+          "enforcementMode": "ENFORCED_BLOCK_AND_AUDIT_LOG"
         }
       },
-      "ignoredFiles": [
-        "**/*.md"
-      ],
-      "includedFiles": [
-        "src/**"
-      ],
-      "substitutions": {
-        "_SERVICE_NAME": "service-name"
-      },
-      "build": {
-        "images": [
-          "gcr.io/$PROJECT_ID/${_SERVICE_NAME}:$COMMIT_SHA"
-        ],
-        "tags": [
-          "team-a",
-          "service-b"
-        ],
-        "timeout": "1800s",
-        "step": [
+      "defaultAdmissionRule": {
+        "evaluationMode": "REQUIRE_ATTESTATION",
+        "requireAttestationsBy": [
           {
-            "id": "download_zip",
-            "name": "gcr.io/cloud-builders/gsutil",
-            "args": [
-              "cp",
-              "gs://mybucket/remotefile.zip",
-              "localfile.zip"
-            ],
-            "timeout": "300s"
-          },
-          {
-            "id": "build_package",
-            "name": "gcr.io/cloud-builders/go",
-            "args": [
-              "build",
-              "my_package"
-            ],
-            "dir": "directory",
-            "env": [
-              "ENV1=one",
-              "ENV2=two"
-            ],
-            "secretEnv": [
-              "SECRET_ENV1"
-            ],
-            "timeout": "300s"
-          },
-          {
-            "id": "build_docker_image",
-            "name": "gcr.io/cloud-builders/docker",
-            "args": [
-              "build",
-              "-t",
-              "gcr.io/$PROJECT_ID/${_SERVICE_NAME}:$COMMIT_SHA",
-              "-f",
-              "Dockerfile",
-              "."
-            ],
-            "timeout": "300s"
+            "name": "binaryauthorizationpolicy-dep-serviceaccount"
           }
-        ]
-      }
+        ],
+        "enforcementMode": "ENFORCED_BLOCK_AND_AUDIT_LOG"
+      },
+      "description": "A sample Binary Authorization policy",
+      "globalPolicyEvaluationMode": "DISABLE"
     }
   }
 }

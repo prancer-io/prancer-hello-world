@@ -1,0 +1,83 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAzureQuickStart",
+  "paths": [
+    "/application-workloads/chef/chef-automate-ha/nested/publicIPAddressResource.json"
+  ],
+  "timestamp": 1642962884341,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/application-workloads/chef/chef-automate-ha/nested/publicIPAddressResource.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT56",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "microsoft.network/publicipaddresses"
+    ]
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT56",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "networkSettings": {
+        "type": "object"
+      }
+    },
+    "variables": {
+      "provider": "[toUpper('33194f91-eb5f-4110-827a-e95f640a9e46')]"
+    },
+    "resources": [
+      {
+        "type": "Microsoft.Network/publicIPAddresses",
+        "name": "networkSettings",
+        "apiVersion": "networkSettings",
+        "location": "networkSettings",
+        "properties": {
+          "publicIPAllocationMethod": "networkSettings",
+          "dnsSettings": {
+            "domainNameLabel": "networkSettings"
+          }
+        },
+        "tags": {
+          "provider": "[toUpper('33194f91-eb5f-4110-827a-e95f640a9e46')]"
+        }
+      },
+      {
+        "type": "Microsoft.Network/publicIPAddresses",
+        "name": "networkSettings",
+        "apiVersion": "networkSettings",
+        "location": "networkSettings",
+        "properties": {
+          "publicIPAllocationMethod": "networkSettings",
+          "dnsSettings": {
+            "domainNameLabel": "networkSettings"
+          }
+        },
+        "tags": {
+          "provider": "[toUpper('33194f91-eb5f-4110-827a-e95f640a9e46')]"
+        }
+      }
+    ],
+    "outputs": {
+      "chefServerfqdn": {
+        "type": "string",
+        "value": "[reference(resourceId('Microsoft.Network/publicIPAddresses',parameters('networkSettings').felbPublicIPAddressName),'2015-06-15').dnsSettings.fqdn]"
+      },
+      "chefAutomatefqdn": {
+        "type": "string",
+        "value": "[reference(resourceId('Microsoft.Network/publicIPAddresses',parameters('networkSettings').chefAutoPublicIPAddressName),'2015-06-15').dnsSettings.fqdn]"
+      }
+    },
+    "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+  }
+}

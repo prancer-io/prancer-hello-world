@@ -1,0 +1,173 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAzureQuickStart",
+  "paths": [
+    "/application-workloads/sap/sap-2-tier-marketplace-image/shared/os-disk-parts.json"
+  ],
+  "timestamp": 1642962894712,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/application-workloads/sap/sap-2-tier-marketplace-image/shared/os-disk-parts.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT424",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": []
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT424",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "imageSku": {
+        "type": "string",
+        "metadata": {
+          "description": "SKU of the image that should be used to deploy the virtual machine."
+        }
+      },
+      "imagePublisher": {
+        "type": "string",
+        "metadata": {
+          "description": "Publisher of the image that should be used to deploy the virtual machine."
+        }
+      },
+      "imageOffer": {
+        "type": "string",
+        "metadata": {
+          "description": "Offer of the image that should be used to deploy the virtual machine."
+        }
+      },
+      "imageVersion": {
+        "type": "string",
+        "defaultValue": "latest",
+        "metadata": {
+          "description": "SKU of the image that should be used to deploy the virtual machine."
+        }
+      },
+      "userImageVhdUri": {
+        "type": "string",
+        "metadata": {
+          "description": "Uri of the user image."
+        }
+      },
+      "userImageStorageAccount": {
+        "type": "string",
+        "metadata": {
+          "description": "Name of the storage account where the user image is stored."
+        }
+      },
+      "osDiskVhdUri": {
+        "type": "string",
+        "metadata": {
+          "description": "Uri of the OS disk."
+        }
+      },
+      "osDiskType": {
+        "type": "string",
+        "allowedValues": [
+          "image",
+          "userImage",
+          "osdisk"
+        ],
+        "metadata": {
+          "description": "The type of OS disk."
+        }
+      },
+      "osType": {
+        "type": "string",
+        "allowedValues": [
+          "Windows",
+          "Linux"
+        ],
+        "metadata": {
+          "description": "The type of the operating system you want to deploy."
+        }
+      },
+      "sidlower": {
+        "type": "string",
+        "metadata": {
+          "description": "SAP System ID in lower case."
+        }
+      },
+      "vmName": {
+        "type": "string",
+        "metadata": {
+          "description": "Prefix of the virtual machine name."
+        }
+      },
+      "storageAccountUri": {
+        "type": "string",
+        "metadata": {
+          "description": "Uri of the storage account where the os disk and data disk should be placed."
+        }
+      }
+    },
+    "variables": {
+      "osDiskName": "sidlower-os.vhd",
+      "osDiskCaching": "ReadWrite",
+      "osDiskParts": {
+        "image": {
+          "imageReference": {
+            "publisher": "imagePublisher",
+            "offer": "imageOffer",
+            "sku": "imageSku",
+            "version": "latest"
+          },
+          "osDisk": {
+            "name": "osdisk",
+            "vhd": {
+              "uri": "[concat(parameters('storageAccountUri'), concat('vhds-', uniqueString(parameters('vmName'))), '/', variables('osDiskName'))]"
+            },
+            "caching": "ReadWrite",
+            "createOption": "FromImage"
+          }
+        },
+        "userImage": {
+          "osDisk": {
+            "name": "osdisk",
+            "osType": "osType",
+            "image": {
+              "uri": "userImageVhdUri"
+            },
+            "vhd": {
+              "uri": "[concat('http://',parameters('userImageStorageAccount'),'.blob.', environment().suffixes.storage, '/', concat('vhds-', uniqueString(resourceGroup().id)), '/', parameters('vmName'), '-', variables('osDiskName'))]"
+            },
+            "caching": "ReadWrite",
+            "createOption": "FromImage"
+          }
+        },
+        "osdisk": {
+          "osDisk": {
+            "name": "osdisk",
+            "osType": "osType",
+            "vhd": {
+              "uri": "osDiskVhdUri"
+            },
+            "caching": "ReadWrite",
+            "createOption": "Attach"
+          }
+        }
+      }
+    },
+    "resources": [],
+    "outputs": {
+      "imageReference": {
+        "value": "[variables('osDiskParts')[parameters('osDiskType')].imageReference]",
+        "type": "object"
+      },
+      "osDisk": {
+        "value": "[variables('osDiskParts')[parameters('osDiskType')].osDisk]",
+        "type": "object"
+      }
+    },
+    "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+  }
+}

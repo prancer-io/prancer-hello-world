@@ -2,12 +2,12 @@
   "structure": "filesystem",
   "error": null,
   "reference": "master",
-  "contentType": "yaml",
+  "contentType": "json",
   "source": "gitConnectorGoogleKcc",
   "paths": [
-    "/samples/resources/computesharedvpcserviceproject/compute_v1beta1_computesharedvpchostproject.yaml"
+    "/samples/resources/computeroute/compute_v1beta1_computeroute.yaml"
   ],
-  "timestamp": 1628765143052,
+  "timestamp": 1642973303038,
   "queryuser": null,
   "checksum": "99914b932bd37a50b983c5e7c90ae93b",
   "node": {
@@ -15,22 +15,31 @@
     "type": "kcc",
     "collection": "kcctemplate",
     "paths": [
-      "/samples/resources/computesharedvpcserviceproject/compute_v1beta1_computesharedvpchostproject.yaml"
+      "/samples/resources/computeroute/compute_v1beta1_computeroute.yaml"
     ],
     "snapshotId": "KCC_TEMPLATE_SNAPSHOT224",
     "status": "active",
-    "validate": true
+    "validate": true,
+    "resourceTypes": [
+      "computeroute"
+    ]
   },
   "snapshotId": "KCC_TEMPLATE_SNAPSHOT224",
   "collection": "kcctemplate",
   "json": {
     "apiVersion": "compute.cnrm.cloud.google.com/v1beta1",
-    "kind": "ComputeSharedVPCHostProject",
+    "kind": "ComputeRoute",
     "metadata": {
-      "annotations": {
-        "cnrm.cloud.google.com/project-id": "${HOST_PROJECT_ID?}"
+      "name": "computeroute-sample"
+    },
+    "spec": {
+      "description": "A sample compute route",
+      "destRange": "0.0.0.0/0",
+      "networkRef": {
+        "name": "computeroute-dep"
       },
-      "name": "computesharedvpchostproject-sample"
+      "priority": 100,
+      "nextHopIp": "10.132.1.5"
     }
   }
 }

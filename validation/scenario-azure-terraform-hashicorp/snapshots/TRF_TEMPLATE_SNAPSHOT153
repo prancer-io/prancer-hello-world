@@ -1,0 +1,277 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "main",
+  "contentType": "json",
+  "source": "gitConnectorAzureTerraHashicorp",
+  "paths": [
+    "/examples/virtual-machines/virtual_machine/unmanaged-disks/from-existing-storage-account/outputs.tf",
+    "/examples/virtual-machines/virtual_machine/unmanaged-disks/from-existing-storage-account/variables.tf",
+    "/examples/virtual-machines/virtual_machine/unmanaged-disks/from-existing-storage-account/main.tf"
+  ],
+  "timestamp": 1642943280142,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "TRF_TEMPLATE_SNAPSHOT",
+    "type": "terraform",
+    "collection": "terraformtemplate",
+    "paths": [
+      "/examples/virtual-machines/virtual_machine/unmanaged-disks/from-existing-storage-account/outputs.tf",
+      "/examples/virtual-machines/virtual_machine/unmanaged-disks/from-existing-storage-account/variables.tf",
+      "/examples/virtual-machines/virtual_machine/unmanaged-disks/from-existing-storage-account/main.tf"
+    ],
+    "snapshotId": "TRF_TEMPLATE_SNAPSHOT153",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "azurerm_subnet",
+      "azurerm_virtual_network",
+      "azurerm_resource_group",
+      "azurerm_network_interface",
+      "azurerm_virtual_machine",
+      "azurerm_public_ip",
+      "azurerm_storage_account",
+      "azurerm_virtual_machine_extension"
+    ]
+  },
+  "snapshotId": "TRF_TEMPLATE_SNAPSHOT153",
+  "collection": "terraformtemplate",
+  "json": {
+    "provider": [
+      {
+        "azurerm": {
+          "features": [
+            {}
+          ]
+        }
+      }
+    ],
+    "resources": [
+      {
+        "type": "azurerm_resource_group",
+        "name": "rg",
+        "properties": {
+          "name": "${var.resource_group}",
+          "location": "southcentralus",
+          "compiletime_identity": "azurerm_resource_group.rg"
+        }
+      },
+      {
+        "type": "azurerm_virtual_network",
+        "name": "vnet",
+        "properties": {
+          "name": "${var.hostname}vnet",
+          "location": "${azurerm_resource_group.rg.location}",
+          "resource_group_name": "${azurerm_resource_group.rg.name}",
+          "address_space": [
+            "10.0.0.0/16"
+          ],
+          "compiletime_identity": "azurerm_virtual_network.vnet"
+        }
+      },
+      {
+        "type": "azurerm_subnet",
+        "name": "subnet",
+        "properties": {
+          "name": "${var.hostname}subnet",
+          "virtual_network_name": "${azurerm_virtual_network.vnet.name}",
+          "resource_group_name": "${azurerm_resource_group.rg.name}",
+          "address_prefixes": [
+            "10.0.0.0/24"
+          ],
+          "compiletime_identity": "azurerm_subnet.subnet"
+        }
+      },
+      {
+        "type": "azurerm_public_ip",
+        "name": "transferpip",
+        "properties": {
+          "name": "transferpip",
+          "location": "${azurerm_resource_group.rg.location}",
+          "resource_group_name": "${azurerm_resource_group.rg.name}",
+          "allocation_method": "Static",
+          "compiletime_identity": "azurerm_public_ip.transferpip"
+        }
+      },
+      {
+        "type": "azurerm_public_ip",
+        "name": "mypip",
+        "properties": {
+          "name": "mypip",
+          "location": "${azurerm_resource_group.rg.location}",
+          "resource_group_name": "${azurerm_resource_group.rg.name}",
+          "allocation_method": "Dynamic",
+          "compiletime_identity": "azurerm_public_ip.mypip"
+        }
+      },
+      {
+        "type": "azurerm_network_interface",
+        "name": "transfernic",
+        "properties": {
+          "name": "transfernic",
+          "location": "${azurerm_resource_group.rg.location}",
+          "resource_group_name": "${azurerm_resource_group.rg.name}",
+          "ip_configuration": [
+            {
+              "name": "${azurerm_public_ip.transferpip.name}",
+              "subnet_id": "${azurerm_subnet.subnet.id}",
+              "private_ip_address_allocation": "Static",
+              "public_ip_address_id": "${azurerm_public_ip.transferpip.id}",
+              "private_ip_address": "10.0.0.5"
+            }
+          ],
+          "compiletime_identity": "azurerm_network_interface.transfernic"
+        }
+      },
+      {
+        "type": "azurerm_network_interface",
+        "name": "mynic",
+        "properties": {
+          "name": "mynic",
+          "location": "${azurerm_resource_group.rg.location}",
+          "resource_group_name": "${azurerm_resource_group.rg.name}",
+          "ip_configuration": [
+            {
+              "name": "${azurerm_public_ip.mypip.name}",
+              "subnet_id": "${azurerm_subnet.subnet.id}",
+              "private_ip_address_allocation": "Dynamic",
+              "public_ip_address_id": "${azurerm_public_ip.mypip.id}"
+            }
+          ],
+          "compiletime_identity": "azurerm_network_interface.mynic"
+        }
+      },
+      {
+        "type": "azurerm_storage_account",
+        "name": "existing",
+        "properties": {
+          "name": "${var.existing_storage_acct}",
+          "resource_group_name": "${var.existing_resource_group}",
+          "location": "${azurerm_resource_group.rg.location}",
+          "account_tier": "Standard",
+          "account_replication_type": "LRS",
+          "lifecycle": {
+            "prevent_destroy": true
+          },
+          "compiletime_identity": "azurerm_storage_account.existing"
+        }
+      },
+      {
+        "type": "azurerm_storage_account",
+        "name": "stor",
+        "properties": {
+          "name": "${var.hostname}",
+          "resource_group_name": "${azurerm_resource_group.rg.name}",
+          "location": "${azurerm_resource_group.rg.location}",
+          "account_tier": "Standard",
+          "account_replication_type": "LRS",
+          "compiletime_identity": "azurerm_storage_account.stor"
+        }
+      },
+      {
+        "type": "azurerm_virtual_machine",
+        "name": "transfer",
+        "properties": {
+          "name": "transfervm",
+          "location": "${azurerm_resource_group.rg.location}",
+          "resource_group_name": "${azurerm_resource_group.rg.name}",
+          "vm_size": "Standard_DS1_v2",
+          "network_interface_ids": [
+            "${azurerm_network_interface.transfernic.id}"
+          ],
+          "storage_os_disk": [
+            {
+              "name": "${var.hostname}-osdisk",
+              "image_uri": "${var.source_img_uri}",
+              "vhd_uri": "https://${var.existing_storage_acct}.blob.core.windows.net/${var.existing_resource_group}-vhds/${var.hostname}osdisk.vhd",
+              "os_type": "windows",
+              "caching": "ReadWrite",
+              "create_option": "FromImage"
+            }
+          ],
+          "os_profile": [
+            {
+              "computer_name": "${var.hostname}",
+              "admin_username": "vmadmin",
+              "admin_password": "${var.admin_password}"
+            }
+          ],
+          "compiletime_identity": "azurerm_virtual_machine.transfer"
+        }
+      },
+      {
+        "type": "azurerm_virtual_machine",
+        "name": "myvm",
+        "properties": {
+          "name": "myvm",
+          "location": "${azurerm_resource_group.rg.location}",
+          "resource_group_name": "${azurerm_resource_group.rg.name}",
+          "vm_size": "Standard_DS1_v2",
+          "network_interface_ids": [
+            "${azurerm_network_interface.mynic.id}"
+          ],
+          "depends_on": [
+            "azurerm_virtual_machine_extension.execute"
+          ],
+          "storage_os_disk": [
+            {
+              "name": "${var.hostname}osdisk",
+              "image_uri": "https://${azurerm_storage_account.stor.name}.blob.core.windows.net/vhds/${var.custom_image_name}.vhd",
+              "vhd_uri": "https://${var.hostname}.blob.core.windows.net/${var.hostname}-vhds/${var.hostname}osdisk.vhd",
+              "os_type": "windows",
+              "caching": "ReadWrite",
+              "create_option": "FromImage"
+            }
+          ],
+          "os_profile": [
+            {
+              "computer_name": "${var.hostname}",
+              "admin_username": "vmadmin",
+              "admin_password": "${var.admin_password}"
+            }
+          ],
+          "compiletime_identity": "azurerm_virtual_machine.myvm"
+        }
+      },
+      {
+        "type": "azurerm_virtual_machine_extension",
+        "name": "script",
+        "properties": {
+          "name": "CustomScriptExtension",
+          "location": "${azurerm_resource_group.rg.location}",
+          "resource_group_name": "${azurerm_resource_group.rg.name}",
+          "virtual_machine_name": "${azurerm_virtual_machine.transfer.name}",
+          "publisher": "Microsoft.Compute",
+          "type": "CustomScriptExtension",
+          "type_handler_version": 1.4,
+          "depends_on": [
+            "azurerm_virtual_machine.transfer"
+          ],
+          "settings": {
+            "commandToExecute": "powershell -ExecutionPolicy Unrestricted -Command \"Invoke-WebRequest -Uri https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/201-vm-custom-image-new-storage-account/ImageTransfer.ps1 -OutFile C:/ImageTransfer.ps1\" "
+          },
+          "compiletime_identity": "azurerm_virtual_machine_extension.script"
+        }
+      },
+      {
+        "type": "azurerm_virtual_machine_extension",
+        "name": "execute",
+        "properties": {
+          "name": "CustomScriptExtension",
+          "location": "${azurerm_resource_group.rg.location}",
+          "resource_group_name": "${azurerm_resource_group.rg.name}",
+          "virtual_machine_name": "${azurerm_virtual_machine.transfer.name}",
+          "publisher": "Microsoft.Compute",
+          "type": "CustomScriptExtension",
+          "type_handler_version": 1.4,
+          "depends_on": [
+            "azurerm_virtual_machine_extension.script"
+          ],
+          "settings": "    {\n        \"commandToExecute\": \"powershell -ExecutionPolicy Unrestricted -File C:\\\\ImageTransfer.ps1 -SourceImage ${var.source_img_uri} -SourceSAKey ${azurerm_storage_account.existing.primary_access_key} -DestinationURI https://${azurerm_storage_account.stor.name}.blob.core.windows.net/vhds -DestinationSAKey ${azurerm_storage_account.stor.primary_access_key}\\\" \"\n    }",
+          "compiletime_identity": "azurerm_virtual_machine_extension.execute"
+        }
+      }
+    ]
+  }
+}

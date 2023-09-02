@@ -1,0 +1,182 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAzureQuickStart",
+  "paths": [
+    "/application-workloads/sql/sqlvm-alwayson-cluster/nested/provisioningNetworkStorageAGSet.json"
+  ],
+  "timestamp": 1642962896514,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/application-workloads/sql/sqlvm-alwayson-cluster/nested/provisioningNetworkStorageAGSet.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT543",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "microsoft.network/publicipaddresses",
+      "microsoft.network/virtualnetworks",
+      "microsoft.storage/storageaccounts",
+      "microsoft.network/loadbalancers"
+    ]
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT543",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "sqlStorageAccountName": {
+        "type": "string"
+      },
+      "dcStorageAccountName": {
+        "type": "string"
+      },
+      "location": {
+        "type": "string"
+      },
+      "SqlStorageAccountType": {
+        "type": "string"
+      },
+      "DcStorageAccountType": {
+        "type": "string"
+      },
+      "virtualNetworkName": {
+        "type": "string"
+      },
+      "virtualNetworkAddressRange": {
+        "type": "string"
+      },
+      "subnets": {
+        "type": "array"
+      },
+      "rdpIPAddressName": {
+        "type": "string"
+      },
+      "rdpLBName": {
+        "type": "string"
+      },
+      "rdpLBFE": {
+        "type": "string"
+      },
+      "adLBBE": {
+        "type": "string"
+      },
+      "RDPNAT": {
+        "type": "string"
+      },
+      "rdplbFEConfigID": {
+        "type": "string"
+      }
+    },
+    "resources": [
+      {
+        "name": "sqlStorageAccountName",
+        "type": "Microsoft.Storage/storageAccounts",
+        "apiVersion": "2021-01-01",
+        "location": "location",
+        "sku": {
+          "name": "SqlStorageAccountType"
+        }
+      },
+      {
+        "type": "Microsoft.Storage/storageAccounts",
+        "name": "dcStorageAccountName",
+        "apiVersion": "2021-01-01",
+        "location": "location",
+        "sku": {
+          "name": "DcStorageAccountType"
+        }
+      },
+      {
+        "type": "Microsoft.Storage/storageAccounts",
+        "name": "[concat(uniquestring(parameters('sqlStorageAccountName')), 'fsw')]",
+        "apiVersion": "2021-01-01",
+        "location": "location",
+        "sku": {
+          "name": "Standard_LRS"
+        }
+      },
+      {
+        "type": "Microsoft.Storage/storageAccounts",
+        "name": "[concat(uniquestring(parameters('sqlStorageAccountName')), 'diag')]",
+        "apiVersion": "2021-01-01",
+        "location": "location",
+        "sku": {
+          "name": "Standard_LRS"
+        }
+      },
+      {
+        "apiVersion": "2020-07-01",
+        "type": "Microsoft.Network/publicIPAddresses",
+        "name": "rdpIPAddressName",
+        "location": "location",
+        "properties": {
+          "publicIPAllocationMethod": "dynamic"
+        }
+      },
+      {
+        "apiVersion": "2020-07-01",
+        "name": "rdpLBName",
+        "type": "Microsoft.Network/loadBalancers",
+        "location": "location",
+        "dependsOn": [
+          "Microsoft.Network/publicIPAddresses/rdpIPAddressName"
+        ],
+        "properties": {
+          "frontendIPConfigurations": [
+            {
+              "name": "rdpLBFE",
+              "properties": {
+                "publicIPAddress": {
+                  "id": "Microsoft.Network/publicIPAddresses/rdpIPAddressName"
+                }
+              }
+            }
+          ],
+          "backendAddressPools": [
+            {
+              "name": "adLBBE"
+            }
+          ],
+          "inboundNatRules": [
+            {
+              "name": "RDPNAT",
+              "properties": {
+                "frontendIPConfiguration": {
+                  "id": "rdplbFEConfigID"
+                },
+                "protocol": "Tcp",
+                "frontendPort": 3389,
+                "backendPort": 3389,
+                "enableFloatingIP": false
+              }
+            }
+          ]
+        }
+      },
+      {
+        "name": "virtualNetworkName",
+        "type": "Microsoft.Network/virtualNetworks",
+        "location": "location",
+        "apiVersion": "2020-07-01",
+        "properties": {
+          "addressSpace": {
+            "addressPrefixes": [
+              "virtualNetworkAddressRange"
+            ]
+          },
+          "subnets": "subnets"
+        }
+      }
+    ],
+    "outputs": {},
+    "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+  }
+}

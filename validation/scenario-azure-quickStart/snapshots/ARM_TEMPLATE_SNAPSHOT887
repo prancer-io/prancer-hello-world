@@ -1,0 +1,708 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAzureQuickStart",
+  "paths": [
+    "/demos/website-cluster-centos/azuredeploy.json",
+    "/demos/website-cluster-centos/azuredeploy.parameters.json"
+  ],
+  "timestamp": 1642962902524,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/demos/website-cluster-centos/azuredeploy.json",
+      "/demos/website-cluster-centos/azuredeploy.parameters.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT887",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "microsoft.resources/deployments"
+    ]
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT887",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "adminUsername": {
+        "type": "string",
+        "metadata": {
+          "description": "Administrator user name used when provisioning virtual machines"
+        },
+        "value": "GEN-UNIQUE"
+      },
+      "mysqlPassword": {
+        "type": "securestring",
+        "metadata": {
+          "description": "MySQL password used when provisioning MySQL Clusters"
+        },
+        "value": "GEN-PASSWORD"
+      },
+      "dnsNamePrefix": {
+        "type": "string",
+        "metadata": {
+          "description": "DNS Name for the publicly accessible primary node. Must be lowercase. It should match with the following regular expression: ^[a-z][a-z0-9-]{1,61}[a-z0-9]$ or it will raise an error."
+        },
+        "value": "GEN-UNIQUE"
+      },
+      "centOsVersion": {
+        "type": "string",
+        "defaultValue": "7.0",
+        "allowedValues": [
+          "6.5",
+          "6.6",
+          "6.7",
+          "7.0",
+          "7.1",
+          "7.2"
+        ],
+        "metadata": {
+          "description": "The CentOS version for the VM. This will pick a fully patched image of this given CentOS version."
+        },
+        "value": "7.2"
+      },
+      "webNodeCount": {
+        "type": "int",
+        "minValue": 1,
+        "maxValue": 11,
+        "defaultValue": 3,
+        "metadata": {
+          "description": "Number of web server nodes"
+        },
+        "value": 3
+      },
+      "zabbixServerIPAddress": {
+        "type": "string",
+        "defaultValue": "",
+        "metadata": {
+          "description": "The zabbix server IP which will monitor the nodes' status. Null means no zabbix server."
+        },
+        "value": "Null"
+      },
+      "_artifactsLocation": {
+        "type": "string",
+        "metadata": {
+          "description": "The base URI where artifacts required by this template are located. When the template is deployed using the accompanying scripts, a private location in the subscription will be used and this value will be automatically generated."
+        },
+        "defaultValue": "[deployment().properties.templateLink.uri]"
+      },
+      "_artifactsLocationSasToken": {
+        "type": "securestring",
+        "metadata": {
+          "description": "The sasToken required to access _artifactsLocation.  When the template is deployed using the accompanying scripts, a sasToken will be automatically generated."
+        },
+        "defaultValue": ""
+      },
+      "location": {
+        "type": "string",
+        "defaultValue": "[resourceGroup().location]",
+        "metadata": {
+          "description": "Location for all resources."
+        }
+      },
+      "authenticationType": {
+        "type": "string",
+        "defaultValue": "sshPublicKey",
+        "allowedValues": [
+          "sshPublicKey",
+          "password"
+        ],
+        "metadata": {
+          "description": "Type of authentication to use on the Virtual Machine. SSH key is recommended."
+        }
+      },
+      "adminPasswordOrKey": {
+        "type": "securestring",
+        "metadata": {
+          "description": "SSH Key or password for the Virtual Machine. SSH key is recommended."
+        },
+        "value": "GEN-SSH-PUB-KEY"
+      },
+      "lbNodeVmSize": {
+        "type": "string",
+        "defaultValue": "Standard_D2_v3",
+        "metadata": {
+          "description": "Size of the load balancer node."
+        }
+      },
+      "webNodeVmSize": {
+        "type": "string",
+        "defaultValue": "Standard_D2_v3",
+        "metadata": {
+          "description": "Size of the web node."
+        }
+      },
+      "dbNodeVmSize": {
+        "type": "string",
+        "defaultValue": "Standard_D2_v3",
+        "metadata": {
+          "description": "Size of the database node."
+        }
+      }
+    },
+    "variables": {
+      "sharedTemplateUrl": "[uri(parameters('_artifactsLocation'), concat('nested/shared-resources.json', parameters('_artifactsLocationSasToken')))]",
+      "lbTemplateUrl": "[uri(parameters('_artifactsLocation'), concat('nested/lb-resources.json', parameters('_artifactsLocationSasToken')))]",
+      "webTemplateUrl": "[uri(parameters('_artifactsLocation'), concat('nested/web-resources.json', parameters('_artifactsLocationSasToken')))]",
+      "redisMasterTemplateUrl": "[uri(parameters('_artifactsLocation'), concat('nested/redisMaster-resources.json', parameters('_artifactsLocationSasToken')))]",
+      "redisSlaveTemplateUrl": "[uri(parameters('_artifactsLocation'), concat('nested/redisSlave-resources.json', parameters('_artifactsLocationSasToken')))]",
+      "mysqlMasterTemplateUrl": "[uri(parameters('_artifactsLocation'), concat('nested/mysqlMaster-resources.json', parameters('_artifactsLocationSasToken')))]",
+      "mysqlSlaveTemplateUrl": "[uri(parameters('_artifactsLocation'), concat('nested/mysqlSlave-resources.json', parameters('_artifactsLocationSasToken')))]",
+      "lbNodeScript": "[uri(parameters('_artifactsLocation'), concat('scripts/lb.sh', parameters('_artifactsLocationSasToken')))]",
+      "webNodeScript": "[uri(parameters('_artifactsLocation'), concat('scripts/web.sh', parameters('_artifactsLocationSasToken')))]",
+      "redisMasterNodeScript": "[uri(parameters('_artifactsLocation'), concat('scripts/redisMaster.sh', parameters('_artifactsLocationSasToken')))]",
+      "redisSlaveNodeScript": "[uri(parameters('_artifactsLocation'), concat('scripts/redisSlave.sh', parameters('_artifactsLocationSasToken')))]",
+      "mysqlMasterNodeScript": "[uri(parameters('_artifactsLocation'), concat('scripts/mysqlMaster.sh', parameters('_artifactsLocationSasToken')))]",
+      "mysqlSlaveNodeScript": "[uri(parameters('_artifactsLocation'), concat('scripts/mysqlSlave.sh', parameters('_artifactsLocationSasToken')))]",
+      "namespace": "websiteCluster-",
+      "virtualNetworkName": "[concat('vnet-', uniqueString(resourceGroup().id))]",
+      "sizeOfDataDiskInGB": 100,
+      "networkSettings": {
+        "virtualNetworkName": "[variables('virtualNetworkName')]",
+        "addressPrefix": "10.0.0.0/24",
+        "subnet": {
+          "web": {
+            "name": "web",
+            "prefix": "10.0.0.0/28",
+            "vnet": "[variables('virtualNetworkName')]"
+          },
+          "mysql": {
+            "name": "mysql",
+            "prefix": "10.0.0.16/28",
+            "vnet": "[variables('virtualNetworkName')]"
+          },
+          "redis": {
+            "name": "redis",
+            "prefix": "10.0.0.32/28",
+            "vnet": "[variables('virtualNetworkName')]"
+          },
+          "haproxy": {
+            "name": "haproxy",
+            "prefix": "10.0.0.48/28",
+            "vnet": "[variables('virtualNetworkName')]"
+          }
+        },
+        "statics": {
+          "clusterRange": {
+            "base": "10.0.0.",
+            "start": 5
+          },
+          "primaryIp": "10.0.0.240"
+        }
+      },
+      "lbOsSettings": {
+        "imageReference": {
+          "publisher": "OpenLogic",
+          "offer": "CentOS",
+          "sku": "7.2",
+          "version": "latest"
+        },
+        "scripts": [
+          "[uri(parameters('_artifactsLocation'), concat('scripts/lb.sh', parameters('_artifactsLocationSasToken')))]"
+        ]
+      },
+      "webOsSettings": {
+        "imageReference": {
+          "publisher": "OpenLogic",
+          "offer": "CentOS",
+          "sku": "7.2",
+          "version": "latest"
+        },
+        "scripts": [
+          "[uri(parameters('_artifactsLocation'), concat('scripts/web.sh', parameters('_artifactsLocationSasToken')))]"
+        ]
+      },
+      "redisMasterOsSettings": {
+        "imageReference": {
+          "publisher": "OpenLogic",
+          "offer": "CentOS",
+          "sku": "7.2",
+          "version": "latest"
+        },
+        "scripts": [
+          "[uri(parameters('_artifactsLocation'), concat('scripts/redisMaster.sh', parameters('_artifactsLocationSasToken')))]"
+        ]
+      },
+      "redisSlaveOsSettings": {
+        "imageReference": {
+          "publisher": "OpenLogic",
+          "offer": "CentOS",
+          "sku": "7.2",
+          "version": "latest"
+        },
+        "scripts": [
+          "[uri(parameters('_artifactsLocation'), concat('scripts/redisSlave.sh', parameters('_artifactsLocationSasToken')))]"
+        ]
+      },
+      "mysqlMasterOsSettings": {
+        "imageReference": {
+          "publisher": "OpenLogic",
+          "offer": "CentOS",
+          "sku": "7.2",
+          "version": "latest"
+        },
+        "scripts": [
+          "[uri(parameters('_artifactsLocation'), concat('scripts/mysqlMaster.sh', parameters('_artifactsLocationSasToken')))]"
+        ]
+      },
+      "mysqlSlaveOsSettings": {
+        "imageReference": {
+          "publisher": "OpenLogic",
+          "offer": "CentOS",
+          "sku": "7.2",
+          "version": "latest"
+        },
+        "scripts": [
+          "[uri(parameters('_artifactsLocation'), concat('scripts/mysqlSlave.sh', parameters('_artifactsLocationSasToken')))]"
+        ]
+      }
+    },
+    "resources": [
+      {
+        "name": "shared",
+        "type": "Microsoft.Resources/deployments",
+        "apiVersion": "2020-10-01",
+        "properties": {
+          "mode": "Incremental",
+          "templateLink": {
+            "uri": "[uri(parameters('_artifactsLocation'), concat('nested/shared-resources.json', parameters('_artifactsLocationSasToken')))]",
+            "contentVersion": "1.0.0.0"
+          },
+          "parameters": {
+            "networkSettings": {
+              "value": {
+                "virtualNetworkName": "[variables('virtualNetworkName')]",
+                "addressPrefix": "10.0.0.0/24",
+                "subnet": {
+                  "web": {
+                    "name": "web",
+                    "prefix": "10.0.0.0/28",
+                    "vnet": "[variables('virtualNetworkName')]"
+                  },
+                  "mysql": {
+                    "name": "mysql",
+                    "prefix": "10.0.0.16/28",
+                    "vnet": "[variables('virtualNetworkName')]"
+                  },
+                  "redis": {
+                    "name": "redis",
+                    "prefix": "10.0.0.32/28",
+                    "vnet": "[variables('virtualNetworkName')]"
+                  },
+                  "haproxy": {
+                    "name": "haproxy",
+                    "prefix": "10.0.0.48/28",
+                    "vnet": "[variables('virtualNetworkName')]"
+                  }
+                },
+                "statics": {
+                  "clusterRange": {
+                    "base": "10.0.0.",
+                    "start": 5
+                  },
+                  "primaryIp": "10.0.0.240"
+                }
+              }
+            },
+            "namespace": {
+              "value": "websiteCluster-"
+            },
+            "location": {
+              "value": "[resourceGroup().location]"
+            }
+          }
+        }
+      },
+      {
+        "name": "webNodecopyindex()",
+        "type": "Microsoft.Resources/deployments",
+        "apiVersion": "2020-10-01",
+        "dependsOn": [
+          "Microsoft.Resources/deployments//shared"
+        ],
+        "copy": {
+          "name": "vmLoop",
+          "count": 3
+        },
+        "properties": {
+          "mode": "Incremental",
+          "templateLink": {
+            "uri": "[uri(parameters('_artifactsLocation'), concat('nested/web-resources.json', parameters('_artifactsLocationSasToken')))]",
+            "contentVersion": "1.0.0.0"
+          },
+          "parameters": {
+            "adminUsername": {
+              "value": "GEN-UNIQUE"
+            },
+            "mysqlPassword": {
+              "value": "GEN-PASSWORD"
+            },
+            "namespace": {
+              "value": "websiteCluster-"
+            },
+            "vmbasename": {
+              "value": "webcopyindex()"
+            },
+            "subnet": {
+              "value": "(networkSettings).subnet.web"
+            },
+            "sizeOfDataDiskInGB": {
+              "value": 100
+            },
+            "vmSize": {
+              "value": "Standard_D2_v3"
+            },
+            "zabbixServerIPAddress": {
+              "value": "Null"
+            },
+            "osSettings": {
+              "value": {
+                "imageReference": {
+                  "publisher": "OpenLogic",
+                  "offer": "CentOS",
+                  "sku": "7.2",
+                  "version": "latest"
+                },
+                "scripts": [
+                  "[uri(parameters('_artifactsLocation'), concat('scripts/web.sh', parameters('_artifactsLocationSasToken')))]"
+                ]
+              }
+            },
+            "authenticationType": {
+              "value": "sshPublicKey"
+            },
+            "adminPasswordOrKey": {
+              "value": "GEN-SSH-PUB-KEY"
+            },
+            "location": {
+              "value": "[resourceGroup().location]"
+            }
+          }
+        }
+      },
+      {
+        "name": "redisMasterNode",
+        "type": "Microsoft.Resources/deployments",
+        "apiVersion": "2020-10-01",
+        "dependsOn": [
+          "Microsoft.Resources/deployments//shared"
+        ],
+        "properties": {
+          "mode": "Incremental",
+          "templateLink": {
+            "uri": "[uri(parameters('_artifactsLocation'), concat('nested/redisMaster-resources.json', parameters('_artifactsLocationSasToken')))]",
+            "contentVersion": "1.0.0.0"
+          },
+          "parameters": {
+            "adminUsername": {
+              "value": "GEN-UNIQUE"
+            },
+            "namespace": {
+              "value": "websiteCluster-"
+            },
+            "vmbasename": {
+              "value": "redisMaster"
+            },
+            "subnet": {
+              "value": "(networkSettings).subnet.redis"
+            },
+            "sizeOfDataDiskInGB": {
+              "value": 100
+            },
+            "vmSize": {
+              "value": "Standard_D2_v3"
+            },
+            "zabbixServerIPAddress": {
+              "value": "Null"
+            },
+            "osSettings": {
+              "value": {
+                "imageReference": {
+                  "publisher": "OpenLogic",
+                  "offer": "CentOS",
+                  "sku": "7.2",
+                  "version": "latest"
+                },
+                "scripts": [
+                  "[uri(parameters('_artifactsLocation'), concat('scripts/redisMaster.sh', parameters('_artifactsLocationSasToken')))]"
+                ]
+              }
+            },
+            "authenticationType": {
+              "value": "sshPublicKey"
+            },
+            "adminPasswordOrKey": {
+              "value": "GEN-SSH-PUB-KEY"
+            },
+            "location": {
+              "value": "[resourceGroup().location]"
+            }
+          }
+        }
+      },
+      {
+        "name": "redisSlaveNode",
+        "type": "Microsoft.Resources/deployments",
+        "apiVersion": "2020-10-01",
+        "dependsOn": [
+          "Microsoft.Resources/deployments//shared",
+          "Microsoft.Resources/deployments//redisMasterNode"
+        ],
+        "properties": {
+          "mode": "Incremental",
+          "templateLink": {
+            "uri": "[uri(parameters('_artifactsLocation'), concat('nested/redisSlave-resources.json', parameters('_artifactsLocationSasToken')))]",
+            "contentVersion": "1.0.0.0"
+          },
+          "parameters": {
+            "adminUsername": {
+              "value": "GEN-UNIQUE"
+            },
+            "namespace": {
+              "value": "websiteCluster-"
+            },
+            "vmbasename": {
+              "value": "redisSlave"
+            },
+            "subnet": {
+              "value": "(networkSettings).subnet.redis"
+            },
+            "sizeOfDataDiskInGB": {
+              "value": 100
+            },
+            "vmSize": {
+              "value": "Standard_D2_v3"
+            },
+            "zabbixServerIPAddress": {
+              "value": "Null"
+            },
+            "osSettings": {
+              "value": {
+                "imageReference": {
+                  "publisher": "OpenLogic",
+                  "offer": "CentOS",
+                  "sku": "7.2",
+                  "version": "latest"
+                },
+                "scripts": [
+                  "[uri(parameters('_artifactsLocation'), concat('scripts/redisSlave.sh', parameters('_artifactsLocationSasToken')))]"
+                ]
+              }
+            },
+            "authenticationType": {
+              "value": "sshPublicKey"
+            },
+            "adminPasswordOrKey": {
+              "value": "GEN-SSH-PUB-KEY"
+            },
+            "location": {
+              "value": "[resourceGroup().location]"
+            }
+          }
+        }
+      },
+      {
+        "name": "mysqlMasterNode",
+        "type": "Microsoft.Resources/deployments",
+        "apiVersion": "2020-10-01",
+        "dependsOn": [
+          "Microsoft.Resources/deployments//shared"
+        ],
+        "properties": {
+          "mode": "Incremental",
+          "templateLink": {
+            "uri": "[uri(parameters('_artifactsLocation'), concat('nested/mysqlMaster-resources.json', parameters('_artifactsLocationSasToken')))]",
+            "contentVersion": "1.0.0.0"
+          },
+          "parameters": {
+            "adminUsername": {
+              "value": "GEN-UNIQUE"
+            },
+            "mysqlPassword": {
+              "value": "GEN-PASSWORD"
+            },
+            "namespace": {
+              "value": "websiteCluster-"
+            },
+            "vmbasename": {
+              "value": "mysqlMaster"
+            },
+            "subnet": {
+              "value": "(networkSettings).subnet.mysql"
+            },
+            "sizeOfDataDiskInGB": {
+              "value": 100
+            },
+            "vmSize": {
+              "value": "Standard_D2_v3"
+            },
+            "zabbixServerIPAddress": {
+              "value": "Null"
+            },
+            "osSettings": {
+              "value": {
+                "imageReference": {
+                  "publisher": "OpenLogic",
+                  "offer": "CentOS",
+                  "sku": "7.2",
+                  "version": "latest"
+                },
+                "scripts": [
+                  "[uri(parameters('_artifactsLocation'), concat('scripts/mysqlMaster.sh', parameters('_artifactsLocationSasToken')))]"
+                ]
+              }
+            },
+            "authenticationType": {
+              "value": "sshPublicKey"
+            },
+            "adminPasswordOrKey": {
+              "value": "GEN-SSH-PUB-KEY"
+            },
+            "location": {
+              "value": "[resourceGroup().location]"
+            }
+          }
+        }
+      },
+      {
+        "name": "mysqlSlaveNode",
+        "type": "Microsoft.Resources/deployments",
+        "apiVersion": "2020-10-01",
+        "dependsOn": [
+          "Microsoft.Resources/deployments//shared",
+          "Microsoft.Resources/deployments//mysqlMasterNode"
+        ],
+        "properties": {
+          "mode": "Incremental",
+          "templateLink": {
+            "uri": "[uri(parameters('_artifactsLocation'), concat('nested/mysqlSlave-resources.json', parameters('_artifactsLocationSasToken')))]",
+            "contentVersion": "1.0.0.0"
+          },
+          "parameters": {
+            "adminUsername": {
+              "value": "GEN-UNIQUE"
+            },
+            "mysqlPassword": {
+              "value": "GEN-PASSWORD"
+            },
+            "namespace": {
+              "value": "websiteCluster-"
+            },
+            "vmbasename": {
+              "value": "mysqlSlave"
+            },
+            "subnet": {
+              "value": "(networkSettings).subnet.mysql"
+            },
+            "sizeOfDataDiskInGB": {
+              "value": 100
+            },
+            "vmSize": {
+              "value": "Standard_D2_v3"
+            },
+            "zabbixServerIPAddress": {
+              "value": "Null"
+            },
+            "osSettings": {
+              "value": {
+                "imageReference": {
+                  "publisher": "OpenLogic",
+                  "offer": "CentOS",
+                  "sku": "7.2",
+                  "version": "latest"
+                },
+                "scripts": [
+                  "[uri(parameters('_artifactsLocation'), concat('scripts/mysqlSlave.sh', parameters('_artifactsLocationSasToken')))]"
+                ]
+              }
+            },
+            "authenticationType": {
+              "value": "sshPublicKey"
+            },
+            "adminPasswordOrKey": {
+              "value": "GEN-SSH-PUB-KEY"
+            },
+            "location": {
+              "value": "[resourceGroup().location]"
+            }
+          }
+        }
+      },
+      {
+        "name": "lbNode",
+        "type": "Microsoft.Resources/deployments",
+        "apiVersion": "2020-10-01",
+        "dependsOn": [
+          "Microsoft.Resources/deployments//shared",
+          "Microsoft.Resources/deployments//mysqlSlaveNode"
+        ],
+        "properties": {
+          "mode": "Incremental",
+          "templateLink": {
+            "uri": "[uri(parameters('_artifactsLocation'), concat('nested/lb-resources.json', parameters('_artifactsLocationSasToken')))]",
+            "contentVersion": "1.0.0.0"
+          },
+          "parameters": {
+            "adminUsername": {
+              "value": "GEN-UNIQUE"
+            },
+            "namespace": {
+              "value": "websiteCluster-"
+            },
+            "vmbasename": {
+              "value": "lb"
+            },
+            "dnsname": {
+              "value": "GEN-UNIQUE"
+            },
+            "subnet": {
+              "value": "(networkSettings).subnet.haproxy"
+            },
+            "sizeOfDataDiskInGB": {
+              "value": 100
+            },
+            "webNodeCount": {
+              "value": 3
+            },
+            "vmSize": {
+              "value": "Standard_D2_v3"
+            },
+            "zabbixServerIPAddress": {
+              "value": "Null"
+            },
+            "osSettings": {
+              "value": {
+                "imageReference": {
+                  "publisher": "OpenLogic",
+                  "offer": "CentOS",
+                  "sku": "7.2",
+                  "version": "latest"
+                },
+                "scripts": [
+                  "[uri(parameters('_artifactsLocation'), concat('scripts/lb.sh', parameters('_artifactsLocationSasToken')))]"
+                ]
+              }
+            },
+            "authenticationType": {
+              "value": "sshPublicKey"
+            },
+            "adminPasswordOrKey": {
+              "value": "GEN-SSH-PUB-KEY"
+            },
+            "location": {
+              "value": "[resourceGroup().location]"
+            }
+          }
+        }
+      }
+    ],
+    "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+  }
+}

@@ -1,0 +1,186 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAzureQuickStart",
+  "paths": [
+    "/quickstarts/microsoft.cdn/cdn-customize/azuredeploy.json",
+    "/quickstarts/microsoft.cdn/cdn-customize/azuredeploy.parameters.json"
+  ],
+  "timestamp": 1642962903251,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/quickstarts/microsoft.cdn/cdn-customize/azuredeploy.json",
+      "/quickstarts/microsoft.cdn/cdn-customize/azuredeploy.parameters.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT977",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "microsoft.cdn/profiles/endpoints",
+      "microsoft.cdn/profiles"
+    ]
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT977",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.0.0.0",
+    "metadata": {
+      "_generator": {
+        "name": "bicep",
+        "version": "0.4.1008.15138",
+        "templateHash": "791031051301333646"
+      }
+    },
+    "parameters": {
+      "profileName": {
+        "type": "string",
+        "metadata": {
+          "description": "Name of the CDN Profile."
+        },
+        "value": "GEN-UNIQUE"
+      },
+      "sku": {
+        "type": "string",
+        "defaultValue": "Standard_Microsoft",
+        "allowedValues": [
+          "Standard_Verizon",
+          "Premium_Verizon",
+          "Custom_Verizon",
+          "Standard_Akamai",
+          "Standard_ChinaCdn",
+          "Standard_Microsoft",
+          "Premium_ChinaCdn",
+          "Standard_AzureFrontDoor",
+          "Premium_AzureFrontDoor",
+          "Standard_955BandWidth_ChinaCdn",
+          "Standard_AvgBandWidth_ChinaCdn",
+          "StandardPlus_ChinaCdn",
+          "StandardPlus_955BandWidth_ChinaCdn",
+          "StandardPlus_AvgBandWidth_ChinaCdn"
+        ],
+        "metadata": {
+          "description": "Pricing tier of the CDN Profile."
+        },
+        "value": "Standard_Microsoft"
+      },
+      "endpointName": {
+        "type": "string",
+        "metadata": {
+          "description": "Name of the CDN Endpoint."
+        },
+        "value": "GEN-UNIQUE"
+      },
+      "isHttpAllowed": {
+        "type": "bool",
+        "defaultValue": true,
+        "metadata": {
+          "description": "Whether the HTTP traffic is allowed."
+        },
+        "value": true
+      },
+      "isHttpsAllowed": {
+        "type": "bool",
+        "defaultValue": true,
+        "metadata": {
+          "description": "Whether the HTTPS traffic is allowed."
+        },
+        "value": true
+      },
+      "queryStringCachingBehavior": {
+        "type": "string",
+        "defaultValue": "IgnoreQueryString",
+        "allowedValues": [
+          "IgnoreQueryString",
+          "BypassCaching",
+          "UseQueryString"
+        ],
+        "metadata": {
+          "description": "Query string caching behavior."
+        },
+        "value": "IgnoreQueryString"
+      },
+      "contentTypesToCompress": {
+        "type": "array",
+        "defaultValue": [
+          "text/plain",
+          "text/html",
+          "text/css",
+          "application/x-javascript",
+          "text/javascript"
+        ],
+        "metadata": {
+          "description": "Content type that is compressed."
+        },
+        "value": []
+      },
+      "isCompressionEnabled": {
+        "type": "bool",
+        "defaultValue": true,
+        "metadata": {
+          "description": "Whether the compression is enabled"
+        },
+        "value": false
+      },
+      "originUrl": {
+        "type": "string",
+        "metadata": {
+          "description": "Url of the origin"
+        },
+        "value": "www.microsoft.com"
+      },
+      "location": {
+        "type": "string",
+        "defaultValue": "global",
+        "metadata": {
+          "description": "Location for all resources."
+        }
+      }
+    },
+    "functions": [],
+    "resources": [
+      {
+        "type": "Microsoft.Cdn/profiles",
+        "apiVersion": "2020-09-01",
+        "name": "GEN-UNIQUE",
+        "location": "global",
+        "properties": {},
+        "sku": {
+          "name": "Standard_Microsoft"
+        }
+      },
+      {
+        "type": "Microsoft.Cdn/profiles/endpoints",
+        "apiVersion": "2020-09-01",
+        "name": "[format('{0}/{1}', parameters('profileName'), parameters('endpointName'))]",
+        "location": "global",
+        "properties": {
+          "originHostHeader": "www.microsoft.com",
+          "isHttpAllowed": true,
+          "isHttpsAllowed": true,
+          "queryStringCachingBehavior": "IgnoreQueryString",
+          "contentTypesToCompress": [],
+          "isCompressionEnabled": false,
+          "origins": [
+            {
+              "name": "origin1",
+              "properties": {
+                "hostName": "www.microsoft.com"
+              }
+            }
+          ]
+        },
+        "dependsOn": [
+          "Microsoft.Cdn/profiles/GEN-UNIQUE"
+        ]
+      }
+    ],
+    "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+  }
+}

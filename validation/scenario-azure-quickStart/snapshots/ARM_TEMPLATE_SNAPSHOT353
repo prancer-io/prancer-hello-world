@@ -1,0 +1,457 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAzureQuickStart",
+  "paths": [
+    "/application-workloads/postgre/postgresql-on-ubuntu/azuredeploy.json",
+    "/application-workloads/postgre/postgresql-on-ubuntu/azuredeploy.parameters.json"
+  ],
+  "timestamp": 1642962893049,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/application-workloads/postgre/postgresql-on-ubuntu/azuredeploy.json",
+      "/application-workloads/postgre/postgresql-on-ubuntu/azuredeploy.parameters.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT353",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "microsoft.resources/deployments"
+    ]
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT353",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "domainName": {
+        "type": "string",
+        "defaultValue": "[concat('postgres-', uniqueString(resourceGroup().id))]",
+        "metadata": {
+          "description": "Domain name of the public jumpbox"
+        }
+      },
+      "adminUsername": {
+        "type": "string",
+        "metadata": {
+          "description": "Virtual machine administrator username"
+        },
+        "value": "GEN-UNQIUE"
+      },
+      "adminPassword": {
+        "type": "securestring",
+        "metadata": {
+          "description": "Virtual machine administrator password"
+        },
+        "value": "GEN-PASSWORD"
+      },
+      "tshirtSize": {
+        "type": "string",
+        "defaultValue": "Small",
+        "allowedValues": [
+          "Small",
+          "Medium",
+          "Large",
+          "XLarge"
+        ],
+        "metadata": {
+          "description": "T-shirt size of the PostgreSQL deployment"
+        }
+      },
+      "replicatorPassword": {
+        "type": "securestring",
+        "metadata": {
+          "description": "The replication password used for PostgreSQL streaming replication"
+        },
+        "value": "GEN-PASSWORD"
+      },
+      "jumpbox": {
+        "type": "string",
+        "defaultValue": "Enabled",
+        "allowedValues": [
+          "Enabled",
+          "Disabled"
+        ],
+        "metadata": {
+          "description": "The flag allowing to enable or disable provisioning of the jumpbox VM that can be used to access the PostgreSQL environment"
+        }
+      },
+      "jumpBoxSize": {
+        "type": "string",
+        "defaultValue": "Standard_A1_V2",
+        "metadata": {
+          "description": "Size of the jumpbox VM, ignored if jumbox is disabled."
+        }
+      },
+      "virtualNetworkName": {
+        "type": "string",
+        "defaultValue": "vnet",
+        "metadata": {
+          "description": "Virtual network name"
+        }
+      },
+      "location": {
+        "type": "string",
+        "defaultValue": "[resourceGroup().location]",
+        "metadata": {
+          "description": "Location for all resources."
+        }
+      },
+      "_artifactsLocation": {
+        "type": "string",
+        "metadata": {
+          "description": "The base URI where artifacts required by this template are located. When the template is deployed using the accompanying scripts, a private location in the subscription will be used and this value will be automatically generated."
+        },
+        "defaultValue": "[deployment().properties.templateLink.uri]"
+      },
+      "_artifactsLocationSasToken": {
+        "type": "securestring",
+        "metadata": {
+          "description": "The sasToken required to access _artifactsLocation.  When the template is deployed using the accompanying scripts, a sasToken will be automatically generated."
+        },
+        "defaultValue": ""
+      }
+    },
+    "variables": {
+      "sharedTemplateUrl": "[uri(parameters('_artifactsLocation'), concat('shared-resources.json', parameters('_artifactsLocationSasToken')))]",
+      "deploymentSize": {
+        "Small": {
+          "vmSize": "Standard_A1_v2",
+          "diskSize": 1023,
+          "diskCount": 2,
+          "vmCount": 2,
+          "slaveCount": 1,
+          "storage": {
+            "count": 1,
+            "pool": "db",
+            "map": [
+              0,
+              0
+            ],
+            "jumpbox": 0
+          }
+        },
+        "Medium": {
+          "vmSize": "Standard_A2_v2",
+          "diskSize": 1023,
+          "diskCount": 8,
+          "vmCount": 2,
+          "slaveCount": 1,
+          "storage": {
+            "count": 2,
+            "pool": "db",
+            "map": [
+              0,
+              1
+            ],
+            "jumpbox": 0
+          }
+        },
+        "Large": {
+          "vmSize": "Standard_A4_v2",
+          "diskSize": 1023,
+          "diskCount": 16,
+          "vmCount": 3,
+          "slaveCount": 2,
+          "storage": {
+            "count": 2,
+            "pool": "db",
+            "map": [
+              0,
+              1,
+              1
+            ],
+            "jumpbox": 0
+          }
+        },
+        "XLarge": {
+          "vmSize": "Standard_A8_v2",
+          "diskSize": 1023,
+          "diskCount": 16,
+          "vmCount": 4,
+          "slaveCount": 3,
+          "storage": {
+            "count": 2,
+            "pool": "db",
+            "map": [
+              0,
+              0,
+              1,
+              1
+            ],
+            "jumpbox": 0
+          }
+        }
+      },
+      "jumpboxTemplateUrl": "[uri(parameters('_artifactsLocation'), concat('jumpbox-resources.json', parameters('_artifactsLocationSasToken')))]",
+      "databaseTemplateUrl": "[uri(parameters('_artifactsLocation'), concat('database-resources.json', parameters('_artifactsLocationSasToken')))]",
+      "osSettings": {
+        "scripts": [
+          "[uri(parameters('_artifactsLocation'), concat('install_postgresql.sh', parameters('_artifactsLocationSasToken')))]",
+          "https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/shared_scripts/ubuntu/vm-disk-utils-0.1.sh"
+        ],
+        "imageReference": {
+          "publisher": "Canonical",
+          "offer": "UbuntuServer",
+          "sku": "18.04-LTS",
+          "version": "latest"
+        }
+      },
+      "networkSettings": {
+        "vnetName": "vnet",
+        "addressPrefix": "10.0.0.0/16",
+        "subnets": {
+          "dmz": {
+            "name": "dmz",
+            "prefix": "10.0.0.0/24",
+            "vnet": "vnet"
+          },
+          "data": {
+            "name": "data",
+            "prefix": "10.0.1.0/24",
+            "vnet": "vnet"
+          }
+        }
+      },
+      "availabilitySetSettings": {
+        "name": "pgsqlAvailabilitySet",
+        "fdCount": 2,
+        "udCount": 5
+      }
+    },
+    "resources": [
+      {
+        "name": "shared",
+        "type": "Microsoft.Resources/deployments",
+        "apiVersion": "2019-10-01",
+        "properties": {
+          "mode": "Incremental",
+          "templateLink": {
+            "uri": "[uri(parameters('_artifactsLocation'), concat('shared-resources.json', parameters('_artifactsLocationSasToken')))]",
+            "contentVersion": "1.0.0.0"
+          },
+          "parameters": {
+            "networkSettings": {
+              "value": {
+                "vnetName": "vnet",
+                "addressPrefix": "10.0.0.0/16",
+                "subnets": {
+                  "dmz": {
+                    "name": "dmz",
+                    "prefix": "10.0.0.0/24",
+                    "vnet": "vnet"
+                  },
+                  "data": {
+                    "name": "data",
+                    "prefix": "10.0.1.0/24",
+                    "vnet": "vnet"
+                  }
+                }
+              }
+            },
+            "availabilitySetSettings": {
+              "value": {
+                "name": "pgsqlAvailabilitySet",
+                "fdCount": 2,
+                "udCount": 5
+              }
+            },
+            "location": {
+              "value": "[resourceGroup().location]"
+            }
+          }
+        }
+      },
+      {
+        "name": "master-node",
+        "type": "Microsoft.Resources/deployments",
+        "apiVersion": "2019-10-01",
+        "dependsOn": [
+          "Microsoft.Resources/deployments/shared"
+        ],
+        "properties": {
+          "mode": "Incremental",
+          "templateLink": {
+            "uri": "[uri(parameters('_artifactsLocation'), concat('database-resources.json', parameters('_artifactsLocationSasToken')))]",
+            "contentVersion": "1.0.0.0"
+          },
+          "parameters": {
+            "location": {
+              "value": "[resourceGroup().location]"
+            },
+            "adminPassword": {
+              "value": "GEN-PASSWORD"
+            },
+            "replicatorPassword": {
+              "value": "GEN-PASSWORD"
+            },
+            "osSettings": {
+              "value": {
+                "scripts": [
+                  "[uri(parameters('_artifactsLocation'), concat('install_postgresql.sh', parameters('_artifactsLocationSasToken')))]",
+                  "https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/shared_scripts/ubuntu/vm-disk-utils-0.1.sh"
+                ],
+                "imageReference": {
+                  "publisher": "Canonical",
+                  "offer": "UbuntuServer",
+                  "sku": "18.04-LTS",
+                  "version": "latest"
+                }
+              }
+            },
+            "subnet": {
+              "value": "(networkSettings).subnets.data"
+            },
+            "commonSettings": {
+              "value": {
+                "adminUsername": "GEN-UNQIUE",
+                "namespace": "ms"
+              }
+            },
+            "machineSettings": {
+              "value": {
+                "vmSize": "(deploymentSize)[parameters(tshirtSize)].vmSize",
+                "diskCount": "(deploymentSize)[parameters(tshirtSize)].diskCount",
+                "diskSize": "(deploymentSize)[parameters(tshirtSize)].diskSize",
+                "vmCount": 1,
+                "availabilitySet": "(availabilitySetSettings).name"
+              }
+            },
+            "masterIpAddress": {
+              "value": "0"
+            },
+            "dbType": {
+              "value": "MASTER"
+            }
+          }
+        }
+      },
+      {
+        "name": "slave-node",
+        "type": "Microsoft.Resources/deployments",
+        "apiVersion": "2019-10-01",
+        "dependsOn": [
+          "Microsoft.Resources/deployments/master-node"
+        ],
+        "properties": {
+          "mode": "Incremental",
+          "templateLink": {
+            "uri": "[uri(parameters('_artifactsLocation'), concat('database-resources.json', parameters('_artifactsLocationSasToken')))]",
+            "contentVersion": "1.0.0.0"
+          },
+          "parameters": {
+            "location": {
+              "value": "[resourceGroup().location]"
+            },
+            "adminPassword": {
+              "value": "GEN-PASSWORD"
+            },
+            "replicatorPassword": {
+              "value": "GEN-PASSWORD"
+            },
+            "osSettings": {
+              "value": {
+                "scripts": [
+                  "[uri(parameters('_artifactsLocation'), concat('install_postgresql.sh', parameters('_artifactsLocationSasToken')))]",
+                  "https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/shared_scripts/ubuntu/vm-disk-utils-0.1.sh"
+                ],
+                "imageReference": {
+                  "publisher": "Canonical",
+                  "offer": "UbuntuServer",
+                  "sku": "18.04-LTS",
+                  "version": "latest"
+                }
+              }
+            },
+            "subnet": {
+              "value": "(networkSettings).subnets.data"
+            },
+            "commonSettings": {
+              "value": {
+                "adminUsername": "GEN-UNQIUE",
+                "namespace": "sl"
+              }
+            },
+            "machineSettings": {
+              "value": {
+                "vmSize": "(deploymentSize)[parameters(tshirtSize)].vmSize",
+                "diskCount": "(deploymentSize)[parameters(tshirtSize)].diskCount",
+                "diskSize": "(deploymentSize)[parameters(tshirtSize)].diskSize",
+                "vmCount": "(deploymentSize)[parameters(tshirtSize)].slaveCount",
+                "availabilitySet": "(availabilitySetSettings).name"
+              }
+            },
+            "masterIpAddress": {
+              "value": "[reference('master-node').outputs.masterip.value]"
+            },
+            "dbType": {
+              "value": "SLAVE"
+            }
+          }
+        }
+      },
+      {
+        "condition": false,
+        "name": "jumpbox",
+        "type": "Microsoft.Resources/deployments",
+        "apiVersion": "2019-10-01",
+        "dependsOn": [
+          "Microsoft.Resources/deployments/shared"
+        ],
+        "properties": {
+          "mode": "Incremental",
+          "templateLink": {
+            "uri": "[uri(parameters('_artifactsLocation'), concat('jumpbox-resources.json', parameters('_artifactsLocationSasToken')))]",
+            "contentVersion": "1.0.0.0"
+          },
+          "parameters": {
+            "location": {
+              "value": "[resourceGroup().location]"
+            },
+            "dnsName": {
+              "value": "[concat('postgres-', uniqueString(resourceGroup().id))]"
+            },
+            "commonSettings": {
+              "value": {
+                "adminUsername": "GEN-UNQIUE",
+                "namespace": "jumpbox"
+              }
+            },
+            "adminPassword": {
+              "value": "GEN-PASSWORD"
+            },
+            "subnet": {
+              "value": "(networkSettings).subnets.dmz"
+            },
+            "osSettings": {
+              "value": {
+                "scripts": [
+                  "[uri(parameters('_artifactsLocation'), concat('install_postgresql.sh', parameters('_artifactsLocationSasToken')))]",
+                  "https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/shared_scripts/ubuntu/vm-disk-utils-0.1.sh"
+                ],
+                "imageReference": {
+                  "publisher": "Canonical",
+                  "offer": "UbuntuServer",
+                  "sku": "18.04-LTS",
+                  "version": "latest"
+                }
+              }
+            },
+            "vmSize": {
+              "value": "Standard_A1_V2"
+            }
+          }
+        }
+      }
+    ],
+    "outputs": {},
+    "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+  }
+}

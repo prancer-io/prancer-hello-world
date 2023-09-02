@@ -1,0 +1,303 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAzureQuickStart",
+  "paths": [
+    "/demos/storage-import-zipped-vhds/prereqs/prereq.azuredeploy.json",
+    "/demos/storage-import-zipped-vhds/prereqs/prereq.azuredeploy.parameters.json"
+  ],
+  "timestamp": 1642962901817,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/demos/storage-import-zipped-vhds/prereqs/prereq.azuredeploy.json",
+      "/demos/storage-import-zipped-vhds/prereqs/prereq.azuredeploy.parameters.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT814",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "microsoft.authorization/roleassignments",
+      "microsoft.keyvault/vaults/secrets",
+      "microsoft.resources/deploymentscripts",
+      "microsoft.keyvault/vaults",
+      "microsoft.storage/storageaccounts",
+      "microsoft.managedidentity/userassignedidentities"
+    ]
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT814",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.0.0.210606",
+    "parameters": {
+      "locationSource": {
+        "type": "string",
+        "metadata": {
+          "description": "The Azure Region location in which the source resources should be deployed. E.g. westus (Azure Public)"
+        },
+        "defaultValue": "[parameters('location')]"
+      },
+      "storageAccountNameSource": {
+        "type": "string",
+        "defaultValue": "[concat('source', uniqueString(resourceGroup().id))]",
+        "metadata": {
+          "description": "Name of Storage Account."
+        },
+        "value": "GEN-UNIQUE"
+      },
+      "blobContainerNameSource": {
+        "type": "string",
+        "defaultValue": "vhd",
+        "metadata": {
+          "description": "Name of the Blob Container"
+        }
+      },
+      "locationDestination": {
+        "type": "string",
+        "metadata": {
+          "description": "The Azure Region location in which the source resources should be deployed. E.g. francecentral (Azure Public)"
+        },
+        "defaultValue": "[parameters('location')]"
+      },
+      "storageAccountNameDestination": {
+        "type": "string",
+        "defaultValue": "[concat('destination', uniqueString(resourceGroup().id))]",
+        "metadata": {
+          "description": "Name of Storage Account."
+        },
+        "value": "GEN-UNIQUE"
+      },
+      "blobContainerNameDestination": {
+        "type": "string",
+        "defaultValue": "vhd",
+        "metadata": {
+          "description": "Name of the Blob Container"
+        }
+      },
+      "storageAccountKind": {
+        "type": "string",
+        "defaultValue": "StorageV2"
+      },
+      "storageAccountSkuName": {
+        "type": "string",
+        "defaultValue": "Standard_LRS",
+        "allowedValues": [
+          "Standard_LRS",
+          "Premium_LRS",
+          "Standard_ZRS",
+          "Standard_GRS"
+        ],
+        "metadata": {
+          "description": "Storage Account SKU"
+        }
+      },
+      "forceUpdateTag": {
+        "type": "string",
+        "defaultValue": "[newGuid()]",
+        "metadata": {
+          "description": "forceUpdateTag property, used to force the execution of the script resource when no other properties have changed."
+        }
+      },
+      "keyVaultName": {
+        "type": "string",
+        "metadata": {
+          "description": "Specifies the name of the key vault."
+        },
+        "value": "GEN-UNIQUE"
+      },
+      "tenantId": {
+        "type": "string",
+        "defaultValue": "[subscription().tenantId]",
+        "metadata": {
+          "description": "Specifies the Azure Active Directory tenant ID that should be used for authenticating requests to the key vault. Get it by using Get-AzSubscription cmdlet."
+        }
+      },
+      "location": {
+        "type": "string",
+        "metadata": {
+          "description": "The Azure Region location in which the source resources should be deployed. E.g. westus (Azure Public)"
+        },
+        "defaultValue": "[resourceGroup().location]"
+      }
+    },
+    "variables": {
+      "userAssignedIdentityName": "[concat('ImportVHD-FromZipArchive-Prereq-worker-',uniqueString(resourceGroup().id))]",
+      "roleAssignmentName": "[guid(concat(variables('userAssignedIdentityName'),resourceGroup().id, 'contributor'))]",
+      "deploymentScriptNameCreateSource": "CreateVHDZipArchiveUrl",
+      "forceUpdateTag": "[newGuid()]",
+      "listAccountSasRequestContent": {
+        "signedServices": "bfqt",
+        "signedPermission": "rwdlacup",
+        "signedStart": "2021-06-02T00:00:00Z",
+        "signedExpiry": "2030-10-30T00:00:00Z",
+        "signedResourceTypes": "sco"
+      }
+    },
+    "resources": [
+      {
+        "apiVersion": "2021-02-01",
+        "type": "Microsoft.Storage/storageAccounts",
+        "name": "GEN-UNIQUE",
+        "location": "[parameters('location')]",
+        "sku": {
+          "name": "Standard_LRS"
+        },
+        "kind": "StorageV2",
+        "resources": [
+          {
+            "name": "default/vhd",
+            "type": "blobServices/containers",
+            "apiVersion": "2021-02-01",
+            "dependsOn": [
+              "Microsoft.Storage/storageAccounts/GEN-UNIQUE"
+            ],
+            "properties": {
+              "publicAccess": "Blob"
+            }
+          }
+        ]
+      },
+      {
+        "type": "Microsoft.ManagedIdentity/userAssignedIdentities",
+        "apiVersion": "2018-11-30",
+        "name": "[variables('userAssignedIdentityName')]",
+        "location": "[parameters('location')]"
+      },
+      {
+        "type": "Microsoft.Authorization/roleAssignments",
+        "apiVersion": "2018-09-01-preview",
+        "name": "[guid(concat(variables('userAssignedIdentityName'),resourceGroup().id, 'contributor'))]",
+        "dependsOn": [
+          "[resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', variables('userAssignedIdentityName'))]"
+        ],
+        "properties": {
+          "roleDefinitionId": "Microsoft.Authorization/roleDefinitions/b24988ac-6180-42a0-ab88-20f7382dd24c",
+          "principalId": "[reference(resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', variables('userAssignedIdentityName')), '2015-08-31-preview').principalId]",
+          "scope": "[resourceGroup().id]",
+          "principalType": "ServicePrincipal"
+        }
+      },
+      {
+        "type": "Microsoft.Resources/deploymentScripts",
+        "apiVersion": "2020-10-01",
+        "name": "CreateVHDZipArchiveUrl",
+        "location": "[parameters('location')]",
+        "dependsOn": [
+          "Microsoft.Storage/storageAccounts/GEN-UNIQUE"
+        ],
+        "identity": {
+          "type": "UserAssigned",
+          "userAssignedIdentities": {
+            "[resourceId('Microsoft.ManagedIdentity/userAssignedIdentities',variables('userAssignedIdentityName'))]": {}
+          }
+        },
+        "kind": "AzurePowerShell",
+        "properties": {
+          "azPowerShellVersion": "5.5",
+          "cleanupPreference": "OnSuccess",
+          "environmentVariables": [
+            {
+              "name": "ResourceGroupName",
+              "value": "[resourceGroup().name]"
+            },
+            {
+              "name": "StorageAccountName",
+              "value": "GEN-UNIQUE"
+            },
+            {
+              "name": "BlobContainerName",
+              "value": "vhd"
+            }
+          ],
+          "forceUpdateTag": "[newGuid()]",
+          "retentionInterval": "PT2H",
+          "scriptContent": "# 210602 \n  \n ##### Parameters \n  \n $StorageAccountName = ${Env:StorageAccountName} \n $BlobContainerName = ${Env:BlobContainerName} \n $ResourceGroupName = ${Env:ResourceGroupName} \n  \n ##### Variables \n  \n $StartTime = Get-Date \n $EndTime = $startTime.AddHours(2.0) \n  \n ##### Create a VHD archive zip \n  \n $timestamp = (Get-Date -Format 'yyMMddhhmmss') \n $vhdZipArchive = 'fake-vhd-disk-archive-{0}.zip' -f $timestamp \n  \n New-Item -Force -Type File -Name ('fake-vhd-disk1-{0}.vhd' -f $timestamp)  \n New-Item -Force -Type File -Name ('fake-vhd-disk2-{0}.vhd' -f $timestamp) \n New-Item -Force -Type File -Name ('fake-vhd-disk3-{0}.vhd' -f $timestamp) \n New-Item -Force -Type File -Name ('fake-readme-{0}.md' -f $timestamp) \n  \n Compress-Archive -Force -Path 'fake*' -DestinationPath $vhdZipArchive              \n  \n ##### Storage account \n  \n $StorageAccount = Get-AzStorageAccount -ResourceGroupName $ResourceGroupName -Name $StorageAccountName \n $Blob = Set-AzStorageBlobContent -File $vhdZipArchive -Container $BlobContainerName -blob $vhdZipArchive -context $StorageAccount.Context \n $urlVHDZipArchive = New-AzStorageBlobSASToken -FullUri -Context $StorageAccount.Context -Container $BlobContainerName -Blob $vhdZipArchive -Permission r -StartTime $StartTime -ExpiryTime $EndTime \n  \n ##### Output \n $DeploymentScriptOutputs = @{} \n $DeploymentScriptOutputs['urlVHDZipArchive'] = $urlVHDZipArchive \n "
+        }
+      },
+      {
+        "apiVersion": "2021-02-01",
+        "type": "Microsoft.Storage/storageAccounts",
+        "name": "GEN-UNIQUE",
+        "location": "[parameters('location')]",
+        "sku": {
+          "name": "Standard_LRS"
+        },
+        "kind": "StorageV2",
+        "resources": [
+          {
+            "name": "default/vhd",
+            "type": "blobServices/containers",
+            "apiVersion": "2021-02-01",
+            "dependsOn": [
+              "Microsoft.Storage/storageAccounts/GEN-UNIQUE"
+            ],
+            "properties": {
+              "publicAccess": "Blob"
+            }
+          }
+        ]
+      },
+      {
+        "type": "Microsoft.KeyVault/vaults",
+        "apiVersion": "2019-09-01",
+        "name": "GEN-UNIQUE",
+        "dependsOn": [
+          "Microsoft.Storage/storageAccounts/GEN-UNIQUE"
+        ],
+        "location": "[resourceGroup().location]",
+        "properties": {
+          "enabledForDeployment": true,
+          "enabledForDiskEncryption": false,
+          "enabledForTemplateDeployment": true,
+          "tenantId": "[subscription().tenantId]",
+          "accessPolicies": [],
+          "sku": {
+            "name": "Standard",
+            "family": "A"
+          },
+          "networkAcls": {
+            "defaultAction": "Allow",
+            "bypass": "AzureServices"
+          }
+        }
+      },
+      {
+        "type": "Microsoft.KeyVault/vaults/secrets",
+        "apiVersion": "2019-09-01",
+        "name": "GEN-UNIQUE/Source",
+        "location": "[resourceGroup().location]",
+        "dependsOn": [
+          "Microsoft.KeyVault/vaults/GEN-UNIQUE"
+        ],
+        "properties": {
+          "value": "[reference(variables('deploymentScriptNameCreateSource')).outputs.urlVHDZipArchive]"
+        }
+      },
+      {
+        "type": "Microsoft.KeyVault/vaults/secrets",
+        "apiVersion": "2019-09-01",
+        "name": "GEN-UNIQUE/Destination",
+        "location": "[resourceGroup().location]",
+        "dependsOn": [
+          "Microsoft.KeyVault/vaults/GEN-UNIQUE"
+        ],
+        "properties": {
+          "value": "[concat(reference(parameters('storageAccountNameDestination')).primaryEndpoints.blob, parameters('blobContainerNameDestination'), '?', listAccountSas(parameters('storageAccountNameDestination'), '2021-04-01', variables('listAccountSasRequestContent')).accountSasToken)]"
+        }
+      }
+    ],
+    "outputs": {
+      "KeyVaultId": {
+        "type": "string",
+        "value": "[resourceId('Microsoft.KeyVault/vaults', parameters('keyVaultName'))]"
+      }
+    },
+    "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+  }
+}

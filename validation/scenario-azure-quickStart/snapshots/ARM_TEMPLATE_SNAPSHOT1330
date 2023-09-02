@@ -1,0 +1,198 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAzureQuickStart",
+  "paths": [
+    "/quickstarts/microsoft.eventhub/eventhubs-create-namespace-and-enable-capture-for-adls/azuredeploy.json",
+    "/quickstarts/microsoft.eventhub/eventhubs-create-namespace-and-enable-capture-for-adls/azuredeploy.parameters.json"
+  ],
+  "timestamp": 1642962906875,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/quickstarts/microsoft.eventhub/eventhubs-create-namespace-and-enable-capture-for-adls/azuredeploy.json",
+      "/quickstarts/microsoft.eventhub/eventhubs-create-namespace-and-enable-capture-for-adls/azuredeploy.parameters.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT1330",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "microsoft.eventhub/namespaces"
+    ]
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT1330",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "eventHubNamespaceName": {
+        "type": "string",
+        "metadata": {
+          "description": "Name of the EventHub namespace"
+        },
+        "value": "GEN-UNIQUE-12"
+      },
+      "eventHubName": {
+        "type": "string",
+        "metadata": {
+          "description": "Name of the Event Hub"
+        },
+        "value": "GEN-UNIQUE"
+      },
+      "messageRetentionInDays": {
+        "type": "int",
+        "defaultValue": 1,
+        "minValue": 1,
+        "maxValue": 7,
+        "metadata": {
+          "description": "How long to retain the data in Event Hub"
+        },
+        "value": 1
+      },
+      "partitionCount": {
+        "type": "int",
+        "defaultValue": 4,
+        "minValue": 2,
+        "maxValue": 32,
+        "metadata": {
+          "description": "Number of partitions chosen"
+        },
+        "value": 2
+      },
+      "captureEnabled": {
+        "type": "string",
+        "defaultValue": "true",
+        "allowedValues": [
+          "false",
+          "true"
+        ],
+        "metadata": {
+          "description": "Enable or disable the Capture feature for your Event Hub"
+        },
+        "value": "true"
+      },
+      "captureEncodingFormat": {
+        "type": "string",
+        "defaultValue": "Avro",
+        "allowedValues": [
+          "Avro"
+        ],
+        "metadata": {
+          "description": "The encoding format Eventhub capture serializes the EventData when archiving to your storage"
+        },
+        "value": "Avro"
+      },
+      "captureTime": {
+        "type": "int",
+        "defaultValue": 300,
+        "minValue": 60,
+        "maxValue": 900,
+        "metadata": {
+          "description": "the time window in seconds for the archival"
+        },
+        "value": 300
+      },
+      "captureSize": {
+        "type": "int",
+        "defaultValue": 314572800,
+        "minValue": 10485760,
+        "maxValue": 524288000,
+        "metadata": {
+          "description": "the size window in bytes for evetn hub capture"
+        },
+        "value": 314572800
+      },
+      "captureNameFormat": {
+        "type": "string",
+        "defaultValue": "{Namespace}/{EventHub}/{PartitionId}/{Year}/{Month}/{Day}/{Hour}/{Minute}/{Second}",
+        "metadata": {
+          "description": "A Capture Name Format must contain {Namespace}, {EventHub}, {PartitionId}, {Year}, {Month}, {Day}, {Hour}, {Minute} and {Second} fields. These can be arranged in any order with or without delimeters. E.g.  Prod_{EventHub}/{Namespace}\\{PartitionId}_{Year}_{Month}/{Day}/{Hour}/{Minute}/{Second}"
+        },
+        "value": "GEN-UNIQUE"
+      },
+      "subscriptionId": {
+        "type": "string",
+        "metadata": {
+          "description": "Subscription Id of both Data Lake Store and Event Hub namespace"
+        },
+        "value": "GEN-UNIQUE"
+      },
+      "dataLakeAccountName": {
+        "type": "string",
+        "metadata": {
+          "description": "Data Lake Store name"
+        },
+        "value": "GEN-UNIQUE"
+      },
+      "dataLakeFolderPath": {
+        "type": "string",
+        "metadata": {
+          "description": "Destination archive folder path"
+        },
+        "value": "GEN-UNIQUE"
+      }
+    },
+    "variables": {
+      "defaultSASKeyName": "RootManageSharedAccessKey",
+      "authRuleResourceId": "Microsoft.EventHub/namespaces/authorizationRules/GEN-UNIQUE-12/RootManageSharedAccessKey"
+    },
+    "resources": [
+      {
+        "apiVersion": "2017-04-01",
+        "name": "GEN-UNIQUE-12",
+        "type": "Microsoft.EventHub/Namespaces",
+        "location": "[resourceGroup().location]",
+        "sku": {
+          "name": "Standard",
+          "tier": "Standard"
+        },
+        "resources": [
+          {
+            "apiVersion": "2017-04-01",
+            "name": "GEN-UNIQUE",
+            "type": "eventhubs",
+            "dependsOn": [
+              "Microsoft.EventHub/namespaces/GEN-UNIQUE-12"
+            ],
+            "properties": {
+              "path": "GEN-UNIQUE",
+              "captureDescription": {
+                "enabled": true,
+                "skipEmptyArchives": false,
+                "encoding": "Avro",
+                "intervalInSeconds": 300,
+                "sizeLimitInBytes": 314572800,
+                "destination": {
+                  "name": "EventHubArchive.AzureDataLake",
+                  "properties": {
+                    "DataLakeSubscriptionId": "GEN-UNIQUE",
+                    "DataLakeAccountName": "GEN-UNIQUE",
+                    "DataLakeFolderPath": "GEN-UNIQUE",
+                    "ArchiveNameFormat": "GEN-UNIQUE"
+                  }
+                }
+              }
+            }
+          }
+        ]
+      }
+    ],
+    "outputs": {
+      "NamespaceConnectionString": {
+        "type": "string",
+        "value": "[listkeys(variables('authRuleResourceId'), '2017-04-01').primaryConnectionString]"
+      },
+      "SharedAccessPolicyPrimaryKey": {
+        "type": "string",
+        "value": "[listkeys(variables('authRuleResourceId'), '2017-04-01').primaryKey]"
+      }
+    },
+    "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+  }
+}

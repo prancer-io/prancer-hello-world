@@ -1,0 +1,208 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAzureQuickStart",
+  "paths": [
+    "/quickstarts/microsoft.machinelearningservices/machine-learning-workspace-cmk/prereqs/prereq.azuredeploy.json",
+    "/quickstarts/microsoft.machinelearningservices/machine-learning-workspace-cmk/prereqs/prereq.azuredeploy.parameters.us.json"
+  ],
+  "timestamp": 1642962907957,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/quickstarts/microsoft.machinelearningservices/machine-learning-workspace-cmk/prereqs/prereq.azuredeploy.json",
+      "/quickstarts/microsoft.machinelearningservices/machine-learning-workspace-cmk/prereqs/prereq.azuredeploy.parameters.us.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT1459",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "microsoft.keyvault/vaults/keys",
+      "microsoft.keyvault/vaults"
+    ]
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT1459",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "keyVaultName": {
+        "type": "string",
+        "metadata": {
+          "description": "Specifies the name of the key vault."
+        },
+        "value": "GEN-UNIQUE"
+      },
+      "location": {
+        "type": "string",
+        "allowedValues": [
+          "australiaeast",
+          "brazilsouth",
+          "canadacentral",
+          "centralus",
+          "eastasia",
+          "eastus",
+          "eastus2",
+          "francecentral",
+          "japaneast",
+          "koreacentral",
+          "northcentralus",
+          "northeurope",
+          "southeastasia",
+          "southcentralus",
+          "uksouth",
+          "westcentralus",
+          "westus",
+          "westus2",
+          "westeurope",
+          "usgovvirginia",
+          "usgovarizona"
+        ],
+        "metadata": {
+          "description": "Specifies the Azure location where the key vault should be created."
+        },
+        "value": "usgovvirginia"
+      },
+      "enabledForDeployment": {
+        "type": "bool",
+        "defaultValue": false,
+        "allowedValues": [
+          true,
+          false
+        ],
+        "metadata": {
+          "description": "Specifies whether Azure Virtual Machines are permitted to retrieve certificates stored as secrets from the key vault."
+        }
+      },
+      "enabledForDiskEncryption": {
+        "type": "bool",
+        "defaultValue": false,
+        "allowedValues": [
+          true,
+          false
+        ],
+        "metadata": {
+          "description": "Specifies whether Azure Disk Encryption is permitted to retrieve secrets from the vault and unwrap keys."
+        }
+      },
+      "enabledForTemplateDeployment": {
+        "type": "bool",
+        "defaultValue": false,
+        "allowedValues": [
+          true,
+          false
+        ],
+        "metadata": {
+          "description": "Specifies whether Azure Resource Manager is permitted to retrieve secrets from the key vault."
+        }
+      },
+      "tenantId": {
+        "type": "string",
+        "defaultValue": "[subscription().tenantId]",
+        "metadata": {
+          "description": "Specifies the Azure Active Directory tenant ID that should be used for authenticating requests to the key vault. Get it by using Get-AzSubscription cmdlet."
+        }
+      },
+      "cosmosDbId": {
+        "type": "string",
+        "metadata": {
+          "description": "Specifies the object ID of the 'Azure Cosmos DB' principal."
+        },
+        "value": "GEN-COSMOS-DB-SP-OBJECTID"
+      },
+      "skuName": {
+        "type": "string",
+        "defaultValue": "Standard",
+        "allowedValues": [
+          "Standard",
+          "Premium"
+        ],
+        "metadata": {
+          "description": "Specifies whether the key vault is a standard vault or a premium vault."
+        }
+      },
+      "keyName": {
+        "type": "string",
+        "defaultValue": "mykey",
+        "metadata": {
+          "description": "The name off the key that will contain encryption info for Azure Machine Learning and Cosmos DB."
+        },
+        "value": "testkey"
+      }
+    },
+    "resources": [
+      {
+        "type": "Microsoft.KeyVault/vaults",
+        "name": "GEN-UNIQUE",
+        "apiVersion": "2021-04-01-preview",
+        "location": "usgovvirginia",
+        "properties": {
+          "enabledForDeployment": false,
+          "enabledForDiskEncryption": false,
+          "enabledForTemplateDeployment": false,
+          "enableSoftDelete": true,
+          "enablePurgeProtection": true,
+          "tenantId": "[subscription().tenantId]",
+          "accessPolicies": [
+            {
+              "objectId": "GEN-COSMOS-DB-SP-OBJECTID",
+              "tenantId": "[subscription().tenantId]",
+              "permissions": {
+                "keys": [
+                  "get",
+                  "wrapKey",
+                  "unwrapKey"
+                ]
+              }
+            }
+          ],
+          "sku": {
+            "name": "Standard",
+            "family": "A"
+          },
+          "networkAcls": {
+            "defaultAction": "Allow",
+            "bypass": "AzureServices"
+          }
+        }
+      },
+      {
+        "type": "Microsoft.KeyVault/vaults/keys",
+        "name": "GEN-UNIQUE/testkey",
+        "apiVersion": "2021-04-01-preview",
+        "location": "usgovvirginia",
+        "dependsOn": [
+          "Microsoft.KeyVault/vaults/GEN-UNIQUE"
+        ],
+        "properties": {
+          "kty": "RSA",
+          "keyOps": [
+            "encrypt",
+            "decrypt",
+            "sign",
+            "verify",
+            "wrapKey",
+            "unwrapKey"
+          ]
+        }
+      }
+    ],
+    "outputs": {
+      "cmk_keyvault": {
+        "type": "string",
+        "value": "[resourceId('Microsoft.KeyVault/vaults', parameters('keyVaultName'))]"
+      },
+      "cmk_keyvault_key_uri": {
+        "type": "string",
+        "value": "[reference(resourceId('Microsoft.KeyVault/vaults/keys', parameters('keyVaultName'), parameters('keyName'))).keyUriWithVersion]"
+      }
+    },
+    "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+  }
+}

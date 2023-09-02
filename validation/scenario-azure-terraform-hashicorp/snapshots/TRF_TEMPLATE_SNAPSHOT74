@@ -1,0 +1,235 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "main",
+  "contentType": "json",
+  "source": "gitConnectorAzureTerraHashicorp",
+  "paths": [
+    "/examples/mssql/mssqlvm/variables.tf",
+    "/examples/mssql/mssqlvm/main.tf"
+  ],
+  "timestamp": 1642943279816,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "TRF_TEMPLATE_SNAPSHOT",
+    "type": "terraform",
+    "collection": "terraformtemplate",
+    "paths": [
+      "/examples/mssql/mssqlvm/variables.tf",
+      "/examples/mssql/mssqlvm/main.tf"
+    ],
+    "snapshotId": "TRF_TEMPLATE_SNAPSHOT74",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "azurerm_network_security_rule",
+      "azurerm_subnet",
+      "azurerm_virtual_network",
+      "azurerm_resource_group",
+      "azurerm_subnet_network_security_group_association",
+      "azurerm_network_interface",
+      "azurerm_virtual_machine",
+      "azurerm_public_ip",
+      "azurerm_network_security_group",
+      "azurerm_network_interface_security_group_association",
+      "azurerm_mssql_virtual_machine"
+    ]
+  },
+  "snapshotId": "TRF_TEMPLATE_SNAPSHOT74",
+  "collection": "terraformtemplate",
+  "json": {
+    "provider": [
+      {
+        "azurerm": {
+          "features": [
+            {}
+          ]
+        }
+      }
+    ],
+    "resources": [
+      {
+        "type": "azurerm_resource_group",
+        "name": "example",
+        "properties": {
+          "name": "${var.prefix}-resources",
+          "location": "${var.location}",
+          "compiletime_identity": "azurerm_resource_group.example"
+        }
+      },
+      {
+        "type": "azurerm_virtual_network",
+        "name": "example",
+        "properties": {
+          "name": "${var.prefix}-VN",
+          "address_space": [
+            "10.0.0.0/16"
+          ],
+          "location": "${azurerm_resource_group.example.location}",
+          "resource_group_name": "${azurerm_resource_group.example.name}",
+          "compiletime_identity": "azurerm_virtual_network.example"
+        }
+      },
+      {
+        "type": "azurerm_subnet",
+        "name": "example",
+        "properties": {
+          "name": "${var.prefix}-SN",
+          "resource_group_name": "${azurerm_resource_group.example.name}",
+          "virtual_network_name": "${azurerm_virtual_network.example.name}",
+          "address_prefixes": [
+            "10.0.0.0/24"
+          ],
+          "compiletime_identity": "azurerm_subnet.example"
+        }
+      },
+      {
+        "type": "azurerm_subnet_network_security_group_association",
+        "name": "example",
+        "properties": {
+          "subnet_id": "${azurerm_subnet.example.id}",
+          "network_security_group_id": "${azurerm_network_security_group.example.id}",
+          "compiletime_identity": "azurerm_subnet_network_security_group_association.example"
+        }
+      },
+      {
+        "type": "azurerm_public_ip",
+        "name": "vm",
+        "properties": {
+          "name": "${var.prefix}-PIP",
+          "location": "${azurerm_resource_group.example.location}",
+          "resource_group_name": "${azurerm_resource_group.example.name}",
+          "allocation_method": "Dynamic",
+          "compiletime_identity": "azurerm_public_ip.vm"
+        }
+      },
+      {
+        "type": "azurerm_network_security_group",
+        "name": "example",
+        "properties": {
+          "name": "${var.prefix}-NSG",
+          "location": "${azurerm_resource_group.example.location}",
+          "resource_group_name": "${azurerm_resource_group.example.name}",
+          "compiletime_identity": "azurerm_network_security_group.example"
+        }
+      },
+      {
+        "type": "azurerm_network_security_rule",
+        "name": "RDPRule",
+        "properties": {
+          "name": "RDPRule",
+          "resource_group_name": "${azurerm_resource_group.example.name}",
+          "priority": 1000,
+          "direction": "Inbound",
+          "access": "Allow",
+          "protocol": "Tcp",
+          "source_port_range": "*",
+          "destination_port_range": 3389,
+          "source_address_prefix": "167.220.255.0/25",
+          "destination_address_prefix": "*",
+          "network_security_group_name": "${azurerm_network_security_group.example.name}",
+          "compiletime_identity": "azurerm_network_security_rule.RDPRule"
+        }
+      },
+      {
+        "type": "azurerm_network_security_rule",
+        "name": "MSSQLRule",
+        "properties": {
+          "name": "MSSQLRule",
+          "resource_group_name": "${azurerm_resource_group.example.name}",
+          "priority": 1001,
+          "direction": "Inbound",
+          "access": "Allow",
+          "protocol": "Tcp",
+          "source_port_range": "*",
+          "destination_port_range": 1433,
+          "source_address_prefix": "167.220.255.0/25",
+          "destination_address_prefix": "*",
+          "network_security_group_name": "${azurerm_network_security_group.example.name}",
+          "compiletime_identity": "azurerm_network_security_rule.MSSQLRule"
+        }
+      },
+      {
+        "type": "azurerm_network_interface",
+        "name": "example",
+        "properties": {
+          "name": "${var.prefix}-NIC",
+          "location": "${azurerm_resource_group.example.location}",
+          "resource_group_name": "${azurerm_resource_group.example.name}",
+          "ip_configuration": [
+            {
+              "name": "exampleconfiguration1",
+              "subnet_id": "${azurerm_subnet.example.id}",
+              "private_ip_address_allocation": "Dynamic",
+              "public_ip_address_id": "${azurerm_public_ip.vm.id}"
+            }
+          ],
+          "compiletime_identity": "azurerm_network_interface.example"
+        }
+      },
+      {
+        "type": "azurerm_network_interface_security_group_association",
+        "name": "example",
+        "properties": {
+          "network_interface_id": "${azurerm_network_interface.example.id}",
+          "network_security_group_id": "${azurerm_network_security_group.example.id}",
+          "compiletime_identity": "azurerm_network_interface_security_group_association.example"
+        }
+      },
+      {
+        "type": "azurerm_virtual_machine",
+        "name": "example",
+        "properties": {
+          "name": "${var.prefix}-VM",
+          "location": "${azurerm_resource_group.example.location}",
+          "resource_group_name": "${azurerm_resource_group.example.name}",
+          "network_interface_ids": [
+            "${azurerm_network_interface.example.id}"
+          ],
+          "vm_size": "Standard_DS14_v2",
+          "storage_image_reference": [
+            {
+              "publisher": "MicrosoftSQLServer",
+              "offer": "SQL2017-WS2016",
+              "sku": "SQLDEV",
+              "version": "laexample"
+            }
+          ],
+          "storage_os_disk": [
+            {
+              "name": "${var.prefix}-OSDisk",
+              "caching": "ReadOnly",
+              "create_option": "FromImage",
+              "managed_disk_type": "Premium_LRS"
+            }
+          ],
+          "os_profile": [
+            {
+              "computer_name": "winhost01",
+              "admin_username": "exampleadmin",
+              "admin_password": "Password1234!"
+            }
+          ],
+          "os_profile_windows_config": [
+            {
+              "timezone": "Pacific Standard Time",
+              "provision_vm_agent": true,
+              "enable_automatic_upgrades": true
+            }
+          ],
+          "compiletime_identity": "azurerm_virtual_machine.example"
+        }
+      },
+      {
+        "type": "azurerm_mssql_virtual_machine",
+        "name": "example",
+        "properties": {
+          "virtual_machine_id": "${azurerm_virtual_machine.example.id}",
+          "sql_license_type": "PAYG",
+          "compiletime_identity": "azurerm_mssql_virtual_machine.example"
+        }
+      }
+    ]
+  }
+}

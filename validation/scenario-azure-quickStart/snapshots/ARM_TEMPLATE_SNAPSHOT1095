@@ -1,0 +1,246 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAzureQuickStart",
+  "paths": [
+    "/quickstarts/microsoft.compute/vm-os-disk-and-data-disk-existing-vnet/azuredeploy.json",
+    "/quickstarts/microsoft.compute/vm-os-disk-and-data-disk-existing-vnet/azuredeploy.parameters.json"
+  ],
+  "timestamp": 1642962904368,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/quickstarts/microsoft.compute/vm-os-disk-and-data-disk-existing-vnet/azuredeploy.json",
+      "/quickstarts/microsoft.compute/vm-os-disk-and-data-disk-existing-vnet/azuredeploy.parameters.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT1095",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "microsoft.network/publicipaddresses",
+      "microsoft.network/networkinterfaces",
+      "microsoft.compute/disks",
+      "microsoft.compute/virtualmachines",
+      "microsoft.storage/storageaccounts"
+    ]
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT1095",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "vmName": {
+        "type": "string",
+        "metadata": {
+          "description": "Name of the VM"
+        },
+        "value": "GEN-UNIQUE-8"
+      },
+      "osType": {
+        "type": "string",
+        "allowedValues": [
+          "Windows",
+          "Linux"
+        ],
+        "metadata": {
+          "description": "Type of OS on the existing vhd"
+        },
+        "value": "Windows"
+      },
+      "osDiskVhdUri": {
+        "type": "string",
+        "metadata": {
+          "description": "Uri of the existing OS VHD in ARM standard or premium storage"
+        },
+        "value": "GEN-SPECIALIZED-WINVHD-URI"
+      },
+      "dataDisk0VhdUri": {
+        "type": "string",
+        "metadata": {
+          "description": "Uri of the existing data disk VHD in ARM standard or premium storage"
+        },
+        "value": "GEN-DATAVHD-URI"
+      },
+      "vmSize": {
+        "type": "string",
+        "metadata": {
+          "description": "Size of the VM"
+        },
+        "value": "Standard_D2s_v3"
+      },
+      "existingVirtualNetworkName": {
+        "type": "string",
+        "metadata": {
+          "description": "Name of the existing VNET"
+        },
+        "value": "GEN-VNET-NAME"
+      },
+      "existingVirtualNetworkResourceGroup": {
+        "type": "string",
+        "defaultValue": "[resourceGroup().name]",
+        "metadata": {
+          "description": "Name of the existing VNET resource group"
+        },
+        "value": "GEN-VNET-RESOURCEGROUP-NAME"
+      },
+      "subnetName": {
+        "type": "string",
+        "metadata": {
+          "description": "Name of the subnet in the virtual network you want to use"
+        },
+        "value": "GEN-VNET-SUBNET1-NAME"
+      },
+      "location": {
+        "type": "string",
+        "defaultValue": "[resourceGroup().location]",
+        "metadata": {
+          "description": "Location for all resources."
+        }
+      }
+    },
+    "variables": {
+      "diagStorageAccountName": "GEN-UNIQUE-8diag",
+      "publicIPAddressType": "Dynamic",
+      "subnetRef": "GEN-VNET-RESOURCEGROUP-NAME/Microsoft.Network/virtualNetworks/subnets/GEN-VNET-NAME/GEN-VNET-SUBNET1-NAME",
+      "nicName": "GEN-UNIQUE-8-nic1",
+      "publicIPAddressName": "GEN-UNIQUE-8-pip"
+    },
+    "resources": [
+      {
+        "apiVersion": "2021-01-01",
+        "type": "Microsoft.Storage/storageAccounts",
+        "name": "GEN-UNIQUE-8diag",
+        "location": "[resourceGroup().location]",
+        "sku": {
+          "name": "Standard_GRS"
+        },
+        "kind": "StorageV2",
+        "properties": {}
+      },
+      {
+        "apiVersion": "2020-11-01",
+        "type": "Microsoft.Network/publicIPAddresses",
+        "name": "GEN-UNIQUE-8-pip",
+        "location": "[resourceGroup().location]",
+        "tags": {
+          "displayName": "PublicIPAddress"
+        },
+        "properties": {
+          "publicIPAllocationMethod": "Dynamic"
+        }
+      },
+      {
+        "apiVersion": "2020-11-01",
+        "type": "Microsoft.Network/networkInterfaces",
+        "name": "GEN-UNIQUE-8-nic1",
+        "location": "[resourceGroup().location]",
+        "dependsOn": [
+          "Microsoft.Network/publicIPAddresses//GEN-UNIQUE-8-pip"
+        ],
+        "tags": {
+          "displayName": "NetworkInterface"
+        },
+        "properties": {
+          "ipConfigurations": [
+            {
+              "name": "ipconfig1",
+              "properties": {
+                "privateIPAllocationMethod": "Dynamic",
+                "publicIPAddress": {
+                  "id": "Microsoft.Network/publicIPAddresses/GEN-UNIQUE-8-pip"
+                },
+                "subnet": {
+                  "id": "GEN-VNET-RESOURCEGROUP-NAME/Microsoft.Network/virtualNetworks/subnets/GEN-VNET-NAME/GEN-VNET-SUBNET1-NAME"
+                }
+              }
+            }
+          ]
+        }
+      },
+      {
+        "type": "Microsoft.Compute/disks",
+        "apiVersion": "2017-03-30",
+        "name": "GEN-UNIQUE-8_OSdisk",
+        "location": "[resourceGroup().location]",
+        "properties": {
+          "creationData": {
+            "createOption": "Import",
+            "sourceUri": "GEN-SPECIALIZED-WINVHD-URI"
+          },
+          "osType": "Windows"
+        }
+      },
+      {
+        "type": "Microsoft.Compute/disks",
+        "apiVersion": "2017-03-30",
+        "name": "GEN-UNIQUE-8_Datadisk",
+        "location": "[resourceGroup().location]",
+        "properties": {
+          "creationData": {
+            "createOption": "Import",
+            "sourceUri": "GEN-DATAVHD-URI"
+          }
+        }
+      },
+      {
+        "apiVersion": "2020-12-01",
+        "type": "Microsoft.Compute/virtualMachines",
+        "name": "GEN-UNIQUE-8",
+        "location": "[resourceGroup().location]",
+        "tags": {
+          "displayName": "VirtualMachine"
+        },
+        "dependsOn": [
+          "Microsoft.Network/networkInterfaces//GEN-UNIQUE-8-nic1",
+          "Microsoft.Compute/disks/GEN-UNIQUE-8_OSdisk",
+          "Microsoft.Compute/disks/GEN-UNIQUE-8_Datadisk"
+        ],
+        "properties": {
+          "hardwareProfile": {
+            "vmSize": "Standard_D2s_v3"
+          },
+          "storageProfile": {
+            "osDisk": {
+              "osType": "Windows",
+              "caching": "ReadWrite",
+              "createOption": "Attach",
+              "managedDisk": {
+                "id": "Microsoft.Compute/disks/GEN-UNIQUE-8_OSdisk"
+              }
+            },
+            "dataDisks": [
+              {
+                "lun": 0,
+                "managedDisk": {
+                  "id": "Microsoft.Compute/disks/GEN-UNIQUE-8_Datadisk"
+                },
+                "caching": "ReadOnly",
+                "createOption": "Attach"
+              }
+            ]
+          },
+          "networkProfile": {
+            "networkInterfaces": [
+              {
+                "id": "Microsoft.Network/networkInterfaces/GEN-UNIQUE-8-nic1"
+              }
+            ]
+          },
+          "diagnosticsProfile": {
+            "bootDiagnostics": {
+              "enabled": true,
+              "storageUri": "[reference(variables('diagStorageAccountName'), '2021-02-01').primaryEndpoints['blob']]"
+            }
+          }
+        }
+      }
+    ],
+    "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+  }
+}

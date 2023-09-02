@@ -1,0 +1,69 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAzureQuickStart",
+  "paths": [
+    "/quickstarts/microsoft.eventgrid/event-grid-resource-events-to-webhook/azuredeploy.json",
+    "/quickstarts/microsoft.eventgrid/event-grid-resource-events-to-webhook/azuredeploy.parameters.json"
+  ],
+  "timestamp": 1642962906741,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/quickstarts/microsoft.eventgrid/event-grid-resource-events-to-webhook/azuredeploy.json",
+      "/quickstarts/microsoft.eventgrid/event-grid-resource-events-to-webhook/azuredeploy.parameters.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT1315",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "microsoft.eventgrid/eventsubscriptions"
+    ]
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT1315",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "eventSubName": {
+        "type": "string",
+        "defaultValue": "subToResources",
+        "metadata": {
+          "description": "The name of the event subscription to create."
+        }
+      },
+      "endpoint": {
+        "type": "string",
+        "metadata": {
+          "description": "The URL for the WebHook to receive events. Create your own endpoint for events."
+        },
+        "value": "GET-PREREQ-siteEventUri"
+      }
+    },
+    "resources": [
+      {
+        "type": "Microsoft.EventGrid/eventSubscriptions",
+        "name": "subToResources",
+        "apiVersion": "2020-06-01",
+        "properties": {
+          "destination": {
+            "endpointType": "WebHook",
+            "properties": {
+              "endpointUrl": "GET-PREREQ-siteEventUri"
+            }
+          },
+          "filter": {
+            "isSubjectCaseSensitive": false
+          }
+        }
+      }
+    ],
+    "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+  }
+}

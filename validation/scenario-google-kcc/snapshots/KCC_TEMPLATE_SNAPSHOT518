@@ -2,12 +2,12 @@
   "structure": "filesystem",
   "error": null,
   "reference": "master",
-  "contentType": "yaml",
+  "contentType": "json",
   "source": "gitConnectorGoogleKcc",
   "paths": [
-    "/samples/resources/sqlinstance/private-ip-instance/compute_v1beta1_computeaddress.yaml"
+    "/samples/resources/logginglogsink/project-sink/resourcemanager_v1beta1_project.yaml"
   ],
-  "timestamp": 1628765151002,
+  "timestamp": 1642973304549,
   "queryuser": null,
   "checksum": "99914b932bd37a50b983c5e7c90ae93b",
   "node": {
@@ -15,27 +15,30 @@
     "type": "kcc",
     "collection": "kcctemplate",
     "paths": [
-      "/samples/resources/sqlinstance/private-ip-instance/compute_v1beta1_computeaddress.yaml"
+      "/samples/resources/logginglogsink/project-sink/resourcemanager_v1beta1_project.yaml"
     ],
     "snapshotId": "KCC_TEMPLATE_SNAPSHOT518",
     "status": "active",
-    "validate": true
+    "validate": true,
+    "resourceTypes": [
+      "project"
+    ]
   },
   "snapshotId": "KCC_TEMPLATE_SNAPSHOT518",
   "collection": "kcctemplate",
   "json": {
-    "apiVersion": "compute.cnrm.cloud.google.com/v1beta1",
-    "kind": "ComputeAddress",
+    "apiVersion": "resourcemanager.cnrm.cloud.google.com/v1beta1",
+    "kind": "Project",
     "metadata": {
-      "name": "sqlinstance-dep-private-ip"
+      "annotations": {
+        "cnrm.cloud.google.com/organization-id": "${ORG_ID?}"
+      },
+      "name": "logginglogsink-dep-project"
     },
     "spec": {
-      "addressType": "INTERNAL",
-      "location": "global",
-      "purpose": "VPC_PEERING",
-      "prefixLength": 16,
-      "networkRef": {
-        "name": "sqlinstance-dep-private-ip"
+      "name": "Project Sink Sample",
+      "billingAccountRef": {
+        "external": "${BILLING_ACCOUNT_ID?}"
       }
     }
   }

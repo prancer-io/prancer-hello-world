@@ -1,0 +1,322 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAzureQuickStart",
+  "paths": [
+    "/application-workloads/lap/lap-neo4j-ubuntu/azuredeploy.json",
+    "/application-workloads/lap/lap-neo4j-ubuntu/azuredeploy.parameters.json"
+  ],
+  "timestamp": 1642962891040,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/application-workloads/lap/lap-neo4j-ubuntu/azuredeploy.json",
+      "/application-workloads/lap/lap-neo4j-ubuntu/azuredeploy.parameters.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT229",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "microsoft.resources/deployments"
+    ]
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT229",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "adminUsername": {
+        "type": "string",
+        "metadata": {
+          "description": "Administrator user name used when provisioning virtual machines"
+        },
+        "value": "GEN-UNIQUE"
+      },
+      "dnsLabelPrefix": {
+        "type": "string",
+        "metadata": {
+          "description": "DNS Label for the Public IP. Must be lowercase. It should match with the following regular expression: ^[a-z][a-z0-9-]{1,61}[a-z0-9]$ or it will raise an error."
+        },
+        "value": "GEN-UNIQUE"
+      },
+      "lapVmSize": {
+        "type": "string",
+        "defaultValue": "Standard_D2_v3",
+        "metadata": {
+          "description": "The size of the virtual machines used when provisioning the Lap node"
+        },
+        "value": "Standard_D2_v3"
+      },
+      "neo4jNodes": {
+        "type": "int",
+        "defaultValue": 1,
+        "metadata": {
+          "description": "Number of Neo4J node (1 is the default)"
+        },
+        "value": 1
+      },
+      "neo4jVmSize": {
+        "type": "string",
+        "defaultValue": "Standard_D2_v3",
+        "metadata": {
+          "description": "The size of the virtual machines used when provisioning Neo4J node(s)"
+        }
+      },
+      "location": {
+        "type": "string",
+        "defaultValue": "[resourceGroup().location]",
+        "metadata": {
+          "description": "Location for all resources."
+        }
+      },
+      "authenticationType": {
+        "type": "string",
+        "defaultValue": "sshPublicKey",
+        "allowedValues": [
+          "sshPublicKey",
+          "password"
+        ],
+        "metadata": {
+          "description": "Type of authentication to use on the Virtual Machine. SSH key is recommended."
+        }
+      },
+      "adminPasswordOrKey": {
+        "type": "securestring",
+        "metadata": {
+          "description": "SSH Key or password for the Virtual Machine. SSH key is recommended."
+        },
+        "value": "GEN-SSH-PUB-KEY"
+      },
+      "_artifactsLocation": {
+        "type": "string",
+        "metadata": {
+          "description": "The base URI where artifacts required by this template are located including a trailing '/'"
+        },
+        "defaultValue": "[deployment().properties.templatelink.uri]"
+      },
+      "_artifactsLocationSasToken": {
+        "type": "securestring",
+        "metadata": {
+          "description": "The sasToken required to access _artifactsLocation.  When the template is deployed using the accompanying scripts, a sasToken will be automatically generated. Use the defaultValue if the staging location is not secured."
+        },
+        "defaultValue": ""
+      }
+    },
+    "variables": {
+      "sharedTemplateUrl": "[uri(parameters('_artifactsLocation'), concat('nested/shared-resources.json', parameters('_artifactsLocationSasToken')))]",
+      "lanpLapTemplateUrl": "[uri(parameters('_artifactsLocation'), concat('nested/lanplap-resources.json', parameters('_artifactsLocationSasToken')))]",
+      "lanpneo4jTemplateUrl": "[uri(parameters('_artifactsLocation'), concat('nested/lanpneo4j-resources.json', parameters('_artifactsLocationSasToken')))]",
+      "namespace": "lanp-",
+      "networkSettings": {
+        "virtualNetworkName": "myVNET",
+        "addressPrefix": "10.0.0.0/16",
+        "subnet": {
+          "dse": {
+            "name": "dse",
+            "prefix": "10.0.0.0/24",
+            "vnet": "myVNET"
+          }
+        },
+        "statics": {
+          "clusterRange": {
+            "base": "10.0.0.",
+            "start": 5
+          },
+          "lapip": "10.0.0.240",
+          "neo4jip": "10.0.0.10"
+        }
+      },
+      "lapOsSettings": {
+        "imageReference": {
+          "publisher": "Canonical",
+          "offer": "UbuntuServer",
+          "sku": "16.04.0-LTS",
+          "version": "latest"
+        },
+        "scripts": [
+          "[uri(parameters('_artifactsLocation'), concat('scripts/install-lap.sh', parameters('_artifactsLocationSasToken')))]"
+        ]
+      },
+      "neo4jOsSettings": {
+        "imageReference": {
+          "publisher": "Canonical",
+          "offer": "UbuntuServer",
+          "sku": "16.04.0-LTS",
+          "version": "latest"
+        },
+        "scripts": [
+          "[uri(parameters('_artifactsLocation'), concat('scripts/install-neo4j.sh', parameters('_artifactsLocationSasToken')))]"
+        ]
+      }
+    },
+    "resources": [
+      {
+        "name": "shared",
+        "type": "Microsoft.Resources/deployments",
+        "apiVersion": "2020-10-01",
+        "properties": {
+          "mode": "Incremental",
+          "templateLink": {
+            "uri": "[uri(parameters('_artifactsLocation'), concat('nested/shared-resources.json', parameters('_artifactsLocationSasToken')))]",
+            "contentVersion": "1.0.0.0"
+          },
+          "parameters": {
+            "networkSettings": {
+              "value": {
+                "virtualNetworkName": "myVNET",
+                "addressPrefix": "10.0.0.0/16",
+                "subnet": {
+                  "dse": {
+                    "name": "dse",
+                    "prefix": "10.0.0.0/24",
+                    "vnet": "myVNET"
+                  }
+                },
+                "statics": {
+                  "clusterRange": {
+                    "base": "10.0.0.",
+                    "start": 5
+                  },
+                  "lapip": "10.0.0.240",
+                  "neo4jip": "10.0.0.10"
+                }
+              }
+            },
+            "location": {
+              "value": "[resourceGroup().location]"
+            }
+          }
+        }
+      },
+      {
+        "name": "lanpLapNode",
+        "type": "Microsoft.Resources/deployments",
+        "apiVersion": "2020-10-01",
+        "dependsOn": [
+          "Microsoft.Resources/deployments//shared"
+        ],
+        "properties": {
+          "mode": "Incremental",
+          "templateLink": {
+            "uri": "[uri(parameters('_artifactsLocation'), concat('nested/lanplap-resources.json', parameters('_artifactsLocationSasToken')))]",
+            "contentVersion": "1.0.0.0"
+          },
+          "parameters": {
+            "adminUsername": {
+              "value": "GEN-UNIQUE"
+            },
+            "namespace": {
+              "value": "lanp-"
+            },
+            "vmbasename": {
+              "value": "Lap"
+            },
+            "subnet": {
+              "value": "(networkSettings).subnet.dse"
+            },
+            "dnsname": {
+              "value": "GEN-UNIQUE"
+            },
+            "staticIp": {
+              "value": "(networkSettings).statics.lapip"
+            },
+            "vmSize": {
+              "value": "Standard_D2_v3"
+            },
+            "osSettings": {
+              "value": {
+                "imageReference": {
+                  "publisher": "Canonical",
+                  "offer": "UbuntuServer",
+                  "sku": "16.04.0-LTS",
+                  "version": "latest"
+                },
+                "scripts": [
+                  "[uri(parameters('_artifactsLocation'), concat('scripts/install-lap.sh', parameters('_artifactsLocationSasToken')))]"
+                ]
+              }
+            },
+            "authenticationType": {
+              "value": "sshPublicKey"
+            },
+            "adminPasswordOrKey": {
+              "value": "GEN-SSH-PUB-KEY"
+            },
+            "location": {
+              "value": "[resourceGroup().location]"
+            }
+          }
+        }
+      },
+      {
+        "name": "lanpNeo4jNodecopyindex()",
+        "type": "Microsoft.Resources/deployments",
+        "apiVersion": "2020-10-01",
+        "dependsOn": [
+          "Microsoft.Resources/deployments//shared",
+          "Microsoft.Resources/deployments//lanpLapNode"
+        ],
+        "copy": {
+          "name": "vmLoop",
+          "count": 1
+        },
+        "properties": {
+          "mode": "Incremental",
+          "templateLink": {
+            "uri": "[uri(parameters('_artifactsLocation'), concat('nested/lanpneo4j-resources.json', parameters('_artifactsLocationSasToken')))]",
+            "contentVersion": "1.0.0.0"
+          },
+          "parameters": {
+            "adminUsername": {
+              "value": "GEN-UNIQUE"
+            },
+            "namespace": {
+              "value": "lanp-"
+            },
+            "vmbasename": {
+              "value": "neo4jcopyindex()"
+            },
+            "location": {
+              "value": "[resourceGroup().location]"
+            },
+            "neo4jstaticIp": {
+              "value": "(networkSettings).statics.neo4jip"
+            },
+            "subnet": {
+              "value": "(networkSettings).subnet.dse"
+            },
+            "vmSize": {
+              "value": "Standard_D2_v3"
+            },
+            "osSettings": {
+              "value": {
+                "imageReference": {
+                  "publisher": "Canonical",
+                  "offer": "UbuntuServer",
+                  "sku": "16.04.0-LTS",
+                  "version": "latest"
+                },
+                "scripts": [
+                  "[uri(parameters('_artifactsLocation'), concat('scripts/install-neo4j.sh', parameters('_artifactsLocationSasToken')))]"
+                ]
+              }
+            },
+            "authenticationType": {
+              "value": "sshPublicKey"
+            },
+            "adminPasswordOrKey": {
+              "value": "GEN-SSH-PUB-KEY"
+            }
+          }
+        }
+      }
+    ],
+    "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+  }
+}

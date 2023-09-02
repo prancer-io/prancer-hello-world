@@ -1,0 +1,84 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorGoogleKcc",
+  "paths": [
+    "/samples/resources/monitoringuptimecheckconfig/http-uptime-check-config/monitoring_v1beta1_monitoringuptimecheckconfig.yaml"
+  ],
+  "timestamp": 1642973304744,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "KCC_TEMPLATE_SNAPSHOT",
+    "type": "kcc",
+    "collection": "kcctemplate",
+    "paths": [
+      "/samples/resources/monitoringuptimecheckconfig/http-uptime-check-config/monitoring_v1beta1_monitoringuptimecheckconfig.yaml"
+    ],
+    "snapshotId": "KCC_TEMPLATE_SNAPSHOT555",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "monitoringuptimecheckconfig"
+    ]
+  },
+  "snapshotId": "KCC_TEMPLATE_SNAPSHOT555",
+  "collection": "kcctemplate",
+  "json": {
+    "apiVersion": "monitoring.cnrm.cloud.google.com/v1beta1",
+    "kind": "MonitoringUptimeCheckConfig",
+    "metadata": {
+      "name": "monitoringuptimecheckconfig-sample"
+    },
+    "spec": {
+      "projectRef": {
+        "external": "projects/${PROJECT_ID?}"
+      },
+      "displayName": "A sample http uptime check config",
+      "period": "60s",
+      "timeout": "30s",
+      "contentMatchers": [
+        {
+          "content": ".*",
+          "matcher": "MATCHES_REGEX"
+        }
+      ],
+      "selectedRegions": [
+        "USA"
+      ],
+      "monitoredResource": {
+        "type": "uptime_url",
+        "filterLabels": {
+          "host": "192.168.1.1",
+          "project_id": "${PROJECT_ID?}"
+        }
+      },
+      "httpCheck": {
+        "requestMethod": "POST",
+        "useSsl": true,
+        "path": "/main",
+        "port": 80,
+        "authInfo": {
+          "username": "test",
+          "password": {
+            "valueFrom": {
+              "secretKeyRef": {
+                "name": "monitoringuptimecheckconfig-dep",
+                "key": "password"
+              }
+            }
+          }
+        },
+        "maskHeaders": true,
+        "headers": {
+          "header-one": "value-one"
+        },
+        "contentType": "URL_ENCODED",
+        "validateSsl": false,
+        "body": "c3RyaW5nCg=="
+      }
+    }
+  }
+}

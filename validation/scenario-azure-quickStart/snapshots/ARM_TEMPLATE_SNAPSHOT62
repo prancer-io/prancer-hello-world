@@ -1,0 +1,311 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAzureQuickStart",
+  "paths": [
+    "/application-workloads/chef/datameer-trend-chef-riskanalysis/nested/datameer-hdinsight.json",
+    "/application-workloads/chef/datameer-trend-chef-riskanalysis/nested/datameer-hdinsight.parameters.json"
+  ],
+  "timestamp": 1642962884434,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/application-workloads/chef/datameer-trend-chef-riskanalysis/nested/datameer-hdinsight.json",
+      "/application-workloads/chef/datameer-trend-chef-riskanalysis/nested/datameer-hdinsight.parameters.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT62",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "microsoft.hdinsight/clusters",
+      "microsoft.storage/storageaccounts",
+      "microsoft.resources/deployments"
+    ]
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT62",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "clusterType": {
+        "type": "string",
+        "allowedValues": [
+          "hadoop",
+          "hbase",
+          "storm",
+          "spark"
+        ],
+        "metadata": {
+          "description": "The type of the HDInsight cluster to create."
+        },
+        "value": "hadoop"
+      },
+      "clusterName": {
+        "type": "string",
+        "metadata": {
+          "description": "The name of the HDInsight cluster to create."
+        },
+        "value": "hdi-datameer-avyan-cluster"
+      },
+      "clusterLoginUserName": {
+        "type": "string",
+        "metadata": {
+          "description": "These credentials can be used to submit jobs to the cluster and to log into cluster dashboards."
+        },
+        "value": "hdiadmin"
+      },
+      "clusterLoginPassword": {
+        "type": "securestring",
+        "metadata": {
+          "description": "The password must be at least 10 characters in length and must contain at least one digit, one non-alphanumeric character, and one upper or lower case letter."
+        },
+        "value": "GEN-PASSWORD"
+      },
+      "sshUserName": {
+        "type": "string",
+        "metadata": {
+          "description": "These credentials can be used to remotely access the cluster."
+        },
+        "value": "hdiuser"
+      },
+      "sshPassword": {
+        "type": "securestring",
+        "metadata": {
+          "description": "The password must be at least 10 characters in length and must contain at least one digit, one non-alphanumeric character, and one upper or lower case letter."
+        },
+        "value": "GEN-PASSWORD"
+      },
+      "clusterWorkerNodeCount": {
+        "type": "int",
+        "defaultValue": 2,
+        "metadata": {
+          "description": "The number of nodes in the HDInsight cluster."
+        }
+      },
+      "storageAccount": {
+        "type": "string",
+        "metadata": {
+          "description": "The name of the storage account to use"
+        },
+        "value": "stgmsignite2016"
+      },
+      "location": {
+        "type": "string",
+        "defaultValue": "westus",
+        "allowedValues": [
+          "westus",
+          "eastus",
+          "centralus"
+        ],
+        "metadata": {
+          "description": "Location where all the resources will be deployed"
+        },
+        "value": "westus"
+      },
+      "clusterVNetName": {
+        "type": "string",
+        "metadata": {
+          "description": "The name of the VirtualNetwork that the cluster need to bind to"
+        },
+        "value": "datameerP2PVnet"
+      },
+      "clusterVnetAddressSpace": {
+        "type": "string",
+        "metadata": {
+          "description": "The VNet subnet CIDR start address"
+        },
+        "value": "10.7.0.0/16"
+      },
+      "clusterVNetSubnetAddressRange": {
+        "type": "string",
+        "metadata": {
+          "description": "The VNet subnet CIDR address range"
+        },
+        "value": "10.7.4.0/24"
+      },
+      "clusterVNetSubnetName": {
+        "type": "string",
+        "metadata": {
+          "description": "The VNet subnet Name of the HD cluster"
+        },
+        "value": "hdi-datameer-avyan-clustersubnet"
+      },
+      "datameerTags": {
+        "type": "object"
+      },
+      "trendmicroTags": {
+        "type": "object"
+      },
+      "chefSoftwareTags": {
+        "type": "object"
+      },
+      "quickstartTags": {
+        "type": "object"
+      }
+    },
+    "variables": {
+      "storageAccountName": "stgmsignite2016",
+      "defaultApiVersion": "2018-02-01",
+      "clusterApiVersion": "2015-03-01-preview",
+      "clusterVNetName": "datameerP2PVnet",
+      "clusterVNetSubnetName": "hdi-datameer-avyan-clustersubnet",
+      "clusterVnetAddressSpace": "10.7.0.0/16",
+      "clusterVNetSubnetAddressRange": "10.7.4.0/24"
+    },
+    "resources": [
+      {
+        "name": "stgmsignite2016",
+        "type": "Microsoft.Storage/storageAccounts",
+        "location": "westus",
+        "apiVersion": "2018-02-01",
+        "tags": {
+          "quickstartName": "quickstartTags",
+          "provider": "datameerTags"
+        },
+        "dependsOn": [],
+        "sku": {
+          "name": "Standard_LRS"
+        },
+        "properties": {}
+      },
+      {
+        "name": "hdi-datameer-avyan-cluster",
+        "type": "Microsoft.HDInsight/clusters",
+        "location": "westus",
+        "apiVersion": "2015-03-01-preview",
+        "tags": {
+          "quickstartName": "quickstartTags",
+          "provider": "datameerTags"
+        },
+        "dependsOn": [
+          "Microsoft.Storage/storageAccounts/stgmsignite2016"
+        ],
+        "properties": {
+          "clusterVersion": "3.2",
+          "osType": "Linux",
+          "clusterDefinition": {
+            "kind": "hadoop",
+            "configurations": {
+              "gateway": {
+                "restAuthCredential.isEnabled": true,
+                "restAuthCredential.username": "hdiadmin",
+                "restAuthCredential.password": "GEN-PASSWORD"
+              }
+            }
+          },
+          "storageProfile": {
+            "storageaccounts": [
+              {
+                "name": "[replace(replace(concat(reference(concat('Microsoft.Storage/storageAccounts/', variables('storageAccountName')), variables('defaultApiVersion')).primaryEndpoints.blob),'https:',''),'/','')]",
+                "isDefault": true,
+                "container": "hdi-datameer-avyan-cluster",
+                "key": "[listKeys(resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName')), variables('defaultApiVersion')).key1]"
+              }
+            ]
+          },
+          "computeProfile": {
+            "roles": [
+              {
+                "name": "headnode",
+                "targetInstanceCount": 2,
+                "hardwareProfile": {
+                  "vmSize": "Standard_D4_v3"
+                },
+                "osProfile": {
+                  "linuxOperatingSystemProfile": {
+                    "username": "hdiuser",
+                    "password": "GEN-PASSWORD"
+                  }
+                },
+                "virtualNetworkProfile": {
+                  "id": "Microsoft.Network/virtualNetworks/datameerP2PVnet",
+                  "subnet": "Microsoft.Network/virtualNetworks/datameerP2PVnet/subnets/hdi-datameer-avyan-clustersubnet"
+                },
+                "scriptActions": []
+              },
+              {
+                "name": "workernode",
+                "targetInstanceCount": 2,
+                "hardwareProfile": {
+                  "vmSize": "Standard_D4_v3"
+                },
+                "osProfile": {
+                  "linuxOperatingSystemProfile": {
+                    "username": "hdiuser",
+                    "password": "GEN-PASSWORD"
+                  }
+                },
+                "virtualNetworkProfile": {
+                  "id": "Microsoft.Network/virtualNetworks/datameerP2PVnet",
+                  "subnet": "Microsoft.Network/virtualNetworks/datameerP2PVnet/subnets/hdi-datameer-avyan-clustersubnet"
+                },
+                "scriptActions": []
+              },
+              {
+                "name": "zookeepernode",
+                "targetInstanceCount": 3,
+                "hardwareProfile": {
+                  "vmSize": "Small"
+                },
+                "osProfile": {
+                  "linuxOperatingSystemProfile": {
+                    "username": "hdiuser",
+                    "password": "GEN-PASSWORD"
+                  }
+                },
+                "virtualNetworkProfile": {
+                  "id": "Microsoft.Network/virtualNetworks/datameerP2PVnet",
+                  "subnet": "Microsoft.Network/virtualNetworks/datameerP2PVnet/subnets/hdi-datameer-avyan-clustersubnet"
+                },
+                "scriptActions": []
+              }
+            ]
+          }
+        }
+      },
+      {
+        "type": "Microsoft.Resources/deployments",
+        "name": "datameerdatameer_2016-08-12T19.37.23.326Z",
+        "apiVersion": "2015-01-01",
+        "properties": {
+          "mode": "Incremental",
+          "templateLink": {
+            "uri": "https://gallery.azure.com/artifact/20151001/datameer.datameerdatameer.1.0.2/Artifacts/mainTemplate.json",
+            "contentVersion": "1.0.0.0"
+          },
+          "parameters": {
+            "clusterName": {
+              "value": "hdi-datameer-avyan-cluster"
+            },
+            "galleryPackageIdentity": {
+              "value": "datameer.datameerdatameer.1.0.2"
+            },
+            "edgeNodeSize": {
+              "value": "Standard_D4_v3"
+            }
+          }
+        },
+        "dependsOn": [
+          "Microsoft.HDInsight/clusters/hdi-datameer-avyan-cluster"
+        ]
+      }
+    ],
+    "outputs": {
+      "cluster": {
+        "type": "object",
+        "value": "[reference(resourceId('Microsoft.HDInsight/clusters',parameters('clusterName')))]"
+      },
+      "datameerAppURL": {
+        "type": "string",
+        "value": "[concat('https://',parameters('clusterName'),'-dtu.apps.azurehdinsight.net:443')]"
+      }
+    },
+    "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+  }
+}

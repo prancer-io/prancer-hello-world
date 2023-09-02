@@ -1,0 +1,139 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAzureQuickStart",
+  "paths": [
+    "/application-workloads/airflow/mongodb-sharded-on-centos/nested/shared-resources.json"
+  ],
+  "timestamp": 1642962883513,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/application-workloads/airflow/mongodb-sharded-on-centos/nested/shared-resources.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT26",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "microsoft.network/virtualnetworks",
+      "microsoft.compute/availabilitysets",
+      "microsoft.network/networksecuritygroups"
+    ]
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT26",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "networkSettings": {
+        "type": "object",
+        "metadata": {
+          "Description": "Network settings object"
+        }
+      },
+      "namespace": {
+        "type": "string",
+        "metadata": {
+          "Description": "namespace"
+        }
+      },
+      "location": {
+        "type": "string",
+        "metadata": {
+          "description": "Location for all resources."
+        }
+      }
+    },
+    "variables": {
+      "securityGroupName": "namespacensg",
+      "nsgName": "namespacensg"
+    },
+    "resources": [
+      {
+        "apiVersion": "2019-07-01",
+        "type": "Microsoft.Compute/availabilitySets",
+        "name": "namespaceset",
+        "location": "location",
+        "sku": {
+          "name": "Aligned"
+        },
+        "properties": {
+          "platformFaultDomainCount": 2,
+          "platformUpdateDomainCount": 5
+        }
+      },
+      {
+        "apiVersion": "2018-10-01",
+        "type": "Microsoft.Network/networkSecurityGroups",
+        "name": "namespacensg",
+        "location": "location",
+        "properties": {
+          "securityRules": [
+            {
+              "name": "SSH",
+              "properties": {
+                "description": "Allows SSH traffic",
+                "protocol": "Tcp",
+                "sourcePortRange": "*",
+                "destinationPortRange": "22",
+                "sourceAddressPrefix": "*",
+                "destinationAddressPrefix": "*",
+                "access": "Allow",
+                "priority": 100,
+                "direction": "Inbound"
+              }
+            },
+            {
+              "name": "MongoDB",
+              "properties": {
+                "description": "Allows MongoDB traffic",
+                "protocol": "Tcp",
+                "sourcePortRange": "*",
+                "destinationPortRange": "27017",
+                "sourceAddressPrefix": "*",
+                "destinationAddressPrefix": "*",
+                "access": "Allow",
+                "priority": 110,
+                "direction": "Inbound"
+              }
+            }
+          ]
+        }
+      },
+      {
+        "apiVersion": "2019-07-01",
+        "type": "Microsoft.Network/virtualNetworks",
+        "name": "networkSettings",
+        "location": "location",
+        "dependsOn": [
+          "Microsoft.Network/networkSecurityGroups//namespacensg"
+        ],
+        "properties": {
+          "addressSpace": {
+            "addressPrefixes": [
+              "networkSettings"
+            ]
+          },
+          "subnets": [
+            {
+              "name": "networkSettings",
+              "properties": {
+                "addressPrefix": "networkSettings",
+                "networkSecurityGroup": {
+                  "id": "Microsoft.Network/networkSecurityGroups/namespacensg"
+                }
+              }
+            }
+          ]
+        }
+      }
+    ],
+    "\uff04schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#"
+  }
+}

@@ -2,12 +2,12 @@
   "structure": "filesystem",
   "error": null,
   "reference": "master",
-  "contentType": "yaml",
+  "contentType": "json",
   "source": "gitConnectorGoogleKcc",
   "paths": [
-    "/samples/resources/iampolicy/kms-policy-with-condition/kms_v1beta1_kmskeyring.yaml"
+    "/samples/resources/dnsrecordset/dnssec-sshfp-record-set/dns_v1beta1_dnsrecordset.yaml"
   ],
-  "timestamp": 1628765147763,
+  "timestamp": 1642973304064,
   "queryuser": null,
   "checksum": "99914b932bd37a50b983c5e7c90ae93b",
   "node": {
@@ -15,22 +15,33 @@
     "type": "kcc",
     "collection": "kcctemplate",
     "paths": [
-      "/samples/resources/iampolicy/kms-policy-with-condition/kms_v1beta1_kmskeyring.yaml"
+      "/samples/resources/dnsrecordset/dnssec-sshfp-record-set/dns_v1beta1_dnsrecordset.yaml"
     ],
     "snapshotId": "KCC_TEMPLATE_SNAPSHOT401",
     "status": "active",
-    "validate": true
+    "validate": true,
+    "resourceTypes": [
+      "dnsrecordset"
+    ]
   },
   "snapshotId": "KCC_TEMPLATE_SNAPSHOT401",
   "collection": "kcctemplate",
   "json": {
-    "apiVersion": "kms.cnrm.cloud.google.com/v1beta1",
-    "kind": "KMSKeyRing",
+    "apiVersion": "dns.cnrm.cloud.google.com/v1beta1",
+    "kind": "DNSRecordSet",
     "metadata": {
-      "name": "iampolicy-dep-condition"
+      "name": "dnsrecordset-sample-dnssecsshfp"
     },
     "spec": {
-      "location": "us-central1"
+      "name": "host.secure.example.com.",
+      "type": "SSHFP",
+      "ttl": 300,
+      "managedZoneRef": {
+        "name": "dnsrecordset-dep-dnssecsshfp"
+      },
+      "rrdatas": [
+        "2 1 123456789abcdef67890123456789abcdef67890"
+      ]
     }
   }
 }

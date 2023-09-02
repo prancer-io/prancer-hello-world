@@ -1,0 +1,141 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorGoogleKcc",
+  "paths": [
+    "/samples/resources/networkservicesgrpcroute/networkservices_v1beta1_networkservicesgrpcroute.yaml"
+  ],
+  "timestamp": 1642973304866,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "KCC_TEMPLATE_SNAPSHOT",
+    "type": "kcc",
+    "collection": "kcctemplate",
+    "paths": [
+      "/samples/resources/networkservicesgrpcroute/networkservices_v1beta1_networkservicesgrpcroute.yaml"
+    ],
+    "snapshotId": "KCC_TEMPLATE_SNAPSHOT574",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "networkservicesgrpcroute"
+    ]
+  },
+  "snapshotId": "KCC_TEMPLATE_SNAPSHOT574",
+  "collection": "kcctemplate",
+  "json": {
+    "apiVersion": "networkservices.cnrm.cloud.google.com/v1beta1",
+    "kind": "NetworkServicesGRPCRoute",
+    "metadata": {
+      "labels": {
+        "key-one": "value-one"
+      },
+      "name": "networkservicesgrpcroute-sample"
+    },
+    "spec": {
+      "projectRef": {
+        "external": "projects/${PROJECT_ID?}"
+      },
+      "location": "global",
+      "hostnames": [
+        "baz.bar"
+      ],
+      "meshes": [],
+      "rules": [
+        {
+          "matches": [
+            {
+              "method": {
+                "grpcService": "helloworld.Greeter",
+                "grpcMethod": "SayHello"
+              }
+            }
+          ],
+          "headers": [
+            {
+              "key": "foo",
+              "value": "bar"
+            }
+          ],
+          "action": {
+            "destinations": [
+              {
+                "serviceRef": {
+                  "name": "networkservicesgrpcroute-dep"
+                }
+              }
+            ],
+            "faultInjectionPolicy": {
+              "abort": {
+                "httpStatus": 501,
+                "percentage": 1
+              },
+              "delay": {
+                "fixedDelay": "10s",
+                "percentage": 2
+              }
+            },
+            "requestHeaderModifier": {
+              "add": {
+                "foo1": "bar1",
+                "baz1": "qux1"
+              },
+              "set": {
+                "foo2": "bar2",
+                "baz2": "qux2"
+              },
+              "remove": [
+                "foo3",
+                "bar3"
+              ]
+            },
+            "requestMirrorPolicy": {
+              "destination": {
+                "serviceRef": {
+                  "name": "networkservicesgrpcroute-dep"
+                }
+              }
+            },
+            "responseHeaderModifier": {
+              "add": {
+                "foo1": "bar1",
+                "baz1": "qux1"
+              },
+              "set": {
+                "foo2": "bar2",
+                "baz2": "qux2"
+              },
+              "remove": [
+                "foo3",
+                "bar3"
+              ]
+            },
+            "retryPolicy": {
+              "numRetries": 3,
+              "perTryTimeout": "5s",
+              "retryConditions": [
+                "refused-stream",
+                "cancelled"
+              ]
+            },
+            "timeout": "30s"
+          }
+        },
+        {
+          "action": {
+            "destinations": [
+              {
+                "serviceRef": {
+                  "name": "networkservicesgrpcroute-dep"
+                }
+              }
+            ]
+          }
+        }
+      ]
+    }
+  }
+}

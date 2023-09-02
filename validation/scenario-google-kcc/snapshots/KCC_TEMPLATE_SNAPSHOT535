@@ -2,12 +2,12 @@
   "structure": "filesystem",
   "error": null,
   "reference": "master",
-  "contentType": "yaml",
+  "contentType": "json",
   "source": "gitConnectorGoogleKcc",
   "paths": [
-    "/samples/resources/storagenotification/storage_v1beta1_storagenotification.yaml"
+    "/samples/resources/monitoringnotificationchannel/sms-monitoring-notification-channel/monitoring_v1beta1_monitoringnotificationchannel.yaml"
   ],
-  "timestamp": 1628765151493,
+  "timestamp": 1642973304621,
   "queryuser": null,
   "checksum": "99914b932bd37a50b983c5e7c90ae93b",
   "node": {
@@ -15,31 +15,34 @@
     "type": "kcc",
     "collection": "kcctemplate",
     "paths": [
-      "/samples/resources/storagenotification/storage_v1beta1_storagenotification.yaml"
+      "/samples/resources/monitoringnotificationchannel/sms-monitoring-notification-channel/monitoring_v1beta1_monitoringnotificationchannel.yaml"
     ],
     "snapshotId": "KCC_TEMPLATE_SNAPSHOT535",
     "status": "active",
-    "validate": true
+    "validate": true,
+    "resourceTypes": [
+      "monitoringnotificationchannel"
+    ]
   },
   "snapshotId": "KCC_TEMPLATE_SNAPSHOT535",
   "collection": "kcctemplate",
   "json": {
-    "apiVersion": "storage.cnrm.cloud.google.com/v1beta1",
-    "kind": "StorageNotification",
+    "apiVersion": "monitoring.cnrm.cloud.google.com/v1beta1",
+    "kind": "MonitoringNotificationChannel",
     "metadata": {
-      "name": "storagenotification-sample"
+      "labels": {
+        "response-priority": "intervention",
+        "target-user": "on-call"
+      },
+      "name": "monitoringnotificationchannel-sample-sms"
     },
     "spec": {
-      "bucketRef": {
-        "name": "${PROJECT_ID?}-storagenotification-dep"
+      "type": "sms",
+      "labels": {
+        "number": "12025550196"
       },
-      "payloadFormat": "JSON_API_V1",
-      "topicRef": {
-        "name": "storagenotification-dep"
-      },
-      "eventTypes": [
-        "OBJECT_ARCHIVE"
-      ]
+      "description": "A channel that sends notifications via Short Message Service (SMS).",
+      "enabled": true
     }
   }
 }

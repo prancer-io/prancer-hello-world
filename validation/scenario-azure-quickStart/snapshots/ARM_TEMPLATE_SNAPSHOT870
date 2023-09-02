@@ -1,0 +1,86 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAzureQuickStart",
+  "paths": [
+    "/demos/web-app-regional-vnet-private-endpoint-sql-storage/nestedtemplates/private_link_ipconfigs.json"
+  ],
+  "timestamp": 1642962902382,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/demos/web-app-regional-vnet-private-endpoint-sql-storage/nestedtemplates/private_link_ipconfigs.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT870",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "microsoft.resources/deployments"
+    ]
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT870",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "privateDnsZoneName": {
+        "type": "string",
+        "metadata": {
+          "description": "private dns zone name"
+        }
+      },
+      "privateLinkNicResource": {
+        "type": "string",
+        "metadata": {
+          "description": "private endpoint Nic ipConfigurations array resource id"
+        }
+      },
+      "privateLinkNicIpConfigTemplateUri": {
+        "type": "string",
+        "metadata": {
+          "description": "ip configurations template resource URI"
+        }
+      },
+      "privateDnsRecordTemplateUri": {
+        "type": "string",
+        "metadata": {
+          "description": "private dns record template resource URI"
+        }
+      }
+    },
+    "variables": {},
+    "resources": [
+      {
+        "type": "Microsoft.Resources/deployments",
+        "apiVersion": "2019-10-01",
+        "name": "private-link-ipconfigs",
+        "properties": {
+          "mode": "Incremental",
+          "parameters": {
+            "privateDnsZoneName": {
+              "value": "privateDnsZoneName"
+            },
+            "privateLinkNicIpConfigs": {
+              "value": "[reference(parameters('privateLinkNicResource'), '2019-11-01').ipConfigurations]"
+            },
+            "privateDnsRecordTemplateUri": {
+              "value": "privateDnsRecordTemplateUri"
+            }
+          },
+          "templateLink": {
+            "uri": "privateLinkNicIpConfigTemplateUri"
+          }
+        }
+      }
+    ],
+    "outputs": {},
+    "functions": [],
+    "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+  }
+}

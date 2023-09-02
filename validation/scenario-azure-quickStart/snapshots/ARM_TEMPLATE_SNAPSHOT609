@@ -1,0 +1,646 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAzureQuickStart",
+  "paths": [
+    "/demos/app-service-environment-azfirewall/nestedtemplates/vnet.json"
+  ],
+  "timestamp": 1642962897963,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/demos/app-service-environment-azfirewall/nestedtemplates/vnet.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT609",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "microsoft.network/publicipaddresses",
+      "microsoft.network/virtualnetworks",
+      "microsoft.network/azurefirewalls",
+      "microsoft.network/networksecuritygroups",
+      "microsoft.network/routetables"
+    ]
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT609",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "location": {
+        "type": "string",
+        "metadata": {
+          "description": "Location (region) for all resources"
+        }
+      },
+      "vnetResourceName": {
+        "type": "string",
+        "metadata": {
+          "description": "The name of the vnet"
+        }
+      },
+      "vnetAddressRange": {
+        "type": "string",
+        "metadata": {
+          "description": "Address range of the virtual network"
+        }
+      },
+      "aseSubnetName": {
+        "type": "string",
+        "metadata": {
+          "description": "Subnet name that will contain the App Service Environment"
+        }
+      },
+      "aseSubnetAddressRange": {
+        "type": "string",
+        "metadata": {
+          "description": "Address range that will be used by the App Service Environment"
+        }
+      },
+      "aseNSGName": {
+        "type": "string",
+        "metadata": {
+          "description": "Name of the NSG for the App Service Environment"
+        }
+      },
+      "aseRouteTableName": {
+        "type": "string",
+        "metadata": {
+          "description": "Name of the ASE Route Table"
+        }
+      },
+      "azureFirewallName": {
+        "type": "string",
+        "metadata": {
+          "description": "Name of the Azure Firewall"
+        }
+      },
+      "deployAzureFirewall": {
+        "type": "bool",
+        "metadata": {
+          "description": "Toggle whether to deploy the Azure Firewall"
+        }
+      },
+      "azureFirewallRouteTableName": {
+        "type": "string",
+        "metadata": {
+          "description": "Name of the Azure Firewall Route Table"
+        }
+      },
+      "azureFirewallSubnetAddressRange": {
+        "type": "string",
+        "metadata": {
+          "description": "Address range that will be used by the Azure Firewall Subnet"
+        }
+      },
+      "azureFirewallPublicIP": {
+        "type": "string",
+        "metadata": {
+          "description": "Name for the Azure Firewall public IP resource"
+        }
+      },
+      "tags": {
+        "type": "object",
+        "metadata": {
+          "description": "Resource Tags."
+        }
+      },
+      "aseSubnetServiceEndpoints": {
+        "type": "array",
+        "metadata": {
+          "description": "Service Endpoints enabled on the ASE subnet"
+        }
+      },
+      "azureMonitorFQDNs": {
+        "type": "array",
+        "metadata": {
+          "description": "FQDNs to whitelist for Azure Monitor"
+        }
+      },
+      "aseManagementIps": {
+        "type": "array",
+        "metadata": {
+          "description": "List of ASE management IPs"
+        }
+      }
+    },
+    "variables": {
+      "nsgId": "Microsoft.Network/networkSecurityGroups/aseNSGName",
+      "azureFirewallPrivateIpArray": "[split(parameters('azureFireWallSubnetAddressRange'),'.')]",
+      "azureFireWallPrivateIp": "[concat(variables('azureFirewallPrivateIpArray')[0],'.',variables('azureFirewallPrivateIpArray')[1],'.',variables('azureFirewallPrivateIpArray')[2],'.4')]",
+      "credentialAPIFQDN": "control-location.identity.azure.net"
+    },
+    "resources": [
+      {
+        "type": "Microsoft.Network/networkSecurityGroups",
+        "apiVersion": "2020-11-01",
+        "name": "aseNSGName",
+        "location": "location",
+        "tags": "tags",
+        "properties": {
+          "securityRules": [
+            {
+              "name": "AppServiceManagement",
+              "properties": {
+                "protocol": "*",
+                "sourcePortRange": "*",
+                "destinationPortRange": "*",
+                "sourceAddressPrefix": "AppServiceManagement",
+                "destinationAddressPrefix": "*",
+                "access": "Allow",
+                "priority": 100,
+                "direction": "Inbound"
+              }
+            },
+            {
+              "name": "ASE-internal-inbound",
+              "properties": {
+                "description": "ASE-internal-inbound",
+                "protocol": "*",
+                "sourcePortRange": "*",
+                "destinationPortRange": "*",
+                "sourceAddressPrefix": "192.168.250.0/24",
+                "destinationAddressPrefix": "*",
+                "access": "Allow",
+                "priority": 110,
+                "direction": "Inbound"
+              }
+            },
+            {
+              "name": "Inbound-HTTP",
+              "properties": {
+                "description": "Allow HTTP",
+                "protocol": "*",
+                "sourcePortRange": "*",
+                "destinationPortRange": "80",
+                "sourceAddressPrefix": "*",
+                "destinationAddressPrefix": "*",
+                "access": "Allow",
+                "priority": 120,
+                "direction": "Inbound"
+              }
+            },
+            {
+              "name": "Inbound-HTTPS",
+              "properties": {
+                "description": "Allow HTTPS",
+                "protocol": "*",
+                "sourcePortRange": "*",
+                "destinationPortRange": "443",
+                "sourceAddressPrefix": "*",
+                "destinationAddressPrefix": "*",
+                "access": "Allow",
+                "priority": 130,
+                "direction": "Inbound"
+              }
+            },
+            {
+              "name": "Inbound-FTP",
+              "properties": {
+                "description": "Allow FTP over port 21",
+                "protocol": "*",
+                "sourcePortRange": "*",
+                "destinationPortRange": "21",
+                "sourceAddressPrefix": "*",
+                "destinationAddressPrefix": "*",
+                "access": "Allow",
+                "priority": 140,
+                "direction": "Inbound"
+              }
+            },
+            {
+              "name": "Inbound-FTPS",
+              "properties": {
+                "description": "Allow FTPS",
+                "protocol": "*",
+                "sourcePortRange": "*",
+                "destinationPortRange": "990",
+                "sourceAddressPrefix": "*",
+                "destinationAddressPrefix": "*",
+                "access": "Allow",
+                "priority": 150,
+                "direction": "Inbound"
+              }
+            },
+            {
+              "name": "Inbound-FTP-Data",
+              "properties": {
+                "description": "RDP",
+                "protocol": "*",
+                "sourcePortRange": "*",
+                "destinationPortRange": "10001-10020",
+                "sourceAddressPrefix": "*",
+                "destinationAddressPrefix": "*",
+                "access": "Allow",
+                "priority": 160,
+                "direction": "Inbound"
+              }
+            },
+            {
+              "name": "Inbound-Remote-Debugging",
+              "properties": {
+                "description": "Visual Studio remote debugging",
+                "protocol": "*",
+                "sourcePortRange": "*",
+                "destinationPortRange": "4016-4022",
+                "sourceAddressPrefix": "*",
+                "destinationAddressPrefix": "*",
+                "access": "Allow",
+                "priority": 170,
+                "direction": "Inbound"
+              }
+            },
+            {
+              "name": "Outbound-443",
+              "properties": {
+                "description": "Azure Storage blob",
+                "protocol": "*",
+                "sourcePortRange": "*",
+                "destinationPortRange": "443",
+                "sourceAddressPrefix": "*",
+                "destinationAddressPrefix": "*",
+                "access": "Allow",
+                "priority": 100,
+                "direction": "Outbound"
+              }
+            },
+            {
+              "name": "Outbound-SMB",
+              "properties": {
+                "description": "Azure Storage queue",
+                "protocol": "*",
+                "sourcePortRange": "*",
+                "destinationPortRange": "445",
+                "sourceAddressPrefix": "*",
+                "destinationAddressPrefix": "*",
+                "access": "Allow",
+                "priority": 110,
+                "direction": "Outbound"
+              }
+            },
+            {
+              "name": "Outbound-DB",
+              "properties": {
+                "description": "Database",
+                "protocol": "*",
+                "sourcePortRange": "*",
+                "destinationPortRange": "1433",
+                "sourceAddressPrefix": "*",
+                "destinationAddressPrefix": "*",
+                "access": "Allow",
+                "priority": 120,
+                "direction": "Outbound"
+              }
+            },
+            {
+              "name": "Outbound-DB2",
+              "properties": {
+                "description": "Database 2",
+                "protocol": "*",
+                "sourcePortRange": "*",
+                "destinationPortRange": "11000-11999",
+                "sourceAddressPrefix": "*",
+                "destinationAddressPrefix": "*",
+                "access": "Allow",
+                "priority": 130,
+                "direction": "Outbound"
+              }
+            },
+            {
+              "name": "Outbound-DB3",
+              "properties": {
+                "description": "Database 3",
+                "protocol": "*",
+                "sourcePortRange": "*",
+                "destinationPortRange": "14000-14999",
+                "sourceAddressPrefix": "*",
+                "destinationAddressPrefix": "*",
+                "access": "Allow",
+                "priority": 140,
+                "direction": "Outbound"
+              }
+            },
+            {
+              "name": "Outbound-DNS",
+              "properties": {
+                "description": "DNS",
+                "protocol": "*",
+                "sourcePortRange": "*",
+                "destinationPortRange": "53",
+                "sourceAddressPrefix": "*",
+                "destinationAddressPrefix": "*",
+                "access": "Allow",
+                "priority": 150,
+                "direction": "Outbound"
+              }
+            },
+            {
+              "name": "ASE-internal-outbound",
+              "properties": {
+                "description": "Azure Storage queue",
+                "protocol": "*",
+                "sourcePortRange": "*",
+                "destinationPortRange": "*",
+                "sourceAddressPrefix": "*",
+                "destinationAddressPrefix": "192.168.250.0/24",
+                "access": "Allow",
+                "priority": 160,
+                "direction": "Outbound"
+              }
+            },
+            {
+              "name": "Outbound-80",
+              "properties": {
+                "description": "Outbound 80",
+                "protocol": "*",
+                "sourcePortRange": "*",
+                "destinationPortRange": "80",
+                "sourceAddressPrefix": "*",
+                "destinationAddressPrefix": "*",
+                "access": "Allow",
+                "priority": 170,
+                "direction": "Outbound"
+              }
+            },
+            {
+              "name": "ASE-to-VNET",
+              "properties": {
+                "description": "ASE to VNET",
+                "protocol": "*",
+                "sourcePortRange": "*",
+                "destinationPortRange": "*",
+                "sourceAddressPrefix": "*",
+                "destinationAddressPrefix": "192.168.250.0/23",
+                "access": "Allow",
+                "priority": 180,
+                "direction": "Outbound"
+              }
+            }
+          ]
+        }
+      },
+      {
+        "type": "Microsoft.Network/routeTables",
+        "apiVersion": "2020-11-01",
+        "name": "aseRouteTableName",
+        "location": "location",
+        "tags": "tags",
+        "properties": {
+          "copy": [
+            {
+              "name": "routes",
+              "count": 30,
+              "input": {
+                "name": "[if(equals(copyIndex('routes'),0),'DefaultRoute',concat(parameters('aseManagementIps')[copyIndex('routes')],'-Route'))]",
+                "properties": {
+                  "addressPrefix": "[if(equals(copyIndex('routes'),0),'0.0.0.0/0',concat(parameters('aseManagementIps')[copyIndex('routes')],'/32'))]",
+                  "nextHopType": "[if(equals(copyIndex('routes'),0),'VirtualAppliance','Internet')]",
+                  "nextHopIpAddress": "[if(equals(copyIndex('routes'),0),variables('azureFireWallPrivateIp'), json('null'))]"
+                }
+              }
+            }
+          ],
+          "disableBgpRoutePropagation": true
+        }
+      },
+      {
+        "type": "Microsoft.Network/routeTables",
+        "apiVersion": "2020-11-01",
+        "name": "azureFirewallRouteTableName",
+        "location": "location",
+        "tags": "tags",
+        "properties": {
+          "routes": [
+            {
+              "name": "default-route",
+              "properties": {
+                "addressPrefix": "0.0.0.0/0",
+                "nextHopType": "Internet"
+              }
+            }
+          ]
+        }
+      },
+      {
+        "type": "Microsoft.Network/virtualNetworks",
+        "apiVersion": "2020-11-01",
+        "name": "vnetResourceName",
+        "location": "location",
+        "dependsOn": [
+          "Microsoft.Network/networkSecurityGroups/aseNSGName",
+          "Microsoft.Network/routeTables/aseRouteTableName",
+          "Microsoft.Network/routeTables/azureFirewallRouteTableName"
+        ],
+        "tags": "tags",
+        "properties": {
+          "addressSpace": {
+            "addressPrefixes": [
+              "vnetAddressRange"
+            ]
+          },
+          "subnets": [
+            {
+              "name": "aseSubnetName",
+              "properties": {
+                "addressPrefix": "aseSubnetAddressRange",
+                "networkSecurityGroup": {
+                  "id": "Microsoft.Network/networkSecurityGroups/aseNSGName"
+                },
+                "routeTable": {
+                  "id": "Microsoft.Network/routeTables/aseRouteTableName"
+                },
+                "serviceEndpoints": "aseSubnetServiceEndpoints"
+              }
+            },
+            {
+              "name": "AzureFirewallSubnet",
+              "properties": {
+                "addressPrefix": "azureFirewallSubnetAddressRange",
+                "routeTable": {
+                  "id": "Microsoft.Network/routeTables/azureFirewallRouteTableName"
+                }
+              }
+            }
+          ]
+        }
+      },
+      {
+        "condition": "deployAzureFirewall",
+        "type": "Microsoft.Network/publicIPAddresses",
+        "apiVersion": "2020-11-01",
+        "name": "azureFirewallPublicIp",
+        "location": "location",
+        "sku": {
+          "name": "Standard"
+        },
+        "tags": "tags",
+        "properties": {
+          "publicIPAllocationMethod": "Static"
+        }
+      },
+      {
+        "condition": "deployAzureFirewall",
+        "type": "Microsoft.Network/azureFirewalls",
+        "apiVersion": "2020-11-01",
+        "name": "azureFirewallName",
+        "location": "location",
+        "dependsOn": [
+          "Microsoft.Network/virtualNetworks/vnetResourceName",
+          "Microsoft.Network/publicIpAddresses/azureFirewallPublicIP"
+        ],
+        "tags": "tags",
+        "properties": {
+          "ipConfigurations": [
+            {
+              "name": "IpConf",
+              "properties": {
+                "subnet": {
+                  "id": "Microsoft.Network/virtualNetworks/subnets/vnetResourceName/AzureFirewallSubnet"
+                },
+                "publicIPAddress": {
+                  "id": "Microsoft.Network/publicIpAddresses/azureFirewallPublicIP"
+                }
+              }
+            }
+          ],
+          "ApplicationRuleCollections": [
+            {
+              "Name": "AppServiceEnvironment",
+              "properties": {
+                "Priority": 500,
+                "Action": {
+                  "Type": "Allow"
+                },
+                "Rules": [
+                  {
+                    "Name": "ASE",
+                    "FqdnTags": [
+                      "WindowsUpdate",
+                      "AppServiceEnvironment"
+                    ],
+                    "Protocols": [
+                      {
+                        "ProtocolType": "Http",
+                        "Port": 80
+                      },
+                      {
+                        "ProtocolType": "Https",
+                        "Port": 443
+                      }
+                    ]
+                  },
+                  {
+                    "Name": "Managed Identity API",
+                    "targetFqdns": [
+                      "control-location.identity.azure.net"
+                    ],
+                    "protocols": [
+                      {
+                        "ProtocolType": "Https",
+                        "Port": 443
+                      }
+                    ],
+                    "sourceAddresses": [
+                      "aseSubnetAddressRange"
+                    ]
+                  },
+                  {
+                    "Name": "AzureMonitorRules",
+                    "targetFqdns": "azureMonitorFQDNs",
+                    "protocols": [
+                      {
+                        "ProtocolType": "Https",
+                        "Port": 443
+                      }
+                    ],
+                    "sourceAddresses": [
+                      "aseSubnetAddressRange"
+                    ]
+                  }
+                ]
+              }
+            }
+          ],
+          "NetworkRuleCollections": [
+            {
+              "Name": "Time-Diagnostics",
+              "properties": {
+                "Priority": 300,
+                "Action": {
+                  "Type": "Allow"
+                },
+                "Rules": [
+                  {
+                    "Name": "Time",
+                    "Protocols": [
+                      "Any"
+                    ],
+                    "SourceAddresses": [
+                      "*"
+                    ],
+                    "DestinationAddresses": [
+                      "*"
+                    ],
+                    "DestinationPorts": [
+                      "123"
+                    ]
+                  },
+                  {
+                    "Name": "Diagnostics",
+                    "Protocols": [
+                      "Any"
+                    ],
+                    "SourceAddresses": [
+                      "*"
+                    ],
+                    "DestinationAddresses": [
+                      "*"
+                    ],
+                    "DestinationPorts": [
+                      "12000"
+                    ]
+                  }
+                ]
+              }
+            },
+            {
+              "name": "AzMonitor",
+              "properties": {
+                "priority": 200,
+                "action": {
+                  "type": "Allow"
+                },
+                "rules": [
+                  {
+                    "name": "AzMonitor",
+                    "protocols": [
+                      "TCP"
+                    ],
+                    "sourceAddresses": [
+                      "*"
+                    ],
+                    "destinationAddresses": [
+                      "AzureMonitor"
+                    ],
+                    "destinationPorts": [
+                      "80",
+                      "443",
+                      "12000"
+                    ]
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      }
+    ],
+    "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+  }
+}

@@ -2,12 +2,12 @@
   "structure": "filesystem",
   "error": null,
   "reference": "master",
-  "contentType": "yaml",
+  "contentType": "json",
   "source": "gitConnectorGoogleKcc",
   "paths": [
-    "/samples/resources/computesslpolicy/modern-tls-1-1-ssl-policy/compute_v1beta1_computesslpolicy.yaml"
+    "/samples/resources/computerouterinterface/compute_v1beta1_computerouterinterface.yaml"
   ],
-  "timestamp": 1628765143339,
+  "timestamp": 1642973303078,
   "queryuser": null,
   "checksum": "99914b932bd37a50b983c5e7c90ae93b",
   "node": {
@@ -15,24 +15,32 @@
     "type": "kcc",
     "collection": "kcctemplate",
     "paths": [
-      "/samples/resources/computesslpolicy/modern-tls-1-1-ssl-policy/compute_v1beta1_computesslpolicy.yaml"
+      "/samples/resources/computerouterinterface/compute_v1beta1_computerouterinterface.yaml"
     ],
     "snapshotId": "KCC_TEMPLATE_SNAPSHOT233",
     "status": "active",
-    "validate": true
+    "validate": true,
+    "resourceTypes": [
+      "computerouterinterface"
+    ]
   },
   "snapshotId": "KCC_TEMPLATE_SNAPSHOT233",
   "collection": "kcctemplate",
   "json": {
     "apiVersion": "compute.cnrm.cloud.google.com/v1beta1",
-    "kind": "ComputeSSLPolicy",
+    "kind": "ComputeRouterInterface",
     "metadata": {
-      "name": "computesslpolicy-sample-moderntls11"
+      "name": "computerouterinterface-sample"
     },
     "spec": {
-      "description": "An SSL Policy with a MODERN encryption profile, supporting several modern methods of encryption for TLS 1.1 and up.",
-      "minTlsVersion": "TLS_1_1",
-      "profile": "MODERN"
+      "routerRef": {
+        "name": "computerouterinterface-dep"
+      },
+      "region": "us-central1",
+      "ipRange": "169.254.1.1/30",
+      "vpnTunnelRef": {
+        "name": "computerouterinterface-dep"
+      }
     }
   }
 }

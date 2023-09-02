@@ -1,0 +1,246 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAzureQuickStart",
+  "paths": [
+    "/quickstarts/microsoft.sql/sql-elastic-pool-create/azuredeploy.json",
+    "/quickstarts/microsoft.sql/sql-elastic-pool-create/azuredeploy.parameters.json"
+  ],
+  "timestamp": 1642962910412,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/quickstarts/microsoft.sql/sql-elastic-pool-create/azuredeploy.json",
+      "/quickstarts/microsoft.sql/sql-elastic-pool-create/azuredeploy.parameters.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT1698",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "microsoft.sql/servers",
+      "microsoft.sql/servers/elasticpools",
+      "microsoft.sql/servers/databases",
+      "microsoft.sql/servers/firewallrules"
+    ]
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT1698",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "administratorLogin": {
+        "type": "string",
+        "metadata": {
+          "description": "The SQL Server administrator login"
+        },
+        "value": "GEN-UNIQUE"
+      },
+      "administratorLoginPassword": {
+        "type": "securestring",
+        "metadata": {
+          "description": "The SQL Server administrator login password."
+        },
+        "value": "GEN-PASSWORD"
+      },
+      "serverName": {
+        "type": "string",
+        "metadata": {
+          "description": "The SQL Server name."
+        },
+        "value": "GEN-UNIQUE"
+      },
+      "elasticPoolName": {
+        "type": "string",
+        "metadata": {
+          "description": "The Elastic Pool name."
+        },
+        "value": "GEN-UNIQUE"
+      },
+      "edition": {
+        "type": "string",
+        "defaultValue": "Standard",
+        "allowedValues": [
+          "Basic",
+          "Standard",
+          "Premium",
+          "GP_Gen5",
+          "BC_Gen5"
+        ],
+        "metadata": {
+          "description": "The Elastic Pool edition."
+        },
+        "value": "Standard"
+      },
+      "capacity": {
+        "type": "int",
+        "metadata": {
+          "description": "The Elastic Pool DTU or nomber of vcore."
+        },
+        "value": 100
+      },
+      "databaseCapacityMin": {
+        "type": "int",
+        "defaultValue": 0,
+        "metadata": {
+          "description": "The Elastic Pool database capacity min."
+        },
+        "value": 0
+      },
+      "databaseCapacityMax": {
+        "type": "int",
+        "metadata": {
+          "description": "The Elastic Pool database capacity max."
+        },
+        "value": 100
+      },
+      "databasesNames": {
+        "type": "array",
+        "defaultValue": [
+          "db1",
+          "db2"
+        ],
+        "metadata": {
+          "description": "The SQL Databases names."
+        },
+        "value": [
+          "GEN-UNIQUE",
+          "GEN-UNIQUE"
+        ]
+      },
+      "databaseCollation": {
+        "type": "string",
+        "defaultValue": "SQL_Latin1_General_CP1_CI_AS",
+        "metadata": {
+          "description": "The SQL Database collation."
+        },
+        "value": "SQL_Latin1_General_CP1_CI_AS"
+      },
+      "location": {
+        "type": "string",
+        "defaultValue": "[resourceGroup().location]",
+        "metadata": {
+          "description": "Location for all resources."
+        }
+      }
+    },
+    "variables": {
+      "editionToSkuMap": {
+        "Basic": {
+          "name": "BasicPool",
+          "tier": "Basic"
+        },
+        "Standard": {
+          "name": "StandardPool",
+          "tier": "Standard"
+        },
+        "Premium": {
+          "name": "PremiumPool",
+          "tier": "Premium"
+        },
+        "GP_Gen5": {
+          "family": "Gen5",
+          "name": "GP_Gen5",
+          "tier": "GeneralPurpose"
+        },
+        "BC_Gen5": {
+          "family": "Gen5",
+          "name": "BC_Gen5",
+          "tier": "BusinessCritical"
+        }
+      },
+      "skuName": "(editionToSkuMap)[parameters(edition)].name",
+      "skuTier": "(editionToSkuMap)[parameters(edition)].tier"
+    },
+    "resources": [
+      {
+        "type": "Microsoft.Sql/servers",
+        "apiVersion": "2020-02-02-preview",
+        "location": "[resourceGroup().location]",
+        "name": "GEN-UNIQUE",
+        "properties": {
+          "administratorLogin": "GEN-UNIQUE",
+          "administratorLoginPassword": "GEN-PASSWORD",
+          "version": "12.0"
+        }
+      },
+      {
+        "type": "Microsoft.Sql/servers/elasticPools",
+        "apiVersion": "2020-02-02-preview",
+        "dependsOn": [
+          "Microsoft.Sql/servers//GEN-UNIQUE"
+        ],
+        "location": "[resourceGroup().location]",
+        "name": "GEN-UNIQUE/GEN-UNIQUE",
+        "sku": {
+          "name": "(editionToSkuMap)[parameters(edition)].name",
+          "tier": "(editionToSkuMap)[parameters(edition)].tier",
+          "capacity": 100
+        },
+        "properties": {
+          "perDatabaseSettings": {
+            "minCapacity": 0,
+            "maxCapacity": 100
+          }
+        }
+      },
+      {
+        "type": "Microsoft.Sql/servers/databases",
+        "name": "[concat(parameters('serverName'), '/', parameters('databasesNames')[copyIndex()])]",
+        "location": "[resourceGroup().location]",
+        "apiVersion": "2020-02-02-preview",
+        "dependsOn": [
+          "Microsoft.Sql/servers//GEN-UNIQUE",
+          "Microsoft.Sql/servers/elasticpools/GEN-UNIQUE/GEN-UNIQUE"
+        ],
+        "sku": {
+          "name": "ElasticPool",
+          "tier": "(editionToSkuMap)[parameters(edition)].tier",
+          "capacity": 0
+        },
+        "properties": {
+          "collation": "SQL_Latin1_General_CP1_CI_AS",
+          "elasticPoolId": "Microsoft.Sql/servers/elasticpools/GEN-UNIQUE/GEN-UNIQUE"
+        }
+      },
+      {
+        "type": "Microsoft.Sql/servers/databases",
+        "name": "[concat(parameters('serverName'), '/', parameters('databasesNames')[copyIndex()])]",
+        "location": "[resourceGroup().location]",
+        "apiVersion": "2020-02-02-preview",
+        "dependsOn": [
+          "Microsoft.Sql/servers//GEN-UNIQUE",
+          "Microsoft.Sql/servers/elasticpools/GEN-UNIQUE/GEN-UNIQUE"
+        ],
+        "sku": {
+          "name": "ElasticPool",
+          "tier": "(editionToSkuMap)[parameters(edition)].tier",
+          "capacity": 0
+        },
+        "properties": {
+          "collation": "SQL_Latin1_General_CP1_CI_AS",
+          "elasticPoolId": "Microsoft.Sql/servers/elasticpools/GEN-UNIQUE/GEN-UNIQUE"
+        }
+      },
+      {
+        "apiVersion": "2020-02-02-preview",
+        "dependsOn": [
+          "Microsoft.Sql/servers//GEN-UNIQUE"
+        ],
+        "location": "[resourceGroup().location]",
+        "name": "GEN-UNIQUE/AllowAllWindowsAzureIps",
+        "properties": {
+          "endIpAddress": "0.0.0.0",
+          "startIpAddress": "0.0.0.0"
+        },
+        "type": "Microsoft.Sql/servers/firewallrules"
+      }
+    ],
+    "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+  }
+}

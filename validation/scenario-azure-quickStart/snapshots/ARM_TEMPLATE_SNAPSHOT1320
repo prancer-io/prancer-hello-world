@@ -1,0 +1,132 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAzureQuickStart",
+  "paths": [
+    "/quickstarts/microsoft.eventhub/event-hubs-create-event-hub-and-consumer-group/azuredeploy.json",
+    "/quickstarts/microsoft.eventhub/event-hubs-create-event-hub-and-consumer-group/azuredeploy.parameters.json"
+  ],
+  "timestamp": 1642962906802,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/quickstarts/microsoft.eventhub/event-hubs-create-event-hub-and-consumer-group/azuredeploy.json",
+      "/quickstarts/microsoft.eventhub/event-hubs-create-event-hub-and-consumer-group/azuredeploy.parameters.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT1320",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "microsoft.eventhub/namespaces"
+    ]
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT1320",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "namespaceName": {
+        "type": "string",
+        "metadata": {
+          "description": "Name of EventHub namespace"
+        },
+        "value": "GEN-UNIQUE"
+      },
+      "eventhubSku": {
+        "type": "string",
+        "allowedValues": [
+          "Basic",
+          "Standard"
+        ],
+        "defaultValue": "Standard",
+        "metadata": {
+          "description": "The messaging tier for service Bus namespace"
+        },
+        "value": "Standard"
+      },
+      "skuCapacity": {
+        "type": "int",
+        "allowedValues": [
+          1,
+          2,
+          4
+        ],
+        "defaultValue": 1,
+        "metadata": {
+          "description": "MessagingUnits for premium namespace"
+        }
+      },
+      "eventHubName": {
+        "type": "string",
+        "metadata": {
+          "description": "Name of Event Hub"
+        },
+        "value": "GEN-UNIQUE-15"
+      },
+      "consumerGroupName": {
+        "type": "string",
+        "metadata": {
+          "description": "Name of Consumer Group"
+        },
+        "value": "GEN-UNIQUE"
+      },
+      "location": {
+        "type": "string",
+        "defaultValue": "[resourceGroup().location]",
+        "metadata": {
+          "description": "Location for all resources."
+        }
+      }
+    },
+    "variables": {},
+    "resources": [
+      {
+        "apiVersion": "2018-01-01-preview",
+        "name": "GEN-UNIQUE",
+        "type": "Microsoft.EventHub/namespaces",
+        "location": "[resourceGroup().location]",
+        "sku": {
+          "name": "Standard",
+          "tier": "Standard",
+          "capacity": 1
+        },
+        "tags": {
+          "tag1": "value1",
+          "tag2": "value2"
+        },
+        "properties": {},
+        "resources": [
+          {
+            "apiVersion": "2017-04-01",
+            "name": "GEN-UNIQUE-15",
+            "type": "eventhubs",
+            "dependsOn": [
+              "Microsoft.EventHub/namespaces//GEN-UNIQUE"
+            ],
+            "properties": {},
+            "resources": [
+              {
+                "apiVersion": "2017-04-01",
+                "name": "GEN-UNIQUE",
+                "type": "consumergroups",
+                "dependsOn": [
+                  "GEN-UNIQUE-15"
+                ],
+                "properties": {
+                  "userMetadata": "User Metadata goes here"
+                }
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+  }
+}

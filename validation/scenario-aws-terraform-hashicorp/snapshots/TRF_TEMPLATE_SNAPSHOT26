@@ -1,0 +1,61 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "main",
+  "contentType": "json",
+  "source": "gitConnectorAwsTerraHashicorp",
+  "paths": [
+    "/examples/networking/subnet/outputs.tf",
+    "/examples/networking/subnet/terraform.template.tfvars",
+    "/examples/networking/subnet/variables.tf",
+    "/examples/networking/subnet/versions.tf",
+    "/examples/networking/subnet/security_group.tf"
+  ],
+  "timestamp": 1642967657708,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "TRF_TEMPLATE_SNAPSHOT",
+    "type": "terraform",
+    "collection": "terraformtemplate",
+    "paths": [
+      "/examples/networking/subnet/outputs.tf",
+      "/examples/networking/subnet/terraform.template.tfvars",
+      "/examples/networking/subnet/variables.tf",
+      "/examples/networking/subnet/versions.tf",
+      "/examples/networking/subnet/security_group.tf"
+    ],
+    "snapshotId": "TRF_TEMPLATE_SNAPSHOT26",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "aws_security_group"
+    ]
+  },
+  "snapshotId": "TRF_TEMPLATE_SNAPSHOT26",
+  "collection": "terraformtemplate",
+  "json": {
+    "resources": [
+      {
+        "type": "aws_security_group",
+        "name": "az",
+        "properties": {
+          "name": "az-${data.aws_availability_zone.target.name}",
+          "description": "Open access within the AZ ${data.aws_availability_zone.target.name}",
+          "vpc_id": "vpc-12345678",
+          "ingress": [
+            {
+              "from_port": 0,
+              "to_port": 0,
+              "protocol": -1,
+              "cidr_blocks": [
+                "${aws_subnet.main.cidr_block}"
+              ]
+            }
+          ],
+          "compiletime_identity": "aws_security_group.az"
+        }
+      }
+    ]
+  }
+}

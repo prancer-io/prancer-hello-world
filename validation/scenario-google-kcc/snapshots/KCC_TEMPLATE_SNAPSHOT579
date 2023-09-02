@@ -1,0 +1,76 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorGoogleKcc",
+  "paths": [
+    "/samples/resources/networkservicestcproute/networkservices_v1beta1_networkservicestcproute.yaml"
+  ],
+  "timestamp": 1642973304896,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "KCC_TEMPLATE_SNAPSHOT",
+    "type": "kcc",
+    "collection": "kcctemplate",
+    "paths": [
+      "/samples/resources/networkservicestcproute/networkservices_v1beta1_networkservicestcproute.yaml"
+    ],
+    "snapshotId": "KCC_TEMPLATE_SNAPSHOT579",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "networkservicestcproute"
+    ]
+  },
+  "snapshotId": "KCC_TEMPLATE_SNAPSHOT579",
+  "collection": "kcctemplate",
+  "json": {
+    "apiVersion": "networkservices.cnrm.cloud.google.com/v1beta1",
+    "kind": "NetworkServicesTCPRoute",
+    "metadata": {
+      "labels": {
+        "key-one": "value-one"
+      },
+      "name": "networkservicestcproute-sample"
+    },
+    "spec": {
+      "projectRef": {
+        "external": "projects/${PROJECT_ID?}"
+      },
+      "location": "global",
+      "meshes": [],
+      "rules": [
+        {
+          "matches": [
+            {
+              "address": "10.0.0.1/32",
+              "port": "7777"
+            }
+          ],
+          "action": {
+            "destinations": [
+              {
+                "serviceRef": {
+                  "name": "networkservicestcproute-dep"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "action": {
+            "destinations": [
+              {
+                "serviceRef": {
+                  "name": "networkservicestcproute-dep"
+                }
+              }
+            ]
+          }
+        }
+      ]
+    }
+  }
+}

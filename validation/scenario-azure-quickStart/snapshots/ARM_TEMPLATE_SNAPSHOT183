@@ -1,0 +1,204 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAzureQuickStart",
+  "paths": [
+    "/application-workloads/intel-lustre/intel-lustre-client-server/vnet-new.json",
+    "/application-workloads/intel-lustre/intel-lustre-client-server/azuredeploy.parameters.json"
+  ],
+  "timestamp": 1642962889955,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/application-workloads/intel-lustre/intel-lustre-client-server/vnet-new.json",
+      "/application-workloads/intel-lustre/intel-lustre-client-server/azuredeploy.parameters.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT183",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "microsoft.network/virtualnetworks",
+      "microsoft.network/networksecuritygroups"
+    ]
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT183",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "location": {
+        "type": "string",
+        "metadata": {
+          "description": "Location for the Lustre nodes"
+        },
+        "value": "Japan East"
+      },
+      "vnetName": {
+        "type": "string",
+        "metadata": {
+          "description": "Virtual Network name (e.g. vnet-lustre)"
+        },
+        "value": "vnettest"
+      },
+      "vnetResourceGroup": {
+        "type": "string",
+        "metadata": {
+          "description": "Virtual Network Resource Group"
+        }
+      },
+      "vnetAddressPrefix": {
+        "type": "string",
+        "metadata": {
+          "description": "Virtual Network Address Prefix (i.e. CIDR)"
+        }
+      },
+      "subnetServersName": {
+        "type": "string",
+        "metadata": {
+          "description": "Lustre servers will be deployed into this subnet within the Virtual Network"
+        }
+      },
+      "subnetServersAddressPrefix": {
+        "type": "string",
+        "metadata": {
+          "description": "Virtual Network Lustre Servers subnet Address Prefix (i.e. CIDR)"
+        }
+      },
+      "subnetClientsName": {
+        "type": "string",
+        "metadata": {
+          "description": "Lustre clients can be deployed into this subnet within the Virtual Network"
+        }
+      },
+      "subnetClientsAddressPrefix": {
+        "type": "string",
+        "metadata": {
+          "description": "Virtual Network Lustre Clients subnet Address Prefix (i.e. CIDR)"
+        }
+      },
+      "artifactsBaseUrl": {
+        "value": "https://raw.githubusercontent.com/lustrehpc/azure-quickstart-templates/master/101-lustre-client-server-create"
+      },
+      "adminUsername": {
+        "value": "azureuser"
+      },
+      "dnsNamePrefix": {
+        "value": "uniqdnsname"
+      },
+      "existingSubnetClientsName": {
+        "value": "subnet-lustre-clients"
+      },
+      "clientlocation": {
+        "value": "Japan East"
+      },
+      "clientadminUsername": {
+        "value": "azureclientuser"
+      },
+      "dnsNamePrefixForClient": {
+        "value": "clntdnsname"
+      }
+    },
+    "variables": {
+      "subnetNetworkSecurityGroupName": "vnettest-nsg",
+      "vnetID": "vnetResourceGroup/Microsoft.Network/virtualNetworks/vnettest"
+    },
+    "resources": [
+      {
+        "apiVersion": "2015-06-15",
+        "type": "Microsoft.Network/networkSecurityGroups",
+        "name": "vnettest-nsg",
+        "location": "Japan East",
+        "properties": {
+          "securityRules": [
+            {
+              "name": "ssh_rule",
+              "properties": {
+                "description": "Allow SSH access",
+                "protocol": "Tcp",
+                "sourcePortRange": "*",
+                "destinationPortRange": "22",
+                "sourceAddressPrefix": "Internet",
+                "destinationAddressPrefix": "*",
+                "access": "Allow",
+                "priority": 100,
+                "direction": "Inbound"
+              }
+            },
+            {
+              "name": "http_rule",
+              "properties": {
+                "description": "Allow HTTP access",
+                "protocol": "Tcp",
+                "sourcePortRange": "*",
+                "destinationPortRange": "80",
+                "sourceAddressPrefix": "Internet",
+                "destinationAddressPrefix": "*",
+                "access": "Allow",
+                "priority": 101,
+                "direction": "Inbound"
+              }
+            },
+            {
+              "name": "https_rule",
+              "properties": {
+                "description": "Allow HTTPS access",
+                "protocol": "Tcp",
+                "sourcePortRange": "*",
+                "destinationPortRange": "443",
+                "sourceAddressPrefix": "Internet",
+                "destinationAddressPrefix": "*",
+                "access": "Allow",
+                "priority": 102,
+                "direction": "Inbound"
+              }
+            }
+          ]
+        }
+      },
+      {
+        "apiVersion": "2015-06-15",
+        "type": "Microsoft.Network/virtualNetworks",
+        "name": "vnettest",
+        "location": "Japan East",
+        "dependsOn": [
+          "Microsoft.Network/networkSecurityGroups/vnettest-nsg"
+        ],
+        "properties": {
+          "addressSpace": {
+            "addressPrefixes": [
+              "vnetAddressPrefix"
+            ]
+          },
+          "subnets": [
+            {
+              "name": "subnetServersName",
+              "properties": {
+                "addressPrefix": "subnetServersAddressPrefix",
+                "networkSecurityGroup": {
+                  "id": "Microsoft.Network/networkSecurityGroups/vnettest-nsg"
+                }
+              }
+            },
+            {
+              "name": "subnetClientsName",
+              "properties": {
+                "addressPrefix": "subnetClientsAddressPrefix",
+                "networkSecurityGroup": {
+                  "id": "Microsoft.Network/networkSecurityGroups/vnettest-nsg"
+                }
+              }
+            }
+          ]
+        }
+      }
+    ],
+    "outputs": {},
+    "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+  }
+}

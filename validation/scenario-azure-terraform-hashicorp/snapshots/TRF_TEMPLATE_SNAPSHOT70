@@ -1,0 +1,144 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "main",
+  "contentType": "json",
+  "source": "gitConnectorAzureTerraHashicorp",
+  "paths": [
+    "/examples/managed-disks/encrypted/variables.tf",
+    "/examples/managed-disks/encrypted/main.tf"
+  ],
+  "timestamp": 1642943279801,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "TRF_TEMPLATE_SNAPSHOT",
+    "type": "terraform",
+    "collection": "terraformtemplate",
+    "paths": [
+      "/examples/managed-disks/encrypted/variables.tf",
+      "/examples/managed-disks/encrypted/main.tf"
+    ],
+    "snapshotId": "TRF_TEMPLATE_SNAPSHOT70",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "azurerm_disk_encryption_set",
+      "azurerm_key_vault_key",
+      "azurerm_role_assignment",
+      "azurerm_key_vault_access_policy",
+      "azurerm_managed_disk"
+    ]
+  },
+  "snapshotId": "TRF_TEMPLATE_SNAPSHOT70",
+  "collection": "terraformtemplate",
+  "json": {
+    "resources": [
+      {
+        "type": "azurerm_key_vault_access_policy",
+        "name": "service-principal",
+        "properties": {
+          "key_vault_id": "${azurerm_key_vault.test.id}",
+          "tenant_id": "${data.azurerm_client_config.current.tenant_id}",
+          "object_id": "${data.azurerm_client_config.current.object_id}",
+          "key_permissions": [
+            "create",
+            "delete",
+            "get",
+            "update"
+          ],
+          "secret_permissions": [
+            "get",
+            "delete",
+            "set"
+          ],
+          "depends_on": [
+            "null_resource.enable-soft-delete-and-purge-protection"
+          ],
+          "compiletime_identity": "azurerm_key_vault_access_policy.service-principal"
+        }
+      },
+      {
+        "type": "azurerm_key_vault_access_policy",
+        "name": "disk-encryption",
+        "properties": {
+          "key_vault_id": "${azurerm_key_vault.test.id}",
+          "key_permissions": [
+            "get",
+            "wrapkey",
+            "unwrapkey"
+          ],
+          "tenant_id": "${azurerm_disk_encryption_set.test.identity[0].tenant_id}",
+          "object_id": "${azurerm_disk_encryption_set.test.identity[0].principal_id}",
+          "compiletime_identity": "azurerm_key_vault_access_policy.disk-encryption"
+        }
+      },
+      {
+        "type": "azurerm_key_vault_key",
+        "name": "test",
+        "properties": {
+          "name": "examplekey",
+          "key_vault_id": "${azurerm_key_vault.test.id}",
+          "key_type": "RSA",
+          "key_size": 2048,
+          "key_opts": [
+            "decrypt",
+            "encrypt",
+            "sign",
+            "unwrapKey",
+            "verify",
+            "wrapKey"
+          ],
+          "depends_on": [
+            "azurerm_key_vault_access_policy.service-principal"
+          ],
+          "compiletime_identity": "azurerm_key_vault_key.test"
+        }
+      },
+      {
+        "type": "azurerm_disk_encryption_set",
+        "name": "test",
+        "properties": {
+          "name": "${var.prefix}-des",
+          "resource_group_name": "${azurerm_resource_group.test.name}",
+          "location": "${azurerm_resource_group.test.location}",
+          "key_vault_key_id": "${azurerm_key_vault_key.test.id}",
+          "identity": [
+            {
+              "type": "SystemAssigned"
+            }
+          ],
+          "compiletime_identity": "azurerm_disk_encryption_set.test"
+        }
+      },
+      {
+        "type": "azurerm_role_assignment",
+        "name": "disk-encryption-read-keyvault",
+        "properties": {
+          "scope": "${azurerm_key_vault.test.id}",
+          "role_definition_name": "Reader",
+          "principal_id": "${azurerm_disk_encryption_set.test.identity[0].principal_id}",
+          "compiletime_identity": "azurerm_role_assignment.disk-encryption-read-keyvault"
+        }
+      },
+      {
+        "type": "azurerm_managed_disk",
+        "name": "test",
+        "properties": {
+          "name": "${var.prefix}-disk",
+          "location": "${azurerm_resource_group.test.location}",
+          "resource_group_name": "${azurerm_resource_group.test.name}",
+          "storage_account_type": "Standard_LRS",
+          "create_option": "Empty",
+          "disk_size_gb": 10,
+          "disk_encryption_set_id": "${azurerm_disk_encryption_set.test.id}",
+          "depends_on": [
+            "azurerm_role_assignment.disk-encryption-read-keyvault",
+            "azurerm_key_vault_access_policy.disk-encryption"
+          ],
+          "compiletime_identity": "azurerm_managed_disk.test"
+        }
+      }
+    ]
+  }
+}

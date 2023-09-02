@@ -1,0 +1,198 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAzureQuickStart",
+  "paths": [
+    "/demos/sql-injection-attack-prevention/nested/microsoft.sql/servers.databases.json"
+  ],
+  "timestamp": 1642962901725,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/demos/sql-injection-attack-prevention/nested/microsoft.sql/servers.databases.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT805",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "microsoft.sql/servers/databases"
+    ]
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT805",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "sqlServerName": {
+        "type": "string"
+      },
+      "databaseName": {
+        "type": "string",
+        "defaultValue": "contosodb"
+      },
+      "location": {
+        "type": "string"
+      },
+      "edition": {
+        "type": "string",
+        "defaultValue": "Basic",
+        "allowedValues": [
+          "Web",
+          "Business",
+          "Basic",
+          "Standard",
+          "Premium",
+          "Free",
+          "Stretch",
+          "DataWarehouse",
+          "System",
+          "System2"
+        ]
+      },
+      "tags": {
+        "type": "object"
+      },
+      "omsWorkspaceResourceId": {
+        "type": "string"
+      },
+      "administratorLogin": {
+        "type": "string"
+      },
+      "administratorLoginPassword": {
+        "type": "securestring"
+      },
+      "bacpacUri": {
+        "type": "string"
+      },
+      "bacpacUriSasToken": {
+        "type": "securestring"
+      },
+      "logsRetentionInDays": {
+        "type": "int",
+        "defaultValue": 0,
+        "minValue": 0,
+        "maxValue": 365,
+        "metadata": {
+          "description": "Specifies the number of days that logs are gonna be kept. If you do not want to apply any retention policy and retain data forever, set value to 0."
+        }
+      }
+    },
+    "resources": [
+      {
+        "type": "Microsoft.Sql/servers/databases",
+        "apiVersion": "2020-02-02-preview",
+        "name": "sqlServerName/contosodb",
+        "tags": "tags",
+        "location": "location",
+        "properties": {
+          "createMode": "Default",
+          "edition": "Basic"
+        },
+        "resources": [
+          {
+            "name": "Import",
+            "type": "extensions",
+            "apiVersion": "2014-04-01-preview",
+            "dependsOn": [
+              "Microsoft.Sql/servers/databases/sqlServerName/contosodb"
+            ],
+            "properties": {
+              "storageKey": "bacpacUriSasToken",
+              "storageKeyType": "SharedAccessKey",
+              "storageUri": "bacpacUri",
+              "administratorLogin": "administratorLogin",
+              "administratorLoginPassword": "administratorLoginPassword",
+              "operationMode": "Import"
+            }
+          },
+          {
+            "type": "providers/diagnosticSettings",
+            "name": "Microsoft.Insights/service",
+            "dependsOn": [
+              "Microsoft.Sql/servers/databases/sqlServerName/contosodb"
+            ],
+            "apiVersion": "2017-05-01-preview",
+            "properties": {
+              "workspaceId": "omsWorkspaceResourceId",
+              "logs": [
+                {
+                  "category": "QueryStoreRuntimeStatistics",
+                  "enabled": true,
+                  "retentionPolicy": {
+                    "days": 0,
+                    "enabled": true
+                  }
+                },
+                {
+                  "category": "QueryStoreWaitStatistics",
+                  "enabled": true,
+                  "retentionPolicy": {
+                    "days": 0,
+                    "enabled": true
+                  }
+                },
+                {
+                  "category": "Errors",
+                  "enabled": true,
+                  "retentionPolicy": {
+                    "days": 0,
+                    "enabled": true
+                  }
+                },
+                {
+                  "category": "DatabaseWaitStatistics",
+                  "enabled": true,
+                  "retentionPolicy": {
+                    "days": 0,
+                    "enabled": true
+                  }
+                },
+                {
+                  "category": "Timeouts",
+                  "enabled": true,
+                  "retentionPolicy": {
+                    "days": 0,
+                    "enabled": true
+                  }
+                },
+                {
+                  "category": "Blocks",
+                  "enabled": true,
+                  "retentionPolicy": {
+                    "days": 0,
+                    "enabled": true
+                  }
+                },
+                {
+                  "category": "SQLInsights",
+                  "enabled": true,
+                  "retentionPolicy": {
+                    "days": 0,
+                    "enabled": true
+                  }
+                }
+              ],
+              "metrics": [
+                {
+                  "timeGrain": "AllMetrics",
+                  "enabled": true,
+                  "retentionPolicy": {
+                    "enabled": true,
+                    "days": 0
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      }
+    ],
+    "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+  }
+}

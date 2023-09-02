@@ -1,0 +1,646 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAzureQuickStart",
+  "paths": [
+    "/application-workloads/shibboleth/shibboleth-cluster-ubuntu/azuredeploy.json",
+    "/application-workloads/shibboleth/shibboleth-cluster-ubuntu/azuredeploy.parameters.json"
+  ],
+  "timestamp": 1642962896240,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/application-workloads/shibboleth/shibboleth-cluster-ubuntu/azuredeploy.json",
+      "/application-workloads/shibboleth/shibboleth-cluster-ubuntu/azuredeploy.parameters.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT514",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "microsoft.network/publicipaddresses",
+      "microsoft.network/virtualnetworks",
+      "microsoft.network/loadbalancers",
+      "microsoft.network/networkinterfaces",
+      "microsoft.compute/virtualmachines/extensions",
+      "microsoft.compute/virtualmachines",
+      "microsoft.network/networksecuritygroups",
+      "microsoft.storage/storageaccounts",
+      "microsoft.compute/availabilitysets"
+    ]
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT514",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "adminUsername": {
+        "type": "string",
+        "metadata": {
+          "description": "The Name of the administrator of the new VM. Exclusion list: 'admin','administrator'"
+        },
+        "value": "GEN-UNIQUE-8"
+      },
+      "publicDnsName": {
+        "type": "string",
+        "defaultValue": "[concat('scu', uniqueString(resourceGroup().id))]",
+        "metadata": {
+          "description": "Unique public DNS prefix for the deployment. The fqdn will look something like '<dnsname>.westus.cloudapp.azure.com'. Up to 62 chars, digits or dashes, lowercase, should start with a letter: must conform to '^[a-z][a-z0-9-]{1,61}[a-z0-9]$'."
+        }
+      },
+      "mySqlPasswordForRootUser": {
+        "type": "securestring",
+        "metadata": {
+          "description": "Password for the MySQL 'root' admin user."
+        },
+        "value": "GEN-PASSWORD"
+      },
+      "mySqlIdpUser": {
+        "type": "string",
+        "defaultValue": "scu",
+        "metadata": {
+          "description": "User name that will be used to create user in MySQL database which has all privileges."
+        }
+      },
+      "mySqlPasswordForIdpUser": {
+        "type": "securestring",
+        "metadata": {
+          "description": "Password for the MySQL Idp user."
+        },
+        "value": "GEN-PASSWORD"
+      },
+      "numberOfInstances": {
+        "type": "int",
+        "defaultValue": 2,
+        "allowedValues": [
+          1,
+          2,
+          3,
+          4,
+          5
+        ],
+        "metadata": {
+          "description": "Number of web front end VMs to create."
+        }
+      },
+      "location": {
+        "type": "string",
+        "defaultValue": "[resourceGroup().location]",
+        "metadata": {
+          "description": "Location for all resources."
+        }
+      },
+      "authenticationType": {
+        "type": "string",
+        "defaultValue": "sshPublicKey",
+        "allowedValues": [
+          "sshPublicKey",
+          "password"
+        ],
+        "metadata": {
+          "description": "Type of authentication to use on the Virtual Machine. SSH key is recommended."
+        }
+      },
+      "adminPasswordOrKey": {
+        "type": "securestring",
+        "metadata": {
+          "description": "SSH Key or password for the Virtual Machine. SSH key is recommended."
+        },
+        "value": "GEN-SSH-PUB-KEY"
+      },
+      "_artifactsLocation": {
+        "type": "string",
+        "metadata": {
+          "description": "The base URI where artifacts required by this template are located including a trailing '/'"
+        },
+        "defaultValue": "[deployment().properties.templateLink.uri]"
+      },
+      "_artifactsLocationSasToken": {
+        "type": "securestring",
+        "metadata": {
+          "description": "The sasToken required to access _artifactsLocation.  When the template is deployed using the accompanying scripts, a sasToken will be automatically generated. Use the defaultValue if the staging location is not secured."
+        },
+        "defaultValue": ""
+      },
+      "vmSize": {
+        "type": "string",
+        "defaultValue": "Standard_A0",
+        "metadata": {
+          "description": "Default VM Size"
+        }
+      }
+    },
+    "variables": {
+      "vnetAddressRange": "10.0.0.0/16",
+      "subnetAddressRange": "10.0.0.0/24",
+      "subnetName": "Subnet",
+      "availabilitySetName": "AvSet",
+      "vmName": "VM",
+      "storageAccountType": "Standard_LRS",
+      "nicsql": "VMsql",
+      "newStorageAccountName": "[concat('st', uniqueString(resourceGroup().id))]",
+      "subnet-id": "Microsoft.Network/virtualNetworks/subnets/VNET/Subnet",
+      "imagePublisher": "Canonical",
+      "imageOffer": "UbuntuServer",
+      "ubuntuOSVersion": "16.04-LTS",
+      "installScriptName": "install_shibboleth_idp.sh",
+      "installScriptUri": "[uri(parameters('_artifactsLocation'), concat(variables('installScriptName'), parameters('_artifactsLocationSasToken')))]",
+      "installBackendScriptName": "install_backend.sh",
+      "installBackendScriptUri": "[uri(parameters('_artifactsLocation'), concat(variables('installBackendScriptName'), parameters('_artifactsLocationSasToken')))]",
+      "installBackendCommand": "sh install_backend.sh GEN-PASSWORD scu GEN-PASSWORD",
+      "linuxConfiguration": {
+        "disablePasswordAuthentication": true,
+        "ssh": {
+          "publicKeys": [
+            {
+              "path": "/home/GEN-UNIQUE-8/.ssh/authorized_keys",
+              "keyData": "GEN-SSH-PUB-KEY"
+            }
+          ]
+        }
+      }
+    },
+    "resources": [
+      {
+        "apiVersion": "2020-07-01",
+        "type": "Microsoft.Network/publicIPAddresses",
+        "name": "publicIp",
+        "location": "[resourceGroup().location]",
+        "properties": {
+          "publicIPAllocationMethod": "Dynamic",
+          "dnsSettings": {
+            "domainNameLabel": "[concat('scu', uniqueString(resourceGroup().id))]"
+          }
+        }
+      },
+      {
+        "apiVersion": "2020-07-01",
+        "type": "Microsoft.Network/publicIPAddresses",
+        "name": "vmsqlIp",
+        "location": "[resourceGroup().location]",
+        "properties": {
+          "publicIPAllocationMethod": "Dynamic",
+          "dnsSettings": {
+            "domainNameLabel": "[concat('scu', uniqueString(resourceGroup().id))]db"
+          }
+        }
+      },
+      {
+        "type": "Microsoft.Compute/availabilitySets",
+        "name": "AvSet",
+        "apiVersion": "2017-12-01",
+        "location": "[resourceGroup().location]",
+        "sku": {
+          "name": "Aligned"
+        },
+        "properties": {
+          "platformFaultDomainCount": 2,
+          "platformUpdateDomainCount": 5
+        }
+      },
+      {
+        "type": "Microsoft.Compute/availabilitySets",
+        "name": "AvSetdb",
+        "apiVersion": "2017-12-01",
+        "location": "[resourceGroup().location]",
+        "sku": {
+          "name": "Aligned"
+        },
+        "properties": {
+          "platformFaultDomainCount": 2,
+          "platformUpdateDomainCount": 5
+        }
+      },
+      {
+        "apiVersion": "2015-06-15",
+        "type": "Microsoft.Storage/storageAccounts",
+        "name": "[variables('newStorageAccountName')]",
+        "location": "[resourceGroup().location]",
+        "properties": {
+          "accountType": "Standard_LRS"
+        }
+      },
+      {
+        "apiVersion": "2018-02-01",
+        "type": "Microsoft.Network/virtualNetworks",
+        "name": "VNET",
+        "location": "[resourceGroup().location]",
+        "properties": {
+          "addressSpace": {
+            "addressPrefixes": [
+              "10.0.0.0/16"
+            ]
+          },
+          "subnets": [
+            {
+              "name": "Subnet",
+              "properties": {
+                "addressPrefix": "10.0.0.0/24"
+              }
+            }
+          ]
+        }
+      },
+      {
+        "apiVersion": "2018-02-01",
+        "name": "loadBalancer",
+        "type": "Microsoft.Network/loadBalancers",
+        "location": "[resourceGroup().location]",
+        "dependsOn": [
+          "Microsoft.Network/publicIPAddresses/publicIp"
+        ],
+        "properties": {
+          "frontendIpConfigurations": [
+            {
+              "name": "LBFE",
+              "properties": {
+                "publicIPAddress": {
+                  "id": "Microsoft.Network/publicIPAddresses/publicIp"
+                }
+              }
+            }
+          ],
+          "backendAddressPools": [
+            {
+              "name": "LBBAP"
+            }
+          ],
+          "inboundNatRules": [
+            {
+              "name": "SSH-VM0",
+              "properties": {
+                "frontendIPConfiguration": {
+                  "id": "Microsoft.Network/loadBalancers/frontendIPConfigurations/loadBalancer/LBFE"
+                },
+                "protocol": "Tcp",
+                "frontendPort": 2200,
+                "backendPort": 22,
+                "enableFloatingIP": false
+              }
+            },
+            {
+              "name": "SSH-VM1",
+              "properties": {
+                "frontendIPConfiguration": {
+                  "id": "Microsoft.Network/loadBalancers/frontendIPConfigurations/loadBalancer/LBFE"
+                },
+                "protocol": "Tcp",
+                "frontendPort": 2201,
+                "backendPort": 22,
+                "enableFloatingIP": false
+              }
+            },
+            {
+              "name": "SSH-VM2",
+              "properties": {
+                "frontendIPConfiguration": {
+                  "id": "Microsoft.Network/loadBalancers/frontendIPConfigurations/loadBalancer/LBFE"
+                },
+                "protocol": "Tcp",
+                "frontendPort": 2202,
+                "backendPort": 22,
+                "enableFloatingIP": false
+              }
+            },
+            {
+              "name": "SSH-VM3",
+              "properties": {
+                "frontendIPConfiguration": {
+                  "id": "Microsoft.Network/loadBalancers/frontendIPConfigurations/loadBalancer/LBFE"
+                },
+                "protocol": "Tcp",
+                "frontendPort": 2203,
+                "backendPort": 22,
+                "enableFloatingIP": false
+              }
+            },
+            {
+              "name": "SSH-VM4",
+              "properties": {
+                "frontendIPConfiguration": {
+                  "id": "Microsoft.Network/loadBalancers/frontendIPConfigurations/loadBalancer/LBFE"
+                },
+                "protocol": "Tcp",
+                "frontendPort": 2204,
+                "backendPort": 22,
+                "enableFloatingIP": false
+              }
+            }
+          ],
+          "loadBalancingRules": [
+            {
+              "properties": {
+                "frontendIPConfiguration": {
+                  "id": "Microsoft.Network/loadBalancers/frontendIpConfigurations/loadBalancer/LBFE"
+                },
+                "backendAddressPool": {
+                  "id": "Microsoft.Network/loadBalancers/backendAddressPools/loadBalancer/LBBAP"
+                },
+                "probe": {
+                  "id": "Microsoft.Network/loadBalancers/probes/loadBalancer/lbprobe"
+                },
+                "protocol": "Tcp",
+                "frontendPort": 80,
+                "backendPort": 80,
+                "idleTimeoutInMinutes": 15
+              },
+              "name": "lbrule"
+            },
+            {
+              "properties": {
+                "frontendIPConfiguration": {
+                  "id": "Microsoft.Network/loadBalancers/frontendIpConfigurations/loadBalancer/LBFE"
+                },
+                "backendAddressPool": {
+                  "id": "Microsoft.Network/loadBalancers/backendAddressPools/loadBalancer/LBBAP"
+                },
+                "probe": {
+                  "id": "Microsoft.Network/loadBalancers/probes/loadBalancer/lbprobe"
+                },
+                "protocol": "Tcp",
+                "frontendPort": 8443,
+                "backendPort": 8443,
+                "idleTimeoutInMinutes": 15
+              },
+              "name": "lbrule8443"
+            }
+          ],
+          "probes": [
+            {
+              "properties": {
+                "protocol": "Http",
+                "port": 8080,
+                "requestPath": "/",
+                "intervalInSeconds": 15,
+                "numberOfProbes": 2
+              },
+              "name": "lbprobe"
+            }
+          ]
+        }
+      },
+      {
+        "apiVersion": "2018-02-01",
+        "type": "Microsoft.Network/networkSecurityGroups",
+        "name": "vmsql",
+        "location": "[resourceGroup().location]",
+        "properties": {
+          "securityRules": [
+            {
+              "name": "default-allow-ssh",
+              "properties": {
+                "description": "Allow SSH",
+                "protocol": "Tcp",
+                "sourcePortRange": "*",
+                "destinationPortRange": "22",
+                "sourceAddressPrefix": "*",
+                "destinationAddressPrefix": "*",
+                "access": "Allow",
+                "priority": 1201,
+                "direction": "Inbound"
+              }
+            },
+            {
+              "name": "Port_3306",
+              "properties": {
+                "description": "Allow 3306",
+                "protocol": "*",
+                "sourcePortRange": "*",
+                "destinationPortRange": "3306",
+                "sourceAddressPrefix": "*",
+                "destinationAddressPrefix": "*",
+                "access": "Allow",
+                "priority": 1010,
+                "direction": "Inbound"
+              }
+            }
+          ]
+        }
+      },
+      {
+        "apiVersion": "2018-02-01",
+        "type": "Microsoft.Network/networkInterfaces",
+        "name": "VMcopyindex()",
+        "copy": {
+          "name": "netIntLoop",
+          "count": 2
+        },
+        "location": "[resourceGroup().location]",
+        "dependsOn": [
+          "Microsoft.Network/virtualNetworks/VNET",
+          "Microsoft.Network/loadBalancers/loadBalancer"
+        ],
+        "properties": {
+          "ipConfigurations": [
+            {
+              "name": "ipconfig",
+              "properties": {
+                "privateIPAllocationMethod": "Dynamic",
+                "subnet": {
+                  "id": "Microsoft.Network/virtualNetworks/subnets/VNET/Subnet"
+                },
+                "loadBalancerBackendAddressPools": [
+                  {
+                    "id": "Microsoft.Network/loadBalancers/backendAddressPools/loadBalancer/LBBAP"
+                  }
+                ],
+                "loadBalancerInboundNatRules": [
+                  {
+                    "id": "Microsoft.Network/loadBalancers/inboundNatRules/loadBalancer/SSH-VMcopyindex()"
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      },
+      {
+        "apiVersion": "2018-02-01",
+        "type": "Microsoft.Network/networkInterfaces",
+        "name": "VMsql",
+        "location": "[resourceGroup().location]",
+        "dependsOn": [
+          "Microsoft.Network/virtualNetworks/VNET",
+          "Microsoft.Network/networkSecurityGroups/vmsql"
+        ],
+        "properties": {
+          "networkSecurityGroup": {
+            "id": "Microsoft.Network/networkSecurityGroups/vmsql"
+          },
+          "ipConfigurations": [
+            {
+              "name": "ipconfig1",
+              "properties": {
+                "privateIPAllocationMethod": "Dynamic",
+                "publicIPAddress": {
+                  "id": "Microsoft.Network/publicIPAddresses/vmsqlIp"
+                },
+                "subnet": {
+                  "id": "Microsoft.Network/virtualNetworks/subnets/VNET/Subnet"
+                }
+              }
+            }
+          ]
+        }
+      },
+      {
+        "apiVersion": "2017-03-30",
+        "type": "Microsoft.Compute/virtualMachines",
+        "name": "VMcopyindex()",
+        "copy": {
+          "name": "virtualMachineLoop",
+          "count": 2
+        },
+        "location": "[resourceGroup().location]",
+        "dependsOn": [
+          "[resourceId('Microsoft.Storage/storageAccounts',variables('newStorageAccountName'))]",
+          "[resourceId('Microsoft.Network/networkInterfaces/',concat(variables('vmName'),copyindex()))]",
+          "[resourceId('Microsoft.Compute/availabilitySets/', variables('availabilitySetName'))]"
+        ],
+        "properties": {
+          "availabilitySet": {
+            "id": "Microsoft.Compute/availabilitySets/AvSet"
+          },
+          "hardwareProfile": {
+            "vmSize": "Standard_A0"
+          },
+          "osProfile": {
+            "computerName": "VMcopyindex()",
+            "adminUsername": "GEN-UNIQUE-8",
+            "adminPassword": "GEN-SSH-PUB-KEY",
+            "linuxConfiguration": "[if(equals(parameters('authenticationType'), 'password'), json('null'), variables('linuxConfiguration'))]"
+          },
+          "storageProfile": {
+            "imageReference": {
+              "publisher": "Canonical",
+              "offer": "UbuntuServer",
+              "sku": "16.04-LTS",
+              "version": "latest"
+            },
+            "osDisk": {
+              "createOption": "FromImage"
+            }
+          },
+          "networkProfile": {
+            "networkInterfaces": [
+              {
+                "id": "Microsoft.Network/networkInterfaces/VMcopyindex()"
+              }
+            ]
+          },
+          "diagnosticsProfile": {
+            "bootDiagnostics": {
+              "enabled": true,
+              "storageUri": "[reference(variables('newStorageAccountName'), '2021-01-01').primaryEndpoints['blob']]"
+            }
+          }
+        }
+      },
+      {
+        "apiVersion": "2017-03-30",
+        "type": "Microsoft.Compute/virtualMachines",
+        "name": "VMdb",
+        "location": "[resourceGroup().location]",
+        "dependsOn": [
+          "[resourceId('Microsoft.Storage/storageAccounts',variables('newStorageAccountName'))]",
+          "[resourceId('Microsoft.Network/networkInterfaces/',variables('nicsql'))]",
+          "[resourceId('Microsoft.Compute/availabilitySets', concat(variables('availabilitySetName'),'db'))]"
+        ],
+        "properties": {
+          "availabilitySet": {
+            "id": "Microsoft.Compute/availabilitySets/AvSetdb"
+          },
+          "hardwareProfile": {
+            "vmSize": "Standard_A0"
+          },
+          "osProfile": {
+            "computerName": "VMdb",
+            "adminUsername": "GEN-UNIQUE-8",
+            "adminPassword": "GEN-SSH-PUB-KEY",
+            "linuxConfiguration": "[if(equals(parameters('authenticationType'), 'password'), json('null'), variables('linuxConfiguration'))]"
+          },
+          "storageProfile": {
+            "imageReference": {
+              "publisher": "Canonical",
+              "offer": "UbuntuServer",
+              "sku": "16.04-LTS",
+              "version": "latest"
+            },
+            "osDisk": {
+              "createOption": "FromImage"
+            }
+          },
+          "networkProfile": {
+            "networkInterfaces": [
+              {
+                "id": "Microsoft.Network/networkInterfaces/VMsql"
+              }
+            ]
+          },
+          "diagnosticsProfile": {
+            "bootDiagnostics": {
+              "enabled": true,
+              "storageUri": "[reference(variables('newStorageAccountName'), '2021-01-01').primaryEndpoints['blob']]"
+            }
+          }
+        }
+      },
+      {
+        "type": "Microsoft.Compute/virtualMachines/extensions",
+        "name": "VMdb/CustomScriptExtension",
+        "apiVersion": "2017-12-01",
+        "location": "[resourceGroup().location]",
+        "dependsOn": [
+          "Microsoft.Compute/virtualMachines//VMdb"
+        ],
+        "properties": {
+          "publisher": "Microsoft.Azure.Extensions",
+          "type": "CustomScript",
+          "typeHandlerVersion": "2.0",
+          "autoUpgradeMinorVersion": true,
+          "settings": {
+            "fileUris": [
+              "[uri(parameters('_artifactsLocation'), concat(variables('installBackendScriptName'), parameters('_artifactsLocationSasToken')))]"
+            ]
+          },
+          "protectedSettings": {
+            "commandToExecute": "sh install_backend.sh GEN-PASSWORD scu GEN-PASSWORD"
+          }
+        }
+      },
+      {
+        "type": "Microsoft.Compute/virtualMachines/extensions",
+        "name": "VMcopyIndex()/CustomScriptExtension",
+        "apiVersion": "2017-12-01",
+        "location": "[resourceGroup().location]",
+        "dependsOn": [
+          "Microsoft.Compute/virtualMachines//VMcopyIndex()"
+        ],
+        "properties": {
+          "publisher": "Microsoft.Azure.Extensions",
+          "type": "CustomScript",
+          "typeHandlerVersion": "2.0",
+          "autoUpgradeMinorVersion": true,
+          "settings": {
+            "fileUris": [
+              "[uri(parameters('_artifactsLocation'), concat(variables('installScriptName'), parameters('_artifactsLocationSasToken')))]"
+            ]
+          },
+          "protectedSettings": {
+            "commandToExecute": "mv *.sh /home/GEN-UNIQUE-8 && cd /home/GEN-UNIQUE-8 && sudo chmod 777 *.sh && sudo su && bash install_shibboleth_idp.sh [concat('scu', uniqueString(resourceGroup().id))] [resourceGroup().location] [concat('scu', uniqueString(resourceGroup().id))]db scu GEN-PASSWORD"
+          }
+        },
+        "copy": {
+          "name": "extensionsCopy",
+          "count": 2
+        }
+      }
+    ],
+    "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+  }
+}

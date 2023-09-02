@@ -1,0 +1,100 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAzureQuickStart",
+  "paths": [
+    "/application-workloads/informatica/informatica-adf-hdinsight-powerbi/nested/public-ip.json"
+  ],
+  "timestamp": 1642962889381,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/application-workloads/informatica/informatica-adf-hdinsight-powerbi/nested/public-ip.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT173",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "microsoft.network/publicipaddresses"
+    ]
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT173",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "location": {
+        "type": "string",
+        "defaultValue": "westus",
+        "metadata": {
+          "description": "Public IP Deployment Location"
+        }
+      },
+      "networkApiVersion": {
+        "type": "string",
+        "defaultValue": "2015-06-15",
+        "metadata": {
+          "description": "API Version for the Network Resources"
+        }
+      },
+      "publicIPAddressName": {
+        "type": "string",
+        "defaultValue": "publicIPAddress",
+        "metadata": {
+          "description": "Public IP Address Name"
+        }
+      },
+      "tag": {
+        "type": "object",
+        "defaultValue": {
+          "key1": "key",
+          "value1": "value"
+        },
+        "metadata": {
+          "description": "Tag Values"
+        }
+      },
+      "publicIPdnsPrefix": {
+        "type": "string",
+        "defaultValue": "publicdnsprefix",
+        "metadata": {
+          "description": "Public IP DNS Prefix"
+        }
+      },
+      "informaticaTags": {
+        "type": "object"
+      },
+      "quickstartTags": {
+        "type": "object"
+      }
+    },
+    "variables": {},
+    "resources": [
+      {
+        "comments": "Public IP Address Resource",
+        "apiVersion": "2015-06-15",
+        "type": "Microsoft.Network/publicIPAddresses",
+        "name": "publicIPAddress",
+        "location": "westus",
+        "tags": {
+          "[parameters('tag').key1]": "value",
+          "quickstartName": "quickstartTags",
+          "provider": "informaticaTags"
+        },
+        "properties": {
+          "publicIPAllocationMethod": "Dynamic",
+          "dnsSettings": {
+            "domainNameLabel": "publicdnsprefix"
+          }
+        }
+      }
+    ],
+    "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+  }
+}

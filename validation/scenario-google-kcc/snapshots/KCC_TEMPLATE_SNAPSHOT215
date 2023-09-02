@@ -2,12 +2,12 @@
   "structure": "filesystem",
   "error": null,
   "reference": "master",
-  "contentType": "yaml",
+  "contentType": "json",
   "source": "gitConnectorGoogleKcc",
   "paths": [
-    "/samples/resources/computerouternat/router-nat-with-manual-nat-ips/compute_v1beta1_computerouter.yaml"
+    "/samples/resources/computepacketmirroring/compute_v1beta1_computepacketmirroring.yaml"
   ],
-  "timestamp": 1628765142802,
+  "timestamp": 1642973303003,
   "queryuser": null,
   "checksum": "99914b932bd37a50b983c5e7c90ae93b",
   "node": {
@@ -15,26 +15,69 @@
     "type": "kcc",
     "collection": "kcctemplate",
     "paths": [
-      "/samples/resources/computerouternat/router-nat-with-manual-nat-ips/compute_v1beta1_computerouter.yaml"
+      "/samples/resources/computepacketmirroring/compute_v1beta1_computepacketmirroring.yaml"
     ],
     "snapshotId": "KCC_TEMPLATE_SNAPSHOT215",
     "status": "active",
-    "validate": true
+    "validate": true,
+    "resourceTypes": [
+      "computepacketmirroring"
+    ]
   },
   "snapshotId": "KCC_TEMPLATE_SNAPSHOT215",
   "collection": "kcctemplate",
   "json": {
     "apiVersion": "compute.cnrm.cloud.google.com/v1beta1",
-    "kind": "ComputeRouter",
+    "kind": "ComputePacketMirroring",
     "metadata": {
-      "name": "computerouternat-dep-withmanualnatips"
+      "name": "computepacketmirroring-sample"
     },
     "spec": {
-      "description": "example router description",
-      "region": "us-west1",
-      "networkRef": {
-        "name": "computerouternat-dep-withmanualnatips"
-      }
+      "projectRef": {
+        "external": "projects/${PROJECT_ID?}"
+      },
+      "location": "us-west2",
+      "description": "A sample packet mirroring",
+      "network": {
+        "urlRef": {
+          "name": "computepacketmirroring-dep"
+        }
+      },
+      "priority": 1000,
+      "collectorIlb": {
+        "urlRef": {
+          "name": "computepacketmirroring-dep"
+        }
+      },
+      "mirroredResources": {
+        "subnetworks": [
+          {
+            "urlRef": {
+              "name": "computepacketmirroring-dep"
+            }
+          }
+        ],
+        "instances": [
+          {
+            "urlRef": {
+              "name": "computepacketmirroring-dep"
+            }
+          }
+        ],
+        "tags": [
+          "tag-one"
+        ]
+      },
+      "filter": {
+        "cidrRanges": [
+          "192.168.0.0/23"
+        ],
+        "ipProtocols": [
+          "tcp"
+        ],
+        "direction": "BOTH"
+      },
+      "enable": "TRUE"
     }
   }
 }

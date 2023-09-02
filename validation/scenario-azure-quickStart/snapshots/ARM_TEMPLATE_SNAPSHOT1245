@@ -1,0 +1,176 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAzureQuickStart",
+  "paths": [
+    "/quickstarts/microsoft.datalakestore/data-lake-store-encryption-key-vault/azuredeploy.json",
+    "/quickstarts/microsoft.datalakestore/data-lake-store-encryption-key-vault/azuredeploy.parameters.json"
+  ],
+  "timestamp": 1642962905927,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/quickstarts/microsoft.datalakestore/data-lake-store-encryption-key-vault/azuredeploy.json",
+      "/quickstarts/microsoft.datalakestore/data-lake-store-encryption-key-vault/azuredeploy.parameters.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT1245",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "microsoft.datalakestore/accounts",
+      "microsoft.resources/deployments"
+    ]
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT1245",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "0.9.0.0",
+    "parameters": {
+      "dataLakeStoreName": {
+        "type": "string",
+        "defaultValue": "[uniqueString(resourceGroup().id)]",
+        "metadata": {
+          "description": "The name of the Data Lake Store account to create."
+        },
+        "value": "GEN-UNIQUE"
+      },
+      "location": {
+        "defaultValue": "[resourceGroup().location]",
+        "type": "string",
+        "metadata": {
+          "description": "The location in which to create the Data Lake Store account."
+        },
+        "value": "eastus2"
+      },
+      "keyVaultName": {
+        "type": "string",
+        "metadata": {
+          "description": "The Azure Key Vault name."
+        },
+        "value": "GET-PREREQ-keyVaultName"
+      },
+      "keyVaultResourceGroupName": {
+        "type": "string",
+        "metadata": {
+          "description": "The Azure Key Vault resource group name."
+        },
+        "value": "GET-PREREQ-keyVaultResourceGroupName"
+      },
+      "keyName": {
+        "type": "string",
+        "metadata": {
+          "description": "The Azure Key Vault encryption key name."
+        },
+        "value": "GET-PREREQ-keyName"
+      },
+      "keyVersion": {
+        "type": "string",
+        "metadata": {
+          "description": "The Azure Key Vault encryption key version."
+        },
+        "value": "GET-PREREQ-keyVersion"
+      }
+    },
+    "resources": [
+      {
+        "apiVersion": "2016-11-01",
+        "name": "GEN-UNIQUE",
+        "location": "eastus2",
+        "type": "Microsoft.DataLakeStore/accounts",
+        "properties": {
+          "encryptionState": "Enabled",
+          "encryptionConfig": {
+            "type": "UserManaged",
+            "keyVaultMetaInfo": {
+              "keyVaultResourceId": "GET-PREREQ-keyVaultResourceGroupName/Microsoft.KeyVault/vaults/GET-PREREQ-keyVaultName",
+              "encryptionKeyName": "GET-PREREQ-keyName",
+              "encryptionKeyVersion": "GET-PREREQ-keyVersion"
+            }
+          }
+        },
+        "identity": {
+          "type": "SystemAssigned"
+        }
+      },
+      {
+        "type": "Microsoft.Resources/deployments",
+        "apiVersion": "2019-09-01",
+        "name": "addAccessPolicy",
+        "resourceGroup": "GET-PREREQ-keyVaultResourceGroupName",
+        "dependsOn": [
+          "Microsoft.DataLakeStore/accounts/GEN-UNIQUE"
+        ],
+        "properties": {
+          "mode": "Incremental",
+          "template": {
+            "contentVersion": "0.9.0.0",
+            "resources": [
+              {
+                "type": "Microsoft.KeyVault/vaults/accessPolicies",
+                "name": "GET-PREREQ-keyVaultName/add",
+                "apiVersion": "2019-09-01",
+                "properties": {
+                  "accessPolicies": [
+                    {
+                      "objectId": "[reference(resourceId('Microsoft.DataLakeStore/accounts', parameters('dataLakeStoreName')), '2016-11-01', 'Full').identity.principalId]",
+                      "tenantId": "[reference(resourceId('Microsoft.DataLakeStore/accounts', parameters('dataLakeStoreName')), '2016-11-01', 'Full').identity.tenantId]",
+                      "permissions": {
+                        "keys": [
+                          "encrypt",
+                          "decrypt"
+                        ]
+                      }
+                    }
+                  ]
+                }
+              }
+            ],
+            "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+          }
+        }
+      },
+      {
+        "type": "Microsoft.Resources/deployments",
+        "apiVersion": "2019-09-01",
+        "name": "updateAdlsAccount",
+        "dependsOn": [
+          "addAccessPolicy"
+        ],
+        "properties": {
+          "mode": "Incremental",
+          "template": {
+            "contentVersion": "0.9.0.0",
+            "resources": [
+              {
+                "apiVersion": "2016-11-01",
+                "name": "GEN-UNIQUE",
+                "location": "eastus2",
+                "type": "Microsoft.DataLakeStore/accounts",
+                "properties": {
+                  "encryptionConfig": {
+                    "keyVaultMetaInfo": {
+                      "keyVaultResourceId": "GET-PREREQ-keyVaultResourceGroupName/Microsoft.KeyVault/vaults/GET-PREREQ-keyVaultName",
+                      "encryptionKeyName": "GET-PREREQ-keyName",
+                      "encryptionKeyVersion": "GET-PREREQ-keyVersion"
+                    }
+                  }
+                },
+                "identity": {
+                  "type": "SystemAssigned"
+                }
+              }
+            ],
+            "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+          }
+        }
+      }
+    ],
+    "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+  }
+}

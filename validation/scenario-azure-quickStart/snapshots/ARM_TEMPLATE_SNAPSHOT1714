@@ -1,0 +1,91 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAzureQuickStart",
+  "paths": [
+    "/quickstarts/microsoft.sqlvirtualmachine/sql-vm-new-storage-ultrassd/prereqs/prereq.azuredeploy.json",
+    "/quickstarts/microsoft.sqlvirtualmachine/sql-vm-new-storage-ultrassd/prereqs/prereq.azuredeploy.parameters.json"
+  ],
+  "timestamp": 1642962910556,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/quickstarts/microsoft.sqlvirtualmachine/sql-vm-new-storage-ultrassd/prereqs/prereq.azuredeploy.json",
+      "/quickstarts/microsoft.sqlvirtualmachine/sql-vm-new-storage-ultrassd/prereqs/prereq.azuredeploy.parameters.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT1714",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "microsoft.network/virtualnetworks"
+    ]
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT1714",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "location": {
+        "type": "string",
+        "metadata": {
+          "description": "Location for all resources."
+        },
+        "defaultValue": "[resourceGroup().location]",
+        "value": "eastus2"
+      }
+    },
+    "variables": {
+      "firstVNETName": "[concat('vnet-', uniqueString(resourceGroup().id, deployment().name))]",
+      "firstVNETPrefix": "10.0.0.0/16",
+      "firstVNETFESubnetName": "subnet01",
+      "firstVNETFESubnetPrefix": "10.0.1.0/24"
+    },
+    "resources": [
+      {
+        "name": "[variables('firstVNETName')]",
+        "type": "Microsoft.Network/virtualNetworks",
+        "location": "eastus2",
+        "apiVersion": "2020-05-01",
+        "tags": {
+          "displayName": "firstVNET"
+        },
+        "properties": {
+          "addressSpace": {
+            "addressPrefixes": [
+              "10.0.0.0/16"
+            ]
+          },
+          "subnets": [
+            {
+              "name": "subnet01",
+              "properties": {
+                "addressPrefix": "10.0.1.0/24"
+              }
+            }
+          ]
+        }
+      }
+    ],
+    "outputs": {
+      "existingVirtualNetworkName": {
+        "type": "string",
+        "value": "[variables('firstVNETName')]"
+      },
+      "existingSubnetName": {
+        "type": "string",
+        "value": "[variables('firstVNETFESubnetName')]"
+      },
+      "existingVnetResourceGroup": {
+        "type": "string",
+        "value": "[resourceGroup().name]"
+      }
+    },
+    "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+  }
+}

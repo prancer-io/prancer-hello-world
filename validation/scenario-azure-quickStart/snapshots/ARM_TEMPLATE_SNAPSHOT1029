@@ -1,0 +1,145 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAzureQuickStart",
+  "paths": [
+    "/quickstarts/microsoft.compute/encrypt-running-vmss-linux/azuredeploy.json",
+    "/quickstarts/microsoft.compute/encrypt-running-vmss-linux/azuredeploy.parameters.json"
+  ],
+  "timestamp": 1642962903741,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/quickstarts/microsoft.compute/encrypt-running-vmss-linux/azuredeploy.json",
+      "/quickstarts/microsoft.compute/encrypt-running-vmss-linux/azuredeploy.parameters.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT1029",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "microsoft.compute/virtualmachinescalesets"
+    ]
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT1029",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "vmssName": {
+        "type": "string",
+        "metadata": {
+          "description": "Name of VMSS to be encrypted."
+        },
+        "maxLength": 61,
+        "value": "GET-PREREQ-existingVmssName"
+      },
+      "keyVaultName": {
+        "type": "string",
+        "metadata": {
+          "description": "Name of the KeyVault to place the volume encryption key."
+        },
+        "value": "GEN-KEYVAULT-NAME"
+      },
+      "keyVaultResourceGroup": {
+        "type": "string",
+        "metadata": {
+          "description": "Resource group of the KeyVault"
+        },
+        "value": "GEN-KEYVAULT-RESOURCEGROUP-NAME"
+      },
+      "keyEncryptionKeyURL": {
+        "type": "string",
+        "defaultValue": "",
+        "metadata": {
+          "description": "URL of the KeyEncryptionKey used to encrypt the volume encryption key"
+        },
+        "value": "GEN-KEYVAULT-ENCRYPTION-KEY-URI"
+      },
+      "keyEncryptionAlgorithm": {
+        "type": "string",
+        "defaultValue": "RSA-OAEP",
+        "metadata": {
+          "description": "keyEncryptionAlgorithm used to wrap volume encryption key using KeyEncryptionKeyURL"
+        },
+        "value": "RSA-OAEP"
+      },
+      "volumeType": {
+        "type": "string",
+        "defaultValue": "Data",
+        "metadata": {
+          "description": "Volume type being targeted for encryption operation (Data is the only supported type in Linux VMSS Preview)"
+        },
+        "value": "Data"
+      },
+      "forceUpdateTag": {
+        "type": "string",
+        "defaultValue": "1.0",
+        "metadata": {
+          "description": "Pass in a unique value like a GUID everytime the operation needs to be force run"
+        },
+        "value": "1.0"
+      },
+      "location": {
+        "type": "string",
+        "defaultValue": "[resourceGroup().location]",
+        "metadata": {
+          "description": "Default location"
+        }
+      }
+    },
+    "variables": {
+      "extensionName": "AzureDiskEncryptionForLinux",
+      "extensionVersion": "1.1",
+      "encryptionOperation": "EnableEncryption",
+      "keyVaultURL": "[concat('https://', parameters('keyVaultName'), environment().suffixes.keyvaultDns)]",
+      "keyVaultResourceID": "GEN-KEYVAULT-RESOURCEGROUP-NAME/Microsoft.KeyVault/vaults//GEN-KEYVAULT-NAME"
+    },
+    "resources": [
+      {
+        "type": "Microsoft.Compute/virtualMachineScaleSets",
+        "name": "GET-PREREQ-existingVmssName",
+        "location": "[resourceGroup().location]",
+        "apiVersion": "2021-04-01",
+        "sku": {
+          "name": "Standard_D2_v3",
+          "tier": "Standard",
+          "capacity": 2
+        },
+        "properties": {
+          "virtualMachineProfile": {
+            "extensionProfile": {
+              "extensions": [
+                {
+                  "name": "AzureDiskEncryptionForLinux",
+                  "properties": {
+                    "publisher": "Microsoft.Azure.Security",
+                    "type": "AzureDiskEncryptionForLinux",
+                    "typeHandlerVersion": "1.1",
+                    "autoUpgradeMinorVersion": true,
+                    "forceUpdateTag": "1.0",
+                    "settings": {
+                      "EncryptionOperation": "EnableEncryption",
+                      "KeyVaultURL": "[variables('keyVaultURL')]",
+                      "KeyVaultResourceId": "GEN-KEYVAULT-RESOURCEGROUP-NAME/Microsoft.KeyVault/vaults//GEN-KEYVAULT-NAME",
+                      "KeyEncryptionKeyURL": "GEN-KEYVAULT-ENCRYPTION-KEY-URI",
+                      "KekVaultResourceId": "[if(empty(parameters('keyEncryptionKeyURL')),'',variables('keyVaultResourceID'))]",
+                      "KeyEncryptionAlgorithm": "RSA-OAEP",
+                      "VolumeType": "Data"
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        }
+      }
+    ],
+    "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+  }
+}

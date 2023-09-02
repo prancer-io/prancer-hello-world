@@ -2,12 +2,12 @@
   "structure": "filesystem",
   "error": null,
   "reference": "master",
-  "contentType": "yaml",
+  "contentType": "json",
   "source": "gitConnectorGoogleKcc",
   "paths": [
-    "/samples/resources/computenetworkendpointgroup/compute_v1beta1_computenetworkendpointgroup.yaml"
+    "/samples/resources/computeinstancegroup/compute_v1beta1_computeinstancegroup.yaml"
   ],
-  "timestamp": 1628765141929,
+  "timestamp": 1642973302852,
   "queryuser": null,
   "checksum": "99914b932bd37a50b983c5e7c90ae93b",
   "node": {
@@ -15,30 +15,44 @@
     "type": "kcc",
     "collection": "kcctemplate",
     "paths": [
-      "/samples/resources/computenetworkendpointgroup/compute_v1beta1_computenetworkendpointgroup.yaml"
+      "/samples/resources/computeinstancegroup/compute_v1beta1_computeinstancegroup.yaml"
     ],
     "snapshotId": "KCC_TEMPLATE_SNAPSHOT176",
     "status": "active",
-    "validate": true
+    "validate": true,
+    "resourceTypes": [
+      "computeinstancegroup"
+    ]
   },
   "snapshotId": "KCC_TEMPLATE_SNAPSHOT176",
   "collection": "kcctemplate",
   "json": {
     "apiVersion": "compute.cnrm.cloud.google.com/v1beta1",
-    "kind": "ComputeNetworkEndpointGroup",
+    "kind": "ComputeInstanceGroup",
     "metadata": {
-      "name": "computenetworkendpointgroup-sample"
+      "name": "computeinstancegroup-sample"
     },
     "spec": {
-      "networkRef": {
-        "name": "computenetworkendpointgroup-dep"
-      },
-      "subnetworkRef": {
-        "name": "computenetworkendpointgroup-dep"
-      },
-      "location": "us-west1-a",
-      "defaultPort": 90,
-      "description": "A network endpoint group living in a specific us-west1 subnetwork, whose member endpoints will serve on port number 90 by default."
+      "description": "Compute instance group with two specified instances and named http and https ports.",
+      "instances": [
+        {
+          "name": "computeinstancegroup-dep1"
+        },
+        {
+          "name": "computeinstancegroup-dep2"
+        }
+      ],
+      "namedPort": [
+        {
+          "name": "http",
+          "port": 8080
+        },
+        {
+          "name": "https",
+          "port": 8443
+        }
+      ],
+      "zone": "us-central1-a"
     }
   }
 }

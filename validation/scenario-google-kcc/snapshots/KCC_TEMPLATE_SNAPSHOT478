@@ -2,12 +2,12 @@
   "structure": "filesystem",
   "error": null,
   "reference": "master",
-  "contentType": "yaml",
+  "contentType": "json",
   "source": "gitConnectorGoogleKcc",
   "paths": [
-    "/samples/resources/networkservicesendpointpolicy/networksecurity_v1beta1_networksecurityservertlspolicy.yaml"
+    "/samples/resources/iampolicymember/pubsub-admin-policy-member/iam_v1beta1_iampolicymember.yaml"
   ],
-  "timestamp": 1628765149787,
+  "timestamp": 1642973304376,
   "queryuser": null,
   "checksum": "99914b932bd37a50b983c5e7c90ae93b",
   "node": {
@@ -15,40 +15,30 @@
     "type": "kcc",
     "collection": "kcctemplate",
     "paths": [
-      "/samples/resources/networkservicesendpointpolicy/networksecurity_v1beta1_networksecurityservertlspolicy.yaml"
+      "/samples/resources/iampolicymember/pubsub-admin-policy-member/iam_v1beta1_iampolicymember.yaml"
     ],
     "snapshotId": "KCC_TEMPLATE_SNAPSHOT478",
     "status": "active",
-    "validate": true
+    "validate": true,
+    "resourceTypes": [
+      "iampolicymember"
+    ]
   },
   "snapshotId": "KCC_TEMPLATE_SNAPSHOT478",
   "collection": "kcctemplate",
   "json": {
-    "apiVersion": "networksecurity.cnrm.cloud.google.com/v1beta1",
-    "kind": "NetworkSecurityServerTLSPolicy",
+    "apiVersion": "iam.cnrm.cloud.google.com/v1beta1",
+    "kind": "IAMPolicyMember",
     "metadata": {
-      "name": "networksecurityservertlspolicy-sample",
-      "labels": {
-        "label-one": "value-one"
-      }
+      "name": "iampolicymember-sample-pubsubadmin"
     },
     "spec": {
-      "description": "Sample global server TLS policy",
-      "location": "global",
-      "allowOpen": true,
-      "serverCertificate": {
-        "certificateProviderInstance": {
-          "pluginInstance": "google_cloud_private_spiffe"
-        }
-      },
-      "mtlsPolicy": {
-        "clientValidationCa": [
-          {
-            "certificateProviderInstance": {
-              "pluginInstance": "google_cloud_private_spiffe"
-            }
-          }
-        ]
+      "member": "serviceAccount:iampolicymember-dep-pubsub@${PROJECT_ID?}.iam.gserviceaccount.com",
+      "role": "roles/editor",
+      "resourceRef": {
+        "apiVersion": "pubsub.cnrm.cloud.google.com/v1beta1",
+        "kind": "PubSubTopic",
+        "name": "iampolicymember-dep-pubsubadmin"
       }
     }
   }

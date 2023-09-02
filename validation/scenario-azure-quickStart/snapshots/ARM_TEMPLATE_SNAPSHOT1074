@@ -1,0 +1,287 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAzureQuickStart",
+  "paths": [
+    "/quickstarts/microsoft.compute/vm-domain-join/azuredeploy.json",
+    "/quickstarts/microsoft.compute/vm-domain-join/azuredeploy.parameters.json"
+  ],
+  "timestamp": 1642962904184,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/quickstarts/microsoft.compute/vm-domain-join/azuredeploy.json",
+      "/quickstarts/microsoft.compute/vm-domain-join/azuredeploy.parameters.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT1074",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "microsoft.network/publicipaddresses",
+      "microsoft.network/networkinterfaces",
+      "microsoft.compute/virtualmachines/extensions",
+      "microsoft.compute/virtualmachines",
+      "microsoft.storage/storageaccounts"
+    ]
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT1074",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.0.0.0",
+    "metadata": {
+      "_generator": {
+        "name": "bicep",
+        "version": "0.4.412.5873",
+        "templateHash": "9170108035308691982"
+      }
+    },
+    "parameters": {
+      "vmSize": {
+        "type": "string",
+        "defaultValue": "Standard_A2_v2",
+        "metadata": {
+          "description": "Size of VM"
+        },
+        "value": "Standard_D2s_v3"
+      },
+      "existingVnetName": {
+        "type": "string",
+        "metadata": {
+          "description": "Existing VNET that contains the domain controller"
+        },
+        "value": "GET-PREREQ-virtualNetworkName"
+      },
+      "publicIPAddressName": {
+        "type": "string",
+        "defaultValue": "[format('{0}-pip', parameters('dnsLabelPrefix'))]",
+        "metadata": {
+          "description": "Public IP address name"
+        },
+        "value": "GEN-UNIQUE"
+      },
+      "existingSubnetName": {
+        "type": "string",
+        "metadata": {
+          "description": "Existing subnet that contains the domain controller"
+        },
+        "value": "GET-PREREQ-subnetName"
+      },
+      "dnsLabelPrefix": {
+        "type": "string",
+        "maxLength": 62,
+        "minLength": 1,
+        "metadata": {
+          "description": "Unique public DNS prefix for the deployment. The fqdn will look something like '<dnsname>.westus.cloudapp.azure.com'. Up to 62 chars, digits or dashes, lowercase, should start with a letter: must conform to '^[a-z][a-z0-9-]{1,61}[a-z0-9]$'."
+        },
+        "value": "GEN-UNIQUE-10"
+      },
+      "domainToJoin": {
+        "type": "string",
+        "metadata": {
+          "description": "The FQDN of the AD domain"
+        },
+        "value": "GET-PREREQ-domainName"
+      },
+      "domainUsername": {
+        "type": "string",
+        "metadata": {
+          "description": "Username of the account on the domain"
+        },
+        "value": "GET-PREREQ-adUsername"
+      },
+      "domainPassword": {
+        "type": "secureString",
+        "metadata": {
+          "description": "Password of the account on the domain"
+        }
+      },
+      "ouPath": {
+        "type": "string",
+        "defaultValue": "",
+        "metadata": {
+          "description": "Organizational Unit path in which the nodes and cluster will be present."
+        }
+      },
+      "domainJoinOptions": {
+        "type": "int",
+        "defaultValue": 3,
+        "metadata": {
+          "description": "Set of bit flags that define the join options. Default value of 3 is a combination of NETSETUP_JOIN_DOMAIN (0x00000001) & NETSETUP_ACCT_CREATE (0x00000002) i.e. will join the domain and create the account on the domain. For more information see https://msdn.microsoft.com/en-us/library/aa392154(v=vs.85).aspx"
+        },
+        "value": 3
+      },
+      "adminUsername": {
+        "type": "string",
+        "metadata": {
+          "description": "The name of the administrator of the new VM."
+        },
+        "value": "GEN-UNIQUE"
+      },
+      "adminPassword": {
+        "type": "secureString",
+        "metadata": {
+          "description": "The password for the administrator account of the new VM."
+        },
+        "value": "GEN-PASSWORD"
+      },
+      "storageAccountName": {
+        "type": "string",
+        "defaultValue": "[uniqueString(resourceGroup().id, deployment().name)]",
+        "metadata": {
+          "description": "The name of the storage account."
+        },
+        "value": "GEN-UNIQUE"
+      },
+      "location": {
+        "type": "string",
+        "defaultValue": "[resourceGroup().location]",
+        "metadata": {
+          "description": "Location for all resources."
+        }
+      }
+    },
+    "functions": [],
+    "variables": {
+      "imagePublisher": "MicrosoftWindowsServer",
+      "imageOffer": "WindowsServer",
+      "windowsOSVersion": "2019-Datacenter",
+      "nicName": "[format('{0}-nic', parameters('dnsLabelPrefix'))]"
+    },
+    "resources": [
+      {
+        "type": "Microsoft.Network/publicIPAddresses",
+        "apiVersion": "2021-02-01",
+        "name": "GEN-UNIQUE",
+        "location": "[resourceGroup().location]",
+        "properties": {
+          "publicIPAllocationMethod": "Dynamic",
+          "dnsSettings": {
+            "domainNameLabel": "GEN-UNIQUE-10"
+          }
+        }
+      },
+      {
+        "type": "Microsoft.Storage/storageAccounts",
+        "apiVersion": "2021-04-01",
+        "name": "GEN-UNIQUE",
+        "location": "[resourceGroup().location]",
+        "kind": "StorageV2",
+        "sku": {
+          "name": "Standard_LRS"
+        }
+      },
+      {
+        "type": "Microsoft.Network/networkInterfaces",
+        "apiVersion": "2021-02-01",
+        "name": "[format('{0}-nic', parameters('dnsLabelPrefix'))]",
+        "location": "[resourceGroup().location]",
+        "properties": {
+          "ipConfigurations": [
+            {
+              "name": "ipconfig1",
+              "properties": {
+                "privateIPAllocationMethod": "Dynamic",
+                "publicIPAddress": {
+                  "id": "Microsoft.Network/publicIPAddresses/GEN-UNIQUE"
+                },
+                "subnet": {
+                  "id": "Microsoft.Network/virtualNetworks/subnets/GET-PREREQ-virtualNetworkName/GET-PREREQ-subnetName"
+                }
+              }
+            }
+          ]
+        },
+        "dependsOn": [
+          "Microsoft.Network/publicIPAddresses/GEN-UNIQUE"
+        ]
+      },
+      {
+        "type": "Microsoft.Compute/virtualMachines",
+        "apiVersion": "2021-03-01",
+        "name": "GEN-UNIQUE-10",
+        "location": "[resourceGroup().location]",
+        "properties": {
+          "hardwareProfile": {
+            "vmSize": "Standard_D2s_v3"
+          },
+          "osProfile": {
+            "computerName": "GEN-UNIQUE-10",
+            "adminUsername": "GEN-UNIQUE",
+            "adminPassword": "GEN-PASSWORD"
+          },
+          "storageProfile": {
+            "imageReference": {
+              "publisher": "MicrosoftWindowsServer",
+              "offer": "WindowsServer",
+              "sku": "2019-Datacenter",
+              "version": "latest"
+            },
+            "osDisk": {
+              "name": "[format('{0}-OsDisk', parameters('dnsLabelPrefix'))]",
+              "caching": "ReadWrite",
+              "createOption": "FromImage"
+            },
+            "dataDisks": [
+              {
+                "name": "[format('{0}-DataDisk', parameters('dnsLabelPrefix'))]",
+                "caching": "None",
+                "createOption": "Empty",
+                "diskSizeGB": 1024,
+                "lun": 0
+              }
+            ]
+          },
+          "networkProfile": {
+            "networkInterfaces": [
+              {
+                "id": "Microsoft.Network/networkInterfaces/[format('{0}-nic', parameters('dnsLabelPrefix'))]"
+              }
+            ]
+          },
+          "diagnosticsProfile": {
+            "bootDiagnostics": {
+              "enabled": true,
+              "storageUri": "[reference(resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccountName'))).primaryEndpoints.blob]"
+            }
+          }
+        },
+        "dependsOn": [
+          "Microsoft.Network/networkInterfaces/[format('{0}-nic', parameters('dnsLabelPrefix'))]",
+          "Microsoft.Storage/storageAccounts/GEN-UNIQUE"
+        ]
+      },
+      {
+        "type": "Microsoft.Compute/virtualMachines/extensions",
+        "apiVersion": "2021-03-01",
+        "name": "[format('{0}/{1}', parameters('dnsLabelPrefix'), 'joindomain')]",
+        "location": "[resourceGroup().location]",
+        "properties": {
+          "publisher": "Microsoft.Compute",
+          "type": "JsonADDomainExtension",
+          "typeHandlerVersion": "1.3",
+          "autoUpgradeMinorVersion": true,
+          "settings": {
+            "name": "GET-PREREQ-domainName",
+            "ouPath": "",
+            "user": "[format('{0}\\{1}', parameters('domainToJoin'), parameters('domainUsername'))]",
+            "restart": true,
+            "options": 3
+          },
+          "protectedSettings": {
+            "Password": "domainPassword"
+          }
+        },
+        "dependsOn": [
+          "Microsoft.Compute/virtualMachines/GEN-UNIQUE-10"
+        ]
+      }
+    ],
+    "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+  }
+}

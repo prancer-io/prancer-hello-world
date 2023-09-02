@@ -1,0 +1,77 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAzureQuickStart",
+  "paths": [
+    "/application-workloads/moodle/moodle-scalable-cluster-ubuntu/nested/controllerconfig.json"
+  ],
+  "timestamp": 1642962891931,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/application-workloads/moodle/moodle-scalable-cluster-ubuntu/nested/controllerconfig.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT291",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "microsoft.compute/virtualmachines/extensions"
+    ]
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT291",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "moodleCommon": {
+        "metadata": {
+          "description": "Common Moodle values"
+        },
+        "type": "object"
+      },
+      "location": {
+        "type": "string",
+        "metadata": {
+          "description": "Location for all resources."
+        }
+      }
+    },
+    "variables": {
+      "storageAccountId": "Microsoft.Storage/storageAccounts/moodleCommon",
+      "redisResourceId": "Microsoft.Cache/Redis/moodleCommon"
+    },
+    "resources": [
+      {
+        "type": "Microsoft.Compute/virtualMachines/extensions",
+        "apiVersion": "2020-12-01",
+        "location": "location",
+        "name": "moodleCommon/install_moodle",
+        "properties": {
+          "autoUpgradeMinorVersion": true,
+          "publisher": "Microsoft.Azure.Extensions",
+          "settings": {
+            "fileUris": [
+              "moodleCommonmoodleCommonmoodleCommon",
+              "moodleCommon"
+            ]
+          },
+          "protectedSettings": {
+            "commandToExecute": "[concat('bash ', parameters('moodleCommon').moodleInstallScriptFilename, ' ', parameters('moodleCommon').moodleVersion, ' ', concat(parameters('moodleCommon').gfsNameRoot, '0'), ' ', 'data', ' ', parameters('moodleCommon').siteURL, ' ', concat(parameters('moodleCommon').dbServerType, '-', parameters('moodleCommon').resourcesPrefix, '.', parameters('moodleCommon').dbServerType, '.database.azure.com'), ' ', parameters('moodleCommon').moodleDbName, ' ', parameters('moodleCommon').moodleDbUser, ' ', parameters('moodleCommon').moodleDbPass, ' ', parameters('moodleCommon').moodleAdminPass, ' ', concat(parameters('moodleCommon').dbLogin, '@', parameters('moodleCommon').dbServerType, '-', parameters('moodleCommon').resourcesPrefix), ' ', parameters('moodleCommon').dbLoginPassword, ' ', parameters('moodleCommon').storageAccountName, ' ', listKeys(variables('storageAccountId'), '2021-01-01').keys[0].value, ' ', parameters('moodleCommon').moodleDbUserAzure, ' ', parameters('moodleCommon').redisDns, ' ', listKeys(variables('redisResourceId'), '2016-04-01').primaryKey, ' ', parameters('moodleCommon').elasticVm1IP, ' ', parameters('moodleCommon').installO365pluginsSwitch, ' ', parameters('moodleCommon').installElasticSearchSwitch, ' ', parameters('moodleCommon').dbServerType, ' ', parameters('moodleCommon').fileServerType)]"
+          },
+          "type": "CustomScript",
+          "typeHandlerVersion": "2.0"
+        },
+        "tags": {
+          "displayName": "install_moodle"
+        }
+      }
+    ],
+    "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+  }
+}

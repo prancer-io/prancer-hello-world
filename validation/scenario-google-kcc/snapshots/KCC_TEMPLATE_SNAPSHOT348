@@ -2,12 +2,12 @@
   "structure": "filesystem",
   "error": null,
   "reference": "master",
-  "contentType": "yaml",
+  "contentType": "json",
   "source": "gitConnectorGoogleKcc",
   "paths": [
-    "/samples/resources/dnsrecordset/dnssec-ds-record-set/dns_v1beta1_dnsrecordset.yaml"
+    "/samples/resources/containernodepool/sole-tenant-node-pool/compute_v1beta1_computenodegroup.yaml"
   ],
-  "timestamp": 1628765146375,
+  "timestamp": 1642973303800,
   "queryuser": null,
   "checksum": "99914b932bd37a50b983c5e7c90ae93b",
   "node": {
@@ -15,30 +15,30 @@
     "type": "kcc",
     "collection": "kcctemplate",
     "paths": [
-      "/samples/resources/dnsrecordset/dnssec-ds-record-set/dns_v1beta1_dnsrecordset.yaml"
+      "/samples/resources/containernodepool/sole-tenant-node-pool/compute_v1beta1_computenodegroup.yaml"
     ],
     "snapshotId": "KCC_TEMPLATE_SNAPSHOT348",
     "status": "active",
-    "validate": true
+    "validate": true,
+    "resourceTypes": [
+      "computenodegroup"
+    ]
   },
   "snapshotId": "KCC_TEMPLATE_SNAPSHOT348",
   "collection": "kcctemplate",
   "json": {
-    "apiVersion": "dns.cnrm.cloud.google.com/v1beta1",
-    "kind": "DNSRecordSet",
+    "apiVersion": "compute.cnrm.cloud.google.com/v1beta1",
+    "kind": "ComputeNodeGroup",
     "metadata": {
-      "name": "dnsrecordset-sample-dnssecds"
+      "name": "containernodepool-dep-soletenancy"
     },
     "spec": {
-      "name": "host.secure.example.com.",
-      "type": "DS",
-      "ttl": 300,
-      "managedZoneRef": {
-        "name": "dnsrecordset-dep-dnssecds"
+      "description": "A single sole-tenant node in the us-central1-b zone.",
+      "size": 1,
+      "nodeTemplateRef": {
+        "name": "containernodepool-dep-soletenancy"
       },
-      "rrdatas": [
-        "31523 5 1 c8761ba5defc26ac7b78e076d7c47fa9f86b9fba"
-      ]
+      "zone": "us-central1-b"
     }
   }
 }

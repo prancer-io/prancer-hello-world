@@ -2,12 +2,12 @@
   "structure": "filesystem",
   "error": null,
   "reference": "master",
-  "contentType": "yaml",
+  "contentType": "json",
   "source": "gitConnectorGoogleKcc",
   "paths": [
-    "/samples/resources/dataflowjob/batch-dataflow-job/storage_v1beta1_storagebucket.yaml"
+    "/samples/resources/computetargettcpproxy/compute_v1beta1_computebackendservice.yaml"
   ],
-  "timestamp": 1628765145455,
+  "timestamp": 1642973303395,
   "queryuser": null,
   "checksum": "99914b932bd37a50b983c5e7c90ae93b",
   "node": {
@@ -15,22 +15,33 @@
     "type": "kcc",
     "collection": "kcctemplate",
     "paths": [
-      "/samples/resources/dataflowjob/batch-dataflow-job/storage_v1beta1_storagebucket.yaml"
+      "/samples/resources/computetargettcpproxy/compute_v1beta1_computebackendservice.yaml"
     ],
     "snapshotId": "KCC_TEMPLATE_SNAPSHOT312",
     "status": "active",
-    "validate": true
+    "validate": true,
+    "resourceTypes": [
+      "computebackendservice"
+    ]
   },
   "snapshotId": "KCC_TEMPLATE_SNAPSHOT312",
   "collection": "kcctemplate",
   "json": {
-    "apiVersion": "storage.cnrm.cloud.google.com/v1beta1",
-    "kind": "StorageBucket",
+    "apiVersion": "compute.cnrm.cloud.google.com/v1beta1",
+    "kind": "ComputeBackendService",
     "metadata": {
-      "annotations": {
-        "cnrm.cloud.google.com/force-destroy": "true"
-      },
-      "name": "${PROJECT_ID?}-dataflowjob-dep-batch"
+      "name": "computetargettcpproxy-dep"
+    },
+    "spec": {
+      "healthChecks": [
+        {
+          "healthCheckRef": {
+            "name": "computetargettcpproxy-dep"
+          }
+        }
+      ],
+      "location": "global",
+      "protocol": "TCP"
     }
   }
 }

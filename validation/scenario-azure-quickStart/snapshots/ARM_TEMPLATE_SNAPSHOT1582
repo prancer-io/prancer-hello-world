@@ -1,0 +1,141 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAzureQuickStart",
+  "paths": [
+    "/quickstarts/microsoft.network/private-dns-zone/azuredeploy.json",
+    "/quickstarts/microsoft.network/private-dns-zone/azuredeploy.parameters.json"
+  ],
+  "timestamp": 1642962909380,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/quickstarts/microsoft.network/private-dns-zone/azuredeploy.json",
+      "/quickstarts/microsoft.network/private-dns-zone/azuredeploy.parameters.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT1582",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "microsoft.network/privatednszones",
+      "microsoft.network/virtualnetworks",
+      "microsoft.network/privatednszones/virtualnetworklinks"
+    ]
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT1582",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.0.0.0",
+    "metadata": {
+      "_generator": {
+        "name": "bicep",
+        "version": "0.4.1008.15138",
+        "templateHash": "16081631543207635397"
+      }
+    },
+    "parameters": {
+      "privateDnsZoneName": {
+        "type": "string",
+        "metadata": {
+          "description": "Private DNS zone name"
+        },
+        "value": "contoso.com"
+      },
+      "vmRegistration": {
+        "type": "bool",
+        "defaultValue": true,
+        "metadata": {
+          "description": "Enable automatic VM DNS registration in the zone"
+        }
+      },
+      "vnetName": {
+        "type": "string",
+        "defaultValue": "VNet",
+        "metadata": {
+          "description": "VNet name"
+        }
+      },
+      "vnetAddressPrefix": {
+        "type": "string",
+        "defaultValue": "10.0.0.0/16",
+        "metadata": {
+          "description": "VNet Address prefix"
+        }
+      },
+      "subnetPrefix": {
+        "type": "string",
+        "defaultValue": "10.0.0.0/24",
+        "metadata": {
+          "description": "Subnet Prefix"
+        }
+      },
+      "subnetName": {
+        "type": "string",
+        "defaultValue": "App",
+        "metadata": {
+          "description": "Subnet Name"
+        }
+      },
+      "location": {
+        "type": "string",
+        "defaultValue": "[resourceGroup().location]",
+        "metadata": {
+          "description": "Location for all resources."
+        }
+      }
+    },
+    "functions": [],
+    "resources": [
+      {
+        "type": "Microsoft.Network/virtualNetworks",
+        "apiVersion": "2021-03-01",
+        "name": "VNet",
+        "location": "[resourceGroup().location]",
+        "properties": {
+          "addressSpace": {
+            "addressPrefixes": [
+              "10.0.0.0/16"
+            ]
+          },
+          "subnets": [
+            {
+              "name": "App",
+              "properties": {
+                "addressPrefix": "10.0.0.0/24"
+              }
+            }
+          ]
+        }
+      },
+      {
+        "type": "Microsoft.Network/privateDnsZones",
+        "apiVersion": "2020-06-01",
+        "name": "contoso.com",
+        "location": "global"
+      },
+      {
+        "type": "Microsoft.Network/privateDnsZones/virtualNetworkLinks",
+        "apiVersion": "2020-06-01",
+        "name": "[format('{0}/{1}', parameters('privateDnsZoneName'), format('{0}-link', parameters('vnetName')))]",
+        "location": "global",
+        "properties": {
+          "registrationEnabled": true,
+          "virtualNetwork": {
+            "id": "Microsoft.Network/virtualNetworks/VNet"
+          }
+        },
+        "dependsOn": [
+          "Microsoft.Network/privateDnsZones/contoso.com",
+          "Microsoft.Network/virtualNetworks/VNet"
+        ]
+      }
+    ],
+    "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+  }
+}

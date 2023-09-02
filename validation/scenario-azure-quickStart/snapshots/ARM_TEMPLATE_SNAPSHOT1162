@@ -1,0 +1,65 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAzureQuickStart",
+  "paths": [
+    "/quickstarts/microsoft.compute/vmss-msi/nestedtemplates/setUpRBAC.json"
+  ],
+  "timestamp": 1642962905046,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/quickstarts/microsoft.compute/vmss-msi/nestedtemplates/setUpRBAC.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT1162",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "microsoft.storage/storageaccounts/providers/roleassignments"
+    ]
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT1162",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "principalId": {
+        "type": "string",
+        "metadata": {
+          "description": "Principal ID to set the access for"
+        }
+      },
+      "storageAccountName": {
+        "type": "string",
+        "metadata": {
+          "description": "The storage account to set access for"
+        }
+      }
+    },
+    "variables": {
+      "contributor": "[subscriptionResourceId('Microsoft.Authorization/roleDefinitions', 'b24988ac-6180-42a0-ab88-20f7382dd24c')]",
+      "scope": "Microsoft.Storage/storageAccounts/storageAccountName",
+      "RBACResourceName": "[guid(variables('scope'), variables('contributor'), parameters('principalId'))]"
+    },
+    "resources": [
+      {
+        "apiVersion": "2020-04-01-preview",
+        "name": "storageAccountName/Microsoft.Authorization/[guid(variables('scope'), variables('contributor'), parameters('principalId'))]",
+        "type": "Microsoft.Storage/storageAccounts/providers/roleAssignments",
+        "properties": {
+          "roleDefinitionId": "[subscriptionResourceId('Microsoft.Authorization/roleDefinitions', 'b24988ac-6180-42a0-ab88-20f7382dd24c')]",
+          "principalId": "principalId",
+          "scope": "Microsoft.Storage/storageAccounts/storageAccountName",
+          "principalType": "ServicePrincipal"
+        }
+      }
+    ],
+    "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+  }
+}

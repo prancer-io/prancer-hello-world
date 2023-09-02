@@ -2,12 +2,12 @@
   "structure": "filesystem",
   "error": null,
   "reference": "master",
-  "contentType": "yaml",
+  "contentType": "json",
   "source": "gitConnectorGoogleKcc",
   "paths": [
-    "/samples/resources/storagenotification/iam_v1beta1_iampolicymember.yaml"
+    "/samples/resources/monitoringnotificationchannel/basicauth-webhook-monitoring-notification-channel/monitoring_v1beta1_monitoringnotificationchannel.yaml"
   ],
-  "timestamp": 1628765151434,
+  "timestamp": 1642973304602,
   "queryuser": null,
   "checksum": "99914b932bd37a50b983c5e7c90ae93b",
   "node": {
@@ -15,27 +15,43 @@
     "type": "kcc",
     "collection": "kcctemplate",
     "paths": [
-      "/samples/resources/storagenotification/iam_v1beta1_iampolicymember.yaml"
+      "/samples/resources/monitoringnotificationchannel/basicauth-webhook-monitoring-notification-channel/monitoring_v1beta1_monitoringnotificationchannel.yaml"
     ],
     "snapshotId": "KCC_TEMPLATE_SNAPSHOT532",
     "status": "active",
-    "validate": true
+    "validate": true,
+    "resourceTypes": [
+      "monitoringnotificationchannel"
+    ]
   },
   "snapshotId": "KCC_TEMPLATE_SNAPSHOT532",
   "collection": "kcctemplate",
   "json": {
-    "apiVersion": "iam.cnrm.cloud.google.com/v1beta1",
-    "kind": "IAMPolicyMember",
+    "apiVersion": "monitoring.cnrm.cloud.google.com/v1beta1",
+    "kind": "MonitoringNotificationChannel",
     "metadata": {
-      "name": "storagenotification-dep"
+      "labels": {
+        "response-priority": "all",
+        "target-user": "automation"
+      },
+      "name": "monitoringnotificationchannel-sample-basicauth-webhook"
     },
     "spec": {
-      "member": "serviceAccount:service-${PROJECT_NUMBER?}@gs-project-accounts.iam.gserviceaccount.com",
-      "role": "roles/pubsub.publisher",
-      "resourceRef": {
-        "apiVersion": "pubsub.cnrm.cloud.google.com/v1beta1",
-        "kind": "PubSubTopic",
-        "name": "storagenotification-dep"
+      "type": "webhook_basicauth",
+      "labels": {
+        "url": "http://hooks.example.com/notifications",
+        "username": "admin"
+      },
+      "description": "Sends notifications to indicated webhook URL using HTTP-standard basic authentication. Should be used in conjunction with SSL/TLS to reduce the risk of attackers snooping the credentials.",
+      "sensitiveLabels": {
+        "password": {
+          "valueFrom": {
+            "secretKeyRef": {
+              "key": "password",
+              "name": "monitoringnotificationchannel-dep-basicauthwebhook"
+            }
+          }
+        }
       }
     }
   }

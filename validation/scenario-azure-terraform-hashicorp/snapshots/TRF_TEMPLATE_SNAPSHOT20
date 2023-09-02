@@ -1,0 +1,68 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "main",
+  "contentType": "json",
+  "source": "gitConnectorAzureTerraHashicorp",
+  "paths": [
+    "/examples/app-service-certificate-order/standard/outputs.tf",
+    "/examples/app-service-certificate-order/standard/variables.tf",
+    "/examples/app-service-certificate-order/standard/main.tf"
+  ],
+  "timestamp": 1642943279627,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "TRF_TEMPLATE_SNAPSHOT",
+    "type": "terraform",
+    "collection": "terraformtemplate",
+    "paths": [
+      "/examples/app-service-certificate-order/standard/outputs.tf",
+      "/examples/app-service-certificate-order/standard/variables.tf",
+      "/examples/app-service-certificate-order/standard/main.tf"
+    ],
+    "snapshotId": "TRF_TEMPLATE_SNAPSHOT20",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "azurerm_app_service_certificate_order",
+      "azurerm_resource_group"
+    ]
+  },
+  "snapshotId": "TRF_TEMPLATE_SNAPSHOT20",
+  "collection": "terraformtemplate",
+  "json": {
+    "provider": [
+      {
+        "azurerm": {
+          "features": [
+            {}
+          ]
+        }
+      }
+    ],
+    "resources": [
+      {
+        "type": "azurerm_resource_group",
+        "name": "example",
+        "properties": {
+          "name": "${var.prefix}-resources",
+          "location": "${var.location}",
+          "compiletime_identity": "azurerm_resource_group.example"
+        }
+      },
+      {
+        "type": "azurerm_app_service_certificate_order",
+        "name": "test",
+        "properties": {
+          "name": "${var.prefix}-autoacc",
+          "location": "global",
+          "resource_group_name": "${azurerm_resource_group.example.name}",
+          "distinguished_name": "CN=example.com",
+          "product_type": "standard",
+          "compiletime_identity": "azurerm_app_service_certificate_order.test"
+        }
+      }
+    ]
+  }
+}

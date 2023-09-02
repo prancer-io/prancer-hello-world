@@ -1,0 +1,317 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAzureQuickStart",
+  "paths": [
+    "/application-workloads/wildfly/wildfly-standalone-centos8/azuredeploy.json",
+    "/application-workloads/wildfly/wildfly-standalone-centos8/azuredeploy.parameters.json"
+  ],
+  "timestamp": 1642962897307,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/application-workloads/wildfly/wildfly-standalone-centos8/azuredeploy.json",
+      "/application-workloads/wildfly/wildfly-standalone-centos8/azuredeploy.parameters.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT584",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "microsoft.resources/deployments",
+      "microsoft.network/virtualnetworks",
+      "microsoft.network/networkinterfaces",
+      "microsoft.compute/virtualmachines/extensions",
+      "microsoft.compute/virtualmachines",
+      "microsoft.storage/storageaccounts"
+    ]
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT584",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "adminUsername": {
+        "type": "string",
+        "metadata": {
+          "description": "Linux VM user account name"
+        },
+        "value": "GEN-UNIQUE"
+      },
+      "authenticationType": {
+        "type": "string",
+        "defaultValue": "password",
+        "allowedValues": [
+          "password",
+          "sshPublicKey"
+        ],
+        "metadata": {
+          "description": "Type of authentication to use on the Virtual Machine"
+        }
+      },
+      "adminPasswordOrSSHKey": {
+        "type": "securestring",
+        "metadata": {
+          "description": "Password or SSH key for the Virtual Machine"
+        },
+        "value": "GEN-PASSWORD"
+      },
+      "wildflyUserName": {
+        "type": "string",
+        "metadata": {
+          "description": "User name for WildFly Manager"
+        },
+        "value": "GEN-UNIQUE"
+      },
+      "wildflyPassword": {
+        "type": "securestring",
+        "minLength": 12,
+        "metadata": {
+          "description": "Password for WildFly Manager"
+        },
+        "value": "GEN-PASSWORD"
+      },
+      "_artifactsLocation": {
+        "type": "string",
+        "metadata": {
+          "description": "The base URI where artifacts required by this template are located. When the template is deployed using the accompanying scripts, a private location in the subscription will be used and this value will be automatically generated"
+        },
+        "defaultValue": "[deployment().properties.templateLink.uri]"
+      },
+      "_artifactsLocationSasToken": {
+        "type": "securestring",
+        "metadata": {
+          "description": "The sasToken required to access _artifactsLocation.  When the template is deployed using the accompanying scripts, a sasToken will be automatically generated"
+        },
+        "defaultValue": ""
+      },
+      "location": {
+        "type": "string",
+        "defaultValue": "[resourceGroup().location]",
+        "metadata": {
+          "description": "Location for all resources"
+        }
+      },
+      "vmSize": {
+        "type": "string",
+        "defaultValue": "Standard_D2s_v3",
+        "allowedValues": [
+          "Standard_D2s_v3",
+          "Standard_D4s_v3",
+          "Standard_D8s_v3",
+          "Standard_E2S_v3",
+          "Standard_E4S_v3",
+          "Standard_E8S_v3",
+          "Standard_F2S_v2",
+          "Standard_F4S_v2",
+          "Standard_F8S_v2"
+        ],
+        "metadata": {
+          "description": "The size of the Virtual Machine"
+        }
+      }
+    },
+    "variables": {
+      "singlequote": "'",
+      "imagePublisher": "OpenLogic",
+      "imageOffer": "CentOS",
+      "imageSKU": "8.0",
+      "nicName": "centos-vm-nic",
+      "addressPrefix": "10.0.0.0/16",
+      "subnetName": "centosvm-subnet",
+      "subnetPrefix": "10.0.0.0/24",
+      "vmName": "centos-vm",
+      "virtualNetworkName": "centosvm-vnet",
+      "bootStorageAccountName": "[concat('bootstrg', uniqueString(resourceGroup().id))]",
+      "storageAccountType": "Standard_LRS",
+      "linuxConfiguration": {
+        "disablePasswordAuthentication": true,
+        "ssh": {
+          "publicKeys": [
+            {
+              "path": "/home/GEN-UNIQUE/.ssh/authorized_keys",
+              "keyData": "GEN-PASSWORD"
+            }
+          ]
+        }
+      },
+      "subnetRef": "Microsoft.Network/virtualNetworks/subnets/centosvm-vnet/centosvm-subnet",
+      "scriptFolder": "scripts",
+      "fileToBeDownloaded": "JBoss-EAP_on_Azure.war",
+      "scriptArgs": "[concat('-a ', uri(parameters('_artifactsLocation'), '.'), ' -t \"', parameters('_artifactsLocationSasToken'), '\" -p ', variables('scriptFolder'), ' -f ', variables('fileToBeDownloaded'))]"
+    },
+    "resources": [
+      {
+        "type": "Microsoft.Resources/deployments",
+        "apiVersion": "2021-01-01",
+        "name": "pid-2c0c0514-a608-492e-b64e-bc4ace59035b",
+        "properties": {
+          "mode": "Incremental",
+          "template": {
+            "contentVersion": "1.0.0.0",
+            "resources": [],
+            "\uff04schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#"
+          }
+        }
+      },
+      {
+        "type": "Microsoft.Storage/storageAccounts",
+        "apiVersion": "2021-02-01",
+        "name": "[variables('bootStorageAccountName')]",
+        "location": "[resourceGroup().location]",
+        "sku": {
+          "name": "Standard_LRS"
+        },
+        "kind": "Storage",
+        "tags": {
+          "QuickstartName": "WildFly 18 on CentOS 8 (stand-alone VM)"
+        }
+      },
+      {
+        "type": "Microsoft.Network/virtualNetworks",
+        "apiVersion": "2019-11-01",
+        "name": "centosvm-vnet",
+        "location": "[resourceGroup().location]",
+        "tags": {
+          "QuickstartName": "WildFly 18 on CentOS 8 (stand-alone VM)"
+        },
+        "properties": {
+          "addressSpace": {
+            "addressPrefixes": [
+              "10.0.0.0/16"
+            ]
+          },
+          "subnets": [
+            {
+              "name": "centosvm-subnet",
+              "properties": {
+                "addressPrefix": "10.0.0.0/24"
+              }
+            }
+          ]
+        }
+      },
+      {
+        "type": "Microsoft.Network/networkInterfaces",
+        "apiVersion": "2019-11-01",
+        "name": "centos-vm-nic",
+        "location": "[resourceGroup().location]",
+        "dependsOn": [
+          "centosvm-vnet"
+        ],
+        "tags": {
+          "QuickstartName": "WildFly 18 on CentOS 8 (stand-alone VM)"
+        },
+        "properties": {
+          "ipConfigurations": [
+            {
+              "name": "ipconfig1",
+              "properties": {
+                "privateIPAllocationMethod": "Dynamic",
+                "subnet": {
+                  "id": "Microsoft.Network/virtualNetworks/subnets/centosvm-vnet/centosvm-subnet"
+                }
+              }
+            }
+          ]
+        }
+      },
+      {
+        "type": "Microsoft.Compute/virtualMachines",
+        "apiVersion": "2019-12-01",
+        "name": "centos-vm",
+        "location": "[resourceGroup().location]",
+        "dependsOn": [
+          "[variables('nicName')]",
+          "[variables('bootStorageAccountName')]"
+        ],
+        "tags": {
+          "QuickstartName": "WildFly 18 on CentOS 8 (stand-alone VM)"
+        },
+        "properties": {
+          "hardwareProfile": {
+            "vmSize": "Standard_D2s_v3"
+          },
+          "osProfile": {
+            "computerName": "centos-vm",
+            "adminUsername": "GEN-UNIQUE",
+            "adminPassword": "GEN-PASSWORD",
+            "linuxConfiguration": "[if(equals(parameters('authenticationType'), 'password'), json('null'), variables('linuxConfiguration'))]"
+          },
+          "storageProfile": {
+            "imageReference": {
+              "publisher": "OpenLogic",
+              "offer": "CentOS",
+              "sku": "8.0",
+              "version": "latest"
+            },
+            "osDisk": {
+              "name": "centos-vm_OSDisk",
+              "caching": "ReadWrite",
+              "createOption": "FromImage"
+            }
+          },
+          "networkProfile": {
+            "networkInterfaces": [
+              {
+                "id": "Microsoft.Network/networkInterfaces/centos-vm-nic"
+              }
+            ]
+          },
+          "diagnosticsProfile": {
+            "bootDiagnostics": {
+              "enabled": true,
+              "storageUri": "[reference(variables('bootStorageAccountName'), '2021-02-01').primaryEndpoints['blob']]"
+            }
+          }
+        }
+      },
+      {
+        "type": "Microsoft.Compute/virtualMachines/extensions",
+        "apiVersion": "2019-12-01",
+        "name": "centos-vm/wildfly-setup",
+        "location": "[resourceGroup().location]",
+        "dependsOn": [
+          "centos-vm"
+        ],
+        "tags": {
+          "QuickstartName": "WildFly 18 on CentOS 8 (stand-alone VM)"
+        },
+        "properties": {
+          "publisher": "Microsoft.Azure.Extensions",
+          "type": "CustomScript",
+          "typeHandlerVersion": "2.0",
+          "autoUpgradeMinorVersion": true,
+          "settings": {
+            "fileUris": [
+              "[uri(parameters('_artifactsLocation'), concat('scripts/wildfly-setup.sh', parameters('_artifactsLocationSasToken')))]"
+            ]
+          },
+          "protectedSettings": {
+            "commandToExecute": "[concat('sh wildfly-setup.sh',' ',variables('scriptArgs'),' ',parameters('wildflyUserName'),' ',variables('singlequote'),parameters('wildflyPassword'),variables('singlequote'))]"
+          }
+        }
+      }
+    ],
+    "outputs": {
+      "vm Private IP Address": {
+        "type": "string",
+        "value": "[reference(variables('nicName')).ipConfigurations[0].properties.privateIPAddress]"
+      },
+      "appURL": {
+        "type": "string",
+        "value": "[format('http://{0}:8080/JBoss-EAP_on_Azure/',reference(variables('nicName')).ipConfigurations[0].properties.privateIPAddress)]"
+      },
+      "adminConsole": {
+        "type": "string",
+        "value": "[concat('http://', reference(variables('nicName')).ipConfigurations[0].properties.privateIPAddress, ':9990')]"
+      }
+    },
+    "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+  }
+}

@@ -2,12 +2,12 @@
   "structure": "filesystem",
   "error": null,
   "reference": "master",
-  "contentType": "yaml",
+  "contentType": "json",
   "source": "gitConnectorGoogleKcc",
   "paths": [
-    "/samples/resources/secretmanagersecret/user-managed-secret-replication/secretmanager_v1beta1_secretmanagersecret.yaml"
+    "/samples/resources/identityplatformtenantoauthidpconfig/identityplatform_v1beta1_identityplatformtenantoauthidpconfig.yaml"
   ],
-  "timestamp": 1628765150459,
+  "timestamp": 1642973304461,
   "queryuser": null,
   "checksum": "99914b932bd37a50b983c5e7c90ae93b",
   "node": {
@@ -15,34 +15,41 @@
     "type": "kcc",
     "collection": "kcctemplate",
     "paths": [
-      "/samples/resources/secretmanagersecret/user-managed-secret-replication/secretmanager_v1beta1_secretmanagersecret.yaml"
+      "/samples/resources/identityplatformtenantoauthidpconfig/identityplatform_v1beta1_identityplatformtenantoauthidpconfig.yaml"
     ],
     "snapshotId": "KCC_TEMPLATE_SNAPSHOT496",
     "status": "active",
-    "validate": true
+    "validate": true,
+    "resourceTypes": [
+      "identityplatformtenantoauthidpconfig"
+    ]
   },
   "snapshotId": "KCC_TEMPLATE_SNAPSHOT496",
   "collection": "kcctemplate",
   "json": {
-    "apiVersion": "secretmanager.cnrm.cloud.google.com/v1beta1",
-    "kind": "SecretManagerSecret",
+    "apiVersion": "identityplatform.cnrm.cloud.google.com/v1beta1",
+    "kind": "IdentityPlatformTenantOAuthIDPConfig",
     "metadata": {
-      "name": "secretmanagersecret-sample-usermanaged",
       "labels": {
-        "replication-type": "user-managed"
-      }
+        "foo": "bar"
+      },
+      "name": "identityplatformtenantoauthidpconfig-sample"
     },
     "spec": {
-      "replication": {
-        "userManaged": {
-          "replicas": [
-            {
-              "location": "us-central1"
-            },
-            {
-              "location": "us-east1"
-            }
-          ]
+      "resourceID": "oidc.tenant-oauth-idp-config-sample",
+      "tenantRef": {
+        "name": "identityplatformtenantoauthidpconfig-dep"
+      },
+      "displayName": "sample tenant oauth idp config",
+      "clientId": "client-id",
+      "issuer": "issuer",
+      "enabled": true,
+      "clientSecret": {
+        "valueFrom": {
+          "secretKeyRef": {
+            "key": "clientSecret",
+            "name": "identityplatformtenantoauthidpconfig-dep"
+          }
         }
       }
     }

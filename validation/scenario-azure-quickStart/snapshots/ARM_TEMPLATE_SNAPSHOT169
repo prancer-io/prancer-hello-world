@@ -1,0 +1,84 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAzureQuickStart",
+  "paths": [
+    "/application-workloads/informatica/informatica-adf-hdinsight-powerbi/nested/info-csa-extension.json"
+  ],
+  "timestamp": 1642962889209,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/application-workloads/informatica/informatica-adf-hdinsight-powerbi/nested/info-csa-extension.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT169",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "microsoft.compute/virtualmachines/extensions"
+    ]
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT169",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "vmName": {
+        "type": "string"
+      },
+      "location": {
+        "type": "string"
+      },
+      "fileUris": {
+        "type": "string"
+      },
+      "arguments": {
+        "type": "securestring",
+        "defaultValue": " "
+      },
+      "informaticaTags": {
+        "type": "object"
+      },
+      "quickstartTags": {
+        "type": "object"
+      }
+    },
+    "variables": {
+      "UriFileNamePieces": "[split(parameters('fileUris'), '/')]",
+      "firstFileNameString": "(UriFileNamePieces)[sub(length(variables(UriFileNamePieces)), 1)]",
+      "firstFileNameBreakString": "[split(variables('firstFileNameString'), '?')]",
+      "firstFileName": "(firstFileNameBreakString)[0]"
+    },
+    "resources": [
+      {
+        "name": "vmName/CustomScriptExtension",
+        "type": "Microsoft.Compute/virtualMachines/extensions",
+        "location": "location",
+        "tags": {
+          "quickstartName": "quickstartTags",
+          "provider": "informaticaTags"
+        },
+        "apiVersion": "2015-06-15",
+        "properties": {
+          "publisher": "Microsoft.Compute",
+          "type": "CustomScriptExtension",
+          "typeHandlerVersion": "1.7",
+          "autoUpgradeMinorVersion": true,
+          "settings": {
+            "fileUris": "[split(parameters('fileUris'), ' ')]"
+          },
+          "protectedSettings": {
+            "commandToExecute": "[concat ('powershell -ExecutionPolicy Unrestricted -File ', variables('firstFileName'), ' ', parameters('arguments'))]"
+          }
+        }
+      }
+    ],
+    "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+  }
+}

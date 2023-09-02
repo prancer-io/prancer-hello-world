@@ -1,0 +1,109 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAzureQuickStart",
+  "paths": [
+    "/demos/create-hpc-cluster/publicip-new.json",
+    "/demos/create-hpc-cluster/azuredeploy.parameters.json"
+  ],
+  "timestamp": 1642962898963,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/demos/create-hpc-cluster/publicip-new.json",
+      "/demos/create-hpc-cluster/azuredeploy.parameters.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT678",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "microsoft.network/publicipaddresses"
+    ]
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT678",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "publicIPAddressName": {
+        "type": "string"
+      },
+      "publicIPAddressType": {
+        "type": "string"
+      },
+      "domainNameLabel": {
+        "type": "string"
+      },
+      "publicIpRGName": {
+        "type": "string"
+      },
+      "location": {
+        "type": "string",
+        "metadata": {
+          "description": "Location for all resources."
+        }
+      },
+      "clusterName": {
+        "value": "GEN-UNIQUE-12"
+      },
+      "privateDomainName": {
+        "value": "hpc.local"
+      },
+      "headNodeVMSize": {
+        "value": "Standard_D8_v3"
+      },
+      "computeNodeImage": {
+        "value": "ComputeNode"
+      },
+      "computeNodeNamePrefix": {
+        "value": "IaaSCN-"
+      },
+      "computeNodeNumber": {
+        "value": 2
+      },
+      "computeNodeVMSize": {
+        "value": "Standard_D4_v3"
+      },
+      "adminUsername": {
+        "value": "azureuser"
+      },
+      "adminPassword": {
+        "value": "GEN-PASSWORD"
+      }
+    },
+    "variables": {
+      "publicIpId": "Microsoft.Network/publicIPAddresses/publicIPAddressName"
+    },
+    "resources": [
+      {
+        "type": "Microsoft.Network/publicIPAddresses",
+        "name": "publicIPAddressName",
+        "apiVersion": "2021-02-01",
+        "location": "location",
+        "properties": {
+          "publicIPAllocationMethod": "publicIPAddressType",
+          "dnsSettings": {
+            "domainNameLabel": "domainNameLabel"
+          }
+        }
+      }
+    ],
+    "outputs": {
+      "resourceId": {
+        "type": "string",
+        "value": "[variables('publicIpId')]"
+      },
+      "fqdn": {
+        "value": "[reference(variables('publicIpId'),'2017-10-01').dnsSettings.fqdn]",
+        "type": "string"
+      }
+    },
+    "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+  }
+}

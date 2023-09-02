@@ -1,0 +1,238 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAzureQuickStart",
+  "paths": [
+    "/quickstarts/microsoft.datalakestore/yash-datalake/nested/eventHub.json"
+  ],
+  "timestamp": 1642962906069,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/quickstarts/microsoft.datalakestore/yash-datalake/nested/eventHub.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT1252",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "microsoft.eventhub/namespaces"
+    ]
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT1252",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "location": {
+        "type": "string",
+        "metadata": {
+          "description": "lcoation for the EventHub namespace"
+        }
+      },
+      "eventHubNamespaceName": {
+        "type": "string",
+        "metadata": {
+          "description": "Name of the EventHub namespace"
+        }
+      },
+      "captureTime": {
+        "type": "int",
+        "minValue": 60,
+        "maxValue": 900,
+        "metadata": {
+          "description": "the time window in seconds for the archival"
+        }
+      },
+      "captureSize": {
+        "type": "int",
+        "minValue": 10485760,
+        "maxValue": 524288000,
+        "metadata": {
+          "description": "the size window in bytes for evetn hub capture"
+        }
+      },
+      "eventhubSku": {
+        "type": "string",
+        "allowedValues": [
+          "Basic",
+          "Standard"
+        ],
+        "metadata": {
+          "description": "The messaging tier for service Bus namespace"
+        }
+      },
+      "skuCapacity": {
+        "type": "int",
+        "allowedValues": [
+          1,
+          2,
+          4
+        ],
+        "metadata": {
+          "description": "MessagingUnits for premium namespace"
+        }
+      },
+      "isAutoInflateEnabled": {
+        "type": "string",
+        "allowedValues": [
+          "True",
+          "False"
+        ],
+        "metadata": {
+          "description": "Enable or disable AutoInflate"
+        }
+      },
+      "messageRetentionInDays": {
+        "type": "int",
+        "minValue": 1,
+        "maxValue": 7,
+        "metadata": {
+          "description": "How long to retain the data in Event Hub"
+        }
+      },
+      "partitionCount": {
+        "type": "int",
+        "minValue": 2,
+        "maxValue": 32,
+        "metadata": {
+          "description": "Number of partitions chosen"
+        }
+      },
+      "captureEncodingFormat": {
+        "type": "string",
+        "allowedValues": [
+          "Avro"
+        ],
+        "metadata": {
+          "description": "The encoding format Eventhub capture serializes the EventData when archiving to your storage"
+        }
+      },
+      "storageAccountName": {
+        "type": "string",
+        "metadata": {
+          "description": "Your existing storage account name where you want the blobs be archived"
+        }
+      },
+      "maximumThroughputUnits": {
+        "type": "int",
+        "minValue": 0,
+        "maxValue": 20,
+        "metadata": {
+          "description": "Upper limit of throughput units when AutoInflate is enabled, vaule should be within 0 to 20 throughput units."
+        }
+      },
+      "DataCleaningInputStream": {
+        "type": "string",
+        "metadata": {
+          "description": "Name of the Event Hub"
+        }
+      },
+      "DataCleaningOutputStream": {
+        "type": "string",
+        "metadata": {
+          "description": "Name of the second Event Hub"
+        }
+      },
+      "captureNameFormat": {
+        "type": "string",
+        "allowedValues": [
+          "{Namespace}/{EventHub}/{PartitionId}/{Year}/{Month}/{Day}/{Hour}/{Minute}/{Second}",
+          "{Year}/{Month}/{Day}/{Namespace}/{EventHub}/{PartitionId}/{Hour}/{Minute}/{Second}",
+          "{Year}/{Month}/{Day}/{Hour}/{Namespace}/{EventHub}/{PartitionId}/{Minute}/{Second}"
+        ],
+        "metadata": {
+          "description": "A Capture Name Format must contain {Namespace}, {EventHub}, {PartitionId}, {Year}, {Month}, {Day}, {Hour}, {Minute} and {Second} fields. These can be arranged in any order with or without delimeters. E.g.  Prod_{EventHub}/{Namespace}\\{PartitionId}_{Year}_{Month}/{Day}/{Hour}/{Minute}/{Second}"
+        }
+      }
+    },
+    "variables": {
+      "RawOrderOutputContainerName": "raw",
+      "DataCleaningOutputContainerName": "transformed",
+      "defaultSASKeyName": "RootManageSharedAccessKey"
+    },
+    "resources": [
+      {
+        "type": "Microsoft.EventHub/Namespaces",
+        "name": "eventHubNamespaceName",
+        "apiVersion": "2021-01-01-preview",
+        "properties": {
+          "isAutoInflateEnabled": "isAutoInflateEnabled",
+          "maximumThroughputUnits": "maximumThroughputUnits"
+        },
+        "location": "location",
+        "sku": {
+          "name": "eventhubSku",
+          "tier": "eventhubSku",
+          "capacity": "skuCapacity"
+        },
+        "resources": [
+          {
+            "apiVersion": "2021-01-01-preview",
+            "name": "DataCleaningInputStream",
+            "type": "EventHubs",
+            "dependsOn": [
+              "Microsoft.EventHub/namespaces//eventHubNamespaceName"
+            ],
+            "properties": {
+              "messageRetentionInDays": "messageRetentionInDays",
+              "partitionCount": "partitionCount",
+              "captureDescription": {
+                "enabled": "true",
+                "encoding": "captureEncodingFormat",
+                "intervalInSeconds": "captureTime",
+                "sizeLimitInBytes": "captureSize",
+                "destination": {
+                  "name": "EventHubArchive.AzureBlockBlob",
+                  "properties": {
+                    "storageAccountResourceId": "Microsoft.Storage/storageAccounts/storageAccountName",
+                    "blobContainer": "raw",
+                    "archiveNameFormat": "captureNameFormat"
+                  }
+                }
+              }
+            }
+          },
+          {
+            "apiVersion": "2021-01-01-preview",
+            "name": "DataCleaningOutputStream",
+            "type": "EventHubs",
+            "dependsOn": [
+              "Microsoft.EventHub/namespaces//eventHubNamespaceName"
+            ],
+            "properties": {
+              "messageRetentionInDays": "messageRetentionInDays",
+              "partitionCount": "partitionCount",
+              "captureDescription": {
+                "enabled": "true",
+                "encoding": "captureEncodingFormat",
+                "intervalInSeconds": "captureTime",
+                "sizeLimitInBytes": "captureSize",
+                "destination": {
+                  "name": "EventHubArchive.AzureBlockBlob",
+                  "properties": {
+                    "storageAccountResourceId": "Microsoft.Storage/storageAccounts/storageAccountName",
+                    "blobContainer": "transformed",
+                    "archiveNameFormat": "captureNameFormat"
+                  }
+                }
+              }
+            }
+          }
+        ]
+      }
+    ],
+    "outputs": {
+      "authRuleResourceId": {
+        "type": "string",
+        "value": "[resourceId('Microsoft.EventHub/namespaces/authorizationRules', parameters('eventHubNamespaceName'), variables('defaultSASKeyName'))]"
+      }
+    },
+    "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+  }
+}

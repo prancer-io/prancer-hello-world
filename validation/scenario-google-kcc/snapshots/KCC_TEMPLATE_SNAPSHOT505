@@ -2,12 +2,12 @@
   "structure": "filesystem",
   "error": null,
   "reference": "master",
-  "contentType": "yaml",
+  "contentType": "json",
   "source": "gitConnectorGoogleKcc",
   "paths": [
-    "/samples/resources/sourcereporepository/iam_v1beta1_iamserviceaccount.yaml"
+    "/samples/resources/logginglogexclusion/project-exclusion/logging_v1beta1_logginglogexclusion.yaml"
   ],
-  "timestamp": 1628765150673,
+  "timestamp": 1642973304496,
   "queryuser": null,
   "checksum": "99914b932bd37a50b983c5e7c90ae93b",
   "node": {
@@ -15,19 +15,29 @@
     "type": "kcc",
     "collection": "kcctemplate",
     "paths": [
-      "/samples/resources/sourcereporepository/iam_v1beta1_iamserviceaccount.yaml"
+      "/samples/resources/logginglogexclusion/project-exclusion/logging_v1beta1_logginglogexclusion.yaml"
     ],
     "snapshotId": "KCC_TEMPLATE_SNAPSHOT505",
     "status": "active",
-    "validate": true
+    "validate": true,
+    "resourceTypes": [
+      "logginglogexclusion"
+    ]
   },
   "snapshotId": "KCC_TEMPLATE_SNAPSHOT505",
   "collection": "kcctemplate",
   "json": {
-    "apiVersion": "iam.cnrm.cloud.google.com/v1beta1",
-    "kind": "IAMServiceAccount",
+    "apiVersion": "logging.cnrm.cloud.google.com/v1beta1",
+    "kind": "LoggingLogExclusion",
     "metadata": {
-      "name": "sourcereporepository-dep"
+      "name": "logginglogexclusion-sample-project"
+    },
+    "spec": {
+      "projectRef": {
+        "name": "logginglogexclusion-dep-project"
+      },
+      "description": "A project log exclusion",
+      "filter": "resource.type=gcs_bucket severity<ERROR sample(insertId, 0.99)"
     }
   }
 }

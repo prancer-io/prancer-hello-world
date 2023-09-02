@@ -1,0 +1,120 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAzureQuickStart",
+  "paths": [
+    "/quickstarts/microsoft.blockchain/blockchain-asaservice/azuredeploy.json",
+    "/quickstarts/microsoft.blockchain/blockchain-asaservice/azuredeploy.parameters.json"
+  ],
+  "timestamp": 1642962903137,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/quickstarts/microsoft.blockchain/blockchain-asaservice/azuredeploy.json",
+      "/quickstarts/microsoft.blockchain/blockchain-asaservice/azuredeploy.parameters.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT961",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "microsoft.blockchain/blockchainmembers"
+    ]
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT961",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "bcMemberName": {
+        "type": "String",
+        "metadata": {
+          "description": "Azure Blockchain Service member name. The blockchain member name must be unique and can only contain lowercase letters and numbers. The first character must be a letter. The value must be between 2 and 20 characters long."
+        },
+        "value": "GEN-UNIQUE"
+      },
+      "consortiumName": {
+        "type": "String",
+        "metadata": {
+          "description": "Consortium name. The new consortium name must be unique."
+        },
+        "value": "GEN-UNIQUE"
+      },
+      "memberPassword": {
+        "type": "secureString",
+        "metadata": {
+          "description": "The password for the member's default transaction node. Use the password for basic authentication when connecting to blockchain member's default transaction node public endpoint. The password must have 3 of the following: 1 lower case character, 1 upper case character, 1 number, and 1 special character that is not '#', '`', '*', '\"', ''', '-', '%',' ' or ';'."
+        },
+        "value": "GEN-PASSWORD-AMP"
+      },
+      "consortiumManagementAccountPassword": {
+        "type": "secureString",
+        "metadata": {
+          "description": "The consortium management account password is used to encrypt the private key for the Ethereum account that is created for your member. You use the member account and member account password for consortium management. The password must have 3 of the following: 1 lower case character, 1 upper case character, 1 number, and 1 special character that is not '#', '`', '*', '\"', ''', '-', '%',' ' or ';'."
+        },
+        "value": "GEN-PASSWORD-AMP"
+      },
+      "skuTier": {
+        "type": "string",
+        "defaultValue": "Basic",
+        "metadata": {
+          "description": "Use Basic or Standard. Use the Basic tier for development, testing, and proof of concepts. Use the Standard tier for production grade deployments. You should also use the Standard tier if you are using Blockchain Data Manager or sending a high volume of private transactions. Changing the pricing tier between basic and standard after member creation is not supported."
+        }
+      },
+      "skuName": {
+        "type": "string",
+        "defaultValue": "B0",
+        "metadata": {
+          "description": "Use S0 for Standard and B0 for Basic."
+        }
+      },
+      "location": {
+        "type": "string",
+        "defaultValue": "[resourceGroup().location]",
+        "metadata": {
+          "description": "Location for all resources."
+        },
+        "value": "westus2"
+      }
+    },
+    "variables": {},
+    "resources": [
+      {
+        "type": "Microsoft.Blockchain/blockchainMembers",
+        "apiVersion": "2018-06-01-preview",
+        "name": "GEN-UNIQUE",
+        "location": "westus2",
+        "sku": {
+          "name": "B0",
+          "tier": "Basic"
+        },
+        "tags": {
+          "consortium": "Consortium"
+        },
+        "properties": {
+          "protocol": "Quorum",
+          "consensus": "Default",
+          "password": "GEN-PASSWORD-AMP",
+          "validatorNodesSku": {
+            "capacity": 1
+          },
+          "consortium": "GEN-UNIQUE",
+          "consortiumManagementAccountPassword": "GEN-PASSWORD-AMP",
+          "firewallRules": [
+            {
+              "ruleName": "AllowAll",
+              "startIpAddress": "0.0.0.0",
+              "endIpAddress": "255.255.255.255"
+            }
+          ]
+        }
+      }
+    ],
+    "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+  }
+}

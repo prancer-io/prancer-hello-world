@@ -1,0 +1,273 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAzureQuickStart",
+  "paths": [
+    "/application-workloads/shibboleth/shibboleth-singlevm-windows/azuredeploy.json",
+    "/application-workloads/shibboleth/shibboleth-singlevm-windows/azuredeploy.parameters.json"
+  ],
+  "timestamp": 1642962896267,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/application-workloads/shibboleth/shibboleth-singlevm-windows/azuredeploy.json",
+      "/application-workloads/shibboleth/shibboleth-singlevm-windows/azuredeploy.parameters.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT517",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "microsoft.network/publicipaddresses",
+      "microsoft.network/virtualnetworks",
+      "microsoft.network/networkinterfaces",
+      "microsoft.compute/virtualmachines/extensions",
+      "microsoft.compute/virtualmachines",
+      "microsoft.storage/storageaccounts"
+    ]
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT517",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "adminUsername": {
+        "type": "string",
+        "metadata": {
+          "description": "User name for the Virtual Machine administrator. Do not use simple names such as 'admin'."
+        },
+        "value": "GEN-UNIQUE-8"
+      },
+      "adminPassword": {
+        "type": "securestring",
+        "metadata": {
+          "description": "Password for the Virtual Machine administrator."
+        },
+        "value": "GEN-PASSWORD"
+      },
+      "uniqueNamePrefix": {
+        "type": "string",
+        "metadata": {
+          "description": "Unique name that will be used to generate various other names including the name of the Public IP used to access the Virtual Machine."
+        },
+        "value": "GEN-UNIQUE-8"
+      },
+      "windowsOSVersion": {
+        "type": "string",
+        "defaultValue": "2016-Datacenter",
+        "allowedValues": [
+          "2016-Datacenter"
+        ],
+        "metadata": {
+          "description": "The Windows version for the VM. This will pick a fully patched image of this given Windows version. Allowed values: 2008-R2-SP1, 2012-Datacenter, 2012-R2-Datacenter."
+        },
+        "value": "2016-Datacenter"
+      },
+      "vmSize": {
+        "type": "string",
+        "defaultValue": "Standard_D4_v3",
+        "allowedValues": [
+          "Standard_A0",
+          "Standard_A1",
+          "Standard_A2",
+          "Standard_A3",
+          "Standard_A4",
+          "Standard_A5",
+          "Standard_A6",
+          "Standard_A7",
+          "Standard_A8",
+          "Standard_A9",
+          "Standard_A10",
+          "Standard_A11",
+          "Standard_D8_v3",
+          "Standard_D2_v3",
+          "Standard_D4_v3",
+          "Standard_D8_v3",
+          "Standard_D4_v3",
+          "Standard_D4_v3",
+          "Standard_D8_v3",
+          "Standard_D16_v3"
+        ],
+        "metadata": {
+          "description": "The size of the VM."
+        },
+        "value": "Standard_D8_v3"
+      },
+      "location": {
+        "type": "string",
+        "defaultValue": "[resourceGroup().location]",
+        "metadata": {
+          "description": "Location for all resources."
+        }
+      },
+      "_artifactsLocation": {
+        "type": "string",
+        "metadata": {
+          "description": "The base URI where artifacts required by this template are located including a trailing '/'"
+        },
+        "defaultValue": "[deployment().properties.templateLink.uri]"
+      },
+      "_artifactsLocationSasToken": {
+        "type": "securestring",
+        "metadata": {
+          "description": "The sasToken required to access _artifactsLocation.  When the template is deployed using the accompanying scripts, a sasToken will be automatically generated. Use the defaultValue if the staging location is not secured."
+        },
+        "defaultValue": ""
+      }
+    },
+    "variables": {
+      "newStorageAccountName": "[concat(uniquestring(resourceGroup().id), 'shs')]",
+      "imagePublisher": "MicrosoftWindowsServer",
+      "imageOffer": "WindowsServer",
+      "nicName": "GEN-UNIQUE-8Nic",
+      "addressPrefix": "10.0.0.0/16",
+      "subnetName": "Subnet",
+      "subnetPrefix": "10.0.0.0/24",
+      "storageAccountType": "Standard_LRS",
+      "publicIPAddressName": "GEN-UNIQUE-8IP",
+      "publicIPAddressType": "Dynamic",
+      "vmName": "GEN-UNIQUE-8VM",
+      "virtualNetworkName": "GEN-UNIQUE-8VNet",
+      "subnetRef": "Microsoft.Network/virtualNetworks/subnets/GEN-UNIQUE-8VNet/Subnet",
+      "installScriptName": "install_shibboleth_idp.ps1",
+      "installCommand": "powershell.exe -File install_shibboleth_idp.ps1 GEN-UNIQUE-8 [resourceGroup().location]"
+    },
+    "resources": [
+      {
+        "apiVersion": "2021-01-01",
+        "location": "[resourceGroup().location]",
+        "name": "[variables('newStorageAccountName')]",
+        "sku": {
+          "name": "Standard_LRS"
+        },
+        "type": "Microsoft.Storage/storageAccounts"
+      },
+      {
+        "apiVersion": "2020-07-01",
+        "type": "Microsoft.Network/publicIPAddresses",
+        "name": "GEN-UNIQUE-8IP",
+        "location": "[resourceGroup().location]",
+        "properties": {
+          "publicIPAllocationMethod": "Dynamic",
+          "dnsSettings": {
+            "domainNameLabel": "GEN-UNIQUE-8"
+          }
+        }
+      },
+      {
+        "apiVersion": "2020-07-01",
+        "type": "Microsoft.Network/virtualNetworks",
+        "name": "GEN-UNIQUE-8VNet",
+        "location": "[resourceGroup().location]",
+        "properties": {
+          "addressSpace": {
+            "addressPrefixes": [
+              "10.0.0.0/16"
+            ]
+          },
+          "subnets": [
+            {
+              "name": "Subnet",
+              "properties": {
+                "addressPrefix": "10.0.0.0/24"
+              }
+            }
+          ]
+        }
+      },
+      {
+        "apiVersion": "2020-07-01",
+        "type": "Microsoft.Network/networkInterfaces",
+        "name": "GEN-UNIQUE-8Nic",
+        "location": "[resourceGroup().location]",
+        "dependsOn": [
+          "Microsoft.Network/publicIPAddresses//GEN-UNIQUE-8IP",
+          "Microsoft.Network/virtualNetworks//GEN-UNIQUE-8VNet"
+        ],
+        "properties": {
+          "ipConfigurations": [
+            {
+              "name": "ipconfig1",
+              "properties": {
+                "privateIPAllocationMethod": "Dynamic",
+                "publicIPAddress": {
+                  "id": "Microsoft.Network/publicIPAddresses/GEN-UNIQUE-8IP"
+                },
+                "subnet": {
+                  "id": "Microsoft.Network/virtualNetworks/subnets/GEN-UNIQUE-8VNet/Subnet"
+                }
+              }
+            }
+          ]
+        }
+      },
+      {
+        "apiVersion": "2020-12-01",
+        "type": "Microsoft.Compute/virtualMachines",
+        "name": "GEN-UNIQUE-8VM",
+        "location": "[resourceGroup().location]",
+        "dependsOn": [
+          "[resourceId('Microsoft.Storage/storageAccounts/', variables('newStorageAccountName'))]",
+          "[resourceId('Microsoft.Network/networkInterfaces/', variables('nicName'))]"
+        ],
+        "properties": {
+          "hardwareProfile": {
+            "vmSize": "Standard_D8_v3"
+          },
+          "osProfile": {
+            "computerName": "GEN-UNIQUE-8VM",
+            "adminUsername": "GEN-UNIQUE-8",
+            "adminPassword": "GEN-PASSWORD"
+          },
+          "storageProfile": {
+            "imageReference": {
+              "publisher": "MicrosoftWindowsServer",
+              "offer": "WindowsServer",
+              "sku": "2016-Datacenter",
+              "version": "latest"
+            },
+            "osDisk": {
+              "name": "GEN-UNIQUE-8VM_OSDisk",
+              "caching": "ReadWrite",
+              "createOption": "FromImage"
+            }
+          },
+          "networkProfile": {
+            "networkInterfaces": [
+              {
+                "id": "Microsoft.Network/networkInterfaces/GEN-UNIQUE-8Nic"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "type": "Microsoft.Compute/virtualMachines/extensions",
+        "name": "GEN-UNIQUE-8VM/CustomScriptExtension",
+        "apiVersion": "2020-12-01",
+        "location": "[resourceGroup().location]",
+        "dependsOn": [
+          "Microsoft.Compute/virtualMachines//GEN-UNIQUE-8VM"
+        ],
+        "properties": {
+          "publisher": "Microsoft.Compute",
+          "type": "CustomScriptExtension",
+          "typeHandlerVersion": "1.9",
+          "autoUpgradeMinorVersion": true,
+          "settings": {
+            "fileUris": [
+              "[uri(parameters('_artifactsLocation'), concat(variables('installScriptName'), parameters('_artifactsLocationSasToken')))]"
+            ],
+            "commandToExecute": "powershell.exe -File install_shibboleth_idp.ps1 GEN-UNIQUE-8 [resourceGroup().location]"
+          }
+        }
+      }
+    ],
+    "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+  }
+}

@@ -1,0 +1,131 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAzureQuickStart",
+  "paths": [
+    "/demos/web-app-regional-vnet-private-endpoint-sql-storage/nestedtemplates/app.json"
+  ],
+  "timestamp": 1642962902347,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/demos/web-app-regional-vnet-private-endpoint-sql-storage/nestedtemplates/app.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT865",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "microsoft.web/sites"
+    ]
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT865",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "appName": {
+        "type": "string",
+        "metadata": {
+          "description": "name of app service web app (must be globally unique)"
+        }
+      },
+      "location": {
+        "type": "string",
+        "metadata": {
+          "description": "location to deploy app service web app"
+        }
+      },
+      "hostingPlanName": {
+        "type": "string",
+        "metadata": {
+          "description": "name of app service hosting plan"
+        }
+      },
+      "ipAddressRestriction": {
+        "type": "array",
+        "defaultValue": [
+          {
+            "ipAddress": "0.0.0.0/32"
+          }
+        ],
+        "metadata": {
+          "description": "ip address restrictions for web app"
+        }
+      },
+      "subnet": {
+        "type": "string",
+        "metadata": {
+          "description": "resource id of subnet to use for app service reginal vnet integration"
+        }
+      }
+    },
+    "variables": {},
+    "resources": [
+      {
+        "type": "Microsoft.Web/sites",
+        "name": "[tolower(parameters('appName'))]",
+        "apiVersion": "2019-08-01",
+        "location": "location",
+        "resources": [
+          {
+            "apiVersion": "2019-08-01",
+            "type": "config",
+            "name": "web",
+            "dependsOn": [
+              "[tolower(parameters('appName'))]"
+            ],
+            "properties": {
+              "ipSecurityRestrictions": [
+                {
+                  "ipAddress": "0.0.0.0/32"
+                }
+              ]
+            }
+          },
+          {
+            "name": "virtualNetwork",
+            "type": "networkConfig",
+            "apiVersion": "2019-08-01",
+            "location": "location",
+            "properties": {
+              "subnetResourceId": "subnet",
+              "swiftSupported": true
+            },
+            "dependsOn": [
+              "Microsoft.Web/sites/appName"
+            ]
+          }
+        ],
+        "properties": {
+          "name": "[tolower(parameters('appName'))]",
+          "serverFarmId": "Microsoft.Web/serverfarms/hostingPlanName",
+          "siteConfig": {
+            "appSettings": [
+              {
+                "name": "WEBSITE_VNET_ROUTE_ALL",
+                "value": 1
+              },
+              {
+                "name": "WEBSITE_DNS_SERVER",
+                "value": "168.63.129.16"
+              }
+            ]
+          }
+        }
+      }
+    ],
+    "outputs": {
+      "appName": {
+        "type": "string",
+        "value": "[parameters('appName')]"
+      }
+    },
+    "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+  }
+}

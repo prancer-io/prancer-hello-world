@@ -1,0 +1,240 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAzureQuickStart",
+  "paths": [
+    "/quickstarts/microsoft.network/vpn-custom-ipsec-policy/azuredeploy.json",
+    "/quickstarts/microsoft.network/vpn-custom-ipsec-policy/azuredeploy.parameters.json"
+  ],
+  "timestamp": 1642962909720,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/quickstarts/microsoft.network/vpn-custom-ipsec-policy/azuredeploy.json",
+      "/quickstarts/microsoft.network/vpn-custom-ipsec-policy/azuredeploy.parameters.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT1615",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "microsoft.network/connections"
+    ]
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT1615",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "location": {
+        "type": "string",
+        "defaultValue": "[resourceGroup().location]",
+        "metadata": {
+          "description": "Resource Location"
+        }
+      },
+      "vpnGateway_Name": {
+        "type": "string",
+        "metadata": {
+          "description": "Name of existing Virtual Network Gateway to deploy the connection to"
+        },
+        "value": "GET-PREREQ-vpnGateway"
+      },
+      "localGateway_Name": {
+        "type": "string",
+        "metadata": {
+          "description": "Name of existing Local Network Gateway to deploy the connection to"
+        },
+        "value": "GET-PREREQ-localGateway"
+      },
+      "vpnName": {
+        "type": "string",
+        "defaultValue": "Azure-to-OnPremises",
+        "metadata": {
+          "description": "Name of the VPN connection between Azure and On-Premises (ex: AzureUKS-to-LDN)"
+        }
+      },
+      "vpnProtocol": {
+        "type": "string",
+        "defaultValue": "IKEv2",
+        "allowedValues": [
+          "IKEv1",
+          "IKEv2"
+        ],
+        "metadata": {
+          "description": "Protocol utilised by the VPN Connection (IKEv1, IKEv2)"
+        }
+      },
+      "saLifeTimeSeconds": {
+        "type": "int",
+        "defaultValue": 3600,
+        "metadata": {
+          "description": "Security Association Lifetime (Seconds)"
+        }
+      },
+      "saDataSizeKilobytes": {
+        "type": "int",
+        "defaultValue": 1024000000,
+        "metadata": {
+          "description": "Security Association Data Size (KB)"
+        }
+      },
+      "ipsecEncryption": {
+        "type": "string",
+        "defaultValue": "AES256",
+        "allowedValues": [
+          "None",
+          "DES",
+          "DES3",
+          "AES128",
+          "AES192",
+          "AES256",
+          "GCMAES128",
+          "GCMAES192",
+          "GCMAES256"
+        ],
+        "metadata": {
+          "description": "IPSec Encryption"
+        }
+      },
+      "ipsecIntegrity": {
+        "type": "string",
+        "defaultValue": "SHA256",
+        "allowedValues": [
+          "MD5",
+          "SHA1",
+          "SHA256",
+          "GCMAES128",
+          "GCMAES192",
+          "GCMAES256"
+        ],
+        "metadata": {
+          "description": "IPSec Integrity"
+        }
+      },
+      "ikeEncryption": {
+        "type": "string",
+        "defaultValue": "AES256",
+        "allowedValues": [
+          "DES",
+          "DES3",
+          "AES128",
+          "AES192",
+          "AES256",
+          "GCMAES256",
+          "GCMAES128"
+        ],
+        "metadata": {
+          "description": "IKE Encryption"
+        }
+      },
+      "ikeIntegrity": {
+        "type": "string",
+        "defaultValue": "SHA256",
+        "allowedValues": [
+          "MD5",
+          "SHA1",
+          "SHA256",
+          "SHA384",
+          "GCMAES256",
+          "GCMAES128"
+        ],
+        "metadata": {
+          "description": "IKE Integrity"
+        }
+      },
+      "dhGroup": {
+        "type": "string",
+        "defaultValue": "DHGroup14",
+        "allowedValues": [
+          "None",
+          "DHGroup1",
+          "DHGroup2",
+          "DHGroup14",
+          "DHGroup2048",
+          "ECP256",
+          "ECP384",
+          "DHGroup24"
+        ],
+        "metadata": {
+          "description": "Diffie-Hellman Group"
+        }
+      },
+      "pfsGroup": {
+        "type": "string",
+        "defaultValue": "PFS14",
+        "allowedValues": [
+          "None",
+          "PFS1",
+          "PFS2",
+          "PFS2048",
+          "ECP256",
+          "ECP384",
+          "PFS24",
+          "PFS14",
+          "PFSMM"
+        ],
+        "metadata": {
+          "description": "Perfect Forward Secrecy Group"
+        }
+      },
+      "sharedKey": {
+        "type": "securestring",
+        "metadata": {
+          "description": "Pre-Shared Key"
+        },
+        "value": "GEN-PASSWORD"
+      },
+      "policyBasedTrafficSelectors": {
+        "type": "bool",
+        "defaultValue": false,
+        "allowedValues": [
+          true,
+          false
+        ],
+        "metadata": {
+          "description": "Enable this if the OnPremises VPN endpoint needs to be configured as a Policy-Based VPN"
+        }
+      }
+    },
+    "variables": {},
+    "resources": [
+      {
+        "type": "Microsoft.Network/connections",
+        "apiVersion": "2020-04-01",
+        "name": "Azure-to-OnPremises",
+        "location": "[resourceGroup().location]",
+        "properties": {
+          "virtualNetworkGateway1": {
+            "id": "Microsoft.Network/virtualNetworkGateways/GET-PREREQ-vpnGateway"
+          },
+          "localNetworkGateway2": {
+            "id": "Microsoft.Network/localNetworkGateways/GET-PREREQ-localGateway"
+          },
+          "connectionType": "IPsec",
+          "connectionProtocol": "IKEv2",
+          "sharedKey": "GEN-PASSWORD",
+          "usePolicyBasedTrafficSelectors": false,
+          "ipsecPolicies": [
+            {
+              "saLifeTimeSeconds": 3600,
+              "saDataSizeKilobytes": 1024000000,
+              "ipsecEncryption": "AES256",
+              "ipsecIntegrity": "SHA256",
+              "ikeEncryption": "iKEEncryption",
+              "ikeIntegrity": "SHA256",
+              "dhGroup": "DHGroup14",
+              "pfsGroup": "PFS14"
+            }
+          ]
+        }
+      }
+    ],
+    "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+  }
+}

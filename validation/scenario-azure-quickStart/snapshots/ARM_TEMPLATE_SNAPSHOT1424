@@ -1,0 +1,135 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAzureQuickStart",
+  "paths": [
+    "/quickstarts/microsoft.machinelearningservices/machine-learning-dataset-create-tabular-from-sql-query/azuredeploy.json",
+    "/quickstarts/microsoft.machinelearningservices/machine-learning-dataset-create-tabular-from-sql-query/azuredeploy.parameters.json"
+  ],
+  "timestamp": 1642962907671,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/quickstarts/microsoft.machinelearningservices/machine-learning-dataset-create-tabular-from-sql-query/azuredeploy.json",
+      "/quickstarts/microsoft.machinelearningservices/machine-learning-dataset-create-tabular-from-sql-query/azuredeploy.parameters.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT1424",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "microsoft.machinelearningservices/workspaces/datasets"
+    ]
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT1424",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "workspaceName": {
+        "type": "string",
+        "metadata": {
+          "description": "Specifies the name of the Azure Machine Learning workspace which will hold this datastore target."
+        },
+        "value": "GET-PREREQ-workspaceResource"
+      },
+      "datasetName": {
+        "type": "string",
+        "metadata": {
+          "description": "The name of the dataset."
+        },
+        "value": "GEN-UNIQUE-12"
+      },
+      "datasetDescription": {
+        "type": "string",
+        "defaultValue": "",
+        "metadata": {
+          "description": "Optional : The description for the dataset."
+        }
+      },
+      "datastoreName": {
+        "type": "string",
+        "metadata": {
+          "description": "The  SQL/PostgreSQL/MySQL datastore name."
+        },
+        "value": "GET-PREREQ-datastoreResource"
+      },
+      "sqlQuery": {
+        "type": "string",
+        "metadata": {
+          "description": "SQL Quey"
+        },
+        "value": "GEN-UNIQUE-12"
+      },
+      "fineGrainTimestamp": {
+        "type": "string",
+        "defaultValue": "",
+        "metadata": {
+          "description": "Optional : Column name to be used as FineGrainTimestamp"
+        }
+      },
+      "coarseGrainTimestamp": {
+        "type": "string",
+        "defaultValue": "",
+        "metadata": {
+          "description": "Optional : Column name to be used as CoarseGrainTimestamp. Can only be used if 'fineGrainTimestamp' is specified and cannot be same as 'fineGrainTimestamp'."
+        }
+      },
+      "tags": {
+        "type": "object",
+        "defaultValue": {},
+        "metadata": {
+          "description": "Optional : Provide JSON object with 'key,value' pairs to add as tags on dataset. Example- {\"sampleTag1\": \"tagValue1\", \"sampleTag2\": \"tagValue2\"}"
+        }
+      },
+      "skipValidation": {
+        "type": "bool",
+        "defaultValue": false,
+        "metadata": {
+          "description": "Optional :  Skip validation that ensures data can be loaded from the dataset before registration."
+        },
+        "value": true
+      },
+      "location": {
+        "type": "string",
+        "defaultValue": "[resourceGroup().location]",
+        "metadata": {
+          "description": "The location of the Azure Machine Learning Workspace."
+        }
+      }
+    },
+    "resources": [
+      {
+        "type": "Microsoft.MachineLearningServices/workspaces/datasets",
+        "name": "GET-PREREQ-workspaceResource/GEN-UNIQUE-12",
+        "apiVersion": "2020-05-01-preview",
+        "location": "[resourceGroup().location]",
+        "properties": {
+          "SkipValidation": true,
+          "DatasetType": "tabular",
+          "Parameters": {
+            "Query": {
+              "Query": "GEN-UNIQUE-12",
+              "DatastoreName": "GET-PREREQ-datastoreResource"
+            },
+            "SourceType": "sql_query"
+          },
+          "Registration": {
+            "Description": "",
+            "Tags": {}
+          },
+          "TimeSeries": {
+            "FineGrainTimestamp": "",
+            "CoarseGrainTimestamp": ""
+          }
+        }
+      }
+    ],
+    "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+  }
+}

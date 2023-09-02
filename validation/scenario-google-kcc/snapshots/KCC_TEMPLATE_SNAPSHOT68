@@ -2,12 +2,12 @@
   "structure": "filesystem",
   "error": null,
   "reference": "master",
-  "contentType": "yaml",
+  "contentType": "json",
   "source": "gitConnectorGoogleKcc",
   "paths": [
-    "/samples/resources/cloudschedulerjob/scheduler-job-oauth/cloudscheduler_v1beta1_cloudschedulerjob.yaml"
+    "/samples/resources/binaryauthorizationpolicy/service-identity-policy/binaryauthorization_v1beta1_binaryauthorizationattestor.yaml"
   ],
-  "timestamp": 1628765139689,
+  "timestamp": 1642973302063,
   "queryuser": null,
   "checksum": "99914b932bd37a50b983c5e7c90ae93b",
   "node": {
@@ -15,38 +15,31 @@
     "type": "kcc",
     "collection": "kcctemplate",
     "paths": [
-      "/samples/resources/cloudschedulerjob/scheduler-job-oauth/cloudscheduler_v1beta1_cloudschedulerjob.yaml"
+      "/samples/resources/binaryauthorizationpolicy/service-identity-policy/binaryauthorization_v1beta1_binaryauthorizationattestor.yaml"
     ],
     "snapshotId": "KCC_TEMPLATE_SNAPSHOT68",
     "status": "active",
-    "validate": true
+    "validate": true,
+    "resourceTypes": [
+      "binaryauthorizationattestor"
+    ]
   },
   "snapshotId": "KCC_TEMPLATE_SNAPSHOT68",
   "collection": "kcctemplate",
   "json": {
-    "apiVersion": "cloudscheduler.cnrm.cloud.google.com/v1beta1",
-    "kind": "CloudSchedulerJob",
+    "apiVersion": "binaryauthorization.cnrm.cloud.google.com/v1beta1",
+    "kind": "BinaryAuthorizationAttestor",
     "metadata": {
-      "name": "cloudscheduler-sample-oauth"
+      "name": "binaryauthorizationpolicy-dep-serviceidentity"
     },
     "spec": {
-      "description": "scheduler-http-target-job",
-      "schedule": "*/5 * * * *",
-      "location": "us-west2",
-      "timeZone": "America/New_York",
-      "attemptDeadline": "600s",
-      "retryConfig": {
-        "retryCount": 3,
-        "maxRetryDuration": "60s",
-        "maxDoublings": 2
+      "projectRef": {
+        "name": "binauthzpolicy-dep-si"
       },
-      "httpTarget": {
-        "httpMethod": "GET",
-        "uri": "https://cloudscheduler.googleapis.com/v1/projects/my-project-name/locations/us-west1/jobs",
-        "oauthToken": {
-          "serviceAccountRef": {
-            "name": "cloudscheduler-oauth-dep"
-          }
+      "description": "A sample binary authorization attestor.",
+      "userOwnedDrydockNote": {
+        "noteRef": {
+          "name": "binaryauthorizationpolicy-dep-serviceidentity"
         }
       }
     }

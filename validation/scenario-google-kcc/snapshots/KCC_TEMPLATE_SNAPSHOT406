@@ -2,12 +2,12 @@
   "structure": "filesystem",
   "error": null,
   "reference": "master",
-  "contentType": "yaml",
+  "contentType": "json",
   "source": "gitConnectorGoogleKcc",
   "paths": [
-    "/samples/resources/iampolicy/pubsub-admin-policy/iam_v1beta1_iamserviceaccount.yaml"
+    "/samples/resources/filestoreinstance/filestore_v1beta1_filestoreinstance.yaml"
   ],
-  "timestamp": 1628765147883,
+  "timestamp": 1642973304086,
   "queryuser": null,
   "checksum": "99914b932bd37a50b983c5e7c90ae93b",
   "node": {
@@ -15,19 +15,58 @@
     "type": "kcc",
     "collection": "kcctemplate",
     "paths": [
-      "/samples/resources/iampolicy/pubsub-admin-policy/iam_v1beta1_iamserviceaccount.yaml"
+      "/samples/resources/filestoreinstance/filestore_v1beta1_filestoreinstance.yaml"
     ],
     "snapshotId": "KCC_TEMPLATE_SNAPSHOT406",
     "status": "active",
-    "validate": true
+    "validate": true,
+    "resourceTypes": [
+      "filestoreinstance"
+    ]
   },
   "snapshotId": "KCC_TEMPLATE_SNAPSHOT406",
   "collection": "kcctemplate",
   "json": {
-    "apiVersion": "iam.cnrm.cloud.google.com/v1beta1",
-    "kind": "IAMServiceAccount",
+    "apiVersion": "filestore.cnrm.cloud.google.com/v1beta1",
+    "kind": "FilestoreInstance",
     "metadata": {
-      "name": "iampolicy-dep-pubsubadmin"
+      "name": "filestoreinstance-sample"
+    },
+    "spec": {
+      "projectRef": {
+        "external": "projects/${PROJECT_ID?}"
+      },
+      "description": "A sample filestore instance",
+      "fileShares": [
+        {
+          "capacityGb": 4800,
+          "name": "my_share",
+          "nfsExportOptions": [
+            {
+              "accessMode": "READ_WRITE",
+              "anonGid": 65534,
+              "anonUid": 65534,
+              "ipRanges": [
+                "172.217.14.238"
+              ],
+              "squashMode": "ROOT_SQUASH"
+            }
+          ]
+        }
+      ],
+      "location": "us-central1-c",
+      "networks": [
+        {
+          "networkRef": {
+            "name": "filestoreinstance-dep"
+          },
+          "modes": [
+            "MODE_IPV4"
+          ],
+          "reservedIPRange": "10.0.0.0/29"
+        }
+      ],
+      "tier": "PREMIUM"
     }
   }
 }

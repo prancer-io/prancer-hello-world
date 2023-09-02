@@ -1,0 +1,102 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAzureQuickStart",
+  "paths": [
+    "/quickstarts/microsoft.network/networkwatcher-create/azuredeploy.json",
+    "/quickstarts/microsoft.network/networkwatcher-create/azuredeploy.parameters.json"
+  ],
+  "timestamp": 1642962909255,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/quickstarts/microsoft.network/networkwatcher-create/azuredeploy.json",
+      "/quickstarts/microsoft.network/networkwatcher-create/azuredeploy.parameters.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT1569",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "microsoft.network/networkwatchers",
+      "microsoft.authorization/locks"
+    ]
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT1569",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.0.0.0",
+    "metadata": {
+      "_generator": {
+        "name": "bicep",
+        "version": "0.4.613.9944",
+        "templateHash": "17247934225504258064"
+      }
+    },
+    "parameters": {
+      "networkWatcherName": {
+        "type": "string",
+        "metadata": {
+          "description": "Network Watcher name"
+        },
+        "value": "GEN-UNIQUE"
+      },
+      "location": {
+        "type": "string",
+        "defaultValue": "[resourceGroup().location]",
+        "metadata": {
+          "description": "Location of Network Watcher"
+        }
+      },
+      "enableDeleteLock": {
+        "type": "bool",
+        "defaultValue": false,
+        "metadata": {
+          "description": "Enable delete lock"
+        }
+      }
+    },
+    "functions": [],
+    "variables": {
+      "lockName": "[format('{0}-lck', parameters('networkWatcherName'))]"
+    },
+    "resources": [
+      {
+        "type": "Microsoft.Network/networkWatchers",
+        "apiVersion": "2021-02-01",
+        "name": "GEN-UNIQUE",
+        "location": "[resourceGroup().location]",
+        "properties": {}
+      },
+      {
+        "condition": false,
+        "type": "Microsoft.Authorization/locks",
+        "apiVersion": "2016-09-01",
+        "scope": "[format('Microsoft.Network/networkWatchers/{0}', parameters('networkWatcherName'))]",
+        "name": "[format('{0}-lck', parameters('networkWatcherName'))]",
+        "properties": {
+          "level": "CanNotDelete"
+        },
+        "dependsOn": [
+          "Microsoft.Network/networkWatchers/GEN-UNIQUE"
+        ]
+      }
+    ],
+    "outputs": {
+      "name": {
+        "type": "string",
+        "value": "[parameters('networkWatcherName')]"
+      },
+      "id": {
+        "type": "string",
+        "value": "[resourceId('Microsoft.Network/networkWatchers', parameters('networkWatcherName'))]"
+      }
+    },
+    "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+  }
+}

@@ -1,0 +1,471 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAzureQuickStart",
+  "paths": [
+    "/quickstarts/microsoft.network/privatelink-service/azuredeploy.json",
+    "/quickstarts/microsoft.network/privatelink-service/azuredeploy.parameters.json"
+  ],
+  "timestamp": 1642962909390,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/quickstarts/microsoft.network/privatelink-service/azuredeploy.json",
+      "/quickstarts/microsoft.network/privatelink-service/azuredeploy.parameters.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT1583",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "microsoft.network/publicipaddresses",
+      "microsoft.network/virtualnetworks",
+      "microsoft.network/loadbalancers",
+      "microsoft.network/networkinterfaces",
+      "microsoft.compute/virtualmachines/extensions",
+      "microsoft.compute/virtualmachines",
+      "microsoft.network/privateendpoints",
+      "microsoft.network/privatelinkservices"
+    ]
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT1583",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "vmAdminUsername": {
+        "type": "string",
+        "metadata": {
+          "description": "Username for the Virtual Machine."
+        },
+        "value": "GEN-UNIQUE"
+      },
+      "vmAdminPassword": {
+        "type": "secureString",
+        "metadata": {
+          "description": "Password for the Virtual Machine. The password must be at least 12 characters long and have lower case, upper characters, digit and a special character (Regex match)"
+        },
+        "value": "GEN-PASSWORD"
+      },
+      "vmSize": {
+        "type": "string",
+        "defaultValue": "Standard_D2_v3",
+        "metadata": {
+          "description": "The size of the VM"
+        }
+      },
+      "location": {
+        "type": "string",
+        "defaultValue": "[resourceGroup().location]",
+        "metadata": {
+          "description": "Location for all resources."
+        }
+      }
+    },
+    "variables": {
+      "vnetName": "myVirtualNetwork",
+      "vnetConsumerName": "myPEVnet",
+      "vnetAddressPrefix": "10.0.0.0/16",
+      "frontendSubnetPrefix": "10.0.1.0/24",
+      "frontendSubnetName": "frontendSubnet",
+      "backendSubnetPrefix": "10.0.2.0/24",
+      "backendSubnetName": "backendSubnet",
+      "consumerSubnetPrefix": "10.0.0.0/24",
+      "consumerSubnetName": "myPESubnet",
+      "loadbalancername": "myILB",
+      "backendpoolname": "myBackEndPool",
+      "loadBalancerFrontEndIpConfigurationName": "myFrontEnd",
+      "healthProbeName": "myHealthProbe",
+      "privateEndpointName": "myPrivateEndpoint",
+      "vmName": "[take(concat('myVm', uniqueString(resourceGroup().id)),15)]",
+      "networkInterfaceName": "[take(concat('myVm', uniqueString(resourceGroup().id)),15)]NetInt",
+      "vmConsumerName": "[take(concat('myConsumerVm', uniqueString(resourceGroup().id)),15)]",
+      "publicIpAddressConsumerName": "[take(concat('myConsumerVm', uniqueString(resourceGroup().id)),15)]PublicIP",
+      "networkInterfaceConsumerName": "[take(concat('myConsumerVm', uniqueString(resourceGroup().id)),15)]NetInt",
+      "osDiskType": "StandardSSD_LRS",
+      "privatelinkservicename": "myPLS",
+      "loadbalancerId": "Microsoft.Network/loadBalancers/myILB"
+    },
+    "resources": [
+      {
+        "type": "Microsoft.Network/virtualNetworks",
+        "apiVersion": "2020-06-01",
+        "name": "myVirtualNetwork",
+        "location": "[resourceGroup().location]",
+        "properties": {
+          "addressSpace": {
+            "addressPrefixes": [
+              "10.0.0.0/16"
+            ]
+          },
+          "subnets": [
+            {
+              "name": "frontendSubnet",
+              "properties": {
+                "addressPrefix": "10.0.1.0/24",
+                "privateLinkServiceNetworkPolicies": "Disabled"
+              }
+            },
+            {
+              "name": "backendSubnet",
+              "properties": {
+                "addressPrefix": "10.0.2.0/24"
+              }
+            }
+          ]
+        }
+      },
+      {
+        "type": "Microsoft.Network/loadBalancers",
+        "apiVersion": "2020-06-01",
+        "name": "myILB",
+        "location": "[resourceGroup().location]",
+        "sku": {
+          "name": "Standard"
+        },
+        "dependsOn": [
+          "myVirtualNetwork"
+        ],
+        "properties": {
+          "frontendIPConfigurations": [
+            {
+              "name": "myFrontEnd",
+              "properties": {
+                "privateIPAllocationMethod": "Dynamic",
+                "subnet": {
+                  "id": "Microsoft.Network/virtualNetworks/subnets/myVirtualNetwork/frontendSubnet"
+                }
+              }
+            }
+          ],
+          "backendAddressPools": [
+            {
+              "name": "myBackEndPool"
+            }
+          ],
+          "inboundNatRules": [
+            {
+              "name": "RDP-VM0",
+              "properties": {
+                "frontendIPConfiguration": {
+                  "id": "Microsoft.Network/loadBalancers/frontendIpConfigurations/myILB/myFrontEnd"
+                },
+                "protocol": "Tcp",
+                "frontendPort": 3389,
+                "backendPort": 3389,
+                "enableFloatingIP": false
+              }
+            }
+          ],
+          "loadBalancingRules": [
+            {
+              "Name": "myHTTPRule",
+              "properties": {
+                "frontendIPConfiguration": {
+                  "id": "Microsoft.Network/loadBalancers/frontendIpConfigurations/myILB/myFrontEnd"
+                },
+                "backendAddressPool": {
+                  "id": "Microsoft.Network/loadBalancers/backendAddressPools/myILB/myBackEndPool"
+                },
+                "probe": {
+                  "id": "Microsoft.Network/loadBalancers/probes/loadBalancerName/myHealthProbe"
+                },
+                "protocol": "Tcp",
+                "frontendPort": 80,
+                "backendPort": 80,
+                "idleTimeoutInMinutes": 15
+              }
+            }
+          ],
+          "probes": [
+            {
+              "properties": {
+                "protocol": "Tcp",
+                "port": 80,
+                "intervalInSeconds": 15,
+                "numberOfProbes": 2
+              },
+              "name": "myHealthProbe"
+            }
+          ]
+        }
+      },
+      {
+        "type": "Microsoft.Network/networkInterfaces",
+        "apiVersion": "2020-06-01",
+        "name": "[take(concat('myVm', uniqueString(resourceGroup().id)),15)]NetInt",
+        "location": "[resourceGroup().location]",
+        "dependsOn": [
+          "myILB"
+        ],
+        "tags": {
+          "displayName": "[take(concat('myVm', uniqueString(resourceGroup().id)),15)]NetInt"
+        },
+        "properties": {
+          "ipConfigurations": [
+            {
+              "name": "ipConfig1",
+              "properties": {
+                "privateIPAllocationMethod": "Dynamic",
+                "subnet": {
+                  "id": "Microsoft.Network/virtualNetworks/subnets/myVirtualNetwork/backendSubnet"
+                },
+                "loadBalancerBackendAddressPools": [
+                  {
+                    "id": "Microsoft.Network/loadBalancers/backendAddressPools/myILB/myBackEndPool"
+                  }
+                ],
+                "loadBalancerInboundNatRules": [
+                  {
+                    "id": "Microsoft.Network/loadBalancers/inboundNatRules//myILB/RDP-VM0"
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      },
+      {
+        "type": "Microsoft.Compute/virtualMachines",
+        "apiVersion": "2020-06-01",
+        "name": "[take(concat('myVm', uniqueString(resourceGroup().id)),15)]",
+        "location": "[resourceGroup().location]",
+        "dependsOn": [
+          "Microsoft.Network/networkInterfaces/[take(concat('myVm', uniqueString(resourceGroup().id)),15)]NetInt"
+        ],
+        "tags": {
+          "displayName": "[take(concat('myVm', uniqueString(resourceGroup().id)),15)]"
+        },
+        "properties": {
+          "hardwareProfile": {
+            "vmSize": "Standard_D2_v3"
+          },
+          "osProfile": {
+            "computerName": "[take(concat('myVm', uniqueString(resourceGroup().id)),15)]",
+            "adminUsername": "GEN-UNIQUE",
+            "adminPassword": "GEN-PASSWORD"
+          },
+          "storageProfile": {
+            "imageReference": {
+              "publisher": "MicrosoftWindowsServer",
+              "offer": "WindowsServer",
+              "sku": "2019-Datacenter",
+              "version": "latest"
+            },
+            "osDisk": {
+              "name": "[take(concat('myVm', uniqueString(resourceGroup().id)),15)]OsDisk",
+              "caching": "ReadWrite",
+              "createOption": "FromImage",
+              "managedDisk": {
+                "storageAccountType": "StandardSSD_LRS"
+              },
+              "diskSizeGB": 128
+            }
+          },
+          "networkProfile": {
+            "networkInterfaces": [
+              {
+                "id": "Microsoft.Network/networkInterfaces/[take(concat('myVm', uniqueString(resourceGroup().id)),15)]NetInt"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "type": "Microsoft.Compute/virtualMachines/extensions",
+        "apiVersion": "2020-06-01",
+        "name": "[take(concat('myVm', uniqueString(resourceGroup().id)),15)]/installcustomscript",
+        "location": "[resourceGroup().location]",
+        "tags": {
+          "displayName": "install software for Windows VM"
+        },
+        "dependsOn": [
+          "Microsoft.Compute/virtualMachines/[take(concat('myVm', uniqueString(resourceGroup().id)),15)]"
+        ],
+        "properties": {
+          "publisher": "Microsoft.Compute",
+          "type": "CustomScriptExtension",
+          "typeHandlerVersion": "1.9",
+          "autoUpgradeMinorVersion": true,
+          "protectedSettings": {
+            "commandToExecute": "powershell -ExecutionPolicy Unrestricted Install-WindowsFeature -Name Web-Server"
+          }
+        }
+      },
+      {
+        "type": "Microsoft.Network/privateLinkServices",
+        "apiVersion": "2020-06-01",
+        "name": "myPLS",
+        "location": "[resourceGroup().location]",
+        "properties": {
+          "enableProxyProtocol": false,
+          "loadBalancerFrontendIpConfigurations": [
+            {
+              "id": "Microsoft.Network/loadBalancers/frontendIpConfigurations/myILB/myFrontEnd"
+            }
+          ],
+          "ipConfigurations": [
+            {
+              "name": "snet-provider-default-1",
+              "properties": {
+                "privateIPAllocationMethod": "Dynamic",
+                "privateIPAddressVersion": "IPv4",
+                "subnet": {
+                  "id": "[reference(variables('loadbalancerId'), '2019-06-01').frontendIPConfigurations[0].properties.subnet.id]"
+                },
+                "primary": false
+              }
+            }
+          ]
+        }
+      },
+      {
+        "type": "Microsoft.Network/virtualNetworks",
+        "apiVersion": "2020-06-01",
+        "name": "myPEVnet",
+        "location": "[resourceGroup().location]",
+        "properties": {
+          "addressSpace": {
+            "addressPrefixes": [
+              "10.0.0.0/16"
+            ]
+          },
+          "subnets": [
+            {
+              "name": "myPESubnet",
+              "properties": {
+                "addressPrefix": "10.0.0.0/24",
+                "privateEndpointNetworkPolicies": "Disabled"
+              }
+            },
+            {
+              "name": "backendSubnet",
+              "properties": {
+                "addressPrefix": "10.0.2.0/24"
+              }
+            }
+          ]
+        }
+      },
+      {
+        "type": "Microsoft.Network/publicIPAddresses",
+        "apiVersion": "2020-06-01",
+        "name": "[take(concat('myConsumerVm', uniqueString(resourceGroup().id)),15)]PublicIP",
+        "location": "[resourceGroup().location]",
+        "tags": {
+          "displayName": "[take(concat('myConsumerVm', uniqueString(resourceGroup().id)),15)]PublicIP"
+        },
+        "properties": {
+          "publicIPAllocationMethod": "Dynamic",
+          "dnsSettings": {
+            "domainNameLabel": "[tolower(variables('vmConsumerName'))]"
+          }
+        }
+      },
+      {
+        "type": "Microsoft.Network/networkInterfaces",
+        "apiVersion": "2020-06-01",
+        "name": "[take(concat('myConsumerVm', uniqueString(resourceGroup().id)),15)]NetInt",
+        "location": "[resourceGroup().location]",
+        "dependsOn": [
+          "myPEVnet",
+          "Microsoft.Network/publicIPAddresses/[take(concat('myConsumerVm', uniqueString(resourceGroup().id)),15)]PublicIP"
+        ],
+        "tags": {
+          "displayName": "[take(concat('myConsumerVm', uniqueString(resourceGroup().id)),15)]NetInt"
+        },
+        "properties": {
+          "ipConfigurations": [
+            {
+              "name": "ipConfig1",
+              "properties": {
+                "privateIPAllocationMethod": "Dynamic",
+                "publicIPAddress": {
+                  "id": "Microsoft.Network/publicIPAddresses/[take(concat('myConsumerVm', uniqueString(resourceGroup().id)),15)]PublicIP"
+                },
+                "subnet": {
+                  "id": "Microsoft.Network/virtualNetworks/subnets/myPEVnet/myPESubnet"
+                }
+              }
+            }
+          ]
+        }
+      },
+      {
+        "type": "Microsoft.Compute/virtualMachines",
+        "apiVersion": "2020-06-01",
+        "name": "[take(concat('myConsumerVm', uniqueString(resourceGroup().id)),15)]",
+        "location": "[resourceGroup().location]",
+        "dependsOn": [
+          "Microsoft.Network/networkInterfaces/[take(concat('myConsumerVm', uniqueString(resourceGroup().id)),15)]NetInt"
+        ],
+        "tags": {
+          "displayName": "[take(concat('myConsumerVm', uniqueString(resourceGroup().id)),15)]"
+        },
+        "properties": {
+          "hardwareProfile": {
+            "vmSize": "Standard_D2_v3"
+          },
+          "osProfile": {
+            "computerName": "[take(concat('myConsumerVm', uniqueString(resourceGroup().id)),15)]",
+            "adminUsername": "GEN-UNIQUE",
+            "adminPassword": "GEN-PASSWORD"
+          },
+          "storageProfile": {
+            "imageReference": {
+              "publisher": "MicrosoftWindowsServer",
+              "offer": "WindowsServer",
+              "sku": "2019-Datacenter",
+              "version": "latest"
+            },
+            "osDisk": {
+              "name": "[take(concat('myConsumerVm', uniqueString(resourceGroup().id)),15)]OsDisk",
+              "caching": "ReadWrite",
+              "createOption": "FromImage",
+              "managedDisk": {
+                "storageAccountType": "StandardSSD_LRS"
+              },
+              "diskSizeGB": 128
+            }
+          },
+          "networkProfile": {
+            "networkInterfaces": [
+              {
+                "id": "Microsoft.Network/networkInterfaces/[take(concat('myConsumerVm', uniqueString(resourceGroup().id)),15)]NetInt"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "type": "Microsoft.Network/privateEndpoints",
+        "apiVersion": "2020-06-01",
+        "name": "myPrivateEndpoint",
+        "location": "[resourceGroup().location]",
+        "dependsOn": [
+          "myPEVnet",
+          "myPLS"
+        ],
+        "properties": {
+          "subnet": {
+            "id": "Microsoft.Network/virtualNetworks/subnets/myPEVnet/myPESubnet"
+          },
+          "privateLinkServiceConnections": [
+            {
+              "name": "myPrivateEndpoint",
+              "properties": {
+                "privateLinkServiceId": "Microsoft.Network/privateLinkServices/myPLS"
+              }
+            }
+          ]
+        }
+      }
+    ],
+    "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+  }
+}

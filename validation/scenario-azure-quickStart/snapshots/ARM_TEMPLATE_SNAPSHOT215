@@ -1,0 +1,180 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAzureQuickStart",
+  "paths": [
+    "/application-workloads/kafka/kafka-ubuntu-multidisks/jumpbox-resources.json",
+    "/application-workloads/kafka/kafka-ubuntu-multidisks/azuredeploy.parameters.json"
+  ],
+  "timestamp": 1642962890675,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/application-workloads/kafka/kafka-ubuntu-multidisks/jumpbox-resources.json",
+      "/application-workloads/kafka/kafka-ubuntu-multidisks/azuredeploy.parameters.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT215",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "microsoft.network/publicipaddresses",
+      "microsoft.network/networkinterfaces",
+      "microsoft.compute/virtualmachines"
+    ]
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT215",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "commonSettings": {
+        "type": "object"
+      },
+      "osSettings": {
+        "type": "object"
+      },
+      "adminPasswordOrKey": {
+        "type": "securestring",
+        "value": "GEN-SSH-PUB-KEY"
+      },
+      "authenticationType": {
+        "type": "string"
+      },
+      "subnet": {
+        "type": "object"
+      },
+      "dnsName": {
+        "type": "string"
+      },
+      "vmSize": {
+        "type": "string",
+        "defaultValue": "Standard_A0",
+        "metadata": {
+          "description": "VM size."
+        }
+      },
+      "location": {
+        "type": "string",
+        "metadata": {
+          "description": "Location for all resources."
+        }
+      },
+      "storageAccountNamePrefix": {
+        "value": "GEN-UNIQUE-8"
+      },
+      "adminUsername": {
+        "value": "GEN-UNIQUE-8"
+      },
+      "domainName": {
+        "value": "GEN-UNIQUE-10"
+      }
+    },
+    "variables": {
+      "subnetRef": "Microsoft.Network/virtualNetworks/subnets//subnet/subnet",
+      "nicName": "commonSettingsnic",
+      "vmName": "commonSettingsvm",
+      "publicIpName": "commonSettingspublicIp",
+      "linuxConfiguration": {
+        "disablePasswordAuthentication": true,
+        "ssh": {
+          "publicKeys": [
+            {
+              "path": "/home/commonSettings/.ssh/authorized_keys",
+              "keyData": "GEN-SSH-PUB-KEY"
+            }
+          ]
+        }
+      }
+    },
+    "resources": [
+      {
+        "apiVersion": "2020-08-01",
+        "type": "Microsoft.Network/publicIPAddresses",
+        "name": "commonSettingspublicIp",
+        "location": "location",
+        "properties": {
+          "publicIPAllocationMethod": "Dynamic",
+          "dnsSettings": {
+            "domainNameLabel": "dnsName"
+          }
+        }
+      },
+      {
+        "apiVersion": "2020-08-01",
+        "type": "Microsoft.Network/networkInterfaces",
+        "name": "commonSettingsnic",
+        "location": "location",
+        "dependsOn": [
+          "Microsoft.Network/publicIPAddresses//commonSettingspublicIp"
+        ],
+        "properties": {
+          "ipConfigurations": [
+            {
+              "name": "ipconfig1",
+              "properties": {
+                "privateIPAllocationMethod": "Dynamic",
+                "publicIPAddress": {
+                  "id": "Microsoft.Network/publicIPAddresses/commonSettingspublicIp"
+                },
+                "subnet": {
+                  "id": "Microsoft.Network/virtualNetworks/subnets//subnet/subnet"
+                }
+              }
+            }
+          ]
+        }
+      },
+      {
+        "apiVersion": "2020-12-01",
+        "type": "Microsoft.Compute/virtualMachines",
+        "name": "commonSettingsvm",
+        "location": "location",
+        "dependsOn": [
+          "Microsoft.Network/networkInterfaces//commonSettingsnic"
+        ],
+        "properties": {
+          "hardwareProfile": {
+            "vmSize": "Standard_A0"
+          },
+          "osProfile": {
+            "computerName": "commonSettingsvm",
+            "adminUsername": "commonSettings",
+            "adminPassword": "GEN-SSH-PUB-KEY",
+            "linuxConfiguration": "[if(equals(parameters('authenticationType'), 'password'), json('null'), variables('linuxConfiguration'))]"
+          },
+          "storageProfile": {
+            "imageReference": "osSettings",
+            "osDisk": {
+              "name": "commonSettingsvm_OSDisk",
+              "caching": "ReadWrite",
+              "createOption": "FromImage"
+            }
+          },
+          "networkProfile": {
+            "networkInterfaces": [
+              {
+                "id": "Microsoft.Network/networkInterfaces/commonSettingsnic"
+              }
+            ],
+            "inputEndpoints": [
+              {
+                "enableDirectServerReturn": "False",
+                "endpointName": "SSH",
+                "privatePort": 22,
+                "publicPort": 22,
+                "protocol": "Tcp"
+              }
+            ]
+          }
+        }
+      }
+    ],
+    "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+  }
+}

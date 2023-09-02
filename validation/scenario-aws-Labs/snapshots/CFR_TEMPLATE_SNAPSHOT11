@@ -1,0 +1,51 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAwsLabs",
+  "paths": [
+    "/aws/services/CloudFormation/MacrosExamples/PyPlate/python_example.yaml"
+  ],
+  "timestamp": 1642972590312,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "CFR_TEMPLATE_SNAPSHOT",
+    "type": "cloudformation",
+    "collection": "cloudformationtemplate",
+    "paths": [
+      "/aws/services/CloudFormation/MacrosExamples/PyPlate/python_example.yaml"
+    ],
+    "snapshotId": "CFR_TEMPLATE_SNAPSHOT11",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "aws::s3::bucket"
+    ]
+  },
+  "snapshotId": "CFR_TEMPLATE_SNAPSHOT11",
+  "collection": "cloudformationtemplate",
+  "json": {
+    "AWSTemplateFormatVersion": "2010-09-09",
+    "Description": "tests String macro functions",
+    "Parameters": {
+      "Tags": {
+        "Default": "Env=Prod,Application=MyApp,BU=ModernisationTeam",
+        "Type": "CommaDelimitedList"
+      }
+    },
+    "Resources": [
+      {
+        "Type": "AWS::S3::Bucket",
+        "Properties": {
+          "Tags": "#!PyPlate\noutput = []\nfor tag in params['Tags']:\n   key, value = tag.split('=')\n   output.append({\"Key\": key, \"Value\": value})\n"
+        },
+        "Name": "S3Bucket"
+      }
+    ],
+    "Transform": [
+      "PyPlate"
+    ]
+  }
+}

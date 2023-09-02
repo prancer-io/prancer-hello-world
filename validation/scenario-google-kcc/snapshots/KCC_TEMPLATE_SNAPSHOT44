@@ -2,12 +2,12 @@
   "structure": "filesystem",
   "error": null,
   "reference": "master",
-  "contentType": "yaml",
+  "contentType": "json",
   "source": "gitConnectorGoogleKcc",
   "paths": [
-    "/samples/resources/binaryauthorizationattestor/binaryauthorization_v1beta1_binaryauthorizationattestor.yaml"
+    "/samples/resources/bigtabletable/bigtable_v1beta1_bigtabletable.yaml"
   ],
-  "timestamp": 1628765139182,
+  "timestamp": 1642973301872,
   "queryuser": null,
   "checksum": "99914b932bd37a50b983c5e7c90ae93b",
   "node": {
@@ -15,36 +15,38 @@
     "type": "kcc",
     "collection": "kcctemplate",
     "paths": [
-      "/samples/resources/binaryauthorizationattestor/binaryauthorization_v1beta1_binaryauthorizationattestor.yaml"
+      "/samples/resources/bigtabletable/bigtable_v1beta1_bigtabletable.yaml"
     ],
     "snapshotId": "KCC_TEMPLATE_SNAPSHOT44",
     "status": "active",
-    "validate": true
+    "validate": true,
+    "resourceTypes": [
+      "bigtabletable"
+    ]
   },
   "snapshotId": "KCC_TEMPLATE_SNAPSHOT44",
   "collection": "kcctemplate",
   "json": {
-    "apiVersion": "binaryauthorization.cnrm.cloud.google.com/v1beta1",
-    "kind": "BinaryAuthorizationAttestor",
+    "apiVersion": "bigtable.cnrm.cloud.google.com/v1beta1",
+    "kind": "BigtableTable",
     "metadata": {
-      "name": "binaryauthorizationattestor-sample"
+      "name": "bigtabletable-sample"
     },
     "spec": {
-      "description": "A sample binary authorization attestor.",
-      "userOwnedDrydockNote": {
-        "noteRef": {
-          "name": "binaryauthorizationattestor-dep"
+      "columnFamily": [
+        {
+          "family": "family1"
         },
-        "publicKeys": [
-          {
-            "comment": "A sample key",
-            "pkixPublicKey": {
-              "publicKeyPem": "-----BEGIN PUBLIC KEY-----\nMFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAE8qErzp1izKNonCWqj5KSqdz6g2Tf\nZWvtX3I6huRWGD0pIMieOOUdFD/hbMH6xYx0ml2vVkUqFJzeSmQt8pbtnw==\n-----END PUBLIC KEY-----\n",
-              "signatureAlgorithm": "ECDSA_P256_SHA256"
-            }
-          }
-        ]
-      }
+        {
+          "family": "family2"
+        }
+      ],
+      "instanceRef": {
+        "name": "bigtabletable-dep"
+      },
+      "splitKeys": [
+        "a"
+      ]
     }
   }
 }

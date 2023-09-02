@@ -1,0 +1,139 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "main",
+  "contentType": "json",
+  "source": "gitConnectorAzureTerraHashicorp",
+  "paths": [
+    "/examples/private-endpoint/cosmos-db/variables.tf",
+    "/examples/private-endpoint/cosmos-db/main.tf"
+  ],
+  "timestamp": 1642943279858,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "TRF_TEMPLATE_SNAPSHOT",
+    "type": "terraform",
+    "collection": "terraformtemplate",
+    "paths": [
+      "/examples/private-endpoint/cosmos-db/variables.tf",
+      "/examples/private-endpoint/cosmos-db/main.tf"
+    ],
+    "snapshotId": "TRF_TEMPLATE_SNAPSHOT85",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "azurerm_private_endpoint",
+      "azurerm_subnet",
+      "azurerm_virtual_network",
+      "azurerm_resource_group",
+      "azurerm_cosmosdb_account"
+    ]
+  },
+  "snapshotId": "TRF_TEMPLATE_SNAPSHOT85",
+  "collection": "terraformtemplate",
+  "json": {
+    "provider": [
+      {
+        "azurerm": {
+          "features": [
+            {}
+          ]
+        }
+      }
+    ],
+    "resources": [
+      {
+        "type": "azurerm_resource_group",
+        "name": "example",
+        "properties": {
+          "name": "${var.prefix}-resources",
+          "location": "${var.location}",
+          "compiletime_identity": "azurerm_resource_group.example"
+        }
+      },
+      {
+        "type": "azurerm_virtual_network",
+        "name": "example",
+        "properties": {
+          "name": "${var.prefix}-vnet",
+          "address_space": [
+            "10.0.0.0/16"
+          ],
+          "location": "${azurerm_resource_group.example.location}",
+          "resource_group_name": "${azurerm_resource_group.example.name}",
+          "compiletime_identity": "azurerm_virtual_network.example"
+        }
+      },
+      {
+        "type": "azurerm_subnet",
+        "name": "endpoint",
+        "properties": {
+          "name": "endpoint",
+          "resource_group_name": "${azurerm_resource_group.example.name}",
+          "virtual_network_name": "${azurerm_virtual_network.example.name}",
+          "address_prefixes": [
+            "10.0.2.0/24"
+          ],
+          "enforce_private_link_endpoint_network_policies": true,
+          "compiletime_identity": "azurerm_subnet.endpoint"
+        }
+      },
+      {
+        "type": "azurerm_cosmosdb_account",
+        "name": "example",
+        "properties": {
+          "name": "${var.prefix}-cosmosdb-example",
+          "location": "${azurerm_resource_group.example.location}",
+          "resource_group_name": "${azurerm_resource_group.example.name}",
+          "offer_type": "Standard",
+          "kind": "MongoDB",
+          "enable_automatic_failover": false,
+          "is_virtual_network_filter_enabled": true,
+          "ip_range_filter": "0.0.0.0,104.42.195.92,40.76.54.131,52.176.6.30,52.169.50.45,52.187.184.26",
+          "capabilities": [
+            {
+              "name": "EnableMongo"
+            }
+          ],
+          "consistency_policy": [
+            {
+              "consistency_level": "BoundedStaleness",
+              "max_interval_in_seconds": 310,
+              "max_staleness_prefix": 101000
+            }
+          ],
+          "geo_location": [
+            {
+              "prefix": "${var.prefix}-cosmos-db-customid",
+              "location": "${azurerm_resource_group.example.location}",
+              "failover_priority": 0
+            }
+          ],
+          "compiletime_identity": "azurerm_cosmosdb_account.example"
+        }
+      },
+      {
+        "type": "azurerm_private_endpoint",
+        "name": "example",
+        "properties": {
+          "name": "${var.prefix}-pe",
+          "location": "${azurerm_resource_group.example.location}",
+          "resource_group_name": "${azurerm_resource_group.example.name}",
+          "subnet_id": "${azurerm_subnet.endpoint.id}",
+          "private_service_connection": [
+            {
+              "name": "tfex-cosmosdb-connection",
+              "is_manual_connection": false,
+              "private_connection_resource_id": "${azurerm_cosmosdb_account.example.id}",
+              "subresource_names": [
+                "MongoDB"
+              ]
+            }
+          ],
+          "compiletime_identity": "azurerm_private_endpoint.example"
+        }
+      }
+    ]
+  }
+}

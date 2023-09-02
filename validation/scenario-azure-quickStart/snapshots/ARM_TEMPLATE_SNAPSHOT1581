@@ -1,0 +1,233 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAzureQuickStart",
+  "paths": [
+    "/quickstarts/microsoft.network/point-to-site-aad/azuredeploy.json",
+    "/quickstarts/microsoft.network/point-to-site-aad/azuredeploy.parameters.json"
+  ],
+  "timestamp": 1642962909369,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/quickstarts/microsoft.network/point-to-site-aad/azuredeploy.json",
+      "/quickstarts/microsoft.network/point-to-site-aad/azuredeploy.parameters.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT1581",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "microsoft.network/publicipaddresses",
+      "microsoft.network/virtualnetworks",
+      "microsoft.network/virtualnetworkgateways"
+    ]
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT1581",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.0.0.0",
+    "metadata": {
+      "_generator": {
+        "name": "bicep",
+        "version": "0.4.613.9944",
+        "templateHash": "6806854432718973934"
+      }
+    },
+    "parameters": {
+      "virtualNetworkName": {
+        "type": "string",
+        "defaultValue": "VNet1",
+        "metadata": {
+          "description": "Name for the virtual network"
+        }
+      },
+      "location": {
+        "type": "string",
+        "defaultValue": "[resourceGroup().location]",
+        "metadata": {
+          "description": "Location for the resources"
+        }
+      },
+      "frontendSubName": {
+        "type": "string",
+        "defaultValue": "FrontEnd",
+        "metadata": {
+          "description": "Name for the frontend subnet"
+        }
+      },
+      "virtualNetworkPrefix": {
+        "type": "string",
+        "defaultValue": "10.1.0.0/16",
+        "metadata": {
+          "description": "CIDR block representing the address space of the VNet"
+        }
+      },
+      "frontendSubPrefix": {
+        "type": "string",
+        "defaultValue": "10.1.0.0/24",
+        "metadata": {
+          "description": "CIDR block for the front end subnet, subset of VNet address space"
+        }
+      },
+      "gatewaySubPrefix": {
+        "type": "string",
+        "defaultValue": "10.1.255.0/27",
+        "metadata": {
+          "description": "CIDR block for the gateway subnet, subset of VNet address space"
+        }
+      },
+      "gatewayName": {
+        "type": "string",
+        "defaultValue": "VNet1GW",
+        "metadata": {
+          "description": "Name for the new gateway"
+        }
+      },
+      "gatewayPublicIPName": {
+        "type": "string",
+        "defaultValue": "VNet1GWIP",
+        "metadata": {
+          "description": "Name for public IP resource used for the new azure gateway"
+        }
+      },
+      "gatewaySku": {
+        "type": "string",
+        "defaultValue": "Standard",
+        "allowedValues": [
+          "Standard",
+          "HighPerformance"
+        ],
+        "metadata": {
+          "description": "The SKU of the Gateway. This must be either Standard or HighPerformance to work with OpenVPN"
+        }
+      },
+      "vpnType": {
+        "type": "string",
+        "defaultValue": "RouteBased",
+        "allowedValues": [
+          "RouteBased",
+          "PolicyBased"
+        ],
+        "metadata": {
+          "description": "Route based (Dynamic Gateway) or Policy based (Static Gateway)"
+        }
+      },
+      "vpnClientAddressPool": {
+        "type": "string",
+        "defaultValue": "172.16.0.0/24",
+        "metadata": {
+          "description": "The IP address range from which VPN clients will receive an IP address when connected. Range specified must not overlap with on-premise network"
+        }
+      }
+    },
+    "functions": [],
+    "variables": {
+      "audienceMap": {
+        "AzureCloud": "41b23e61-6c1e-4545-b367-cd054e0ed4b4",
+        "AzureUSGovernment": "51bb15d4-3a4f-4ebf-9dca-40096fe32426",
+        "AzureGermanCloud": "538ee9e6-310a-468d-afef-ea97365856a9",
+        "AzureChinaCloud": "49f817b6-84ae-4cc0-928c-73f27289b3aa"
+      },
+      "tenantId": "[subscription().tenantId]",
+      "cloud": "[environment().name]",
+      "audience": "(audienceMap)[variables(cloud)]",
+      "tenant": "[uri(environment().authentication.loginEndpoint, variables('tenantId'))]",
+      "issuer": "[format('https://sts.windows.net/{0}/', variables('tenantId'))]",
+      "gatewaySubnetRef": "Microsoft.Network/virtualNetworks/subnets/VNet1/GatewaySubnet",
+      "publicIPAddressRef": "Microsoft.Network/publicIPAddresses/VNet1GWIP"
+    },
+    "resources": [
+      {
+        "type": "Microsoft.Network/virtualNetworks",
+        "apiVersion": "2021-02-01",
+        "name": "VNet1",
+        "location": "[resourceGroup().location]",
+        "properties": {
+          "addressSpace": {
+            "addressPrefixes": [
+              "10.1.0.0/16"
+            ]
+          },
+          "subnets": [
+            {
+              "name": "FrontEnd",
+              "properties": {
+                "addressPrefix": "10.1.0.0/24"
+              }
+            },
+            {
+              "name": "GatewaySubnet",
+              "properties": {
+                "addressPrefix": "10.1.255.0/27"
+              }
+            }
+          ]
+        }
+      },
+      {
+        "type": "Microsoft.Network/virtualNetworkGateways",
+        "apiVersion": "2021-02-01",
+        "name": "VNet1GW",
+        "location": "[resourceGroup().location]",
+        "properties": {
+          "ipConfigurations": [
+            {
+              "properties": {
+                "privateIPAllocationMethod": "Dynamic",
+                "subnet": {
+                  "id": "Microsoft.Network/virtualNetworks/subnets/VNet1/GatewaySubnet"
+                },
+                "publicIPAddress": {
+                  "id": "Microsoft.Network/publicIPAddresses/VNet1GWIP"
+                }
+              },
+              "name": "vnetGatewayConfig"
+            }
+          ],
+          "sku": {
+            "name": "Standard",
+            "tier": "Standard"
+          },
+          "gatewayType": "Vpn",
+          "vpnType": "RouteBased",
+          "vpnClientConfiguration": {
+            "vpnClientAddressPool": {
+              "addressPrefixes": [
+                "172.16.0.0/24"
+              ]
+            },
+            "vpnClientProtocols": [
+              "OpenVPN"
+            ],
+            "vpnAuthenticationTypes": [
+              "AAD"
+            ],
+            "aadTenant": "[uri(environment().authentication.loginEndpoint, variables('tenantId'))]",
+            "aadAudience": "(audienceMap)[variables(cloud)]",
+            "aadIssuer": "[format('https://sts.windows.net/{0}/', variables('tenantId'))]"
+          }
+        },
+        "dependsOn": [
+          "Microsoft.Network/publicIPAddresses/VNet1GWIP",
+          "Microsoft.Network/virtualNetworks/VNet1"
+        ]
+      },
+      {
+        "type": "Microsoft.Network/publicIPAddresses",
+        "apiVersion": "2021-02-01",
+        "name": "VNet1GWIP",
+        "location": "[resourceGroup().location]",
+        "properties": {
+          "publicIPAllocationMethod": "Dynamic"
+        }
+      }
+    ],
+    "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+  }
+}

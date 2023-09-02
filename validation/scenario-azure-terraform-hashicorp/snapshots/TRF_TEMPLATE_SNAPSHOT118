@@ -1,0 +1,305 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "main",
+  "contentType": "json",
+  "source": "gitConnectorAzureTerraHashicorp",
+  "paths": [
+    "/examples/traffic-manager/virtual-machine/outputs.tf",
+    "/examples/traffic-manager/virtual-machine/variables.tf",
+    "/examples/traffic-manager/virtual-machine/main.tf"
+  ],
+  "timestamp": 1642943279992,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "TRF_TEMPLATE_SNAPSHOT",
+    "type": "terraform",
+    "collection": "terraformtemplate",
+    "paths": [
+      "/examples/traffic-manager/virtual-machine/outputs.tf",
+      "/examples/traffic-manager/virtual-machine/variables.tf",
+      "/examples/traffic-manager/virtual-machine/main.tf"
+    ],
+    "snapshotId": "TRF_TEMPLATE_SNAPSHOT118",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "azurerm_subnet",
+      "azurerm_virtual_network",
+      "azurerm_resource_group",
+      "azurerm_traffic_manager_endpoint",
+      "azurerm_network_interface",
+      "azurerm_virtual_machine",
+      "azurerm_traffic_manager_profile",
+      "azurerm_virtual_machine_extension"
+    ]
+  },
+  "snapshotId": "TRF_TEMPLATE_SNAPSHOT118",
+  "collection": "terraformtemplate",
+  "json": {
+    "provider": [
+      {
+        "azurerm": {
+          "features": [
+            {}
+          ]
+        }
+      }
+    ],
+    "resources": [
+      {
+        "type": "azurerm_virtual_network",
+        "name": "example",
+        "properties": {
+          "name": "${var.prefix}",
+          "resource_group_name": "${azurerm_resource_group.example.name}",
+          "location": "${data.azurerm_resource_group.example.location}",
+          "address_space": [
+            "10.0.0.0/16"
+          ],
+          "prefix": "${var.prefix}",
+          "compiletime_identity": "module.virtual-network"
+        }
+      },
+      {
+        "type": "azurerm_subnet",
+        "name": "example",
+        "properties": {
+          "name": "internal",
+          "virtual_network_name": "${var.prefix}",
+          "resource_group_name": "${azurerm_resource_group.example.name}",
+          "address_prefixes": [
+            "10.0.1.0/24"
+          ],
+          "prefix": "${var.prefix}",
+          "compiletime_identity": "module.virtual-network"
+        }
+      },
+      {
+        "type": "azurerm_network_interface",
+        "name": "example",
+        "properties": {
+          "name": "${var.prefix}1",
+          "location": "${data.azurerm_resource_group.example.location}",
+          "resource_group_name": "${azurerm_resource_group.example.name}",
+          "ip_configuration": [
+            {
+              "name": "example",
+              "subnet_id": "${module.virtual-network.subnet_id}",
+              "private_ip_address_allocation": "Dynamic"
+            }
+          ],
+          "prefix": "${var.prefix}1",
+          "subnet_id": "${module.virtual-network.subnet_id}",
+          "compiletime_identity": "module.first-virtual-machine"
+        }
+      },
+      {
+        "type": "azurerm_network_interface",
+        "name": "example",
+        "properties": {
+          "name": "${var.prefix}2",
+          "location": "${data.azurerm_resource_group.example.location}",
+          "resource_group_name": "${azurerm_resource_group.example.name}",
+          "ip_configuration": [
+            {
+              "name": "example",
+              "subnet_id": "${module.virtual-network.subnet_id}",
+              "private_ip_address_allocation": "Dynamic"
+            }
+          ],
+          "prefix": "${var.prefix}2",
+          "subnet_id": "${module.virtual-network.subnet_id}",
+          "compiletime_identity": "module.second-virtual-machine"
+        }
+      },
+      {
+        "type": "azurerm_virtual_machine",
+        "name": "example",
+        "properties": {
+          "name": "${var.prefix}1",
+          "location": "${data.azurerm_resource_group.example.location}",
+          "resource_group_name": "${azurerm_resource_group.example.name}",
+          "network_interface_ids": [
+            "${azurerm_network_interface.example.id}"
+          ],
+          "vm_size": "Standard_DS1_v2",
+          "delete_os_disk_on_termination": true,
+          "storage_image_reference": [
+            {
+              "publisher": "Canonical",
+              "offer": "UbuntuServer",
+              "sku": "16.04-LTS",
+              "version": "latest"
+            }
+          ],
+          "storage_os_disk": [
+            {
+              "name": "myosdisk1",
+              "caching": "ReadWrite",
+              "create_option": "FromImage",
+              "managed_disk_type": "Standard_LRS"
+            }
+          ],
+          "os_profile": [
+            {
+              "computer_name": "hostname",
+              "admin_username": "testadmin",
+              "admin_password": "Password1234!"
+            }
+          ],
+          "os_profile_linux_config": [
+            {
+              "disable_password_authentication": false
+            }
+          ],
+          "prefix": "${var.prefix}1",
+          "subnet_id": "${module.virtual-network.subnet_id}",
+          "compiletime_identity": "module.first-virtual-machine"
+        }
+      },
+      {
+        "type": "azurerm_virtual_machine",
+        "name": "example",
+        "properties": {
+          "name": "${var.prefix}2",
+          "location": "${data.azurerm_resource_group.example.location}",
+          "resource_group_name": "${azurerm_resource_group.example.name}",
+          "network_interface_ids": [
+            "${azurerm_network_interface.example.id}"
+          ],
+          "vm_size": "Standard_DS1_v2",
+          "delete_os_disk_on_termination": true,
+          "storage_image_reference": [
+            {
+              "publisher": "Canonical",
+              "offer": "UbuntuServer",
+              "sku": "16.04-LTS",
+              "version": "latest"
+            }
+          ],
+          "storage_os_disk": [
+            {
+              "name": "myosdisk1",
+              "caching": "ReadWrite",
+              "create_option": "FromImage",
+              "managed_disk_type": "Standard_LRS"
+            }
+          ],
+          "os_profile": [
+            {
+              "computer_name": "hostname",
+              "admin_username": "testadmin",
+              "admin_password": "Password1234!"
+            }
+          ],
+          "os_profile_linux_config": [
+            {
+              "disable_password_authentication": false
+            }
+          ],
+          "prefix": "${var.prefix}2",
+          "subnet_id": "${module.virtual-network.subnet_id}",
+          "compiletime_identity": "module.second-virtual-machine"
+        }
+      },
+      {
+        "type": "azurerm_virtual_machine_extension",
+        "name": "example",
+        "properties": {
+          "name": "CustomScript",
+          "virtual_machine_id": "${azurerm_virtual_machine.example.id}",
+          "publisher": "Microsoft.Azure.Extensions",
+          "type": "CustomScript",
+          "type_handler_version": 2.0,
+          "auto_upgrade_minor_version": true,
+          "settings": {
+            "commandToExecute": "sudo bash -c 'apt-get update && apt-get -y install apache2'"
+          },
+          "resource_group_name": "${azurerm_resource_group.example.name}",
+          "prefix": "${var.prefix}1",
+          "subnet_id": "${module.virtual-network.subnet_id}",
+          "compiletime_identity": "module.first-virtual-machine"
+        }
+      },
+      {
+        "type": "azurerm_virtual_machine_extension",
+        "name": "example",
+        "properties": {
+          "name": "CustomScript",
+          "virtual_machine_id": "${azurerm_virtual_machine.example.id}",
+          "publisher": "Microsoft.Azure.Extensions",
+          "type": "CustomScript",
+          "type_handler_version": 2.0,
+          "auto_upgrade_minor_version": true,
+          "settings": {
+            "commandToExecute": "sudo bash -c 'apt-get update && apt-get -y install apache2'"
+          },
+          "resource_group_name": "${azurerm_resource_group.example.name}",
+          "prefix": "${var.prefix}2",
+          "subnet_id": "${module.virtual-network.subnet_id}",
+          "compiletime_identity": "module.second-virtual-machine"
+        }
+      },
+      {
+        "type": "azurerm_resource_group",
+        "name": "example",
+        "properties": {
+          "name": "${var.prefix}-resources",
+          "location": "${var.location}",
+          "compiletime_identity": "azurerm_resource_group.example"
+        }
+      },
+      {
+        "type": "azurerm_traffic_manager_profile",
+        "name": "example",
+        "properties": {
+          "name": "${var.prefix}-tmprofile",
+          "resource_group_name": "${azurerm_resource_group.example.name}",
+          "traffic_routing_method": "Weighted",
+          "dns_config": [
+            {
+              "relative_name": "${azurerm_resource_group.example.name}",
+              "ttl": 30
+            }
+          ],
+          "monitor_config": [
+            {
+              "protocol": "http",
+              "port": 80,
+              "path": "/"
+            }
+          ],
+          "compiletime_identity": "azurerm_traffic_manager_profile.example"
+        }
+      },
+      {
+        "type": "azurerm_traffic_manager_endpoint",
+        "name": "first-vm",
+        "properties": {
+          "name": "${var.prefix}-first-vm",
+          "resource_group_name": "${azurerm_resource_group.example.name}",
+          "profile_name": "${azurerm_traffic_manager_profile.example.name}",
+          "target_resource_id": "${module.first-virtual-machine.network_interface_id}",
+          "type": "azureEndpoints",
+          "weight": 1,
+          "compiletime_identity": "azurerm_traffic_manager_endpoint.first-vm"
+        }
+      },
+      {
+        "type": "azurerm_traffic_manager_endpoint",
+        "name": "second-vm",
+        "properties": {
+          "name": "${var.prefix}-second-vm",
+          "resource_group_name": "${azurerm_resource_group.example.name}",
+          "profile_name": "${azurerm_traffic_manager_profile.example.name}",
+          "target_resource_id": "${module.second-virtual-machine.network_interface_id}",
+          "type": "azureEndpoints",
+          "weight": 1,
+          "compiletime_identity": "azurerm_traffic_manager_endpoint.second-vm"
+        }
+      }
+    ]
+  }
+}

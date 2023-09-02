@@ -1,0 +1,137 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAzureQuickStart",
+  "paths": [
+    "/application-workloads/spark/spark-on-ubuntu/shared-resources.json",
+    "/application-workloads/spark/spark-on-ubuntu/azuredeploy.parameters.json"
+  ],
+  "timestamp": 1642962896404,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/application-workloads/spark/spark-on-ubuntu/shared-resources.json",
+      "/application-workloads/spark/spark-on-ubuntu/azuredeploy.parameters.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT530",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "microsoft.network/virtualnetworks",
+      "microsoft.compute/availabilitysets"
+    ]
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT530",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "virtualNetworkName": {
+        "type": "string",
+        "defaultValue": "myVNET",
+        "metadata": {
+          "Description": "The arbitrary name of the virtual network provisioned for the cluster"
+        },
+        "value": "GEN-VNET-NAME"
+      },
+      "addressPrefix": {
+        "type": "string",
+        "defaultValue": "10.0.0.0/16",
+        "metadata": {
+          "Description": "The network address space for the virtual network"
+        },
+        "value": "10.0.0.0/16"
+      },
+      "subnetName": {
+        "type": "string",
+        "defaultValue": "Subnet-1",
+        "metadata": {
+          "Description": "Subnet name for the virtual network that resources will be provisioned in to"
+        },
+        "value": "GEN-SUBNET1-NAME"
+      },
+      "subnetPrefix": {
+        "type": "string",
+        "defaultValue": "10.0.0.0/24",
+        "metadata": {
+          "Description": "Address space for the virtual network subnet"
+        },
+        "value": "10.0.0.0/24"
+      },
+      "location": {
+        "type": "string",
+        "metadata": {
+          "description": "Location for all resources."
+        }
+      },
+      "adminUsername": {
+        "value": "GEN-UNIQUE"
+      },
+      "adminPassword": {
+        "value": "GEN-PASSWORD"
+      },
+      "sparkVersion": {
+        "value": "3.0.0"
+      },
+      "sparkNodeIPAddressPrefix": {
+        "value": "10.0.0.1"
+      },
+      "sparkSlaveNodeIPAddressPrefix": {
+        "value": "10.0.0.3"
+      },
+      "jumpbox": {
+        "value": "enabled"
+      },
+      "tshirtSizeIns": {
+        "value": 1
+      }
+    },
+    "variables": {
+      "platformFaultDomainCount": 2,
+      "platformUpdateDomainCount": 5
+    },
+    "resources": [
+      {
+        "apiVersion": "2020-12-01",
+        "type": "Microsoft.Compute/availabilitySets",
+        "name": "sparkCluserAS",
+        "location": "location",
+        "sku": {
+          "name": "Aligned"
+        },
+        "properties": {
+          "platformFaultDomainCount": 2,
+          "platformUpdateDomainCount": 5
+        }
+      },
+      {
+        "apiVersion": "2020-05-01",
+        "type": "Microsoft.Network/virtualNetworks",
+        "name": "GEN-VNET-NAME",
+        "location": "location",
+        "properties": {
+          "addressSpace": {
+            "addressPrefixes": [
+              "10.0.0.0/16"
+            ]
+          },
+          "subnets": [
+            {
+              "name": "GEN-SUBNET1-NAME",
+              "properties": {
+                "addressPrefix": "10.0.0.0/24"
+              }
+            }
+          ]
+        }
+      }
+    ],
+    "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+  }
+}

@@ -1,0 +1,251 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAzureQuickStart",
+  "paths": [
+    "/application-workloads/jenkins/jenkins-on-ubuntu/jenkmaster-resources.json",
+    "/application-workloads/jenkins/jenkins-on-ubuntu/azuredeploy.parameters.json"
+  ],
+  "timestamp": 1642962890454,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/application-workloads/jenkins/jenkins-on-ubuntu/jenkmaster-resources.json",
+      "/application-workloads/jenkins/jenkins-on-ubuntu/azuredeploy.parameters.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT201",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "microsoft.network/publicipaddresses",
+      "microsoft.network/networkinterfaces",
+      "microsoft.compute/virtualmachines/extensions",
+      "microsoft.compute/virtualmachines",
+      "microsoft.network/networksecuritygroups",
+      "microsoft.compute/availabilitysets"
+    ]
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT201",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "adminUsername": {
+        "type": "string",
+        "value": "GEN-UNIQUE"
+      },
+      "namespace": {
+        "type": "string"
+      },
+      "vmbasename": {
+        "type": "string"
+      },
+      "osSettings": {
+        "type": "object"
+      },
+      "vmSize": {
+        "type": "string"
+      },
+      "dnsName": {
+        "type": "string",
+        "value": "GEN-UNIQUE-8"
+      },
+      "slaveNodes": {
+        "type": "int",
+        "value": 1
+      },
+      "subnet": {
+        "type": "object"
+      },
+      "staticIp": {
+        "type": "string"
+      },
+      "location": {
+        "type": "string",
+        "metadata": {
+          "description": "Location for all resources."
+        }
+      },
+      "authenticationType": {
+        "type": "string"
+      },
+      "adminPasswordOrKey": {
+        "type": "securestring",
+        "value": "GEN-SSH-PUB-KEY"
+      },
+      "virtualNetworkName": {
+        "value": "GEN-UNIQUE"
+      },
+      "masterVmSize": {
+        "value": "Standard_D4_v3"
+      },
+      "slaveVmSize": {
+        "value": "Standard_D4_v3"
+      }
+    },
+    "variables": {
+      "securityGroupName": "namespacevmbasenamensg",
+      "linuxConfiguration": {
+        "disablePasswordAuthentication": true,
+        "ssh": {
+          "publicKeys": [
+            {
+              "path": "/home/GEN-UNIQUE/.ssh/authorized_keys",
+              "keyData": "GEN-SSH-PUB-KEY"
+            }
+          ]
+        }
+      }
+    },
+    "resources": [
+      {
+        "apiVersion": "2020-07-01",
+        "type": "Microsoft.Network/networkSecurityGroups",
+        "name": "namespacevmbasenamensg",
+        "location": "location",
+        "properties": {
+          "securityRules": [
+            {
+              "name": "SSH",
+              "properties": {
+                "description": "Allows SSH traffic",
+                "protocol": "Tcp",
+                "sourcePortRange": "*",
+                "destinationPortRange": "22",
+                "sourceAddressPrefix": "*",
+                "destinationAddressPrefix": "*",
+                "access": "Allow",
+                "priority": 100,
+                "direction": "Inbound"
+              }
+            },
+            {
+              "name": "HTTP",
+              "properties": {
+                "description": "Allows HTTP traffic",
+                "protocol": "Tcp",
+                "sourcePortRange": "*",
+                "destinationPortRange": "8080",
+                "sourceAddressPrefix": "*",
+                "destinationAddressPrefix": "*",
+                "access": "Allow",
+                "priority": 110,
+                "direction": "Inbound"
+              }
+            }
+          ]
+        }
+      },
+      {
+        "apiVersion": "2015-05-01-preview",
+        "type": "Microsoft.Network/publicIPAddresses",
+        "name": "namespacevmbasenamePublicIp",
+        "location": "location",
+        "properties": {
+          "publicIPAllocationMethod": "Dynamic",
+          "dnsSettings": {
+            "domainNameLabel": "GEN-UNIQUE-8"
+          }
+        }
+      },
+      {
+        "apiVersion": "2015-05-01-preview",
+        "type": "Microsoft.Compute/availabilitySets",
+        "name": "namespaceset",
+        "location": "location",
+        "properties": {}
+      },
+      {
+        "apiVersion": "2015-05-01-preview",
+        "type": "Microsoft.Network/networkInterfaces",
+        "name": "namespacevmbasenamenic",
+        "location": "location",
+        "dependsOn": [
+          "Microsoft.Network/publicIPAddresses/namespacevmbasenamePublicIp"
+        ],
+        "properties": {
+          "ipConfigurations": [
+            {
+              "name": "ipconfig1",
+              "properties": {
+                "publicIPAddress": {
+                  "id": "Microsoft.Network/publicIPAddresses/namespacevmbasenamePublicIp"
+                },
+                "privateIPAllocationMethod": "Static",
+                "privateIPAddress": "staticIp",
+                "subnet": {
+                  "id": "Microsoft.Network/virtualNetworks/subnets/subnet/subnet"
+                }
+              }
+            }
+          ],
+          "networkSecurityGroup": {
+            "id": "Microsoft.Network/networkSecurityGroups/namespacevmbasenamensg"
+          }
+        }
+      },
+      {
+        "apiVersion": "2017-03-30",
+        "type": "Microsoft.Compute/virtualMachines",
+        "name": "namespacevmbasenamevm",
+        "location": "location",
+        "dependsOn": [
+          "Microsoft.Network/networkInterfaces//namespacevmbasenamenic"
+        ],
+        "properties": {
+          "hardwareProfile": {
+            "vmSize": "vmSize"
+          },
+          "osProfile": {
+            "computerName": "namespacevmbasenamevm",
+            "adminUsername": "GEN-UNIQUE",
+            "adminPassword": "GEN-SSH-PUB-KEY",
+            "linuxConfiguration": "[if(equals(parameters('authenticationType'), 'password'), json('null'), variables('linuxConfiguration'))]"
+          },
+          "storageProfile": {
+            "imageReference": "osSettings",
+            "osDisk": {
+              "name": "namespacevmbasenamevm_OSDisk",
+              "caching": "ReadWrite",
+              "createOption": "FromImage"
+            }
+          },
+          "networkProfile": {
+            "networkInterfaces": [
+              {
+                "id": "Microsoft.Network/networkInterfaces/namespacevmbasenamenic"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "type": "Microsoft.Compute/virtualMachines/extensions",
+        "name": "namespacevmbasenamevm/jenkInstall",
+        "apiVersion": "2015-05-01-preview",
+        "location": "location",
+        "dependsOn": [
+          "Microsoft.Compute/virtualMachines//namespacevmbasenamevm"
+        ],
+        "properties": {
+          "publisher": "Microsoft.Azure.Extensions",
+          "type": "CustomScript",
+          "typeHandlerVersion": "2.0",
+          "autoUpgradeMinorVersion": true,
+          "settings": {
+            "fileUris": "osSettings",
+            "commandToExecute": "bash jenkMstrInstall.sh -n 1"
+          }
+        }
+      }
+    ],
+    "outputs": {},
+    "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+  }
+}

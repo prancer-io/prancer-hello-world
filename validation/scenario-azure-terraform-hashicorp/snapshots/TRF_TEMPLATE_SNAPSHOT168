@@ -1,0 +1,77 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "main",
+  "contentType": "json",
+  "source": "gitConnectorAzureTerraHashicorp",
+  "paths": [
+    "/examples/virtual-networks/virtual-hub/variables.tf",
+    "/examples/virtual-networks/virtual-hub/main.tf"
+  ],
+  "timestamp": 1642943280198,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "TRF_TEMPLATE_SNAPSHOT",
+    "type": "terraform",
+    "collection": "terraformtemplate",
+    "paths": [
+      "/examples/virtual-networks/virtual-hub/variables.tf",
+      "/examples/virtual-networks/virtual-hub/main.tf"
+    ],
+    "snapshotId": "TRF_TEMPLATE_SNAPSHOT168",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "azurerm_virtual_hub",
+      "azurerm_virtual_wan",
+      "azurerm_resource_group"
+    ]
+  },
+  "snapshotId": "TRF_TEMPLATE_SNAPSHOT168",
+  "collection": "terraformtemplate",
+  "json": {
+    "provider": [
+      {
+        "azurerm": {
+          "features": [
+            {}
+          ]
+        }
+      }
+    ],
+    "resources": [
+      {
+        "type": "azurerm_resource_group",
+        "name": "example",
+        "properties": {
+          "name": "${var.prefix}-resources",
+          "location": "${var.location}",
+          "compiletime_identity": "azurerm_resource_group.example"
+        }
+      },
+      {
+        "type": "azurerm_virtual_wan",
+        "name": "example",
+        "properties": {
+          "name": "${var.prefix}-virtualwan",
+          "resource_group_name": "${azurerm_resource_group.example.name}",
+          "location": "${azurerm_resource_group.example.location}",
+          "compiletime_identity": "azurerm_virtual_wan.example"
+        }
+      },
+      {
+        "type": "azurerm_virtual_hub",
+        "name": "example",
+        "properties": {
+          "name": "${var.prefix}-virtualhub",
+          "resource_group_name": "${azurerm_resource_group.example.name}",
+          "location": "${azurerm_resource_group.example.location}",
+          "address_prefix": "10.0.1.0/24",
+          "virtual_wan_id": "${azurerm_virtual_wan.example.id}",
+          "compiletime_identity": "azurerm_virtual_hub.example"
+        }
+      }
+    ]
+  }
+}

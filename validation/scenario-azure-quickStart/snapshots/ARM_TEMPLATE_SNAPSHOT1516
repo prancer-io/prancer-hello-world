@@ -1,0 +1,82 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAzureQuickStart",
+  "paths": [
+    "/quickstarts/microsoft.network/existing-vnet-to-vnet-peering/azuredeploy.json",
+    "/quickstarts/microsoft.network/existing-vnet-to-vnet-peering/azuredeploy.parameters.json"
+  ],
+  "timestamp": 1642962908629,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/quickstarts/microsoft.network/existing-vnet-to-vnet-peering/azuredeploy.json",
+      "/quickstarts/microsoft.network/existing-vnet-to-vnet-peering/azuredeploy.parameters.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT1516",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "microsoft.network/virtualnetworks/virtualnetworkpeerings"
+    ]
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT1516",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.0.0.0",
+    "metadata": {
+      "_generator": {
+        "name": "bicep",
+        "version": "0.4.1008.15138",
+        "templateHash": "17718844949536163305"
+      }
+    },
+    "parameters": {
+      "existingLocalVirtualNetworkName": {
+        "type": "string",
+        "metadata": {
+          "description": "Set the local VNet name"
+        },
+        "value": "GET-PREREQ-vnetLocal"
+      },
+      "existingRemoteVirtualNetworkName": {
+        "type": "string",
+        "metadata": {
+          "description": "Set the remote VNet name"
+        },
+        "value": "GET-PREREQ-vnetRemote"
+      },
+      "existingRemoteVirtualNetworkResourceGroupName": {
+        "type": "string",
+        "metadata": {
+          "description": "Sets the remote VNet Resource group"
+        },
+        "value": "GET-PREREQ-vnetRemoteResourceGroup"
+      }
+    },
+    "functions": [],
+    "resources": [
+      {
+        "type": "Microsoft.Network/virtualNetworks/virtualNetworkPeerings",
+        "apiVersion": "2021-02-01",
+        "name": "[format('{0}/peering-to-remote-vnet', parameters('existingLocalVirtualNetworkName'))]",
+        "properties": {
+          "allowVirtualNetworkAccess": true,
+          "allowForwardedTraffic": false,
+          "allowGatewayTransit": false,
+          "useRemoteGateways": false,
+          "remoteVirtualNetwork": {
+            "id": "GET-PREREQ-vnetRemoteResourceGroup/Microsoft.Network/virtualNetworks/GET-PREREQ-vnetRemote"
+          }
+        }
+      }
+    ],
+    "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+  }
+}

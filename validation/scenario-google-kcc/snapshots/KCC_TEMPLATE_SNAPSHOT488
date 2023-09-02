@@ -2,12 +2,12 @@
   "structure": "filesystem",
   "error": null,
   "reference": "master",
-  "contentType": "yaml",
+  "contentType": "json",
   "source": "gitConnectorGoogleKcc",
   "paths": [
-    "/samples/resources/resourcemanagerlien/resourcemanager_v1beta1_project.yaml"
+    "/samples/resources/iamworkloadidentitypoolprovider/oidc-workload-identity-pool-provider/iam_v1beta1_iamworkloadidentitypoolprovider.yaml"
   ],
-  "timestamp": 1628765150239,
+  "timestamp": 1642973304415,
   "queryuser": null,
   "checksum": "99914b932bd37a50b983c5e7c90ae93b",
   "node": {
@@ -15,26 +15,40 @@
     "type": "kcc",
     "collection": "kcctemplate",
     "paths": [
-      "/samples/resources/resourcemanagerlien/resourcemanager_v1beta1_project.yaml"
+      "/samples/resources/iamworkloadidentitypoolprovider/oidc-workload-identity-pool-provider/iam_v1beta1_iamworkloadidentitypoolprovider.yaml"
     ],
     "snapshotId": "KCC_TEMPLATE_SNAPSHOT488",
     "status": "active",
-    "validate": true
+    "validate": true,
+    "resourceTypes": [
+      "iamworkloadidentitypoolprovider"
+    ]
   },
   "snapshotId": "KCC_TEMPLATE_SNAPSHOT488",
   "collection": "kcctemplate",
   "json": {
-    "apiVersion": "resourcemanager.cnrm.cloud.google.com/v1beta1",
-    "kind": "Project",
+    "apiVersion": "iam.cnrm.cloud.google.com/v1beta1",
+    "kind": "IAMWorkloadIdentityPoolProvider",
     "metadata": {
-      "annotations": {
-        "cnrm.cloud.google.com/organization-id": "${ORG_ID?}",
-        "cnrm.cloud.google.com/auto-create-network": "false"
-      },
-      "name": "resourcemanagerlien-dep"
+      "name": "iamwipp-sample-oidc"
     },
     "spec": {
-      "name": "ResourceManagerLien dependency"
+      "projectRef": {
+        "external": "projects/${PROJECT_ID?}"
+      },
+      "location": "global",
+      "workloadIdentityPoolRef": {
+        "name": "iamwipp-dep-oidc"
+      },
+      "attributeMapping": {
+        "google.subject": "true"
+      },
+      "oidc": {
+        "issuerUri": "https://example.com/",
+        "allowedAudiences": [
+          "sample-audience"
+        ]
+      }
     }
   }
 }

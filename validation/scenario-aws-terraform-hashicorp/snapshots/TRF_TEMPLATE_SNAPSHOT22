@@ -1,0 +1,285 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "main",
+  "contentType": "json",
+  "source": "gitConnectorAwsTerraHashicorp",
+  "paths": [
+    "/examples/lambda-file-systems/outputs.tf",
+    "/examples/lambda-file-systems/variables.tf",
+    "/examples/lambda-file-systems/main.tf"
+  ],
+  "timestamp": 1642967657694,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "TRF_TEMPLATE_SNAPSHOT",
+    "type": "terraform",
+    "collection": "terraformtemplate",
+    "paths": [
+      "/examples/lambda-file-systems/outputs.tf",
+      "/examples/lambda-file-systems/variables.tf",
+      "/examples/lambda-file-systems/main.tf"
+    ],
+    "snapshotId": "TRF_TEMPLATE_SNAPSHOT22",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "aws_default_vpc",
+      "aws_efs_file_system",
+      "aws_iam_role_policy_attachment",
+      "aws_iam_role",
+      "aws_efs_mount_target",
+      "aws_default_security_group",
+      "aws_lambda_function",
+      "aws_efs_access_point",
+      "aws_default_subnet"
+    ]
+  },
+  "snapshotId": "TRF_TEMPLATE_SNAPSHOT22",
+  "collection": "terraformtemplate",
+  "json": {
+    "terraform": [
+      {
+        "required_version": ">= 0.12"
+      }
+    ],
+    "provider": [
+      {
+        "aws": {
+          "region": "${var.aws_region}"
+        }
+      },
+      {
+        "archive": {}
+      }
+    ],
+    "data": {
+      "archive_file": {
+        "zip": {
+          "type": "zip",
+          "source_file": "hello_lambda.py",
+          "output_path": "hello_lambda.zip",
+          "compiletime_identity": "data.archive_file.zip"
+        }
+      },
+      "aws_iam_policy_document": {
+        "assume_role_policy": {
+          "statement": [
+            {
+              "sid": "",
+              "effect": "Allow",
+              "principals": [
+                {
+                  "identifiers": [
+                    "lambda.amazonaws.com"
+                  ],
+                  "type": "Service"
+                }
+              ],
+              "actions": [
+                "sts:AssumeRole"
+              ]
+            }
+          ],
+          "compiletime_identity": "data.aws_iam_policy_document.assume_role_policy"
+        }
+      },
+      "aws_partition": {
+        "current": {
+          "compiletime_identity": "data.aws_partition.current"
+        }
+      },
+      "aws_iam_policy": {
+        "AmazonElasticFileSystemClientFullAccess": {
+          "arn": "arn:${data.aws_partition.current.partition}:iam::aws:policy/AmazonElasticFileSystemClientFullAccess"
+        }
+      },
+      "aws_availability_zones": {
+        "available": {
+          "state": "available",
+          "compiletime_identity": "data.aws_availability_zones.available"
+        }
+      }
+    },
+    "resources": [
+      {
+        "type": "aws_iam_role",
+        "name": "iam_role_for_lambda",
+        "properties": {
+          "assume_role_policy": "${data.aws_iam_policy_document.assume_role_policy.json}",
+          "compiletime_identity": "aws_iam_role.iam_role_for_lambda"
+        }
+      },
+      {
+        "type": "aws_iam_role_policy_attachment",
+        "name": "AWSLambdaVPCAccessExecutionRole-attach",
+        "properties": {
+          "role": "${aws_iam_role.iam_role_for_lambda.name}",
+          "policy_arn": "${data.aws_iam_policy.AWSLambdaVPCAccessExecutionRole.arn}",
+          "compiletime_identity": "aws_iam_role_policy_attachment.AWSLambdaVPCAccessExecutionRole-attach"
+        }
+      },
+      {
+        "type": "aws_iam_role_policy_attachment",
+        "name": "AmazonElasticFileSystemClientFullAccess-attach",
+        "properties": {
+          "role": "${aws_iam_role.iam_role_for_lambda.name}",
+          "policy_arn": "arn:${data.aws_partition.current.partition}:iam::aws:policy/AmazonElasticFileSystemClientFullAccess",
+          "compiletime_identity": "aws_iam_role_policy_attachment.AmazonElasticFileSystemClientFullAccess-attach"
+        }
+      },
+      {
+        "type": "aws_default_vpc",
+        "name": "default",
+        "properties": {
+          "compiletime_identity": "aws_default_vpc.default"
+        }
+      },
+      {
+        "type": "aws_default_subnet",
+        "name": "default_az1",
+        "properties": {
+          "availability_zone": "${data.aws_availability_zones.available.names[0]}",
+          "compiletime_identity": "aws_default_subnet.default_az1"
+        }
+      },
+      {
+        "type": "aws_default_subnet",
+        "name": "default_az2",
+        "properties": {
+          "availability_zone": "${data.aws_availability_zones.available.names[1]}",
+          "compiletime_identity": "aws_default_subnet.default_az2"
+        }
+      },
+      {
+        "type": "aws_default_security_group",
+        "name": "default",
+        "properties": {
+          "vpc_id": "${aws_default_vpc.default.id}",
+          "ingress": [
+            {
+              "protocol": -1,
+              "self": true,
+              "from_port": 0,
+              "to_port": 0
+            }
+          ],
+          "egress": [
+            {
+              "from_port": 0,
+              "to_port": 0,
+              "protocol": -1,
+              "cidr_blocks": [
+                "0.0.0.0/0"
+              ]
+            }
+          ],
+          "compiletime_identity": "aws_default_security_group.default"
+        }
+      },
+      {
+        "type": "aws_efs_file_system",
+        "name": "efs_for_lambda",
+        "properties": {
+          "tags": {
+            "Name": "efs_for_lambda"
+          },
+          "compiletime_identity": "aws_efs_file_system.efs_for_lambda"
+        }
+      },
+      {
+        "type": "aws_efs_mount_target",
+        "name": "mount_target_az1",
+        "properties": {
+          "file_system_id": "${aws_efs_file_system.efs_for_lambda.id}",
+          "subnet_id": "${aws_default_subnet.default_az1.id}",
+          "security_groups": [
+            "${aws_default_security_group.default.id}"
+          ],
+          "compiletime_identity": "aws_efs_mount_target.mount_target_az1"
+        }
+      },
+      {
+        "type": "aws_efs_mount_target",
+        "name": "mount_target_az2",
+        "properties": {
+          "file_system_id": "${aws_efs_file_system.efs_for_lambda.id}",
+          "subnet_id": "${aws_default_subnet.default_az2.id}",
+          "security_groups": [
+            "${aws_default_security_group.default.id}"
+          ],
+          "compiletime_identity": "aws_efs_mount_target.mount_target_az2"
+        }
+      },
+      {
+        "type": "aws_efs_access_point",
+        "name": "access_point_lambda",
+        "properties": {
+          "file_system_id": "${aws_efs_file_system.efs_for_lambda.id}",
+          "root_directory": [
+            {
+              "path": "/lambda",
+              "creation_info": [
+                {
+                  "owner_gid": 1000,
+                  "owner_uid": 1000,
+                  "permissions": 777
+                }
+              ]
+            }
+          ],
+          "posix_user": [
+            {
+              "gid": 1000,
+              "uid": 1000
+            }
+          ],
+          "compiletime_identity": "aws_efs_access_point.access_point_lambda"
+        }
+      },
+      {
+        "type": "aws_lambda_function",
+        "name": "example_lambda",
+        "properties": {
+          "function_name": "hello_lambda",
+          "filename": "hello_lambda.zip",
+          "source_code_hash": "${data.archive_file.zip.output_base64sha256}",
+          "role": "${aws_iam_role.iam_role_for_lambda.arn}",
+          "handler": "hello_lambda.lambda_handler",
+          "runtime": "python3.7",
+          "timeout": 60,
+          "environment": [
+            {
+              "variables": {
+                "greeting": "Hello"
+              }
+            }
+          ],
+          "vpc_config": [
+            {
+              "subnet_ids": [
+                "${aws_default_subnet.default_az1.id}",
+                "${aws_default_subnet.default_az2.id}"
+              ],
+              "security_group_ids": [
+                "${aws_default_security_group.default.id}"
+              ]
+            }
+          ],
+          "file_system_config": [
+            {
+              "arn": "${aws_efs_access_point.access_point_lambda.arn}",
+              "local_mount_path": "/mnt/efs"
+            }
+          ],
+          "depends_on": [
+            "${aws_efs_mount_target.mount_target_az1}",
+            "${aws_efs_mount_target.mount_target_az2}"
+          ],
+          "compiletime_identity": "aws_lambda_function.example_lambda"
+        }
+      }
+    ]
+  }
+}

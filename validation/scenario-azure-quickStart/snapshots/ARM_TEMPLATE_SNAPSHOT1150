@@ -1,0 +1,308 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAzureQuickStart",
+  "paths": [
+    "/quickstarts/microsoft.compute/vmss-custom-script-windows/azuredeploy.json",
+    "/quickstarts/microsoft.compute/vmss-custom-script-windows/azuredeploy.parameters.json"
+  ],
+  "timestamp": 1642962904823,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/quickstarts/microsoft.compute/vmss-custom-script-windows/azuredeploy.json",
+      "/quickstarts/microsoft.compute/vmss-custom-script-windows/azuredeploy.parameters.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT1150",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "microsoft.network/publicipaddresses",
+      "microsoft.network/virtualnetworks",
+      "microsoft.network/loadbalancers",
+      "microsoft.compute/virtualmachinescalesets"
+    ]
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT1150",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "vmSku": {
+        "type": "string",
+        "defaultValue": "Standard_D2s_v3",
+        "metadata": {
+          "description": "Size of VMs in the VM Scale Set"
+        }
+      },
+      "vmssName": {
+        "type": "string",
+        "metadata": {
+          "description": "String used as a base for naming resources. Must be 3-61 characters in length and globally unique across Azure. A hash is prepended to this string for some resources, and resource-specific information is appended."
+        },
+        "maxLength": 61,
+        "value": "GEN-UNIQUE-8"
+      },
+      "instanceCount": {
+        "type": "int",
+        "metadata": {
+          "description": "Number of VM instances (100 or less)."
+        },
+        "defaultValue": 2,
+        "minValue": 2,
+        "maxValue": 100
+      },
+      "adminUsername": {
+        "type": "string",
+        "metadata": {
+          "description": "Admin username on all VMs."
+        },
+        "value": "GEN-UNIQUE-8"
+      },
+      "adminPassword": {
+        "type": "securestring",
+        "metadata": {
+          "description": "Admin password on all VMs."
+        },
+        "value": "GEN-PASSWORD"
+      },
+      "location": {
+        "type": "string",
+        "metadata": {
+          "description": "Default location"
+        },
+        "defaultValue": "[resourceGroup().location]"
+      },
+      "_artifactsLocationSasToken": {
+        "defaultValue": "",
+        "type": "securestring",
+        "metadata": {
+          "description": "The sasToken required to access _artifactsLocation. When the template is deployed using the accompanying scripts, a sasToken will be automatically generated."
+        }
+      },
+      "_artifactsLocation": {
+        "defaultValue": "[deployment().properties.templateLink.uri]",
+        "type": "string",
+        "metadata": {
+          "description": "The base URI where artifacts required by this template are located. When the template is deployed using the accompanying scripts, a private location in the subscription will be used and this value will be automatically generated."
+        }
+      }
+    },
+    "variables": {
+      "vnetName": "vnet",
+      "subnetName": "subnet",
+      "subnetRef": "Microsoft.Network/virtualNetworks/subnets/vnet/subnet",
+      "publicIPAddressName": "pip",
+      "loadBalancerName": "loadBalancer",
+      "loadBalancerFrontEndName": "loadBalancerFrontEnd",
+      "loadBalancerBackEndName": "loadBalancerBackEnd",
+      "loadBalancerProbeName": "loadBalancerHttpProbe",
+      "loadBalancerNatPoolName": "loadBalancerNatPool",
+      "scriptLocation": "[uri(parameters('_artifactsLocation'), concat('scripts/helloWorld.ps1', parameters('_artifactsLocationSasToken')))]"
+    },
+    "resources": [
+      {
+        "type": "Microsoft.Compute/virtualMachineScaleSets",
+        "name": "GEN-UNIQUE-8",
+        "location": "[resourceGroup().location]",
+        "apiVersion": "2020-12-01",
+        "dependsOn": [
+          "Microsoft.Network/virtualNetworks/vnet",
+          "Microsoft.Network/loadBalancers/loadBalancer"
+        ],
+        "sku": {
+          "name": "Standard_D2s_v3",
+          "capacity": 2
+        },
+        "properties": {
+          "overprovision": "true",
+          "upgradePolicy": {
+            "mode": "Manual"
+          },
+          "virtualMachineProfile": {
+            "storageProfile": {
+              "osDisk": {
+                "createOption": "FromImage",
+                "caching": "ReadWrite"
+              },
+              "imageReference": {
+                "publisher": "MicrosoftWindowsServer",
+                "offer": "WindowsServer",
+                "sku": "2016-Datacenter",
+                "version": "latest"
+              }
+            },
+            "osProfile": {
+              "computerNamePrefix": "GEN-UNIQUE-8",
+              "adminUsername": "GEN-UNIQUE-8",
+              "adminPassword": "GEN-PASSWORD"
+            },
+            "networkProfile": {
+              "networkInterfaceConfigurations": [
+                {
+                  "name": "nic",
+                  "properties": {
+                    "primary": true,
+                    "ipConfigurations": [
+                      {
+                        "name": "ipconfig",
+                        "properties": {
+                          "subnet": {
+                            "id": "Microsoft.Network/virtualNetworks/subnets/vnet/subnet"
+                          },
+                          "loadBalancerBackendAddressPools": [
+                            {
+                              "id": "Microsoft.Network/loadBalancers/backendAddressPools/loadBalancer/loadBalancerBackEnd"
+                            }
+                          ],
+                          "loadBalancerInboundNatPools": [
+                            {
+                              "id": "Microsoft.Network/loadBalancers/inboundNatPools/loadBalancer/loadBalancerNatPool"
+                            }
+                          ]
+                        }
+                      }
+                    ]
+                  }
+                }
+              ]
+            },
+            "extensionProfile": {
+              "extensions": [
+                {
+                  "name": "customScript",
+                  "properties": {
+                    "publisher": "Microsoft.Compute",
+                    "settings": {
+                      "fileUris": [
+                        "[uri(parameters('_artifactsLocation'), concat('scripts/helloWorld.ps1', parameters('_artifactsLocationSasToken')))]"
+                      ]
+                    },
+                    "typeHandlerVersion": "1.8",
+                    "autoUpgradeMinorVersion": true,
+                    "protectedSettings": {
+                      "commandToExecute": "powershell -ExecutionPolicy Unrestricted -File scripts/helloWorld.ps1"
+                    },
+                    "type": "CustomScriptExtension"
+                  }
+                }
+              ]
+            }
+          }
+        }
+      },
+      {
+        "type": "Microsoft.Network/virtualNetworks",
+        "name": "vnet",
+        "location": "[resourceGroup().location]",
+        "apiVersion": "2020-07-01",
+        "properties": {
+          "addressSpace": {
+            "addressPrefixes": [
+              "10.0.0.0/16"
+            ]
+          },
+          "subnets": [
+            {
+              "name": "subnet",
+              "properties": {
+                "addressPrefix": "10.0.0.0/24"
+              }
+            }
+          ]
+        }
+      },
+      {
+        "type": "Microsoft.Network/publicIPAddresses",
+        "name": "pip",
+        "location": "[resourceGroup().location]",
+        "apiVersion": "2020-07-01",
+        "properties": {
+          "publicIPAllocationMethod": "Dynamic",
+          "dnsSettings": {
+            "domainNameLabel": "[toLower(parameters('vmssName'))]"
+          }
+        }
+      },
+      {
+        "type": "Microsoft.Network/loadBalancers",
+        "name": "loadBalancer",
+        "location": "[resourceGroup().location]",
+        "apiVersion": "2020-07-01",
+        "dependsOn": [
+          "Microsoft.Network/publicIPAddresses/pip"
+        ],
+        "properties": {
+          "frontendIPConfigurations": [
+            {
+              "name": "loadBalancerFrontEnd",
+              "properties": {
+                "publicIPAddress": {
+                  "id": "Microsoft.Network/publicIPAddresses/pip"
+                }
+              }
+            }
+          ],
+          "backendAddressPools": [
+            {
+              "name": "loadBalancerBackendName"
+            }
+          ],
+          "loadBalancingRules": [
+            {
+              "name": "roundRobinLBRule",
+              "properties": {
+                "frontendIPConfiguration": {
+                  "id": "Microsoft.Network/loadBalancers/frontendIPConfigurations/loadBalancer/loadBalancerFrontEnd"
+                },
+                "backendAddressPool": {
+                  "id": "Microsoft.Network/loadBalancers/backendAddressPools/loadBalancer/loadBalancerBackendName"
+                },
+                "protocol": "Tcp",
+                "frontendPort": 80,
+                "backendPort": 80,
+                "enableFloatingIP": false,
+                "idleTimeoutInMinutes": 5,
+                "probe": {
+                  "id": "Microsoft.Network/loadBalancers/probes/loadBalancer/loadBalancerHttpProbe"
+                }
+              }
+            }
+          ],
+          "probes": [
+            {
+              "name": "loadBalancerHttpProbe",
+              "properties": {
+                "protocol": "Tcp",
+                "port": 80,
+                "intervalInSeconds": "5",
+                "numberOfProbes": "2"
+              }
+            }
+          ],
+          "inboundNatPools": [
+            {
+              "name": "loadBalancerNatPool",
+              "properties": {
+                "frontendIPConfiguration": {
+                  "id": "Microsoft.Network/loadBalancers/frontendIPConfigurations/loadBalancer/loadBalancerFrontEnd"
+                },
+                "protocol": "Tcp",
+                "frontendPortRangeStart": 50000,
+                "frontendPortRangeEnd": 50019,
+                "backendPort": 3389
+              }
+            }
+          ]
+        }
+      }
+    ],
+    "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+  }
+}

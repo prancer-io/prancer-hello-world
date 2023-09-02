@@ -1,0 +1,883 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAzureQuickStart",
+  "paths": [
+    "/demos/azmgmt-demo/nestedtemplates/asrRunbooks.json"
+  ],
+  "timestamp": 1642962898165,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/demos/azmgmt-demo/nestedtemplates/asrRunbooks.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT619",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "microsoft.automation/automationaccounts",
+      "microsoft.automation/automationaccounts/runbooks",
+      "microsoft.automation/automationaccounts/modules"
+    ]
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT619",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "automationAccountName": {
+        "type": "string",
+        "metadata": {
+          "description": "Specify the name of your Automation Account"
+        }
+      },
+      "automationRegion": {
+        "type": "string",
+        "metadata": {
+          "description": "Specify the region for your automation account"
+        }
+      }
+    },
+    "variables": {
+      "assets": {
+        "aaVariables": {
+          "AzureSubscriptionId": {
+            "name": "AzureSubscriptionId",
+            "description": "Azure subscription Id"
+          }
+        }
+      },
+      "asrScripts": {
+        "runbooks": [
+          {
+            "name": "ASR-AddPublicIp",
+            "url": "[uri(deployment().properties.templateLink.uri, 'scripts/ASR-AddPublicIp.ps1')]",
+            "version": "1.0.0.0",
+            "type": "PowerShell",
+            "description": "ASR Runbook to enable public IP on every VM in a Recovery Plan"
+          },
+          {
+            "name": "ASR-SQL-FailoverAG",
+            "url": "[uri(deployment().properties.templateLink.uri, 'scripts/ASR-SQL-FailoverAG.ps1')]",
+            "version": "1.0.0.0",
+            "type": "PowerShellWorkflow",
+            "description": "ASR Runbook to handle SQL Always On failover"
+          },
+          {
+            "name": "ASR-AddSingleNSGPublicIp",
+            "url": "[uri(deployment().properties.templateLink.uri, 'scripts/ASR-AddSingleNSGPublicIp.ps1')]",
+            "version": "1.0.0.0",
+            "type": "PowerShell",
+            "description": "ASR Runbook to enable NSG and Public IP on every VM in a Recovery Plan"
+          },
+          {
+            "name": "ASR-AddSingleLoadBalancer",
+            "url": "[uri(deployment().properties.templateLink.uri, 'scripts/ASR-AddSingleLoadBalancer.ps1')]",
+            "version": "1.0.0.0",
+            "type": "PowerShell",
+            "description": "ASR Runbook to enable a single Load Balancer for all the VMs in the recovery plan"
+          },
+          {
+            "name": "ASR-AddMulitpleLoadBalancers",
+            "url": "[uri(deployment().properties.templateLink.uri, 'scripts/ASR-AddMultipleLoadBalancers.ps1')]",
+            "version": "1.0.0.0",
+            "type": "PowerShell",
+            "description": "ASR Runbook to enable multiple Load Balancers for selected VMs in the recovery plan"
+          },
+          {
+            "name": "ASR-DNS-UpdateIP",
+            "url": "[uri(deployment().properties.templateLink.uri, 'scripts/ASR-DNS-UpdateIP.ps1')]",
+            "version": "1.0.0.0",
+            "type": "PowerShellWorkflow",
+            "description": "ASR Runbook to update DNS for VMs within the recovery plan"
+          },
+          {
+            "name": "ASR-Wordpress-ChangeMysqlConfig",
+            "url": "[uri(deployment().properties.templateLink.uri, 'scripts/ASR-Wordpress-ChangeMysqlConfig.ps1')]",
+            "version": "1.0.0.0",
+            "type": "PowerShellWorkflow",
+            "description": "ASR Runbook to configure Mysql as part of a recovery plan"
+          },
+          {
+            "name": "ASR-SQL-FailoverAGClassic",
+            "url": "[uri(deployment().properties.templateLink.uri, 'scripts/ASR-SQL-FailoverAGClassic.ps1')]",
+            "version": "1.0.0.0",
+            "type": "PowerShellWorkflow",
+            "description": "ASR Runbook to failover SQL Availability Group"
+          }
+        ],
+        "modules": [
+          {
+            "name": "AzureRm.Compute",
+            "url": "https://devopsgallerystorage.blob.core.windows.net/packages/azurerm.compute.2.8.0.nupkg"
+          },
+          {
+            "name": "AzureRm.Resources",
+            "url": "https://devopsgallerystorage.blob.core.windows.net/packages/azurerm.resources.3.7.0.nupkg"
+          },
+          {
+            "name": "AzureRm.Network",
+            "url": "https://devopsgallerystorage.blob.core.windows.net/packages/azurerm.network.3.6.0.nupkg"
+          },
+          {
+            "name": "AzureRm.Automation",
+            "url": "https://devopsgallerystorage.blob.core.windows.net/packages/azurerm.automation.1.0.3.nupkg"
+          }
+        ]
+      },
+      "azureRmProfile": {
+        "name": "AzureRm.Profile",
+        "url": "https://devopsgallerystorage.blob.core.windows.net/packages/azurerm.profile.2.7.0.nupkg"
+      }
+    },
+    "resources": [
+      {
+        "name": "automationAccountName",
+        "type": "Microsoft.Automation/automationAccounts",
+        "apiVersion": "2015-10-31",
+        "location": "automationRegion",
+        "properties": {
+          "sku": {
+            "name": "OMS"
+          }
+        },
+        "resources": [
+          {
+            "name": "(assets).aaVariables.AzureSubscriptionId.name",
+            "type": "variables",
+            "apiVersion": "2015-10-31",
+            "dependsOn": [
+              "Microsoft.Automation/automationAccounts/automationAccountName"
+            ],
+            "tags": {},
+            "properties": {
+              "description": "(assets).aaVariables.AzureSubscriptionId.description",
+              "value": "[concat('\"',subscription().subscriptionId,'\"')]"
+            }
+          }
+        ]
+      },
+      {
+        "apiVersion": "2015-10-31",
+        "type": "Microsoft.Automation/automationAccounts/runbooks",
+        "name": "[concat(parameters('automationAccountName'), '/', variables('asrScripts').runbooks[copyIndex()].Name)]",
+        "location": "automationRegion",
+        "dependsOn": [
+          "Microsoft.Automation/automationAccounts//automationAccountName"
+        ],
+        "properties": {
+          "description": "(asrScripts).runbooks[copyIndex()].description",
+          "runbookType": "(asrScripts).runbooks[copyIndex()].type",
+          "logProgress": false,
+          "logVerbose": true,
+          "publishContentLink": {
+            "uri": "(asrScripts).runbooks[copyIndex()].url",
+            "version": "(asrScripts).runbooks[copyIndex()].version"
+          }
+        }
+      },
+      {
+        "apiVersion": "2015-10-31",
+        "type": "Microsoft.Automation/automationAccounts/runbooks",
+        "name": "[concat(parameters('automationAccountName'), '/', variables('asrScripts').runbooks[copyIndex()].Name)]",
+        "location": "automationRegion",
+        "dependsOn": [
+          "Microsoft.Automation/automationAccounts//automationAccountName"
+        ],
+        "properties": {
+          "description": "(asrScripts).runbooks[copyIndex()].description",
+          "runbookType": "(asrScripts).runbooks[copyIndex()].type",
+          "logProgress": false,
+          "logVerbose": true,
+          "publishContentLink": {
+            "uri": "(asrScripts).runbooks[copyIndex()].url",
+            "version": "(asrScripts).runbooks[copyIndex()].version"
+          }
+        }
+      },
+      {
+        "apiVersion": "2015-10-31",
+        "type": "Microsoft.Automation/automationAccounts/runbooks",
+        "name": "[concat(parameters('automationAccountName'), '/', variables('asrScripts').runbooks[copyIndex()].Name)]",
+        "location": "automationRegion",
+        "dependsOn": [
+          "Microsoft.Automation/automationAccounts//automationAccountName"
+        ],
+        "properties": {
+          "description": "(asrScripts).runbooks[copyIndex()].description",
+          "runbookType": "(asrScripts).runbooks[copyIndex()].type",
+          "logProgress": false,
+          "logVerbose": true,
+          "publishContentLink": {
+            "uri": "(asrScripts).runbooks[copyIndex()].url",
+            "version": "(asrScripts).runbooks[copyIndex()].version"
+          }
+        }
+      },
+      {
+        "apiVersion": "2015-10-31",
+        "type": "Microsoft.Automation/automationAccounts/runbooks",
+        "name": "[concat(parameters('automationAccountName'), '/', variables('asrScripts').runbooks[copyIndex()].Name)]",
+        "location": "automationRegion",
+        "dependsOn": [
+          "Microsoft.Automation/automationAccounts//automationAccountName"
+        ],
+        "properties": {
+          "description": "(asrScripts).runbooks[copyIndex()].description",
+          "runbookType": "(asrScripts).runbooks[copyIndex()].type",
+          "logProgress": false,
+          "logVerbose": true,
+          "publishContentLink": {
+            "uri": "(asrScripts).runbooks[copyIndex()].url",
+            "version": "(asrScripts).runbooks[copyIndex()].version"
+          }
+        }
+      },
+      {
+        "apiVersion": "2015-10-31",
+        "type": "Microsoft.Automation/automationAccounts/runbooks",
+        "name": "[concat(parameters('automationAccountName'), '/', variables('asrScripts').runbooks[copyIndex()].Name)]",
+        "location": "automationRegion",
+        "dependsOn": [
+          "Microsoft.Automation/automationAccounts//automationAccountName"
+        ],
+        "properties": {
+          "description": "(asrScripts).runbooks[copyIndex()].description",
+          "runbookType": "(asrScripts).runbooks[copyIndex()].type",
+          "logProgress": false,
+          "logVerbose": true,
+          "publishContentLink": {
+            "uri": "(asrScripts).runbooks[copyIndex()].url",
+            "version": "(asrScripts).runbooks[copyIndex()].version"
+          }
+        }
+      },
+      {
+        "apiVersion": "2015-10-31",
+        "type": "Microsoft.Automation/automationAccounts/runbooks",
+        "name": "[concat(parameters('automationAccountName'), '/', variables('asrScripts').runbooks[copyIndex()].Name)]",
+        "location": "automationRegion",
+        "dependsOn": [
+          "Microsoft.Automation/automationAccounts//automationAccountName"
+        ],
+        "properties": {
+          "description": "(asrScripts).runbooks[copyIndex()].description",
+          "runbookType": "(asrScripts).runbooks[copyIndex()].type",
+          "logProgress": false,
+          "logVerbose": true,
+          "publishContentLink": {
+            "uri": "(asrScripts).runbooks[copyIndex()].url",
+            "version": "(asrScripts).runbooks[copyIndex()].version"
+          }
+        }
+      },
+      {
+        "apiVersion": "2015-10-31",
+        "type": "Microsoft.Automation/automationAccounts/runbooks",
+        "name": "[concat(parameters('automationAccountName'), '/', variables('asrScripts').runbooks[copyIndex()].Name)]",
+        "location": "automationRegion",
+        "dependsOn": [
+          "Microsoft.Automation/automationAccounts//automationAccountName"
+        ],
+        "properties": {
+          "description": "(asrScripts).runbooks[copyIndex()].description",
+          "runbookType": "(asrScripts).runbooks[copyIndex()].type",
+          "logProgress": false,
+          "logVerbose": true,
+          "publishContentLink": {
+            "uri": "(asrScripts).runbooks[copyIndex()].url",
+            "version": "(asrScripts).runbooks[copyIndex()].version"
+          }
+        }
+      },
+      {
+        "apiVersion": "2015-10-31",
+        "type": "Microsoft.Automation/automationAccounts/runbooks",
+        "name": "[concat(parameters('automationAccountName'), '/', variables('asrScripts').runbooks[copyIndex()].Name)]",
+        "location": "automationRegion",
+        "dependsOn": [
+          "Microsoft.Automation/automationAccounts//automationAccountName"
+        ],
+        "properties": {
+          "description": "(asrScripts).runbooks[copyIndex()].description",
+          "runbookType": "(asrScripts).runbooks[copyIndex()].type",
+          "logProgress": false,
+          "logVerbose": true,
+          "publishContentLink": {
+            "uri": "(asrScripts).runbooks[copyIndex()].url",
+            "version": "(asrScripts).runbooks[copyIndex()].version"
+          }
+        }
+      },
+      {
+        "apiVersion": "2015-10-31",
+        "type": "Microsoft.Automation/automationAccounts/runbooks",
+        "name": "[concat(parameters('automationAccountName'), '/', variables('asrScripts').runbooks[copyIndex()].Name)]",
+        "location": "automationRegion",
+        "dependsOn": [
+          "Microsoft.Automation/automationAccounts//automationAccountName"
+        ],
+        "properties": {
+          "description": "(asrScripts).runbooks[copyIndex()].description",
+          "runbookType": "(asrScripts).runbooks[copyIndex()].type",
+          "logProgress": false,
+          "logVerbose": true,
+          "publishContentLink": {
+            "uri": "(asrScripts).runbooks[copyIndex()].url",
+            "version": "(asrScripts).runbooks[copyIndex()].version"
+          }
+        }
+      },
+      {
+        "apiVersion": "2015-10-31",
+        "type": "Microsoft.Automation/automationAccounts/runbooks",
+        "name": "[concat(parameters('automationAccountName'), '/', variables('asrScripts').runbooks[copyIndex()].Name)]",
+        "location": "automationRegion",
+        "dependsOn": [
+          "Microsoft.Automation/automationAccounts//automationAccountName"
+        ],
+        "properties": {
+          "description": "(asrScripts).runbooks[copyIndex()].description",
+          "runbookType": "(asrScripts).runbooks[copyIndex()].type",
+          "logProgress": false,
+          "logVerbose": true,
+          "publishContentLink": {
+            "uri": "(asrScripts).runbooks[copyIndex()].url",
+            "version": "(asrScripts).runbooks[copyIndex()].version"
+          }
+        }
+      },
+      {
+        "apiVersion": "2015-10-31",
+        "type": "Microsoft.Automation/automationAccounts/runbooks",
+        "name": "[concat(parameters('automationAccountName'), '/', variables('asrScripts').runbooks[copyIndex()].Name)]",
+        "location": "automationRegion",
+        "dependsOn": [
+          "Microsoft.Automation/automationAccounts//automationAccountName"
+        ],
+        "properties": {
+          "description": "(asrScripts).runbooks[copyIndex()].description",
+          "runbookType": "(asrScripts).runbooks[copyIndex()].type",
+          "logProgress": false,
+          "logVerbose": true,
+          "publishContentLink": {
+            "uri": "(asrScripts).runbooks[copyIndex()].url",
+            "version": "(asrScripts).runbooks[copyIndex()].version"
+          }
+        }
+      },
+      {
+        "apiVersion": "2015-10-31",
+        "type": "Microsoft.Automation/automationAccounts/runbooks",
+        "name": "[concat(parameters('automationAccountName'), '/', variables('asrScripts').runbooks[copyIndex()].Name)]",
+        "location": "automationRegion",
+        "dependsOn": [
+          "Microsoft.Automation/automationAccounts//automationAccountName"
+        ],
+        "properties": {
+          "description": "(asrScripts).runbooks[copyIndex()].description",
+          "runbookType": "(asrScripts).runbooks[copyIndex()].type",
+          "logProgress": false,
+          "logVerbose": true,
+          "publishContentLink": {
+            "uri": "(asrScripts).runbooks[copyIndex()].url",
+            "version": "(asrScripts).runbooks[copyIndex()].version"
+          }
+        }
+      },
+      {
+        "apiVersion": "2015-10-31",
+        "type": "Microsoft.Automation/automationAccounts/runbooks",
+        "name": "[concat(parameters('automationAccountName'), '/', variables('asrScripts').runbooks[copyIndex()].Name)]",
+        "location": "automationRegion",
+        "dependsOn": [
+          "Microsoft.Automation/automationAccounts//automationAccountName"
+        ],
+        "properties": {
+          "description": "(asrScripts).runbooks[copyIndex()].description",
+          "runbookType": "(asrScripts).runbooks[copyIndex()].type",
+          "logProgress": false,
+          "logVerbose": true,
+          "publishContentLink": {
+            "uri": "(asrScripts).runbooks[copyIndex()].url",
+            "version": "(asrScripts).runbooks[copyIndex()].version"
+          }
+        }
+      },
+      {
+        "apiVersion": "2015-10-31",
+        "type": "Microsoft.Automation/automationAccounts/runbooks",
+        "name": "[concat(parameters('automationAccountName'), '/', variables('asrScripts').runbooks[copyIndex()].Name)]",
+        "location": "automationRegion",
+        "dependsOn": [
+          "Microsoft.Automation/automationAccounts//automationAccountName"
+        ],
+        "properties": {
+          "description": "(asrScripts).runbooks[copyIndex()].description",
+          "runbookType": "(asrScripts).runbooks[copyIndex()].type",
+          "logProgress": false,
+          "logVerbose": true,
+          "publishContentLink": {
+            "uri": "(asrScripts).runbooks[copyIndex()].url",
+            "version": "(asrScripts).runbooks[copyIndex()].version"
+          }
+        }
+      },
+      {
+        "apiVersion": "2015-10-31",
+        "type": "Microsoft.Automation/automationAccounts/runbooks",
+        "name": "[concat(parameters('automationAccountName'), '/', variables('asrScripts').runbooks[copyIndex()].Name)]",
+        "location": "automationRegion",
+        "dependsOn": [
+          "Microsoft.Automation/automationAccounts//automationAccountName"
+        ],
+        "properties": {
+          "description": "(asrScripts).runbooks[copyIndex()].description",
+          "runbookType": "(asrScripts).runbooks[copyIndex()].type",
+          "logProgress": false,
+          "logVerbose": true,
+          "publishContentLink": {
+            "uri": "(asrScripts).runbooks[copyIndex()].url",
+            "version": "(asrScripts).runbooks[copyIndex()].version"
+          }
+        }
+      },
+      {
+        "apiVersion": "2015-10-31",
+        "type": "Microsoft.Automation/automationAccounts/runbooks",
+        "name": "[concat(parameters('automationAccountName'), '/', variables('asrScripts').runbooks[copyIndex()].Name)]",
+        "location": "automationRegion",
+        "dependsOn": [
+          "Microsoft.Automation/automationAccounts//automationAccountName"
+        ],
+        "properties": {
+          "description": "(asrScripts).runbooks[copyIndex()].description",
+          "runbookType": "(asrScripts).runbooks[copyIndex()].type",
+          "logProgress": false,
+          "logVerbose": true,
+          "publishContentLink": {
+            "uri": "(asrScripts).runbooks[copyIndex()].url",
+            "version": "(asrScripts).runbooks[copyIndex()].version"
+          }
+        }
+      },
+      {
+        "apiVersion": "2015-10-31",
+        "type": "Microsoft.Automation/automationAccounts/runbooks",
+        "name": "[concat(parameters('automationAccountName'), '/', variables('asrScripts').runbooks[copyIndex()].Name)]",
+        "location": "automationRegion",
+        "dependsOn": [
+          "Microsoft.Automation/automationAccounts//automationAccountName"
+        ],
+        "properties": {
+          "description": "(asrScripts).runbooks[copyIndex()].description",
+          "runbookType": "(asrScripts).runbooks[copyIndex()].type",
+          "logProgress": false,
+          "logVerbose": true,
+          "publishContentLink": {
+            "uri": "(asrScripts).runbooks[copyIndex()].url",
+            "version": "(asrScripts).runbooks[copyIndex()].version"
+          }
+        }
+      },
+      {
+        "apiVersion": "2015-10-31",
+        "type": "Microsoft.Automation/automationAccounts/runbooks",
+        "name": "[concat(parameters('automationAccountName'), '/', variables('asrScripts').runbooks[copyIndex()].Name)]",
+        "location": "automationRegion",
+        "dependsOn": [
+          "Microsoft.Automation/automationAccounts//automationAccountName"
+        ],
+        "properties": {
+          "description": "(asrScripts).runbooks[copyIndex()].description",
+          "runbookType": "(asrScripts).runbooks[copyIndex()].type",
+          "logProgress": false,
+          "logVerbose": true,
+          "publishContentLink": {
+            "uri": "(asrScripts).runbooks[copyIndex()].url",
+            "version": "(asrScripts).runbooks[copyIndex()].version"
+          }
+        }
+      },
+      {
+        "apiVersion": "2015-10-31",
+        "type": "Microsoft.Automation/automationAccounts/runbooks",
+        "name": "[concat(parameters('automationAccountName'), '/', variables('asrScripts').runbooks[copyIndex()].Name)]",
+        "location": "automationRegion",
+        "dependsOn": [
+          "Microsoft.Automation/automationAccounts//automationAccountName"
+        ],
+        "properties": {
+          "description": "(asrScripts).runbooks[copyIndex()].description",
+          "runbookType": "(asrScripts).runbooks[copyIndex()].type",
+          "logProgress": false,
+          "logVerbose": true,
+          "publishContentLink": {
+            "uri": "(asrScripts).runbooks[copyIndex()].url",
+            "version": "(asrScripts).runbooks[copyIndex()].version"
+          }
+        }
+      },
+      {
+        "apiVersion": "2015-10-31",
+        "type": "Microsoft.Automation/automationAccounts/runbooks",
+        "name": "[concat(parameters('automationAccountName'), '/', variables('asrScripts').runbooks[copyIndex()].Name)]",
+        "location": "automationRegion",
+        "dependsOn": [
+          "Microsoft.Automation/automationAccounts//automationAccountName"
+        ],
+        "properties": {
+          "description": "(asrScripts).runbooks[copyIndex()].description",
+          "runbookType": "(asrScripts).runbooks[copyIndex()].type",
+          "logProgress": false,
+          "logVerbose": true,
+          "publishContentLink": {
+            "uri": "(asrScripts).runbooks[copyIndex()].url",
+            "version": "(asrScripts).runbooks[copyIndex()].version"
+          }
+        }
+      },
+      {
+        "apiVersion": "2015-10-31",
+        "type": "Microsoft.Automation/automationAccounts/runbooks",
+        "name": "[concat(parameters('automationAccountName'), '/', variables('asrScripts').runbooks[copyIndex()].Name)]",
+        "location": "automationRegion",
+        "dependsOn": [
+          "Microsoft.Automation/automationAccounts//automationAccountName"
+        ],
+        "properties": {
+          "description": "(asrScripts).runbooks[copyIndex()].description",
+          "runbookType": "(asrScripts).runbooks[copyIndex()].type",
+          "logProgress": false,
+          "logVerbose": true,
+          "publishContentLink": {
+            "uri": "(asrScripts).runbooks[copyIndex()].url",
+            "version": "(asrScripts).runbooks[copyIndex()].version"
+          }
+        }
+      },
+      {
+        "apiVersion": "2015-10-31",
+        "type": "Microsoft.Automation/automationAccounts/modules",
+        "name": "automationAccountName/(azureRmProfile).name",
+        "location": "automationRegion",
+        "dependsOn": [
+          "Microsoft.Automation/automationAccounts//automationAccountName"
+        ],
+        "properties": {
+          "contentLink": {
+            "uri": "(azureRmProfile).url"
+          }
+        }
+      },
+      {
+        "apiVersion": "2015-10-31",
+        "type": "Microsoft.Automation/automationAccounts/modules",
+        "name": "[concat(parameters('automationAccountName'), '/', variables('asrScripts').modules[copyIndex()].Name)]",
+        "location": "automationRegion",
+        "dependsOn": [
+          "Microsoft.Automation/automationAccounts//automationAccountName",
+          "Microsoft.Automation/automationAccounts/modules//automationAccountName/(azureRmProfile).name"
+        ],
+        "properties": {
+          "contentLink": {
+            "uri": "(asrScripts).modules[copyIndex()].url"
+          }
+        }
+      },
+      {
+        "apiVersion": "2015-10-31",
+        "type": "Microsoft.Automation/automationAccounts/modules",
+        "name": "[concat(parameters('automationAccountName'), '/', variables('asrScripts').modules[copyIndex()].Name)]",
+        "location": "automationRegion",
+        "dependsOn": [
+          "Microsoft.Automation/automationAccounts//automationAccountName",
+          "Microsoft.Automation/automationAccounts/modules//automationAccountName/(azureRmProfile).name"
+        ],
+        "properties": {
+          "contentLink": {
+            "uri": "(asrScripts).modules[copyIndex()].url"
+          }
+        }
+      },
+      {
+        "apiVersion": "2015-10-31",
+        "type": "Microsoft.Automation/automationAccounts/modules",
+        "name": "[concat(parameters('automationAccountName'), '/', variables('asrScripts').modules[copyIndex()].Name)]",
+        "location": "automationRegion",
+        "dependsOn": [
+          "Microsoft.Automation/automationAccounts//automationAccountName",
+          "Microsoft.Automation/automationAccounts/modules//automationAccountName/(azureRmProfile).name"
+        ],
+        "properties": {
+          "contentLink": {
+            "uri": "(asrScripts).modules[copyIndex()].url"
+          }
+        }
+      },
+      {
+        "apiVersion": "2015-10-31",
+        "type": "Microsoft.Automation/automationAccounts/modules",
+        "name": "[concat(parameters('automationAccountName'), '/', variables('asrScripts').modules[copyIndex()].Name)]",
+        "location": "automationRegion",
+        "dependsOn": [
+          "Microsoft.Automation/automationAccounts//automationAccountName",
+          "Microsoft.Automation/automationAccounts/modules//automationAccountName/(azureRmProfile).name"
+        ],
+        "properties": {
+          "contentLink": {
+            "uri": "(asrScripts).modules[copyIndex()].url"
+          }
+        }
+      },
+      {
+        "apiVersion": "2015-10-31",
+        "type": "Microsoft.Automation/automationAccounts/modules",
+        "name": "[concat(parameters('automationAccountName'), '/', variables('asrScripts').modules[copyIndex()].Name)]",
+        "location": "automationRegion",
+        "dependsOn": [
+          "Microsoft.Automation/automationAccounts//automationAccountName",
+          "Microsoft.Automation/automationAccounts/modules//automationAccountName/(azureRmProfile).name"
+        ],
+        "properties": {
+          "contentLink": {
+            "uri": "(asrScripts).modules[copyIndex()].url"
+          }
+        }
+      },
+      {
+        "apiVersion": "2015-10-31",
+        "type": "Microsoft.Automation/automationAccounts/modules",
+        "name": "[concat(parameters('automationAccountName'), '/', variables('asrScripts').modules[copyIndex()].Name)]",
+        "location": "automationRegion",
+        "dependsOn": [
+          "Microsoft.Automation/automationAccounts//automationAccountName",
+          "Microsoft.Automation/automationAccounts/modules//automationAccountName/(azureRmProfile).name"
+        ],
+        "properties": {
+          "contentLink": {
+            "uri": "(asrScripts).modules[copyIndex()].url"
+          }
+        }
+      },
+      {
+        "apiVersion": "2015-10-31",
+        "type": "Microsoft.Automation/automationAccounts/modules",
+        "name": "[concat(parameters('automationAccountName'), '/', variables('asrScripts').modules[copyIndex()].Name)]",
+        "location": "automationRegion",
+        "dependsOn": [
+          "Microsoft.Automation/automationAccounts//automationAccountName",
+          "Microsoft.Automation/automationAccounts/modules//automationAccountName/(azureRmProfile).name"
+        ],
+        "properties": {
+          "contentLink": {
+            "uri": "(asrScripts).modules[copyIndex()].url"
+          }
+        }
+      },
+      {
+        "apiVersion": "2015-10-31",
+        "type": "Microsoft.Automation/automationAccounts/modules",
+        "name": "[concat(parameters('automationAccountName'), '/', variables('asrScripts').modules[copyIndex()].Name)]",
+        "location": "automationRegion",
+        "dependsOn": [
+          "Microsoft.Automation/automationAccounts//automationAccountName",
+          "Microsoft.Automation/automationAccounts/modules//automationAccountName/(azureRmProfile).name"
+        ],
+        "properties": {
+          "contentLink": {
+            "uri": "(asrScripts).modules[copyIndex()].url"
+          }
+        }
+      },
+      {
+        "apiVersion": "2015-10-31",
+        "type": "Microsoft.Automation/automationAccounts/modules",
+        "name": "[concat(parameters('automationAccountName'), '/', variables('asrScripts').modules[copyIndex()].Name)]",
+        "location": "automationRegion",
+        "dependsOn": [
+          "Microsoft.Automation/automationAccounts//automationAccountName",
+          "Microsoft.Automation/automationAccounts/modules//automationAccountName/(azureRmProfile).name"
+        ],
+        "properties": {
+          "contentLink": {
+            "uri": "(asrScripts).modules[copyIndex()].url"
+          }
+        }
+      },
+      {
+        "apiVersion": "2015-10-31",
+        "type": "Microsoft.Automation/automationAccounts/modules",
+        "name": "[concat(parameters('automationAccountName'), '/', variables('asrScripts').modules[copyIndex()].Name)]",
+        "location": "automationRegion",
+        "dependsOn": [
+          "Microsoft.Automation/automationAccounts//automationAccountName",
+          "Microsoft.Automation/automationAccounts/modules//automationAccountName/(azureRmProfile).name"
+        ],
+        "properties": {
+          "contentLink": {
+            "uri": "(asrScripts).modules[copyIndex()].url"
+          }
+        }
+      },
+      {
+        "apiVersion": "2015-10-31",
+        "type": "Microsoft.Automation/automationAccounts/modules",
+        "name": "[concat(parameters('automationAccountName'), '/', variables('asrScripts').modules[copyIndex()].Name)]",
+        "location": "automationRegion",
+        "dependsOn": [
+          "Microsoft.Automation/automationAccounts//automationAccountName",
+          "Microsoft.Automation/automationAccounts/modules//automationAccountName/(azureRmProfile).name"
+        ],
+        "properties": {
+          "contentLink": {
+            "uri": "(asrScripts).modules[copyIndex()].url"
+          }
+        }
+      },
+      {
+        "apiVersion": "2015-10-31",
+        "type": "Microsoft.Automation/automationAccounts/modules",
+        "name": "[concat(parameters('automationAccountName'), '/', variables('asrScripts').modules[copyIndex()].Name)]",
+        "location": "automationRegion",
+        "dependsOn": [
+          "Microsoft.Automation/automationAccounts//automationAccountName",
+          "Microsoft.Automation/automationAccounts/modules//automationAccountName/(azureRmProfile).name"
+        ],
+        "properties": {
+          "contentLink": {
+            "uri": "(asrScripts).modules[copyIndex()].url"
+          }
+        }
+      },
+      {
+        "apiVersion": "2015-10-31",
+        "type": "Microsoft.Automation/automationAccounts/modules",
+        "name": "[concat(parameters('automationAccountName'), '/', variables('asrScripts').modules[copyIndex()].Name)]",
+        "location": "automationRegion",
+        "dependsOn": [
+          "Microsoft.Automation/automationAccounts//automationAccountName",
+          "Microsoft.Automation/automationAccounts/modules//automationAccountName/(azureRmProfile).name"
+        ],
+        "properties": {
+          "contentLink": {
+            "uri": "(asrScripts).modules[copyIndex()].url"
+          }
+        }
+      },
+      {
+        "apiVersion": "2015-10-31",
+        "type": "Microsoft.Automation/automationAccounts/modules",
+        "name": "[concat(parameters('automationAccountName'), '/', variables('asrScripts').modules[copyIndex()].Name)]",
+        "location": "automationRegion",
+        "dependsOn": [
+          "Microsoft.Automation/automationAccounts//automationAccountName",
+          "Microsoft.Automation/automationAccounts/modules//automationAccountName/(azureRmProfile).name"
+        ],
+        "properties": {
+          "contentLink": {
+            "uri": "(asrScripts).modules[copyIndex()].url"
+          }
+        }
+      },
+      {
+        "apiVersion": "2015-10-31",
+        "type": "Microsoft.Automation/automationAccounts/modules",
+        "name": "[concat(parameters('automationAccountName'), '/', variables('asrScripts').modules[copyIndex()].Name)]",
+        "location": "automationRegion",
+        "dependsOn": [
+          "Microsoft.Automation/automationAccounts//automationAccountName",
+          "Microsoft.Automation/automationAccounts/modules//automationAccountName/(azureRmProfile).name"
+        ],
+        "properties": {
+          "contentLink": {
+            "uri": "(asrScripts).modules[copyIndex()].url"
+          }
+        }
+      },
+      {
+        "apiVersion": "2015-10-31",
+        "type": "Microsoft.Automation/automationAccounts/modules",
+        "name": "[concat(parameters('automationAccountName'), '/', variables('asrScripts').modules[copyIndex()].Name)]",
+        "location": "automationRegion",
+        "dependsOn": [
+          "Microsoft.Automation/automationAccounts//automationAccountName",
+          "Microsoft.Automation/automationAccounts/modules//automationAccountName/(azureRmProfile).name"
+        ],
+        "properties": {
+          "contentLink": {
+            "uri": "(asrScripts).modules[copyIndex()].url"
+          }
+        }
+      },
+      {
+        "apiVersion": "2015-10-31",
+        "type": "Microsoft.Automation/automationAccounts/modules",
+        "name": "[concat(parameters('automationAccountName'), '/', variables('asrScripts').modules[copyIndex()].Name)]",
+        "location": "automationRegion",
+        "dependsOn": [
+          "Microsoft.Automation/automationAccounts//automationAccountName",
+          "Microsoft.Automation/automationAccounts/modules//automationAccountName/(azureRmProfile).name"
+        ],
+        "properties": {
+          "contentLink": {
+            "uri": "(asrScripts).modules[copyIndex()].url"
+          }
+        }
+      },
+      {
+        "apiVersion": "2015-10-31",
+        "type": "Microsoft.Automation/automationAccounts/modules",
+        "name": "[concat(parameters('automationAccountName'), '/', variables('asrScripts').modules[copyIndex()].Name)]",
+        "location": "automationRegion",
+        "dependsOn": [
+          "Microsoft.Automation/automationAccounts//automationAccountName",
+          "Microsoft.Automation/automationAccounts/modules//automationAccountName/(azureRmProfile).name"
+        ],
+        "properties": {
+          "contentLink": {
+            "uri": "(asrScripts).modules[copyIndex()].url"
+          }
+        }
+      },
+      {
+        "apiVersion": "2015-10-31",
+        "type": "Microsoft.Automation/automationAccounts/modules",
+        "name": "[concat(parameters('automationAccountName'), '/', variables('asrScripts').modules[copyIndex()].Name)]",
+        "location": "automationRegion",
+        "dependsOn": [
+          "Microsoft.Automation/automationAccounts//automationAccountName",
+          "Microsoft.Automation/automationAccounts/modules//automationAccountName/(azureRmProfile).name"
+        ],
+        "properties": {
+          "contentLink": {
+            "uri": "(asrScripts).modules[copyIndex()].url"
+          }
+        }
+      },
+      {
+        "apiVersion": "2015-10-31",
+        "type": "Microsoft.Automation/automationAccounts/modules",
+        "name": "[concat(parameters('automationAccountName'), '/', variables('asrScripts').modules[copyIndex()].Name)]",
+        "location": "automationRegion",
+        "dependsOn": [
+          "Microsoft.Automation/automationAccounts//automationAccountName",
+          "Microsoft.Automation/automationAccounts/modules//automationAccountName/(azureRmProfile).name"
+        ],
+        "properties": {
+          "contentLink": {
+            "uri": "(asrScripts).modules[copyIndex()].url"
+          }
+        }
+      }
+    ],
+    "outputs": {},
+    "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+  }
+}

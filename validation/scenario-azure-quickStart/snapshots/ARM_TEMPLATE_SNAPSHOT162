@@ -1,0 +1,137 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAzureQuickStart",
+  "paths": [
+    "/application-workloads/ibm-cloud-pak/ibm-cloud-pak-for-data/nested/ocs.json"
+  ],
+  "timestamp": 1642962888984,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/application-workloads/ibm-cloud-pak/ibm-cloud-pak-for-data/nested/ocs.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT162",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "microsoft.compute/virtualmachines/extensions"
+    ]
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT162",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "installOCSImagesScriptUrl": {
+        "type": "string",
+        "metadata": {
+          "description": "OCS script Url"
+        }
+      },
+      "installOCSScriptFileName": {
+        "type": "string",
+        "metadata": {
+          "description": "OCS script file name"
+        }
+      },
+      "redHatTags": {
+        "type": "object",
+        "metadata": {
+          "description": "Red Hat Tags"
+        }
+      },
+      "adminUsername": {
+        "type": "string",
+        "metadata": {
+          "description": "Admin Username"
+        }
+      },
+      "bastionHostname": {
+        "type": "string",
+        "metadata": {
+          "description": "Bastion Hostname"
+        }
+      },
+      "location": {
+        "type": "string",
+        "metadata": {
+          "description": "Region where the resources should be created in"
+        }
+      },
+      "openshiftUsername": {
+        "type": "string",
+        "metadata": {
+          "description": "Openshift Username"
+        }
+      },
+      "openshiftPassword": {
+        "type": "securestring",
+        "metadata": {
+          "description": "Openshift Password"
+        }
+      },
+      "clusterName": {
+        "type": "string",
+        "metadata": {
+          "description": "Cluster Name"
+        }
+      },
+      "domainName": {
+        "type": "string",
+        "metadata": {
+          "description": "DNS Zone name"
+        }
+      },
+      "singleZoneOrMultiZone": {
+        "type": "string",
+        "metadata": {
+          "description": "Single Or Multizone"
+        }
+      },
+      "resourceGroupName": {
+        "type": "string",
+        "metadata": {
+          "description": "Resource Group name"
+        }
+      }
+    },
+    "variables": {},
+    "resources": [
+      {
+        "type": "Microsoft.Compute/virtualMachines/extensions",
+        "name": "bastionHostname/deployOpenshift",
+        "location": "location",
+        "apiVersion": "2021-07-01",
+        "tags": {
+          "displayName": "InstallOCS",
+          "app": "redHatTags",
+          "version": "redHatTags",
+          "platform": "redHatTags"
+        },
+        "properties": {
+          "publisher": "Microsoft.Azure.Extensions",
+          "type": "CustomScript",
+          "typeHandlerVersion": "2.0",
+          "autoUpgradeMinorVersion": true,
+          "settings": {
+            "fileUris": [
+              "installOCSImagesScriptUrl"
+            ]
+          },
+          "protectedSettings": {
+            "commandToExecute": "bash installOCSScriptFileName \"adminUsername\" \"openshiftUsername\" \"openshiftPassword\" \"clusterName\" \"domainName\" \"singleZoneOrMultiZone\" \"location\" \"resourceGroupName\""
+          }
+        }
+      }
+    ],
+    "outputs": {},
+    "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+  }
+}

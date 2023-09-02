@@ -1,0 +1,81 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAzureQuickStart",
+  "paths": [
+    "/quickstarts/microsoft.web/app-service-managed-certificate-apex/azuredeploy.json",
+    "/quickstarts/microsoft.web/app-service-managed-certificate-apex/azuredeploy.parameters.json"
+  ],
+  "timestamp": 1642962910809,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/quickstarts/microsoft.web/app-service-managed-certificate-apex/azuredeploy.json",
+      "/quickstarts/microsoft.web/app-service-managed-certificate-apex/azuredeploy.parameters.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT1743",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "microsoft.web/certificates"
+    ]
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT1743",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "SubjectName": {
+        "type": "string",
+        "metadata": {
+          "description": "Subject name of the certificate."
+        },
+        "value": "GET-PREREQ-domainName"
+      },
+      "AppServicePlanName": {
+        "type": "string",
+        "metadata": {
+          "description": "App Service Plan Name where certificate will be imported to."
+        },
+        "value": "GET-PREREQ-AppServicePlanName"
+      },
+      "Location": {
+        "type": "string",
+        "defaultValue": "[resourceGroup().location]",
+        "metadata": {
+          "description": "Location of app service plan."
+        }
+      },
+      "resourceGroupName": {
+        "type": "string",
+        "defaultValue": "[resourceGroup().name]",
+        "metadata": {
+          "description": "Name of the resourceGroup."
+        }
+      },
+      "resourceGroup": {
+        "value": "demo"
+      }
+    },
+    "resources": [
+      {
+        "apiVersion": "2020-12-01",
+        "location": "[resourceGroup().location]",
+        "name": "GET-PREREQ-domainName-GET-PREREQ-AppServicePlanName",
+        "type": "Microsoft.Web/certificates",
+        "properties": {
+          "serverFarmId": "[resourceGroup().name]/Microsoft.Web/serverfarms//GET-PREREQ-AppServicePlanName",
+          "canonicalName": "GET-PREREQ-domainName",
+          "domainValidationMethod": "http-token"
+        }
+      }
+    ],
+    "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+  }
+}

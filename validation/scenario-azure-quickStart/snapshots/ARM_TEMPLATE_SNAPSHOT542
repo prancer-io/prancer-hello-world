@@ -1,0 +1,245 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAzureQuickStart",
+  "paths": [
+    "/application-workloads/sql/sqlvm-alwayson-cluster/nested/preparingSqlServer.json"
+  ],
+  "timestamp": 1642962896504,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/application-workloads/sql/sqlvm-alwayson-cluster/nested/preparingSqlServer.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT542",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "microsoft.compute/virtualmachines/extensions"
+    ]
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT542",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "sqlVMName": {
+        "type": "string"
+      },
+      "location": {
+        "type": "string"
+      },
+      "adminUsername": {
+        "type": "string"
+      },
+      "adminPassword": {
+        "type": "securestring"
+      },
+      "domainName": {
+        "type": "string"
+      },
+      "sqlAOPrepareModulesURL": {
+        "type": "string"
+      },
+      "sqlAOPrepareConfigurationFunction": {
+        "type": "string"
+      },
+      "sqlAOEPName": {
+        "type": "string"
+      },
+      "sqlServerServiceAccountUserName": {
+        "type": "string"
+      },
+      "sqlServerServiceAccountPassword": {
+        "type": "securestring"
+      },
+      "sharePath": {
+        "type": "string"
+      },
+      "adPDCVMName": {
+        "type": "string"
+      },
+      "sqlwVMName": {
+        "type": "string"
+      },
+      "fswModulesURL": {
+        "type": "string"
+      },
+      "fswConfigurationFunction": {
+        "type": "string"
+      },
+      "autoPatchingEnable": {
+        "type": "bool"
+      },
+      "autoPatchingDay": {
+        "type": "string"
+      },
+      "autoPatchingStartHour": {
+        "type": "string"
+      },
+      "numberOfDisks": {
+        "type": "string"
+      },
+      "workloadType": {
+        "type": "string"
+      }
+    },
+    "variables": {
+      "Monday": "[mod(div(add(add(24,int(parameters('autoPatchingStartHour'))),2),24),7)]",
+      "Tuesday": "[mod(div(add(add(48,int(parameters('autoPatchingStartHour'))),2),24),7)]",
+      "Wednesday": "[mod(div(add(add(72,int(parameters('autoPatchingStartHour'))),2),24),7)]",
+      "Thursday": "[mod(div(add(add(96,int(parameters('autoPatchingStartHour'))),2),24),7)]",
+      "Friday": "[mod(div(add(add(120,int(parameters('autoPatchingStartHour'))),2),24),7)]",
+      "Saturday": "[mod(div(add(add(144,int(parameters('autoPatchingStartHour'))),2),24),7)]",
+      "Sunday": "[mod(div(add(add(168,int(parameters('autoPatchingStartHour'))),2),24),7)]",
+      "Never": "8",
+      "Everyday": "0",
+      "1": "Monday",
+      "2": "Tuesday",
+      "3": "Wednesday",
+      "4": "Thursday",
+      "5": "Friday",
+      "6": "Saturday",
+      "7": "Sunday",
+      "8": "Monday",
+      "0": "Everyday"
+    },
+    "resources": [
+      {
+        "type": "Microsoft.Compute/virtualMachines/extensions",
+        "name": "sqlwVMName/CreateFileShareWitness",
+        "apiVersion": "2021-07-01",
+        "location": "location",
+        "properties": {
+          "publisher": "Microsoft.Powershell",
+          "type": "DSC",
+          "typeHandlerVersion": "2.75",
+          "autoUpgradeMinorVersion": true,
+          "settings": {
+            "modulesURL": "fswModulesURL",
+            "configurationFunction": "fswConfigurationFunction",
+            "properties": {
+              "domainName": "domainName",
+              "SharePath": "sharePath",
+              "adminCreds": {
+                "userName": "adminUsername",
+                "password": "privateSettingsRef:adminPassword"
+              }
+            }
+          },
+          "protectedSettings": {
+            "items": {
+              "adminPassword": "adminPassword"
+            }
+          }
+        }
+      },
+      {
+        "apiVersion": "2021-07-01",
+        "type": "Microsoft.Compute/virtualMachines/extensions",
+        "name": "sqlVMName0/SqlVmIaasExtension",
+        "location": "location",
+        "properties": {
+          "type": "SqlIaaSAgent",
+          "publisher": "Microsoft.SqlServer.Management",
+          "typeHandlerVersion": "1.2",
+          "autoUpgradeMinorVersion": "true",
+          "settings": {
+            "AutoTelemetrySettings": {
+              "Region": "location"
+            },
+            "AutoPatchingSettings": {
+              "PatchCategory": "WindowsMandatoryUpdates",
+              "Enable": "autoPatchingEnable",
+              "DayOfWeek": "autoPatchingDay",
+              "MaintenanceWindowStartingHour": "[int(parameters('autoPatchingStartHour'))]",
+              "MaintenanceWindowDuration": "60"
+            },
+            "AutoBackupSettings": {
+              "Enable": false,
+              "RetentionPeriod": "30",
+              "EnableEncryption": false
+            }
+          }
+        }
+      },
+      {
+        "apiVersion": "2021-07-01",
+        "type": "Microsoft.Compute/virtualMachines/extensions",
+        "name": "sqlVMName1/SqlVmIaasExtension",
+        "location": "location",
+        "properties": {
+          "type": "SqlIaaSAgent",
+          "publisher": "Microsoft.SqlServer.Management",
+          "typeHandlerVersion": "1.2",
+          "autoUpgradeMinorVersion": "true",
+          "settings": {
+            "AutoTelemetrySettings": {
+              "Region": "location"
+            },
+            "AutoPatchingSettings": {
+              "PatchCategory": "WindowsMandatoryUpdates",
+              "Enable": "autoPatchingEnable",
+              "DayOfWeek": "string(variables(parameters(autoPatchingDay)))",
+              "MaintenanceWindowStartingHour": "[mod(add(int(parameters('autoPatchingStartHour')),2),24)]",
+              "MaintenanceWindowDuration": "60"
+            },
+            "AutoBackupSettings": {
+              "Enable": false,
+              "RetentionPeriod": "30",
+              "EnableEncryption": false
+            }
+          }
+        }
+      },
+      {
+        "type": "Microsoft.Compute/virtualMachines/extensions",
+        "name": "sqlVMName0/sqlAOPrepare",
+        "apiVersion": "2021-07-01",
+        "location": "location",
+        "dependsOn": [
+          "Microsoft.Compute/virtualMachines/extensions/sqlwVMName/CreateFileShareWitness",
+          "Microsoft.Compute/virtualMachines/extensions/sqlVMName0/SqlVmIaasExtension"
+        ],
+        "properties": {
+          "publisher": "Microsoft.Powershell",
+          "type": "DSC",
+          "typeHandlerVersion": "2.75",
+          "autoUpgradeMinorVersion": true,
+          "settings": {
+            "modulesURL": "sqlAOPrepareModulesURL",
+            "configurationFunction": "sqlAOPrepareConfigurationFunction",
+            "properties": {
+              "domainName": "domainName",
+              "sqlAlwaysOnEndpointName": "sqlAOEPName",
+              "adminCreds": {
+                "userName": "adminUsername",
+                "password": "privateSettingsRef:AdminPassword"
+              },
+              "sqlServiceCreds": {
+                "userName": "sqlServerServiceAccountUserName",
+                "password": "privateSettingsRef:SqlServerServiceAccountPassword"
+              },
+              "NumberOfDisks": "numberOfDisks",
+              "WorkloadType": "workloadType"
+            }
+          },
+          "protectedSettings": {
+            "items": {
+              "adminPassword": "adminPassword",
+              "sqlServerServiceAccountPassword": "sqlServerServiceAccountPassword"
+            }
+          }
+        }
+      }
+    ],
+    "outputs": {},
+    "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+  }
+}

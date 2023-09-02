@@ -1,0 +1,230 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAzureQuickStart",
+  "paths": [
+    "/demos/arm-template-retrieve-azure-storage-access-keys/azuredeploy.json",
+    "/demos/arm-template-retrieve-azure-storage-access-keys/azuredeploy.parameters.json"
+  ],
+  "timestamp": 1642962898057,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/demos/arm-template-retrieve-azure-storage-access-keys/azuredeploy.json",
+      "/demos/arm-template-retrieve-azure-storage-access-keys/azuredeploy.parameters.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT614",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "microsoft.web/connections",
+      "microsoft.storage/storageaccounts",
+      "microsoft.logic/workflows"
+    ]
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT614",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "storageAccountName": {
+        "type": "string",
+        "defaultValue": "[concat('storage', uniqueString(resourceGroup().id))]",
+        "metadata": {
+          "description": "Name of the Azure Storage account."
+        },
+        "value": "GEN-UNIQUE"
+      },
+      "storageAccountSku": {
+        "type": "string",
+        "defaultValue": "Standard_LRS",
+        "allowedValues": [
+          "Standard_LRS",
+          "Standard_GRS",
+          "Standard_RAGRS",
+          "Standard_ZRS",
+          "Premium_LRS",
+          "Premium_ZRS",
+          "Standard_GZRS",
+          "Standard_RAGZRS"
+        ],
+        "metadata": {
+          "description": "Sku on which to run the Azure Storage account."
+        }
+      },
+      "storageAccountKind": {
+        "type": "string",
+        "defaultValue": "StorageV2",
+        "allowedValues": [
+          "Storage",
+          "StorageV2",
+          "BlobStorage",
+          "FileStorage",
+          "BlockBlobStorage"
+        ],
+        "metadata": {
+          "description": "Indicates the type of storage account."
+        }
+      },
+      "storageAccountContainerName": {
+        "type": "string",
+        "defaultValue": "my-container",
+        "metadata": {
+          "description": "Set the name of the container to create in the Storage account."
+        }
+      },
+      "storageConnectionName": {
+        "type": "string",
+        "defaultValue": "[concat('storageconnection', uniqueString(resourceGroup().id))]",
+        "metadata": {
+          "description": "Name of the Logic Apps API connection used to connect to the Azure Storage account."
+        },
+        "value": "GEN-UNIQUE"
+      },
+      "logicAppName": {
+        "type": "string",
+        "defaultValue": "[concat('logicapp', uniqueString(resourceGroup().id))]",
+        "metadata": {
+          "description": "Name of the Logic App."
+        },
+        "value": "GEN-UNIQUE"
+      },
+      "logicAppPollingIntervalInMinutes": {
+        "type": "int",
+        "defaultValue": 30,
+        "metadata": {
+          "description": "The polling interval used to check for items on the Storage account."
+        }
+      },
+      "location": {
+        "type": "string",
+        "defaultValue": "[resourceGroup().location]",
+        "metadata": {
+          "description": "Location where resources reside."
+        }
+      },
+      "azureMgmtUri": {
+        "type": "string",
+        "defaultValue": "",
+        "metadata": {
+          "description": "Azure Management URI"
+        },
+        "value": "https://management.azure.com:443/"
+      }
+    },
+    "variables": {
+      "storageAccountId": "Microsoft.Storage/storageAccounts/GEN-UNIQUE"
+    },
+    "resources": [
+      {
+        "type": "Microsoft.Web/connections",
+        "apiVersion": "2018-07-01-preview",
+        "name": "GEN-UNIQUE",
+        "location": "[resourceGroup().location]",
+        "dependsOn": [
+          "Microsoft.Storage/storageAccounts/GEN-UNIQUE"
+        ],
+        "properties": {
+          "api": {
+            "id": "[subscriptionResourceId('Microsoft.Web/locations/managedApis', parameters('location'), 'azureblob')]"
+          },
+          "parameterValues": {
+            "accountName": "GEN-UNIQUE",
+            "accessKey": "[listKeys(variables('storageAccountId'), '2019-04-01').keys[0].value]"
+          },
+          "testLinks": [
+            {
+              "requestUri": "[uri(parameters('azureMgmtUri'), concat('subscriptions/', subscription().subscriptionId, '/resourceGroups/', resourceGroup().name, '/providers/Microsoft.Web/connections/', parameters('storageConnectionName'), '/extensions/proxy/testconnection?api-version=2018-07-01-preview'))]",
+              "method": "get"
+            }
+          ]
+        }
+      },
+      {
+        "type": "Microsoft.Storage/storageAccounts",
+        "apiVersion": "2019-04-01",
+        "name": "GEN-UNIQUE",
+        "location": "[resourceGroup().location]",
+        "sku": {
+          "name": "Standard_LRS"
+        },
+        "kind": "StorageV2",
+        "properties": {
+          "accessTier": "Hot",
+          "supportsHttpsTrafficOnly": true
+        }
+      },
+      {
+        "type": "Microsoft.Logic/workflows",
+        "apiVersion": "2019-05-01",
+        "name": "GEN-UNIQUE",
+        "location": "[resourceGroup().location]",
+        "dependsOn": [
+          "Microsoft.Web/connections/GEN-UNIQUE"
+        ],
+        "properties": {
+          "definition": {
+            "contentVersion": "1.0.0.0",
+            "parameters": {
+              "$connections": {
+                "defaultValue": {},
+                "type": "Object"
+              }
+            },
+            "triggers": {
+              "When_a_blob_is_added_or_modified_(properties_only)": {
+                "recurrence": {
+                  "frequency": "Minute",
+                  "interval": 30
+                },
+                "splitOn": "@triggerBody()",
+                "metadata": {
+                  "JTJmbXktY29udGFpbmVy": "/my-container"
+                },
+                "type": "ApiConnection",
+                "inputs": {
+                  "host": {
+                    "connection": {
+                      "name": "@parameters('$connections')['azureblob']['connectionId']"
+                    }
+                  },
+                  "method": "get",
+                  "path": "/datasets/default/triggers/batch/onupdatedfile",
+                  "queries": {
+                    "folderId": "JTJmbXktY29udGFpbmVy",
+                    "maxFileCount": 10
+                  }
+                }
+              }
+            },
+            "actions": {
+              "Process_blobs": {
+                "type": "Scope"
+              }
+            },
+            "\uff04schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#"
+          },
+          "parameters": {
+            "$connections": {
+              "value": {
+                "azureblob": {
+                  "connectionId": "Microsoft.Web/connections/GEN-UNIQUE",
+                  "connectionName": "azureblob",
+                  "id": "[subscriptionResourceId('Microsoft.Web/locations/managedApis', parameters('location'), 'azureblob')]"
+                }
+              }
+            }
+          },
+          "state": "Enabled"
+        }
+      }
+    ],
+    "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+  }
+}

@@ -1,0 +1,62 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorGoogleKcc",
+  "paths": [
+    "/samples/resources/monitoringservicelevelobjective/window-based-metric-mean-filter/monitoring_v1beta1_monitoringservicelevelobjective.yaml"
+  ],
+  "timestamp": 1642973304729,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "KCC_TEMPLATE_SNAPSHOT",
+    "type": "kcc",
+    "collection": "kcctemplate",
+    "paths": [
+      "/samples/resources/monitoringservicelevelobjective/window-based-metric-mean-filter/monitoring_v1beta1_monitoringservicelevelobjective.yaml"
+    ],
+    "snapshotId": "KCC_TEMPLATE_SNAPSHOT552",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "monitoringservicelevelobjective"
+    ]
+  },
+  "snapshotId": "KCC_TEMPLATE_SNAPSHOT552",
+  "collection": "kcctemplate",
+  "json": {
+    "apiVersion": "monitoring.cnrm.cloud.google.com/v1beta1",
+    "kind": "MonitoringServiceLevelObjective",
+    "metadata": {
+      "name": "monitoringservicelevelobjective-sample-windowbasedmetricmeanfilter",
+      "labels": {
+        "test1": "value1"
+      }
+    },
+    "spec": {
+      "projectRef": {
+        "external": "projects/${PROJECT_ID?}"
+      },
+      "serviceRef": {
+        "external": "monitoringservicelevelobjective-dep-windowbasedmetricmeanfilter"
+      },
+      "displayName": "A window based metric mean filter",
+      "goal": 0.9,
+      "rollingPeriod": "86400s",
+      "serviceLevelIndicator": {
+        "windowsBased": {
+          "windowPeriod": "60s",
+          "metricMeanInRange": {
+            "timeSeries": "resource.type=\"gce_instance\" \nmetric.type=\"compute.googleapis.com/instance/cpu/usage_time\"",
+            "range": {
+              "min": 50,
+              "max": 100
+            }
+          }
+        }
+      }
+    }
+  }
+}

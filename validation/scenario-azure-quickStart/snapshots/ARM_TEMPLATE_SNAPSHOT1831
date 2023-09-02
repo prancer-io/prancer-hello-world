@@ -1,0 +1,154 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAzureQuickStart",
+  "paths": [
+    "/test/pipeline/azuredeploy.json"
+  ],
+  "timestamp": 1642962911688,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/test/pipeline/azuredeploy.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT1831",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "microsoft.network/virtualnetworks",
+      "microsoft.compute/virtualmachinescalesets"
+    ]
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT1831",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "adminUsername": {
+        "type": "string",
+        "metadata": {
+          "description": "Admin usernanme"
+        }
+      },
+      "adminPassword": {
+        "type": "SecureString",
+        "metadata": {
+          "description": "Secure adminPassword"
+        }
+      },
+      "managedDiskId": {
+        "type": "string",
+        "metadata": {
+          "description": "resourceId of the disk to use for the VMSS, must be in the same location as the vmss"
+        }
+      },
+      "location": {
+        "type": "string",
+        "metadata": {
+          "description": "Location of the managedDisk and the resources deployed in the template."
+        }
+      },
+      "agentPoolprefix": {
+        "type": "string",
+        "metadata": {
+          "description": "Naming prefix for the vmss"
+        }
+      }
+    },
+    "variables": {
+      "vnetName": "[format('agent-pool-vnet-{0}', parameters('location'))]",
+      "subnetName": "[format('agent-pool-subnet-{0}', parameters('location'))]",
+      "vmssName": "[format('{0}-{1}', parameters('agentPoolprefix'), parameters('location'))]"
+    },
+    "resources": [
+      {
+        "type": "Microsoft.Network/virtualNetworks",
+        "apiVersion": "2021-02-01",
+        "name": "[format('agent-pool-vnet-{0}', parameters('location'))]",
+        "location": "location",
+        "properties": {
+          "addressSpace": {
+            "addressPrefixes": [
+              "10.0.0.0/16"
+            ]
+          },
+          "subnets": [
+            {
+              "name": "[format('agent-pool-subnet-{0}', parameters('location'))]",
+              "properties": {
+                "addressPrefix": "10.0.0.0/24"
+              }
+            }
+          ]
+        }
+      },
+      {
+        "type": "Microsoft.Compute/virtualMachineScaleSets",
+        "apiVersion": "2020-12-01",
+        "name": "[format('{0}-{1}', parameters('agentPoolprefix'), parameters('location'))]",
+        "location": "location",
+        "dependsOn": [
+          "[format('agent-pool-vnet-{0}', parameters('location'))]"
+        ],
+        "sku": {
+          "name": "Standard_D2s_v3",
+          "capacity": 2
+        },
+        "properties": {
+          "overprovision": false,
+          "upgradePolicy": {
+            "mode": "Manual"
+          },
+          "virtualMachineProfile": {
+            "storageProfile": {
+              "osDisk": {
+                "createOption": "FromImage",
+                "caching": "ReadOnly",
+                "managedDisk": {
+                  "storageAccountType": "StandardSSD_LRS"
+                }
+              },
+              "imageReference": {
+                "id": "managedDiskId"
+              }
+            },
+            "networkProfile": {
+              "networkInterfaceConfigurations": [
+                {
+                  "name": "agent-nic",
+                  "properties": {
+                    "primary": true,
+                    "ipConfigurations": [
+                      {
+                        "name": "agent-ip-config",
+                        "properties": {
+                          "subnet": {
+                            "id": "Microsoft.Network/virtualNetworks/subnets/[format('agent-pool-vnet-{0}', parameters('location'))]/[format('agent-pool-subnet-{0}', parameters('location'))]"
+                          }
+                        }
+                      }
+                    ]
+                  }
+                }
+              ]
+            },
+            "osProfile": {
+              "computerNamePrefix": "agentPoolprefix",
+              "adminUsername": "adminUsername",
+              "adminPassword": "adminPassword"
+            }
+          },
+          "singlePlacementGroup": false,
+          "platformFaultDomainCount": 1
+        }
+      }
+    ],
+    "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+  }
+}

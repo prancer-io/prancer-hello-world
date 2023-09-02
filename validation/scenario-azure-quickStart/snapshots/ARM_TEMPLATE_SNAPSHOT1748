@@ -1,0 +1,209 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAzureQuickStart",
+  "paths": [
+    "/quickstarts/microsoft.web/container-app-create/azuredeploy.json",
+    "/quickstarts/microsoft.web/container-app-create/azuredeploy.parameters.json"
+  ],
+  "timestamp": 1642962910849,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/quickstarts/microsoft.web/container-app-create/azuredeploy.json",
+      "/quickstarts/microsoft.web/container-app-create/azuredeploy.parameters.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT1748",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "microsoft.operationalinsights/workspaces",
+      "microsoft.web/kubeenvironments",
+      "microsoft.web/containerapps"
+    ]
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT1748",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.0.0.0",
+    "metadata": {
+      "_generator": {
+        "name": "bicep",
+        "version": "0.4.1008.15138",
+        "templateHash": "6220213040958471409"
+      }
+    },
+    "parameters": {
+      "containerAppName": {
+        "type": "string",
+        "defaultValue": "[format('containerapp-{0}', uniqueString(resourceGroup().id))]",
+        "metadata": {
+          "description": "Specifies the name of the container app."
+        }
+      },
+      "containerAppEnvName": {
+        "type": "string",
+        "defaultValue": "[format('containerapp-env-{0}', uniqueString(resourceGroup().id))]",
+        "metadata": {
+          "description": "Specifies the name of the container app environment."
+        }
+      },
+      "containerAppLogAnalyticsName": {
+        "type": "string",
+        "defaultValue": "[format('containerapp-log-{0}', uniqueString(resourceGroup().id))]",
+        "metadata": {
+          "description": "Specifies the name of the log analytics workspace."
+        }
+      },
+      "location": {
+        "type": "string",
+        "allowedValues": [
+          "northcentralusstage",
+          "eastus",
+          "northeurope",
+          "canadacentral"
+        ],
+        "metadata": {
+          "description": "Specifies the location for all resources."
+        },
+        "value": "canadacentral"
+      },
+      "containerImage": {
+        "type": "string",
+        "defaultValue": "mcr.microsoft.com/azuredocs/containerapps-helloworld:latest",
+        "metadata": {
+          "description": "Specifies the docker container image to deploy."
+        }
+      },
+      "targetPort": {
+        "type": "int",
+        "defaultValue": 80,
+        "metadata": {
+          "description": "Specifies the container port."
+        }
+      },
+      "cpuCore": {
+        "type": "string",
+        "defaultValue": "0.5",
+        "metadata": {
+          "description": "Number of CPU cores the container can use. Can be with a maximum of two decimals."
+        }
+      },
+      "memorySize": {
+        "type": "string",
+        "defaultValue": "1",
+        "metadata": {
+          "description": "Amount of memory (in gibibytes, GiB) allocated to the container up to 4GiB. Can be with a maximum of two decimals. Ratio with CPU cores must be equal to 2."
+        }
+      },
+      "minReplica": {
+        "type": "int",
+        "defaultValue": 1,
+        "maxValue": 25,
+        "minValue": 0,
+        "metadata": {
+          "description": "Minimum number of replicas that will be deployed"
+        }
+      },
+      "maxReplica": {
+        "type": "int",
+        "defaultValue": 3,
+        "maxValue": 25,
+        "minValue": 0,
+        "metadata": {
+          "description": "Maximum number of replicas that will be deployed"
+        }
+      }
+    },
+    "functions": [],
+    "resources": [
+      {
+        "type": "Microsoft.OperationalInsights/workspaces",
+        "apiVersion": "2020-10-01",
+        "name": "[format('containerapp-log-{0}', uniqueString(resourceGroup().id))]",
+        "location": "canadacentral",
+        "properties": {
+          "sku": {
+            "name": "PerGB2018"
+          }
+        }
+      },
+      {
+        "type": "Microsoft.Web/kubeEnvironments",
+        "apiVersion": "2021-02-01",
+        "name": "[format('containerapp-env-{0}', uniqueString(resourceGroup().id))]",
+        "location": "canadacentral",
+        "kind": "containerenvironment",
+        "properties": {
+          "type": "managed",
+          "internalLoadBalancerEnabled": false,
+          "appLogsConfiguration": {
+            "destination": "log-analytics",
+            "logAnalyticsConfiguration": {
+              "customerId": "[reference(resourceId('Microsoft.OperationalInsights/workspaces', parameters('containerAppLogAnalyticsName'))).customerId]",
+              "sharedKey": "[listKeys(resourceId('Microsoft.OperationalInsights/workspaces', parameters('containerAppLogAnalyticsName')), '2020-10-01').primarySharedKey]"
+            }
+          }
+        },
+        "dependsOn": [
+          "Microsoft.OperationalInsights/workspaces/[format('containerapp-log-{0}', uniqueString(resourceGroup().id))]"
+        ]
+      },
+      {
+        "type": "Microsoft.Web/containerApps",
+        "apiVersion": "2021-03-01",
+        "name": "[format('containerapp-{0}', uniqueString(resourceGroup().id))]",
+        "location": "canadacentral",
+        "properties": {
+          "kubeEnvironmentId": "Microsoft.Web/kubeEnvironments/[format('containerapp-env-{0}', uniqueString(resourceGroup().id))]",
+          "configuration": {
+            "ingress": {
+              "external": true,
+              "targetport": 80,
+              "allowInsecure": false,
+              "traffic": [
+                {
+                  "latestRevision": true,
+                  "weight": 100
+                }
+              ]
+            }
+          },
+          "template": {
+            "revisionSuffix": "firstrevision",
+            "containers": [
+              {
+                "name": "[format('containerapp-{0}', uniqueString(resourceGroup().id))]",
+                "image": "mcr.microsoft.com/azuredocs/containerapps-helloworld:latest",
+                "resources": {
+                  "cpu": "0.5",
+                  "memory": "[format('{0}Gi', parameters('memorySize'))]"
+                }
+              }
+            ],
+            "scale": {
+              "minReplica": 1,
+              "maxReplica": 3
+            }
+          }
+        },
+        "dependsOn": [
+          "Microsoft.Web/kubeEnvironments/[format('containerapp-env-{0}', uniqueString(resourceGroup().id))]"
+        ]
+      }
+    ],
+    "outputs": {
+      "containerAppFQDN": {
+        "type": "string",
+        "value": "[reference(resourceId('Microsoft.Web/containerApps', parameters('containerAppName'))).configuration.ingress.fqdn]"
+      }
+    },
+    "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+  }
+}

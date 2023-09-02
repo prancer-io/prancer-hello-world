@@ -2,12 +2,12 @@
   "structure": "filesystem",
   "error": null,
   "reference": "master",
-  "contentType": "yaml",
+  "contentType": "json",
   "source": "gitConnectorGoogleKcc",
   "paths": [
-    "/samples/resources/computeinterconnectattachment/compute_v1beta1_computenetwork.yaml"
+    "/samples/resources/computeinstance/network-worker-instance/compute_v1beta1_computesubnetwork.yaml"
   ],
-  "timestamp": 1628765141856,
+  "timestamp": 1642973302835,
   "queryuser": null,
   "checksum": "99914b932bd37a50b983c5e7c90ae93b",
   "node": {
@@ -15,26 +15,36 @@
     "type": "kcc",
     "collection": "kcctemplate",
     "paths": [
-      "/samples/resources/computeinterconnectattachment/compute_v1beta1_computenetwork.yaml"
+      "/samples/resources/computeinstance/network-worker-instance/compute_v1beta1_computesubnetwork.yaml"
     ],
     "snapshotId": "KCC_TEMPLATE_SNAPSHOT172",
     "status": "active",
-    "validate": true
+    "validate": true,
+    "resourceTypes": [
+      "computesubnetwork"
+    ]
   },
   "snapshotId": "KCC_TEMPLATE_SNAPSHOT172",
   "collection": "kcctemplate",
   "json": {
     "apiVersion": "compute.cnrm.cloud.google.com/v1beta1",
-    "kind": "ComputeNetwork",
+    "kind": "ComputeSubnetwork",
     "metadata": {
-      "labels": {
-        "label-one": "value-one"
-      },
-      "name": "computeinterconnectattachment-dep"
+      "name": "computeinstance-dep-networkworker"
     },
     "spec": {
-      "routingMode": "REGIONAL",
-      "autoCreateSubnetworks": false
+      "ipCidrRange": "10.2.0.0/16",
+      "region": "us-west2",
+      "description": "a sample subnetwork",
+      "privateIpGoogleAccess": false,
+      "networkRef": {
+        "name": "computeinstance-dep-networkworker"
+      },
+      "logConfig": {
+        "aggregationInterval": "INTERVAL_10_MIN",
+        "flowSampling": 0.5,
+        "metadata": "INCLUDE_ALL_METADATA"
+      }
     }
   }
 }

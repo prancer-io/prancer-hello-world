@@ -2,12 +2,12 @@
   "structure": "filesystem",
   "error": null,
   "reference": "master",
-  "contentType": "yaml",
+  "contentType": "json",
   "source": "gitConnectorGoogleKcc",
   "paths": [
-    "/samples/resources/bigqueryjob/copy-bigquery-job/iam_v1beta1_iampolicymember.yaml"
+    "/samples/resources/bigqueryjob/copy-bigquery-job/bigquery_v1beta1_bigquerytable_multiple_yaml_2.yaml"
   ],
-  "timestamp": 1628765138622,
+  "timestamp": 1642973301739,
   "queryuser": null,
   "checksum": "99914b932bd37a50b983c5e7c90ae93b",
   "node": {
@@ -15,28 +15,35 @@
     "type": "kcc",
     "collection": "kcctemplate",
     "paths": [
-      "/samples/resources/bigqueryjob/copy-bigquery-job/iam_v1beta1_iampolicymember.yaml"
+      "/samples/resources/bigqueryjob/copy-bigquery-job/bigquery_v1beta1_bigquerytable_multiple_yaml_2.yaml"
     ],
     "snapshotId": "KCC_TEMPLATE_SNAPSHOT18",
     "status": "active",
-    "validate": true
+    "validate": true,
+    "resourceTypes": [
+      "bigquerytable"
+    ]
   },
   "snapshotId": "KCC_TEMPLATE_SNAPSHOT18",
   "collection": "kcctemplate",
   "json": {
-    "apiVersion": "iam.cnrm.cloud.google.com/v1beta1",
-    "kind": "IAMPolicyMember",
+    "apiVersion": "bigquery.cnrm.cloud.google.com/v1beta1",
+    "kind": "BigQueryTable",
     "metadata": {
-      "name": "bigqueryjob-dep-copy"
+      "name": "bigqueryjobdep3copy"
     },
     "spec": {
-      "member": "serviceAccount:bq-${PROJECT_NUMBER?}@bigquery-encryption.iam.gserviceaccount.com",
-      "role": "roles/cloudkms.cryptoKeyEncrypterDecrypter",
-      "resourceRef": {
-        "apiVersion": "resourcemanager.cnrm.cloud.google.com/v1beta1",
-        "kind": "Project",
-        "external": "projects/${PROJECT_ID?}"
-      }
+      "datasetRef": {
+        "name": "bigqueryjobdep3copy"
+      },
+      "description": "Destination BigQueryTable",
+      "encryptionConfiguration": {
+        "kmsKeyRef": {
+          "name": "bigqueryjob-dep-copy"
+        }
+      },
+      "friendlyName": "bigqueryjob-dep3-copy",
+      "schema": "[\n  {\n    \"name\": \"name\",\n    \"type\": \"STRING\",\n    \"mode\": \"NULLABLE\"\n  },\n  {\n    \"name\": \"post_abbr\",\n    \"type\": \"STRING\",\n    \"mode\": \"NULLABLE\"\n  },\n  {\n    \"name\": \"date\",\n    \"type\": \"DATE\",\n    \"mode\": \"NULLABLE\"\n  }\n]\n"
     }
   }
 }

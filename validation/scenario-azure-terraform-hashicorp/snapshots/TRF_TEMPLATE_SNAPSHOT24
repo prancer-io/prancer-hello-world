@@ -1,0 +1,109 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "main",
+  "contentType": "json",
+  "source": "gitConnectorAzureTerraHashicorp",
+  "paths": [
+    "/examples/azure-monitoring/eventhub_integration/main.tf"
+  ],
+  "timestamp": 1642943279639,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "TRF_TEMPLATE_SNAPSHOT",
+    "type": "terraform",
+    "collection": "terraformtemplate",
+    "paths": [
+      "/examples/azure-monitoring/eventhub_integration/main.tf"
+    ],
+    "snapshotId": "TRF_TEMPLATE_SNAPSHOT24",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "azurerm_eventhub_namespace",
+      "azurerm_resource_group",
+      "azurerm_eventhub_namespace_authorization_rule",
+      "azurerm_eventhub",
+      "azurerm_monitor_diagnostic_setting"
+    ]
+  },
+  "snapshotId": "TRF_TEMPLATE_SNAPSHOT24",
+  "collection": "terraformtemplate",
+  "json": {
+    "data": {
+      "azurerm_kusto_cluster": {
+        "example": {
+          "name": "examplekustocluster",
+          "resource_group_name": "example_rg_kusto_cluster",
+          "compiletime_identity": "data.azurerm_kusto_cluster.example"
+        }
+      },
+      "azurerm_monitor_diagnostic_categories": {
+        "example": {
+          "resource_id": "${data.azurerm_kusto_cluster.example.id}"
+        }
+      }
+    },
+    "resources": [
+      {
+        "type": "azurerm_resource_group",
+        "name": "example",
+        "properties": {
+          "name": "example_rg_eventhub",
+          "location": "West Europe",
+          "compiletime_identity": "azurerm_resource_group.example"
+        }
+      },
+      {
+        "type": "azurerm_eventhub_namespace",
+        "name": "example",
+        "properties": {
+          "name": "exampleEventhubns",
+          "location": "${azurerm_resource_group.example.location}",
+          "resource_group_name": "${azurerm_resource_group.example.name}",
+          "sku": "Standard",
+          "compiletime_identity": "azurerm_eventhub_namespace.example"
+        }
+      },
+      {
+        "type": "azurerm_eventhub",
+        "name": "example",
+        "properties": {
+          "name": "example_eventhub",
+          "namespace_name": "${azurerm_eventhub_namespace.example.name}",
+          "resource_group_name": "${azurerm_resource_group.example.name}",
+          "partition_count": 2,
+          "message_retention": 1,
+          "compiletime_identity": "azurerm_eventhub.example"
+        }
+      },
+      {
+        "type": "azurerm_eventhub_namespace_authorization_rule",
+        "name": "example",
+        "properties": {
+          "name": "example_eventhubns_auth_rule",
+          "namespace_name": "${azurerm_eventhub_namespace.example.name}",
+          "resource_group_name": "${azurerm_resource_group.example.name}",
+          "listen": true,
+          "send": true,
+          "manage": true,
+          "compiletime_identity": "azurerm_eventhub_namespace_authorization_rule.example"
+        }
+      },
+      {
+        "type": "azurerm_monitor_diagnostic_setting",
+        "name": "example",
+        "properties": {
+          "name": "example_monitor_diag_setting",
+          "target_resource_id": "${data.azurerm_kusto_cluster.example.id}",
+          "eventhub_name": "${azurerm_eventhub.example.name}",
+          "eventhub_authorization_rule_id": "${azurerm_eventhub_namespace_authorization_rule.example.id}",
+          "log": [],
+          "metric": [],
+          "compiletime_identity": "azurerm_monitor_diagnostic_setting.example"
+        }
+      }
+    ]
+  }
+}

@@ -1,0 +1,136 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAzureQuickStart",
+  "paths": [
+    "/demos/web-app-regional-vnet-private-endpoint-sql-storage/nestedtemplates/storage.json"
+  ],
+  "timestamp": 1642962902407,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/demos/web-app-regional-vnet-private-endpoint-sql-storage/nestedtemplates/storage.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT873",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "microsoft.storage/storageaccounts"
+    ]
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT873",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "suffix": {
+        "type": "string",
+        "metadata": {
+          "description": "naming suffix based on resource group name hash"
+        }
+      },
+      "location": {
+        "type": "string",
+        "metadata": {
+          "description": "location to deploy the storage account"
+        }
+      },
+      "storageSku": {
+        "type": "string",
+        "defaultValue": "Standard_LRS",
+        "metadata": {
+          "description": "storage account SKU"
+        }
+      },
+      "storageKind": {
+        "type": "string",
+        "defaultValue": "StorageV2",
+        "metadata": {
+          "description": "storage account kind"
+        }
+      },
+      "containerName": {
+        "type": "string",
+        "metadata": {
+          "description": "storage account container name"
+        }
+      },
+      "defaultNetworkAccessAction": {
+        "type": "string",
+        "defaultValue": "Allow",
+        "allowedValues": [
+          "Allow",
+          "Deny"
+        ],
+        "metadata": {
+          "description": "allor or deny internet access to storage account"
+        }
+      }
+    },
+    "variables": {
+      "storageAccountName": "storsuffix"
+    },
+    "resources": [
+      {
+        "type": "Microsoft.Storage/storageAccounts",
+        "name": "storsuffix",
+        "apiVersion": "2021-02-01",
+        "sku": {
+          "name": "Standard_LRS"
+        },
+        "kind": "StorageV2",
+        "location": "location",
+        "properties": {
+          "networkAcls": {
+            "bypass": "AzureServices",
+            "defaultAction": "Allow"
+          },
+          "supportsHttpsTrafficOnly": true,
+          "encryption": {
+            "services": {
+              "file": {
+                "enabled": true
+              },
+              "blob": {
+                "enabled": true
+              }
+            },
+            "keySource": "Microsoft.Storage"
+          },
+          "accessTier": "Hot"
+        },
+        "resources": [
+          {
+            "name": "default/containerName",
+            "type": "blobServices/containers",
+            "apiVersion": "2019-06-01",
+            "dependsOn": [
+              "storsuffix"
+            ]
+          }
+        ]
+      }
+    ],
+    "outputs": {
+      "storageAccountName": {
+        "type": "string",
+        "value": "[variables('storageAccountName')]"
+      },
+      "storageContainerUri": {
+        "type": "string",
+        "value": "[concat(reference(resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))).primaryEndpoints.blob, parameters('containerName'))]"
+      },
+      "containerName": {
+        "type": "string",
+        "value": "[parameters('containerName')]"
+      }
+    },
+    "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+  }
+}

@@ -1,0 +1,634 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAzureQuickStart",
+  "paths": [
+    "/quickstarts/microsoft.sqlvirtualmachine/sql-vm-ag-setup/azuredeploy.json"
+  ],
+  "timestamp": 1642962910527,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/quickstarts/microsoft.sqlvirtualmachine/sql-vm-ag-setup/azuredeploy.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT1710",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "microsoft.resources/deployments",
+      "microsoft.storage/storageaccounts",
+      "microsoft.sqlvirtualmachine/sqlvirtualmachines",
+      "microsoft.sqlvirtualmachine/sqlvirtualmachinegroups"
+    ]
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT1710",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "failoverClusterName": {
+        "type": "string",
+        "maxLength": 15,
+        "metadata": {
+          "description": "Specify the Windows Failover Cluster Name"
+        }
+      },
+      "existingVmList": {
+        "type": "string",
+        "metadata": {
+          "description": "Specify comma separated list of names of SQL Server VM's to participate in the Availability Group (e.g. SQLVM1, SQLVM2). OS underneath should be at least WS 2016."
+        }
+      },
+      "sqlServerLicenseType": {
+        "allowedValues": [
+          "PAYG",
+          "AHUB"
+        ],
+        "type": "string",
+        "metadata": {
+          "description": "Specify the SQL Server License type for all VM's."
+        }
+      },
+      "existingVmResourceGroup": {
+        "type": "string",
+        "metadata": {
+          "description": "Specify resourcegroup name for existing Vms."
+        },
+        "defaultValue": "[resourceGroup().name]"
+      },
+      "sqlServerImageType": {
+        "allowedValues": [
+          "SQL2017-WS2016",
+          "SQL2016-WS2016",
+          "SQL2019-WS2019"
+        ],
+        "type": "string",
+        "metadata": {
+          "description": "Select the version of SQL Server Image type"
+        }
+      },
+      "existingFullyQualifiedDomainName": {
+        "type": "string",
+        "metadata": {
+          "description": "Specify the Fully Qualified Domain Name under which the Failover Cluster will be created. The VM's should already be joined to it. (e.g. contoso.com)"
+        }
+      },
+      "existingOuPath": {
+        "type": "string",
+        "metadata": {
+          "description": "Specify an optional Organizational Unit (OU) on AD Domain where the CNO (Computer Object for Cluster Name) will be created (e.g. OU=testou,OU=testou2,DC=contoso,DC=com). Default is empty."
+        },
+        "defaultValue": ""
+      },
+      "existingDomainAccount": {
+        "type": "string",
+        "metadata": {
+          "description": "Specify the account for WS failover cluster creation in UPN format (e.g. example@contoso.com). This account can either be a Domain Admin or at least have permissions to create Computer Objects in default or specified OU."
+        }
+      },
+      "domainAccountPassword": {
+        "type": "SecureString",
+        "metadata": {
+          "description": "Specify the password for the domain account"
+        }
+      },
+      "existingSqlServiceAccount": {
+        "type": "string",
+        "metadata": {
+          "description": "Specify the domain account under which SQL Server service will run for AG setup in UPN format (e.g. sqlservice@contoso.com)"
+        }
+      },
+      "sqlServicePassword": {
+        "type": "SecureString",
+        "metadata": {
+          "description": "Specify the password for Sql Server service account"
+        }
+      },
+      "cloudWitnessName": {
+        "type": "string",
+        "metadata": {
+          "description": "Specify the name of the storage account to be used for creating Cloud Witness for Windows server failover cluster"
+        },
+        "defaultValue": "[concat('clwitness', uniqueString(resourceGroup().id))]"
+      },
+      "_artifactsLocation": {
+        "type": "string",
+        "metadata": {
+          "description": "Location of resources that the script is dependent on such as linked templates and DSC modules"
+        },
+        "defaultValue": "https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/quickstarts/microsoft.sqlvirtualmachine/sql-vm-ag-setup/"
+      },
+      "_artifactsLocationSasToken": {
+        "type": "securestring",
+        "metadata": {
+          "description": "The sasToken required to access _artifactsLocation.  When the template is deployed using the accompanying scripts, a sasToken will be automatically generated."
+        },
+        "defaultValue": ""
+      },
+      "location": {
+        "type": "string",
+        "metadata": {
+          "description": "Location for all resources."
+        },
+        "defaultValue": "[resourceGroup().location]"
+      }
+    },
+    "variables": {
+      "existingVMListArray": "[split(parameters('existingVmList'),',')]",
+      "GroupResourceId": "Microsoft.SqlVirtualMachine/SqlVirtualMachineGroups/failoverClusterName",
+      "joinClusterTemplateURL": "https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/quickstarts/microsoft.sqlvirtualmachine/sql-vm-ag-setup//nested/join-cluster.jsonparameters('_artifactsLocationSasToken')"
+    },
+    "resources": [
+      {
+        "type": "Microsoft.SqlVirtualMachine/SqlVirtualMachines",
+        "apiVersion": "2017-03-01-preview",
+        "name": "[trim(variables('existingVMListArray')[copyIndex()])]",
+        "location": "[resourceGroup().location]",
+        "properties": {
+          "virtualMachineResourceId": "[resourceId(parameters('existingVmResourceGroup'), 'Microsoft.Compute/virtualMachines', trim(variables('existingVMListArray')[copyIndex()]))]",
+          "sqlServerLicenseType": "sqlServerLicenseType"
+        }
+      },
+      {
+        "type": "Microsoft.SqlVirtualMachine/SqlVirtualMachines",
+        "apiVersion": "2017-03-01-preview",
+        "name": "[trim(variables('existingVMListArray')[copyIndex()])]",
+        "location": "[resourceGroup().location]",
+        "properties": {
+          "virtualMachineResourceId": "[resourceId(parameters('existingVmResourceGroup'), 'Microsoft.Compute/virtualMachines', trim(variables('existingVMListArray')[copyIndex()]))]",
+          "sqlServerLicenseType": "sqlServerLicenseType"
+        }
+      },
+      {
+        "type": "Microsoft.SqlVirtualMachine/SqlVirtualMachines",
+        "apiVersion": "2017-03-01-preview",
+        "name": "[trim(variables('existingVMListArray')[copyIndex()])]",
+        "location": "[resourceGroup().location]",
+        "properties": {
+          "virtualMachineResourceId": "[resourceId(parameters('existingVmResourceGroup'), 'Microsoft.Compute/virtualMachines', trim(variables('existingVMListArray')[copyIndex()]))]",
+          "sqlServerLicenseType": "sqlServerLicenseType"
+        }
+      },
+      {
+        "type": "Microsoft.SqlVirtualMachine/SqlVirtualMachines",
+        "apiVersion": "2017-03-01-preview",
+        "name": "[trim(variables('existingVMListArray')[copyIndex()])]",
+        "location": "[resourceGroup().location]",
+        "properties": {
+          "virtualMachineResourceId": "[resourceId(parameters('existingVmResourceGroup'), 'Microsoft.Compute/virtualMachines', trim(variables('existingVMListArray')[copyIndex()]))]",
+          "sqlServerLicenseType": "sqlServerLicenseType"
+        }
+      },
+      {
+        "type": "Microsoft.SqlVirtualMachine/SqlVirtualMachines",
+        "apiVersion": "2017-03-01-preview",
+        "name": "[trim(variables('existingVMListArray')[copyIndex()])]",
+        "location": "[resourceGroup().location]",
+        "properties": {
+          "virtualMachineResourceId": "[resourceId(parameters('existingVmResourceGroup'), 'Microsoft.Compute/virtualMachines', trim(variables('existingVMListArray')[copyIndex()]))]",
+          "sqlServerLicenseType": "sqlServerLicenseType"
+        }
+      },
+      {
+        "type": "Microsoft.SqlVirtualMachine/SqlVirtualMachines",
+        "apiVersion": "2017-03-01-preview",
+        "name": "[trim(variables('existingVMListArray')[copyIndex()])]",
+        "location": "[resourceGroup().location]",
+        "properties": {
+          "virtualMachineResourceId": "[resourceId(parameters('existingVmResourceGroup'), 'Microsoft.Compute/virtualMachines', trim(variables('existingVMListArray')[copyIndex()]))]",
+          "sqlServerLicenseType": "sqlServerLicenseType"
+        }
+      },
+      {
+        "type": "Microsoft.SqlVirtualMachine/SqlVirtualMachines",
+        "apiVersion": "2017-03-01-preview",
+        "name": "[trim(variables('existingVMListArray')[copyIndex()])]",
+        "location": "[resourceGroup().location]",
+        "properties": {
+          "virtualMachineResourceId": "[resourceId(parameters('existingVmResourceGroup'), 'Microsoft.Compute/virtualMachines', trim(variables('existingVMListArray')[copyIndex()]))]",
+          "sqlServerLicenseType": "sqlServerLicenseType"
+        }
+      },
+      {
+        "type": "Microsoft.SqlVirtualMachine/SqlVirtualMachines",
+        "apiVersion": "2017-03-01-preview",
+        "name": "[trim(variables('existingVMListArray')[copyIndex()])]",
+        "location": "[resourceGroup().location]",
+        "properties": {
+          "virtualMachineResourceId": "[resourceId(parameters('existingVmResourceGroup'), 'Microsoft.Compute/virtualMachines', trim(variables('existingVMListArray')[copyIndex()]))]",
+          "sqlServerLicenseType": "sqlServerLicenseType"
+        }
+      },
+      {
+        "type": "Microsoft.SqlVirtualMachine/SqlVirtualMachines",
+        "apiVersion": "2017-03-01-preview",
+        "name": "[trim(variables('existingVMListArray')[copyIndex()])]",
+        "location": "[resourceGroup().location]",
+        "properties": {
+          "virtualMachineResourceId": "[resourceId(parameters('existingVmResourceGroup'), 'Microsoft.Compute/virtualMachines', trim(variables('existingVMListArray')[copyIndex()]))]",
+          "sqlServerLicenseType": "sqlServerLicenseType"
+        }
+      },
+      {
+        "type": "Microsoft.SqlVirtualMachine/SqlVirtualMachines",
+        "apiVersion": "2017-03-01-preview",
+        "name": "[trim(variables('existingVMListArray')[copyIndex()])]",
+        "location": "[resourceGroup().location]",
+        "properties": {
+          "virtualMachineResourceId": "[resourceId(parameters('existingVmResourceGroup'), 'Microsoft.Compute/virtualMachines', trim(variables('existingVMListArray')[copyIndex()]))]",
+          "sqlServerLicenseType": "sqlServerLicenseType"
+        }
+      },
+      {
+        "type": "Microsoft.SqlVirtualMachine/SqlVirtualMachines",
+        "apiVersion": "2017-03-01-preview",
+        "name": "[trim(variables('existingVMListArray')[copyIndex()])]",
+        "location": "[resourceGroup().location]",
+        "properties": {
+          "virtualMachineResourceId": "[resourceId(parameters('existingVmResourceGroup'), 'Microsoft.Compute/virtualMachines', trim(variables('existingVMListArray')[copyIndex()]))]",
+          "sqlServerLicenseType": "sqlServerLicenseType"
+        }
+      },
+      {
+        "type": "Microsoft.SqlVirtualMachine/SqlVirtualMachines",
+        "apiVersion": "2017-03-01-preview",
+        "name": "[trim(variables('existingVMListArray')[copyIndex()])]",
+        "location": "[resourceGroup().location]",
+        "properties": {
+          "virtualMachineResourceId": "[resourceId(parameters('existingVmResourceGroup'), 'Microsoft.Compute/virtualMachines', trim(variables('existingVMListArray')[copyIndex()]))]",
+          "sqlServerLicenseType": "sqlServerLicenseType"
+        }
+      },
+      {
+        "type": "Microsoft.SqlVirtualMachine/SqlVirtualMachines",
+        "apiVersion": "2017-03-01-preview",
+        "name": "[trim(variables('existingVMListArray')[copyIndex()])]",
+        "location": "[resourceGroup().location]",
+        "properties": {
+          "virtualMachineResourceId": "[resourceId(parameters('existingVmResourceGroup'), 'Microsoft.Compute/virtualMachines', trim(variables('existingVMListArray')[copyIndex()]))]",
+          "sqlServerLicenseType": "sqlServerLicenseType"
+        }
+      },
+      {
+        "type": "Microsoft.SqlVirtualMachine/SqlVirtualMachines",
+        "apiVersion": "2017-03-01-preview",
+        "name": "[trim(variables('existingVMListArray')[copyIndex()])]",
+        "location": "[resourceGroup().location]",
+        "properties": {
+          "virtualMachineResourceId": "[resourceId(parameters('existingVmResourceGroup'), 'Microsoft.Compute/virtualMachines', trim(variables('existingVMListArray')[copyIndex()]))]",
+          "sqlServerLicenseType": "sqlServerLicenseType"
+        }
+      },
+      {
+        "type": "Microsoft.SqlVirtualMachine/SqlVirtualMachines",
+        "apiVersion": "2017-03-01-preview",
+        "name": "[trim(variables('existingVMListArray')[copyIndex()])]",
+        "location": "[resourceGroup().location]",
+        "properties": {
+          "virtualMachineResourceId": "[resourceId(parameters('existingVmResourceGroup'), 'Microsoft.Compute/virtualMachines', trim(variables('existingVMListArray')[copyIndex()]))]",
+          "sqlServerLicenseType": "sqlServerLicenseType"
+        }
+      },
+      {
+        "type": "Microsoft.SqlVirtualMachine/SqlVirtualMachines",
+        "apiVersion": "2017-03-01-preview",
+        "name": "[trim(variables('existingVMListArray')[copyIndex()])]",
+        "location": "[resourceGroup().location]",
+        "properties": {
+          "virtualMachineResourceId": "[resourceId(parameters('existingVmResourceGroup'), 'Microsoft.Compute/virtualMachines', trim(variables('existingVMListArray')[copyIndex()]))]",
+          "sqlServerLicenseType": "sqlServerLicenseType"
+        }
+      },
+      {
+        "type": "Microsoft.SqlVirtualMachine/SqlVirtualMachines",
+        "apiVersion": "2017-03-01-preview",
+        "name": "[trim(variables('existingVMListArray')[copyIndex()])]",
+        "location": "[resourceGroup().location]",
+        "properties": {
+          "virtualMachineResourceId": "[resourceId(parameters('existingVmResourceGroup'), 'Microsoft.Compute/virtualMachines', trim(variables('existingVMListArray')[copyIndex()]))]",
+          "sqlServerLicenseType": "sqlServerLicenseType"
+        }
+      },
+      {
+        "type": "Microsoft.SqlVirtualMachine/SqlVirtualMachines",
+        "apiVersion": "2017-03-01-preview",
+        "name": "[trim(variables('existingVMListArray')[copyIndex()])]",
+        "location": "[resourceGroup().location]",
+        "properties": {
+          "virtualMachineResourceId": "[resourceId(parameters('existingVmResourceGroup'), 'Microsoft.Compute/virtualMachines', trim(variables('existingVMListArray')[copyIndex()]))]",
+          "sqlServerLicenseType": "sqlServerLicenseType"
+        }
+      },
+      {
+        "type": "Microsoft.SqlVirtualMachine/SqlVirtualMachines",
+        "apiVersion": "2017-03-01-preview",
+        "name": "[trim(variables('existingVMListArray')[copyIndex()])]",
+        "location": "[resourceGroup().location]",
+        "properties": {
+          "virtualMachineResourceId": "[resourceId(parameters('existingVmResourceGroup'), 'Microsoft.Compute/virtualMachines', trim(variables('existingVMListArray')[copyIndex()]))]",
+          "sqlServerLicenseType": "sqlServerLicenseType"
+        }
+      },
+      {
+        "type": "Microsoft.SqlVirtualMachine/SqlVirtualMachines",
+        "apiVersion": "2017-03-01-preview",
+        "name": "[trim(variables('existingVMListArray')[copyIndex()])]",
+        "location": "[resourceGroup().location]",
+        "properties": {
+          "virtualMachineResourceId": "[resourceId(parameters('existingVmResourceGroup'), 'Microsoft.Compute/virtualMachines', trim(variables('existingVMListArray')[copyIndex()]))]",
+          "sqlServerLicenseType": "sqlServerLicenseType"
+        }
+      },
+      {
+        "type": "Microsoft.SqlVirtualMachine/SqlVirtualMachines",
+        "apiVersion": "2017-03-01-preview",
+        "name": "[trim(variables('existingVMListArray')[copyIndex()])]",
+        "location": "[resourceGroup().location]",
+        "properties": {
+          "virtualMachineResourceId": "[resourceId(parameters('existingVmResourceGroup'), 'Microsoft.Compute/virtualMachines', trim(variables('existingVMListArray')[copyIndex()]))]",
+          "sqlServerLicenseType": "sqlServerLicenseType"
+        }
+      },
+      {
+        "type": "Microsoft.SqlVirtualMachine/SqlVirtualMachines",
+        "apiVersion": "2017-03-01-preview",
+        "name": "[trim(variables('existingVMListArray')[copyIndex()])]",
+        "location": "[resourceGroup().location]",
+        "properties": {
+          "virtualMachineResourceId": "[resourceId(parameters('existingVmResourceGroup'), 'Microsoft.Compute/virtualMachines', trim(variables('existingVMListArray')[copyIndex()]))]",
+          "sqlServerLicenseType": "sqlServerLicenseType"
+        }
+      },
+      {
+        "type": "Microsoft.SqlVirtualMachine/SqlVirtualMachines",
+        "apiVersion": "2017-03-01-preview",
+        "name": "[trim(variables('existingVMListArray')[copyIndex()])]",
+        "location": "[resourceGroup().location]",
+        "properties": {
+          "virtualMachineResourceId": "[resourceId(parameters('existingVmResourceGroup'), 'Microsoft.Compute/virtualMachines', trim(variables('existingVMListArray')[copyIndex()]))]",
+          "sqlServerLicenseType": "sqlServerLicenseType"
+        }
+      },
+      {
+        "type": "Microsoft.SqlVirtualMachine/SqlVirtualMachines",
+        "apiVersion": "2017-03-01-preview",
+        "name": "[trim(variables('existingVMListArray')[copyIndex()])]",
+        "location": "[resourceGroup().location]",
+        "properties": {
+          "virtualMachineResourceId": "[resourceId(parameters('existingVmResourceGroup'), 'Microsoft.Compute/virtualMachines', trim(variables('existingVMListArray')[copyIndex()]))]",
+          "sqlServerLicenseType": "sqlServerLicenseType"
+        }
+      },
+      {
+        "type": "Microsoft.SqlVirtualMachine/SqlVirtualMachines",
+        "apiVersion": "2017-03-01-preview",
+        "name": "[trim(variables('existingVMListArray')[copyIndex()])]",
+        "location": "[resourceGroup().location]",
+        "properties": {
+          "virtualMachineResourceId": "[resourceId(parameters('existingVmResourceGroup'), 'Microsoft.Compute/virtualMachines', trim(variables('existingVMListArray')[copyIndex()]))]",
+          "sqlServerLicenseType": "sqlServerLicenseType"
+        }
+      },
+      {
+        "type": "Microsoft.SqlVirtualMachine/SqlVirtualMachines",
+        "apiVersion": "2017-03-01-preview",
+        "name": "[trim(variables('existingVMListArray')[copyIndex()])]",
+        "location": "[resourceGroup().location]",
+        "properties": {
+          "virtualMachineResourceId": "[resourceId(parameters('existingVmResourceGroup'), 'Microsoft.Compute/virtualMachines', trim(variables('existingVMListArray')[copyIndex()]))]",
+          "sqlServerLicenseType": "sqlServerLicenseType"
+        }
+      },
+      {
+        "type": "Microsoft.SqlVirtualMachine/SqlVirtualMachines",
+        "apiVersion": "2017-03-01-preview",
+        "name": "[trim(variables('existingVMListArray')[copyIndex()])]",
+        "location": "[resourceGroup().location]",
+        "properties": {
+          "virtualMachineResourceId": "[resourceId(parameters('existingVmResourceGroup'), 'Microsoft.Compute/virtualMachines', trim(variables('existingVMListArray')[copyIndex()]))]",
+          "sqlServerLicenseType": "sqlServerLicenseType"
+        }
+      },
+      {
+        "type": "Microsoft.SqlVirtualMachine/SqlVirtualMachines",
+        "apiVersion": "2017-03-01-preview",
+        "name": "[trim(variables('existingVMListArray')[copyIndex()])]",
+        "location": "[resourceGroup().location]",
+        "properties": {
+          "virtualMachineResourceId": "[resourceId(parameters('existingVmResourceGroup'), 'Microsoft.Compute/virtualMachines', trim(variables('existingVMListArray')[copyIndex()]))]",
+          "sqlServerLicenseType": "sqlServerLicenseType"
+        }
+      },
+      {
+        "type": "Microsoft.SqlVirtualMachine/SqlVirtualMachines",
+        "apiVersion": "2017-03-01-preview",
+        "name": "[trim(variables('existingVMListArray')[copyIndex()])]",
+        "location": "[resourceGroup().location]",
+        "properties": {
+          "virtualMachineResourceId": "[resourceId(parameters('existingVmResourceGroup'), 'Microsoft.Compute/virtualMachines', trim(variables('existingVMListArray')[copyIndex()]))]",
+          "sqlServerLicenseType": "sqlServerLicenseType"
+        }
+      },
+      {
+        "type": "Microsoft.SqlVirtualMachine/SqlVirtualMachines",
+        "apiVersion": "2017-03-01-preview",
+        "name": "[trim(variables('existingVMListArray')[copyIndex()])]",
+        "location": "[resourceGroup().location]",
+        "properties": {
+          "virtualMachineResourceId": "[resourceId(parameters('existingVmResourceGroup'), 'Microsoft.Compute/virtualMachines', trim(variables('existingVMListArray')[copyIndex()]))]",
+          "sqlServerLicenseType": "sqlServerLicenseType"
+        }
+      },
+      {
+        "type": "Microsoft.SqlVirtualMachine/SqlVirtualMachines",
+        "apiVersion": "2017-03-01-preview",
+        "name": "[trim(variables('existingVMListArray')[copyIndex()])]",
+        "location": "[resourceGroup().location]",
+        "properties": {
+          "virtualMachineResourceId": "[resourceId(parameters('existingVmResourceGroup'), 'Microsoft.Compute/virtualMachines', trim(variables('existingVMListArray')[copyIndex()]))]",
+          "sqlServerLicenseType": "sqlServerLicenseType"
+        }
+      },
+      {
+        "type": "Microsoft.SqlVirtualMachine/SqlVirtualMachines",
+        "apiVersion": "2017-03-01-preview",
+        "name": "[trim(variables('existingVMListArray')[copyIndex()])]",
+        "location": "[resourceGroup().location]",
+        "properties": {
+          "virtualMachineResourceId": "[resourceId(parameters('existingVmResourceGroup'), 'Microsoft.Compute/virtualMachines', trim(variables('existingVMListArray')[copyIndex()]))]",
+          "sqlServerLicenseType": "sqlServerLicenseType"
+        }
+      },
+      {
+        "type": "Microsoft.SqlVirtualMachine/SqlVirtualMachines",
+        "apiVersion": "2017-03-01-preview",
+        "name": "[trim(variables('existingVMListArray')[copyIndex()])]",
+        "location": "[resourceGroup().location]",
+        "properties": {
+          "virtualMachineResourceId": "[resourceId(parameters('existingVmResourceGroup'), 'Microsoft.Compute/virtualMachines', trim(variables('existingVMListArray')[copyIndex()]))]",
+          "sqlServerLicenseType": "sqlServerLicenseType"
+        }
+      },
+      {
+        "type": "Microsoft.SqlVirtualMachine/SqlVirtualMachines",
+        "apiVersion": "2017-03-01-preview",
+        "name": "[trim(variables('existingVMListArray')[copyIndex()])]",
+        "location": "[resourceGroup().location]",
+        "properties": {
+          "virtualMachineResourceId": "[resourceId(parameters('existingVmResourceGroup'), 'Microsoft.Compute/virtualMachines', trim(variables('existingVMListArray')[copyIndex()]))]",
+          "sqlServerLicenseType": "sqlServerLicenseType"
+        }
+      },
+      {
+        "type": "Microsoft.SqlVirtualMachine/SqlVirtualMachines",
+        "apiVersion": "2017-03-01-preview",
+        "name": "[trim(variables('existingVMListArray')[copyIndex()])]",
+        "location": "[resourceGroup().location]",
+        "properties": {
+          "virtualMachineResourceId": "[resourceId(parameters('existingVmResourceGroup'), 'Microsoft.Compute/virtualMachines', trim(variables('existingVMListArray')[copyIndex()]))]",
+          "sqlServerLicenseType": "sqlServerLicenseType"
+        }
+      },
+      {
+        "type": "Microsoft.SqlVirtualMachine/SqlVirtualMachines",
+        "apiVersion": "2017-03-01-preview",
+        "name": "[trim(variables('existingVMListArray')[copyIndex()])]",
+        "location": "[resourceGroup().location]",
+        "properties": {
+          "virtualMachineResourceId": "[resourceId(parameters('existingVmResourceGroup'), 'Microsoft.Compute/virtualMachines', trim(variables('existingVMListArray')[copyIndex()]))]",
+          "sqlServerLicenseType": "sqlServerLicenseType"
+        }
+      },
+      {
+        "type": "Microsoft.SqlVirtualMachine/SqlVirtualMachines",
+        "apiVersion": "2017-03-01-preview",
+        "name": "[trim(variables('existingVMListArray')[copyIndex()])]",
+        "location": "[resourceGroup().location]",
+        "properties": {
+          "virtualMachineResourceId": "[resourceId(parameters('existingVmResourceGroup'), 'Microsoft.Compute/virtualMachines', trim(variables('existingVMListArray')[copyIndex()]))]",
+          "sqlServerLicenseType": "sqlServerLicenseType"
+        }
+      },
+      {
+        "type": "Microsoft.SqlVirtualMachine/SqlVirtualMachines",
+        "apiVersion": "2017-03-01-preview",
+        "name": "[trim(variables('existingVMListArray')[copyIndex()])]",
+        "location": "[resourceGroup().location]",
+        "properties": {
+          "virtualMachineResourceId": "[resourceId(parameters('existingVmResourceGroup'), 'Microsoft.Compute/virtualMachines', trim(variables('existingVMListArray')[copyIndex()]))]",
+          "sqlServerLicenseType": "sqlServerLicenseType"
+        }
+      },
+      {
+        "type": "Microsoft.SqlVirtualMachine/SqlVirtualMachines",
+        "apiVersion": "2017-03-01-preview",
+        "name": "[trim(variables('existingVMListArray')[copyIndex()])]",
+        "location": "[resourceGroup().location]",
+        "properties": {
+          "virtualMachineResourceId": "[resourceId(parameters('existingVmResourceGroup'), 'Microsoft.Compute/virtualMachines', trim(variables('existingVMListArray')[copyIndex()]))]",
+          "sqlServerLicenseType": "sqlServerLicenseType"
+        }
+      },
+      {
+        "type": "Microsoft.SqlVirtualMachine/SqlVirtualMachines",
+        "apiVersion": "2017-03-01-preview",
+        "name": "[trim(variables('existingVMListArray')[copyIndex()])]",
+        "location": "[resourceGroup().location]",
+        "properties": {
+          "virtualMachineResourceId": "[resourceId(parameters('existingVmResourceGroup'), 'Microsoft.Compute/virtualMachines', trim(variables('existingVMListArray')[copyIndex()]))]",
+          "sqlServerLicenseType": "sqlServerLicenseType"
+        }
+      },
+      {
+        "type": "Microsoft.SqlVirtualMachine/SqlVirtualMachines",
+        "apiVersion": "2017-03-01-preview",
+        "name": "[trim(variables('existingVMListArray')[copyIndex()])]",
+        "location": "[resourceGroup().location]",
+        "properties": {
+          "virtualMachineResourceId": "[resourceId(parameters('existingVmResourceGroup'), 'Microsoft.Compute/virtualMachines', trim(variables('existingVMListArray')[copyIndex()]))]",
+          "sqlServerLicenseType": "sqlServerLicenseType"
+        }
+      },
+      {
+        "type": "Microsoft.Storage/storageAccounts",
+        "apiVersion": "2018-07-01",
+        "name": "[concat('clwitness', uniqueString(resourceGroup().id))]",
+        "sku": {
+          "name": "Standard_LRS"
+        },
+        "kind": "StorageV2",
+        "location": "[resourceGroup().location]",
+        "properties": {
+          "accessTier": "Hot",
+          "supportsHttpsTrafficOnly": true
+        }
+      },
+      {
+        "type": "Microsoft.SqlVirtualMachine/SqlVirtualMachineGroups",
+        "apiVersion": "2017-03-01-preview",
+        "name": "failoverClusterName",
+        "location": "[resourceGroup().location]",
+        "properties": {
+          "SqlImageOffer": "sqlServerImageType",
+          "SqlImageSku": "Enterprise",
+          "WsfcDomainProfile": {
+            "DomainFqdn": "existingFullyQualifiedDomainName",
+            "OuPath": "",
+            "ClusterBootstrapAccount": "existingDomainAccount",
+            "ClusterOperatorAccount": "existingDomainAccount",
+            "SqlServiceAccount": "existingSqlServiceAccount",
+            "StorageAccountUrl": "[reference(resourceId('Microsoft.Storage/storageAccounts', parameters('cloudWitnessName')), '2018-07-01').primaryEndpoints['blob']]",
+            "StorageAccountPrimaryKey": "[listKeys(resourceId('Microsoft.Storage/storageAccounts', parameters('cloudWitnessName')), '2018-07-01').keys[0].value]"
+          }
+        }
+      },
+      {
+        "type": "Microsoft.Resources/deployments",
+        "apiVersion": "2019-03-01",
+        "name": "joincluster",
+        "dependsOn": [
+          "failoverClusterName",
+          "[concat('clwitness', uniqueString(resourceGroup().id))]",
+          "sqlvirtualMachineLoop"
+        ],
+        "properties": {
+          "mode": "Incremental",
+          "templateLink": {
+            "uri": "https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/quickstarts/microsoft.sqlvirtualmachine/sql-vm-ag-setup//nested/join-cluster.jsonparameters('_artifactsLocationSasToken')",
+            "contentVersion": "1.0.0.0"
+          },
+          "parameters": {
+            "existingVirtualMachineNames": {
+              "value": "[split(parameters('existingVmList'),',')]"
+            },
+            "location": {
+              "value": "[resourceGroup().location]"
+            },
+            "sqlServerLicenseType": {
+              "value": "sqlServerLicenseType"
+            },
+            "existingVmResourceGroup": {
+              "value": "[resourceGroup().name]"
+            },
+            "groupResourceId": {
+              "value": "groupResourceId"
+            },
+            "domainAccountPassword": {
+              "value": "domainAccountPassword"
+            },
+            "sqlServicePassword": {
+              "value": "sqlServicePassword"
+            }
+          }
+        }
+      }
+    ],
+    "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+  }
+}

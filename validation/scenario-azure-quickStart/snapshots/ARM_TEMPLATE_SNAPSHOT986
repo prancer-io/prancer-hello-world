@@ -1,0 +1,215 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAzureQuickStart",
+  "paths": [
+    "/quickstarts/microsoft.cdn/cdn-with-waf-rate-limit-rules/azuredeploy.json",
+    "/quickstarts/microsoft.cdn/cdn-with-waf-rate-limit-rules/azuredeploy.parameters.json"
+  ],
+  "timestamp": 1642962903319,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/quickstarts/microsoft.cdn/cdn-with-waf-rate-limit-rules/azuredeploy.json",
+      "/quickstarts/microsoft.cdn/cdn-with-waf-rate-limit-rules/azuredeploy.parameters.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT986",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "microsoft.cdn/cdnwebapplicationfirewallpolicies",
+      "microsoft.cdn/profiles"
+    ]
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT986",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "policyName": {
+        "type": "string",
+        "metadata": {
+          "description": "Name of the CDN WAF Policy"
+        },
+        "value": "GEN-UNIQUE"
+      },
+      "profileName": {
+        "type": "string",
+        "metadata": {
+          "description": "Name of the CDN Profile"
+        },
+        "value": "GEN-UNIQUE"
+      },
+      "endpointName": {
+        "type": "string",
+        "metadata": {
+          "description": "Name of the CDN Endpoint"
+        },
+        "value": "GEN-UNIQUE"
+      },
+      "originUrl": {
+        "type": "string",
+        "metadata": {
+          "description": "Url of the origin"
+        },
+        "value": "www.microsoft.com"
+      },
+      "policyMode": {
+        "type": "string",
+        "metadata": {
+          "description": "The enforcement mode of the CDN WAF Policy"
+        },
+        "defaultValue": "Detection",
+        "allowedValues": [
+          "Detection",
+          "Prevention"
+        ]
+      },
+      "enabledState": {
+        "type": "string",
+        "metadata": {
+          "description": "Whether the CDN WAF Policy is enabled"
+        },
+        "defaultValue": "Enabled",
+        "allowedValues": [
+          "Enabled",
+          "Disabled"
+        ]
+      },
+      "redirectUrl": {
+        "type": "string",
+        "metadata": {
+          "description": "The redirect URL of the CDN WAF Policy"
+        },
+        "defaultValue": "https://contoso.com/login"
+      },
+      "CDNSku": {
+        "type": "string",
+        "metadata": {
+          "description": "CDN SKU names"
+        },
+        "defaultValue": "Standard_Microsoft",
+        "allowedValues": [
+          "Standard_Microsoft"
+        ]
+      },
+      "location": {
+        "type": "string",
+        "defaultValue": "[resourceGroup().location]",
+        "metadata": {
+          "description": "Location the CDN profile and endpoint."
+        }
+      }
+    },
+    "resources": [
+      {
+        "type": "Microsoft.Cdn/CdnWebApplicationFirewallPolicies",
+        "apiVersion": "2020-09-01",
+        "name": "GEN-UNIQUE",
+        "location": "Global",
+        "sku": {
+          "name": "Standard_Microsoft"
+        },
+        "properties": {
+          "policySettings": {
+            "enabledState": "Enabled",
+            "mode": "Detection",
+            "defaultRedirectUrl": "https://contoso.com/login"
+          },
+          "rateLimitRules": {
+            "rules": [
+              {
+                "name": "BaseLimit",
+                "priority": 100,
+                "enabledState": "Enabled",
+                "rateLimitThreshold": 1000,
+                "rateLimitDurationInMinutes": 1,
+                "matchConditions": [
+                  {
+                    "matchVariable": "RequestMethod",
+                    "operator": "Any",
+                    "negateCondition": false
+                  }
+                ],
+                "action": "Block"
+              },
+              {
+                "name": "WriteLimit",
+                "priority": 50,
+                "enabledState": "Enabled",
+                "rateLimitThreshold": 100,
+                "rateLimitDurationInMinutes": 1,
+                "matchConditions": [
+                  {
+                    "matchVariable": "RequestMethod",
+                    "operator": "Equal",
+                    "negateCondition": false,
+                    "matchValue": [
+                      "POST",
+                      "PUT",
+                      "PATCH"
+                    ]
+                  }
+                ],
+                "action": "Redirect"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "name": "GEN-UNIQUE",
+        "type": "Microsoft.Cdn/profiles",
+        "location": "[resourceGroup().location]",
+        "apiVersion": "2019-06-15-preview",
+        "sku": {
+          "name": "Standard_Microsoft"
+        },
+        "resources": [
+          {
+            "apiVersion": "2019-06-15-preview",
+            "dependsOn": [
+              "Microsoft.Cdn/profiles/GEN-UNIQUE",
+              "Microsoft.Cdn/CdnWebApplicationFirewallPolicies/GEN-UNIQUE"
+            ],
+            "location": "[resourceGroup().location]",
+            "name": "GEN-UNIQUE",
+            "type": "endpoints",
+            "properties": {
+              "originHostHeader": "www.microsoft.com",
+              "isHttpAllowed": true,
+              "isHttpsAllowed": true,
+              "queryStringCachingBehavior": "IgnoreQueryString",
+              "contentTypesToCompress": [
+                "text/plain",
+                "text/html",
+                "text/css",
+                "application/x-javascript",
+                "text/javascript"
+              ],
+              "isCompressionEnabled": true,
+              "origins": [
+                {
+                  "name": "origin1",
+                  "properties": {
+                    "hostName": "www.microsoft.com"
+                  }
+                }
+              ],
+              "webApplicationFirewallPolicyLink": {
+                "id": "Microsoft.Cdn/CdnWebApplicationFirewallPolicies/GEN-UNIQUE"
+              }
+            }
+          }
+        ]
+      }
+    ],
+    "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+  }
+}

@@ -2,12 +2,12 @@
   "structure": "filesystem",
   "error": null,
   "reference": "master",
-  "contentType": "yaml",
+  "contentType": "json",
   "source": "gitConnectorGoogleKcc",
   "paths": [
-    "/samples/resources/bigqueryjob/query-bigquery-job/bigquery_v1beta1_bigqueryjob.yaml"
+    "/samples/resources/bigqueryjob/query-bigquery-job/bigquery_v1beta1_bigquerydataset_multiple_yaml_1.yaml"
   ],
-  "timestamp": 1628765138886,
+  "timestamp": 1642973301814,
   "queryuser": null,
   "checksum": "99914b932bd37a50b983c5e7c90ae93b",
   "node": {
@@ -15,53 +15,26 @@
     "type": "kcc",
     "collection": "kcctemplate",
     "paths": [
-      "/samples/resources/bigqueryjob/query-bigquery-job/bigquery_v1beta1_bigqueryjob.yaml"
+      "/samples/resources/bigqueryjob/query-bigquery-job/bigquery_v1beta1_bigquerydataset_multiple_yaml_1.yaml"
     ],
     "snapshotId": "KCC_TEMPLATE_SNAPSHOT30",
     "status": "active",
-    "validate": true
+    "validate": true,
+    "resourceTypes": [
+      "bigquerydataset"
+    ]
   },
   "snapshotId": "KCC_TEMPLATE_SNAPSHOT30",
   "collection": "kcctemplate",
   "json": {
     "apiVersion": "bigquery.cnrm.cloud.google.com/v1beta1",
-    "kind": "BigQueryJob",
+    "kind": "BigQueryDataset",
     "metadata": {
-      "labels": {
-        "label-one": "value-one"
-      },
-      "name": "bigqueryjob-sample-query"
+      "name": "bigqueryjobdep2query"
     },
     "spec": {
-      "location": "US",
-      "jobTimeoutMs": "600000",
-      "query": {
-        "query": "SELECT state FROM [lookerdata:cdc.project_tycho_reports]",
-        "useLegacySql": true,
-        "defaultDataset": {
-          "datasetRef": {
-            "name": "bigqueryjobdep1query"
-          }
-        },
-        "destinationTable": {
-          "tableRef": {
-            "name": "bigqueryjobdepquery"
-          }
-        },
-        "allowLargeResults": true,
-        "flattenResults": true,
-        "useQueryCache": true,
-        "priority": "INTERACTIVE",
-        "writeDisposition": "WRITE_APPEND",
-        "schemaUpdateOptions": [
-          "ALLOW_FIELD_ADDITION",
-          "ALLOW_FIELD_RELAXATION"
-        ],
-        "scriptOptions": {
-          "statementTimeoutMs": "300000",
-          "keyResultStatement": "LAST"
-        }
-      }
+      "description": "Destination BigQueryDataset",
+      "friendlyName": "bigqueryjob-dep2-query"
     }
   }
 }

@@ -1,0 +1,345 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAzureQuickStart",
+  "paths": [
+    "/quickstarts/microsoft.compute/vmss-windows-autoscale/azuredeploy.json",
+    "/quickstarts/microsoft.compute/vmss-windows-autoscale/azuredeploy.parameters.json"
+  ],
+  "timestamp": 1642962905237,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/quickstarts/microsoft.compute/vmss-windows-autoscale/azuredeploy.json",
+      "/quickstarts/microsoft.compute/vmss-windows-autoscale/azuredeploy.parameters.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT1173",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "microsoft.network/publicipaddresses",
+      "microsoft.network/virtualnetworks",
+      "microsoft.network/loadbalancers",
+      "microsoft.compute/virtualmachinescalesets",
+      "microsoft.insights/autoscalesettings"
+    ]
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT1173",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.0.0.0",
+    "metadata": {
+      "_generator": {
+        "name": "bicep",
+        "version": "0.4.412.5873",
+        "templateHash": "7379231288636260028"
+      }
+    },
+    "parameters": {
+      "vmSku": {
+        "type": "string",
+        "defaultValue": "Standard_A1_v2",
+        "metadata": {
+          "description": "Size of VMs in the VM Scale Set."
+        },
+        "value": "Standard_A1"
+      },
+      "windowsOSVersion": {
+        "type": "string",
+        "defaultValue": "2019-Datacenter",
+        "allowedValues": [
+          "2019-Datacenter",
+          "2016-Datacenter",
+          "2012-R2-Datacenter",
+          "2012-Datacenter"
+        ],
+        "metadata": {
+          "description": "The Windows version for the VM. This will pick a fully patched image of this given Windows version."
+        },
+        "value": "2012-R2-Datacenter"
+      },
+      "vmssName": {
+        "type": "string",
+        "maxLength": 61,
+        "metadata": {
+          "description": "String used as a base for naming resources. Must be 3-61 characters in length and globally unique across Azure. A hash is prepended to this string for some resources, and resource-specific information is appended."
+        },
+        "value": "GEN-UNIQUE-32"
+      },
+      "instanceCount": {
+        "type": "int",
+        "maxValue": 100,
+        "minValue": 1,
+        "metadata": {
+          "description": "Number of VM instances (100 or less)."
+        },
+        "value": 5
+      },
+      "adminUsername": {
+        "type": "string",
+        "metadata": {
+          "description": "Admin username on all VMs."
+        },
+        "value": "windows"
+      },
+      "adminPassword": {
+        "type": "secureString",
+        "metadata": {
+          "description": "Admin password on all VMs."
+        },
+        "value": "GEN-PASSWORD"
+      },
+      "location": {
+        "type": "string",
+        "defaultValue": "[resourceGroup().location]",
+        "metadata": {
+          "description": "Location for all resources."
+        }
+      }
+    },
+    "functions": [],
+    "variables": {
+      "namingInfix": "[toLower(substring(format('{0}{1}', parameters('vmssName'), uniqueString(resourceGroup().id)), 0, 9))]",
+      "longNamingInfix": "[toLower(parameters('vmssName'))]",
+      "addressPrefix": "10.0.0.0/16",
+      "subnetPrefix": "10.0.0.0/24",
+      "virtualNetworkName": "[format('{0}vnet', variables('namingInfix'))]",
+      "publicIPAddressName": "[format('{0}pip', variables('namingInfix'))]",
+      "subnetName": "[format('{0}subnet', variables('namingInfix'))]",
+      "loadBalancerName": "[format('{0}lb', variables('namingInfix'))]",
+      "natPoolName": "[format('{0}natpool', variables('namingInfix'))]",
+      "bePoolName": "[format('{0}bepool', variables('namingInfix'))]",
+      "natStartPort": 50000,
+      "natEndPort": 50119,
+      "natBackendPort": 3389,
+      "nicName": "[format('{0}nic', variables('namingInfix'))]",
+      "ipConfigName": "[format('{0}ipconfig', variables('namingInfix'))]",
+      "osType": {
+        "publisher": "MicrosoftWindowsServer",
+        "offer": "WindowsServer",
+        "sku": "2012-R2-Datacenter",
+        "version": "latest"
+      },
+      "imageReference": {
+        "publisher": "MicrosoftWindowsServer",
+        "offer": "WindowsServer",
+        "sku": "2012-R2-Datacenter",
+        "version": "latest"
+      }
+    },
+    "resources": [
+      {
+        "type": "Microsoft.Network/virtualNetworks",
+        "apiVersion": "2021-02-01",
+        "name": "[format('{0}vnet', variables('namingInfix'))]",
+        "location": "[resourceGroup().location]",
+        "properties": {
+          "addressSpace": {
+            "addressPrefixes": [
+              "10.0.0.0/16"
+            ]
+          },
+          "subnets": [
+            {
+              "name": "[format('{0}subnet', variables('namingInfix'))]",
+              "properties": {
+                "addressPrefix": "10.0.0.0/24"
+              }
+            }
+          ]
+        }
+      },
+      {
+        "type": "Microsoft.Network/publicIPAddresses",
+        "apiVersion": "2021-02-01",
+        "name": "[format('{0}pip', variables('namingInfix'))]",
+        "location": "[resourceGroup().location]",
+        "properties": {
+          "publicIPAllocationMethod": "Dynamic",
+          "dnsSettings": {
+            "domainNameLabel": "[toLower(parameters('vmssName'))]"
+          }
+        }
+      },
+      {
+        "type": "Microsoft.Network/loadBalancers",
+        "apiVersion": "2021-02-01",
+        "name": "[format('{0}lb', variables('namingInfix'))]",
+        "location": "[resourceGroup().location]",
+        "properties": {
+          "frontendIPConfigurations": [
+            {
+              "name": "LoadBalancerFrontEnd",
+              "properties": {
+                "publicIPAddress": {
+                  "id": "Microsoft.Network/publicIPAddresses/[format('{0}pip', variables('namingInfix'))]"
+                }
+              }
+            }
+          ],
+          "backendAddressPools": [
+            {
+              "name": "[format('{0}bepool', variables('namingInfix'))]"
+            }
+          ],
+          "inboundNatPools": [
+            {
+              "name": "[format('{0}natpool', variables('namingInfix'))]",
+              "properties": {
+                "frontendIPConfiguration": {
+                  "id": "Microsoft.Network/loadBalancers/frontendIPConfigurations/[format('{0}lb', variables('namingInfix'))]/loadBalancerFrontEnd"
+                },
+                "protocol": "Tcp",
+                "frontendPortRangeStart": 50000,
+                "frontendPortRangeEnd": 50119,
+                "backendPort": 3389
+              }
+            }
+          ]
+        },
+        "dependsOn": [
+          "Microsoft.Network/publicIPAddresses/[format('{0}pip', variables('namingInfix'))]"
+        ]
+      },
+      {
+        "type": "Microsoft.Compute/virtualMachineScaleSets",
+        "apiVersion": "2021-03-01",
+        "name": "GEN-UNIQUE-32",
+        "location": "[resourceGroup().location]",
+        "sku": {
+          "name": "Standard_A1",
+          "tier": "Standard",
+          "capacity": 5
+        },
+        "properties": {
+          "overprovision": true,
+          "upgradePolicy": {
+            "mode": "Manual"
+          },
+          "virtualMachineProfile": {
+            "storageProfile": {
+              "osDisk": {
+                "createOption": "FromImage",
+                "caching": "ReadWrite"
+              },
+              "imageReference": {
+                "publisher": "MicrosoftWindowsServer",
+                "offer": "WindowsServer",
+                "sku": "2012-R2-Datacenter",
+                "version": "latest"
+              }
+            },
+            "osProfile": {
+              "computerNamePrefix": "[toLower(substring(format('{0}{1}', parameters('vmssName'), uniqueString(resourceGroup().id)), 0, 9))]",
+              "adminUsername": "windows",
+              "adminPassword": "GEN-PASSWORD"
+            },
+            "networkProfile": {
+              "networkInterfaceConfigurations": [
+                {
+                  "name": "[format('{0}nic', variables('namingInfix'))]",
+                  "properties": {
+                    "primary": true,
+                    "ipConfigurations": [
+                      {
+                        "name": "[format('{0}ipconfig', variables('namingInfix'))]",
+                        "properties": {
+                          "subnet": {
+                            "id": "Microsoft.Network/virtualNetworks/subnets/[format('{0}vnet', variables('namingInfix'))]/[format('{0}subnet', variables('namingInfix'))]"
+                          },
+                          "loadBalancerBackendAddressPools": [
+                            {
+                              "id": "Microsoft.Network/loadBalancers/backendAddressPools/[format('{0}lb', variables('namingInfix'))]/[format('{0}bepool', variables('namingInfix'))]"
+                            }
+                          ],
+                          "loadBalancerInboundNatPools": [
+                            {
+                              "id": "Microsoft.Network/loadBalancers/inboundNatPools/[format('{0}lb', variables('namingInfix'))]/[format('{0}natpool', variables('namingInfix'))]"
+                            }
+                          ]
+                        }
+                      }
+                    ]
+                  }
+                }
+              ]
+            }
+          }
+        },
+        "dependsOn": [
+          "Microsoft.Network/loadBalancers/[format('{0}lb', variables('namingInfix'))]",
+          "Microsoft.Network/virtualNetworks/[format('{0}vnet', variables('namingInfix'))]"
+        ]
+      },
+      {
+        "type": "Microsoft.Insights/autoscalesettings",
+        "apiVersion": "2015-04-01",
+        "name": "cpuautoscale",
+        "location": "[resourceGroup().location]",
+        "properties": {
+          "name": "cpuautoscale",
+          "targetResourceUri": "Microsoft.Compute/virtualMachineScaleSets/GEN-UNIQUE-32",
+          "enabled": true,
+          "profiles": [
+            {
+              "name": "Profile1",
+              "capacity": {
+                "minimum": "1",
+                "maximum": "10",
+                "default": "1"
+              },
+              "rules": [
+                {
+                  "metricTrigger": {
+                    "metricName": "Percentage CPU",
+                    "metricResourceUri": "Microsoft.Compute/virtualMachineScaleSets/GEN-UNIQUE-32",
+                    "timeGrain": "PT1M",
+                    "timeWindow": "PT5M",
+                    "timeAggregation": "Average",
+                    "operator": "GreaterThan",
+                    "threshold": 50,
+                    "statistic": "Average"
+                  },
+                  "scaleAction": {
+                    "direction": "Increase",
+                    "type": "ChangeCount",
+                    "value": "1",
+                    "cooldown": "PT5M"
+                  }
+                },
+                {
+                  "metricTrigger": {
+                    "metricName": "Percentage CPU",
+                    "metricResourceUri": "Microsoft.Compute/virtualMachineScaleSets/GEN-UNIQUE-32",
+                    "timeGrain": "PT1M",
+                    "timeWindow": "PT5M",
+                    "timeAggregation": "Average",
+                    "operator": "LessThan",
+                    "threshold": 30,
+                    "statistic": "Average"
+                  },
+                  "scaleAction": {
+                    "direction": "Decrease",
+                    "type": "ChangeCount",
+                    "value": "1",
+                    "cooldown": "PT5M"
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        "dependsOn": [
+          "Microsoft.Compute/virtualMachineScaleSets/GEN-UNIQUE-32"
+        ]
+      }
+    ],
+    "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+  }
+}

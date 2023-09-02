@@ -1,0 +1,72 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAzureQuickStart",
+  "paths": [
+    "/application-workloads/safekit/safekit-cluster-mirror/nestedtemplates/createvip.json"
+  ],
+  "timestamp": 1642962893619,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/application-workloads/safekit/safekit-cluster-mirror/nestedtemplates/createvip.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT387",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "microsoft.network/publicipaddresses"
+    ]
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT387",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "VIPDnsLabel": {
+        "type": "string",
+        "metadata": {
+          "description": "Public VIP dns label (optional. If set, an additionnal Standard SKU, unassociated public IP will be created)"
+        },
+        "defaultValue": ""
+      },
+      "location": {
+        "type": "string",
+        "metadata": {
+          "description": "location of the resources"
+        }
+      }
+    },
+    "resources": [
+      {
+        "condition": "[not(empty(parameters('VIPDnsLabel')))]",
+        "type": "Microsoft.Network/publicIPAddresses",
+        "apiVersion": "2020-11-01",
+        "name": "pipparameters('VIPDnsLabel')",
+        "location": "location",
+        "sku": {
+          "name": "Standard"
+        },
+        "properties": {
+          "publicIPAllocationMethod": "Static",
+          "dnsSettings": {
+            "domainNameLabel": "[toLower(parameters('VIPDnsLabel'))]"
+          }
+        }
+      }
+    ],
+    "outputs": {
+      "fqdn": {
+        "type": "string",
+        "value": "[if(empty(parameters('VIPDnsLabel')),'',reference(resourceId('Microsoft.Network/publicIPAddresses', concat('pip',parameters('VIPDnsLabel')))).dnsSettings.fqdn)]"
+      }
+    },
+    "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+  }
+}

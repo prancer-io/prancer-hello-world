@@ -1,0 +1,355 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAzureQuickStart",
+  "paths": [
+    "/quickstarts/microsoft.compute/vm-windows-baseline/azuredeploy.json",
+    "/quickstarts/microsoft.compute/vm-windows-baseline/azuredeploy.parameters.json"
+  ],
+  "timestamp": 1642962904698,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/quickstarts/microsoft.compute/vm-windows-baseline/azuredeploy.json",
+      "/quickstarts/microsoft.compute/vm-windows-baseline/azuredeploy.parameters.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT1133",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "microsoft.network/publicipaddresses",
+      "microsoft.network/virtualnetworks",
+      "microsoft.network/networkinterfaces",
+      "microsoft.compute/virtualmachines/extensions",
+      "microsoft.compute/virtualmachines",
+      "microsoft.network/networksecuritygroups",
+      "microsoft.guestconfiguration/guestconfigurationassignments"
+    ]
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT1133",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.0.0.0",
+    "metadata": {
+      "_generator": {
+        "name": "bicep",
+        "version": "0.4.1008.15138",
+        "templateHash": "11029009265237624607"
+      }
+    },
+    "parameters": {
+      "location": {
+        "type": "string",
+        "metadata": {
+          "description": "The Azure region where resources in the template should be deployed."
+        },
+        "value": "eastus"
+      },
+      "subnetName": {
+        "type": "string",
+        "defaultValue": "subnet",
+        "metadata": {
+          "description": "Name for the subnet in the virtual network where the network interface is connected."
+        }
+      },
+      "networkSecurityGroupName": {
+        "type": "string",
+        "defaultValue": "nsg",
+        "metadata": {
+          "description": "Name of the network security group that sets rules for the network environment."
+        }
+      },
+      "virtualNetworkName": {
+        "type": "string",
+        "defaultValue": "network",
+        "metadata": {
+          "description": "Name of the virtual network."
+        }
+      },
+      "addressPrefix": {
+        "type": "string",
+        "defaultValue": "10.2.0.0/16",
+        "metadata": {
+          "description": "Network subnet and prefix."
+        }
+      },
+      "publicIpName": {
+        "type": "string",
+        "defaultValue": "myPublicIP",
+        "metadata": {
+          "description": "Name for the Public IP used to access the Virtual Machine."
+        }
+      },
+      "publicIPAllocationMethod": {
+        "type": "string",
+        "defaultValue": "Static",
+        "allowedValues": [
+          "Dynamic",
+          "Static"
+        ],
+        "metadata": {
+          "description": "Allocation method for the Public IP used to access the Virtual Machine."
+        }
+      },
+      "vmName": {
+        "type": "string",
+        "metadata": {
+          "description": "Name of the virtual machine."
+        },
+        "value": "GEN-UNIQUE-15"
+      },
+      "OSVersion": {
+        "type": "string",
+        "defaultValue": "2022-datacenter-azure-edition-smalldisk",
+        "allowedValues": [
+          "2012-R2-Datacenter",
+          "2016-Datacenter",
+          "2019-Datacenter",
+          "2019-Datacenter-Core",
+          "2019-Datacenter-Core-smalldisk",
+          "2019-Datacenter-smalldisk",
+          "2022-datacenter",
+          "2022-datacenter-azure-edition-smalldisk",
+          "2022-datacenter-core",
+          "2022-datacenter-core-g2",
+          "2022-datacenter-core-smalldisk",
+          "2022-datacenter-core-smalldisk-g2",
+          "2022-datacenter-g2",
+          "2022-datacenter-smalldisk",
+          "2022-datacenter-smalldisk-g2"
+        ],
+        "metadata": {
+          "description": "The Windows version for the VM. This will pick a fully patched image of this given Windows version."
+        }
+      },
+      "osDiskStorageAccountType": {
+        "type": "string",
+        "defaultValue": "Standard_LRS",
+        "allowedValues": [
+          "Premium_LRS",
+          "StandardSSD_LRS",
+          "Standard_LRS",
+          "UltraSSD_LRS"
+        ],
+        "metadata": {
+          "description": "Specifies the storage account type for OS and data disk."
+        }
+      },
+      "vmSize": {
+        "type": "string",
+        "defaultValue": "Standard_D2s_v3",
+        "metadata": {
+          "description": "Size of the virtual machine."
+        }
+      },
+      "zone": {
+        "type": "string",
+        "defaultValue": "1",
+        "allowedValues": [
+          "1",
+          "2",
+          "3"
+        ],
+        "metadata": {
+          "description": "Availability zone number."
+        }
+      },
+      "adminUsername": {
+        "type": "string",
+        "metadata": {
+          "description": "Username for the Virtual Machine."
+        },
+        "value": "GEN-UNIQUE"
+      },
+      "adminPassword": {
+        "type": "secureString",
+        "minLength": 12,
+        "metadata": {
+          "description": "Password for the Virtual Machine."
+        },
+        "value": "GEN-PASSWORD"
+      },
+      "enableAcceleratedNetworking": {
+        "type": "bool",
+        "defaultValue": true,
+        "metadata": {
+          "description": "Enable accelerated networking."
+        }
+      }
+    },
+    "functions": [],
+    "resources": [
+      {
+        "type": "Microsoft.Network/networkSecurityGroups",
+        "apiVersion": "2021-05-01",
+        "name": "nsg",
+        "location": "eastus"
+      },
+      {
+        "type": "Microsoft.Network/virtualNetworks",
+        "apiVersion": "2021-05-01",
+        "name": "network",
+        "location": "eastus",
+        "properties": {
+          "addressSpace": {
+            "addressPrefixes": [
+              "10.2.0.0/16"
+            ]
+          },
+          "subnets": [
+            {
+              "name": "subnet",
+              "properties": {
+                "addressPrefix": "10.2.0.0/16"
+              }
+            }
+          ]
+        }
+      },
+      {
+        "type": "Microsoft.Network/publicIpAddresses",
+        "apiVersion": "2021-05-01",
+        "name": "myPublicIP",
+        "location": "eastus",
+        "sku": {
+          "name": "Standard"
+        },
+        "zones": [
+          "1"
+        ],
+        "properties": {
+          "publicIPAllocationMethod": "Static"
+        }
+      },
+      {
+        "type": "Microsoft.Network/networkInterfaces",
+        "apiVersion": "2021-05-01",
+        "name": "[format('{0}-nic', parameters('vmName'))]",
+        "location": "eastus",
+        "properties": {
+          "ipConfigurations": [
+            {
+              "name": "ipconfig1",
+              "properties": {
+                "subnet": {
+                  "id": "[reference(resourceId('Microsoft.Network/virtualNetworks', parameters('virtualNetworkName'))).subnets[0].id]"
+                },
+                "privateIPAllocationMethod": "Dynamic",
+                "publicIPAddress": {
+                  "id": "Microsoft.Network/publicIpAddresses/myPublicIP"
+                }
+              }
+            }
+          ],
+          "enableAcceleratedNetworking": true,
+          "networkSecurityGroup": {
+            "id": "Microsoft.Network/networkSecurityGroups/nsg"
+          }
+        },
+        "dependsOn": [
+          "Microsoft.Network/networkSecurityGroups/nsg",
+          "Microsoft.Network/publicIpAddresses/myPublicIP",
+          "Microsoft.Network/virtualNetworks/network"
+        ]
+      },
+      {
+        "type": "Microsoft.Compute/virtualMachines",
+        "apiVersion": "2021-07-01",
+        "name": "GEN-UNIQUE-15",
+        "location": "eastus",
+        "zones": [
+          "1"
+        ],
+        "properties": {
+          "hardwareProfile": {
+            "vmSize": "Standard_D2s_v3"
+          },
+          "storageProfile": {
+            "imageReference": {
+              "publisher": "MicrosoftWindowsServer",
+              "offer": "WindowsServer",
+              "sku": "2022-datacenter-azure-edition-smalldisk",
+              "version": "latest"
+            },
+            "osDisk": {
+              "createOption": "FromImage",
+              "managedDisk": {
+                "storageAccountType": "Standard_LRS"
+              }
+            },
+            "dataDisks": [
+              {
+                "diskSizeGB": 1023,
+                "lun": 0,
+                "createOption": "Empty"
+              }
+            ]
+          },
+          "networkProfile": {
+            "networkInterfaces": [
+              {
+                "id": "[resourceId('Microsoft.Network/networkInterfaces', format('{0}-nic', parameters('vmName')))]"
+              }
+            ]
+          },
+          "osProfile": {
+            "computerName": "GEN-UNIQUE-15",
+            "adminUsername": "GEN-UNIQUE",
+            "adminPassword": "GEN-PASSWORD",
+            "windowsConfiguration": {
+              "enableAutomaticUpdates": true
+            }
+          },
+          "diagnosticsProfile": {
+            "bootDiagnostics": {
+              "enabled": true
+            }
+          }
+        },
+        "dependsOn": [
+          "[resourceId('Microsoft.Network/networkInterfaces', format('{0}-nic', parameters('vmName')))]"
+        ]
+      },
+      {
+        "type": "Microsoft.Compute/virtualMachines/extensions",
+        "apiVersion": "2021-07-01",
+        "name": "[format('{0}/{1}', parameters('vmName'), 'AzurePolicyforWindows')]",
+        "location": "eastus",
+        "properties": {
+          "publisher": "Microsoft.GuestConfiguration",
+          "type": "ConfigurationforWindows",
+          "typeHandlerVersion": "1.0",
+          "autoUpgradeMinorVersion": true,
+          "enableAutomaticUpgrade": true
+        },
+        "dependsOn": [
+          "Microsoft.Compute/virtualMachines/GEN-UNIQUE-15"
+        ]
+      },
+      {
+        "type": "Microsoft.GuestConfiguration/guestConfigurationAssignments",
+        "apiVersion": "2020-06-25",
+        "scope": "[format('Microsoft.Compute/virtualMachines/{0}', parameters('vmName'))]",
+        "name": "AzureWindowsBaseline",
+        "location": "eastus",
+        "properties": {
+          "guestConfiguration": {
+            "assignmentType": "ApplyAndMonitor",
+            "name": "AzureWindowsBaseline",
+            "version": "1.*"
+          }
+        },
+        "dependsOn": [
+          "Microsoft.Compute/virtualMachines/GEN-UNIQUE-15"
+        ]
+      }
+    ],
+    "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+  }
+}

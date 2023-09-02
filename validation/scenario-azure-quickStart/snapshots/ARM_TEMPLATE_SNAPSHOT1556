@@ -1,0 +1,161 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAzureQuickStart",
+  "paths": [
+    "/quickstarts/microsoft.network/front-door-waf-http-params/azuredeploy.json",
+    "/quickstarts/microsoft.network/front-door-waf-http-params/azuredeploy.parameters.json"
+  ],
+  "timestamp": 1642962909111,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/quickstarts/microsoft.network/front-door-waf-http-params/azuredeploy.json",
+      "/quickstarts/microsoft.network/front-door-waf-http-params/azuredeploy.parameters.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT1556",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "microsoft.network/frontdoorwebapplicationfirewallpolicies"
+    ]
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT1556",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "wafPolicyName": {
+        "type": "string",
+        "metadata": {
+          "description": "The name of the WAF policy"
+        },
+        "value": "GEN-UNIQUE"
+      },
+      "wafMode": {
+        "type": "string",
+        "allowedValues": [
+          "Detection",
+          "Prevention"
+        ],
+        "defaultValue": "Detection",
+        "metadata": {
+          "description": "Describes if it is in detection mode or prevention mode at policy level."
+        }
+      },
+      "httpRule1": {
+        "type": "object",
+        "metadata": {
+          "description": "Defines contents of a web application rule 1"
+        },
+        "value": {
+          "name": "Rule1",
+          "priority": 1,
+          "enabledState": "Enabled",
+          "ruleType": "MatchRule",
+          "matchConditions": [
+            {
+              "matchVariable": "RequestHeader",
+              "operator": "Contains",
+              "selector": "User-Agent",
+              "matchValue": [
+                "Chrome/69.0.3497"
+              ]
+            }
+          ],
+          "action": "Block"
+        }
+      },
+      "httpRule2": {
+        "type": "object",
+        "metadata": {
+          "description": "Defines contents of a web application rule 2"
+        },
+        "value": {
+          "name": "Rule2",
+          "priority": 2,
+          "enabledState": "Enabled",
+          "ruleType": "MatchRule",
+          "matchConditions": [
+            {
+              "matchVariable": "QueryString",
+              "operator": "Contains",
+              "selector": "",
+              "matchValue": [
+                "IamAbot"
+              ]
+            }
+          ],
+          "action": "Block"
+        }
+      }
+    },
+    "variables": {
+      "wafLocation": "global"
+    },
+    "resources": [
+      {
+        "apiVersion": "2019-03-01",
+        "type": "Microsoft.Network/FrontDoorWebApplicationFirewallPolicies",
+        "name": "GEN-UNIQUE",
+        "location": "global",
+        "properties": {
+          "policySettings": {
+            "mode": "Detection",
+            "enabledState": "Enabled"
+          },
+          "customRules": {
+            "rules": [
+              {
+                "name": "Rule1",
+                "priority": 1,
+                "enabledState": "Enabled",
+                "ruleType": "MatchRule",
+                "copy": [
+                  {
+                    "name": "matchConditions",
+                    "count": 39,
+                    "input": {
+                      "matchVariable": "httpRule1).matchConditions[copyIndex(matchConditions",
+                      "operator": "httpRule1).matchConditions[copyIndex(matchConditions",
+                      "selector": "httpRule1).matchConditions[copyIndex(matchConditions",
+                      "matchValue": "httpRule1).matchConditions[copyIndex(matchConditions"
+                    }
+                  }
+                ],
+                "action": "Block"
+              },
+              {
+                "name": "Rule2",
+                "priority": 2,
+                "enabledState": "Enabled",
+                "ruleType": "MatchRule",
+                "copy": [
+                  {
+                    "name": "matchConditions",
+                    "count": 39,
+                    "input": {
+                      "matchVariable": "httpRule2).matchConditions[copyIndex(matchConditions",
+                      "operator": "httpRule2).matchConditions[copyIndex(matchConditions",
+                      "selector": "httpRule2).matchConditions[copyIndex(matchConditions",
+                      "matchValue": "httpRule2).matchConditions[copyIndex(matchConditions"
+                    }
+                  }
+                ],
+                "action": "Block"
+              }
+            ]
+          }
+        }
+      }
+    ],
+    "outputs": {},
+    "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+  }
+}

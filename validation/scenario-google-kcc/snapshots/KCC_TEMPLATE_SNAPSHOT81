@@ -2,12 +2,12 @@
   "structure": "filesystem",
   "error": null,
   "reference": "master",
-  "contentType": "yaml",
+  "contentType": "json",
   "source": "gitConnectorGoogleKcc",
   "paths": [
-    "/samples/resources/computebackendservice/external-load-balancing-backend-service/compute_v1beta1_computebackendservice.yaml"
+    "/samples/resources/cloudbuildtrigger/build-trigger-with-template-file/sourcerepo_v1beta1_sourcereporepository.yaml"
   ],
-  "timestamp": 1628765139953,
+  "timestamp": 1642973302150,
   "queryuser": null,
   "checksum": "99914b932bd37a50b983c5e7c90ae93b",
   "node": {
@@ -15,60 +15,22 @@
     "type": "kcc",
     "collection": "kcctemplate",
     "paths": [
-      "/samples/resources/computebackendservice/external-load-balancing-backend-service/compute_v1beta1_computebackendservice.yaml"
+      "/samples/resources/cloudbuildtrigger/build-trigger-with-template-file/sourcerepo_v1beta1_sourcereporepository.yaml"
     ],
     "snapshotId": "KCC_TEMPLATE_SNAPSHOT81",
     "status": "active",
-    "validate": true
+    "validate": true,
+    "resourceTypes": [
+      "sourcereporepository"
+    ]
   },
   "snapshotId": "KCC_TEMPLATE_SNAPSHOT81",
   "collection": "kcctemplate",
   "json": {
-    "apiVersion": "compute.cnrm.cloud.google.com/v1beta1",
-    "kind": "ComputeBackendService",
+    "apiVersion": "sourcerepo.cnrm.cloud.google.com/v1beta1",
+    "kind": "SourceRepoRepository",
     "metadata": {
-      "name": "computebackendservice-sample-externalloadbalancing"
-    },
-    "spec": {
-      "description": "External backend service with cookie-based session affinity.",
-      "portName": "cookie-cloud",
-      "timeoutSec": 30,
-      "healthChecks": [
-        {
-          "healthCheckRef": {
-            "name": "computebackendservice-dep-externalloadbalancing"
-          }
-        }
-      ],
-      "loadBalancingScheme": "EXTERNAL",
-      "location": "global",
-      "protocol": "HTTPS",
-      "affinityCookieTtlSec": 360,
-      "connectionDrainingTimeoutSec": 60,
-      "securityPolicyRef": {
-        "name": "computebackendservice-dep-externalloadbalancing"
-      },
-      "sessionAffinity": "GENERATED_COOKIE",
-      "customRequestHeaders": [
-        "Trailer: custom-trailer"
-      ],
-      "logConfig": {
-        "enable": true,
-        "sampleRate": 0.5
-      },
-      "backend": [
-        {
-          "balancingMode": "RATE",
-          "capacityScaler": 1,
-          "description": "A network endpoint group serving this backend with all its available capacity, as calculated by number of simultaneous connections.",
-          "maxRatePerEndpoint": 10,
-          "group": {
-            "networkEndpointGroupRef": {
-              "name": "computebackendservice-dep-externalloadbalancing"
-            }
-          }
-        }
-      ]
+      "name": "cloudbuildtrigger-dep-withtemplatefile"
     }
   }
 }

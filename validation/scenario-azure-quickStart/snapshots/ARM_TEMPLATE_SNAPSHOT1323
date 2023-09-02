@@ -1,0 +1,146 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAzureQuickStart",
+  "paths": [
+    "/quickstarts/microsoft.eventhub/eventhub-create-namespace-geo-recoveryconfiguration/azuredeploy.json",
+    "/quickstarts/microsoft.eventhub/eventhub-create-namespace-geo-recoveryconfiguration/azuredeploy.parameters.us.json"
+  ],
+  "timestamp": 1642962906829,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/quickstarts/microsoft.eventhub/eventhub-create-namespace-geo-recoveryconfiguration/azuredeploy.json",
+      "/quickstarts/microsoft.eventhub/eventhub-create-namespace-geo-recoveryconfiguration/azuredeploy.parameters.us.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT1323",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "microsoft.eventhub/namespaces"
+    ]
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT1323",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "eventHubNamespaceNamePrimary": {
+        "type": "string",
+        "metadata": {
+          "description": "Name of Event Hub namespace"
+        },
+        "value": "GEN-UNIQUE-10"
+      },
+      "eventHubNamespaceNameSecondary": {
+        "type": "string",
+        "metadata": {
+          "description": "Name of Event Hub namespace"
+        },
+        "value": "GEN-UNIQUE-11"
+      },
+      "aliasName": {
+        "type": "string",
+        "metadata": {
+          "description": "Name of Geo-Recovery Configuration Alias"
+        },
+        "value": "GEN-UNIQUE"
+      },
+      "eventhubSku": {
+        "type": "string",
+        "allowedValues": [
+          "Basic",
+          "Standard"
+        ],
+        "defaultValue": "Standard",
+        "metadata": {
+          "description": "The messaging tier for Event Hub namespace"
+        },
+        "value": "Standard"
+      },
+      "skuCapacity": {
+        "type": "int",
+        "allowedValues": [
+          1,
+          2,
+          4
+        ],
+        "defaultValue": 1,
+        "metadata": {
+          "description": "MessagingUnits for namespace"
+        },
+        "value": 1
+      },
+      "locationPrimaryNamepsace": {
+        "type": "string",
+        "metadata": {
+          "description": "Location of Primary namespace"
+        },
+        "value": "usgoviowa"
+      },
+      "locationSecondaryNamepsace": {
+        "type": "string",
+        "metadata": {
+          "description": "Location of Secondary namespace"
+        },
+        "value": "usgovvirginia"
+      }
+    },
+    "resources": [
+      {
+        "apiVersion": "2018-01-01-preview",
+        "name": "GEN-UNIQUE-11",
+        "type": "Microsoft.EventHub/namespaces",
+        "location": "usgovvirginia",
+        "sku": {
+          "name": "Standard",
+          "tier": "Standard",
+          "capacity": 1
+        },
+        "tags": {
+          "tag1": "value1",
+          "tag2": "value2"
+        }
+      },
+      {
+        "apiVersion": "2018-01-01-preview",
+        "name": "GEN-UNIQUE-10",
+        "type": "Microsoft.EventHub/namespaces",
+        "dependsOn": [
+          "Microsoft.EventHub/namespaces//GEN-UNIQUE-11"
+        ],
+        "location": "usgoviowa",
+        "sku": {
+          "name": "Standard",
+          "tier": "Standard",
+          "capacity": 1
+        },
+        "tags": {
+          "tag1": "value1",
+          "tag2": "value2"
+        },
+        "resources": [
+          {
+            "apiVersion": "2017-04-01",
+            "name": "GEN-UNIQUE",
+            "type": "disasterRecoveryConfigs",
+            "dependsOn": [
+              "Microsoft.EventHub/namespaces//GEN-UNIQUE-10"
+            ],
+            "properties": {
+              "partnerNamespace": "Microsoft.EventHub/namespaces/GEN-UNIQUE-11"
+            }
+          }
+        ]
+      }
+    ],
+    "outputs": {},
+    "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+  }
+}

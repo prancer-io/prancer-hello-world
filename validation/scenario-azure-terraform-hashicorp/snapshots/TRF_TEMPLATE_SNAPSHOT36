@@ -1,0 +1,148 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "main",
+  "contentType": "json",
+  "source": "gitConnectorAzureTerraHashicorp",
+  "paths": [
+    "/examples/cosmos-db/customer-managed-key/outputs.tf",
+    "/examples/cosmos-db/customer-managed-key/variables.tf",
+    "/examples/cosmos-db/customer-managed-key/main.tf"
+  ],
+  "timestamp": 1642943279681,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "TRF_TEMPLATE_SNAPSHOT",
+    "type": "terraform",
+    "collection": "terraformtemplate",
+    "paths": [
+      "/examples/cosmos-db/customer-managed-key/outputs.tf",
+      "/examples/cosmos-db/customer-managed-key/variables.tf",
+      "/examples/cosmos-db/customer-managed-key/main.tf"
+    ],
+    "snapshotId": "TRF_TEMPLATE_SNAPSHOT36",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "azurerm_key_vault",
+      "azurerm_key_vault_key",
+      "azurerm_cosmosdb_account",
+      "azurerm_resource_group"
+    ]
+  },
+  "snapshotId": "TRF_TEMPLATE_SNAPSHOT36",
+  "collection": "terraformtemplate",
+  "json": {
+    "provider": [
+      {
+        "azurerm": {
+          "features": [
+            {}
+          ]
+        }
+      }
+    ],
+    "data": {
+      "azuread_service_principal": {
+        "cosmosdb": {
+          "display_name": "Azure Cosmos DB",
+          "compiletime_identity": "data.azuread_service_principal.cosmosdb"
+        }
+      },
+      "azurerm_client_config": {
+        "current": {
+          "compiletime_identity": "data.azurerm_client_config.current"
+        }
+      }
+    },
+    "resources": [
+      {
+        "type": "azurerm_resource_group",
+        "name": "example",
+        "properties": {
+          "name": "${var.prefix}-resources",
+          "location": "${var.location}",
+          "compiletime_identity": "azurerm_resource_group.example"
+        }
+      },
+      {
+        "type": "azurerm_key_vault",
+        "name": "example",
+        "properties": {
+          "name": "${var.prefix}kv",
+          "location": "${azurerm_resource_group.example.location}",
+          "resource_group_name": "${azurerm_resource_group.example.name}",
+          "tenant_id": "${data.azurerm_client_config.current.tenant_id}",
+          "sku_name": "premium",
+          "purge_protection_enabled": true,
+          "access_policy": [
+            {
+              "tenant_id": "${data.azurerm_client_config.current.tenant_id}",
+              "object_id": "${data.azurerm_client_config.current.object_id}",
+              "key_permissions": [
+                "list",
+                "create",
+                "delete",
+                "get",
+                "update"
+              ]
+            },
+            {
+              "tenant_id": "${data.azurerm_client_config.current.tenant_id}",
+              "object_id": "${data.azuread_service_principal.cosmosdb.id}",
+              "key_permissions": [
+                "get",
+                "unwrapKey",
+                "wrapKey"
+              ]
+            }
+          ],
+          "compiletime_identity": "azurerm_key_vault.example"
+        }
+      },
+      {
+        "type": "azurerm_key_vault_key",
+        "name": "example",
+        "properties": {
+          "name": "${var.prefix}key",
+          "key_vault_id": "${azurerm_key_vault.example.id}",
+          "key_type": "RSA",
+          "key_size": 3072,
+          "key_opts": [
+            "decrypt",
+            "encrypt",
+            "wrapKey",
+            "unwrapKey"
+          ],
+          "compiletime_identity": "azurerm_key_vault_key.example"
+        }
+      },
+      {
+        "type": "azurerm_cosmosdb_account",
+        "name": "example",
+        "properties": {
+          "name": "${var.prefix}-cosmosdb",
+          "location": "${azurerm_resource_group.example.location}",
+          "resource_group_name": "${azurerm_resource_group.example.name}",
+          "offer_type": "Standard",
+          "kind": "MongoDB",
+          "key_vault_key_id": "${azurerm_key_vault_key.example.id}",
+          "consistency_policy": [
+            {
+              "consistency_level": "Strong"
+            }
+          ],
+          "geo_location": [
+            {
+              "prefix": "${var.prefix}-customid",
+              "location": "${azurerm_resource_group.example.location}",
+              "failover_priority": 0
+            }
+          ],
+          "compiletime_identity": "azurerm_cosmosdb_account.example"
+        }
+      }
+    ]
+  }
+}

@@ -1,0 +1,151 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAzureQuickStart",
+  "paths": [
+    "/quickstarts/microsoft.containerinstance/aci-linuxcontainer-secure-environmentvariables/azuredeploy.json",
+    "/quickstarts/microsoft.containerinstance/aci-linuxcontainer-secure-environmentvariables/azuredeploy.parameters.json"
+  ],
+  "timestamp": 1642962905333,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/quickstarts/microsoft.containerinstance/aci-linuxcontainer-secure-environmentvariables/azuredeploy.json",
+      "/quickstarts/microsoft.containerinstance/aci-linuxcontainer-secure-environmentvariables/azuredeploy.parameters.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT1183",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "microsoft.containerinstance/containergroups"
+    ]
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT1183",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "containergroupname": {
+        "type": "string",
+        "metadata": {
+          "description": "Name for the container group"
+        },
+        "value": "GEN-UNIQUE"
+      },
+      "containername": {
+        "type": "string",
+        "metadata": {
+          "description": "Name for the container"
+        },
+        "value": "GEN-UNIQUE"
+      },
+      "imagename": {
+        "type": "string",
+        "metadata": {
+          "description": "Name for the image"
+        },
+        "defaultValue": "nginx"
+      },
+      "port": {
+        "type": "string",
+        "metadata": {
+          "description": "Port to open on the container and the public IP address."
+        },
+        "defaultValue": "443"
+      },
+      "cpuCores": {
+        "type": "string",
+        "metadata": {
+          "description": "The number of CPU cores to allocate to the container."
+        },
+        "defaultValue": "1.0"
+      },
+      "memoryInGB": {
+        "type": "string",
+        "metadata": {
+          "description": "The amount of memory to allocate to the container in gigabytes."
+        },
+        "defaultValue": "1.5"
+      },
+      "environmentVariableName": {
+        "type": "string",
+        "metadata": {
+          "description": "The environment variable name."
+        },
+        "value": "GEN-UNIQUE"
+      },
+      "environmentVariableValue": {
+        "type": "string",
+        "metadata": {
+          "description": "The environment variable value."
+        },
+        "value": "GEN-UNIQUE"
+      },
+      "location": {
+        "type": "string",
+        "defaultValue": "[resourceGroup().location]",
+        "metadata": {
+          "description": "The location in which the resources will be created."
+        }
+      }
+    },
+    "resources": [
+      {
+        "name": "GEN-UNIQUE",
+        "type": "Microsoft.ContainerInstance/containerGroups",
+        "apiVersion": "2019-12-01",
+        "location": "[resourceGroup().location]",
+        "properties": {
+          "containers": [
+            {
+              "name": "GEN-UNIQUE",
+              "properties": {
+                "image": "nginx",
+                "ports": [
+                  {
+                    "port": "443"
+                  }
+                ],
+                "resources": {
+                  "requests": {
+                    "cpu": "1.0",
+                    "memoryInGB": "1.5"
+                  }
+                },
+                "environmentVariables": [
+                  {
+                    "name": "GEN-UNIQUE",
+                    "secureValue": "GEN-UNIQUE"
+                  }
+                ]
+              }
+            }
+          ],
+          "osType": "Linux",
+          "ipAddress": {
+            "type": "Public",
+            "ports": [
+              {
+                "protocol": "Tcp",
+                "port": "443"
+              }
+            ]
+          }
+        }
+      }
+    ],
+    "outputs": {
+      "containerIPv4Address": {
+        "type": "string",
+        "value": "[reference(resourceId('Microsoft.ContainerInstance/containerGroups/', parameters('containergroupname'))).ipAddress.ip]"
+      }
+    },
+    "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+  }
+}

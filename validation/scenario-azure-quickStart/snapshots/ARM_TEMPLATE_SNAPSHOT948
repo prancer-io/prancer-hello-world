@@ -1,0 +1,66 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAzureQuickStart",
+  "paths": [
+    "/quickstarts/microsoft.authorization/rbac-builtinrole-resourcegroup/azuredeploy.json",
+    "/quickstarts/microsoft.authorization/rbac-builtinrole-resourcegroup/azuredeploy.parameters.json"
+  ],
+  "timestamp": 1642962903031,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/quickstarts/microsoft.authorization/rbac-builtinrole-resourcegroup/azuredeploy.json",
+      "/quickstarts/microsoft.authorization/rbac-builtinrole-resourcegroup/azuredeploy.parameters.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT948",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "microsoft.authorization/roleassignments"
+    ]
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT948",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "roleDefinitionID": {
+        "type": "string",
+        "metadata": {
+          "description": "Specifies the role definition ID used in the role assignment."
+        },
+        "value": "acdd72a7-3385-48ef-bd42-f606fba81ae7"
+      },
+      "principalId": {
+        "type": "string",
+        "metadata": {
+          "description": "Specifies the principal ID assigned to the role."
+        },
+        "value": "GEN-AZUREAD-OBJECTID"
+      }
+    },
+    "variables": {
+      "roleAssignmentName": "[guid(parameters('principalId'), parameters('roleDefinitionID'), resourceGroup().id)]"
+    },
+    "resources": [
+      {
+        "type": "Microsoft.Authorization/roleAssignments",
+        "apiVersion": "2020-04-01-preview",
+        "name": "[guid(parameters('principalId'), parameters('roleDefinitionID'), resourceGroup().id)]",
+        "properties": {
+          "roleDefinitionId": "Microsoft.Authorization/roleDefinitions/roleDefinitionId",
+          "principalId": "GEN-AZUREAD-OBJECTID",
+          "scope": "[resourceGroup().id]"
+        }
+      }
+    ],
+    "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+  }
+}

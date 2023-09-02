@@ -2,12 +2,12 @@
   "structure": "filesystem",
   "error": null,
   "reference": "master",
-  "contentType": "yaml",
+  "contentType": "json",
   "source": "gitConnectorGoogleKcc",
   "paths": [
-    "/samples/resources/bigqueryjob/copy-bigquery-job/bigquery_v1beta1_bigqueryjob.yaml"
+    "/samples/resources/bigqueryjob/copy-bigquery-job/bigquery_v1beta1_bigquerydataset_multiple_yaml_2.yaml"
   ],
-  "timestamp": 1628765138513,
+  "timestamp": 1642973301702,
   "queryuser": null,
   "checksum": "99914b932bd37a50b983c5e7c90ae93b",
   "node": {
@@ -15,51 +15,26 @@
     "type": "kcc",
     "collection": "kcctemplate",
     "paths": [
-      "/samples/resources/bigqueryjob/copy-bigquery-job/bigquery_v1beta1_bigqueryjob.yaml"
+      "/samples/resources/bigqueryjob/copy-bigquery-job/bigquery_v1beta1_bigquerydataset_multiple_yaml_2.yaml"
     ],
     "snapshotId": "KCC_TEMPLATE_SNAPSHOT14",
     "status": "active",
-    "validate": true
+    "validate": true,
+    "resourceTypes": [
+      "bigquerydataset"
+    ]
   },
   "snapshotId": "KCC_TEMPLATE_SNAPSHOT14",
   "collection": "kcctemplate",
   "json": {
     "apiVersion": "bigquery.cnrm.cloud.google.com/v1beta1",
-    "kind": "BigQueryJob",
+    "kind": "BigQueryDataset",
     "metadata": {
-      "labels": {
-        "label-one": "value-one"
-      },
-      "name": "bigqueryjob-sample-copy"
+      "name": "bigqueryjobdep3copy"
     },
     "spec": {
-      "location": "US",
-      "jobTimeoutMs": "600000",
-      "copy": {
-        "sourceTables": [
-          {
-            "tableRef": {
-              "name": "bigqueryjobdep1copy"
-            }
-          },
-          {
-            "tableRef": {
-              "name": "bigqueryjobdep2copy"
-            }
-          }
-        ],
-        "destinationTable": {
-          "tableRef": {
-            "name": "bigqueryjobdep3copy"
-          }
-        },
-        "destinationEncryptionConfiguration": {
-          "kmsKeyRef": {
-            "name": "bigqueryjob-dep-copy"
-          }
-        },
-        "writeDisposition": "WRITE_APPEND"
-      }
+      "description": "Destination BigQueryDataset",
+      "friendlyName": "bigqueryjob-dep3-copy"
     }
   }
 }

@@ -1,0 +1,188 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAzureQuickStart",
+  "paths": [
+    "/application-workloads/sql/sql-server-2014-alwayson-existing-vnet-and-ad/nested/deploy-sql-alwayson.json"
+  ],
+  "timestamp": 1642962896423,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/application-workloads/sql/sql-server-2014-alwayson-existing-vnet-and-ad/nested/deploy-sql-alwayson.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT533",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "microsoft.compute/virtualmachines/extensions"
+    ]
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT533",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "sqlNamePrefix": {
+        "type": "string"
+      },
+      "domainName": {
+        "type": "string"
+      },
+      "namePrefix": {
+        "type": "string"
+      },
+      "sharePath": {
+        "type": "string"
+      },
+      "sqlWitnessVMName": {
+        "type": "string"
+      },
+      "sqlLBName": {
+        "type": "string"
+      },
+      "sqlLBIPAddress": {
+        "type": "string"
+      },
+      "dnsServerName": {
+        "type": "string"
+      },
+      "sqlServerServiceAccountUserName": {
+        "type": "string"
+      },
+      "sqlServerServiceAccountPassword": {
+        "type": "securestring"
+      },
+      "adminUsername": {
+        "type": "string"
+      },
+      "adminPassword": {
+        "type": "securestring"
+      },
+      "sqlAlwaysOnEndpointName": {
+        "type": "string"
+      },
+      "sqlAlwaysOnAvailabilityGroupName1": {
+        "type": "string"
+      },
+      "sqlAlwaysOnAvailabilityGroupListenerName1": {
+        "type": "string"
+      },
+      "_artifactsLocation": {
+        "type": "string"
+      },
+      "_artifactsLocationSasToken": {
+        "type": "securestring"
+      },
+      "location": {
+        "type": "string",
+        "metadata": {
+          "description": "Location for all resources."
+        }
+      }
+    },
+    "variables": {
+      "sqlAOPrepareModulesURL": "[uri(parameters('_artifactsLocation'),concat('dsc/prepare-sql-alwayson-server.ps1.zip', parameters('_artifactsLocationSasToken')))]",
+      "sqlAOPrepareConfigurationFunction": "PrepareAlwaysOnSqlServer.ps1\\PrepareAlwaysOnSqlServer",
+      "createClusterModulesURL": "[uri(parameters('_artifactsLocation'),concat('dsc/create-failover-cluster.ps1.zip', parameters('_artifactsLocationSasToken')))]",
+      "createClusterConfigurationFunction": "CreateFailoverCluster.ps1\\CreateFailoverCluster",
+      "clusterName": "namePrefix-c"
+    },
+    "resources": [
+      {
+        "type": "Microsoft.Compute/virtualMachines/extensions",
+        "name": "sqlNamePrefix0/sqlAOPrepare",
+        "apiVersion": "2020-12-01",
+        "location": "location",
+        "properties": {
+          "publisher": "Microsoft.Powershell",
+          "type": "DSC",
+          "typeHandlerVersion": "2.17",
+          "autoUpgradeMinorVersion": true,
+          "settings": {
+            "wmfVersion": "5.0",
+            "modulesUrl": "[uri(parameters('_artifactsLocation'),concat('dsc/prepare-sql-alwayson-server.ps1.zip', parameters('_artifactsLocationSasToken')))]",
+            "configurationFunction": "PrepareAlwaysOnSqlServer.ps1\\PrepareAlwaysOnSqlServer",
+            "properties": {
+              "domainName": "domainName",
+              "sqlAlwaysOnEndpointName": "sqlAlwaysOnEndpointName",
+              "adminCreds": {
+                "userName": "adminUsername",
+                "password": "PrivateSettingsRef:adminPassword"
+              },
+              "sqlServiceCreds": {
+                "userName": "sqlServerServiceAccountUserName",
+                "password": "PrivateSettingsRef:sqlServerServiceAccountPassword"
+              }
+            }
+          },
+          "protectedSettings": {
+            "items": {
+              "adminPassword": "adminPassword",
+              "sqlServerServiceAccountPassword": "sqlServerServiceAccountPassword"
+            }
+          }
+        }
+      },
+      {
+        "type": "Microsoft.Compute/virtualMachines/extensions",
+        "name": "sqlNamePrefix1/CreateCluster",
+        "apiVersion": "2020-12-01",
+        "location": "location",
+        "dependsOn": [
+          "Microsoft.Compute/virtualMachines/extensions/sqlNamePrefix0/sqlAOPrepare"
+        ],
+        "properties": {
+          "publisher": "Microsoft.Powershell",
+          "type": "DSC",
+          "typeHandlerVersion": "2.17",
+          "autoUpgradeMinorVersion": true,
+          "settings": {
+            "wmfVersion": "5.0",
+            "modulesUrl": "[uri(parameters('_artifactsLocation'),concat('dsc/create-failover-cluster.ps1.zip', parameters('_artifactsLocationSasToken')))]",
+            "configurationFunction": "CreateFailoverCluster.ps1\\CreateFailoverCluster",
+            "properties": {
+              "domainName": "domainName",
+              "clusterName": "namePrefix-c",
+              "sharePath": "\\\\sqlWitnessVMName\\sharePath",
+              "nodes": [
+                "sqlNamePrefix0",
+                "sqlNamePrefix1"
+              ],
+              "sqlAlwaysOnEndpointName": "sqlAlwaysOnEndpointName",
+              "sqlAlwaysOnAvailabilityGroupName": "sqlAlwaysOnAvailabilityGroupName1",
+              "sqlAlwaysOnAvailabilityGroupListenerName": "sqlAlwaysOnAvailabilityGroupListenerName1",
+              "sqlAlwaysOnAvailabilityGroupListenerPort": 1433,
+              "lbName": "sqlLBName",
+              "lbAddress": "sqlLBIPAddress",
+              "primaryReplica": "sqlNamePrefix1",
+              "secondaryReplica": "sqlNamePrefix0",
+              "dnsServerName": "dnsServerName",
+              "adminCreds": {
+                "userName": "adminUsername",
+                "password": "PrivateSettingsRef:adminPassword"
+              },
+              "sqlServiceCreds": {
+                "userName": "sqlServerServiceAccountUserName",
+                "password": "PrivateSettingsRef:sqlServerServiceAccountPassword"
+              }
+            }
+          },
+          "protectedSettings": {
+            "items": {
+              "adminPassword": "adminPassword",
+              "sqlServerServiceAccountPassword": "sqlServerServiceAccountPassword"
+            }
+          }
+        }
+      }
+    ],
+    "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+  }
+}

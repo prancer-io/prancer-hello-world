@@ -1,0 +1,129 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "main",
+  "contentType": "json",
+  "source": "gitConnectorAzureTerraHashicorp",
+  "paths": [
+    "/examples/kubernetes/spot-node-pool/outputs.tf",
+    "/examples/kubernetes/spot-node-pool/variables.tf",
+    "/examples/kubernetes/spot-node-pool/main.tf"
+  ],
+  "timestamp": 1642943279777,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "TRF_TEMPLATE_SNAPSHOT",
+    "type": "terraform",
+    "collection": "terraformtemplate",
+    "paths": [
+      "/examples/kubernetes/spot-node-pool/outputs.tf",
+      "/examples/kubernetes/spot-node-pool/variables.tf",
+      "/examples/kubernetes/spot-node-pool/main.tf"
+    ],
+    "snapshotId": "TRF_TEMPLATE_SNAPSHOT63",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "azurerm_kubernetes_cluster",
+      "azurerm_resource_group",
+      "azurerm_kubernetes_cluster_node_pool"
+    ]
+  },
+  "snapshotId": "TRF_TEMPLATE_SNAPSHOT63",
+  "collection": "terraformtemplate",
+  "json": {
+    "provider": [
+      {
+        "azurerm": {
+          "features": [
+            {}
+          ]
+        }
+      }
+    ],
+    "resources": [
+      {
+        "type": "azurerm_resource_group",
+        "name": "example",
+        "properties": {
+          "name": "${var.prefix}-k8s-resources",
+          "location": "${var.location}",
+          "compiletime_identity": "azurerm_resource_group.example"
+        }
+      },
+      {
+        "type": "azurerm_kubernetes_cluster",
+        "name": "example",
+        "properties": {
+          "name": "${var.prefix}-k8s",
+          "location": "${azurerm_resource_group.example.location}",
+          "resource_group_name": "${azurerm_resource_group.example.name}",
+          "dns_prefix": "${var.prefix}-k8s",
+          "default_node_pool": [
+            {
+              "name": "default",
+              "node_count": 1,
+              "vm_size": "Standard_DS2_v2"
+            }
+          ],
+          "addon_profile": [
+            {
+              "aci_connector_linux": [
+                {
+                  "enabled": false
+                }
+              ],
+              "azure_policy": [
+                {
+                  "enabled": false
+                }
+              ],
+              "http_application_routing": [
+                {
+                  "enabled": false
+                }
+              ],
+              "kube_dashboard": [
+                {
+                  "enabled": true
+                }
+              ],
+              "oms_agent": [
+                {
+                  "enabled": false
+                }
+              ]
+            }
+          ],
+          "identity": [
+            {
+              "type": "SystemAssigned"
+            }
+          ],
+          "compiletime_identity": "azurerm_kubernetes_cluster.example"
+        }
+      },
+      {
+        "type": "azurerm_kubernetes_cluster_node_pool",
+        "name": "example",
+        "properties": {
+          "name": "spot",
+          "kubernetes_cluster_id": "${azurerm_kubernetes_cluster.example.id}",
+          "vm_size": "Standard_DS2_v2",
+          "node_count": 1,
+          "priority": "Spot",
+          "eviction_policy": "Delete",
+          "spot_max_price": 0.5,
+          "node_labels": {
+            "kubernetes.azure.com/scalesetpriority": "spot"
+          },
+          "node_taints": [
+            "kubernetes.azure.com/scalesetpriority=spot:NoSchedule"
+          ],
+          "compiletime_identity": "azurerm_kubernetes_cluster_node_pool.example"
+        }
+      }
+    ]
+  }
+}

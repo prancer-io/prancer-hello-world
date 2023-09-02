@@ -1,0 +1,236 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAzureQuickStart",
+  "paths": [
+    "/application-workloads/jenkins/jenkins-cicd-container/nested/grafana.json"
+  ],
+  "timestamp": 1642962890328,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/application-workloads/jenkins/jenkins-cicd-container/nested/grafana.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT193",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "microsoft.network/publicipaddresses",
+      "microsoft.network/networkinterfaces",
+      "microsoft.compute/virtualmachines",
+      "microsoft.network/networksecuritygroups"
+    ]
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT193",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "grafanaVMName": {
+        "type": "string"
+      },
+      "grafanaVMSize": {
+        "type": "string"
+      },
+      "spClientId": {
+        "type": "string"
+      },
+      "spClientSecret": {
+        "type": "securestring"
+      },
+      "linuxAdminUsername": {
+        "type": "string"
+      },
+      "linuxAdminPassword": {
+        "type": "securestring"
+      },
+      "dnsPrefix": {
+        "type": "string"
+      },
+      "subnetId": {
+        "type": "string"
+      },
+      "cosmosDbName": {
+        "type": "string"
+      },
+      "kubernetesClusterName": {
+        "type": "string"
+      },
+      "_artifactsLocation": {
+        "type": "string"
+      },
+      "_artifactsLocationSasToken": {
+        "type": "securestring"
+      },
+      "location": {
+        "type": "string"
+      }
+    },
+    "variables": {
+      "installOpts": "-A \"linuxAdminPassword\"",
+      "configureOpts": "[concat('-A \"', uriComponent(parameters('linuxAdminPassword')), '\" -p \"3000\" -S \"', subscription().subscriptionId, '\" -T \"', subscription().tenantId, '\" -i \"', parameters('spClientId'), '\" -s \"', parameters('spClientSecret'), '\" -r \"', resourceGroup().name, '\" -c \"', parameters('cosmosDbName'), '\" -k \"', parameters('kubernetesClusterName'), '\" -l \"', parameters('_artifactsLocation'), '\" -t \"', parameters('_artifactsLocationSasToken'), '\"')]",
+      "nicName": "grafanaVMName-nic",
+      "publicIPAddressName": "grafanaVMName-ip",
+      "securityGroupName": "grafanaVMName-nsg"
+    },
+    "resources": [
+      {
+        "apiVersion": "2019-06-01",
+        "type": "Microsoft.Network/publicIPAddresses",
+        "name": "grafanaVMName-ip",
+        "location": "location",
+        "properties": {
+          "publicIPAllocationMethod": "Dynamic",
+          "dnsSettings": {
+            "domainNameLabel": "dnsPrefix"
+          }
+        }
+      },
+      {
+        "apiVersion": "2019-06-01",
+        "type": "Microsoft.Network/networkSecurityGroups",
+        "name": "grafanaVMName-nsg",
+        "location": "location",
+        "properties": {
+          "securityRules": [
+            {
+              "name": "SSH",
+              "properties": {
+                "description": "Allows inbound SSH traffic",
+                "protocol": "Tcp",
+                "sourcePortRange": "*",
+                "destinationPortRange": "22",
+                "sourceAddressPrefix": "*",
+                "destinationAddressPrefix": "*",
+                "access": "Allow",
+                "priority": 100,
+                "direction": "Inbound"
+              }
+            },
+            {
+              "name": "Grafana",
+              "properties": {
+                "description": "Allows inbound grafana HTTP traffic",
+                "protocol": "Tcp",
+                "sourcePortRange": "*",
+                "destinationPortRange": "3000",
+                "sourceAddressPrefix": "*",
+                "destinationAddressPrefix": "*",
+                "access": "Allow",
+                "priority": 200,
+                "direction": "Inbound"
+              }
+            }
+          ]
+        }
+      },
+      {
+        "apiVersion": "2019-06-01",
+        "type": "Microsoft.Network/networkInterfaces",
+        "name": "grafanaVMName-nic",
+        "location": "location",
+        "dependsOn": [
+          "Microsoft.Network/publicIPAddresses/grafanaVMName-ip"
+        ],
+        "properties": {
+          "ipConfigurations": [
+            {
+              "name": "grafanaVMName-ip-config",
+              "properties": {
+                "privateIPAllocationMethod": "Dynamic",
+                "publicIPAddress": {
+                  "id": "Microsoft.Network/publicIPAddresses/grafanaVMName-ip"
+                },
+                "subnet": {
+                  "id": "subnetId"
+                }
+              }
+            }
+          ],
+          "networkSecurityGroup": {
+            "id": "Microsoft.Network/networkSecurityGroups/grafanaVMName-nsg"
+          }
+        }
+      },
+      {
+        "name": "grafanaVMName",
+        "type": "Microsoft.Compute/virtualMachines",
+        "apiVersion": "2019-03-01",
+        "location": "location",
+        "dependsOn": [
+          "Microsoft.Network/networkInterfaces/grafanaVMName-nic"
+        ],
+        "properties": {
+          "storageProfile": {
+            "imageReference": {
+              "publisher": "Canonical",
+              "offer": "UbuntuServer",
+              "sku": "16.04-LTS",
+              "version": "latest"
+            },
+            "osDisk": {
+              "createOption": "FromImage",
+              "managedDisk": {
+                "storageAccountType": "Premium_LRS"
+              }
+            }
+          },
+          "hardwareProfile": {
+            "vmSize": "grafanaVMSize"
+          },
+          "osProfile": {
+            "computerName": "grafanaVMName-vm",
+            "adminUsername": "linuxAdminUsername",
+            "adminPassword": "linuxAdminPassword"
+          },
+          "networkProfile": {
+            "networkInterfaces": [
+              {
+                "id": "Microsoft.Network/networkInterfaces/grafanaVMName-nic"
+              }
+            ]
+          }
+        },
+        "resources": [
+          {
+            "type": "extensions",
+            "name": "installGrafana",
+            "apiVersion": "2019-03-01",
+            "location": "location",
+            "dependsOn": [
+              "Microsoft.Compute/virtualMachines/grafanaVMName"
+            ],
+            "properties": {
+              "publisher": "Microsoft.Azure.Extensions",
+              "type": "CustomScript",
+              "typeHandlerVersion": "2.0",
+              "autoUpgradeMinorVersion": true,
+              "settings": {
+                "fileUris": [
+                  "_artifactsLocationscripts/grafana/install-grafana.sh_artifactsLocationSasToken",
+                  "_artifactsLocationscripts/grafana/configure-grafana.sh_artifactsLocationSasToken"
+                ]
+              },
+              "protectedSettings": {
+                "commandToExecute": "[concat('bash install-grafana.sh ', variables('installOpts'), '; bash configure-grafana.sh ', variables('configureOpts'))]"
+              }
+            }
+          }
+        ]
+      }
+    ],
+    "outputs": {
+      "grafanaURL": {
+        "type": "string",
+        "value": "[concat('http://', reference(variables('publicIPAddressName')).dnsSettings.fqdn, ':3000')]"
+      }
+    },
+    "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+  }
+}

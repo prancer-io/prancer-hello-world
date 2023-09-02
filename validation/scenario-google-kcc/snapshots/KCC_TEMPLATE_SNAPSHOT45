@@ -2,12 +2,12 @@
   "structure": "filesystem",
   "error": null,
   "reference": "master",
-  "contentType": "yaml",
+  "contentType": "json",
   "source": "gitConnectorGoogleKcc",
   "paths": [
-    "/samples/resources/binaryauthorizationattestor/containeranalysis_v1beta1_containeranalysisnote.yaml"
+    "/samples/resources/binaryauthorizationattestor/binaryauthorization_v1beta1_binaryauthorizationattestor.yaml"
   ],
-  "timestamp": 1628765139197,
+  "timestamp": 1642973301880,
   "queryuser": null,
   "checksum": "99914b932bd37a50b983c5e7c90ae93b",
   "node": {
@@ -15,23 +15,41 @@
     "type": "kcc",
     "collection": "kcctemplate",
     "paths": [
-      "/samples/resources/binaryauthorizationattestor/containeranalysis_v1beta1_containeranalysisnote.yaml"
+      "/samples/resources/binaryauthorizationattestor/binaryauthorization_v1beta1_binaryauthorizationattestor.yaml"
     ],
     "snapshotId": "KCC_TEMPLATE_SNAPSHOT45",
     "status": "active",
-    "validate": true
+    "validate": true,
+    "resourceTypes": [
+      "binaryauthorizationattestor"
+    ]
   },
   "snapshotId": "KCC_TEMPLATE_SNAPSHOT45",
   "collection": "kcctemplate",
   "json": {
-    "apiVersion": "containeranalysis.cnrm.cloud.google.com/v1beta1",
-    "kind": "ContainerAnalysisNote",
+    "apiVersion": "binaryauthorization.cnrm.cloud.google.com/v1beta1",
+    "kind": "BinaryAuthorizationAttestor",
     "metadata": {
-      "name": "binaryauthorizationattestor-dep"
+      "name": "binaryauthorizationattestor-sample"
     },
     "spec": {
-      "package": {
-        "name": "test-package"
+      "projectRef": {
+        "external": "projects/${PROJECT_ID?}"
+      },
+      "description": "A sample binary authorization attestor.",
+      "userOwnedDrydockNote": {
+        "noteRef": {
+          "name": "binaryauthorizationattestor-dep"
+        },
+        "publicKeys": [
+          {
+            "comment": "A sample key",
+            "pkixPublicKey": {
+              "publicKeyPem": "-----BEGIN PUBLIC KEY-----\nMFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAE8qErzp1izKNonCWqj5KSqdz6g2Tf\nZWvtX3I6huRWGD0pIMieOOUdFD/hbMH6xYx0ml2vVkUqFJzeSmQt8pbtnw==\n-----END PUBLIC KEY-----\n",
+              "signatureAlgorithm": "ECDSA_P256_SHA256"
+            }
+          }
+        ]
       }
     }
   }

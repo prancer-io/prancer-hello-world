@@ -2,12 +2,12 @@
   "structure": "filesystem",
   "error": null,
   "reference": "master",
-  "contentType": "yaml",
+  "contentType": "json",
   "source": "gitConnectorGoogleKcc",
   "paths": [
-    "/samples/resources/identityplatformtenantoauthidpconfig/identityplatform_v1beta1_identityplatformtenant.yaml"
+    "/samples/resources/gkehubmembership/gkehub_v1beta1_gkehubmembership.yaml"
   ],
-  "timestamp": 1628765148636,
+  "timestamp": 1642973304205,
   "queryuser": null,
   "checksum": "99914b932bd37a50b983c5e7c90ae93b",
   "node": {
@@ -15,30 +15,38 @@
     "type": "kcc",
     "collection": "kcctemplate",
     "paths": [
-      "/samples/resources/identityplatformtenantoauthidpconfig/identityplatform_v1beta1_identityplatformtenant.yaml"
+      "/samples/resources/gkehubmembership/gkehub_v1beta1_gkehubmembership.yaml"
     ],
     "snapshotId": "KCC_TEMPLATE_SNAPSHOT436",
     "status": "active",
-    "validate": true
+    "validate": true,
+    "resourceTypes": [
+      "gkehubmembership"
+    ]
   },
   "snapshotId": "KCC_TEMPLATE_SNAPSHOT436",
   "collection": "kcctemplate",
   "json": {
-    "apiVersion": "identityplatform.cnrm.cloud.google.com/v1beta1",
-    "kind": "IdentityPlatformTenant",
+    "apiVersion": "gkehub.cnrm.cloud.google.com/v1beta1",
+    "kind": "GKEHubMembership",
     "metadata": {
-      "name": "identityplatformtenantoauthidpconfig-dep"
+      "labels": {
+        "label-one": "value-one"
+      },
+      "name": "gkehubmembership-sample"
     },
     "spec": {
-      "displayName": "test-tenant",
-      "allowPasswordSignup": true,
-      "enableAnonymousUser": false,
-      "mfaConfig": {
-        "state": "ENABLED"
+      "location": "global",
+      "authority": {
+        "issuer": "https://container.googleapis.com/v1/projects/${PROJECT_ID?}/locations/us-central1-a/clusters/gkehubmembership-dep"
       },
-      "testPhoneNumbers": {
-        "+12345678901": "123451",
-        "+16505550000": "123450"
+      "description": "A sample GKE Hub membership",
+      "endpoint": {
+        "gkeCluster": {
+          "resourceRef": {
+            "name": "gkehubmembership-dep"
+          }
+        }
       }
     }
   }

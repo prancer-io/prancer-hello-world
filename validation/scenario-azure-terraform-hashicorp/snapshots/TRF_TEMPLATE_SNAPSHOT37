@@ -1,0 +1,88 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "main",
+  "contentType": "json",
+  "source": "gitConnectorAzureTerraHashicorp",
+  "paths": [
+    "/examples/cosmos-db/failover/outputs.tf",
+    "/examples/cosmos-db/failover/variables.tf",
+    "/examples/cosmos-db/failover/main.tf"
+  ],
+  "timestamp": 1642943279684,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "TRF_TEMPLATE_SNAPSHOT",
+    "type": "terraform",
+    "collection": "terraformtemplate",
+    "paths": [
+      "/examples/cosmos-db/failover/outputs.tf",
+      "/examples/cosmos-db/failover/variables.tf",
+      "/examples/cosmos-db/failover/main.tf"
+    ],
+    "snapshotId": "TRF_TEMPLATE_SNAPSHOT37",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "azurerm_resource_group",
+      "azurerm_cosmosdb_account"
+    ]
+  },
+  "snapshotId": "TRF_TEMPLATE_SNAPSHOT37",
+  "collection": "terraformtemplate",
+  "json": {
+    "provider": [
+      {
+        "azurerm": {
+          "features": [
+            {}
+          ]
+        }
+      }
+    ],
+    "resources": [
+      {
+        "type": "azurerm_resource_group",
+        "name": "example",
+        "properties": {
+          "name": "${var.prefix}-resources",
+          "location": "${var.location}",
+          "compiletime_identity": "azurerm_resource_group.example"
+        }
+      },
+      {
+        "type": "azurerm_cosmosdb_account",
+        "name": "example",
+        "properties": {
+          "name": "${var.prefix}-cosmosdb",
+          "location": "${azurerm_resource_group.example.location}",
+          "resource_group_name": "${azurerm_resource_group.example.name}",
+          "offer_type": "Standard",
+          "kind": "GlobalDocumentDB",
+          "enable_automatic_failover": true,
+          "ip_range_filter": "0.0.0.0,104.42.195.92,40.76.54.131,52.176.6.30,52.169.50.45,52.187.184.26",
+          "consistency_policy": [
+            {
+              "consistency_level": "BoundedStaleness",
+              "max_interval_in_seconds": 10,
+              "max_staleness_prefix": 200
+            }
+          ],
+          "geo_location": [
+            {
+              "prefix": "${var.prefix}-customid",
+              "location": "${azurerm_resource_group.example.location}",
+              "failover_priority": 2
+            },
+            {
+              "location": "${var.alt_location}",
+              "failover_priority": 0
+            }
+          ],
+          "compiletime_identity": "azurerm_cosmosdb_account.example"
+        }
+      }
+    ]
+  }
+}

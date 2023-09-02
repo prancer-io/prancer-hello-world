@@ -1,0 +1,239 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAzureQuickStart",
+  "paths": [
+    "/demos/azure-sql-managed-instance/nestedtemplates/vnet.json"
+  ],
+  "timestamp": 1642962898447,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/demos/azure-sql-managed-instance/nestedtemplates/vnet.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT637",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "microsoft.network/virtualnetworks",
+      "microsoft.network/networksecuritygroups",
+      "microsoft.network/routetables"
+    ]
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT637",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "location": {
+        "type": "string",
+        "metadata": {
+          "description": "Location for all resources"
+        }
+      },
+      "vnetResourceName": {
+        "type": "string",
+        "metadata": {
+          "description": "The name of the vnet"
+        }
+      },
+      "vnetAddressRange": {
+        "type": "string",
+        "metadata": {
+          "description": "Address range of the virtual network"
+        }
+      },
+      "managedInstanceSubnetName": {
+        "type": "string",
+        "metadata": {
+          "description": "Managed Instance Subnet name"
+        }
+      },
+      "managedInstanceSubnetAddressRange": {
+        "type": "string",
+        "metadata": {
+          "description": "Managed Instance Subnet range"
+        }
+      },
+      "managedInstanceNSGName": {
+        "type": "string",
+        "metadata": {
+          "description": "Name of the Managed Instance NSG"
+        }
+      },
+      "managedInstanceRouteTableName": {
+        "type": "string",
+        "metadata": {
+          "description": "Name of the Managed Instance Route Table"
+        }
+      },
+      "miManagementIps": {
+        "type": "array",
+        "metadata": {
+          "description": "List of MI management IP ranges"
+        }
+      }
+    },
+    "resources": [
+      {
+        "type": "Microsoft.Network/networkSecurityGroups",
+        "apiVersion": "2019-11-01",
+        "location": "location",
+        "name": "managedInstanceNsgName",
+        "properties": {
+          "securityRules": [
+            {
+              "name": "allow-management-outbound",
+              "properties": {
+                "description": "Allow outbound management TCP traffic",
+                "protocol": "Tcp",
+                "sourcePortRange": "*",
+                "sourceAddressPrefix": "*",
+                "destinationAddressPrefix": "AzureCloud",
+                "access": "Allow",
+                "priority": 110,
+                "direction": "Outbound",
+                "destinationPortRanges": [
+                  "443",
+                  "12000"
+                ]
+              }
+            },
+            {
+              "name": "inbound-management",
+              "properties": {
+                "description": "Management ports for the Managed Instance",
+                "protocol": "TCP",
+                "sourcePortRange": "*",
+                "sourceAddressPrefix": "SqlManagement",
+                "destinationAddressPrefix": "managedInstanceSubnetAddressRange",
+                "access": "Allow",
+                "priority": 100,
+                "direction": "Inbound",
+                "destinationPortRanges": [
+                  "9000",
+                  "9003",
+                  "1438",
+                  "1440",
+                  "1452"
+                ]
+              }
+            },
+            {
+              "name": "outbound-mi-subnet",
+              "properties": {
+                "protocol": "*",
+                "sourcePortRange": "*",
+                "destinationPortRange": "*",
+                "sourceAddressPrefix": "*",
+                "destinationAddressPrefix": "managedInstanceSubnetAddressRange",
+                "access": "Allow",
+                "priority": 150,
+                "direction": "Outbound"
+              }
+            },
+            {
+              "name": "inbound-mi-subnet",
+              "properties": {
+                "protocol": "*",
+                "sourcePortRange": "*",
+                "destinationPortRange": "*",
+                "sourceAddressPrefix": "managedInstanceSubnetAddressRange",
+                "destinationAddressPrefix": "*",
+                "access": "Allow",
+                "priority": 110,
+                "direction": "Inbound"
+              }
+            },
+            {
+              "name": "inbound-health-probe",
+              "properties": {
+                "protocol": "*",
+                "sourcePortRange": "*",
+                "destinationPortRange": "*",
+                "sourceAddressPrefix": "AzureLoadBalancer",
+                "destinationAddressPrefix": "*",
+                "access": "Allow",
+                "priority": 140,
+                "direction": "Inbound"
+              }
+            }
+          ]
+        }
+      },
+      {
+        "type": "Microsoft.Network/routeTables",
+        "apiVersion": "2019-11-01",
+        "name": "managedInstanceRouteTableName",
+        "location": "location",
+        "tags": {
+          "displayName": "Deploy Azure SQL Managed Instance UDR"
+        },
+        "properties": {
+          "copy": [
+            {
+              "name": "routes",
+              "count": 29,
+              "input": {
+                "name": "[if(equals(copyIndex('routes'),0),'subnet_to_vnetlocal',concat(replace(parameters('miManagementIps')[copyIndex('routes')],'/','-'),'-next-hop-internet-route'))]",
+                "properties": {
+                  "addressPrefix": "[if(equals(copyIndex('routes'),0),parameters('managedInstanceSubnetAddressRange'),parameters('miManagementIps')[copyIndex('routes')])]",
+                  "nextHopType": "[if(equals(copyIndex('routes'),0),'VnetLocal','Internet')]"
+                }
+              }
+            }
+          ]
+        }
+      },
+      {
+        "type": "Microsoft.Network/virtualNetworks",
+        "apiVersion": "2019-11-01",
+        "name": "vnetResourceName",
+        "location": "location",
+        "tags": {
+          "displayName": "Deploy VNet"
+        },
+        "dependsOn": [
+          "Microsoft.Network/networkSecurityGroups/managedInstanceNSGName",
+          "Microsoft.Network/routeTables/managedInstanceRouteTableName"
+        ],
+        "properties": {
+          "addressSpace": {
+            "addressPrefixes": [
+              "vnetAddressRange"
+            ]
+          },
+          "subnets": [
+            {
+              "name": "managedInstanceSubnetName",
+              "properties": {
+                "addressPrefix": "managedInstanceSubnetAddressRange",
+                "routeTable": {
+                  "id": "Microsoft.Network/routeTables/managedInstanceRouteTableName"
+                },
+                "networkSecurityGroup": {
+                  "id": "Microsoft.Network/networkSecurityGroups/managedInstanceNSGName"
+                },
+                "delegations": [
+                  {
+                    "properties": {
+                      "serviceName": "Microsoft.Sql/managedInstances"
+                    },
+                    "name": "managedInstanceSubnetName-delegation"
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      }
+    ],
+    "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+  }
+}

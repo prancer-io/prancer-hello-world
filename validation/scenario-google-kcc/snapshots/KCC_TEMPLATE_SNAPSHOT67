@@ -2,12 +2,12 @@
   "structure": "filesystem",
   "error": null,
   "reference": "master",
-  "contentType": "yaml",
+  "contentType": "json",
   "source": "gitConnectorGoogleKcc",
   "paths": [
-    "/samples/resources/cloudschedulerjob/scheduler-job-http/cloudscheduler_v1beta1_cloudschedulerjob.yaml"
+    "/samples/resources/binaryauthorizationpolicy/service-account-policy/serviceusage_v1beta1_service_multiple_yaml_1.yaml"
   ],
-  "timestamp": 1628765139670,
+  "timestamp": 1642973302038,
   "queryuser": null,
   "checksum": "99914b932bd37a50b983c5e7c90ae93b",
   "node": {
@@ -15,41 +15,31 @@
     "type": "kcc",
     "collection": "kcctemplate",
     "paths": [
-      "/samples/resources/cloudschedulerjob/scheduler-job-http/cloudscheduler_v1beta1_cloudschedulerjob.yaml"
+      "/samples/resources/binaryauthorizationpolicy/service-account-policy/serviceusage_v1beta1_service_multiple_yaml_1.yaml"
     ],
     "snapshotId": "KCC_TEMPLATE_SNAPSHOT67",
     "status": "active",
-    "validate": true
+    "validate": true,
+    "resourceTypes": [
+      "service"
+    ]
   },
   "snapshotId": "KCC_TEMPLATE_SNAPSHOT67",
   "collection": "kcctemplate",
   "json": {
-    "apiVersion": "cloudscheduler.cnrm.cloud.google.com/v1beta1",
-    "kind": "CloudSchedulerJob",
+    "apiVersion": "serviceusage.cnrm.cloud.google.com/v1beta1",
+    "kind": "Service",
     "metadata": {
-      "name": "cloudscheduler-sample-http"
+      "annotations": {
+        "cnrm.cloud.google.com/disable-dependent-services": "false"
+      },
+      "name": "binaryauthorizationpolicy-dep2-serviceaccount"
     },
     "spec": {
-      "description": "scheduler-http-target-job",
-      "schedule": "*/5 * * * *",
-      "location": "us-west2",
-      "timeZone": "EST",
-      "attemptDeadline": "600s",
-      "retryConfig": {
-        "retryCount": 3,
-        "maxRetryDuration": "60s",
-        "maxDoublings": 2
+      "projectRef": {
+        "name": "binauthzpolicy-dep-sa"
       },
-      "httpTarget": {
-        "headers": {
-          "app": "test",
-          "Content-Type": "application/octet-stream",
-          "User-Agent": "Google-Cloud-Scheduler"
-        },
-        "httpMethod": "POST",
-        "uri": "https://example.com/ping",
-        "body": "eyJmb28iOiJiYXIifQo="
-      }
+      "resourceID": "binaryauthorization.googleapis.com"
     }
   }
 }

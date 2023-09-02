@@ -2,12 +2,12 @@
   "structure": "filesystem",
   "error": null,
   "reference": "master",
-  "contentType": "yaml",
+  "contentType": "json",
   "source": "gitConnectorGoogleKcc",
   "paths": [
-    "/samples/resources/computenetworkpeering/compute_v1beta1_computenetworkpeering_multiple_yaml_1.yaml"
+    "/samples/resources/computeinstancegroupmanager/regional-compute-instance-group-manager/compute_v1beta1_computeinstancegroupmanager.yaml"
   ],
-  "timestamp": 1628765142064,
+  "timestamp": 1642973302872,
   "queryuser": null,
   "checksum": "99914b932bd37a50b983c5e7c90ae93b",
   "node": {
@@ -15,28 +15,50 @@
     "type": "kcc",
     "collection": "kcctemplate",
     "paths": [
-      "/samples/resources/computenetworkpeering/compute_v1beta1_computenetworkpeering_multiple_yaml_1.yaml"
+      "/samples/resources/computeinstancegroupmanager/regional-compute-instance-group-manager/compute_v1beta1_computeinstancegroupmanager.yaml"
     ],
     "snapshotId": "KCC_TEMPLATE_SNAPSHOT181",
     "status": "active",
-    "validate": true
+    "validate": true,
+    "resourceTypes": [
+      "computeinstancegroupmanager"
+    ]
   },
   "snapshotId": "KCC_TEMPLATE_SNAPSHOT181",
   "collection": "kcctemplate",
   "json": {
     "apiVersion": "compute.cnrm.cloud.google.com/v1beta1",
-    "kind": "ComputeNetworkPeering",
+    "kind": "ComputeInstanceGroupManager",
     "metadata": {
-      "name": "computenetworkpeering-sample2"
+      "name": "computeinstancegroupmanager-sample-regional"
     },
     "spec": {
-      "exportCustomRoutes": false,
-      "importCustomRoutes": false,
-      "networkRef": {
-        "name": "computenetworkpeering-dep2"
+      "projectRef": {
+        "external": "projects/${PROJECT_ID?}"
       },
-      "peerNetworkRef": {
-        "name": "computenetworkpeering-dep1"
+      "location": "us-central1",
+      "baseInstanceName": "app",
+      "autoHealingPolicies": [
+        {
+          "healthCheckRef": {
+            "name": "computeinstancegroupmanager-dep-regional"
+          },
+          "initialDelaySec": 300
+        }
+      ],
+      "targetSize": 3,
+      "instanceTemplateRef": {
+        "name": "computeinstancegroupmanager-dep-regional"
+      },
+      "updatePolicy": {
+        "instanceRedistributionType": "PROACTIVE",
+        "minimalAction": "RESTART",
+        "maxSurge": {
+          "fixed": 3
+        },
+        "maxUnavailable": {
+          "fixed": 3
+        }
       }
     }
   }

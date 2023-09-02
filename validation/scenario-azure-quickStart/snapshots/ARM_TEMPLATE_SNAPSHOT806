@@ -1,0 +1,62 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAzureQuickStart",
+  "paths": [
+    "/demos/sql-injection-attack-prevention/nested/microsoft.sql/servers.securityalertpolicies.json"
+  ],
+  "timestamp": 1642962901737,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/demos/sql-injection-attack-prevention/nested/microsoft.sql/servers.securityalertpolicies.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT806",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "microsoft.sql/servers/securityalertpolicies"
+    ]
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT806",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "sqlServerName": {
+        "type": "string"
+      },
+      "storageAccountName": {
+        "type": "string"
+      },
+      "sendAlertsTo": {
+        "type": "string",
+        "defaultValue": "dummy@contoso.com",
+        "metadata": {
+          "description": "Specifies the semicolon-separated list of e-mail addresses to which the alert is sent."
+        }
+      }
+    },
+    "resources": [
+      {
+        "apiVersion": "2020-02-02-preview",
+        "type": "Microsoft.Sql/servers/securityAlertPolicies",
+        "name": "sqlServerName/default",
+        "properties": {
+          "state": "Enabled",
+          "emailAddresses": "[split(parameters('sendAlertsTo'),';')]",
+          "storageEndpoint": "[reference(resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccountName')), '2021-01-01').PrimaryEndpoints.Blob]",
+          "storageAccountAccessKey": "[listKeys(resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccountName')), '2021-01-01').keys[0].value]",
+          "retentionDays": 0
+        }
+      }
+    ],
+    "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+  }
+}

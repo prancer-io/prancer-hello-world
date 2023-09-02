@@ -1,0 +1,434 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAzureQuickStart",
+  "paths": [
+    "/application-workloads/jenkins/jenkins-cicd-container/azuredeploy.json",
+    "/application-workloads/jenkins/jenkins-cicd-container/azuredeploy.parameters.json"
+  ],
+  "timestamp": 1642962890336,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/application-workloads/jenkins/jenkins-cicd-container/azuredeploy.json",
+      "/application-workloads/jenkins/jenkins-cicd-container/azuredeploy.parameters.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT194",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "microsoft.network/virtualnetworks",
+      "microsoft.resources/deployments",
+      "microsoft.containerregistry/registries",
+      "microsoft.documentdb/databaseaccounts",
+      "microsoft.containerservice/managedclusters"
+    ]
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT194",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "spClientId": {
+        "type": "string",
+        "metadata": {
+          "description": "Service Principal Client ID used by Jenkins and Azure Container Service (AKS)."
+        },
+        "value": "GEN-AZUREAD-AKS-APPID"
+      },
+      "spClientSecret": {
+        "type": "securestring",
+        "metadata": {
+          "description": "Service Principal Client Secret used by Jenkins and Azure Container Service(AKS)."
+        },
+        "value": "GEN-AZUREAD-AKS-APPID-SECRET"
+      },
+      "linuxAdminUsername": {
+        "type": "string",
+        "metadata": {
+          "description": "User name for the Linux Virtual Machines (Jenkins and Kubernetes)."
+        },
+        "value": "GEN-UNIQUE"
+      },
+      "linuxAdminPassword": {
+        "type": "securestring",
+        "metadata": {
+          "description": "Password for the Jenkins and Grafana Virtual Machines."
+        },
+        "value": "GEN-PASSWORD"
+      },
+      "linuxSSHPublicKey": {
+        "type": "string",
+        "metadata": {
+          "description": "Configure all linux machines with the SSH RSA public key string. Your key should include three parts, for example 'ssh-rsa AAAAB...snip...UcyupgH azureuser@linuxvm'"
+        },
+        "value": "GEN-SSH-PUB-KEY"
+      },
+      "cosmosDbName": {
+        "type": "string",
+        "metadata": {
+          "description": "Name of the CosmosDB."
+        },
+        "value": "GEN-UNIQUE"
+      },
+      "acrName": {
+        "type": "string",
+        "metadata": {
+          "description": "Name of the Azure Container Registery. The name may contain alpha numeric characters only and must be between 5 and 50 characters."
+        },
+        "value": "GEN-UNIQUE"
+      },
+      "jenkinsDnsPrefix": {
+        "type": "string",
+        "metadata": {
+          "description": "Unique DNS Name for the Public IP used to access the Jenkins Virtual Machine."
+        },
+        "value": "GEN-UNIQUE"
+      },
+      "grafanaDnsPrefix": {
+        "type": "string",
+        "metadata": {
+          "description": "Unique DNS Name for the Public IP used to access the Grafana Virtual Machine."
+        },
+        "value": "GEN-UNIQUE"
+      },
+      "grafanaVMSize": {
+        "type": "string",
+        "defaultValue": "Standard_D2s_v3",
+        "metadata": {
+          "description": "The size of the Kubernetes host virtual machine."
+        }
+      },
+      "jenkinsVMSize": {
+        "type": "string",
+        "defaultValue": "Standard_D2s_v3",
+        "metadata": {
+          "description": "The size of the Kubernetes host virtual machine."
+        }
+      },
+      "kubernetesDnsPrefix": {
+        "type": "string",
+        "metadata": {
+          "description": "Optional DNS prefix to use with hosted Kubernetes API server FQDN."
+        },
+        "value": "GEN-UNIQUE"
+      },
+      "kubernetesClusterName": {
+        "type": "string",
+        "metadata": {
+          "description": "The name of the Managed Cluster resource."
+        },
+        "value": "GEN-UNIQUE"
+      },
+      "kubernetesAgentCount": {
+        "type": "int",
+        "defaultValue": 1,
+        "metadata": {
+          "description": "The number of nodes for the cluster."
+        },
+        "minValue": 1,
+        "maxValue": 50
+      },
+      "kubernetesAgentVMSize": {
+        "type": "string",
+        "defaultValue": "Standard_D2s_v3",
+        "metadata": {
+          "description": "The size of the Kubernetes host virtual machine."
+        }
+      },
+      "kubernetesVersion": {
+        "type": "string",
+        "defaultValue": "1.14.8",
+        "allowedValues": [
+          "1.14.8",
+          "1.14.7",
+          "1.13.12",
+          "1.13.11",
+          "1.12.8",
+          "1.12.7",
+          "1.11.10",
+          "1.11.9",
+          "1.10.13",
+          "1.10.12"
+        ],
+        "metadata": {
+          "description": "The version of Kubernetes."
+        }
+      },
+      "gitRepository": {
+        "type": "string",
+        "metadata": {
+          "description": "URL to a public git repository that includes a Dockerfile."
+        },
+        "defaultValue": "https://github.com/Azure/azure-quickstart-templates"
+      },
+      "_artifactsLocation": {
+        "type": "string",
+        "defaultValue": "https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/application-workloads/jenkins/jenkins-cicd-container/",
+        "metadata": {
+          "description": "The base URI where artifacts required by this template are located. When the template is deployed using the accompanying scripts, a private location in the subscription will be used and this value will be automatically generated."
+        }
+      },
+      "_artifactsLocationSasToken": {
+        "type": "securestring",
+        "defaultValue": "",
+        "metadata": {
+          "description": "The sasToken required to access _artifactsLocation.  When the template is deployed using the accompanying scripts, a sasToken will be automatically generated."
+        }
+      },
+      "location": {
+        "type": "string",
+        "defaultValue": "[resourceGroup().location]",
+        "metadata": {
+          "description": "Location for all resources."
+        }
+      }
+    },
+    "variables": {
+      "jenkinsVMName": "jenkins",
+      "grafanaVMName": "grafana",
+      "cosmosDbName": "GEN-UNIQUE",
+      "acrName": "GEN-UNIQUE",
+      "virtualNetworkName": "virtual-network",
+      "subnetName": "default-subnet"
+    },
+    "resources": [
+      {
+        "name": "GEN-UNIQUE",
+        "type": "Microsoft.ContainerRegistry/registries",
+        "location": "[resourceGroup().location]",
+        "apiVersion": "2019-05-01",
+        "sku": {
+          "name": "Basic"
+        },
+        "properties": {
+          "adminUserEnabled": true
+        }
+      },
+      {
+        "apiVersion": "2016-03-31",
+        "kind": "MongoDB",
+        "type": "Microsoft.DocumentDb/databaseAccounts",
+        "name": "GEN-UNIQUE",
+        "location": "[resourceGroup().location]",
+        "properties": {
+          "databaseAccountOfferType": "Standard"
+        }
+      },
+      {
+        "apiVersion": "2019-06-01",
+        "type": "Microsoft.Network/virtualNetworks",
+        "name": "virtual-network",
+        "location": "[resourceGroup().location]",
+        "properties": {
+          "addressSpace": {
+            "addressPrefixes": [
+              "10.0.0.0/16"
+            ]
+          },
+          "subnets": [
+            {
+              "name": "default-subnet",
+              "properties": {
+                "addressPrefix": "10.0.0.0/24"
+              }
+            }
+          ]
+        }
+      },
+      {
+        "apiVersion": "2019-08-01",
+        "name": "jenkinsDeployment",
+        "type": "Microsoft.Resources/deployments",
+        "dependsOn": [
+          "Microsoft.ContainerRegistry/registries/GEN-UNIQUE",
+          "Microsoft.Network/virtualNetworks/virtual-network",
+          "Microsoft.DocumentDb/databaseAccounts/GEN-UNIQUE"
+        ],
+        "properties": {
+          "mode": "Incremental",
+          "templateLink": {
+            "uri": "[uri(parameters('_artifactsLocation'), concat('nested/jenkins.json', parameters('_artifactsLocationSasToken')))]",
+            "contentVersion": "1.0.0.0"
+          },
+          "parameters": {
+            "jenkinsVMName": {
+              "value": "jenkins"
+            },
+            "jenkinsVMSize": {
+              "value": "Standard_D2s_v3"
+            },
+            "spClientId": {
+              "value": "GEN-AZUREAD-AKS-APPID"
+            },
+            "spClientSecret": {
+              "value": "GEN-AZUREAD-AKS-APPID-SECRET"
+            },
+            "linuxAdminUsername": {
+              "value": "GEN-UNIQUE"
+            },
+            "linuxAdminPassword": {
+              "value": "GEN-PASSWORD"
+            },
+            "dnsPrefix": {
+              "value": "GEN-UNIQUE"
+            },
+            "subnetId": {
+              "value": "Microsoft.Network/virtualNetworks/subnets/virtual-network/default-subnet"
+            },
+            "gitRepository": {
+              "value": "https://github.com/Azure/azure-quickstart-templates"
+            },
+            "acrServer": {
+              "value": "[reference(resourceId('Microsoft.ContainerRegistry/registries', variables('acrName'))).loginServer]"
+            },
+            "acrUsername": {
+              "value": "[listCredentials(resourceId('Microsoft.ContainerRegistry/registries', variables('acrName')), '2019-05-01').username]"
+            },
+            "acrPassword": {
+              "value": "[listCredentials(resourceId('Microsoft.ContainerRegistry/registries', variables('acrName')), '2019-05-01').passwords[0].value]"
+            },
+            "mongoDbURI": {
+              "value": "[concat('mongodb://', variables('cosmosDbName'), ':', uriComponent(listKeys(resourceId('Microsoft.DocumentDb/databaseAccounts', variables('cosmosDbName')), '2016-03-31').primaryMasterKey), '@', variables('cosmosDbName'), '.documents.azure.com:10255/?ssl=true&replicaSet=globaldb')]"
+            },
+            "kubernetesResourceGroupName": {
+              "value": "[resourceGroup().name]"
+            },
+            "kubernetesClusterName": {
+              "value": "GEN-UNIQUE"
+            },
+            "_artifactsLocation": {
+              "value": "https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/application-workloads/jenkins/jenkins-cicd-container/"
+            },
+            "_artifactsLocationSasToken": {
+              "value": ""
+            },
+            "location": {
+              "value": "[resourceGroup().location]"
+            }
+          }
+        }
+      },
+      {
+        "apiVersion": "2019-10-01",
+        "type": "Microsoft.ContainerService/managedClusters",
+        "location": "[resourceGroup().location]",
+        "name": "GEN-UNIQUE",
+        "properties": {
+          "kubernetesVersion": "1.14.8",
+          "dnsPrefix": "GEN-UNIQUE",
+          "agentPoolProfiles": [
+            {
+              "name": "agentpool",
+              "osDiskSizeGB": 0,
+              "count": 1,
+              "vmSize": "Standard_D2s_v3",
+              "osType": "Linux",
+              "storageProfile": "ManagedDisks"
+            }
+          ],
+          "linuxProfile": {
+            "adminUsername": "GEN-UNIQUE",
+            "ssh": {
+              "publicKeys": [
+                {
+                  "keyData": "GEN-SSH-PUB-KEY"
+                }
+              ]
+            }
+          },
+          "servicePrincipalProfile": {
+            "ClientId": "GEN-AZUREAD-AKS-APPID",
+            "Secret": "GEN-AZUREAD-AKS-APPID-SECRET"
+          }
+        }
+      },
+      {
+        "apiVersion": "2019-08-01",
+        "name": "grafanaDeployment",
+        "type": "Microsoft.Resources/deployments",
+        "dependsOn": [
+          "Microsoft.DocumentDb/databaseAccounts/GEN-UNIQUE",
+          "Microsoft.ContainerService/managedClusters/GEN-UNIQUE"
+        ],
+        "properties": {
+          "mode": "Incremental",
+          "templateLink": {
+            "uri": "[uri(parameters('_artifactsLocation'), concat('nested/grafana.json', parameters('_artifactsLocationSasToken')))]",
+            "contentVersion": "1.0.0.0"
+          },
+          "parameters": {
+            "grafanaVMName": {
+              "value": "grafana"
+            },
+            "grafanaVMSize": {
+              "value": "Standard_D2s_v3"
+            },
+            "spClientId": {
+              "value": "GEN-AZUREAD-AKS-APPID"
+            },
+            "spClientSecret": {
+              "value": "GEN-AZUREAD-AKS-APPID-SECRET"
+            },
+            "linuxAdminUsername": {
+              "value": "GEN-UNIQUE"
+            },
+            "linuxAdminPassword": {
+              "value": "GEN-PASSWORD"
+            },
+            "dnsPrefix": {
+              "value": "GEN-UNIQUE"
+            },
+            "subnetId": {
+              "value": "Microsoft.Network/virtualNetworks/subnets/virtual-network/default-subnet"
+            },
+            "cosmosDbName": {
+              "value": "GEN-UNIQUE"
+            },
+            "kubernetesClusterName": {
+              "value": "GEN-UNIQUE"
+            },
+            "_artifactsLocation": {
+              "value": "https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/application-workloads/jenkins/jenkins-cicd-container/"
+            },
+            "_artifactsLocationSasToken": {
+              "value": ""
+            },
+            "location": {
+              "value": "[resourceGroup().location]"
+            }
+          }
+        }
+      }
+    ],
+    "outputs": {
+      "jenkinsURL": {
+        "type": "string",
+        "value": "[reference('jenkinsDeployment').outputs.jenkinsURL.value]"
+      },
+      "jenkinsSSH": {
+        "type": "string",
+        "value": "[reference('jenkinsDeployment').outputs.jenkinsSSH.value]"
+      },
+      "azureContainerRegistryUrl": {
+        "type": "string",
+        "value": "[reference(resourceId('Microsoft.ContainerRegistry/registries', variables('acrName'))).loginServer]"
+      },
+      "kubernetesControlPlaneFQDN": {
+        "type": "string",
+        "value": "[reference(concat('Microsoft.ContainerService/managedClusters/', parameters('kubernetesClusterName'))).fqdn]"
+      },
+      "grafanaUrl": {
+        "type": "string",
+        "value": "[reference('grafanaDeployment').outputs.grafanaURL.value]"
+      }
+    },
+    "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+  }
+}

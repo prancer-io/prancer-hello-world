@@ -1,0 +1,697 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAzureQuickStart",
+  "paths": [
+    "/application-workloads/barracuda/barracuda-waf-iis/azuredeploy.json",
+    "/application-workloads/barracuda/barracuda-waf-iis/azuredeploy.parameters.json"
+  ],
+  "timestamp": 1642962883588,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/application-workloads/barracuda/barracuda-waf-iis/azuredeploy.json",
+      "/application-workloads/barracuda/barracuda-waf-iis/azuredeploy.parameters.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT32",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "microsoft.network/publicipaddresses",
+      "microsoft.network/virtualnetworks",
+      "microsoft.network/loadbalancers",
+      "microsoft.network/networkinterfaces",
+      "microsoft.compute/virtualmachines",
+      "microsoft.network/networksecuritygroups",
+      "microsoft.network/loadbalancers/inboundnatrules",
+      "microsoft.storage/storageaccounts",
+      "microsoft.compute/availabilitysets"
+    ]
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT32",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "adminUsername": {
+        "type": "string",
+        "metadata": {
+          "description": "Username for the virtual machines"
+        },
+        "value": "GEN-UNIQUE"
+      },
+      "adminPassword": {
+        "type": "securestring",
+        "minLength": 12,
+        "metadata": {
+          "description": "Password for Barracuda WAF Admin Interface and Backend Web Servers(Min Length: 12)"
+        },
+        "value": "GEN-PASSWORD"
+      },
+      "webVmCount": {
+        "type": "int",
+        "defaultValue": 2,
+        "metadata": {
+          "description": "Number of backend Web servers to be deployed"
+        }
+      },
+      "remoteAllowedCIDR": {
+        "type": "string",
+        "minLength": 7,
+        "defaultValue": "0.0.0.0/0",
+        "metadata": {
+          "description": "Enter Public IP CIDR to allow for accessing the deployment.Enter in 0.0.0.0/0 format. You can always modify these later in NSG Settings"
+        },
+        "value": "0.0.0.0/0"
+      },
+      "_artifactsLocation": {
+        "type": "string",
+        "defaultValue": "[deployment().properties.templateLink.uri]",
+        "metadata": {
+          "description": "The base URI where artifacts required by this template are located. When the template is deployed using the accompanying scripts, a private location in the subscription will be used and this value will be automatically generated."
+        }
+      },
+      "_artifactsLocationSasToken": {
+        "type": "securestring",
+        "metadata": {
+          "description": "The sasToken required to access _artifactsLocation.  When the template is deployed using the accompanying scripts, a sasToken will be automatically generated.Leave blank if unsure"
+        },
+        "defaultValue": ""
+      },
+      "location": {
+        "type": "string",
+        "defaultValue": "[resourceGroup().location]",
+        "metadata": {
+          "description": "Location for all resources."
+        }
+      },
+      "bwafVmSize": {
+        "type": "string",
+        "defaultValue": "Standard_D2_v3",
+        "metadata": {
+          "description": "Default VM Size"
+        }
+      },
+      "webVmSize": {
+        "type": "string",
+        "defaultValue": "Standard_D2_v3",
+        "metadata": {
+          "description": "Default VM Size"
+        }
+      }
+    },
+    "variables": {
+      "storageAccountType": "Standard_GRS",
+      "bwafStorageAccountName": "[concat('bwafstorage',uniqueString(resourceGroup().id))]",
+      "webStorageAccountName": "[concat('webstorage',uniqueString(resourceGroup().id))]",
+      "diagStorageAccountName": "[concat('diagstorage',uniqueString(resourceGroup().id))]",
+      "virtualNetworkName": "bwaf-vnet",
+      "webNSGName": "web-NSG",
+      "bwafNSGName": "bwaf-NSG",
+      "bwafSubnetName": "bwaf-subnet",
+      "webSubnetName": "web-subnet",
+      "lbIPAddressName": "lb-pip",
+      "lbDnsLabel": "[concat('lbpip',uniqueString(resourceGroup().id))]",
+      "loadBalancerName": "web-rdp-lb",
+      "bwafAvailSetName": "bwaf-as",
+      "bwafVmName": "bwaf-vm",
+      "bwafVmIPAddressName": "bwaf-pip",
+      "bwafVmDnsLabel": "[concat('bwafpip',uniqueString(resourceGroup().id))]",
+      "bwafVmNicName": "bwaf-vm-nic",
+      "webAvailSetName": "web-as",
+      "webVmName": "web-vm",
+      "webVmNicName": "web-vm-nic",
+      "webVmSku": "2012-R2-Datacenter",
+      "webVmPublisher": "MicrosoftWindowsServer",
+      "webVmOffer": "WindowsServer",
+      "webVmExtensionFunction": "webServerConfig.ps1\\WebServerConfig",
+      "barracudaNetworksTags": {
+        "type": "object",
+        "provider": "3285C15D-A16F-479C-8886-67042BCB03A9"
+      },
+      "quickstartTags": {
+        "type": "object",
+        "name": "barracuda-waf-iis"
+      }
+    },
+    "resources": [
+      {
+        "type": "Microsoft.Storage/storageAccounts",
+        "name": "[variables('bwafStorageAccountName')]",
+        "apiVersion": "2021-01-01",
+        "location": "[resourceGroup().location]",
+        "comments": "Storage account used to store the BWAF VM disks",
+        "tags": {
+          "displayName": "BWAF VM Storage Account",
+          "quickstartName": "(quickstartTags).name",
+          "provider": "(barracudaNetworksTags).provider"
+        },
+        "sku": {
+          "name": "Standard_GRS"
+        },
+        "kind": "Storage",
+        "properties": {}
+      },
+      {
+        "type": "Microsoft.Storage/storageAccounts",
+        "name": "[variables('webStorageAccountName')]",
+        "apiVersion": "2021-01-01",
+        "location": "[resourceGroup().location]",
+        "comments": "Storage account used to store the Web VM disks",
+        "tags": {
+          "displayName": "Web VM Storage Account",
+          "quickstartName": "(quickstartTags).name",
+          "provider": "(barracudaNetworksTags).provider"
+        },
+        "sku": {
+          "name": "Standard_GRS"
+        },
+        "kind": "Storage",
+        "properties": {}
+      },
+      {
+        "type": "Microsoft.Storage/storageAccounts",
+        "name": "[variables('diagStorageAccountName')]",
+        "apiVersion": "2021-01-01",
+        "location": "[resourceGroup().location]",
+        "comments": "Storage account used to store VM diagnostics data",
+        "tags": {
+          "displayName": "Diagnostics Storage Account",
+          "quickstartName": "(quickstartTags).name",
+          "provider": "(barracudaNetworksTags).provider"
+        },
+        "sku": {
+          "name": "Standard_LRS"
+        },
+        "kind": "Storage",
+        "properties": {}
+      },
+      {
+        "type": "Microsoft.Network/networkSecurityGroups",
+        "name": "bwaf-NSG",
+        "apiVersion": "2016-03-30",
+        "location": "[resourceGroup().location]",
+        "comments": " NSG for BWAF subnet",
+        "tags": {
+          "displayName": "BWAF NSG",
+          "quickstartName": "(quickstartTags).name",
+          "provider": "(barracudaNetworksTags).provider"
+        },
+        "properties": {
+          "securityRules": [
+            {
+              "name": "HTTP-allow",
+              "properties": {
+                "protocol": "Tcp",
+                "sourcePortRange": "*",
+                "destinationPortRange": "80",
+                "sourceAddressPrefix": "0.0.0.0/0",
+                "destinationAddressPrefix": "10.0.0.0/24",
+                "access": "Allow",
+                "priority": 110,
+                "direction": "Inbound"
+              }
+            },
+            {
+              "name": "HTTPS-allow",
+              "properties": {
+                "protocol": "Tcp",
+                "sourcePortRange": "*",
+                "destinationPortRange": "443",
+                "sourceAddressPrefix": "0.0.0.0/0",
+                "destinationAddressPrefix": "10.0.0.0/24",
+                "access": "Allow",
+                "priority": 120,
+                "direction": "Inbound"
+              }
+            },
+            {
+              "name": "AdminPortal-allow",
+              "properties": {
+                "protocol": "Tcp",
+                "sourcePortRange": "*",
+                "destinationPortRange": "8000",
+                "sourceAddressPrefix": "0.0.0.0/0",
+                "destinationAddressPrefix": "10.0.0.0/24",
+                "access": "Allow",
+                "priority": 130,
+                "direction": "Inbound"
+              }
+            }
+          ]
+        }
+      },
+      {
+        "type": "Microsoft.Network/networkSecurityGroups",
+        "name": "web-NSG",
+        "apiVersion": "2016-03-30",
+        "location": "[resourceGroup().location]",
+        "comments": " NSG for Web subnet",
+        "tags": {
+          "displayName": "Web NSG",
+          "quickstartName": "(quickstartTags).name",
+          "provider": "(barracudaNetworksTags).provider"
+        },
+        "properties": {
+          "securityRules": [
+            {
+              "name": "RDP-allow",
+              "properties": {
+                "protocol": "Tcp",
+                "sourcePortRange": "*",
+                "destinationPortRange": "3389",
+                "sourceAddressPrefix": "0.0.0.0/0",
+                "destinationAddressPrefix": "10.0.1.0/24",
+                "access": "Allow",
+                "priority": 110,
+                "direction": "Inbound"
+              }
+            }
+          ]
+        }
+      },
+      {
+        "type": "Microsoft.Network/publicIPAddresses",
+        "name": "bwaf-pip",
+        "apiVersion": "2016-03-30",
+        "location": "[resourceGroup().location]",
+        "comments": " Public IP used by the BWAF VM",
+        "tags": {
+          "displayName": "BWAF Public IP",
+          "quickstartName": "(quickstartTags).name",
+          "provider": "(barracudaNetworksTags).provider"
+        },
+        "properties": {
+          "publicIPAllocationMethod": "Static",
+          "idleTimeoutInMinutes": 4,
+          "dnsSettings": {
+            "domainNameLabel": "[variables('bwafVmDnsLabel')]"
+          }
+        }
+      },
+      {
+        "type": "Microsoft.Network/publicIPAddresses",
+        "name": "lb-pip",
+        "apiVersion": "2016-03-30",
+        "location": "[resourceGroup().location]",
+        "comments": "Public IP used by the Load Balancer for RDP into Web Servers",
+        "tags": {
+          "displayName": "LB Public IP",
+          "quickstartName": "(quickstartTags).name",
+          "provider": "(barracudaNetworksTags).provider"
+        },
+        "properties": {
+          "publicIPAllocationMethod": "Static",
+          "idleTimeoutInMinutes": 4,
+          "dnsSettings": {
+            "domainNameLabel": "[variables('lbDnsLabel')]"
+          }
+        }
+      },
+      {
+        "type": "Microsoft.Network/virtualNetworks",
+        "name": "bwaf-vnet",
+        "apiVersion": "2016-03-30",
+        "location": "[resourceGroup().location]",
+        "comments": "Virtual network for overall solution",
+        "tags": {
+          "displayName": "Bwaf Virtual Network",
+          "quickstartName": "(quickstartTags).name",
+          "provider": "(barracudaNetworksTags).provider"
+        },
+        "dependsOn": [
+          "Microsoft.Network/networkSecurityGroups//web-NSG",
+          "Microsoft.Network/networkSecurityGroups//bwaf-NSG"
+        ],
+        "properties": {
+          "addressSpace": {
+            "addressPrefixes": [
+              "10.0.0.0/16"
+            ]
+          },
+          "subnets": [
+            {
+              "name": "bwaf-subnet",
+              "properties": {
+                "addressPrefix": "10.0.0.0/24",
+                "networkSecurityGroup": {
+                  "id": "Microsoft.Network/networkSecurityGroups/bwaf-NSG"
+                }
+              }
+            },
+            {
+              "name": "web-subnet",
+              "properties": {
+                "addressPrefix": "10.0.1.0/24",
+                "networkSecurityGroup": {
+                  "id": "Microsoft.Network/networkSecurityGroups/web-NSG"
+                }
+              }
+            }
+          ]
+        }
+      },
+      {
+        "type": "Microsoft.Compute/availabilitySets",
+        "name": "web-as",
+        "apiVersion": "2017-12-01",
+        "location": "[resourceGroup().location]",
+        "comments": "This is the Availability Set for all Web VMs",
+        "tags": {
+          "displayName": "Web Avail Set",
+          "quickstartName": "(quickstartTags).name",
+          "provider": "(barracudaNetworksTags).provider"
+        },
+        "sku": {
+          "name": "Aligned"
+        },
+        "properties": {
+          "platformFaultDomainCount": 2,
+          "platformUpdateDomainCount": 2
+        }
+      },
+      {
+        "type": "Microsoft.Compute/availabilitySets",
+        "name": "bwaf-as",
+        "apiVersion": "2017-12-01",
+        "location": "[resourceGroup().location]",
+        "comments": "This is the Availability Set for BWAF VM",
+        "tags": {
+          "displayName": "BWAF Avail Set",
+          "quickstartName": "(quickstartTags).name",
+          "provider": "(barracudaNetworksTags).provider"
+        },
+        "sku": {
+          "name": "Aligned"
+        },
+        "properties": {
+          "platformFaultDomainCount": 2,
+          "platformUpdateDomainCount": 2
+        }
+      },
+      {
+        "type": "Microsoft.Network/loadBalancers",
+        "name": "web-rdp-lb",
+        "apiVersion": "2015-06-15",
+        "location": "[resourceGroup().location]",
+        "comments": "This Load Balancer is used to allow RDP access to Web VMs",
+        "tags": {
+          "displayName": "Web RDP Load Balancer",
+          "quickstartName": "(quickstartTags).name",
+          "provider": "(barracudaNetworksTags).provider"
+        },
+        "dependsOn": [
+          "Microsoft.Network/publicIPAddresses//lb-pip"
+        ],
+        "properties": {
+          "frontendIPConfigurations": [
+            {
+              "name": "loadBalancerFrontEnd",
+              "properties": {
+                "publicIPAddress": {
+                  "id": "Microsoft.Network/publicIPAddresses/lb-pip"
+                }
+              }
+            }
+          ],
+          "backendAddressPools": [
+            {
+              "name": "loadBalancerBackEnd"
+            }
+          ]
+        }
+      },
+      {
+        "type": "Microsoft.Network/loadBalancers/inboundNatRules",
+        "name": "[concat(variables('loadBalancerName'), '/', 'RDPVM', copyIndex(1))]",
+        "apiVersion": "2016-03-30",
+        "location": "[resourceGroup().location]",
+        "comments": "This resource adds all the NAT rules needed to allow RDP access to Web Servers VMs",
+        "tags": {
+          "displayName": "LB RDP NAT rules",
+          "quickstartName": "(quickstartTags).name",
+          "provider": "(barracudaNetworksTags).provider"
+        },
+        "dependsOn": [
+          "Microsoft.Network/loadBalancers//web-rdp-lb"
+        ],
+        "copy": {
+          "name": "lbNatLoop",
+          "count": "webvmCount"
+        },
+        "properties": {
+          "frontendIPConfiguration": {
+            "id": "Microsoft.Network/loadBalancers/frontendIPConfigurations/web-rdp-lb/loadBalancerFrontEnd"
+          },
+          "protocol": "Tcp",
+          "frontendPort": "[copyIndex(5001)]",
+          "backendPort": 3389,
+          "enableFloatingIP": false
+        }
+      },
+      {
+        "name": "[concat(variables('webVmNicName'), copyindex(1))]",
+        "type": "Microsoft.Network/networkInterfaces",
+        "apiVersion": "2016-03-30",
+        "location": "[resourceGroup().location]",
+        "comments": "NICs for Web Servers",
+        "tags": {
+          "displayName": "Web VM NICs",
+          "quickstartName": "(quickstartTags).name",
+          "provider": "(barracudaNetworksTags).provider"
+        },
+        "dependsOn": [
+          "[resourceId('Microsoft.Network/virtualNetworks/', variables('virtualNetworkName'))]",
+          "[resourceId('Microsoft.Network/loadBalancers/inboundNatRules',variables('loadBalancerName'), concat('RDPVM', copyIndex(1)))]"
+        ],
+        "copy": {
+          "name": "WebnicLoop",
+          "count": 2
+        },
+        "properties": {
+          "ipConfigurations": [
+            {
+              "name": "ipconfig1",
+              "properties": {
+                "privateIPAllocationMethod": "Dynamic",
+                "subnet": {
+                  "id": "Microsoft.Network/virtualNetworks/subnets/bwaf-vnet/web-subnet"
+                },
+                "loadBalancerBackendAddressPools": [
+                  {
+                    "id": "Microsoft.Network/loadBalancers/backendAddressPools/web-rdp-lb/LoadBalancerBackend"
+                  }
+                ],
+                "loadBalancerInboundNatRules": [
+                  {
+                    "id": "[resourceId('Microsoft.Network/loadBalancers/inboundNatRules',variables('loadBalancerName'),concat('RDPVM',copyIndex(1)))]"
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      },
+      {
+        "type": "Microsoft.Network/networkInterfaces",
+        "name": "bwaf-vm-nic",
+        "apiVersion": "2016-03-30",
+        "location": "[resourceGroup().location]",
+        "comments": "NIC for BWAF VM",
+        "tags": {
+          "displayName": "BWAF VM NIC",
+          "quickstartName": "(quickstartTags).name",
+          "provider": "(barracudaNetworksTags).provider"
+        },
+        "dependsOn": [
+          "Microsoft.Network/virtualNetworks//bwaf-vnet",
+          "Microsoft.Network/publicIPAddresses/bwaf-pip"
+        ],
+        "properties": {
+          "ipConfigurations": [
+            {
+              "name": "ipconfig1",
+              "properties": {
+                "privateIPAllocationMethod": "Dynamic",
+                "publicIPAddress": {
+                  "id": "Microsoft.Network/publicIPAddresses/bwaf-pip"
+                },
+                "subnet": {
+                  "id": "Microsoft.Network/virtualNetworks/subnets/bwaf-vnet/bwaf-subnet"
+                }
+              }
+            }
+          ]
+        }
+      },
+      {
+        "type": "Microsoft.Compute/virtualMachines",
+        "name": "[concat(variables('webVmName'), copyindex(1))]",
+        "apiVersion": "2017-03-30",
+        "location": "[resourceGroup().location]",
+        "comments": " Web Server VMs",
+        "tags": {
+          "displayName": "Web VMs",
+          "quickstartName": "(quickstartTags).name",
+          "provider": "(barracudaNetworksTags).provider"
+        },
+        "dependsOn": [
+          "[resourceId('Microsoft.Storage/storageAccounts/', variables('webStorageAccountName'))]",
+          "[resourceId('Microsoft.Network/networkInterfaces/', concat(variables('webVmNicName'), copyindex(1)))]",
+          "[resourceId('Microsoft.Compute/availabilitySets/', variables('webAvailSetName'))]"
+        ],
+        "copy": {
+          "name": "webSrvMachineLoop",
+          "count": 2
+        },
+        "properties": {
+          "availabilitySet": {
+            "id": "Microsoft.Compute/availabilitySets/web-as"
+          },
+          "hardwareProfile": {
+            "vmSize": "Standard_D2_v3"
+          },
+          "osProfile": {
+            "computerName": "[concat('webserver',copyindex(1))]",
+            "adminUsername": "GEN-UNIQUE",
+            "adminPassword": "GEN-PASSWORD"
+          },
+          "storageProfile": {
+            "imageReference": {
+              "publisher": "MicrosoftWindowsServer",
+              "offer": "WindowsServer",
+              "sku": "2012-R2-Datacenter",
+              "version": "latest"
+            },
+            "osDisk": {
+              "name": "[concat(variables('webVmName'), copyindex(1),'_OSDisk')]",
+              "caching": "ReadWrite",
+              "createOption": "FromImage"
+            }
+          },
+          "networkProfile": {
+            "networkInterfaces": [
+              {
+                "id": "[resourceId('Microsoft.Network/networkInterfaces', concat(variables('webVmNicName'), copyindex(1)))]"
+              }
+            ]
+          },
+          "diagnosticsProfile": {
+            "bootDiagnostics": {
+              "enabled": true,
+              "storageUri": "[reference(resourceId('Microsoft.Storage/storageAccounts/', variables('diagStorageAccountName'))).primaryEndpoints.blob]"
+            }
+          }
+        },
+        "resources": [
+          {
+            "type": "Microsoft.Compute/virtualMachines/extensions",
+            "name": "[concat(variables('webVmName'), copyindex(1),'/',concat(variables('webVmName'), copyindex(1),'-web-dsc'))]",
+            "apiVersion": "2015-06-15",
+            "location": "[resourceGroup().location]",
+            "comments": "This VM Extension loops to setup IIS in each Web VMs using DSC",
+            "tags": {
+              "displayName": "Web VM Extensions",
+              "quickstartName": "(quickstartTags).name",
+              "provider": "(barracudaNetworksTags).provider"
+            },
+            "dependsOn": [
+              "[resourceId('Microsoft.Compute/virtualMachines/', concat(variables('webVmName'), copyindex(1)))]"
+            ],
+            "properties": {
+              "publisher": "Microsoft.Powershell",
+              "type": "DSC",
+              "typeHandlerVersion": "2.19",
+              "autoUpgradeMinorVersion": true,
+              "settings": {
+                "modulesUrl": "[uri(parameters('_artifactsLocation'),concat('scripts/webserverconfig.zip',parameters('_artifactsLocationSasToken')))]",
+                "configurationFunction": "webServerConfig.ps1\\WebServerConfig",
+                "wmfVersion": "4.0",
+                "Properties": {}
+              }
+            }
+          }
+        ]
+      },
+      {
+        "type": "Microsoft.Compute/virtualMachines",
+        "name": "bwaf-vm",
+        "apiVersion": "2017-03-30",
+        "location": "[resourceGroup().location]",
+        "comments": "This is the Barracuda WAF VM",
+        "tags": {
+          "displayName": "BWAF VM",
+          "quickstartName": "(quickstartTags).name",
+          "provider": "(barracudaNetworksTags).provider"
+        },
+        "dependsOn": [
+          "[resourceId('Microsoft.Storage/storageAccounts/', variables('bwafStorageAccountName'))]",
+          "[resourceId('Microsoft.Network/networkInterfaces/', variables('bwafVmNicName'))]",
+          "[resourceId('Microsoft.Compute/availabilitySets/', variables('bwafAvailSetName'))]"
+        ],
+        "plan": {
+          "name": "hourly",
+          "publisher": "barracudanetworks",
+          "product": "waf"
+        },
+        "properties": {
+          "osProfile": {
+            "computerName": "bwafserver",
+            "adminUsername": "GEN-UNIQUE",
+            "adminPassword": "GEN-PASSWORD"
+          },
+          "hardwareProfile": {
+            "vmSize": "Standard_D2_v3"
+          },
+          "storageProfile": {
+            "imageReference": {
+              "publisher": "barracudanetworks",
+              "offer": "waf",
+              "sku": "hourly",
+              "version": "latest"
+            },
+            "osDisk": {
+              "createOption": "FromImage",
+              "name": "bwaf-vm_OSDisk"
+            }
+          },
+          "networkProfile": {
+            "networkInterfaces": [
+              {
+                "id": "Microsoft.Network/networkInterfaces/bwaf-vm-nic"
+              }
+            ]
+          },
+          "availabilitySet": {
+            "id": "Microsoft.Compute/availabilitySets/bwaf-as"
+          }
+        }
+      }
+    ],
+    "outputs": {
+      "loadBalancerIP": {
+        "value": "[reference(resourceId('Microsoft.Network/publicIPAddresses',variables('lbIPAddressName'))).ipAddress]",
+        "type": "string"
+      },
+      "bwafIP": {
+        "value": "[reference(resourceId('Microsoft.Network/publicIPAddresses',variables('bwafVmIPAddressName'))).ipAddress]",
+        "type": "string"
+      },
+      "loadBalancerFqdn": {
+        "value": "[reference(resourceId('Microsoft.Network/publicIPAddresses',variables('lbIPAddressName'))).dnsSettings.fqdn]",
+        "type": "string"
+      },
+      "bwafFqdn": {
+        "value": "[reference(resourceId('Microsoft.Network/publicIPAddresses',variables('bwafVmIPAddressName'))).dnsSettings.fqdn]",
+        "type": "string"
+      }
+    },
+    "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+  }
+}

@@ -2,12 +2,12 @@
   "structure": "filesystem",
   "error": null,
   "reference": "master",
-  "contentType": "yaml",
+  "contentType": "json",
   "source": "gitConnectorGoogleKcc",
   "paths": [
-    "/samples/resources/storagebucketaccesscontrol/storage_v1beta1_storagebucketaccesscontrol.yaml"
+    "/samples/resources/monitoringgroup/monitoring_v1beta1_monitoringgroup_multiple_yaml_0.yaml"
   ],
-  "timestamp": 1628765151373,
+  "timestamp": 1642973304590,
   "queryuser": null,
   "checksum": "99914b932bd37a50b983c5e7c90ae93b",
   "node": {
@@ -15,29 +15,29 @@
     "type": "kcc",
     "collection": "kcctemplate",
     "paths": [
-      "/samples/resources/storagebucketaccesscontrol/storage_v1beta1_storagebucketaccesscontrol.yaml"
+      "/samples/resources/monitoringgroup/monitoring_v1beta1_monitoringgroup_multiple_yaml_0.yaml"
     ],
     "snapshotId": "KCC_TEMPLATE_SNAPSHOT529",
     "status": "active",
-    "validate": true
+    "validate": true,
+    "resourceTypes": [
+      "monitoringgroup"
+    ]
   },
   "snapshotId": "KCC_TEMPLATE_SNAPSHOT529",
   "collection": "kcctemplate",
   "json": {
-    "apiVersion": "storage.cnrm.cloud.google.com/v1beta1",
-    "kind": "StorageBucketAccessControl",
+    "apiVersion": "monitoring.cnrm.cloud.google.com/v1beta1",
+    "kind": "MonitoringGroup",
     "metadata": {
-      "labels": {
-        "label-one": "value-one"
-      },
-      "name": "storagebucketaccesscontrol-sample"
+      "name": "monitoringgroup-sample"
     },
     "spec": {
-      "bucketRef": {
-        "name": "${PROJECT_ID?}-bucketaccesscontrol-dep"
-      },
-      "entity": "allAuthenticatedUsers",
-      "role": "READER"
+      "displayName": "MonitoringSubGroup",
+      "filter": "resource.metadata.name=has_substring(\"test\")",
+      "parentRef": {
+        "name": "monitoringgroup-dep"
+      }
     }
   }
 }

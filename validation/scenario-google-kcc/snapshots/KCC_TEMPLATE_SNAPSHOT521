@@ -2,12 +2,12 @@
   "structure": "filesystem",
   "error": null,
   "reference": "master",
-  "contentType": "yaml",
+  "contentType": "json",
   "source": "gitConnectorGoogleKcc",
   "paths": [
-    "/samples/resources/sqlinstance/private-ip-instance/sql_v1beta1_sqlinstance.yaml"
+    "/samples/resources/memcacheinstance/memcache_v1beta1_memcacheinstance.yaml"
   ],
-  "timestamp": 1628765151092,
+  "timestamp": 1642973304561,
   "queryuser": null,
   "checksum": "99914b932bd37a50b983c5e7c90ae93b",
   "node": {
@@ -15,30 +15,47 @@
     "type": "kcc",
     "collection": "kcctemplate",
     "paths": [
-      "/samples/resources/sqlinstance/private-ip-instance/sql_v1beta1_sqlinstance.yaml"
+      "/samples/resources/memcacheinstance/memcache_v1beta1_memcacheinstance.yaml"
     ],
     "snapshotId": "KCC_TEMPLATE_SNAPSHOT521",
     "status": "active",
-    "validate": true
+    "validate": true,
+    "resourceTypes": [
+      "memcacheinstance"
+    ]
   },
   "snapshotId": "KCC_TEMPLATE_SNAPSHOT521",
   "collection": "kcctemplate",
   "json": {
-    "apiVersion": "sql.cnrm.cloud.google.com/v1beta1",
-    "kind": "SQLInstance",
+    "apiVersion": "memcache.cnrm.cloud.google.com/v1beta1",
+    "kind": "MemcacheInstance",
     "metadata": {
-      "name": "sqlinstance-sample-private-ip"
+      "labels": {
+        "size": "small",
+        "process-type": "long-queue"
+      },
+      "name": "memcacheinstance-sample"
     },
     "spec": {
-      "databaseVersion": "MYSQL_5_7",
+      "networkRef": {
+        "name": "memcacheinstance-dep"
+      },
+      "nodeConfig": {
+        "memorySizeMb": 1024,
+        "cpuCount": 1
+      },
+      "nodeCount": 2,
       "region": "us-central1",
-      "settings": {
-        "tier": "db-f1-micro",
-        "ipConfiguration": {
-          "ipv4Enabled": false,
-          "privateNetworkRef": {
-            "name": "sqlinstance-dep-private-ip"
-          }
+      "zones": [
+        "us-central1-a",
+        "us-central1-c"
+      ],
+      "displayName": "Sample Memcache Instance",
+      "memcacheParameters": {
+        "params": {
+          "listen-backlog": "10000",
+          "max-item-size": "524288",
+          "max-reqs-per-event": "1"
         }
       }
     }

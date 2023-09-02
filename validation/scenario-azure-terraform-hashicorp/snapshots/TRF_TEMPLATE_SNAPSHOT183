@@ -1,0 +1,229 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "main",
+  "contentType": "json",
+  "source": "gitConnectorAzureTerraHashicorp",
+  "paths": [
+    "/examples/vm-scale-set/linux/rolling-upgrade-policy/variables.tf",
+    "/examples/vm-scale-set/linux/rolling-upgrade-policy/main.tf"
+  ],
+  "timestamp": 1642943280258,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "TRF_TEMPLATE_SNAPSHOT",
+    "type": "terraform",
+    "collection": "terraformtemplate",
+    "paths": [
+      "/examples/vm-scale-set/linux/rolling-upgrade-policy/variables.tf",
+      "/examples/vm-scale-set/linux/rolling-upgrade-policy/main.tf"
+    ],
+    "snapshotId": "TRF_TEMPLATE_SNAPSHOT183",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "azurerm_lb_backend_address_pool",
+      "azurerm_lb_rule",
+      "azurerm_subnet",
+      "azurerm_virtual_network",
+      "azurerm_resource_group",
+      "azurerm_lb_nat_pool",
+      "azurerm_linux_virtual_machine_scale_set",
+      "azurerm_lb",
+      "azurerm_public_ip",
+      "azurerm_lb_probe"
+    ]
+  },
+  "snapshotId": "TRF_TEMPLATE_SNAPSHOT183",
+  "collection": "terraformtemplate",
+  "json": {
+    "provider": [
+      {
+        "azurerm": {
+          "features": [
+            {}
+          ]
+        }
+      }
+    ],
+    "resources": [
+      {
+        "type": "azurerm_resource_group",
+        "name": "main",
+        "properties": {
+          "name": "${var.prefix}-resources",
+          "location": "${var.location}",
+          "compiletime_identity": "azurerm_resource_group.main"
+        }
+      },
+      {
+        "type": "azurerm_virtual_network",
+        "name": "main",
+        "properties": {
+          "name": "${var.prefix}-network",
+          "address_space": [
+            "10.0.0.0/16"
+          ],
+          "location": "${azurerm_resource_group.main.location}",
+          "resource_group_name": "${azurerm_resource_group.main.name}",
+          "compiletime_identity": "azurerm_virtual_network.main"
+        }
+      },
+      {
+        "type": "azurerm_subnet",
+        "name": "internal",
+        "properties": {
+          "name": "internal",
+          "resource_group_name": "${azurerm_resource_group.main.name}",
+          "virtual_network_name": "${azurerm_virtual_network.main.name}",
+          "address_prefixes": [
+            "10.0.2.0/24"
+          ],
+          "compiletime_identity": "azurerm_subnet.internal"
+        }
+      },
+      {
+        "type": "azurerm_public_ip",
+        "name": "main",
+        "properties": {
+          "name": "${var.prefix}-publicip",
+          "location": "${azurerm_resource_group.main.location}",
+          "resource_group_name": "${azurerm_resource_group.main.name}",
+          "allocation_method": "Static",
+          "compiletime_identity": "azurerm_public_ip.main"
+        }
+      },
+      {
+        "type": "azurerm_lb",
+        "name": "main",
+        "properties": {
+          "name": "${var.prefix}-lb",
+          "location": "${azurerm_resource_group.main.location}",
+          "resource_group_name": "${azurerm_resource_group.main.name}",
+          "frontend_ip_configuration": [
+            {
+              "name": "internal",
+              "public_ip_address_id": "${azurerm_public_ip.main.id}"
+            }
+          ],
+          "compiletime_identity": "azurerm_lb.main"
+        }
+      },
+      {
+        "type": "azurerm_lb_backend_address_pool",
+        "name": "main",
+        "properties": {
+          "name": "backend-pool",
+          "resource_group_name": "${azurerm_resource_group.main.name}",
+          "loadbalancer_id": "${azurerm_lb.main.id}",
+          "compiletime_identity": "azurerm_lb_backend_address_pool.main"
+        }
+      },
+      {
+        "type": "azurerm_lb_nat_pool",
+        "name": "main",
+        "properties": {
+          "name": "nat-pool",
+          "resource_group_name": "${azurerm_resource_group.main.name}",
+          "loadbalancer_id": "${azurerm_lb.main.id}",
+          "frontend_ip_configuration_name": "internal",
+          "protocol": "Tcp",
+          "frontend_port_start": 80,
+          "frontend_port_end": 90,
+          "backend_port": 8080,
+          "compiletime_identity": "azurerm_lb_nat_pool.main"
+        }
+      },
+      {
+        "type": "azurerm_lb_probe",
+        "name": "main",
+        "properties": {
+          "name": "lb-probe",
+          "resource_group_name": "${azurerm_resource_group.main.name}",
+          "loadbalancer_id": "${azurerm_lb.main.id}",
+          "port": 22,
+          "protocol": "Tcp",
+          "compiletime_identity": "azurerm_lb_probe.main"
+        }
+      },
+      {
+        "type": "azurerm_lb_rule",
+        "name": "main",
+        "properties": {
+          "name": "lb-rule",
+          "resource_group_name": "${azurerm_resource_group.main.name}",
+          "loadbalancer_id": "${azurerm_lb.main.id}",
+          "probe_id": "${azurerm_lb_probe.main.id}",
+          "backend_address_pool_id": "${azurerm_lb_backend_address_pool.main.id}",
+          "frontend_ip_configuration_name": "internal",
+          "protocol": "Tcp",
+          "frontend_port": 22,
+          "backend_port": 22,
+          "compiletime_identity": "azurerm_lb_rule.main"
+        }
+      },
+      {
+        "type": "azurerm_linux_virtual_machine_scale_set",
+        "name": "main",
+        "properties": {
+          "name": "${var.prefix}-vmss",
+          "resource_group_name": "${azurerm_resource_group.main.name}",
+          "location": "${azurerm_resource_group.main.location}",
+          "sku": "Standard_F2",
+          "instances": 3,
+          "admin_username": "adminuser",
+          "admin_password": "P@ssw0rd1234!",
+          "disable_password_authentication": false,
+          "health_probe_id": "${azurerm_lb_probe.main.id}",
+          "upgrade_mode": "Rolling",
+          "source_image_reference": [
+            {
+              "publisher": "Canonical",
+              "offer": "UbuntuServer",
+              "sku": "16.04-LTS",
+              "version": "latest"
+            }
+          ],
+          "os_disk": [
+            {
+              "storage_account_type": "Standard_LRS",
+              "caching": "ReadWrite"
+            }
+          ],
+          "network_interface": [
+            {
+              "name": "example",
+              "primary": true,
+              "ip_configuration": [
+                {
+                  "name": "internal",
+                  "primary": true,
+                  "subnet_id": "${azurerm_subnet.internal.id}",
+                  "load_balancer_backend_address_pool_ids": [
+                    "${azurerm_lb_backend_address_pool.main.id}"
+                  ],
+                  "load_balancer_inbound_nat_rules_ids": [
+                    "${azurerm_lb_nat_pool.main.id}"
+                  ]
+                }
+              ]
+            }
+          ],
+          "rolling_upgrade_policy": [
+            {
+              "max_batch_instance_percent": 21,
+              "max_unhealthy_instance_percent": 22,
+              "max_unhealthy_upgraded_instance_percent": 23,
+              "pause_time_between_batches": "PT30S"
+            }
+          ],
+          "depends_on": [
+            "${azurerm_lb_rule.main}"
+          ],
+          "compiletime_identity": "azurerm_linux_virtual_machine_scale_set.main"
+        }
+      }
+    ]
+  }
+}

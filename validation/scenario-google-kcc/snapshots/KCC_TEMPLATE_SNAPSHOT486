@@ -2,12 +2,12 @@
   "structure": "filesystem",
   "error": null,
   "reference": "master",
-  "contentType": "yaml",
+  "contentType": "json",
   "source": "gitConnectorGoogleKcc",
   "paths": [
-    "/samples/resources/pubsubtopic/pubsub_v1beta1_pubsubtopic.yaml"
+    "/samples/resources/iamworkloadidentitypoolprovider/aws-workload-identity-pool-provider/iam_v1beta1_iamworkloadidentitypoolprovider.yaml"
   ],
-  "timestamp": 1628765150150,
+  "timestamp": 1642973304409,
   "queryuser": null,
   "checksum": "99914b932bd37a50b983c5e7c90ae93b",
   "node": {
@@ -15,22 +15,44 @@
     "type": "kcc",
     "collection": "kcctemplate",
     "paths": [
-      "/samples/resources/pubsubtopic/pubsub_v1beta1_pubsubtopic.yaml"
+      "/samples/resources/iamworkloadidentitypoolprovider/aws-workload-identity-pool-provider/iam_v1beta1_iamworkloadidentitypoolprovider.yaml"
     ],
     "snapshotId": "KCC_TEMPLATE_SNAPSHOT486",
     "status": "active",
-    "validate": true
+    "validate": true,
+    "resourceTypes": [
+      "iamworkloadidentitypoolprovider"
+    ]
   },
   "snapshotId": "KCC_TEMPLATE_SNAPSHOT486",
   "collection": "kcctemplate",
   "json": {
-    "apiVersion": "pubsub.cnrm.cloud.google.com/v1beta1",
-    "kind": "PubSubTopic",
+    "apiVersion": "iam.cnrm.cloud.google.com/v1beta1",
+    "kind": "IAMWorkloadIdentityPoolProvider",
     "metadata": {
-      "labels": {
-        "label-one": "value-one"
+      "name": "iamwipp-sample-aws"
+    },
+    "spec": {
+      "projectRef": {
+        "external": "projects/${PROJECT_ID?}"
       },
-      "name": "pubsubtopic-sample"
+      "location": "global",
+      "workloadIdentityPoolRef": {
+        "name": "iamwipp-dep-aws"
+      },
+      "displayName": "sample-provider",
+      "description": "A sample workload identity pool provider using aws",
+      "disabled": false,
+      "attributeMapping": {
+        "google.subject": "true"
+      },
+      "attributeCondition": "true",
+      "aws": {
+        "accountId": "999999999999",
+        "stsUri": [
+          "https://sts.amazonaws.com/sample-sts"
+        ]
+      }
     }
   }
 }

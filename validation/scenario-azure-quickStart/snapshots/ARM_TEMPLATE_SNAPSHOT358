@@ -1,0 +1,333 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAzureQuickStart",
+  "paths": [
+    "/application-workloads/pubnub/pubnub-eventhub-bridge/azuredeploy.json",
+    "/application-workloads/pubnub/pubnub-eventhub-bridge/azuredeploy.parameters.json"
+  ],
+  "timestamp": 1642962893165,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/application-workloads/pubnub/pubnub-eventhub-bridge/azuredeploy.json",
+      "/application-workloads/pubnub/pubnub-eventhub-bridge/azuredeploy.parameters.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT358",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "microsoft.web/sites",
+      "microsoft.web/serverfarms",
+      "microsoft.eventhub/namespaces"
+    ]
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT358",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "Event Hub Namespace": {
+        "type": "string",
+        "metadata": {
+          "description": "A unique Namespace. It's suggested to replace the 'pn-' prefix with your own unique prefix, such as your company name, and add a '-suffix' at the end, where the suffix is also unique."
+        },
+        "value": "GEN-UNIQUE-11"
+      },
+      "Azure Webjob Name": {
+        "type": "string",
+        "metadata": {
+          "description": "A unique Web Job Name. Follow the same naming conventions as for Event Hub Namespaces to ensure you have a unique, legal string."
+        },
+        "value": "GEN-UNIQUE-11"
+      },
+      "PubNub Ingress Channel": {
+        "type": "string",
+        "defaultValue": "pnInput",
+        "metadata": {
+          "description": "A channel name that the PubNub Subscriber should listen on. If you wish for the subscriber to listen on multiple channels, enter a CSV list of channels, with no spaces."
+        }
+      },
+      "PubNub Egress Channel": {
+        "type": "string",
+        "defaultValue": "pnOutput",
+        "metadata": {
+          "description": "A channel name that the PubNub Publisher should publish back out on."
+        }
+      },
+      "PubNub Announce Channel": {
+        "type": "string",
+        "defaultValue": "pnAnnounce",
+        "metadata": {
+          "description": "A channel name that the PubNub Deployment script will alert on when the deployment has completed. If you don't intend on using this, just set this value to all caps, case-sensitive DISABLED. See below for more information on using the Provisioning Listener and the Announce channel."
+        }
+      },
+      "PubNub Publish Key": {
+        "type": "string",
+        "defaultValue": "demo-36",
+        "metadata": {
+          "description": "The PubNub Publish API Key that the PubNub component should publish against."
+        }
+      },
+      "PubNub Subscribe Key": {
+        "type": "string",
+        "defaultValue": "demo-36",
+        "metadata": {
+          "description": "The PubNub Subscribe API Key that the PubNub component should subscribe against."
+        }
+      },
+      "Azure Service Plan": {
+        "type": "string",
+        "metadata": {
+          "description": "Must be USBasic unless you ensure all components are in the same region.  See README for more information."
+        },
+        "value": "GEN-UNIQUE-11"
+      },
+      "Azure Ingress Event Hub Name": {
+        "defaultValue": "infromsubscriberhub",
+        "type": "string",
+        "metadata": {
+          "description": "The name you wish to give the Ingress (Input) Event Hub. You can accept the default, as the Event Hub name needs only to be unique within a unique Event Hub Namespace."
+        }
+      },
+      "Azure Egress Event Hub Name": {
+        "defaultValue": "outtopnpublisher",
+        "type": "string",
+        "metadata": {
+          "description": "The name you wish to give the Egress (Output) Event Hub. You can accept the default, as the Event Hub name needs only to be unique within a unique Event Hub Namespace."
+        }
+      },
+      "Azure Ingress SAS Policy Name": {
+        "defaultValue": "infromsubscriberhub",
+        "type": "string",
+        "metadata": {
+          "description": "The name you wish to give the Ingress (Input) Event Hub SAS Policy. You can accept the default, as the Event Hub SAS Policy name needs only to be unique within a unique Event Hub Namespace."
+        }
+      },
+      "Azure Egress SAS Policy Name": {
+        "defaultValue": "outtopublisherhub",
+        "type": "string",
+        "metadata": {
+          "description": "The name you wish to give the Egress (Output) Event Hub SAS Policy. You can accept the default, as the Event Hub SAS Policy name needs only to be unique within a unique Event Hub Namespace."
+        }
+      },
+      "location": {
+        "type": "string",
+        "defaultValue": "[resourceGroup().location]",
+        "metadata": {
+          "description": "Location for all resources."
+        }
+      }
+    },
+    "variables": {
+      "sbVersion": "2015-08-01",
+      "ehInAuthorizationRuleResourceId": "Microsoft.EventHub/namespaces/eventhubs/authorizationRules/GEN-UNIQUE-11/infromsubscriberhub/infromsubscriberhub",
+      "ehOutAuthorizationRuleResourceId": "Microsoft.EventHub/namespaces/eventhubs/authorizationRules/GEN-UNIQUE-11/outtopnpublisher/outtopublisherhub",
+      "endpoint": "[if(contains(parameters('location'), 'gov'), '.azurewebsites.us', '.azurewebsites.net')]"
+    },
+    "resources": [
+      {
+        "comments": "Generalized from resource: '/subscriptions/38ccde7a-8dbd-46b4-a0c6-71201ffab311/resourcegroups/AutoNub/providers/Microsoft.EventHub/namespaces/AutoNubEventHub'.",
+        "type": "Microsoft.EventHub/namespaces",
+        "sku": {
+          "name": "Basic",
+          "tier": "Basic"
+        },
+        "name": "GEN-UNIQUE-11",
+        "apiVersion": "2018-01-01-preview",
+        "location": "[resourceGroup().location]",
+        "properties": {},
+        "resources": [
+          {
+            "comments": "Generalized from resource: '/subscriptions/38ccde7a-8dbd-46b4-a0c6-71201ffab311/resourcegroups/AutoNub/providers/Microsoft.EventHub/namespaces/AutoNubEventHub/eventhubs/infrompnsubscriber'.",
+            "type": "eventhubs",
+            "name": "infromsubscriberhub",
+            "dependsOn": [
+              "Microsoft.EventHub/namespaces/GEN-UNIQUE-11"
+            ],
+            "apiVersion": "2017-04-01",
+            "location": "[resourceGroup().location]",
+            "properties": {
+              "messageRetentionInDays": 1,
+              "partitionCount": 2
+            },
+            "resources": [
+              {
+                "comments": "Generalized from resource: '/subscriptions/38ccde7a-8dbd-46b4-a0c6-71201ffab311/resourcegroups/AutoNub/providers/Microsoft.EventHub/namespaces/AutoNubEventHub/eventhubs/infrompnsubscriber/authorizationRules/infromsubscriberhub'.",
+                "type": "authorizationRules",
+                "dependsOn": [
+                  "Microsoft.EventHub/namespaces/eventhubs/GEN-UNIQUE-11/infromsubscriberhub"
+                ],
+                "name": "infromsubscriberhub",
+                "apiVersion": "2017-04-01",
+                "location": "[resourceGroup().location]",
+                "properties": {
+                  "rights": [
+                    "Send",
+                    "Listen"
+                  ]
+                }
+              }
+            ]
+          },
+          {
+            "comments": "Generalized from resource: '/subscriptions/38ccde7a-8dbd-46b4-a0c6-71201ffab311/resourcegroups/AutoNub/providers/Microsoft.EventHub/namespaces/AutoNubEventHub/eventhubs/outtopnpublisher'.",
+            "type": "eventhubs",
+            "name": "outtopnpublisher",
+            "dependsOn": [
+              "Microsoft.EventHub/namespaces/GEN-UNIQUE-11",
+              "Microsoft.EventHub/namespaces/eventhubs/GEN-UNIQUE-11/infromsubscriberhub"
+            ],
+            "apiVersion": "2017-04-01",
+            "location": "[resourceGroup().location]",
+            "properties": {
+              "messageRetentionInDays": 1,
+              "partitionCount": 2
+            },
+            "resources": [
+              {
+                "comments": "Generalized from resource: '/subscriptions/38ccde7a-8dbd-46b4-a0c6-71201ffab311/resourcegroups/AutoNub/providers/Microsoft.EventHub/namespaces/AutoNubEventHub/eventhubs/outtopnpublisher/authorizationRules/outtopublisherhub'.",
+                "type": "authorizationRules",
+                "dependsOn": [
+                  "Microsoft.EventHub/namespaces/eventhubs/GEN-UNIQUE-11/outtopnpublisher"
+                ],
+                "name": "outtopublisherhub",
+                "apiVersion": "2017-04-01",
+                "location": "[resourceGroup().location]",
+                "properties": {
+                  "rights": [
+                    "Send",
+                    "Listen"
+                  ]
+                }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "comments": "Generalized from resource: '/subscriptions/38ccde7a-8dbd-46b4-a0c6-71201ffab311/resourceGroups/AutoNub/providers/Microsoft.Web/serverfarms/USWestBasic'.",
+        "type": "Microsoft.Web/serverfarms",
+        "sku": {
+          "name": "B1",
+          "tier": "Basic",
+          "size": "B1",
+          "family": "B",
+          "capacity": 1
+        },
+        "name": "GEN-UNIQUE-11",
+        "apiVersion": "2020-12-01",
+        "location": "[resourceGroup().location]",
+        "properties": {
+          "name": "GEN-UNIQUE-11",
+          "numberOfWorkers": 1
+        }
+      },
+      {
+        "comments": "Generalized from resource: '/subscriptions/38ccde7a-8dbd-46b4-a0c6-71201ffab311/resourceGroups/AutoNub/providers/Microsoft.Web/sites/pnwebjob'.",
+        "type": "Microsoft.Web/sites",
+        "name": "GEN-UNIQUE-11",
+        "apiVersion": "2020-06-01",
+        "location": "[resourceGroup().location]",
+        "properties": {
+          "name": "GEN-UNIQUE-11",
+          "hostNames": [
+            "GEN-UNIQUE-11[if(contains(parameters('location'), 'gov'), '.azurewebsites.us', '.azurewebsites.net')]"
+          ],
+          "enabledHostNames": [
+            "GEN-UNIQUE-11[if(contains(parameters('location'), 'gov'), '.azurewebsites.us', '.azurewebsites.net')]",
+            "GEN-UNIQUE-11.scm[if(contains(parameters('location'), 'gov'), '.azurewebsites.us', '.azurewebsites.net')]"
+          ],
+          "hostNameSslStates": [
+            {
+              "name": "GEN-UNIQUE-11[if(contains(parameters('location'), 'gov'), '.azurewebsites.us', '.azurewebsites.net')]",
+              "sslState": 0,
+              "ipBasedSslState": 0
+            },
+            {
+              "name": "GEN-UNIQUE-11.scm[if(contains(parameters('location'), 'gov'), '.azurewebsites.us', '.azurewebsites.net')]",
+              "sslState": 0,
+              "ipBasedSslState": 0
+            }
+          ],
+          "serverFarmId": "Microsoft.Web/serverfarms/GEN-UNIQUE-11"
+        },
+        "resources": [
+          {
+            "apiVersion": "2020-06-01",
+            "name": "web",
+            "type": "config",
+            "dependsOn": [
+              "Microsoft.Web/Sites/GEN-UNIQUE-11"
+            ],
+            "properties": {
+              "alwaysOn": true
+            }
+          },
+          {
+            "apiVersion": "2020-06-01",
+            "name": "web",
+            "type": "sourcecontrols",
+            "dependsOn": [
+              "Microsoft.Web/Sites/GEN-UNIQUE-11"
+            ],
+            "properties": {
+              "RepoUrl": "https://github.com/pubnub/azureEventHubBridge.git",
+              "branch": "master",
+              "IsManualIntegration": true
+            }
+          },
+          {
+            "apiVersion": "2020-06-01",
+            "name": "connectionstrings",
+            "type": "config",
+            "dependsOn": [
+              "Microsoft.Web/Sites/GEN-UNIQUE-11",
+              "Microsoft.Web/Sites/sourcecontrols/GEN-UNIQUE-11/web"
+            ],
+            "properties": {
+              "PNSubChannel": {
+                "value": "pnInput",
+                "type": "custom"
+              },
+              "PNPubChannel": {
+                "value": "pnOutput",
+                "type": "custom"
+              },
+              "PNAnnounceChannel": {
+                "value": "pnAnnounce",
+                "type": "custom"
+              },
+              "PNPublishKey": {
+                "value": "demo-36",
+                "type": "custom"
+              },
+              "PNSubscribeKey": {
+                "value": "demo-36",
+                "type": "custom"
+              },
+              "EHInConnectionString": {
+                "value": "[listkeys(variables('ehInAuthorizationRuleResourceId'), variables('sbVersion')).primaryConnectionString]",
+                "type": "custom"
+              },
+              "EHOutConnectionString": {
+                "value": "[listkeys(variables('ehOutAuthorizationRuleResourceId'), variables('sbVersion')).primaryConnectionString]",
+                "type": "custom"
+              }
+            }
+          }
+        ],
+        "dependsOn": [
+          "Microsoft.Web/serverfarms/GEN-UNIQUE-11"
+        ]
+      }
+    ],
+    "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+  }
+}

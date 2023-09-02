@@ -1,0 +1,272 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAzureQuickStart",
+  "paths": [
+    "/application-workloads/sql/aks-sql-server-always-on/azuredeploy.json",
+    "/application-workloads/sql/aks-sql-server-always-on/azuredeploy.parameters.json"
+  ],
+  "timestamp": 1642962896412,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/application-workloads/sql/aks-sql-server-always-on/azuredeploy.json",
+      "/application-workloads/sql/aks-sql-server-always-on/azuredeploy.parameters.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT531",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "microsoft.storage/storageaccounts",
+      "microsoft.containerinstance/containergroups"
+    ]
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT531",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "aks_cluster_name": {
+        "type": "string",
+        "defaultValue": "sql-server-aks",
+        "metadata": {
+          "description": "The name to use for the AKS Cluster."
+        }
+      },
+      "aks_resource_group": {
+        "type": "string",
+        "defaultValue": "sql-server-always-on",
+        "metadata": {
+          "description": "The name of the resource group to create the AKS Cluster in."
+        },
+        "value": "sql-server-always-on"
+      },
+      "azure_client_id": {
+        "type": "securestring",
+        "metadata": {
+          "description": "AAD Client ID for Azure account authentication - used to authenticate to Azure using Service Principal for ACI creation to run CNAB operation and also for AKS Cluster."
+        },
+        "value": "GEN-GUID"
+      },
+      "azure_client_secret": {
+        "type": "securestring",
+        "metadata": {
+          "description": "AAD Client Secret for Azure account authentication - used to authenticate to Azure using Service Principal for ACI creation to run CNAB operation and also for AKS Cluster."
+        },
+        "value": "GEN_UNIQUE"
+      },
+      "cnab_action": {
+        "type": "string",
+        "defaultValue": "install",
+        "metadata": {
+          "description": "The name of the action to be performed on the application instance."
+        },
+        "value": "install"
+      },
+      "cnab_installation_name": {
+        "type": "string",
+        "defaultValue": "porter-sql-server-always-on",
+        "metadata": {
+          "description": "The name of the application instance."
+        },
+        "value": "sql-server-always-on"
+      },
+      "cnab_state_share_name": {
+        "type": "string",
+        "defaultValue": "",
+        "metadata": {
+          "description": "The file share name in the storage account for the CNAB state to be stored in"
+        }
+      },
+      "cnab_state_storage_account_key": {
+        "type": "string",
+        "defaultValue": "",
+        "metadata": {
+          "description": "The storage account key for the account for the CNAB state to be stored in, if this is left blank it will be looked up at runtime"
+        }
+      },
+      "cnab_state_storage_account_name": {
+        "type": "string",
+        "defaultValue": "[concat('cnabstate',uniqueString(resourceGroup().id))]",
+        "metadata": {
+          "description": "The storage account name for the account for the CNAB state to be stored in, by default this will be in the current resource group and will be created if it does not exist"
+        }
+      },
+      "cnab_state_storage_account_resource_group": {
+        "type": "string",
+        "defaultValue": "[resourceGroup().name]",
+        "metadata": {
+          "description": "The resource group name for the storage account for the CNAB state to be stored in, by default this will be in the current resource group, if this is changed to a different resource group the storage account is expected to already exist"
+        }
+      },
+      "containerGroupName": {
+        "type": "string",
+        "defaultValue": "[concat('cg-',uniqueString(resourceGroup().id, newGuid()))]",
+        "metadata": {
+          "description": "Name for the container group"
+        }
+      },
+      "containerName": {
+        "type": "string",
+        "defaultValue": "[concat('cn-',uniqueString(resourceGroup().id, newGuid()))]",
+        "metadata": {
+          "description": "Name for the container"
+        }
+      },
+      "location": {
+        "type": "string",
+        "defaultValue": "[resourceGroup().Location]",
+        "metadata": {
+          "description": "The location in which the resources will be created."
+        }
+      },
+      "sql_masterkeypassword": {
+        "type": "securestring",
+        "metadata": {
+          "description": "The Password for the SQL Server Master Key."
+        },
+        "value": "GEN-PASSWORD"
+      },
+      "sql_sapassword": {
+        "type": "securestring",
+        "metadata": {
+          "description": "The Password for the sa user in SQL Server."
+        },
+        "value": "GEN-PASSWORD"
+      }
+    },
+    "resources": [
+      {
+        "condition": false,
+        "type": "Microsoft.Storage/storageAccounts",
+        "name": "[concat('cnabstate',uniqueString(resourceGroup().id))]",
+        "apiVersion": "2021-01-01",
+        "location": "[resourceGroup().Location]",
+        "sku": {
+          "name": "Standard_LRS"
+        },
+        "kind": "StorageV2",
+        "properties": {
+          "encryption": {
+            "keySource": "Microsoft.Storage",
+            "services": {
+              "file": {
+                "enabled": true
+              }
+            }
+          }
+        }
+      },
+      {
+        "type": "Microsoft.ContainerInstance/containerGroups",
+        "name": "[concat('cg-',uniqueString(resourceGroup().id, newGuid()))]",
+        "apiVersion": "2018-10-01",
+        "location": "[resourceGroup().Location]",
+        "dependsOn": [
+          "[concat('cnabstate',uniqueString(resourceGroup().id))]"
+        ],
+        "properties": {
+          "containers": [
+            {
+              "name": "[concat('cn-',uniqueString(resourceGroup().id, newGuid()))]",
+              "properties": {
+                "image": "cnabquickstartstest.azurecr.io/simongdavies/run-duffle:latest",
+                "resources": {
+                  "requests": {
+                    "cpu": "1.0",
+                    "memoryInGb": "1.5"
+                  }
+                },
+                "environmentVariables": [
+                  {
+                    "name": "CNAB_ACTION",
+                    "value": "install"
+                  },
+                  {
+                    "name": "CNAB_INSTALLATION_NAME",
+                    "value": "sql-server-always-on"
+                  },
+                  {
+                    "name": "ACI_LOCATION",
+                    "value": "[resourceGroup().Location]"
+                  },
+                  {
+                    "name": "CNAB_STATE_STORAGE_ACCOUNT_NAME",
+                    "value": "[concat('cnabstate',uniqueString(resourceGroup().id))]"
+                  },
+                  {
+                    "name": "CNAB_STATE_STORAGE_ACCOUNT_KEY",
+                    "secureValue": ""
+                  },
+                  {
+                    "name": "CNAB_STATE_SHARE_NAME",
+                    "value": ""
+                  },
+                  {
+                    "name": "VERBOSE",
+                    "value": "false"
+                  },
+                  {
+                    "name": "CNAB_BUNDLE_NAME",
+                    "value": "porter/sql-server-always-on"
+                  },
+                  {
+                    "name": "AKS_CLUSTER_NAME",
+                    "value": "sql-server-aks"
+                  },
+                  {
+                    "name": "AKS_RESOURCE_GROUP",
+                    "value": "sql-server-always-on"
+                  },
+                  {
+                    "name": "LOCATION",
+                    "value": "[resourceGroup().Location]"
+                  },
+                  {
+                    "name": "SQL_MASTERKEYPASSWORD",
+                    "secureValue": "GEN-PASSWORD"
+                  },
+                  {
+                    "name": "SQL_SAPASSWORD",
+                    "secureValue": "GEN-PASSWORD"
+                  },
+                  {
+                    "name": "AZURE_CLIENT_ID",
+                    "secureValue": "GEN-GUID"
+                  },
+                  {
+                    "name": "AZURE_CLIENT_SECRET",
+                    "secureValue": "GEN_UNIQUE"
+                  },
+                  {
+                    "name": "AZURE_SUBSCRIPTION_ID",
+                    "value": "[subscription().subscriptionId]"
+                  },
+                  {
+                    "name": "AZURE_TENANT_ID",
+                    "value": "[subscription().tenantId]"
+                  }
+                ]
+              }
+            }
+          ],
+          "osType": "Linux",
+          "restartPolicy": "Never"
+        }
+      }
+    ],
+    "outputs": {
+      "CNAB Package Action Logs Command": {
+        "type": "string",
+        "value": "[concat('az container logs -g ',resourceGroup().name,' -n ',parameters('containerGroupName'),'  --container-name ',parameters('containerName'), ' --follow')]"
+      }
+    },
+    "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+  }
+}

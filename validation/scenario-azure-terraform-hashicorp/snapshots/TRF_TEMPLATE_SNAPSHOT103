@@ -1,0 +1,145 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "main",
+  "contentType": "json",
+  "source": "gitConnectorAzureTerraHashicorp",
+  "paths": [
+    "/examples/service-fabric/windows-vmss-self-signed-certs/variables.tf",
+    "/examples/service-fabric/windows-vmss-self-signed-certs/2-loadbalancer.tf"
+  ],
+  "timestamp": 1642943279932,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "TRF_TEMPLATE_SNAPSHOT",
+    "type": "terraform",
+    "collection": "terraformtemplate",
+    "paths": [
+      "/examples/service-fabric/windows-vmss-self-signed-certs/variables.tf",
+      "/examples/service-fabric/windows-vmss-self-signed-certs/2-loadbalancer.tf"
+    ],
+    "snapshotId": "TRF_TEMPLATE_SNAPSHOT103",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "azurerm_lb_backend_address_pool",
+      "azurerm_lb_rule",
+      "azurerm_lb_nat_pool",
+      "azurerm_lb",
+      "azurerm_public_ip",
+      "azurerm_lb_probe"
+    ]
+  },
+  "snapshotId": "TRF_TEMPLATE_SNAPSHOT103",
+  "collection": "terraformtemplate",
+  "json": {
+    "resources": [
+      {
+        "type": "azurerm_public_ip",
+        "name": "example",
+        "properties": {
+          "name": "${var.prefix}PIPForLB",
+          "location": "${azurerm_resource_group.example.location}",
+          "resource_group_name": "${azurerm_resource_group.example.name}",
+          "allocation_method": "Dynamic",
+          "domain_name_label": "exampleservicefabric",
+          "compiletime_identity": "azurerm_public_ip.example"
+        }
+      },
+      {
+        "type": "azurerm_lb",
+        "name": "example",
+        "properties": {
+          "name": "${var.prefix}LoadBalancer",
+          "location": "${azurerm_resource_group.example.location}",
+          "resource_group_name": "${azurerm_resource_group.example.name}",
+          "frontend_ip_configuration": [
+            {
+              "name": "PublicIPAddress",
+              "public_ip_address_id": "${azurerm_public_ip.example.id}"
+            }
+          ],
+          "compiletime_identity": "azurerm_lb.example"
+        }
+      },
+      {
+        "type": "azurerm_lb_backend_address_pool",
+        "name": "example",
+        "properties": {
+          "resource_group_name": "${azurerm_resource_group.example.name}",
+          "loadbalancer_id": "${azurerm_lb.example.id}",
+          "name": "${var.prefix}BEAPool",
+          "compiletime_identity": "azurerm_lb_backend_address_pool.example"
+        }
+      },
+      {
+        "type": "azurerm_lb_nat_pool",
+        "name": "example",
+        "properties": {
+          "resource_group_name": "${azurerm_resource_group.example.name}",
+          "loadbalancer_id": "${azurerm_lb.example.id}",
+          "name": "${var.prefix}SFApplicationPool",
+          "protocol": "Tcp",
+          "frontend_port_start": 3389,
+          "frontend_port_end": 4500,
+          "backend_port": 3389,
+          "frontend_ip_configuration_name": "${azurerm_lb.example.frontend_ip_configuration[0].name}",
+          "compiletime_identity": "azurerm_lb_nat_pool.example"
+        }
+      },
+      {
+        "type": "azurerm_lb_rule",
+        "name": "example_tcp",
+        "properties": {
+          "resource_group_name": "${azurerm_resource_group.example.name}",
+          "loadbalancer_id": "${azurerm_lb.example.id}",
+          "name": "${var.prefix}LBRuleTcp",
+          "protocol": "Tcp",
+          "frontend_port": 19000,
+          "backend_port": 19000,
+          "frontend_ip_configuration_name": "${azurerm_lb.example.frontend_ip_configuration[0].name}",
+          "backend_address_pool_id": "${azurerm_lb_backend_address_pool.example.id}",
+          "compiletime_identity": "azurerm_lb_rule.example_tcp"
+        }
+      },
+      {
+        "type": "azurerm_lb_rule",
+        "name": "example_http",
+        "properties": {
+          "resource_group_name": "${azurerm_resource_group.example.name}",
+          "loadbalancer_id": "${azurerm_lb.example.id}",
+          "name": "${var.prefix}LBRuleHttp",
+          "protocol": "Tcp",
+          "frontend_port": 19080,
+          "backend_port": 19080,
+          "frontend_ip_configuration_name": "${azurerm_lb.example.frontend_ip_configuration[0].name}",
+          "backend_address_pool_id": "${azurerm_lb_backend_address_pool.example.id}",
+          "compiletime_identity": "azurerm_lb_rule.example_http"
+        }
+      },
+      {
+        "type": "azurerm_lb_probe",
+        "name": "example_tcp",
+        "properties": {
+          "resource_group_name": "${azurerm_resource_group.example.name}",
+          "loadbalancer_id": "${azurerm_lb.example.id}",
+          "name": "${var.prefix}SFTcpGatewayProbe",
+          "port": 19000,
+          "compiletime_identity": "azurerm_lb_probe.example_tcp"
+        }
+      },
+      {
+        "type": "azurerm_lb_probe",
+        "name": "example_http",
+        "properties": {
+          "resource_group_name": "${azurerm_resource_group.example.name}",
+          "loadbalancer_id": "${azurerm_lb.example.id}",
+          "name": "${var.prefix}SFHttpGatewayProbe",
+          "port": 19080,
+          "compiletime_identity": "azurerm_lb_probe.example_http"
+        }
+      }
+    ]
+  }
+}

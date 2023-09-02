@@ -1,0 +1,95 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAzureQuickStart",
+  "paths": [
+    "/demos/web-app-regional-vnet-private-endpoint-sql-storage/nestedtemplates/vnet_peering.json"
+  ],
+  "timestamp": 1642962902421,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/demos/web-app-regional-vnet-private-endpoint-sql-storage/nestedtemplates/vnet_peering.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT875",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "microsoft.network/virtualnetworks/virtualnetworkpeerings"
+    ]
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT875",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "suffix": {
+        "type": "string",
+        "metadata": {
+          "description": "naming suffix based on resource group name hash"
+        }
+      },
+      "location": {
+        "type": "string",
+        "metadata": {
+          "description": "location to deploy the storage account"
+        }
+      },
+      "vNets": {
+        "type": "array",
+        "metadata": {
+          "description": "array of JSON virtual network objects"
+        }
+      }
+    },
+    "variables": {},
+    "resources": [
+      {
+        "apiVersion": "2018-11-01",
+        "type": "Microsoft.Network/virtualNetworks/virtualNetworkPeerings",
+        "name": "[concat(parameters('vNets')[0].name, '-', parameters('suffix'), '/peering-to-', parameters('vnets')[copyIndex(1)].name, '-', parameters('suffix'))]",
+        "location": "location",
+        "copy": {
+          "name": "hubPeeringCopy",
+          "count": "[sub(length(parameters('vNets')), 1)]"
+        },
+        "properties": {
+          "allowVirtualNetworkAccess": true,
+          "allowForwardedTraffic": true,
+          "allowGatewayTransit": false,
+          "useRemoteGateways": false,
+          "remoteVirtualNetwork": {
+            "id": "[resourceId('Microsoft.Network/virtualNetworks', concat(parameters('vNets')[copyIndex(1)].name, '-', parameters('suffix')))]"
+          }
+        }
+      },
+      {
+        "apiVersion": "2018-11-01",
+        "type": "Microsoft.Network/virtualNetworks/virtualNetworkPeerings",
+        "name": "[concat(parameters('vNets')[copyIndex(1)].name, '-', parameters('suffix'), '/peering-to-', parameters('vNets')[0].name, '-', parameters('suffix'))]",
+        "location": "location",
+        "copy": {
+          "name": "spokePeeringCopy",
+          "count": "[sub(length(parameters('vNets')), 1)]"
+        },
+        "properties": {
+          "allowVirtualNetworkAccess": true,
+          "allowForwardedTraffic": true,
+          "allowGatewayTransit": false,
+          "useRemoteGateways": false,
+          "remoteVirtualNetwork": {
+            "id": "[resourceId('Microsoft.Network/virtualNetworks', concat(parameters('vNets')[0].name, '-', parameters('suffix')))]"
+          }
+        }
+      }
+    ],
+    "outputs": {},
+    "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+  }
+}

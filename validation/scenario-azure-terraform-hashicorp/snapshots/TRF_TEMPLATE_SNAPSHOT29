@@ -1,0 +1,100 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "main",
+  "contentType": "json",
+  "source": "gitConnectorAzureTerraHashicorp",
+  "paths": [
+    "/examples/cdn/outputs.tf",
+    "/examples/cdn/variables.tf",
+    "/examples/cdn/main.tf"
+  ],
+  "timestamp": 1642943279655,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "TRF_TEMPLATE_SNAPSHOT",
+    "type": "terraform",
+    "collection": "terraformtemplate",
+    "paths": [
+      "/examples/cdn/outputs.tf",
+      "/examples/cdn/variables.tf",
+      "/examples/cdn/main.tf"
+    ],
+    "snapshotId": "TRF_TEMPLATE_SNAPSHOT29",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "azurerm_storage_account",
+      "azurerm_resource_group",
+      "azurerm_cdn_endpoint",
+      "azurerm_cdn_profile"
+    ]
+  },
+  "snapshotId": "TRF_TEMPLATE_SNAPSHOT29",
+  "collection": "terraformtemplate",
+  "json": {
+    "provider": [
+      {
+        "azurerm": {
+          "features": [
+            {}
+          ]
+        }
+      }
+    ],
+    "resources": [
+      {
+        "type": "azurerm_resource_group",
+        "name": "example",
+        "properties": {
+          "name": "${var.prefix}-resources",
+          "location": "${var.location}",
+          "compiletime_identity": "azurerm_resource_group.example"
+        }
+      },
+      {
+        "type": "azurerm_storage_account",
+        "name": "stor",
+        "properties": {
+          "name": "${var.prefix}stor",
+          "location": "${azurerm_resource_group.example.location}",
+          "resource_group_name": "${azurerm_resource_group.example.name}",
+          "account_tier": "Standard",
+          "account_replication_type": "LRS",
+          "compiletime_identity": "azurerm_storage_account.stor"
+        }
+      },
+      {
+        "type": "azurerm_cdn_profile",
+        "name": "example",
+        "properties": {
+          "name": "${var.prefix}-cdn",
+          "location": "${azurerm_resource_group.example.location}",
+          "resource_group_name": "${azurerm_resource_group.example.name}",
+          "sku": "Standard_Akamai",
+          "compiletime_identity": "azurerm_cdn_profile.example"
+        }
+      },
+      {
+        "type": "azurerm_cdn_endpoint",
+        "name": "example",
+        "properties": {
+          "name": "${var.prefix}-cdn",
+          "profile_name": "${azurerm_cdn_profile.example.name}",
+          "location": "${azurerm_resource_group.example.location}",
+          "resource_group_name": "${azurerm_resource_group.example.name}",
+          "origin": [
+            {
+              "name": "${var.prefix}origin1",
+              "host_name": "www.contoso.com",
+              "http_port": 80,
+              "https_port": 443
+            }
+          ],
+          "compiletime_identity": "azurerm_cdn_endpoint.example"
+        }
+      }
+    ]
+  }
+}

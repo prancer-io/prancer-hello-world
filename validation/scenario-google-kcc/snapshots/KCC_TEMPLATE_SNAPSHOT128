@@ -2,12 +2,12 @@
   "structure": "filesystem",
   "error": null,
   "reference": "master",
-  "contentType": "yaml",
+  "contentType": "json",
   "source": "gitConnectorGoogleKcc",
   "paths": [
-    "/samples/resources/computehttpshealthcheck/compute_v1beta1_computehttpshealthcheck.yaml"
+    "/samples/resources/computeforwardingrule/global-forwarding-rule-with-target-grpc-proxy/compute_v1beta1_computeforwardingrule.yaml"
   ],
-  "timestamp": 1628765140910,
+  "timestamp": 1642973302524,
   "queryuser": null,
   "checksum": "99914b932bd37a50b983c5e7c90ae93b",
   "node": {
@@ -15,28 +15,40 @@
     "type": "kcc",
     "collection": "kcctemplate",
     "paths": [
-      "/samples/resources/computehttpshealthcheck/compute_v1beta1_computehttpshealthcheck.yaml"
+      "/samples/resources/computeforwardingrule/global-forwarding-rule-with-target-grpc-proxy/compute_v1beta1_computeforwardingrule.yaml"
     ],
     "snapshotId": "KCC_TEMPLATE_SNAPSHOT128",
     "status": "active",
-    "validate": true
+    "validate": true,
+    "resourceTypes": [
+      "computeforwardingrule"
+    ]
   },
   "snapshotId": "KCC_TEMPLATE_SNAPSHOT128",
   "collection": "kcctemplate",
   "json": {
     "apiVersion": "compute.cnrm.cloud.google.com/v1beta1",
-    "kind": "ComputeHTTPSHealthCheck",
+    "kind": "ComputeForwardingRule",
     "metadata": {
-      "name": "computehttpshealthcheck-sample"
+      "labels": {
+        "label-one": "value-one"
+      },
+      "name": "computeforwardingrule-sample-global-with-grpc-proxy"
     },
     "spec": {
-      "checkIntervalSec": 10,
-      "description": "example HTTPS health check",
-      "healthyThreshold": 2,
-      "port": 80,
-      "requestPath": "/",
-      "timeoutSec": 5,
-      "unhealthyThreshold": 2
+      "description": "A global forwarding rule",
+      "target": {
+        "targetGRPCProxyRef": {
+          "name": "computeforwardingrule-dep-global-with-grpc-proxy"
+        }
+      },
+      "loadBalancingScheme": "INTERNAL_SELF_MANAGED",
+      "ipAddress": {
+        "ip": "0.0.0.0"
+      },
+      "portRange": "80",
+      "ipProtocol": "TCP",
+      "location": "global"
     }
   }
 }

@@ -1,0 +1,344 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAzureQuickStart",
+  "paths": [
+    "/application-workloads/torque/torque-cluster/azuredeploy.json",
+    "/application-workloads/torque/torque-cluster/azuredeploy.parameters.json"
+  ],
+  "timestamp": 1642962896858,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/application-workloads/torque/torque-cluster/azuredeploy.json",
+      "/application-workloads/torque/torque-cluster/azuredeploy.parameters.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT562",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "microsoft.network/publicipaddresses",
+      "microsoft.network/virtualnetworks",
+      "microsoft.network/networkinterfaces",
+      "microsoft.compute/virtualmachines/extensions",
+      "microsoft.compute/virtualmachines",
+      "microsoft.storage/storageaccounts"
+    ]
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT562",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "dnsName": {
+        "type": "string",
+        "metadata": {
+          "description": "Unique public dns name where the master node will be exposed"
+        },
+        "value": "GEN-UNIQUE-8"
+      },
+      "newStorageAccountName": {
+        "type": "string",
+        "metadata": {
+          "description": "Unique DNS Name for the Storage Account where the Virtual Machine's disks will be placed."
+        },
+        "value": "GEN-UNIQUE-8"
+      },
+      "adminUsername": {
+        "type": "string",
+        "metadata": {
+          "description": "User name for the Virtual Machine."
+        },
+        "value": "GEN-UNIQUE"
+      },
+      "adminPassword": {
+        "type": "securestring",
+        "metadata": {
+          "description": "Admin password"
+        },
+        "value": "GEN-PASSWORD"
+      },
+      "vmSize": {
+        "type": "string",
+        "defaultValue": "Standard_D2_v3",
+        "metadata": {
+          "description": "Size of the nodes."
+        },
+        "value": "Standard_D2_v3"
+      },
+      "scaleNumber": {
+        "type": "int",
+        "defaultValue": 2,
+        "metadata": {
+          "description": "This template create N worker node. Use scaleNumber to specify that N."
+        },
+        "value": 2
+      },
+      "location": {
+        "type": "string",
+        "defaultValue": "[resourceGroup().location]",
+        "metadata": {
+          "description": "Location for all resources."
+        }
+      },
+      "_artifactsLocation": {
+        "type": "string",
+        "metadata": {
+          "description": "The base URI where artifacts required by this template are located. For example, if stored on a public GitHub repo, you'd use the following URI: https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/torque-cluster/."
+        },
+        "defaultValue": "[deployment().properties.templatelink.uri]"
+      },
+      "_artifactsLocationSasToken": {
+        "type": "securestring",
+        "defaultValue": "",
+        "metadata": {
+          "description": "The sasToken required to access _artifactsLocation.  If your artifacts are stored on a public repo or public storage account you can leave this blank."
+        }
+      }
+    },
+    "variables": {
+      "imagePublisher": "OpenLogic",
+      "imageOffer": "CentOS",
+      "OSVersion": "6.10",
+      "publicIPAddressType": "Dynamic",
+      "publicIPAddressName": "publicips",
+      "masterVMName": "master",
+      "workerVMName": "worker",
+      "nicName": "nic",
+      "networkSettings": {
+        "virtualNetworkName": "virtualnetwork",
+        "addressPrefix": "10.0.0.0/16",
+        "subnet": {
+          "dse": {
+            "name": "dse",
+            "prefix": "10.0.0.0/24",
+            "vnet": "virtualnetwork"
+          }
+        },
+        "statics": {
+          "workerRange": {
+            "base": "10.0.0.",
+            "start": 5
+          },
+          "master": "10.0.0.254"
+        }
+      },
+      "subnetRef": "Microsoft.Network/virtualNetworks/subnets/(networkSettings).virtualNetworkName/(networkSettings).subnet.dse.name",
+      "installationCLI": "sh azuredeploy.sh master (networkSettings).statics.master worker (networkSettings).statics.workerRange.base (networkSettings).statics.workerRange.start 2 GEN-UNIQUE GEN-PASSWORD [deployment().properties.templatelink.uri]",
+      "storageAccountType": "Standard_LRS"
+    },
+    "resources": [
+      {
+        "type": "Microsoft.Storage/storageAccounts",
+        "name": "GEN-UNIQUE-8",
+        "apiVersion": "2019-06-01",
+        "location": "[resourceGroup().location]",
+        "sku": {
+          "name": "Standard_LRS"
+        },
+        "kind": "StorageV2"
+      },
+      {
+        "apiVersion": "2020-05-01",
+        "type": "Microsoft.Network/virtualNetworks",
+        "name": "(networkSettings).virtualNetworkName",
+        "location": "[resourceGroup().location]",
+        "properties": {
+          "addressSpace": {
+            "addressPrefixes": [
+              "(networkSettings).addressPrefix"
+            ]
+          },
+          "subnets": [
+            {
+              "name": "(networkSettings).subnet.dse.name",
+              "properties": {
+                "addressPrefix": "(networkSettings).subnet.dse.prefix"
+              }
+            }
+          ]
+        }
+      },
+      {
+        "type": "Microsoft.Network/publicIPAddresses",
+        "apiVersion": "2020-05-01",
+        "name": "publicips",
+        "location": "[resourceGroup().location]",
+        "properties": {
+          "publicIPAllocationMethod": "Dynamic",
+          "dnsSettings": {
+            "domainNameLabel": "GEN-UNIQUE-8"
+          }
+        }
+      },
+      {
+        "apiVersion": "2020-05-01",
+        "type": "Microsoft.Network/networkInterfaces",
+        "name": "nic",
+        "location": "[resourceGroup().location]",
+        "dependsOn": [
+          "Microsoft.Network/publicIPAddresses//publicips",
+          "Microsoft.Network/virtualNetworks//(networkSettings).virtualNetworkName"
+        ],
+        "properties": {
+          "ipConfigurations": [
+            {
+              "name": "ipconfig1",
+              "properties": {
+                "privateIPAllocationMethod": "Static",
+                "privateIPAddress": "(networkSettings).statics.master",
+                "publicIPAddress": {
+                  "id": "Microsoft.Network/publicIPAddresses/publicips"
+                },
+                "subnet": {
+                  "id": "Microsoft.Network/virtualNetworks/subnets/(networkSettings).virtualNetworkName/(networkSettings).subnet.dse.name"
+                }
+              }
+            }
+          ]
+        }
+      },
+      {
+        "apiVersion": "2019-12-01",
+        "type": "Microsoft.Compute/virtualMachines",
+        "name": "master",
+        "location": "[resourceGroup().location]",
+        "dependsOn": [
+          "Microsoft.Storage/storageAccounts//GEN-UNIQUE-8",
+          "Microsoft.Network/networkInterfaces//nic"
+        ],
+        "properties": {
+          "hardwareProfile": {
+            "vmSize": "Standard_D2_v3"
+          },
+          "osProfile": {
+            "computerName": "master",
+            "adminUsername": "GEN-UNIQUE",
+            "adminPassword": "GEN-PASSWORD"
+          },
+          "storageProfile": {
+            "imageReference": {
+              "publisher": "OpenLogic",
+              "offer": "CentOS",
+              "sku": "6.10",
+              "version": "latest"
+            },
+            "osDisk": {
+              "name": "master_OSDisk",
+              "caching": "ReadWrite",
+              "createOption": "FromImage"
+            }
+          },
+          "networkProfile": {
+            "networkInterfaces": [
+              {
+                "id": "Microsoft.Network/networkInterfaces/nic"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "apiVersion": "2019-12-01",
+        "type": "Microsoft.Compute/virtualMachines/extensions",
+        "name": "master/Installation",
+        "location": "[resourceGroup().location]",
+        "dependsOn": [
+          "Microsoft.Compute/virtualMachines//master"
+        ],
+        "properties": {
+          "publisher": "Microsoft.Azure.Extensions",
+          "type": "CustomScript",
+          "typeHandlerVersion": "2.0",
+          "autoUpgradeMinorVersion": true,
+          "settings": {
+            "fileUris": [
+              "[uri(parameters('_artifactsLocation'), concat('azuredeploy.sh', parameters('_artifactsLocationSasToken')))]"
+            ]
+          },
+          "protectedSettings": {
+            "commandToExecute": "sh azuredeploy.sh master (networkSettings).statics.master worker (networkSettings).statics.workerRange.base (networkSettings).statics.workerRange.start 2 GEN-UNIQUE GEN-PASSWORD [deployment().properties.templatelink.uri]"
+          }
+        }
+      },
+      {
+        "apiVersion": "2020-05-01",
+        "type": "Microsoft.Network/networkInterfaces",
+        "name": "nicworkercopyindex()",
+        "location": "[resourceGroup().location]",
+        "dependsOn": [
+          "Microsoft.Network/virtualNetworks//(networkSettings).virtualNetworkName"
+        ],
+        "copy": {
+          "name": "foo",
+          "count": 2
+        },
+        "properties": {
+          "ipConfigurations": [
+            {
+              "name": "ipconfig1",
+              "properties": {
+                "privateIPAllocationMethod": "Static",
+                "privateIPAddress": "[concat(variables('networkSettings').statics.workerRange.base, copyindex(variables('networkSettings').statics.workerRange.start))]",
+                "subnet": {
+                  "id": "Microsoft.Network/virtualNetworks/subnets/(networkSettings).virtualNetworkName/(networkSettings).subnet.dse.name"
+                }
+              }
+            }
+          ]
+        }
+      },
+      {
+        "apiVersion": "2019-12-01",
+        "type": "Microsoft.Compute/virtualMachines",
+        "name": "workercopyindex()",
+        "location": "[resourceGroup().location]",
+        "dependsOn": [
+          "Microsoft.Storage/storageAccounts//GEN-UNIQUE-8",
+          "Microsoft.Network/networkInterfaces//nicworkercopyindex()"
+        ],
+        "copy": {
+          "name": "foo",
+          "count": 2
+        },
+        "properties": {
+          "hardwareProfile": {
+            "vmSize": "Standard_D2_v3"
+          },
+          "osProfile": {
+            "computerName": "workercopyindex()",
+            "adminUsername": "GEN-UNIQUE",
+            "adminPassword": "GEN-PASSWORD"
+          },
+          "storageProfile": {
+            "imageReference": {
+              "publisher": "OpenLogic",
+              "offer": "CentOS",
+              "sku": "6.10",
+              "version": "latest"
+            },
+            "osDisk": {
+              "name": "workercopyindex()_OSDisk",
+              "caching": "ReadWrite",
+              "createOption": "FromImage"
+            }
+          },
+          "networkProfile": {
+            "networkInterfaces": [
+              {
+                "id": "Microsoft.Network/networkInterfaces/nicworkercopyindex()"
+              }
+            ]
+          }
+        }
+      }
+    ],
+    "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+  }
+}

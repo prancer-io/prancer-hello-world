@@ -1,0 +1,376 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAzureQuickStart",
+  "paths": [
+    "/demos/azmgmt-demo/azuredeploy.json",
+    "/demos/azmgmt-demo/azuredeploy.parameters.json"
+  ],
+  "timestamp": 1642962898326,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/demos/azmgmt-demo/azuredeploy.json",
+      "/demos/azmgmt-demo/azuredeploy.parameters.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT629",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "microsoft.resources/deployments"
+    ]
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT629",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "azMgmtPrefix": {
+        "type": "string",
+        "metadata": {
+          "description": "Provide a prefix for the Azure mgmt. services that will be created"
+        },
+        "value": "GEN-UNIQUE20"
+      },
+      "instanceCount": {
+        "type": "int",
+        "defaultValue": 2,
+        "maxValue": 10,
+        "metadata": {
+          "description": "Specify the number of VMs to create"
+        },
+        "value": 1
+      },
+      "vmNamePrefix": {
+        "type": "string",
+        "defaultValue": "az1demo",
+        "metadata": {
+          "description": "Assing a prefix for the VMs you will create"
+        },
+        "value": "GEN-UNIQUE10"
+      },
+      "platform": {
+        "type": "string",
+        "defaultValue": "WinSrv",
+        "allowedValues": [
+          "WinSrv",
+          "Linux"
+        ],
+        "metadata": {
+          "description": "Select the OS type to deploy."
+        },
+        "value": "Linux"
+      },
+      "username": {
+        "type": "string",
+        "defaultValue": "azureadmin",
+        "metadata": {
+          "description": "Assign a username to the VMs. Default will be 'azureadmin'."
+        },
+        "value": "azureadmin"
+      },
+      "pwdOrSsh": {
+        "type": "securestring",
+        "metadata": {
+          "description": "Specify pwd if platform is WinSrv, or ssh if Linux."
+        },
+        "value": "GEN-PASSWORD"
+      },
+      "vmResourceGroup": {
+        "type": "string",
+        "metadata": {
+          "description": "Specify the name of an existing Resource Group where the VMs will be deployed."
+        },
+        "value": ""
+      }
+    },
+    "variables": {
+      "nestedTemplates": {
+        "omsRecoveryServices": "[uri(deployment().properties.templateLink.uri, 'nestedtemplates/omsRecoveryServices.json')]",
+        "omsAutomation": "[uri(deployment().properties.templateLink.uri, 'nestedtemplates/omsAutomation.json')]",
+        "omsWorkspace": "[uri(deployment().properties.templateLink.uri, 'nestedtemplates/omsWorkspace.json')]",
+        "managedVMs": "[uri(deployment().properties.templateLink.uri, 'nestedtemplates/managedVms.json')]",
+        "asrRunbooks": "[uri(deployment().properties.templateLink.uri, 'nestedtemplates/asrRunbooks.json')]",
+        "dscConfigs": "[uri(deployment().properties.templateLink.uri, 'nestedtemplates/dscConfigs.json')]",
+        "mgmtDashboards": "[uri(deployment().properties.templateLink.uri, 'nestedtemplates/mgmtDashboards.json')]"
+      },
+      "resourceNames": {
+        "omsWorkspace": "[concat(parameters('azMgmtPrefix'), uniquestring(resourceGroup().name, '-oms'))]",
+        "azureAutomation": "[concat(parameters('azMgmtPrefix'), uniquestring(resourceGroup().name, '-auto'))]",
+        "azureRecoveryServices": "[concat(parameters('azMgmtPrefix'), uniquestring(resourceGroup().name, '-recovery'))]"
+      },
+      "azMgmtLocationMap": {
+        "eastasia": "southeastasia",
+        "southeastasia": "southeastasia",
+        "centralus": "westcentralus",
+        "eastus": "eastus",
+        "eastus2": "eastus",
+        "westus": "westcentralus",
+        "northcentralus": "westcentralus",
+        "southcentralus": "westcentralus",
+        "northeurope": "westeurope",
+        "westeurope": "westeurope",
+        "japanwest": "southeastasia",
+        "japaneast": "southeastasia",
+        "brazilsouth": "eastus",
+        "australiaeast": "australiasoutheast",
+        "australiasoutheast": "australiasoutheast",
+        "southindia": "southeastasia",
+        "centralindia": "southeastasia",
+        "westindia": "southeastasia",
+        "canadacentral": "eastus",
+        "canadaeast": "eastus",
+        "uksouth": "westeurope",
+        "ukwest": "westeurope",
+        "westcentralus": "westcentralus",
+        "westus2": "westcentralus",
+        "koreacentral": "southeastasia",
+        "koreasouth": "southeastasia",
+        "eastus2euap": "eastus"
+      },
+      "azMgmtLocation": "(azMgmtLocationMap)[resourceGroup().location]",
+      "azAutoLocationMap": {
+        "eastasia": "southeastasia",
+        "southeastasia": "southeastasia",
+        "centralus": "westcentralus",
+        "eastus": "eastus2",
+        "eastus2": "eastus2",
+        "westus": "westcentralus",
+        "northcentralus": "westcentralus",
+        "southcentralus": "southcentralus",
+        "northeurope": "westeurope",
+        "westeurope": "westeurope",
+        "japanwest": "southeastasia",
+        "japaneast": "southeastasia",
+        "brazilsouth": "eastus2",
+        "australiaeast": "australiasoutheast",
+        "australiasoutheast": "australiasoutheast",
+        "southindia": "southeastasia",
+        "centralindia": "southeastasia",
+        "westindia": "southeastasia",
+        "canadacentral": "eastus2",
+        "canadaeast": "eastus2",
+        "uksouth": "westeurope",
+        "ukwest": "westeurope",
+        "westcentralus": "westcentralus",
+        "westus2": "westcentralus",
+        "koreacentral": "southeastasia",
+        "koreasouth": "southeastasia",
+        "eastus2euap": "eastus2"
+      },
+      "azAutoLocation": "(azAutoLocationMap)[resourceGroup().location]"
+    },
+    "resources": [
+      {
+        "type": "Microsoft.Resources/deployments",
+        "apiVersion": "2017-05-10",
+        "name": "omsWorkspace",
+        "dependsOn": [],
+        "properties": {
+          "mode": "Incremental",
+          "templateLink": {
+            "uri": "(nestedTemplates).omsWorkspace",
+            "contentVersion": "1.0.0.0"
+          },
+          "parameters": {
+            "omsWorkspaceName": {
+              "value": "(resourceNames).omsWorkspace"
+            },
+            "omsWorkspaceRegion": {
+              "value": "(azMgmtLocationMap)[resourceGroup().location]"
+            }
+          }
+        }
+      },
+      {
+        "type": "Microsoft.Resources/deployments",
+        "apiVersion": "2017-05-10",
+        "name": "omsRecoveryServices",
+        "dependsOn": [],
+        "properties": {
+          "mode": "Incremental",
+          "templateLink": {
+            "uri": "(nestedTemplates).omsRecoveryServices",
+            "contentVersion": "1.0.0.0"
+          },
+          "parameters": {
+            "omsRecoveryVaultName": {
+              "value": "(resourceNames).azureRecoveryServices"
+            },
+            "omsRecoveryVaultRegion": {
+              "value": "(azMgmtLocationMap)[resourceGroup().location]"
+            }
+          }
+        }
+      },
+      {
+        "type": "Microsoft.Resources/deployments",
+        "apiVersion": "2017-05-10",
+        "name": "omsAutomation",
+        "dependsOn": [
+          "Microsoft.Resources/deployments/omsRecoveryServices",
+          "Microsoft.Resources/deployments/omsWorkspace"
+        ],
+        "properties": {
+          "mode": "Incremental",
+          "templateLink": {
+            "uri": "(nestedTemplates).omsAutomation",
+            "contentVersion": "1.0.0.0"
+          },
+          "parameters": {
+            "omsAutomationAccountName": {
+              "value": "(resourceNames).azureAutomation"
+            },
+            "omsAutomationRegion": {
+              "value": "(azAutoLocationMap)[resourceGroup().location]"
+            },
+            "omsRecoveryVaultName": {
+              "value": "(resourceNames).azureRecoveryServices"
+            },
+            "omsWorkspaceName": {
+              "value": "(resourceNames).omsWorkspace"
+            }
+          }
+        }
+      },
+      {
+        "type": "Microsoft.Resources/deployments",
+        "apiVersion": "2017-05-10",
+        "name": "asrRunbooks",
+        "dependsOn": [
+          "omsAutomation"
+        ],
+        "properties": {
+          "mode": "Incremental",
+          "templateLink": {
+            "uri": "(nestedTemplates).asrRunbooks",
+            "contentVersion": "1.0.0.0"
+          },
+          "parameters": {
+            "automationAccountName": {
+              "value": "(resourceNames).azureAutomation"
+            },
+            "automationRegion": {
+              "value": "(azAutoLocationMap)[resourceGroup().location]"
+            }
+          }
+        }
+      },
+      {
+        "type": "Microsoft.Resources/deployments",
+        "apiVersion": "2017-05-10",
+        "name": "dscConfigs",
+        "dependsOn": [
+          "omsAutomation"
+        ],
+        "properties": {
+          "mode": "Incremental",
+          "templateLink": {
+            "uri": "(nestedTemplates).dscConfigs",
+            "contentVersion": "1.0.0.0"
+          },
+          "parameters": {
+            "omsAutomationAccountName": {
+              "value": "(resourceNames).azureAutomation"
+            },
+            "omsAutomationRegion": {
+              "value": "(azAutoLocationMap)[resourceGroup().location]"
+            },
+            "omsWorkspaceName": {
+              "value": "(resourceNames).omsWorkspace"
+            }
+          }
+        }
+      },
+      {
+        "type": "Microsoft.Resources/deployments",
+        "apiVersion": "2017-05-10",
+        "name": "deployVMs",
+        "resourceGroup": "",
+        "dependsOn": [
+          "omsWorkspace",
+          "omsRecoveryServices",
+          "dscConfigs"
+        ],
+        "properties": {
+          "mode": "Incremental",
+          "templateLink": {
+            "uri": "(nestedTemplates).managedVMs",
+            "contentVersion": "1.0.0.0"
+          },
+          "parameters": {
+            "instanceCount": {
+              "value": 1
+            },
+            "vmNamePrefix": {
+              "value": "GEN-UNIQUE10"
+            },
+            "platform": {
+              "value": "Linux"
+            },
+            "userName": {
+              "value": "userName"
+            },
+            "pwdOrSsh": {
+              "value": "GEN-PASSWORD"
+            },
+            "omsRecoveryVaultName": {
+              "value": "(resourceNames).azureRecoveryServices"
+            },
+            "omsRecoveryVaultRegion": {
+              "value": "(azMgmtLocationMap)[resourceGroup().location]"
+            },
+            "omsResourceGroup": {
+              "value": "[resourceGroup().name]"
+            },
+            "omsWorkspaceName": {
+              "value": "(resourceNames).omsWorkspace"
+            },
+            "automationAccountName": {
+              "value": "(resourceNames).azureAutomation"
+            }
+          }
+        }
+      },
+      {
+        "type": "Microsoft.Resources/deployments",
+        "apiVersion": "2017-05-10",
+        "name": "mgmtDashboards",
+        "dependsOn": [
+          "omsAutomation",
+          "omsWorkspace",
+          "omsRecoveryServices"
+        ],
+        "properties": {
+          "mode": "Incremental",
+          "templateLink": {
+            "uri": "(nestedTemplates).mgmtDashboards",
+            "contentVersion": "1.0.0.0"
+          },
+          "parameters": {
+            "omsWorkspaceName": {
+              "value": "(resourceNames).omsWorkspace"
+            },
+            "omsRecoveryVaultName": {
+              "value": "(resourceNames).azureRecoveryServices"
+            },
+            "omsAutomationAccountName": {
+              "value": "(resourceNames).azureAutomation"
+            },
+            "vmResourceGroup": {
+              "value": ""
+            }
+          }
+        }
+      }
+    ],
+    "outputs": {},
+    "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+  }
+}

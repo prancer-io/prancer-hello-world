@@ -2,12 +2,12 @@
   "structure": "filesystem",
   "error": null,
   "reference": "master",
-  "contentType": "yaml",
+  "contentType": "json",
   "source": "gitConnectorGoogleKcc",
   "paths": [
-    "/samples/resources/cloudbuildtrigger/build-trigger-for-cloud-source-repo/cloudbuild_v1beta1_cloudbuildtrigger.yaml"
+    "/samples/resources/binaryauthorizationpolicy/namespace-policy/serviceusage_v1beta1_service_multiple_yaml_1.yaml"
   ],
-  "timestamp": 1628765139538,
+  "timestamp": 1642973301993,
   "queryuser": null,
   "checksum": "99914b932bd37a50b983c5e7c90ae93b",
   "node": {
@@ -15,91 +15,31 @@
     "type": "kcc",
     "collection": "kcctemplate",
     "paths": [
-      "/samples/resources/cloudbuildtrigger/build-trigger-for-cloud-source-repo/cloudbuild_v1beta1_cloudbuildtrigger.yaml"
+      "/samples/resources/binaryauthorizationpolicy/namespace-policy/serviceusage_v1beta1_service_multiple_yaml_1.yaml"
     ],
     "snapshotId": "KCC_TEMPLATE_SNAPSHOT61",
     "status": "active",
-    "validate": true
+    "validate": true,
+    "resourceTypes": [
+      "service"
+    ]
   },
   "snapshotId": "KCC_TEMPLATE_SNAPSHOT61",
   "collection": "kcctemplate",
   "json": {
-    "apiVersion": "cloudbuild.cnrm.cloud.google.com/v1beta1",
-    "kind": "CloudBuildTrigger",
+    "apiVersion": "serviceusage.cnrm.cloud.google.com/v1beta1",
+    "kind": "Service",
     "metadata": {
-      "name": "cloudbuildtrigger-sample-cloudsourcerepo"
+      "annotations": {
+        "cnrm.cloud.google.com/disable-dependent-services": "false"
+      },
+      "name": "binaryauthorizationpolicy-dep2-namespace"
     },
     "spec": {
-      "description": "Cloud Build Trigger for building the master branch of the referenced Cloud Source Repository.",
-      "disabled": false,
-      "triggerTemplate": {
-        "repoRef": {
-          "name": "cloudbuildtrigger-dep-cloudsourcerepo"
-        },
-        "dir": "team-a/service-b",
-        "branchName": "master"
+      "projectRef": {
+        "name": "binauthzpolicy-dep-namespace"
       },
-      "ignoredFiles": [
-        "**/*.md"
-      ],
-      "includedFiles": [
-        "src/**"
-      ],
-      "substitutions": {
-        "_SERVICE_NAME": "service-name"
-      },
-      "build": {
-        "images": [
-          "gcr.io/$PROJECT_ID/${_SERVICE_NAME}:$COMMIT_SHA"
-        ],
-        "tags": [
-          "team-a",
-          "service-b"
-        ],
-        "timeout": "1800s",
-        "step": [
-          {
-            "id": "download_zip",
-            "name": "gcr.io/cloud-builders/gsutil",
-            "args": [
-              "cp",
-              "gs://mybucket/remotefile.zip",
-              "localfile.zip"
-            ],
-            "timeout": "300s"
-          },
-          {
-            "id": "build_package",
-            "name": "gcr.io/cloud-builders/go",
-            "args": [
-              "build",
-              "my_package"
-            ],
-            "dir": "directory",
-            "env": [
-              "ENV1=one",
-              "ENV2=two"
-            ],
-            "secretEnv": [
-              "SECRET_ENV1"
-            ],
-            "timeout": "300s"
-          },
-          {
-            "id": "build_docker_image",
-            "name": "gcr.io/cloud-builders/docker",
-            "args": [
-              "build",
-              "-t",
-              "gcr.io/$PROJECT_ID/${_SERVICE_NAME}:$COMMIT_SHA",
-              "-f",
-              "Dockerfile",
-              "."
-            ],
-            "timeout": "300s"
-          }
-        ]
-      }
+      "resourceID": "binaryauthorization.googleapis.com"
     }
   }
 }

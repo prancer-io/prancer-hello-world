@@ -1,0 +1,186 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAzureQuickStart",
+  "paths": [
+    "/quickstarts/microsoft.network/extend-vnet-to-multi-vnet/azuredeploy.json",
+    "/quickstarts/microsoft.network/extend-vnet-to-multi-vnet/azuredeploy.parameters.us.json"
+  ],
+  "timestamp": 1642962908721,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/quickstarts/microsoft.network/extend-vnet-to-multi-vnet/azuredeploy.json",
+      "/quickstarts/microsoft.network/extend-vnet-to-multi-vnet/azuredeploy.parameters.us.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT1523",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "microsoft.network/publicipaddresses",
+      "microsoft.network/virtualnetworks",
+      "microsoft.network/connections",
+      "microsoft.network/virtualnetworkgateways"
+    ]
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT1523",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "sharedKey": {
+        "type": "string",
+        "metadata": {
+          "description": "Shared key for the VNET connection."
+        },
+        "value": "GEN-UNIQUE"
+      },
+      "vnetName": {
+        "type": "string",
+        "metadata": {
+          "description": "Name of the VNET."
+        },
+        "value": "GEN-UNIQUE"
+      },
+      "vnetLocation": {
+        "type": "string",
+        "metadata": {
+          "description": "Location of the VNET."
+        },
+        "value": "usgovtexas"
+      },
+      "existingVnetLocation": {
+        "type": "string",
+        "metadata": {
+          "description": "Location of the existing VNET."
+        },
+        "value": "GET-PREREQ-existingVnetLocation"
+      },
+      "existingGatewayId": {
+        "type": "string",
+        "metadata": {
+          "description": "ID of the existing gateway."
+        },
+        "value": "GET-PREREQ-existingGatewayId"
+      },
+      "gatewaySubnetName": {
+        "type": "string",
+        "defaultValue": "GatewaySubnet",
+        "metadata": {
+          "description": "Name of the gateway subnet."
+        }
+      }
+    },
+    "variables": {
+      "vnetName": "GEN-UNIQUE-vnet",
+      "pipName": "GEN-UNIQUE-pip",
+      "gatewayName": "GEN-UNIQUE-gw"
+    },
+    "resources": [
+      {
+        "type": "Microsoft.Network/virtualNetworks",
+        "apiVersion": "2020-11-01",
+        "name": "GEN-UNIQUE-vnet",
+        "location": "usgovtexas",
+        "properties": {
+          "addressSpace": {
+            "addressPrefixes": [
+              "10.0.0.0/16"
+            ]
+          },
+          "subnets": [
+            {
+              "name": "GEN-UNIQUE-vnet-subnet",
+              "properties": {
+                "addressPrefix": "10.0.0.0/24",
+                "privateEndpointNetworkPolicies": "Enabled",
+                "privateLinkServiceNetworkPolicies": "Enabled"
+              }
+            },
+            {
+              "name": "GatewaySubnet",
+              "properties": {
+                "addressPrefix": "10.0.1.0/24",
+                "privateEndpointNetworkPolicies": "Enabled",
+                "privateLinkServiceNetworkPolicies": "Enabled"
+              }
+            }
+          ],
+          "enableDdosProtection": false
+        }
+      },
+      {
+        "type": "Microsoft.Network/publicIPAddresses",
+        "apiVersion": "2020-11-01",
+        "name": "GEN-UNIQUE-pip",
+        "location": "usgovtexas",
+        "properties": {
+          "publicIPAllocationMethod": "Dynamic"
+        }
+      },
+      {
+        "type": "Microsoft.Network/virtualNetworkGateways",
+        "apiVersion": "2020-11-01",
+        "name": "GEN-UNIQUE-gw",
+        "location": "usgovtexas",
+        "dependsOn": [
+          "Microsoft.Network/virtualNetworks/GEN-UNIQUE-vnet"
+        ],
+        "properties": {
+          "enablePrivateIpAddress": false,
+          "ipConfigurations": [
+            {
+              "name": "default",
+              "properties": {
+                "privateIPAllocationMethod": "Dynamic",
+                "publicIPAddress": {
+                  "id": "Microsoft.Network/publicIPAddresses//GEN-UNIQUE-pip"
+                },
+                "subnet": {
+                  "id": "Microsoft.Network/virtualNetworks/subnets/GEN-UNIQUE-vnet/GatewaySubnet"
+                }
+              }
+            }
+          ],
+          "gatewayType": "Vpn",
+          "vpnType": "RouteBased",
+          "vpnGatewayGeneration": "Generation1"
+        }
+      },
+      {
+        "type": "Microsoft.Network/connections",
+        "apiVersion": "2020-11-01",
+        "name": "connection",
+        "location": "GET-PREREQ-existingVnetLocation",
+        "dependsOn": [
+          "Microsoft.Network/virtualNetworkGateways/GEN-UNIQUE-gw"
+        ],
+        "properties": {
+          "virtualNetworkGateway1": {
+            "id": "GET-PREREQ-existingGatewayId"
+          },
+          "virtualNetworkGateway2": {
+            "id": "Microsoft.Network/virtualNetworkGateways/GEN-UNIQUE-gw"
+          },
+          "connectionType": "Vnet2Vnet",
+          "connectionProtocol": "IKEv2",
+          "routingWeight": 0,
+          "sharedKey": "GEN-UNIQUE",
+          "enableBgp": false,
+          "useLocalAzureIpAddress": false,
+          "usePolicyBasedTrafficSelectors": false,
+          "expressRouteGatewayBypass": false,
+          "dpdTimeoutSeconds": 45,
+          "connectionMode": "Default"
+        }
+      }
+    ],
+    "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+  }
+}

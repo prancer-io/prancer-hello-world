@@ -1,0 +1,93 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAzureQuickStart",
+  "paths": [
+    "/quickstarts/microsoft.datalakestore/yash-datalake/nested/datalakeAnalytics.json"
+  ],
+  "timestamp": 1642962906046,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/quickstarts/microsoft.datalakestore/yash-datalake/nested/datalakeAnalytics.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT1250",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "microsoft.datalakestore/accounts",
+      "microsoft.datalakeanalytics/accounts"
+    ]
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT1250",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "storageAccountName": {
+        "type": "string",
+        "metadata": {
+          "description": "The name of the Data Lake Store account to create."
+        }
+      },
+      "adlAnalyticsName": {
+        "type": "string",
+        "metadata": {
+          "description": "The name of the Data Lake Analytics account to create."
+        }
+      },
+      "adlStoreName": {
+        "type": "string",
+        "metadata": {
+          "description": "The name of the Data Lake Store account to create."
+        }
+      },
+      "dataLakeAnalyticsLocation": {
+        "type": "string",
+        "metadata": {
+          "description": "Location of the data lake analytics. "
+        }
+      }
+    },
+    "resources": [
+      {
+        "type": "Microsoft.DataLakeStore/accounts",
+        "name": "adlStoreName",
+        "apiVersion": "2016-11-01",
+        "location": "dataLakeAnalyticsLocation"
+      },
+      {
+        "type": "Microsoft.DataLakeAnalytics/accounts",
+        "name": "adlAnalyticsName",
+        "apiVersion": "2019-11-01-preview",
+        "location": "dataLakeAnalyticsLocation",
+        "dependsOn": [
+          "Microsoft.DataLakeStore/accounts//adlStoreName"
+        ],
+        "properties": {
+          "defaultDataLakeStoreAccount": "adlStoreName",
+          "dataLakeStoreAccounts": [
+            {
+              "name": "adlStoreName"
+            }
+          ],
+          "storageAccounts": [
+            {
+              "name": "storageAccountName",
+              "properties": {
+                "accessKey": "[listKeys(resourceId('Microsoft.Storage/storageAccounts',parameters('storageAccountName')),'2021-01-01').keys[0].value]"
+              }
+            }
+          ]
+        }
+      }
+    ],
+    "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+  }
+}

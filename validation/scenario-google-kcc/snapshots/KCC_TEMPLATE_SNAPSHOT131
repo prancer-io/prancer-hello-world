@@ -2,12 +2,12 @@
   "structure": "filesystem",
   "error": null,
   "reference": "master",
-  "contentType": "yaml",
+  "contentType": "json",
   "source": "gitConnectorGoogleKcc",
   "paths": [
-    "/samples/resources/computeimage/image-from-url-raw/compute_v1beta1_computeimage.yaml"
+    "/samples/resources/computeforwardingrule/global-forwarding-rule-with-target-http-proxy/compute_v1beta1_computebackendservice.yaml"
   ],
-  "timestamp": 1628765140976,
+  "timestamp": 1642973302547,
   "queryuser": null,
   "checksum": "99914b932bd37a50b983c5e7c90ae93b",
   "node": {
@@ -15,34 +15,32 @@
     "type": "kcc",
     "collection": "kcctemplate",
     "paths": [
-      "/samples/resources/computeimage/image-from-url-raw/compute_v1beta1_computeimage.yaml"
+      "/samples/resources/computeforwardingrule/global-forwarding-rule-with-target-http-proxy/compute_v1beta1_computebackendservice.yaml"
     ],
     "snapshotId": "KCC_TEMPLATE_SNAPSHOT131",
     "status": "active",
-    "validate": true
+    "validate": true,
+    "resourceTypes": [
+      "computebackendservice"
+    ]
   },
   "snapshotId": "KCC_TEMPLATE_SNAPSHOT131",
   "collection": "kcctemplate",
   "json": {
     "apiVersion": "compute.cnrm.cloud.google.com/v1beta1",
-    "kind": "ComputeImage",
+    "kind": "ComputeBackendService",
     "metadata": {
-      "name": "computeimage-sample-fromurlraw",
-      "labels": {
-        "image-type": "stemcell"
-      }
+      "name": "computeforwardingrule-dep-global-with-target-http-proxy"
     },
     "spec": {
-      "description": "A sample image created from URL to a raw TAR disk image",
-      "family": "ubuntu-custom",
-      "licenses": [
-        "https://compute.googleapis.com/compute/v1/projects/vm-options/global/licenses/enable-vmx"
+      "healthChecks": [
+        {
+          "healthCheckRef": {
+            "name": "computeforwardingrule-dep-global-with-target-http-proxy"
+          }
+        }
       ],
-      "rawDisk": {
-        "source": "https://storage.googleapis.com/bosh-gce-raw-stemcells/bosh-stemcell-97.98-google-kvm-ubuntu-xenial-go_agent-raw-1557960142.tar.gz",
-        "containerType": "TAR",
-        "sha1": "819b7e9c17423f4539f09687eaa13687afa2fe32"
-      }
+      "location": "global"
     }
   }
 }

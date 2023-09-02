@@ -1,0 +1,173 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAzureQuickStart",
+  "paths": [
+    "/quickstarts/microsoft.eventgrid/event-grid-cloudevents/azuredeploy.json",
+    "/quickstarts/microsoft.eventgrid/event-grid-cloudevents/azuredeploy.parameters.json"
+  ],
+  "timestamp": 1642962906697,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/quickstarts/microsoft.eventgrid/event-grid-cloudevents/azuredeploy.json",
+      "/quickstarts/microsoft.eventgrid/event-grid-cloudevents/azuredeploy.parameters.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT1312",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "microsoft.eventgrid/eventsubscriptions",
+      "microsoft.eventgrid/topics",
+      "microsoft.logic/workflows"
+    ]
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT1312",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "location": {
+        "type": "string",
+        "metadata": {
+          "description": "The region where resources are deployed"
+        },
+        "defaultValue": "[resourceGroup().location]"
+      },
+      "logicAppName": {
+        "type": "string",
+        "metadata": {
+          "description": "Name of Logic App"
+        },
+        "defaultValue": "[concat('logicapp-', uniqueString(resourceGroup().id))]",
+        "value": "GEN-UNIQUE"
+      },
+      "eventGridTopicName": {
+        "type": "string",
+        "metadata": {
+          "description": "Name of Event Grid Topic"
+        },
+        "defaultValue": "[concat('eventgridtopic-', uniqueString(resourceGroup().id))]",
+        "value": "GEN-UNIQUE"
+      },
+      "eventGridSubscriptionName": {
+        "type": "string",
+        "metadata": {
+          "description": "Name of Event Grid Subscription"
+        },
+        "defaultValue": "[concat('eventgridsubscription-', uniqueString(resourceGroup().id))]",
+        "value": "GEN-UNIQUE"
+      }
+    },
+    "variables": {
+      "logicApp": {
+        "name": "GEN-UNIQUE",
+        "resourceId": "Microsoft.Logic/workflows/GEN-UNIQUE",
+        "location": "[resourceGroup().location]",
+        "triggerId": "Microsoft.Logic/workflows/triggers/GEN-UNIQUE/manual"
+      },
+      "eventGridTopic": {
+        "name": "GEN-UNIQUE",
+        "resourceId": "Microsoft.EventGrid/topics/GEN-UNIQUE",
+        "location": "[resourceGroup().location]"
+      },
+      "eventGridSubscription": {
+        "name": "GEN-UNIQUE",
+        "location": "[resourceGroup().location]"
+      },
+      "tags": {
+        "projectUrl": "https://github.com/Azure/azure-quickstart-templates",
+        "repositoryUrl": "https://github.com/Azure/azure-quickstart-templates",
+        "license": "https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/LICENSE"
+      }
+    },
+    "resources": [
+      {
+        "comments": "### RESOURCE - LOGIC APP - EVENT HANDLER ###",
+        "apiVersion": "2019-05-01",
+        "type": "Microsoft.Logic/workflows",
+        "name": "(logicApp).name",
+        "location": "(logicApp).location",
+        "tags": {
+          "projectUrl": "https://github.com/Azure/azure-quickstart-templates",
+          "repositoryUrl": "https://github.com/Azure/azure-quickstart-templates",
+          "license": "https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/LICENSE"
+        },
+        "properties": {
+          "state": "Enabled",
+          "definition": {
+            "contentVersion": "1.0.0.0",
+            "parameters": {},
+            "triggers": {
+              "manual": {
+                "type": "Request",
+                "kind": "Http",
+                "inputs": {
+                  "method": "POST"
+                }
+              }
+            },
+            "\uff04schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#"
+          }
+        }
+      },
+      {
+        "comments": "### RESOURCE - CUSTOM EVENT GRID TOPIC ###",
+        "apiVersion": "2020-06-01",
+        "type": "Microsoft.EventGrid/topics",
+        "name": "(eventGridTopic).name",
+        "location": "(eventGridTopic).location",
+        "tags": {
+          "projectUrl": "https://github.com/Azure/azure-quickstart-templates",
+          "repositoryUrl": "https://github.com/Azure/azure-quickstart-templates",
+          "license": "https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/LICENSE"
+        },
+        "properties": {
+          "inputSchema": "CloudEventV01Schema"
+        }
+      },
+      {
+        "comments": "### RESOURCE - EVENT GRID SUBSCRIPTION ###",
+        "scope": "[format('Microsoft.EventGrid/topics/{0}', variables('eventGridTopic').name)]",
+        "type": "Microsoft.EventGrid/eventSubscriptions",
+        "apiVersion": "2019-06-01",
+        "name": "(eventGridSubscription).name",
+        "location": "(eventGridSubscription).location",
+        "tags": {
+          "projectUrl": "https://github.com/Azure/azure-quickstart-templates",
+          "repositoryUrl": "https://github.com/Azure/azure-quickstart-templates",
+          "license": "https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/LICENSE"
+        },
+        "dependsOn": [
+          "(logicApp).name",
+          "(eventGridTopic).name"
+        ],
+        "properties": {
+          "eventDeliverySchema": "CloudEventV01Schema",
+          "destination": {
+            "endpointType": "Webhook",
+            "properties": {
+              "endpointUrl": "[listCallbackUrl(variables('logicApp').triggerId, '2019-05-01').value]"
+            }
+          },
+          "filter": {
+            "isSubjectCaseSensitive": false
+          }
+        }
+      }
+    ],
+    "outputs": {
+      "eventGridTopicEndpointUrl": {
+        "type": "string",
+        "value": "[reference(variables('eventGridTopic').name).endpoint]"
+      }
+    },
+    "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+  }
+}

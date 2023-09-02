@@ -1,0 +1,493 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAzureQuickStart",
+  "paths": [
+    "/application-workloads/kafka/kafka-ubuntu-multidisks/azuredeploy.json",
+    "/application-workloads/kafka/kafka-ubuntu-multidisks/azuredeploy.parameters.json"
+  ],
+  "timestamp": 1642962890597,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/application-workloads/kafka/kafka-ubuntu-multidisks/azuredeploy.json",
+      "/application-workloads/kafka/kafka-ubuntu-multidisks/azuredeploy.parameters.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT210",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "microsoft.resources/deployments"
+    ]
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT210",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "storageAccountNamePrefix": {
+        "type": "string",
+        "metadata": {
+          "description": "Unique name of the new storage account that will be created to store virtual machine VHDs."
+        },
+        "value": "GEN-UNIQUE-8"
+      },
+      "domainName": {
+        "type": "string",
+        "metadata": {
+          "description": "Domain name of the public jumpbox"
+        },
+        "value": "GEN-UNIQUE-10"
+      },
+      "adminUsername": {
+        "type": "string",
+        "defaultValue": "azureuser",
+        "metadata": {
+          "description": "Virtual machine administrator username"
+        },
+        "value": "GEN-UNIQUE-8"
+      },
+      "tshirtSize": {
+        "type": "string",
+        "defaultValue": "Small",
+        "allowedValues": [
+          "Small",
+          "Medium",
+          "Large",
+          "XLarge"
+        ],
+        "metadata": {
+          "description": "T-shirt size of the Kafka deployment"
+        }
+      },
+      "jumpbox": {
+        "type": "string",
+        "defaultValue": "Enabled",
+        "allowedValues": [
+          "Enabled",
+          "Disabled"
+        ],
+        "metadata": {
+          "description": "The flag allowing to enable or disable provisioning of the jumpbox VM that can be used to access the Kafka environment"
+        }
+      },
+      "virtualNetworkName": {
+        "type": "string",
+        "defaultValue": "vnet",
+        "metadata": {
+          "description": "Virtual network name"
+        }
+      },
+      "location": {
+        "type": "string",
+        "defaultValue": "[resourceGroup().location]",
+        "metadata": {
+          "description": "Location for all resources."
+        }
+      },
+      "_artifactsLocation": {
+        "type": "string",
+        "defaultValue": "[deployment().properties.templatelink.uri]",
+        "metadata": {
+          "description": "The base URI where artifacts required by this template are located. When the template is deployed using the accompanying scripts, a private location in the subscription will be used and this value will be automatically generated."
+        }
+      },
+      "_artifactsLocationSasToken": {
+        "type": "securestring",
+        "metadata": {
+          "description": "The sasToken required to access _artifactsLocation.  When the template is deployed using the accompanying scripts, a sasToken will be automatically generated."
+        },
+        "defaultValue": ""
+      },
+      "sharedModulesLocation": {
+        "type": "string",
+        "metadata": {
+          "description": "Location of the shared modules."
+        },
+        "defaultValue": "https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/shared_scripts/ubuntu/vm-disk-utils-0.1.sh"
+      },
+      "authenticationType": {
+        "type": "string",
+        "defaultValue": "sshPublicKey",
+        "allowedValues": [
+          "sshPublicKey",
+          "password"
+        ],
+        "metadata": {
+          "description": "Type of authentication to use on the Virtual Machine. SSH key is recommended."
+        }
+      },
+      "adminPasswordOrKey": {
+        "type": "securestring",
+        "metadata": {
+          "description": "SSH Key or password for the Virtual Machine. SSH key is recommended."
+        },
+        "value": "GEN-SSH-PUB-KEY"
+      }
+    },
+    "variables": {
+      "sharedTemplateUrl": "[uri(parameters('_artifactsLocation'), concat('shared-resources.json', parameters('_artifactsLocationSasToken')))]",
+      "tshirtSizeTypes": {
+        "Small": {
+          "vmSize": "Standard_A1",
+          "diskSize": 1023,
+          "vmTemplate": "[uri(parameters('_artifactsLocation'), concat('datastore-2disk-resources.json', parameters('_artifactsLocationSasToken')))]",
+          "zookeeperCount": 1,
+          "brokerCount": 3,
+          "storage": {
+            "name": "GEN-UNIQUE-8",
+            "count": 1,
+            "pool": "db",
+            "map": [
+              0,
+              0,
+              0
+            ],
+            "jumpbox": 0
+          }
+        },
+        "Medium": {
+          "vmSize": "Standard_A3",
+          "diskSize": 1023,
+          "vmTemplate": "[uri(parameters('_artifactsLocation'), concat('datastore-8disk-resources.json', parameters('_artifactsLocationSasToken')))]",
+          "zookeeperCount": 3,
+          "brokerCount": 5,
+          "storage": {
+            "name": "GEN-UNIQUE-8",
+            "count": 2,
+            "pool": "db",
+            "map": [
+              0,
+              0,
+              0,
+              1,
+              1
+            ],
+            "jumpbox": 0
+          }
+        },
+        "Large": {
+          "vmSize": "Standard_A4",
+          "diskSize": 1023,
+          "vmTemplate": "[uri(parameters('_artifactsLocation'), concat('datastore-16disk-resources.json', parameters('_artifactsLocationSasToken')))]",
+          "zookeeperCount": 3,
+          "brokerCount": 5,
+          "storage": {
+            "name": "GEN-UNIQUE-8",
+            "count": 3,
+            "pool": "db",
+            "map": [
+              0,
+              0,
+              1,
+              1,
+              2
+            ],
+            "jumpbox": 0
+          }
+        },
+        "XLarge": {
+          "vmSize": "Standard_A7",
+          "diskSize": 1023,
+          "vmTemplate": "[uri(parameters('_artifactsLocation'), concat('datastore-16disk-resources.json', parameters('_artifactsLocationSasToken')))]",
+          "zookeeperCount": 5,
+          "brokerCount": 8,
+          "storage": {
+            "name": "GEN-UNIQUE-8",
+            "count": 4,
+            "pool": "db",
+            "map": [
+              0,
+              0,
+              1,
+              1,
+              2,
+              2,
+              3,
+              3
+            ],
+            "jumpbox": 0
+          }
+        }
+      },
+      "tshirtSize": "(tshirtSizeTypes)[parameters(tshirtSize)]",
+      "jumpboxTemplate": {
+        "Enabled": "jumpbox-resources.json",
+        "Disabled": "empty-resources.json"
+      },
+      "vmTemplatezookeeper": "[uri(parameters('_artifactsLocation'), concat('zookeeper-resources.json', parameters('_artifactsLocationSasToken')))]",
+      "jumpboxTemplateUrl": "[uri(parameters('_artifactsLocation'), concat(variables('jumpboxTemplate')[parameters('jumpbox')], parameters('_artifactsLocationSasToken')))]",
+      "osSettings": {
+        "scripts": [
+          "[uri(parameters('_artifactsLocation'), concat('kafka-cluster-install.sh', parameters('_artifactsLocationSasToken')))]",
+          "https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/shared_scripts/ubuntu/vm-disk-utils-0.1.sh"
+        ],
+        "imageReference": {
+          "publisher": "Canonical",
+          "offer": "UbuntuServer",
+          "sku": "14.04.5-LTS",
+          "version": "latest"
+        }
+      },
+      "networkSettings": {
+        "vnetName": "vnet",
+        "addressPrefix": "10.0.0.0/16",
+        "subnets": {
+          "dmz": {
+            "name": "dmz",
+            "prefix": "10.0.0.0/24",
+            "vnet": "vnet"
+          },
+          "zookeeper": {
+            "name": "zookeeper",
+            "prefix": "10.0.1.0/24",
+            "addprefix": "10.0.1.1",
+            "vnet": "vnet"
+          },
+          "data": {
+            "name": "data",
+            "prefix": "10.0.2.0/24",
+            "addprefix": "10.0.2.1",
+            "vnet": "vnet"
+          }
+        }
+      },
+      "availabilitySetSettings": {
+        "name": "kafkaAvailabilitySet",
+        "fdCount": 2,
+        "udCount": 5
+      }
+    },
+    "resources": [
+      {
+        "name": "shared",
+        "type": "Microsoft.Resources/deployments",
+        "apiVersion": "2020-10-01",
+        "properties": {
+          "mode": "Incremental",
+          "templateLink": {
+            "uri": "[uri(parameters('_artifactsLocation'), concat('shared-resources.json', parameters('_artifactsLocationSasToken')))]",
+            "contentVersion": "1.0.0.0"
+          },
+          "parameters": {
+            "storageSettings": {
+              "value": "(tshirtSize).storage"
+            },
+            "location": {
+              "value": "[resourceGroup().location]"
+            },
+            "networkSettings": {
+              "value": {
+                "vnetName": "vnet",
+                "addressPrefix": "10.0.0.0/16",
+                "subnets": {
+                  "dmz": {
+                    "name": "dmz",
+                    "prefix": "10.0.0.0/24",
+                    "vnet": "vnet"
+                  },
+                  "zookeeper": {
+                    "name": "zookeeper",
+                    "prefix": "10.0.1.0/24",
+                    "addprefix": "10.0.1.1",
+                    "vnet": "vnet"
+                  },
+                  "data": {
+                    "name": "data",
+                    "prefix": "10.0.2.0/24",
+                    "addprefix": "10.0.2.1",
+                    "vnet": "vnet"
+                  }
+                }
+              }
+            },
+            "availabilitySetSettings": {
+              "value": {
+                "name": "kafkaAvailabilitySet",
+                "fdCount": 2,
+                "udCount": 5
+              }
+            }
+          }
+        }
+      },
+      {
+        "name": "zookeeper-node",
+        "type": "Microsoft.Resources/deployments",
+        "apiVersion": "2020-10-01",
+        "dependsOn": [
+          "Microsoft.Resources/deployments//shared"
+        ],
+        "properties": {
+          "mode": "Incremental",
+          "templateLink": {
+            "uri": "[uri(parameters('_artifactsLocation'), concat('zookeeper-resources.json', parameters('_artifactsLocationSasToken')))]",
+            "contentVersion": "1.0.0.0"
+          },
+          "parameters": {
+            "adminPasswordOrKey": {
+              "value": "GEN-SSH-PUB-KEY"
+            },
+            "authenticationType": {
+              "value": "sshPublicKey"
+            },
+            "osSettings": {
+              "value": {
+                "scripts": [
+                  "[uri(parameters('_artifactsLocation'), concat('kafka-cluster-install.sh', parameters('_artifactsLocationSasToken')))]",
+                  "https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/shared_scripts/ubuntu/vm-disk-utils-0.1.sh"
+                ],
+                "imageReference": {
+                  "publisher": "Canonical",
+                  "offer": "UbuntuServer",
+                  "sku": "14.04.5-LTS",
+                  "version": "latest"
+                }
+              }
+            },
+            "subnet": {
+              "value": "(networkSettings).subnets.zookeeper"
+            },
+            "location": {
+              "value": "[resourceGroup().location]"
+            },
+            "commonSettings": {
+              "value": {
+                "adminUsername": "GEN-UNIQUE-8",
+                "namespace": "zk"
+              }
+            },
+            "machineSettings": {
+              "value": {
+                "vmSize": "(tshirtSize).vmSize",
+                "diskSize": "(tshirtSize).diskSize",
+                "vmCount": "(tshirtSize).zookeeperCount",
+                "availabilitySet": "(availabilitySetSettings).name",
+                "addprefix": "(networkSettings).subnets.zookeeper.addprefix"
+              }
+            }
+          }
+        }
+      },
+      {
+        "name": "broker-node",
+        "type": "Microsoft.Resources/deployments",
+        "apiVersion": "2020-10-01",
+        "dependsOn": [
+          "Microsoft.Resources/deployments//zookeeper-node"
+        ],
+        "properties": {
+          "mode": "Incremental",
+          "templateLink": {
+            "uri": "(tshirtSize).vmTemplate",
+            "contentVersion": "1.0.0.0"
+          },
+          "parameters": {
+            "location": {
+              "value": "[resourceGroup().location]"
+            },
+            "adminPasswordOrKey": {
+              "value": "GEN-SSH-PUB-KEY"
+            },
+            "authenticationType": {
+              "value": "sshPublicKey"
+            },
+            "osSettings": {
+              "value": {
+                "scripts": [
+                  "[uri(parameters('_artifactsLocation'), concat('kafka-cluster-install.sh', parameters('_artifactsLocationSasToken')))]",
+                  "https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/shared_scripts/ubuntu/vm-disk-utils-0.1.sh"
+                ],
+                "imageReference": {
+                  "publisher": "Canonical",
+                  "offer": "UbuntuServer",
+                  "sku": "14.04.5-LTS",
+                  "version": "latest"
+                }
+              }
+            },
+            "subnet": {
+              "value": "(networkSettings).subnets.data"
+            },
+            "commonSettings": {
+              "value": {
+                "adminUsername": "GEN-UNIQUE-8",
+                "namespace": "bk"
+              }
+            },
+            "machineSettingsbroker": {
+              "value": {
+                "vmSize": "(tshirtSize).vmSize",
+                "diskSize": "(tshirtSize).diskSize",
+                "zookeeperCount": "(tshirtSize).zookeeperCount",
+                "vmCount": "(tshirtSize).brokerCount",
+                "availabilitySet": "(availabilitySetSettings).name",
+                "zookeeperSubnet": "(networkSettings).subnets.zookeeper.addprefix",
+                "addprefix": "(networkSettings).subnets.data.addprefix"
+              }
+            }
+          }
+        }
+      },
+      {
+        "name": "jumpbox",
+        "type": "Microsoft.Resources/deployments",
+        "apiVersion": "2020-10-01",
+        "dependsOn": [
+          "Microsoft.Resources/deployments//shared"
+        ],
+        "properties": {
+          "mode": "Incremental",
+          "templateLink": {
+            "uri": "[uri(parameters('_artifactsLocation'), concat(variables('jumpboxTemplate')[parameters('jumpbox')], parameters('_artifactsLocationSasToken')))]",
+            "contentVersion": "1.0.0.0"
+          },
+          "parameters": {
+            "dnsName": {
+              "value": "GEN-UNIQUE-10"
+            },
+            "commonSettings": {
+              "value": {
+                "adminUsername": "GEN-UNIQUE-8",
+                "namespace": "jumpbox"
+              }
+            },
+            "location": {
+              "value": "[resourceGroup().location]"
+            },
+            "adminPasswordOrKey": {
+              "value": "GEN-SSH-PUB-KEY"
+            },
+            "authenticationType": {
+              "value": "sshPublicKey"
+            },
+            "subnet": {
+              "value": "(networkSettings).subnets.dmz"
+            },
+            "osSettings": {
+              "value": {
+                "scripts": [
+                  "[uri(parameters('_artifactsLocation'), concat('kafka-cluster-install.sh', parameters('_artifactsLocationSasToken')))]",
+                  "https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/shared_scripts/ubuntu/vm-disk-utils-0.1.sh"
+                ],
+                "imageReference": {
+                  "publisher": "Canonical",
+                  "offer": "UbuntuServer",
+                  "sku": "14.04.5-LTS",
+                  "version": "latest"
+                }
+              }
+            }
+          }
+        }
+      }
+    ],
+    "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+  }
+}

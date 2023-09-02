@@ -1,0 +1,84 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAzureQuickStart",
+  "paths": [
+    "/demos/xss-attack-prevention/nested/microsoft.web/sites.json"
+  ],
+  "timestamp": 1642962902613,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/demos/xss-attack-prevention/nested/microsoft.web/sites.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT900",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "microsoft.web/sites"
+    ]
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT900",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "name": {
+        "type": "string"
+      },
+      "hostingPlanName": {
+        "type": "string"
+      },
+      "location": {
+        "type": "string"
+      },
+      "hostingEnvironment": {
+        "type": "string",
+        "defaultValue": ""
+      },
+      "tags": {
+        "type": "object"
+      }
+    },
+    "variables": {
+      "tags": {
+        "[concat('hidden-related:', resourceId('Microsoft.Web/serverfarms',parameters('hostingPlanName')))]": "empty"
+      },
+      "combinedTags": "[union(parameters('tags'),variables('tags'))]"
+    },
+    "resources": [
+      {
+        "apiVersion": "2019-08-01",
+        "name": "name",
+        "type": "Microsoft.Web/sites",
+        "tags": "[union(parameters('tags'),variables('tags'))]",
+        "identity": {
+          "type": "SystemAssigned"
+        },
+        "properties": {
+          "name": "name",
+          "serverFarmId": "Microsoft.Web/serverfarms/hostingPlanName",
+          "hostingEnvironment": ""
+        },
+        "location": "location"
+      }
+    ],
+    "outputs": {
+      "principalId": {
+        "type": "string",
+        "value": "[reference(resourceId('Microsoft.Web/sites', parameters('name')), '2019-08-01', 'Full').identity.principalId]"
+      },
+      "endpoint": {
+        "type": "string",
+        "value": "[concat(parameters('name'),'.azurewebsites.net')]"
+      }
+    },
+    "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+  }
+}

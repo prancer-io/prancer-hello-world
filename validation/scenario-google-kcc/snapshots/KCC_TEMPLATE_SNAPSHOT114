@@ -2,12 +2,12 @@
   "structure": "filesystem",
   "error": null,
   "reference": "master",
-  "contentType": "yaml",
+  "contentType": "json",
   "source": "gitConnectorGoogleKcc",
   "paths": [
-    "/samples/resources/computeforwardingrule/global-forwarding-rule-with-target-ssl-proxy/compute_v1beta1_computesslcertificate.yaml"
+    "/samples/resources/computedisk/regional-compute-disk/compute_v1beta1_computesnapshot.yaml"
   ],
-  "timestamp": 1628765140618,
+  "timestamp": 1642973302413,
   "queryuser": null,
   "checksum": "99914b932bd37a50b983c5e7c90ae93b",
   "node": {
@@ -15,39 +15,28 @@
     "type": "kcc",
     "collection": "kcctemplate",
     "paths": [
-      "/samples/resources/computeforwardingrule/global-forwarding-rule-with-target-ssl-proxy/compute_v1beta1_computesslcertificate.yaml"
+      "/samples/resources/computedisk/regional-compute-disk/compute_v1beta1_computesnapshot.yaml"
     ],
     "snapshotId": "KCC_TEMPLATE_SNAPSHOT114",
     "status": "active",
-    "validate": true
+    "validate": true,
+    "resourceTypes": [
+      "computesnapshot"
+    ]
   },
   "snapshotId": "KCC_TEMPLATE_SNAPSHOT114",
   "collection": "kcctemplate",
   "json": {
     "apiVersion": "compute.cnrm.cloud.google.com/v1beta1",
-    "kind": "ComputeSSLCertificate",
+    "kind": "ComputeSnapshot",
     "metadata": {
-      "name": "computeforwardingrule-dep-global-with-target-ssl-proxy"
+      "name": "computedisk-dep-regional"
     },
     "spec": {
-      "location": "global",
-      "description": "example compute SSL certificate",
-      "certificate": {
-        "valueFrom": {
-          "secretKeyRef": {
-            "name": "computeforwardingrule-dep-global-with-target-ssl-proxy",
-            "key": "certificate"
-          }
-        }
+      "sourceDiskRef": {
+        "name": "computedisk-dep-regional"
       },
-      "privateKey": {
-        "valueFrom": {
-          "secretKeyRef": {
-            "name": "computeforwardingrule-dep-global-with-target-ssl-proxy",
-            "key": "privateKey"
-          }
-        }
-      }
+      "zone": "us-west1-c"
     }
   }
 }

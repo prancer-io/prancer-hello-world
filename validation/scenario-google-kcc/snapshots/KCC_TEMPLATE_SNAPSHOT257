@@ -2,12 +2,12 @@
   "structure": "filesystem",
   "error": null,
   "reference": "master",
-  "contentType": "yaml",
+  "contentType": "json",
   "source": "gitConnectorGoogleKcc",
   "paths": [
-    "/samples/resources/computetargetpool/compute_v1beta1_computeinstance_multiple_yaml_2.yaml"
+    "/samples/resources/computeserviceattachment/compute_v1beta1_computeserviceattachment.yaml"
   ],
-  "timestamp": 1628765144005,
+  "timestamp": 1642973303167,
   "queryuser": null,
   "checksum": "99914b932bd37a50b983c5e7c90ae93b",
   "node": {
@@ -15,25 +15,52 @@
     "type": "kcc",
     "collection": "kcctemplate",
     "paths": [
-      "/samples/resources/computetargetpool/compute_v1beta1_computeinstance_multiple_yaml_2.yaml"
+      "/samples/resources/computeserviceattachment/compute_v1beta1_computeserviceattachment.yaml"
     ],
     "snapshotId": "KCC_TEMPLATE_SNAPSHOT257",
     "status": "active",
-    "validate": true
+    "validate": true,
+    "resourceTypes": [
+      "computeserviceattachment"
+    ]
   },
   "snapshotId": "KCC_TEMPLATE_SNAPSHOT257",
   "collection": "kcctemplate",
   "json": {
     "apiVersion": "compute.cnrm.cloud.google.com/v1beta1",
-    "kind": "ComputeInstance",
+    "kind": "ComputeServiceAttachment",
     "metadata": {
-      "name": "computetargetpool-dep3"
+      "name": "computeserviceattachment-sample"
     },
     "spec": {
-      "instanceTemplateRef": {
-        "name": "computetargetpool-dep"
+      "projectRef": {
+        "external": "projects/${PROJECT_ID?}"
       },
-      "zone": "us-central1-b"
+      "location": "us-west2",
+      "description": "A sample service attachment",
+      "targetServiceRef": {
+        "name": "computeserviceattachment-dep"
+      },
+      "connectionPreference": "ACCEPT_MANUAL",
+      "natSubnets": [
+        {
+          "name": "computeserviceattachment-dep1"
+        }
+      ],
+      "enableProxyProtocol": false,
+      "consumerRejectLists": [
+        {
+          "name": "computeserviceattachment-dep1"
+        }
+      ],
+      "consumerAcceptLists": [
+        {
+          "projectRef": {
+            "name": "computeserviceattachment-dep2"
+          },
+          "connectionLimit": 2
+        }
+      ]
     }
   }
 }

@@ -2,12 +2,12 @@
   "structure": "filesystem",
   "error": null,
   "reference": "master",
-  "contentType": "yaml",
+  "contentType": "json",
   "source": "gitConnectorGoogleKcc",
   "paths": [
-    "/samples/resources/computebackendservice/external-load-balancing-backend-service/compute_v1beta1_computesecuritypolicy.yaml"
+    "/samples/resources/cloudidentitymembership/membership-with-manager-role/cloudidentity_v1beta1_cloudidentitymembership.yaml"
   ],
-  "timestamp": 1628765140049,
+  "timestamp": 1642973302188,
   "queryuser": null,
   "checksum": "99914b932bd37a50b983c5e7c90ae93b",
   "node": {
@@ -15,33 +15,36 @@
     "type": "kcc",
     "collection": "kcctemplate",
     "paths": [
-      "/samples/resources/computebackendservice/external-load-balancing-backend-service/compute_v1beta1_computesecuritypolicy.yaml"
+      "/samples/resources/cloudidentitymembership/membership-with-manager-role/cloudidentity_v1beta1_cloudidentitymembership.yaml"
     ],
     "snapshotId": "KCC_TEMPLATE_SNAPSHOT86",
     "status": "active",
-    "validate": true
+    "validate": true,
+    "resourceTypes": [
+      "cloudidentitymembership"
+    ]
   },
   "snapshotId": "KCC_TEMPLATE_SNAPSHOT86",
   "collection": "kcctemplate",
   "json": {
-    "apiVersion": "compute.cnrm.cloud.google.com/v1beta1",
-    "kind": "ComputeSecurityPolicy",
+    "apiVersion": "cloudidentity.cnrm.cloud.google.com/v1beta1",
+    "kind": "CloudIdentityMembership",
     "metadata": {
-      "name": "computebackendservice-dep-externalloadbalancing"
+      "name": "cloudidentitymembership-sample-managerrole"
     },
     "spec": {
-      "rule": [
+      "groupRef": {
+        "name": "cloudidentitymembership-dep-managerrole"
+      },
+      "preferredMemberKey": {
+        "id": "test-member@example.com"
+      },
+      "roles": [
         {
-          "action": "deny(403)",
-          "priority": 2147483647,
-          "match": {
-            "versionedExpr": "SRC_IPS_V1",
-            "config": {
-              "srcIpRanges": [
-                "*"
-              ]
-            }
-          }
+          "name": "MEMBER"
+        },
+        {
+          "name": "MANAGER"
         }
       ]
     }

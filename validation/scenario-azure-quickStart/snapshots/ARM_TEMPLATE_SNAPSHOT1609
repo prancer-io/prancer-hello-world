@@ -1,0 +1,349 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAzureQuickStart",
+  "paths": [
+    "/quickstarts/microsoft.network/vnet-to-vnet/azuredeploy.json",
+    "/quickstarts/microsoft.network/vnet-to-vnet/azuredeploy.parameters.json"
+  ],
+  "timestamp": 1642962909653,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/quickstarts/microsoft.network/vnet-to-vnet/azuredeploy.json",
+      "/quickstarts/microsoft.network/vnet-to-vnet/azuredeploy.parameters.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT1609",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "microsoft.network/publicipaddresses",
+      "microsoft.network/virtualnetworks",
+      "microsoft.network/connections",
+      "microsoft.network/virtualnetworkgateways"
+    ]
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT1609",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "location1": {
+        "type": "string",
+        "metadata": {
+          "description": "Location where first VNET, Gateway, PublicIP and Connection will be deployed."
+        },
+        "value": "North Europe"
+      },
+      "location2": {
+        "type": "string",
+        "metadata": {
+          "description": "Location where second VNET, Gateway, PublicIP and Connection will be deployed."
+        },
+        "value": "East US"
+      },
+      "virtualNetworkName1": {
+        "type": "string",
+        "metadata": {
+          "description": "Name of the first VNET."
+        },
+        "value": "Vnet1"
+      },
+      "addressPrefix1": {
+        "type": "string",
+        "metadata": {
+          "description": "Address space for the first VNET."
+        },
+        "value": "192.168.100.0/24"
+      },
+      "subnet1Name1": {
+        "type": "string",
+        "defaultValue": "Subnet-1",
+        "metadata": {
+          "description": "Name of the first subnet in the first VNET. Please note, an additional subnet called GatewaySubnet will be created where the VirtualNetworkGateway will be deployed. The name of that subnet must not be changed from GatewaySubnet."
+        },
+        "value": "WebTier1"
+      },
+      "subnet1Prefix1": {
+        "type": "string",
+        "metadata": {
+          "description": "The prefix for the first subnet in the first VNET."
+        },
+        "value": "192.168.100.0/28"
+      },
+      "gatewaySubnetPrefix1": {
+        "type": "string",
+        "metadata": {
+          "description": "The prefix for the GatewaySubnet where the first VirtualNetworkGateway will be deployed. This must be at least /29."
+        },
+        "value": "192.168.100.16/28"
+      },
+      "gatewayPublicIPName1": {
+        "type": "string",
+        "metadata": {
+          "description": "The name of the PublicIP attached to the first VirtualNetworkGateway."
+        },
+        "value": "GEN-UNIQUE"
+      },
+      "gatewayName1": {
+        "type": "string",
+        "metadata": {
+          "description": "The name of the first VirtualNetworkGateway."
+        },
+        "value": "Vnet1Gw"
+      },
+      "connectionName1": {
+        "type": "string",
+        "metadata": {
+          "description": "The name of the first connection, connecting the first VirtualNetworkGateway to the second VirtualNetworkGateway."
+        },
+        "value": "Vnet1Connection"
+      },
+      "virtualNetworkName2": {
+        "type": "string",
+        "metadata": {
+          "description": "Name of the second VNET."
+        },
+        "value": "Vnet2"
+      },
+      "addressPrefix2": {
+        "type": "string",
+        "metadata": {
+          "description": "Address space for the second VNET."
+        },
+        "value": "192.168.101.0/24"
+      },
+      "subnet1Name2": {
+        "type": "string",
+        "defaultValue": "Subnet-1",
+        "metadata": {
+          "description": "Name of the first subnet in the second VNET. Please note, an additional subnet called GatewaySubnet will be created where the VirtualNetworkGateway will be deployed. The name of that subnet must not be changed from GatewaySubnet."
+        },
+        "value": "WebTier2"
+      },
+      "subnet1Prefix2": {
+        "type": "string",
+        "metadata": {
+          "description": "The prefix for the first subnet in the second VNET."
+        },
+        "value": "192.168.101.0/28"
+      },
+      "gatewaySubnetPrefix2": {
+        "type": "string",
+        "metadata": {
+          "description": "The prefix for the GatewaySubnet where the second VirtualNetworkGateway will be deployed. This must be at least /29."
+        },
+        "value": "192.168.101.16/28"
+      },
+      "gatewayPublicIPName2": {
+        "type": "string",
+        "metadata": {
+          "description": "The name of the PublicIP attached to the second VirtualNetworkGateway."
+        },
+        "value": "GEN-UNIQUE"
+      },
+      "gatewayName2": {
+        "type": "string",
+        "metadata": {
+          "description": "The name of the second VirtualNetworkGateway."
+        },
+        "value": "Vnet2Gw"
+      },
+      "connectionName2": {
+        "type": "string",
+        "metadata": {
+          "description": "The name of the second connection, connecting the second VirtualNetworkGateway to the first VirtualNetworkGateway."
+        },
+        "value": "Vnet2Connection"
+      },
+      "sharedKey": {
+        "type": "string",
+        "metadata": {
+          "description": "The shared key used to establish connection between the two VirtualNetworkGateways."
+        },
+        "value": "secretKey"
+      }
+    },
+    "resources": [
+      {
+        "apiVersion": "2020-05-01",
+        "type": "Microsoft.Network/virtualNetworks",
+        "name": "Vnet1",
+        "location": "North Europe",
+        "properties": {
+          "addressSpace": {
+            "addressPrefixes": [
+              "192.168.100.0/24"
+            ]
+          },
+          "subnets": [
+            {
+              "name": "WebTier1",
+              "properties": {
+                "addressPrefix": "192.168.100.0/28"
+              }
+            },
+            {
+              "name": "GatewaySubnet",
+              "properties": {
+                "addressPrefix": "192.168.100.16/28"
+              }
+            }
+          ]
+        }
+      },
+      {
+        "apiVersion": "2020-05-01",
+        "type": "Microsoft.Network/virtualNetworks",
+        "name": "Vnet2",
+        "location": "East US",
+        "properties": {
+          "addressSpace": {
+            "addressPrefixes": [
+              "192.168.101.0/24"
+            ]
+          },
+          "subnets": [
+            {
+              "name": "WebTier2",
+              "properties": {
+                "addressPrefix": "192.168.101.0/28"
+              }
+            },
+            {
+              "name": "GatewaySubnet",
+              "properties": {
+                "addressPrefix": "192.168.101.16/28"
+              }
+            }
+          ]
+        }
+      },
+      {
+        "apiVersion": "2020-05-01",
+        "type": "Microsoft.Network/publicIPAddresses",
+        "name": "GEN-UNIQUE",
+        "location": "North Europe",
+        "properties": {
+          "publicIPAllocationMethod": "Dynamic"
+        }
+      },
+      {
+        "apiVersion": "2020-05-01",
+        "type": "Microsoft.Network/publicIPAddresses",
+        "name": "GEN-UNIQUE",
+        "location": "East US",
+        "properties": {
+          "publicIPAllocationMethod": "Dynamic"
+        }
+      },
+      {
+        "apiVersion": "2020-05-01",
+        "type": "Microsoft.Network/virtualNetworkGateways",
+        "name": "Vnet1Gw",
+        "location": "North Europe",
+        "dependsOn": [
+          "Microsoft.Network/publicIPAddresses//GEN-UNIQUE",
+          "Microsoft.Network/virtualNetworks//Vnet1"
+        ],
+        "properties": {
+          "ipConfigurations": [
+            {
+              "properties": {
+                "privateIPAllocationMethod": "Dynamic",
+                "subnet": {
+                  "id": "Microsoft.Network/virtualNetworks/subnets/Vnet1/GatewaySubnet"
+                },
+                "publicIPAddress": {
+                  "id": "Microsoft.Network/publicIPAddresses/GEN-UNIQUE"
+                }
+              },
+              "name": "vnetGatewayConfig1"
+            }
+          ],
+          "gatewayType": "Vpn",
+          "vpnType": "RouteBased",
+          "enableBgp": false
+        }
+      },
+      {
+        "apiVersion": "2020-05-01",
+        "type": "Microsoft.Network/virtualNetworkGateways",
+        "name": "Vnet2Gw",
+        "location": "East US",
+        "dependsOn": [
+          "Microsoft.Network/publicIPAddresses//GEN-UNIQUE",
+          "Microsoft.Network/virtualNetworks//Vnet2"
+        ],
+        "properties": {
+          "ipConfigurations": [
+            {
+              "properties": {
+                "privateIPAllocationMethod": "Dynamic",
+                "subnet": {
+                  "id": "Microsoft.Network/virtualNetworks/subnets/Vnet2/GatewaySubnet"
+                },
+                "publicIPAddress": {
+                  "id": "Microsoft.Network/publicIPAddresses/GEN-UNIQUE"
+                }
+              },
+              "name": "vnetGatewayConfig2"
+            }
+          ],
+          "gatewayType": "Vpn",
+          "vpnType": "RouteBased",
+          "enableBgp": false
+        }
+      },
+      {
+        "apiVersion": "2020-05-01",
+        "type": "Microsoft.Network/connections",
+        "name": "Vnet1Connection",
+        "location": "North Europe",
+        "dependsOn": [
+          "Microsoft.Network/virtualNetworkGateways//Vnet1Gw",
+          "Microsoft.Network/virtualNetworkGateways//Vnet2Gw"
+        ],
+        "properties": {
+          "virtualNetworkGateway1": {
+            "id": "Microsoft.Network/virtualNetworkGateways/Vnet1Gw"
+          },
+          "virtualNetworkGateway2": {
+            "id": "Microsoft.Network/virtualNetworkGateways/Vnet2Gw"
+          },
+          "connectionType": "Vnet2Vnet",
+          "routingWeight": 3,
+          "sharedKey": "secretKey"
+        }
+      },
+      {
+        "apiVersion": "2020-05-01",
+        "type": "Microsoft.Network/connections",
+        "name": "Vnet2Connection",
+        "location": "East US",
+        "dependsOn": [
+          "Microsoft.Network/virtualNetworkGateways//Vnet1Gw",
+          "Microsoft.Network/virtualNetworkGateways//Vnet2Gw"
+        ],
+        "properties": {
+          "virtualNetworkGateway1": {
+            "id": "Microsoft.Network/virtualNetworkGateways/Vnet2Gw"
+          },
+          "virtualNetworkGateway2": {
+            "id": "Microsoft.Network/virtualNetworkGateways/Vnet1Gw"
+          },
+          "connectionType": "Vnet2Vnet",
+          "routingWeight": 3,
+          "sharedKey": "secretKey"
+        }
+      }
+    ],
+    "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+  }
+}

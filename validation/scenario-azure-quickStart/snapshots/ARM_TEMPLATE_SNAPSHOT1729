@@ -1,0 +1,179 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAzureQuickStart",
+  "paths": [
+    "/quickstarts/microsoft.storagepool/diskpool-create-entry-level/azuredeploy.json",
+    "/quickstarts/microsoft.storagepool/diskpool-create-entry-level/azuredeploy.parameters.json"
+  ],
+  "timestamp": 1642962910680,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/quickstarts/microsoft.storagepool/diskpool-create-entry-level/azuredeploy.json",
+      "/quickstarts/microsoft.storagepool/diskpool-create-entry-level/azuredeploy.parameters.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT1729",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "microsoft.storagepool/diskpools",
+      "microsoft.storagepool/diskpools/iscsitargets"
+    ]
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT1729",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.0.0.0",
+    "metadata": {
+      "_generator": {
+        "name": "bicep",
+        "version": "0.4.613.9944",
+        "templateHash": "657559697202475547"
+      }
+    },
+    "parameters": {
+      "diskPoolLocation": {
+        "type": "string",
+        "allowedValues": [
+          "AustraliaEast",
+          "CanadaCentral",
+          "CentralUS",
+          "EastUS",
+          "JapanEast",
+          "NorthEurope",
+          "SouthCentralUS",
+          "SoutheastAsia",
+          "UKSouth",
+          "WestEurope",
+          "WestUS2"
+        ],
+        "metadata": {
+          "description": "Location of the Disk Pool"
+        },
+        "value": "GET-PREREQ-location"
+      },
+      "diskPoolSku": {
+        "type": "string",
+        "defaultValue": "Standard_S1",
+        "allowedValues": [
+          "Basic_B1",
+          "Standard_S1",
+          "Premium_P1"
+        ],
+        "metadata": {
+          "description": "Sku of the Disk Pool"
+        },
+        "value": "Standard_S1"
+      },
+      "diskPoolName": {
+        "type": "string",
+        "defaultValue": "diskpool-01",
+        "maxLength": 30,
+        "minLength": 7,
+        "metadata": {
+          "description": "Name of the Disk Pool"
+        },
+        "value": "GEN-UNIQUE"
+      },
+      "diskPoolAvailabilityZone": {
+        "type": "string",
+        "metadata": {
+          "description": "Availability zone to deploy the Disk Pool"
+        },
+        "value": "GET-PREREQ-existingManagedDiskAvailabilityZone"
+      },
+      "existingManagedDiskName": {
+        "type": "string",
+        "defaultValue": "disk-1",
+        "metadata": {
+          "description": "Name of the managed disk (512 sector size) to create and export as an iSCSI LUN in the Disk Pool"
+        },
+        "value": "GET-PREREQ-existingManagedDiskName"
+      },
+      "targetName": {
+        "type": "string",
+        "defaultValue": "iscsi-target-01",
+        "maxLength": 40,
+        "minLength": 5,
+        "metadata": {
+          "description": "Name of the iSCSI Target"
+        },
+        "value": "GEN-UNIQUE"
+      },
+      "existingResourceGroupName": {
+        "type": "string",
+        "metadata": {
+          "description": "Name of the resourceGroup for the existing virtual network and disk to deploy the Disk Pool."
+        },
+        "value": "GET-PREREQ-existingResourceGroupName"
+      },
+      "existingVnetName": {
+        "type": "string",
+        "metadata": {
+          "description": "Name of the existing virtual network to deploy the Disk Pool into."
+        },
+        "value": "GET-PREREQ-existingVnetName"
+      },
+      "existingSubnetName": {
+        "type": "string",
+        "metadata": {
+          "description": "Name of the existing subnet to deploy the Disk Pool into."
+        },
+        "value": "GET-PREREQ-existingSubnetName"
+      }
+    },
+    "functions": [],
+    "variables": {
+      "subnetId": "[extensionResourceId(format('/subscriptions/{0}/resourceGroups/{1}', subscription().subscriptionId, parameters('existingResourceGroupName')), 'Microsoft.Network/virtualNetworks/subnets', parameters('existingVnetName'), parameters('existingSubnetName'))]",
+      "diskId": "[extensionResourceId(format('/subscriptions/{0}/resourceGroups/{1}', subscription().subscriptionId, parameters('existingResourceGroupName')), 'Microsoft.Compute/disks', parameters('existingManagedDiskName'))]"
+    },
+    "resources": [
+      {
+        "type": "Microsoft.StoragePool/diskPools",
+        "apiVersion": "2021-08-01",
+        "name": "GEN-UNIQUE",
+        "sku": {
+          "name": "Standard_S1"
+        },
+        "location": "GET-PREREQ-location",
+        "properties": {
+          "availabilityZones": [
+            "GET-PREREQ-existingManagedDiskAvailabilityZone"
+          ],
+          "subnetId": "[extensionResourceId(format('/subscriptions/{0}/resourceGroups/{1}', subscription().subscriptionId, parameters('existingResourceGroupName')), 'Microsoft.Network/virtualNetworks/subnets', parameters('existingVnetName'), parameters('existingSubnetName'))]",
+          "disks": [
+            {
+              "id": "[extensionResourceId(format('/subscriptions/{0}/resourceGroups/{1}', subscription().subscriptionId, parameters('existingResourceGroupName')), 'Microsoft.Compute/disks', parameters('existingManagedDiskName'))]"
+            }
+          ]
+        }
+      },
+      {
+        "type": "Microsoft.StoragePool/diskPools/iscsiTargets",
+        "apiVersion": "2021-08-01",
+        "name": "[format('{0}/{1}', parameters('diskPoolName'), parameters('targetName'))]",
+        "properties": {
+          "targetIqn": "iqn.2021-04.org.microsoft.com:target",
+          "aclMode": "Dynamic",
+          "luns": [
+            {
+              "managedDiskAzureResourceId": "[extensionResourceId(format('/subscriptions/{0}/resourceGroups/{1}', subscription().subscriptionId, parameters('existingResourceGroupName')), 'Microsoft.Compute/disks', parameters('existingManagedDiskName'))]",
+              "name": "lun0"
+            }
+          ]
+        },
+        "dependsOn": [
+          "Microsoft.StoragePool/diskPools/GEN-UNIQUE"
+        ]
+      }
+    ],
+    "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+  }
+}

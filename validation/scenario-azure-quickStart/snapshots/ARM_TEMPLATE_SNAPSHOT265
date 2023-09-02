@@ -1,0 +1,215 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAzureQuickStart",
+  "paths": [
+    "/application-workloads/mongo/mongodb-nodejs-high-availability/frontend-resource.json",
+    "/application-workloads/mongo/mongodb-nodejs-high-availability/azuredeploy.parameters.json"
+  ],
+  "timestamp": 1642962891612,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/application-workloads/mongo/mongodb-nodejs-high-availability/frontend-resource.json",
+      "/application-workloads/mongo/mongodb-nodejs-high-availability/azuredeploy.parameters.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT265",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "microsoft.network/publicipaddresses",
+      "microsoft.network/networkinterfaces",
+      "microsoft.compute/virtualmachines",
+      "microsoft.compute/virtualmachines/extensions"
+    ]
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT265",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "commonSettings": {
+        "type": "object",
+        "metadata": {
+          "Description": "Common settings object"
+        }
+      },
+      "networkSettings": {
+        "type": "object",
+        "metadata": {
+          "Description": "Network settings object"
+        }
+      },
+      "machineSettings": {
+        "type": "object",
+        "metadata": {
+          "Description": "Machine settings object"
+        }
+      },
+      "location": {
+        "type": "string",
+        "defaultValue": "[resourceGroup().location]",
+        "metadata": {
+          "description": "Location for all resources."
+        }
+      },
+      "adminUsername": {
+        "value": "GEN-UNIQUE"
+      },
+      "adminPassword": {
+        "value": "GEN-PASSWORD"
+      },
+      "virtualNetworkName": {
+        "value": "mongodbVnet"
+      },
+      "subnetName": {
+        "value": "mongodbSubnet"
+      },
+      "addressPrefix": {
+        "value": "10.0.0.0/16"
+      },
+      "subnetPrefix": {
+        "value": "10.0.0.0/24"
+      },
+      "nodeAddressPrefix": {
+        "value": "10.0.0.1"
+      },
+      "dnsNameForPublicIP": {
+        "value": "GEN-UNIQUE-8"
+      },
+      "ubuntuOSVersion": {
+        "value": "14.04.5-LTS"
+      },
+      "jumpbox": {
+        "value": "Disabled"
+      },
+      "tshirtSize": {
+        "value": "XSmall"
+      },
+      "replicaSetName": {
+        "value": "rs0"
+      },
+      "replicaSetKey": {
+        "value": "GEN-UNIQUE"
+      }
+    },
+    "variables": {
+      "imagePublisher": "Canonical",
+      "imageOffer": "UbuntuServer",
+      "nicName": "myVMNic",
+      "publicIPAddressName": "myPublicIP",
+      "publicIPAddressType": "Dynamic",
+      "vmName": "MyUbuntuVM",
+      "vmSize": "Standard_D2_v3",
+      "virtualNetworkName": "networkSettings",
+      "subnetRef": "networkSettings"
+    },
+    "resources": [
+      {
+        "apiVersion": "2015-05-01-preview",
+        "type": "Microsoft.Network/publicIPAddresses",
+        "name": "myPublicIP",
+        "location": "[resourceGroup().location]",
+        "properties": {
+          "publicIPAllocationMethod": "Dynamic",
+          "dnsSettings": {
+            "domainNameLabel": "machineSettings"
+          }
+        }
+      },
+      {
+        "apiVersion": "2015-05-01-preview",
+        "type": "Microsoft.Network/networkInterfaces",
+        "name": "myVMNic",
+        "location": "[resourceGroup().location]",
+        "dependsOn": [
+          "Microsoft.Network/publicIPAddresses/myPublicIP"
+        ],
+        "properties": {
+          "ipConfigurations": [
+            {
+              "name": "ipconfig1",
+              "properties": {
+                "privateIPAllocationMethod": "Dynamic",
+                "publicIPAddress": {
+                  "id": "Microsoft.Network/publicIPAddresses/myPublicIP"
+                },
+                "subnet": {
+                  "id": "networkSettings"
+                }
+              }
+            }
+          ]
+        }
+      },
+      {
+        "apiVersion": "2017-03-30",
+        "type": "Microsoft.Compute/virtualMachines",
+        "name": "MyUbuntuVM",
+        "location": "[resourceGroup().location]",
+        "dependsOn": [
+          "Microsoft.Network/networkInterfaces/myVMNic"
+        ],
+        "properties": {
+          "hardwareProfile": {
+            "vmSize": "Standard_D2_v3"
+          },
+          "osProfile": {
+            "computerName": "MyUbuntuVM",
+            "adminUsername": "machineSettings",
+            "adminPassword": "machineSettings"
+          },
+          "storageProfile": {
+            "imageReference": {
+              "publisher": "Canonical",
+              "offer": "UbuntuServer",
+              "sku": "machineSettings",
+              "version": "latest"
+            },
+            "osDisk": {
+              "name": "VmName_OSDisk",
+              "caching": "ReadWrite",
+              "createOption": "FromImage"
+            }
+          },
+          "networkProfile": {
+            "networkInterfaces": [
+              {
+                "id": "Microsoft.Network/networkInterfaces/myVMNic"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "type": "Microsoft.Compute/virtualMachines/extensions",
+        "name": "MyUbuntuVM/CustomScript",
+        "apiVersion": "2015-05-01-preview",
+        "location": "[resourceGroup().location]",
+        "dependsOn": [
+          "Microsoft.Compute/virtualMachines/MyUbuntuVM"
+        ],
+        "properties": {
+          "publisher": "Microsoft.Azure.Extensions",
+          "type": "CustomScript",
+          "typeHandlerVersion": "2.0",
+          "autoUpgradeMinorVersion": true,
+          "settings": {
+            "fileUris": [
+              "https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/application-workloads/mongo/mongodb-nodejs-high-availability/Script/templateScript.sh",
+              "https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/application-workloads/mongo/mongodb-nodejs-high-availability/nodeservice/app.js"
+            ],
+            "commandToExecute": "sh templateScript.sh"
+          }
+        }
+      }
+    ],
+    "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+  }
+}

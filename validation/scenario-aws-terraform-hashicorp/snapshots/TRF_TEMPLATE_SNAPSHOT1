@@ -1,0 +1,120 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "main",
+  "contentType": "json",
+  "source": "gitConnectorAwsTerraHashicorp",
+  "paths": [
+    "/examples/alexa/outputs.tf",
+    "/examples/alexa/variables.tf",
+    "/examples/alexa/main.tf"
+  ],
+  "timestamp": 1642967657593,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "TRF_TEMPLATE_SNAPSHOT",
+    "type": "terraform",
+    "collection": "terraformtemplate",
+    "paths": [
+      "/examples/alexa/outputs.tf",
+      "/examples/alexa/variables.tf",
+      "/examples/alexa/main.tf"
+    ],
+    "snapshotId": "TRF_TEMPLATE_SNAPSHOT1",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "aws_lambda_permission",
+      "aws_lambda_function",
+      "aws_iam_role",
+      "aws_iam_role_policy"
+    ]
+  },
+  "snapshotId": "TRF_TEMPLATE_SNAPSHOT1",
+  "collection": "terraformtemplate",
+  "json": {
+    "terraform": [
+      {
+        "required_version": ">= 0.12"
+      }
+    ],
+    "provider": [
+      {
+        "aws": {
+          "region": "${var.aws_region}"
+        }
+      }
+    ],
+    "resources": [
+      {
+        "type": "aws_lambda_permission",
+        "name": "default",
+        "properties": {
+          "statement_id": "AllowExecutionFromAlexa",
+          "action": "lambda:InvokeFunction",
+          "function_name": "${aws_lambda_function.default.function_name}",
+          "principal": "alexa-appkit.amazon.com",
+          "compiletime_identity": "aws_lambda_permission.default"
+        }
+      },
+      {
+        "type": "aws_lambda_function",
+        "name": "default",
+        "properties": {
+          "filename": "lambda_function.zip",
+          "source_code_hash": "${filebase64sha256(\"lambda_function.zip\")}",
+          "function_name": "terraform_lambda_alexa_example",
+          "role": "${aws_iam_role.default.arn}",
+          "handler": "lambda_function.lambda_handler",
+          "runtime": "python3.6",
+          "compiletime_identity": "aws_lambda_function.default"
+        }
+      },
+      {
+        "type": "aws_iam_role",
+        "name": "default",
+        "properties": {
+          "name": "terraform_lambda_alexa_example",
+          "assume_role_policy": {
+            "Version": "2012-10-17",
+            "Statement": [
+              {
+                "Action": "sts:AssumeRole",
+                "Principal": {
+                  "Service": "lambda.amazonaws.com"
+                },
+                "Effect": "Allow",
+                "Sid": ""
+              }
+            ]
+          },
+          "compiletime_identity": "aws_iam_role.default"
+        }
+      },
+      {
+        "type": "aws_iam_role_policy",
+        "name": "default",
+        "properties": {
+          "name": "terraform_lambda_alexa_example",
+          "role": "${aws_iam_role.default.id}",
+          "policy": {
+            "Version": "2012-10-17",
+            "Statement": [
+              {
+                "Effect": "Allow",
+                "Action": [
+                  "logs:CreateLogGroup",
+                  "logs:CreateLogStream",
+                  "logs:PutLogEvents"
+                ],
+                "Resource": "*"
+              }
+            ]
+          },
+          "compiletime_identity": "aws_iam_role_policy.default"
+        }
+      }
+    ]
+  }
+}

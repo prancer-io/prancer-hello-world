@@ -1,0 +1,262 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAzureQuickStart",
+  "paths": [
+    "/quickstarts/microsoft.compute/vm-specialized-vhd-new-or-existing-vnet/azuredeploy.json",
+    "/quickstarts/microsoft.compute/vm-specialized-vhd-new-or-existing-vnet/azuredeploy.parameters.json"
+  ],
+  "timestamp": 1642962904477,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/quickstarts/microsoft.compute/vm-specialized-vhd-new-or-existing-vnet/azuredeploy.json",
+      "/quickstarts/microsoft.compute/vm-specialized-vhd-new-or-existing-vnet/azuredeploy.parameters.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT1107",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "microsoft.network/publicipaddresses",
+      "microsoft.network/virtualnetworks",
+      "microsoft.network/networkinterfaces",
+      "microsoft.compute/disks",
+      "microsoft.compute/virtualmachines",
+      "microsoft.storage/storageaccounts"
+    ]
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT1107",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "vmName": {
+        "type": "string",
+        "defaultValue": "newvm",
+        "metadata": {
+          "description": "Name of the VM"
+        }
+      },
+      "osType": {
+        "type": "string",
+        "allowedValues": [
+          "Windows",
+          "Linux"
+        ],
+        "defaultValue": "Windows",
+        "metadata": {
+          "description": "Type of OS on the existing vhd"
+        }
+      },
+      "osDiskVhdUri": {
+        "type": "string",
+        "metadata": {
+          "description": "Uri of the existing VHD in ARM standard or premium storage"
+        },
+        "value": "GEN-SPECIALIZED-WINVHD-URI"
+      },
+      "vmSize": {
+        "type": "string",
+        "defaultValue": "Standard_D2s_v3",
+        "metadata": {
+          "description": "Size of the VM"
+        }
+      },
+      "vNetNewOrExisting": {
+        "type": "string",
+        "defaultValue": "new",
+        "allowedValues": [
+          "new",
+          "existing"
+        ],
+        "metadata": {
+          "description": "Specify whether to create a new or existing virtual network for the VM."
+        },
+        "value": "existing"
+      },
+      "virtualNetworkName": {
+        "type": "string",
+        "defaultValue": "newVnet",
+        "metadata": {
+          "description": "Name of the existing VNET"
+        },
+        "value": "GEN-VNET-NAME"
+      },
+      "virtualNetworkResourceGroup": {
+        "type": "string",
+        "defaultValue": "[resourceGroup().name]",
+        "metadata": {
+          "description": "Name of the existing VNET resource group"
+        },
+        "value": "GEN-VNET-RESOURCEGROUP-NAME"
+      },
+      "subnetName": {
+        "type": "string",
+        "defaultValue": "subnet-1",
+        "metadata": {
+          "description": "Name of the subnet in the virtual network you want to use"
+        },
+        "value": "GEN-VNET-SUBNET1-NAME"
+      },
+      "dnsNameForPublicIP": {
+        "type": "string",
+        "defaultValue": "[concat('vm-', uniqueString(resourceGroup().id))]",
+        "metadata": {
+          "description": "Unique DNS Name for the Public IP used to access the Virtual Machine."
+        }
+      },
+      "location": {
+        "type": "string",
+        "defaultValue": "[resourceGroup().location]",
+        "metadata": {
+          "description": "Location for all resources."
+        }
+      }
+    },
+    "variables": {
+      "diagStorageAccountName": "[concat(uniquestring(resourceGroup().id), 'specvm')]",
+      "subnetRef": "GEN-VNET-RESOURCEGROUP-NAME/Microsoft.Network/virtualNetworks/subnets/GEN-VNET-NAME/GEN-VNET-SUBNET1-NAME",
+      "nicName": "nic",
+      "publicIPAddressName": "publicIp",
+      "diskName": "newvm-disk"
+    },
+    "resources": [
+      {
+        "condition": false,
+        "apiVersion": "2020-08-01",
+        "type": "Microsoft.Network/virtualNetworks",
+        "name": "GEN-VNET-NAME",
+        "location": "[resourceGroup().location]",
+        "properties": {
+          "addressSpace": {
+            "addressPrefixes": [
+              "10.0.0.0/16"
+            ]
+          },
+          "subnets": [
+            {
+              "name": "GEN-VNET-SUBNET1-NAME",
+              "properties": {
+                "addressPrefix": "10.0.0.0/24"
+              }
+            }
+          ]
+        }
+      },
+      {
+        "type": "Microsoft.Storage/storageAccounts",
+        "name": "[variables('diagStorageAccountName')]",
+        "apiVersion": "2018-07-01",
+        "location": "[resourceGroup().location]",
+        "sku": {
+          "name": "Standard_LRS"
+        },
+        "kind": "Storage",
+        "properties": {}
+      },
+      {
+        "apiVersion": "2018-10-01",
+        "type": "Microsoft.Network/publicIPAddresses",
+        "name": "publicIp",
+        "location": "[resourceGroup().location]",
+        "tags": {
+          "displayName": "PublicIPAddress"
+        },
+        "properties": {
+          "publicIPAllocationMethod": "Dynamic",
+          "dnsSettings": {
+            "domainNameLabel": "[concat('vm-', uniqueString(resourceGroup().id))]"
+          }
+        }
+      },
+      {
+        "apiVersion": "2018-10-01",
+        "type": "Microsoft.Network/networkInterfaces",
+        "name": "nic",
+        "location": "[resourceGroup().location]",
+        "dependsOn": [
+          "publicIp"
+        ],
+        "tags": {
+          "displayName": "NetworkInterface"
+        },
+        "properties": {
+          "ipConfigurations": [
+            {
+              "name": "ipconfig1",
+              "properties": {
+                "privateIPAllocationMethod": "Dynamic",
+                "publicIPAddress": {
+                  "id": "Microsoft.Network/publicIPAddresses/publicIp"
+                },
+                "subnet": {
+                  "id": "GEN-VNET-RESOURCEGROUP-NAME/Microsoft.Network/virtualNetworks/subnets/GEN-VNET-NAME/GEN-VNET-SUBNET1-NAME"
+                }
+              }
+            }
+          ]
+        }
+      },
+      {
+        "type": "Microsoft.Compute/disks",
+        "apiVersion": "2018-09-30",
+        "name": "newvm-disk",
+        "location": "[resourceGroup().location]",
+        "properties": {
+          "creationData": {
+            "createOption": "Import",
+            "sourceUri": "GEN-SPECIALIZED-WINVHD-URI"
+          },
+          "osType": "Windows"
+        }
+      },
+      {
+        "apiVersion": "2018-10-01",
+        "type": "Microsoft.Compute/virtualMachines",
+        "name": "newvm",
+        "location": "[resourceGroup().location]",
+        "tags": {
+          "displayName": "VirtualMachine"
+        },
+        "dependsOn": [
+          "nic",
+          "newvm-disk"
+        ],
+        "properties": {
+          "hardwareProfile": {
+            "vmSize": "Standard_D2s_v3"
+          },
+          "storageProfile": {
+            "osDisk": {
+              "osType": "Windows",
+              "createOption": "Attach",
+              "managedDisk": {
+                "id": "Microsoft.Compute/disks/newvm-disk"
+              }
+            }
+          },
+          "networkProfile": {
+            "networkInterfaces": [
+              {
+                "id": "Microsoft.Network/networkInterfaces/nic"
+              }
+            ]
+          },
+          "diagnosticsProfile": {
+            "bootDiagnostics": {
+              "enabled": true,
+              "storageUri": "[reference(variables('diagStorageAccountName')).primaryEndpoints.blob]"
+            }
+          }
+        }
+      }
+    ],
+    "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+  }
+}

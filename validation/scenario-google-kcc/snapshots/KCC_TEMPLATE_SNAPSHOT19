@@ -2,12 +2,12 @@
   "structure": "filesystem",
   "error": null,
   "reference": "master",
-  "contentType": "yaml",
+  "contentType": "json",
   "source": "gitConnectorGoogleKcc",
   "paths": [
-    "/samples/resources/bigqueryjob/copy-bigquery-job/kms_v1beta1_kmscryptokey.yaml"
+    "/samples/resources/bigqueryjob/copy-bigquery-job/iam_v1beta1_iampolicymember.yaml"
   ],
-  "timestamp": 1628765138640,
+  "timestamp": 1642973301744,
   "queryuser": null,
   "checksum": "99914b932bd37a50b983c5e7c90ae93b",
   "node": {
@@ -15,23 +15,30 @@
     "type": "kcc",
     "collection": "kcctemplate",
     "paths": [
-      "/samples/resources/bigqueryjob/copy-bigquery-job/kms_v1beta1_kmscryptokey.yaml"
+      "/samples/resources/bigqueryjob/copy-bigquery-job/iam_v1beta1_iampolicymember.yaml"
     ],
     "snapshotId": "KCC_TEMPLATE_SNAPSHOT19",
     "status": "active",
-    "validate": true
+    "validate": true,
+    "resourceTypes": [
+      "iampolicymember"
+    ]
   },
   "snapshotId": "KCC_TEMPLATE_SNAPSHOT19",
   "collection": "kcctemplate",
   "json": {
-    "apiVersion": "kms.cnrm.cloud.google.com/v1beta1",
-    "kind": "KMSCryptoKey",
+    "apiVersion": "iam.cnrm.cloud.google.com/v1beta1",
+    "kind": "IAMPolicyMember",
     "metadata": {
       "name": "bigqueryjob-dep-copy"
     },
     "spec": {
-      "keyRingRef": {
-        "name": "bigqueryjob-dep-copy"
+      "member": "serviceAccount:bq-${PROJECT_NUMBER?}@bigquery-encryption.iam.gserviceaccount.com",
+      "role": "roles/cloudkms.cryptoKeyEncrypterDecrypter",
+      "resourceRef": {
+        "apiVersion": "resourcemanager.cnrm.cloud.google.com/v1beta1",
+        "kind": "Project",
+        "external": "projects/${PROJECT_ID?}"
       }
     }
   }

@@ -1,0 +1,226 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAzureQuickStart",
+  "paths": [
+    "/application-workloads/informatica/informatica-adf-hdinsight-powerbi/nested/workflow-automation.json"
+  ],
+  "timestamp": 1642962889593,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/application-workloads/informatica/informatica-adf-hdinsight-powerbi/nested/workflow-automation.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT178",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "microsoft.automation/automationaccounts"
+    ]
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT178",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "automationAccountName": {
+        "type": "string"
+      },
+      "sku": {
+        "type": "string",
+        "defaultValue": "Basic",
+        "allowedValues": [
+          "Free",
+          "Basic"
+        ]
+      },
+      "runbookName": {
+        "type": "string"
+      },
+      "credential1Name": {
+        "defaultValue": "Azure_RM_Account_Credentials",
+        "type": "string"
+      },
+      "cred1Username": {
+        "type": "string",
+        "defaultValue": "ash@sysgaininc.onmicrosoft.com"
+      },
+      "cred1Password": {
+        "type": "securestring"
+      },
+      "jobIdWorkflow": {
+        "type": "string",
+        "defaultValue": "24b18f62-aa2c-4528-ac10-1e3602eb4053",
+        "metadata": {
+          "description": "Generate a Job ID (GUID) from https://www.guidgenerator.com/ "
+        }
+      },
+      "location": {
+        "type": "string",
+        "defaultValue": "East US 2",
+        "allowedValues": [
+          "Japan East",
+          "North Europe",
+          "South Central US",
+          "West Europe",
+          "Southeast Asia",
+          "East US 2"
+        ],
+        "metadata": {
+          "description": "Automation Service Location"
+        }
+      },
+      "runbookUrl": {
+        "defaultValue": "https://raw.githubusercontent.com/sysgain/informatica-p2p/master/runbooks/info-restapi-workflow.ps1",
+        "type": "string"
+      },
+      "tag": {
+        "type": "object",
+        "defaultValue": {
+          "key1": "key",
+          "value1": "value"
+        },
+        "metadata": {
+          "description": "Tag Values"
+        }
+      },
+      "ip": {
+        "type": "string"
+      },
+      "sysgain_ms_email": {
+        "type": "string"
+      },
+      "sysgain_ms_password": {
+        "type": "securestring"
+      },
+      "informatica_user_name": {
+        "type": "string",
+        "metadata": {
+          "description": "The same email id used for user_email"
+        }
+      },
+      "informatica_user_password": {
+        "type": "securestring"
+      },
+      "informatica_csa_vmname": {
+        "type": "string"
+      },
+      "client_id": {
+        "type": "string"
+      },
+      "adfStorageAccName": {
+        "type": "string"
+      },
+      "adfStorageAccKey": {
+        "type": "string"
+      },
+      "informaticaTags": {
+        "type": "object"
+      },
+      "quickstartTags": {
+        "type": "object"
+      }
+    },
+    "resources": [
+      {
+        "name": "automationAccountName",
+        "type": "Microsoft.Automation/automationAccounts",
+        "apiVersion": "2015-01-01-preview",
+        "location": "East US 2",
+        "tags": {
+          "[parameters('tag').key1]": "value",
+          "quickstartName": "quickstartTags",
+          "provider": "informaticaTags"
+        },
+        "properties": {
+          "sku": {
+            "name": "Basic"
+          }
+        },
+        "resources": [
+          {
+            "name": "runbookName",
+            "type": "runbooks",
+            "apiVersion": "2015-01-01-preview",
+            "location": "East US 2",
+            "dependsOn": [
+              "Microsoft.Automation/automationAccounts/automationAccountName"
+            ],
+            "tags": {
+              "[parameters('tag').key1]": "value",
+              "quickstartName": "quickstartTags",
+              "provider": "informaticaTags"
+            },
+            "properties": {
+              "runbookType": "Script",
+              "logProgress": false,
+              "logVerbose": false,
+              "description": null,
+              "publishContentLink": {
+                "uri": "https://raw.githubusercontent.com/sysgain/informatica-p2p/master/runbooks/info-restapi-workflow.ps1",
+                "version": "1.0.0.0"
+              }
+            }
+          },
+          {
+            "name": "Azure_RM_Account_Credentials",
+            "type": "credentials",
+            "apiVersion": "2015-01-01-preview",
+            "location": "East US 2",
+            "dependsOn": [
+              "Microsoft.Automation/automationAccounts/automationAccountName"
+            ],
+            "tags": {
+              "[parameters('tag').key1]": "value",
+              "quickstartName": "quickstartTags",
+              "provider": "informaticaTags"
+            },
+            "properties": {
+              "userName": "ash@sysgaininc.onmicrosoft.com",
+              "password": "cred1Password"
+            }
+          },
+          {
+            "name": "automationAccountName/24b18f62-aa2c-4528-ac10-1e3602eb4053",
+            "type": "Microsoft.Automation/automationAccounts/jobs",
+            "apiVersion": "2015-10-31",
+            "location": "East US 2",
+            "tags": {
+              "[parameters('tag').key1]": "value",
+              "quickstartName": "quickstartTags",
+              "provider": "informaticaTags"
+            },
+            "properties": {
+              "runbook": {
+                "name": "runbookName"
+              },
+              "parameters": {
+                "ip": "ip",
+                "sysgain_ms_email": "sysgain_ms_email",
+                "sysgain_ms_password": "sysgain_ms_password",
+                "informatica_user_name": "informatica_user_name",
+                "informatica_user_password": "informatica_user_password",
+                "client_id": "client_id",
+                "informatica_csa_vmname": "informatica_csa_vmname",
+                "adfStorageAccName": "adfstorageAccName",
+                "adfStorageAccKey": "adfStorageAccKey"
+              }
+            },
+            "dependsOn": [
+              "Microsoft.Automation/automationAccounts/automationAccountName",
+              "Microsoft.Automation/automationAccounts/runbooks/automationAccountName/runbookName",
+              "Microsoft.Automation/automationAccounts/credentials/automationAccountName/Azure_RM_Account_Credentials"
+            ]
+          }
+        ]
+      }
+    ],
+    "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+  }
+}

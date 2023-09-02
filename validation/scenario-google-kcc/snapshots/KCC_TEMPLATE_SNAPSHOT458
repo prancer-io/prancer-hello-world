@@ -2,12 +2,12 @@
   "structure": "filesystem",
   "error": null,
   "reference": "master",
-  "contentType": "yaml",
+  "contentType": "json",
   "source": "gitConnectorGoogleKcc",
   "paths": [
-    "/samples/resources/memcacheinstance/memcache_v1beta1_memcacheinstance.yaml"
+    "/samples/resources/iampolicy/project-level-policy/resourcemanager_v1beta1_project.yaml"
   ],
-  "timestamp": 1628765149150,
+  "timestamp": 1642973304292,
   "queryuser": null,
   "checksum": "99914b932bd37a50b983c5e7c90ae93b",
   "node": {
@@ -15,45 +15,31 @@
     "type": "kcc",
     "collection": "kcctemplate",
     "paths": [
-      "/samples/resources/memcacheinstance/memcache_v1beta1_memcacheinstance.yaml"
+      "/samples/resources/iampolicy/project-level-policy/resourcemanager_v1beta1_project.yaml"
     ],
     "snapshotId": "KCC_TEMPLATE_SNAPSHOT458",
     "status": "active",
-    "validate": true
+    "validate": true,
+    "resourceTypes": [
+      "project"
+    ]
   },
   "snapshotId": "KCC_TEMPLATE_SNAPSHOT458",
   "collection": "kcctemplate",
   "json": {
-    "apiVersion": "memcache.cnrm.cloud.google.com/v1beta1",
-    "kind": "MemcacheInstance",
+    "apiVersion": "resourcemanager.cnrm.cloud.google.com/v1beta1",
+    "kind": "Project",
     "metadata": {
-      "labels": {
-        "size": "small",
-        "process-type": "long-queue"
+      "annotations": {
+        "cnrm.cloud.google.com/organization-id": "${ORG_ID?}",
+        "cnrm.cloud.google.com/auto-create-network": "false"
       },
-      "name": "memcacheinstance-sample"
+      "name": "iampolicy-dep-project"
     },
     "spec": {
-      "networkRef": {
-        "name": "memcacheinstance-dep"
-      },
-      "nodeConfig": {
-        "memorySizeMb": 1024,
-        "cpuCount": 1
-      },
-      "nodeCount": 2,
-      "region": "us-central1",
-      "zones": [
-        "us-central1-a",
-        "us-central1-c"
-      ],
-      "displayName": "Sample Memcache Instance",
-      "memcacheParameters": {
-        "params": {
-          "listen-backlog": "10000",
-          "max-item-size": "524288",
-          "max-reqs-per-event": "1"
-        }
+      "name": "Config Connector Sample",
+      "billingAccountRef": {
+        "external": "${BILLING_ACCOUNT_ID?}"
       }
     }
   }

@@ -1,0 +1,163 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "main",
+  "contentType": "json",
+  "source": "gitConnectorAzureTerraHashicorp",
+  "paths": [
+    "/examples/app-service-certificate/stored-in-keyvault/variables.tf",
+    "/examples/app-service-certificate/stored-in-keyvault/main.tf"
+  ],
+  "timestamp": 1642943279622,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "TRF_TEMPLATE_SNAPSHOT",
+    "type": "terraform",
+    "collection": "terraformtemplate",
+    "paths": [
+      "/examples/app-service-certificate/stored-in-keyvault/variables.tf",
+      "/examples/app-service-certificate/stored-in-keyvault/main.tf"
+    ],
+    "snapshotId": "TRF_TEMPLATE_SNAPSHOT18",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "azurerm_app_service_certificate",
+      "azurerm_key_vault",
+      "azurerm_resource_group",
+      "azurerm_key_vault_certificate",
+      "azurerm_key_vault_access_policy"
+    ]
+  },
+  "snapshotId": "TRF_TEMPLATE_SNAPSHOT18",
+  "collection": "terraformtemplate",
+  "json": {
+    "provider": [
+      {
+        "azurerm": {
+          "features": [
+            {}
+          ]
+        }
+      }
+    ],
+    "data": {
+      "azurerm_client_config": {
+        "current": {
+          "compiletime_identity": "data.azurerm_client_config.current"
+        }
+      },
+      "azuread_service_principal": {
+        "web_app_resource_provider": {
+          "application_id": "abfa0a7c-a6b6-4736-8310-5855508787cd",
+          "compiletime_identity": "data.azuread_service_principal.web_app_resource_provider"
+        }
+      }
+    },
+    "resources": [
+      {
+        "type": "azurerm_resource_group",
+        "name": "example",
+        "properties": {
+          "name": "${var.prefix}-resources",
+          "location": "${var.location}",
+          "compiletime_identity": "azurerm_resource_group.example"
+        }
+      },
+      {
+        "type": "azurerm_key_vault",
+        "name": "example",
+        "properties": {
+          "name": "${var.prefix}-key-vault",
+          "resource_group_name": "${azurerm_resource_group.example.name}",
+          "location": "${azurerm_resource_group.example.location}",
+          "tenant_id": "${data.azurerm_client_config.current.tenant_id}",
+          "sku_name": "standard",
+          "compiletime_identity": "azurerm_key_vault.example"
+        }
+      },
+      {
+        "type": "azurerm_key_vault_access_policy",
+        "name": "current_user",
+        "properties": {
+          "key_vault_id": "${azurerm_key_vault.example.id}",
+          "tenant_id": "${azurerm_key_vault.example.tenant_id}",
+          "object_id": "${data.azurerm_client_config.current.object_id}",
+          "certificate_permissions": [
+            "get",
+            "import"
+          ],
+          "compiletime_identity": "azurerm_key_vault_access_policy.current_user"
+        }
+      },
+      {
+        "type": "azurerm_key_vault_access_policy",
+        "name": "web_app_resource_provider",
+        "properties": {
+          "key_vault_id": "${azurerm_key_vault.example.id}",
+          "tenant_id": "${azurerm_key_vault.example.tenant_id}",
+          "object_id": "${data.azuread_service_principal.web_app_resource_provider.id}",
+          "secret_permissions": [
+            "get"
+          ],
+          "certificate_permissions": [
+            "get"
+          ],
+          "compiletime_identity": "azurerm_key_vault_access_policy.web_app_resource_provider"
+        }
+      },
+      {
+        "type": "azurerm_key_vault_certificate",
+        "name": "example",
+        "properties": {
+          "name": "${var.prefix}-cert",
+          "key_vault_id": "${azurerm_key_vault.example.id}",
+          "certificate": [
+            {
+              "contents": "${filebase64(\"certificate.pfx\")}",
+              "password": "terraform"
+            }
+          ],
+          "certificate_policy": [
+            {
+              "issuer_parameters": [
+                {
+                  "name": "Unknown"
+                }
+              ],
+              "key_properties": [
+                {
+                  "exportable": true,
+                  "key_size": 2048,
+                  "key_type": "RSA",
+                  "reuse_key": false
+                }
+              ],
+              "secret_properties": [
+                {
+                  "content_type": "application/x-pkcs12"
+                }
+              ]
+            }
+          ],
+          "depends_on": [
+            "${azurerm_key_vault_access_policy.current_user}"
+          ],
+          "compiletime_identity": "azurerm_key_vault_certificate.example"
+        }
+      },
+      {
+        "type": "azurerm_app_service_certificate",
+        "name": "example",
+        "properties": {
+          "name": "${var.prefix}-cert",
+          "resource_group_name": "${azurerm_resource_group.example.name}",
+          "location": "${azurerm_resource_group.example.location}",
+          "key_vault_secret_id": "${azurerm_key_vault_certificate.example.secret_id}",
+          "compiletime_identity": "azurerm_app_service_certificate.example"
+        }
+      }
+    ]
+  }
+}

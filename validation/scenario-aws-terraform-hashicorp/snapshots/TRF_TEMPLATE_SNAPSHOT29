@@ -1,0 +1,91 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "main",
+  "contentType": "json",
+  "source": "gitConnectorAwsTerraHashicorp",
+  "paths": [
+    "/examples/rds/outputs.tf",
+    "/examples/rds/sg-variables.tf",
+    "/examples/rds/subnet-variables.tf",
+    "/examples/rds/terraform.template.tfvars",
+    "/examples/rds/variables.tf",
+    "/examples/rds/main.tf"
+  ],
+  "timestamp": 1642967657718,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "TRF_TEMPLATE_SNAPSHOT",
+    "type": "terraform",
+    "collection": "terraformtemplate",
+    "paths": [
+      "/examples/rds/outputs.tf",
+      "/examples/rds/sg-variables.tf",
+      "/examples/rds/subnet-variables.tf",
+      "/examples/rds/terraform.template.tfvars",
+      "/examples/rds/variables.tf",
+      "/examples/rds/main.tf"
+    ],
+    "snapshotId": "TRF_TEMPLATE_SNAPSHOT29",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "aws_db_subnet_group",
+      "aws_db_instance"
+    ]
+  },
+  "snapshotId": "TRF_TEMPLATE_SNAPSHOT29",
+  "collection": "terraformtemplate",
+  "json": {
+    "terraform": [
+      {
+        "required_version": ">= 0.12"
+      }
+    ],
+    "provider": [
+      {
+        "aws": {
+          "region": "${var.aws_region}"
+        }
+      }
+    ],
+    "resources": [
+      {
+        "type": "aws_db_instance",
+        "name": "default",
+        "properties": {
+          "depends_on": [
+            "${aws_security_group.default}"
+          ],
+          "identifier": "mydb-rds",
+          "allocated_storage": "10",
+          "engine": "postgres",
+          "engine_version": "${var.engine_version[var.engine]}",
+          "instance_class": "db.t2.micro",
+          "name": "mydb",
+          "username": "myuser",
+          "password": "neverstorepasswordsinplaintext",
+          "vpc_security_group_ids": [
+            "${aws_security_group.default.id}"
+          ],
+          "db_subnet_group_name": "${aws_db_subnet_group.default.id}",
+          "compiletime_identity": "aws_db_instance.default"
+        }
+      },
+      {
+        "type": "aws_db_subnet_group",
+        "name": "default",
+        "properties": {
+          "name": "main_subnet_group",
+          "description": "Our main group of subnets",
+          "subnet_ids": [
+            "${aws_subnet.subnet_1.id}",
+            "${aws_subnet.subnet_2.id}"
+          ],
+          "compiletime_identity": "aws_db_subnet_group.default"
+        }
+      }
+    ]
+  }
+}

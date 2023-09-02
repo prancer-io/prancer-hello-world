@@ -2,12 +2,12 @@
   "structure": "filesystem",
   "error": null,
   "reference": "master",
-  "contentType": "yaml",
+  "contentType": "json",
   "source": "gitConnectorGoogleKcc",
   "paths": [
-    "/samples/resources/computebackendservice/internal-managed-load-balancing-backend-service/compute_v1beta1_computebackendservice.yaml"
+    "/samples/resources/cloudschedulerjob/scheduler-job-oauth/cloudscheduler_v1beta1_cloudschedulerjob.yaml"
   ],
-  "timestamp": 1628765140096,
+  "timestamp": 1642973302195,
   "queryuser": null,
   "checksum": "99914b932bd37a50b983c5e7c90ae93b",
   "node": {
@@ -15,85 +15,43 @@
     "type": "kcc",
     "collection": "kcctemplate",
     "paths": [
-      "/samples/resources/computebackendservice/internal-managed-load-balancing-backend-service/compute_v1beta1_computebackendservice.yaml"
+      "/samples/resources/cloudschedulerjob/scheduler-job-oauth/cloudscheduler_v1beta1_cloudschedulerjob.yaml"
     ],
     "snapshotId": "KCC_TEMPLATE_SNAPSHOT88",
     "status": "active",
-    "validate": true
+    "validate": true,
+    "resourceTypes": [
+      "cloudschedulerjob"
+    ]
   },
   "snapshotId": "KCC_TEMPLATE_SNAPSHOT88",
   "collection": "kcctemplate",
   "json": {
-    "apiVersion": "compute.cnrm.cloud.google.com/v1beta1",
-    "kind": "ComputeBackendService",
+    "apiVersion": "cloudscheduler.cnrm.cloud.google.com/v1beta1",
+    "kind": "CloudSchedulerJob",
     "metadata": {
-      "name": "computebackendservice-sample-internalmanagedloadbalancing"
+      "name": "cloudscheduler-sample-oauth"
     },
     "spec": {
-      "description": "Internal managed backend service with Maglev session affinity.",
-      "localityLbPolicy": "MAGLEV",
-      "timeoutSec": 86400,
-      "consistentHash": {
-        "httpHeaderName": "Hash string"
+      "description": "scheduler-http-target-job",
+      "schedule": "*/5 * * * *",
+      "location": "us-west2",
+      "timeZone": "America/New_York",
+      "attemptDeadline": "600s",
+      "retryConfig": {
+        "retryCount": 3,
+        "maxRetryDuration": "60s",
+        "maxDoublings": 2
       },
-      "healthChecks": [
-        {
-          "healthCheckRef": {
-            "name": "computebackendservice-dep-internalmanagedloadbalancing"
+      "httpTarget": {
+        "httpMethod": "GET",
+        "uri": "https://cloudscheduler.googleapis.com/v1/projects/my-project-name/locations/us-west1/jobs",
+        "oauthToken": {
+          "serviceAccountRef": {
+            "name": "cloudscheduler-oauth-dep"
           }
         }
-      ],
-      "loadBalancingScheme": "INTERNAL_MANAGED",
-      "location": "us-east1",
-      "protocol": "HTTP",
-      "connectionDrainingTimeoutSec": 10,
-      "sessionAffinity": "HEADER_FIELD",
-      "circuitBreakers": {
-        "connectTimeout": {
-          "nanos": 999999999,
-          "seconds": 0
-        },
-        "maxConnections": 1024,
-        "maxPendingRequests": 1024,
-        "maxRequests": 1024,
-        "maxRequestsPerConnection": 1,
-        "maxRetries": 3
-      },
-      "logConfig": {
-        "enable": false
-      },
-      "outlierDetection": {
-        "consecutiveGatewayFailure": 5,
-        "enforcingConsecutiveErrors": 100,
-        "enforcingSuccessRate": 100,
-        "successRateMinimumHosts": 5,
-        "successRateRequestVolume": 100,
-        "baseEjectionTime": {
-          "nanos": 999999999,
-          "seconds": 29
-        },
-        "consecutiveErrors": 5,
-        "enforcingConsecutiveGatewayFailure": 0,
-        "interval": {
-          "nanos": 999999999,
-          "seconds": 9
-        },
-        "maxEjectionPercent": 10,
-        "successRateStdevFactor": 1900
-      },
-      "backend": [
-        {
-          "balancingMode": "RATE",
-          "capacityScaler": 0.9,
-          "description": "An instance group serving this backend with 90% of its capacity, as calculated by requests per second.",
-          "maxRate": 10000,
-          "group": {
-            "instanceGroupRef": {
-              "name": "computebackendservice-dep-internalmanagedloadbalancing"
-            }
-          }
-        }
-      ]
+      }
     }
   }
 }

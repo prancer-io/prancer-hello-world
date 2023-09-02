@@ -1,0 +1,129 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "main",
+  "contentType": "json",
+  "source": "gitConnectorAwsTerraHashicorp",
+  "paths": [
+    "/examples/count/outputs.tf",
+    "/examples/count/variables.tf",
+    "/examples/count/main.tf"
+  ],
+  "timestamp": 1642967657643,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "TRF_TEMPLATE_SNAPSHOT",
+    "type": "terraform",
+    "collection": "terraformtemplate",
+    "paths": [
+      "/examples/count/outputs.tf",
+      "/examples/count/variables.tf",
+      "/examples/count/main.tf"
+    ],
+    "snapshotId": "TRF_TEMPLATE_SNAPSHOT10",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "aws_elb",
+      "aws_instance"
+    ]
+  },
+  "snapshotId": "TRF_TEMPLATE_SNAPSHOT10",
+  "collection": "terraformtemplate",
+  "json": {
+    "terraform": [
+      {
+        "required_version": ">= 0.12"
+      }
+    ],
+    "provider": [
+      {
+        "aws": {
+          "region": "${var.aws_region}"
+        }
+      }
+    ],
+    "data": {
+      "aws_ami": {
+        "ubuntu": {
+          "most_recent": true,
+          "filter": [
+            {
+              "name": "name",
+              "values": [
+                "ubuntu/images/hvm-ssd/ubuntu-focal-20.04-amd64-server-*"
+              ]
+            },
+            {
+              "name": "virtualization-type",
+              "values": [
+                "hvm"
+              ]
+            }
+          ],
+          "owners": [
+            99720109477
+          ],
+          "compiletime_identity": "data.aws_ami.ubuntu"
+        }
+      }
+    },
+    "resources": [
+      {
+        "type": "aws_elb",
+        "name": "web",
+        "properties": {
+          "name": "terraform-example-elb",
+          "availability_zones": "${aws_instance.web.*.availability_zone}",
+          "listener": [
+            {
+              "instance_port": 80,
+              "instance_protocol": "http",
+              "lb_port": 80,
+              "lb_protocol": "http"
+            }
+          ],
+          "instances": "${aws_instance.web.*.id}",
+          "compiletime_identity": "aws_elb.web"
+        }
+      },
+      {
+        "type": "aws_instance",
+        "name": "web",
+        "properties": {
+          "instance_type": "t2.small",
+          "ami": "${data.aws_ami.ubuntu.id}",
+          "compiletime_identity": "aws_instance.web"
+        }
+      },
+      {
+        "type": "aws_instance",
+        "name": "web",
+        "properties": {
+          "instance_type": "t2.small",
+          "ami": "${data.aws_ami.ubuntu.id}",
+          "compiletime_identity": "aws_instance.web"
+        }
+      },
+      {
+        "type": "aws_instance",
+        "name": "web",
+        "properties": {
+          "instance_type": "t2.small",
+          "ami": "${data.aws_ami.ubuntu.id}",
+          "compiletime_identity": "aws_instance.web"
+        }
+      },
+      {
+        "type": "aws_instance",
+        "name": "web",
+        "properties": {
+          "instance_type": "t2.small",
+          "ami": "${data.aws_ami.ubuntu.id}",
+          "compiletime_identity": "aws_instance.web"
+        }
+      }
+    ]
+  }
+}

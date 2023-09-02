@@ -1,0 +1,258 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAzureQuickStart",
+  "paths": [
+    "/application-workloads/moodle/moodle-scalable-cluster-ubuntu/nested/network.json"
+  ],
+  "timestamp": 1642962892020,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/application-workloads/moodle/moodle-scalable-cluster-ubuntu/nested/network.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT298",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "microsoft.network/publicipaddresses",
+      "microsoft.network/virtualnetworks",
+      "microsoft.network/loadbalancers",
+      "microsoft.network/virtualnetworkgateways",
+      "microsoft.network/virtualnetworks/subnets"
+    ]
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT298",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "moodleCommon": {
+        "metadata": {
+          "description": "Common Moodle values"
+        },
+        "type": "object"
+      },
+      "location": {
+        "type": "string",
+        "metadata": {
+          "description": "Location for all resources."
+        }
+      }
+    },
+    "resources": [
+      {
+        "type": "Microsoft.Network/virtualNetworks",
+        "apiVersion": "2020-11-01",
+        "location": "location",
+        "name": "moodleCommon",
+        "properties": {
+          "addressSpace": {
+            "addressPrefixes": [
+              "moodleCommon/16"
+            ]
+          },
+          "subnets": [
+            {
+              "name": "moodleCommon",
+              "properties": {
+                "addressPrefix": "moodleCommon"
+              }
+            },
+            {
+              "name": "moodleCommon",
+              "properties": {
+                "addressPrefix": "moodleCommon"
+              }
+            },
+            {
+              "name": "moodleCommon",
+              "properties": {
+                "addressPrefix": "moodleCommon"
+              }
+            },
+            {
+              "name": "moodleCommon",
+              "properties": {
+                "addressPrefix": "moodleCommon"
+              }
+            },
+            {
+              "name": "moodleCommon",
+              "properties": {
+                "addressPrefix": "moodleCommon"
+              }
+            }
+          ]
+        }
+      },
+      {
+        "condition": "moodleCommon",
+        "type": "Microsoft.Network/publicIPAddresses",
+        "apiVersion": "2020-11-01",
+        "location": "location",
+        "name": "moodleCommon",
+        "properties": {
+          "publicIPAllocationMethod": "Dynamic"
+        },
+        "tags": {
+          "displayName": "Virtual network gateway Public IP"
+        }
+      },
+      {
+        "condition": "moodleCommon",
+        "type": "Microsoft.Network/virtualNetworks/subnets",
+        "apiVersion": "2020-11-01",
+        "dependsOn": [
+          "Microsoft.Network/virtualNetworks/moodleCommon"
+        ],
+        "name": "moodleCommon/moodleCommon",
+        "properties": {
+          "addressPrefix": "moodleCommon"
+        }
+      },
+      {
+        "condition": "moodleCommon",
+        "type": "Microsoft.Network/virtualNetworkGateways",
+        "apiVersion": "2020-11-01",
+        "dependsOn": [
+          "Microsoft.Network/publicIPAddresses/moodleCommon",
+          "Microsoft.Network/virtualNetworks/subnets/moodleCommon/moodleCommon"
+        ],
+        "location": "location",
+        "name": "moodleCommon",
+        "properties": {
+          "activeActive": false,
+          "enableBgp": false,
+          "gatewayType": "moodleCommon",
+          "ipConfigurations": [
+            {
+              "name": "vnet-Gateway-Config",
+              "properties": {
+                "privateIPAllocationMethod": "Dynamic",
+                "publicIPAddress": {
+                  "id": "Microsoft.Network/publicIPAddresses/moodleCommon"
+                },
+                "subnet": {
+                  "id": "Microsoft.Network/virtualNetworks/subnets/moodleCommon/moodleCommon"
+                }
+              }
+            }
+          ],
+          "sku": {
+            "name": "VpnGw1",
+            "tier": "VpnGw1",
+            "capacity": 2
+          },
+          "vpnType": "moodleCommon"
+        }
+      },
+      {
+        "type": "Microsoft.Network/publicIPAddresses",
+        "apiVersion": "2020-11-01",
+        "location": "location",
+        "name": "moodleCommon",
+        "properties": {
+          "dnsSettings": {
+            "domainNameLabel": "moodleCommon"
+          },
+          "publicIPAllocationMethod": "Static"
+        },
+        "tags": {
+          "displayName": "Load Balancer Public IP"
+        }
+      },
+      {
+        "type": "Microsoft.Network/loadBalancers",
+        "apiVersion": "2020-11-01",
+        "dependsOn": [
+          "Microsoft.Network/publicIPAddresses//moodleCommon"
+        ],
+        "location": "location",
+        "name": "moodleCommon",
+        "properties": {
+          "backendAddressPools": [
+            {
+              "name": "moodleCommon"
+            }
+          ],
+          "frontendIPConfigurations": [
+            {
+              "name": "moodleCommon",
+              "properties": {
+                "publicIPAddress": {
+                  "id": "Microsoft.Network/publicIPAddresses/moodleCommon"
+                }
+              }
+            }
+          ],
+          "loadBalancingRules": [
+            {
+              "name": "Http",
+              "properties": {
+                "backendAddressPool": {
+                  "id": "Microsoft.Network/loadBalancers/backendAddressPools//moodleCommon/moodleCommon"
+                },
+                "backendPort": 80,
+                "enableFloatingIP": false,
+                "frontendIPConfiguration": {
+                  "id": "Microsoft.Network/loadBalancers/frontendIPConfigurations//moodleCommon/moodleCommon"
+                },
+                "frontendPort": 80,
+                "idleTimeoutInMinutes": 5,
+                "probe": {
+                  "id": "Microsoft.Network/loadBalancers/probes/moodleCommon/moodleCommon"
+                },
+                "protocol": "Tcp"
+              }
+            },
+            {
+              "name": "Https",
+              "properties": {
+                "backendAddressPool": {
+                  "id": "Microsoft.Network/loadBalancers/backendAddressPools//moodleCommon/moodleCommon"
+                },
+                "backendPort": 443,
+                "enableFloatingIP": false,
+                "frontendIPConfiguration": {
+                  "id": "Microsoft.Network/loadBalancers/frontendIPConfigurations//moodleCommon/moodleCommon"
+                },
+                "frontendPort": 443,
+                "idleTimeoutInMinutes": 5,
+                "probe": {
+                  "id": "Microsoft.Network/loadBalancers/probes/moodleCommon/moodleCommon"
+                },
+                "protocol": "Tcp"
+              }
+            }
+          ],
+          "probes": [
+            {
+              "name": "moodleCommon",
+              "properties": {
+                "intervalInSeconds": 5,
+                "numberOfProbes": 3,
+                "port": 80,
+                "protocol": "Tcp"
+              }
+            }
+          ]
+        }
+      }
+    ],
+    "variables": {
+      "extBeID": "Microsoft.Network/loadBalancers/backendAddressPools//moodleCommon/moodleCommon",
+      "extFeID": "Microsoft.Network/loadBalancers/frontendIPConfigurations//moodleCommon/moodleCommon",
+      "extProbeID": "Microsoft.Network/loadBalancers/probes/moodleCommon/moodleCommon",
+      "gatewaySubnetRef": "Microsoft.Network/virtualNetworks/subnets/moodleCommon/moodleCommon",
+      "pipID": "Microsoft.Network/publicIPAddresses/moodleCommon"
+    },
+    "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+  }
+}

@@ -2,12 +2,12 @@
   "structure": "filesystem",
   "error": null,
   "reference": "master",
-  "contentType": "yaml",
+  "contentType": "json",
   "source": "gitConnectorGoogleKcc",
   "paths": [
-    "/samples/resources/computeforwardingrule/global-forwarding-rule-with-target-http-proxy/compute_v1beta1_computeforwardingrule.yaml"
+    "/samples/resources/computebackendservice/external-load-balancing-backend-service/compute_v1beta1_computesubnetwork.yaml"
   ],
-  "timestamp": 1628765140476,
+  "timestamp": 1642973302356,
   "queryuser": null,
   "checksum": "99914b932bd37a50b983c5e7c90ae93b",
   "node": {
@@ -15,34 +15,29 @@
     "type": "kcc",
     "collection": "kcctemplate",
     "paths": [
-      "/samples/resources/computeforwardingrule/global-forwarding-rule-with-target-http-proxy/compute_v1beta1_computeforwardingrule.yaml"
+      "/samples/resources/computebackendservice/external-load-balancing-backend-service/compute_v1beta1_computesubnetwork.yaml"
     ],
     "snapshotId": "KCC_TEMPLATE_SNAPSHOT107",
     "status": "active",
-    "validate": true
+    "validate": true,
+    "resourceTypes": [
+      "computesubnetwork"
+    ]
   },
   "snapshotId": "KCC_TEMPLATE_SNAPSHOT107",
   "collection": "kcctemplate",
   "json": {
     "apiVersion": "compute.cnrm.cloud.google.com/v1beta1",
-    "kind": "ComputeForwardingRule",
+    "kind": "ComputeSubnetwork",
     "metadata": {
-      "labels": {
-        "label-one": "value-one"
-      },
-      "name": "computeforwardingrule-sample-global-with-target-http-proxy"
+      "name": "computebackendservice-dep-externalloadbalancing"
     },
     "spec": {
-      "description": "A global forwarding rule",
-      "target": {
-        "targetHTTPProxyRef": {
-          "name": "computeforwardingrule-dep-global-with-target-http-proxy"
-        }
-      },
-      "portRange": "80",
-      "ipProtocol": "TCP",
-      "ipVersion": "IPV4",
-      "location": "global"
+      "ipCidrRange": "10.2.0.0/16",
+      "region": "us-west1",
+      "networkRef": {
+        "name": "computebackendservice-dep-externalloadbalancing"
+      }
     }
   }
 }

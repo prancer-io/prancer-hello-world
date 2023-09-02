@@ -1,0 +1,104 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAzureQuickStart",
+  "paths": [
+    "/quickstarts/microsoft.web/web-app-asev2-ilb-create/azuredeploy.json",
+    "/quickstarts/microsoft.web/web-app-asev2-ilb-create/azuredeploy.parameters.json"
+  ],
+  "timestamp": 1642962911166,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/quickstarts/microsoft.web/web-app-asev2-ilb-create/azuredeploy.json",
+      "/quickstarts/microsoft.web/web-app-asev2-ilb-create/azuredeploy.parameters.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT1776",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "microsoft.web/hostingenvironments"
+    ]
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT1776",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "aseName": {
+        "type": "string",
+        "metadata": {
+          "description": "Name of the App Service Environment"
+        },
+        "value": "GEN-UNIQUE"
+      },
+      "location": {
+        "type": "string",
+        "defaultValue": "[resourceGroup().location]",
+        "metadata": {
+          "description": "Location of the App Service Environment"
+        }
+      },
+      "existingVirtualNetworkName": {
+        "type": "string",
+        "metadata": {
+          "description": "Name of the existing VNET"
+        },
+        "value": "GET-PREREQ-virtualNetwork"
+      },
+      "existingVirtualNetworkResourceGroup": {
+        "type": "string",
+        "metadata": {
+          "description": "Name of the existing VNET resource group"
+        },
+        "value": "GET-PREREQ-rgName"
+      },
+      "subnetName": {
+        "type": "string",
+        "metadata": {
+          "description": "Subnet name that will contain the App Service Environment"
+        },
+        "value": "GET-PREREQ-subnet"
+      },
+      "internalLoadBalancingMode": {
+        "type": "int",
+        "defaultValue": 3,
+        "allowedValues": [
+          0,
+          1,
+          2,
+          3
+        ],
+        "metadata": {
+          "description": "0 = public VIP only, 1 = only ports 80/443 are mapped to ILB VIP, 2 = only FTP ports are mapped to ILB VIP, 3 = both ports 80/443 and FTP ports are mapped to an ILB VIP."
+        },
+        "value": 3
+      }
+    },
+    "resources": [
+      {
+        "apiVersion": "2020-06-01",
+        "type": "Microsoft.Web/hostingEnvironments",
+        "name": "GEN-UNIQUE",
+        "kind": "ASEV2",
+        "location": "[resourceGroup().location]",
+        "properties": {
+          "name": "GEN-UNIQUE",
+          "location": "[resourceGroup().location]",
+          "ipSslAddressCount": 0,
+          "internalLoadBalancingMode": 3,
+          "virtualNetwork": {
+            "id": "GET-PREREQ-rgName/Microsoft.Network/virtualNetworks/subnets/GET-PREREQ-virtualNetwork/GET-PREREQ-subnet"
+          }
+        }
+      }
+    ],
+    "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+  }
+}

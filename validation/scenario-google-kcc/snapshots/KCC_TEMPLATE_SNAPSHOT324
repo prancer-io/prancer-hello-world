@@ -2,12 +2,12 @@
   "structure": "filesystem",
   "error": null,
   "reference": "master",
-  "contentType": "yaml",
+  "contentType": "json",
   "source": "gitConnectorGoogleKcc",
   "paths": [
-    "/samples/resources/dataproccluster/storage_v1beta1_storagebucket.yaml"
+    "/samples/resources/computeurlmap/regional-compute-url-map-l7-ilb-path/compute_v1beta1_computebackendservice.yaml"
   ],
-  "timestamp": 1628765145771,
+  "timestamp": 1642973303518,
   "queryuser": null,
   "checksum": "99914b932bd37a50b983c5e7c90ae93b",
   "node": {
@@ -15,29 +15,35 @@
     "type": "kcc",
     "collection": "kcctemplate",
     "paths": [
-      "/samples/resources/dataproccluster/storage_v1beta1_storagebucket.yaml"
+      "/samples/resources/computeurlmap/regional-compute-url-map-l7-ilb-path/compute_v1beta1_computebackendservice.yaml"
     ],
     "snapshotId": "KCC_TEMPLATE_SNAPSHOT324",
     "status": "active",
-    "validate": true
+    "validate": true,
+    "resourceTypes": [
+      "computebackendservice"
+    ]
   },
   "snapshotId": "KCC_TEMPLATE_SNAPSHOT324",
   "collection": "kcctemplate",
   "json": {
-    "apiVersion": "storage.cnrm.cloud.google.com/v1beta1",
-    "kind": "StorageBucket",
+    "apiVersion": "compute.cnrm.cloud.google.com/v1beta1",
+    "kind": "ComputeBackendService",
     "metadata": {
-      "annotations": {
-        "cnrm.cloud.google.com/force-destroy": "true"
-      },
-      "labels": {
-        "label-one": "value-one"
-      },
-      "name": "dataproccluster-dep-staging"
+      "name": "computeurlmap-dep"
     },
     "spec": {
-      "resourceID": "${PROJECT_ID?}-dataproccluster-dep-staging",
-      "bucketPolicyOnly": true
+      "location": "us-central1",
+      "healthChecks": [
+        {
+          "healthCheckRef": {
+            "name": "computeurlmap-dep"
+          }
+        }
+      ],
+      "protocol": "HTTP",
+      "timeoutSec": 10,
+      "loadBalancingScheme": "INTERNAL_MANAGED"
     }
   }
 }

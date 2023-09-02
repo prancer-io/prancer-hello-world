@@ -1,0 +1,205 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAzureQuickStart",
+  "paths": [
+    "/application-workloads/sql/sqlvm-alwayson-cluster/nested/creatingNICS.json"
+  ],
+  "timestamp": 1642962896486,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/application-workloads/sql/sqlvm-alwayson-cluster/nested/creatingNICS.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT540",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "microsoft.network/networkinterfaces"
+    ]
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT540",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "location": {
+        "type": "string"
+      },
+      "adPDCNicName": {
+        "type": "string"
+      },
+      "adPDCNICIPAddress": {
+        "type": "string"
+      },
+      "staticSubnetRef": {
+        "type": "string"
+      },
+      "adBEAddressPoolID": {
+        "type": "string"
+      },
+      "adRDPNATRuleID": {
+        "type": "string"
+      },
+      "adBDCNicName": {
+        "type": "string"
+      },
+      "adBDCNICIPAddress": {
+        "type": "string"
+      },
+      "sqlVMName": {
+        "type": "string"
+      },
+      "sqlSubnetRef": {
+        "type": "string"
+      },
+      "sqlBEAddressPoolID": {
+        "type": "string"
+      },
+      "sqlwNicName": {
+        "type": "string"
+      },
+      "primaryDCIPAddressNameWithSuffix": {
+        "type": "string"
+      },
+      "backupDCIPAddressNameWithSuffix": {
+        "type": "string"
+      },
+      "sql1AddressNameWithSuffix": {
+        "type": "string"
+      },
+      "sql0AddressNameWithSuffix": {
+        "type": "string"
+      }
+    },
+    "resources": [
+      {
+        "name": "adPDCNicName",
+        "type": "Microsoft.Network/networkInterfaces",
+        "location": "location",
+        "apiVersion": "2020-07-01",
+        "properties": {
+          "ipConfigurations": [
+            {
+              "name": "ipconfig1",
+              "properties": {
+                "privateIPAllocationMethod": "Static",
+                "privateIPAddress": "adPDCNICIPAddress",
+                "subnet": {
+                  "id": "staticSubnetRef"
+                },
+                "publicIpAddress": {
+                  "id": "Microsoft.Network/publicIpAddresses/primaryDCIPAddressNameWithSuffix"
+                }
+              }
+            }
+          ]
+        }
+      },
+      {
+        "name": "adBDCNicName",
+        "type": "Microsoft.Network/networkInterfaces",
+        "location": "location",
+        "apiVersion": "2020-07-01",
+        "properties": {
+          "ipConfigurations": [
+            {
+              "name": "ipconfig1",
+              "properties": {
+                "privateIPAllocationMethod": "Static",
+                "privateIPAddress": "adBDCNICIPAddress",
+                "subnet": {
+                  "id": "staticSubnetRef"
+                },
+                "publicIpAddress": {
+                  "id": "Microsoft.Network/publicIpAddresses/backupDCIPAddressNameWithSuffix"
+                }
+              }
+            }
+          ]
+        }
+      },
+      {
+        "name": "sqlVMName1-nic",
+        "type": "Microsoft.Network/networkInterfaces",
+        "location": "location",
+        "apiVersion": "2020-07-01",
+        "properties": {
+          "ipConfigurations": [
+            {
+              "name": "ipconfig1",
+              "properties": {
+                "privateIPAllocationMethod": "Dynamic",
+                "subnet": {
+                  "id": "sqlSubnetRef"
+                },
+                "publicIpAddress": {
+                  "id": "Microsoft.Network/publicIpAddresses/sql1AddressNameWithSuffix"
+                },
+                "loadBalancerBackendAddressPools": [
+                  {
+                    "id": "sqlBEAddressPoolID"
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      },
+      {
+        "name": "sqlVMName0-nic",
+        "type": "Microsoft.Network/networkInterfaces",
+        "location": "location",
+        "apiVersion": "2020-07-01",
+        "properties": {
+          "ipConfigurations": [
+            {
+              "name": "ipconfig1",
+              "properties": {
+                "privateIPAllocationMethod": "Dynamic",
+                "subnet": {
+                  "id": "sqlSubnetRef"
+                },
+                "publicIpAddress": {
+                  "id": "Microsoft.Network/publicIpAddresses/sql0AddressNameWithSuffix"
+                },
+                "loadBalancerBackendAddressPools": [
+                  {
+                    "id": "sqlBEAddressPoolID"
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      },
+      {
+        "name": "sqlwNicName",
+        "type": "Microsoft.Network/networkInterfaces",
+        "location": "location",
+        "apiVersion": "2020-07-01",
+        "properties": {
+          "ipConfigurations": [
+            {
+              "name": "ipconfig1",
+              "properties": {
+                "privateIPAllocationMethod": "Dynamic",
+                "subnet": {
+                  "id": "sqlSubnetRef"
+                }
+              }
+            }
+          ]
+        }
+      }
+    ],
+    "outputs": {},
+    "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+  }
+}

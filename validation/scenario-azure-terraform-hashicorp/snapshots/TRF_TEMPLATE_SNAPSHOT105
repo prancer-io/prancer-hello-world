@@ -1,0 +1,118 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "main",
+  "contentType": "json",
+  "source": "gitConnectorAzureTerraHashicorp",
+  "paths": [
+    "/examples/servicebus/basic/outputs.tf",
+    "/examples/servicebus/basic/variables.tf",
+    "/examples/servicebus/basic/main.tf"
+  ],
+  "timestamp": 1642943279939,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "TRF_TEMPLATE_SNAPSHOT",
+    "type": "terraform",
+    "collection": "terraformtemplate",
+    "paths": [
+      "/examples/servicebus/basic/outputs.tf",
+      "/examples/servicebus/basic/variables.tf",
+      "/examples/servicebus/basic/main.tf"
+    ],
+    "snapshotId": "TRF_TEMPLATE_SNAPSHOT105",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "azurerm_servicebus_topic",
+      "azurerm_servicebus_queue",
+      "azurerm_resource_group",
+      "azurerm_servicebus_namespace_authorization_rule",
+      "azurerm_servicebus_subscription",
+      "azurerm_servicebus_namespace"
+    ]
+  },
+  "snapshotId": "TRF_TEMPLATE_SNAPSHOT105",
+  "collection": "terraformtemplate",
+  "json": {
+    "provider": [
+      {
+        "azurerm": {
+          "features": [
+            {}
+          ]
+        }
+      }
+    ],
+    "resources": [
+      {
+        "type": "azurerm_resource_group",
+        "name": "example",
+        "properties": {
+          "name": "${var.prefix}-resources",
+          "location": "${var.location}",
+          "compiletime_identity": "azurerm_resource_group.example"
+        }
+      },
+      {
+        "type": "azurerm_servicebus_namespace",
+        "name": "example",
+        "properties": {
+          "name": "${var.prefix}-sbnamespace",
+          "location": "${azurerm_resource_group.example.location}",
+          "resource_group_name": "${azurerm_resource_group.example.name}",
+          "sku": "Standard",
+          "compiletime_identity": "azurerm_servicebus_namespace.example"
+        }
+      },
+      {
+        "type": "azurerm_servicebus_namespace_authorization_rule",
+        "name": "example",
+        "properties": {
+          "name": "${var.prefix}-sbnauth",
+          "namespace_name": "${azurerm_servicebus_namespace.example.name}",
+          "resource_group_name": "${azurerm_resource_group.example.name}",
+          "send": true,
+          "listen": true,
+          "manage": true,
+          "compiletime_identity": "azurerm_servicebus_namespace_authorization_rule.example"
+        }
+      },
+      {
+        "type": "azurerm_servicebus_topic",
+        "name": "example",
+        "properties": {
+          "name": "${var.prefix}-sbtopic",
+          "resource_group_name": "${azurerm_resource_group.example.name}",
+          "namespace_name": "${azurerm_servicebus_namespace.example.name}",
+          "enable_partitioning": true,
+          "compiletime_identity": "azurerm_servicebus_topic.example"
+        }
+      },
+      {
+        "type": "azurerm_servicebus_subscription",
+        "name": "example",
+        "properties": {
+          "name": "${var.prefix}-sbsubscription",
+          "resource_group_name": "${azurerm_resource_group.example.name}",
+          "namespace_name": "${azurerm_servicebus_namespace.example.name}",
+          "topic_name": "${azurerm_servicebus_topic.example.name}",
+          "max_delivery_count": 1,
+          "compiletime_identity": "azurerm_servicebus_subscription.example"
+        }
+      },
+      {
+        "type": "azurerm_servicebus_queue",
+        "name": "example",
+        "properties": {
+          "name": "${var.prefix}-sbqueue",
+          "resource_group_name": "${azurerm_resource_group.example.name}",
+          "namespace_name": "${azurerm_servicebus_namespace.example.name}",
+          "enable_partitioning": true,
+          "compiletime_identity": "azurerm_servicebus_queue.example"
+        }
+      }
+    ]
+  }
+}

@@ -1,0 +1,325 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAzureQuickStart",
+  "paths": [
+    "/quickstarts/microsoft.compute/vmss-linux-nat-zones/azuredeploy.json",
+    "/quickstarts/microsoft.compute/vmss-linux-nat-zones/azuredeploy.parameters.json"
+  ],
+  "timestamp": 1642962904905,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/quickstarts/microsoft.compute/vmss-linux-nat-zones/azuredeploy.json",
+      "/quickstarts/microsoft.compute/vmss-linux-nat-zones/azuredeploy.parameters.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT1158",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "microsoft.network/publicipaddresses",
+      "microsoft.network/virtualnetworks",
+      "microsoft.network/loadbalancers",
+      "microsoft.compute/virtualmachinescalesets",
+      "microsoft.network/networksecuritygroups"
+    ]
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT1158",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "location": {
+        "type": "string",
+        "metadata": {
+          "description": "Location for the VM, only certain regions support Availability Zones."
+        },
+        "value": "westus2"
+      },
+      "adminUsername": {
+        "type": "string",
+        "metadata": {
+          "description": "Admin username on all VMs"
+        },
+        "value": "GEN-UNIQUE"
+      },
+      "ubuntuOSVersion": {
+        "type": "string",
+        "defaultValue": "16.04-LTS",
+        "allowedValues": [
+          "14.04.4-LTS",
+          "16.04-LTS"
+        ],
+        "metadata": {
+          "description": "The Ubuntu version for the VM. This will pick a fully patched image of this given Ubuntu version. Allowed values are: 14.04.4-LTS, 16.04-LTS."
+        }
+      },
+      "vmssName": {
+        "type": "string",
+        "metadata": {
+          "description": "String used as a base for naming resources. Must be 3-61 characters in length and globally unique across Azure. A hash is prepended to this string for some resources, and resource-specific information is appended."
+        },
+        "maxLength": 61,
+        "value": "GEN-UNIQUE"
+      },
+      "instanceCount": {
+        "type": "int",
+        "defaultValue": 3,
+        "metadata": {
+          "description": "Number of VM instances (100 or less)."
+        },
+        "minValue": 3,
+        "maxValue": 100
+      },
+      "authenticationType": {
+        "type": "string",
+        "defaultValue": "sshPublicKey",
+        "allowedValues": [
+          "sshPublicKey",
+          "password"
+        ],
+        "metadata": {
+          "description": "Type of authentication to use on the Virtual Machine. SSH key is recommended."
+        }
+      },
+      "adminPasswordOrKey": {
+        "type": "securestring",
+        "metadata": {
+          "description": "SSH Key or password for the Virtual Machine. SSH key is recommended."
+        },
+        "value": "GEN-SSH-PUB-KEY"
+      }
+    },
+    "variables": {
+      "virtualNetworkName": "GEN-UNIQUEvnet",
+      "publicIPAddressName": "lbPublicIp",
+      "networkSecurityGroupName": "allowRemoting",
+      "subnetName": "GEN-UNIQUEsubnet",
+      "loadBalancerName": "GEN-UNIQUElb",
+      "natPoolName": "GEN-UNIQUEnatpool",
+      "bePoolName": "GEN-UNIQUEbepool",
+      "nicName": "GEN-UNIQUEnic",
+      "ipConfigName": "GEN-UNIQUEipconfig",
+      "imageReference": {
+        "publisher": "Canonical",
+        "offer": "UbuntuServer",
+        "sku": "16.04-LTS",
+        "version": "latest"
+      },
+      "linuxConfiguration": {
+        "disablePasswordAuthentication": true,
+        "ssh": {
+          "publicKeys": [
+            {
+              "path": "/home/GEN-UNIQUE/.ssh/authorized_keys",
+              "keyData": "GEN-SSH-PUB-KEY"
+            }
+          ]
+        }
+      }
+    },
+    "resources": [
+      {
+        "type": "Microsoft.Network/virtualNetworks",
+        "apiVersion": "2020-08-01",
+        "name": "GEN-UNIQUEvnet",
+        "location": "westus2",
+        "properties": {
+          "addressSpace": {
+            "addressPrefixes": [
+              "10.0.0.0/16"
+            ]
+          },
+          "subnets": [
+            {
+              "name": "GEN-UNIQUEsubnet",
+              "properties": {
+                "addressPrefix": "10.0.0.0/24"
+              }
+            }
+          ]
+        }
+      },
+      {
+        "type": "Microsoft.Network/networkSecurityGroups",
+        "apiVersion": "2017-10-01",
+        "name": "allowRemoting",
+        "location": "westus2",
+        "properties": {
+          "securityRules": [
+            {
+              "name": "remoteConnection",
+              "properties": {
+                "description": "Allow RDP traffic",
+                "protocol": "Tcp",
+                "sourcePortRange": "*",
+                "destinationPortRange": "22",
+                "sourceAddressPrefix": "*",
+                "destinationAddressPrefix": "*",
+                "access": "Allow",
+                "priority": 101,
+                "direction": "Inbound"
+              }
+            },
+            {
+              "name": "webTraffic",
+              "properties": {
+                "description": "Allow web traffic",
+                "protocol": "Tcp",
+                "sourcePortRange": "80",
+                "destinationPortRange": "80",
+                "sourceAddressPrefix": "*",
+                "destinationAddressPrefix": "*",
+                "access": "Allow",
+                "priority": 100,
+                "direction": "Inbound"
+              }
+            }
+          ]
+        }
+      },
+      {
+        "type": "Microsoft.Network/publicIPAddresses",
+        "apiVersion": "2017-10-01",
+        "name": "lbPublicIp",
+        "location": "westus2",
+        "sku": {
+          "name": "Standard"
+        },
+        "properties": {
+          "publicIPAllocationMethod": "Static",
+          "dnsSettings": {
+            "domainNameLabel": "[tolower(parameters('vmssName'))]"
+          }
+        }
+      },
+      {
+        "type": "Microsoft.Network/loadBalancers",
+        "apiVersion": "2017-10-01",
+        "name": "GEN-UNIQUElb",
+        "location": "westus2",
+        "sku": {
+          "name": "Standard"
+        },
+        "dependsOn": [
+          "Microsoft.Network/publicIPAddresses/lbPublicIp"
+        ],
+        "properties": {
+          "frontendIPConfigurations": [
+            {
+              "name": "LoadBalancerFrontEnd",
+              "properties": {
+                "publicIPAddress": {
+                  "id": "Microsoft.Network/publicIPAddresses/lbPublicIp"
+                }
+              }
+            }
+          ],
+          "backendAddressPools": [
+            {
+              "name": "GEN-UNIQUEbepool"
+            }
+          ],
+          "inboundNatPools": [
+            {
+              "name": "GEN-UNIQUEnatpool",
+              "properties": {
+                "frontendIPConfiguration": {
+                  "id": "Microsoft.Network/loadBalancers/frontendIPConfigurations/GEN-UNIQUElb/loadBalancerFrontEnd"
+                },
+                "protocol": "Tcp",
+                "frontendPortRangeStart": 50000,
+                "frontendPortRangeEnd": 50099,
+                "backendPort": 22
+              }
+            }
+          ]
+        }
+      },
+      {
+        "type": "Microsoft.Compute/virtualMachineScaleSets",
+        "name": "GEN-UNIQUE",
+        "location": "westus2",
+        "zones": [
+          "1"
+        ],
+        "apiVersion": "2017-12-01",
+        "dependsOn": [
+          "Microsoft.Network/loadBalancers/GEN-UNIQUElb",
+          "Microsoft.Network/virtualNetworks/GEN-UNIQUEvnet"
+        ],
+        "sku": {
+          "name": "Standard_A1_v2",
+          "tier": "Standard",
+          "capacity": 3
+        },
+        "properties": {
+          "overprovision": true,
+          "upgradePolicy": {
+            "mode": "Manual"
+          },
+          "virtualMachineProfile": {
+            "storageProfile": {
+              "osDisk": {
+                "createOption": "FromImage",
+                "caching": "ReadWrite"
+              },
+              "imageReference": {
+                "publisher": "Canonical",
+                "offer": "UbuntuServer",
+                "sku": "16.04-LTS",
+                "version": "latest"
+              }
+            },
+            "osProfile": {
+              "computerNamePrefix": "GEN-UNIQUE",
+              "adminUsername": "GEN-UNIQUE",
+              "adminPassword": "GEN-SSH-PUB-KEY",
+              "linuxConfiguration": "[if(equals(parameters('authenticationType'), 'password'), json('null'), variables('linuxConfiguration'))]"
+            },
+            "networkProfile": {
+              "networkInterfaceConfigurations": [
+                {
+                  "name": "GEN-UNIQUEnic",
+                  "properties": {
+                    "networkSecurityGroup": {
+                      "id": "Microsoft.Network/networkSecurityGroups/allowRemoting"
+                    },
+                    "primary": true,
+                    "ipConfigurations": [
+                      {
+                        "name": "GEN-UNIQUEipconfig",
+                        "properties": {
+                          "subnet": {
+                            "id": "Microsoft.Network/virtualNetworks/subnets/GEN-UNIQUEvnet/GEN-UNIQUEsubnet"
+                          },
+                          "loadBalancerBackendAddressPools": [
+                            {
+                              "id": "Microsoft.Network/loadBalancers/backendAddressPools/GEN-UNIQUElb/GEN-UNIQUEbepool"
+                            }
+                          ],
+                          "loadBalancerInboundNatPools": [
+                            {
+                              "id": "Microsoft.Network/loadBalancers/inboundNatPools//GEN-UNIQUElb/GEN-UNIQUEnatpool"
+                            }
+                          ]
+                        }
+                      }
+                    ]
+                  }
+                }
+              ]
+            }
+          }
+        }
+      }
+    ],
+    "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+  }
+}

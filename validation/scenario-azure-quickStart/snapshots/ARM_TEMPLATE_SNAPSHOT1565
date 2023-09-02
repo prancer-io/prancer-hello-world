@@ -1,0 +1,251 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAzureQuickStart",
+  "paths": [
+    "/quickstarts/microsoft.network/loadbalancer-with-multivip/azuredeploy.json",
+    "/quickstarts/microsoft.network/loadbalancer-with-multivip/azuredeploy.parameters.json"
+  ],
+  "timestamp": 1642962909224,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/quickstarts/microsoft.network/loadbalancer-with-multivip/azuredeploy.json",
+      "/quickstarts/microsoft.network/loadbalancer-with-multivip/azuredeploy.parameters.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT1565",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "microsoft.network/publicipaddresses",
+      "microsoft.network/virtualnetworks",
+      "microsoft.network/loadbalancers",
+      "microsoft.network/networkinterfaces"
+    ]
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT1565",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "dnsNameforLBIP": {
+        "type": "string",
+        "metadata": {
+          "description": "Unique DNS name"
+        },
+        "value": "GEN-UNIQUE"
+      },
+      "addressPrefix": {
+        "type": "string",
+        "defaultValue": "10.0.0.0/16",
+        "metadata": {
+          "description": "Address Prefix"
+        },
+        "value": "10.0.0.0/16"
+      },
+      "subnetPrefix": {
+        "type": "string",
+        "defaultValue": "10.0.0.0/24",
+        "metadata": {
+          "description": "Subnet Prefix"
+        },
+        "value": "10.0.0.0/24"
+      },
+      "publicIPAddressType": {
+        "type": "string",
+        "defaultValue": "Dynamic",
+        "allowedValues": [
+          "Dynamic",
+          "Static"
+        ],
+        "metadata": {
+          "description": "Public IP type"
+        },
+        "value": "Dynamic"
+      },
+      "location": {
+        "type": "string",
+        "defaultValue": "[resourceGroup().location]",
+        "metadata": {
+          "description": "Location for all resources."
+        }
+      }
+    },
+    "variables": {
+      "virtualNetworkName": "virtualNetwork1",
+      "publicIPAddressName1": "publicIp1",
+      "publicIPAddressName2": "publicIp2",
+      "subnetName": "subnet1",
+      "loadBalancerName": "loadBalancer1",
+      "nicName": "networkInterface1",
+      "subnetRef": "Microsoft.Network/virtualNetworks/subnets/virtualNetwork1/subnet1",
+      "publicIPAddressID1": "Microsoft.Network/publicIPAddresses/publicIp1",
+      "publicIPAddressID2": "Microsoft.Network/publicIPAddresses/publicIp2",
+      "lbBackendPoolID": "Microsoft.Network/loadBalancers/backendAddressPools/loadBalancer1/loadBalancerBackend",
+      "lbProbeID": "Microsoft.Network/loadBalancers/probes/loadBalancer1/tcpProbe",
+      "frontEndIPConfigID1": "Microsoft.Network/loadBalancers/frontendIPConfigurations/loadBalancer1/loadBalancerFrontEnd1",
+      "frontEndIPConfigID2": "Microsoft.Network/loadBalancers/frontendIPConfigurations/loadBalancer1/loadBalancerFrontEnd2"
+    },
+    "resources": [
+      {
+        "apiVersion": "2020-05-01",
+        "type": "Microsoft.Network/publicIPAddresses",
+        "name": "publicIp1",
+        "location": "[resourceGroup().location]",
+        "properties": {
+          "publicIPAllocationMethod": "Dynamic",
+          "dnsSettings": {
+            "domainNameLabel": "GEN-UNIQUE"
+          }
+        }
+      },
+      {
+        "apiVersion": "2020-05-01",
+        "type": "Microsoft.Network/publicIPAddresses",
+        "name": "publicIp2",
+        "location": "[resourceGroup().location]",
+        "properties": {
+          "publicIPAllocationMethod": "Dynamic"
+        }
+      },
+      {
+        "apiVersion": "2020-05-01",
+        "type": "Microsoft.Network/virtualNetworks",
+        "name": "virtualNetwork1",
+        "location": "[resourceGroup().location]",
+        "properties": {
+          "addressSpace": {
+            "addressPrefixes": [
+              "10.0.0.0/16"
+            ]
+          },
+          "subnets": [
+            {
+              "name": "subnet1",
+              "properties": {
+                "addressPrefix": "10.0.0.0/24"
+              }
+            }
+          ]
+        }
+      },
+      {
+        "apiVersion": "2020-05-01",
+        "type": "Microsoft.Network/networkInterfaces",
+        "name": "networkInterface1",
+        "location": "[resourceGroup().location]",
+        "dependsOn": [
+          "Microsoft.Network/virtualNetworks//virtualNetwork1",
+          "Microsoft.Network/loadBalancers//loadBalancer1"
+        ],
+        "properties": {
+          "ipConfigurations": [
+            {
+              "name": "ipconfig1",
+              "properties": {
+                "privateIPAllocationMethod": "Dynamic",
+                "subnet": {
+                  "id": "Microsoft.Network/virtualNetworks/subnets/virtualNetwork1/subnet1"
+                },
+                "loadBalancerBackendAddressPools": [
+                  {
+                    "id": "Microsoft.Network/loadBalancers/backendAddressPools//loadBalancer1/loadBalancerBackEnd"
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      },
+      {
+        "apiVersion": "2020-05-01",
+        "name": "loadBalancer1",
+        "type": "Microsoft.Network/loadBalancers",
+        "location": "[resourceGroup().location]",
+        "dependsOn": [
+          "Microsoft.Network/publicIPAddresses//publicIp1",
+          "Microsoft.Network/publicIPAddresses//publicIp2"
+        ],
+        "properties": {
+          "frontendIPConfigurations": [
+            {
+              "name": "loadBalancerFrontEnd1",
+              "properties": {
+                "publicIPAddress": {
+                  "id": "Microsoft.Network/publicIPAddresses/publicIp1"
+                }
+              }
+            },
+            {
+              "name": "loadBalancerFrontEnd2",
+              "properties": {
+                "publicIPAddress": {
+                  "id": "Microsoft.Network/publicIPAddresses/publicIp2"
+                }
+              }
+            }
+          ],
+          "backendAddressPools": [
+            {
+              "name": "loadBalancerBackEnd"
+            }
+          ],
+          "loadBalancingRules": [
+            {
+              "name": "LBRuleForVIP1",
+              "properties": {
+                "frontendIPConfiguration": {
+                  "id": "Microsoft.Network/loadBalancers/frontendIPConfigurations/loadBalancer1/loadBalancerFrontEnd1"
+                },
+                "backendAddressPool": {
+                  "id": "Microsoft.Network/loadBalancers/backendAddressPools/loadBalancer1/loadBalancerBackend"
+                },
+                "protocol": "Tcp",
+                "frontendPort": 443,
+                "backendPort": 443,
+                "probe": {
+                  "id": "Microsoft.Network/loadBalancers/probes/loadBalancer1/tcpProbe"
+                }
+              }
+            },
+            {
+              "name": "LBRuleForVIP2",
+              "properties": {
+                "frontendIPConfiguration": {
+                  "id": "Microsoft.Network/loadBalancers/frontendIPConfigurations/loadBalancer1/loadBalancerFrontEnd2"
+                },
+                "backendAddressPool": {
+                  "id": "Microsoft.Network/loadBalancers/backendAddressPools/loadBalancer1/loadBalancerBackend"
+                },
+                "protocol": "Tcp",
+                "frontendPort": 443,
+                "backendPort": 444,
+                "probe": {
+                  "id": "Microsoft.Network/loadBalancers/probes/loadBalancer1/tcpProbe"
+                }
+              }
+            }
+          ],
+          "probes": [
+            {
+              "name": "tcpProbe",
+              "properties": {
+                "protocol": "Tcp",
+                "port": 445,
+                "intervalInSeconds": 5,
+                "numberOfProbes": 2
+              }
+            }
+          ]
+        }
+      }
+    ],
+    "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+  }
+}

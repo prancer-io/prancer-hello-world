@@ -1,0 +1,236 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAzureQuickStart",
+  "paths": [
+    "/application-workloads/elastic/elasticsearch/nestedtemplates/shared-resources.json"
+  ],
+  "timestamp": 1642962887409,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/application-workloads/elastic/elasticsearch/nestedtemplates/shared-resources.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT130",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "microsoft.network/publicipaddresses",
+      "microsoft.network/virtualnetworks",
+      "microsoft.storage/storageaccounts",
+      "microsoft.network/loadbalancers"
+    ]
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT130",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "networkSettings": {
+        "type": "object",
+        "metadata": {
+          "description": "Network settings object"
+        }
+      },
+      "loadBalancerType": {
+        "type": "string",
+        "defaultValue": "internal",
+        "allowedValues": [
+          "internal",
+          "external"
+        ],
+        "metadata": {
+          "description": "Load balancer setting (internal/external)"
+        }
+      },
+      "storageSettings": {
+        "type": "object",
+        "metadata": {
+          "description": "Storage Account Settings"
+        }
+      },
+      "ilbIpAddress": {
+        "type": "string",
+        "metadata": {
+          "description": "The static IP address to use with the internal load balancer configuration"
+        }
+      },
+      "location": {
+        "type": "string",
+        "metadata": {
+          "description": "Location for all resources."
+        }
+      }
+    },
+    "variables": {
+      "storageAccountName": "storageSettings",
+      "storageAccountNameAFS": "storageSettings",
+      "storageAccountNameShared": "storageSettings",
+      "FELBtype": {
+        "internal": [
+          {
+            "name": "LBFE",
+            "properties": {
+              "subnet": {
+                "id": "Microsoft.Network/virtualNetworks/subnets/networkSettings/networkSettings"
+              },
+              "privateIPAddress": "ilbIpAddress",
+              "privateIPAllocationMethod": "Static"
+            }
+          }
+        ]
+      },
+      "feLoadBalancerConfig": "(FELBtype)[parameters(loadBalancerType)]"
+    },
+    "resources": [
+      {
+        "type": "Microsoft.Storage/storageAccounts",
+        "name": "storageSettings",
+        "apiVersion": "2021-01-01",
+        "sku": {
+          "name": "Standard_LRS"
+        },
+        "kind": "StorageV2",
+        "location": "location"
+      },
+      {
+        "type": "Microsoft.Storage/storageAccounts",
+        "name": "storageSettings",
+        "apiVersion": "2021-01-01",
+        "sku": {
+          "name": "Standard_LRS"
+        },
+        "kind": "StorageV2",
+        "location": "location"
+      },
+      {
+        "type": "Microsoft.Storage/storageAccounts",
+        "name": "[concat(variables('storageAccountName'), copyindex(1))]",
+        "apiVersion": "2021-01-01",
+        "sku": {
+          "name": "storageSettings"
+        },
+        "kind": "StorageV2",
+        "location": "location",
+        "copy": {
+          "name": "storageLoop",
+          "count": "storageSettings"
+        }
+      },
+      {
+        "apiVersion": "2020-05-01",
+        "type": "Microsoft.Network/publicIPAddresses",
+        "name": "public-ip",
+        "location": "location",
+        "properties": {
+          "publicIPAllocationMethod": "Static"
+        }
+      },
+      {
+        "apiVersion": "2020-05-01",
+        "type": "Microsoft.Network/virtualNetworks",
+        "name": "networkSettings",
+        "location": "location",
+        "properties": {
+          "addressSpace": {
+            "addressPrefixes": [
+              "networkSettings"
+            ]
+          },
+          "subnets": [
+            {
+              "name": "networkSettings",
+              "properties": {
+                "addressPrefix": "networkSettings"
+              }
+            },
+            {
+              "name": "networkSettings",
+              "properties": {
+                "addressPrefix": "networkSettings"
+              }
+            },
+            {
+              "name": "networkSettings",
+              "properties": {
+                "addressPrefix": "networkSettings"
+              }
+            }
+          ]
+        }
+      },
+      {
+        "apiVersion": "2020-05-01",
+        "name": "es-load-balancer",
+        "type": "Microsoft.Network/loadBalancers",
+        "location": "location",
+        "dependsOn": [
+          "Microsoft.Network/publicIPAddresses/public-ip"
+        ],
+        "properties": {
+          "frontendIPConfigurations": "(FELBtype)[parameters(loadBalancerType)]",
+          "backendAddressPools": [
+            {
+              "name": "LBBE"
+            }
+          ],
+          "loadBalancingRules": [
+            {
+              "name": "es-http-rule",
+              "properties": {
+                "frontendIPConfiguration": {
+                  "id": "Microsoft.Network/loadBalancers/frontendIPConfigurations/es-load-balancer/LBFE"
+                },
+                "backendAddressPool": {
+                  "id": "Microsoft.Network/loadBalancers/backendAddressPools/es-load-balancer/LBBE"
+                },
+                "protocol": "Tcp",
+                "frontendPort": 9200,
+                "backendPort": 9200,
+                "enableFloatingIP": false,
+                "idleTimeoutInMinutes": 5,
+                "probe": {
+                  "id": "Microsoft.Network/loadBalancers/probes/es-load-balancer/es-tcp-probe"
+                }
+              }
+            },
+            {
+              "name": "es-tcp-rule",
+              "properties": {
+                "frontendIPConfiguration": {
+                  "id": "Microsoft.Network/loadBalancers/frontendIPConfigurations/es-load-balancer/LBFE"
+                },
+                "backendAddressPool": {
+                  "id": "Microsoft.Network/loadBalancers/backendAddressPools/es-load-balancer/LBBE"
+                },
+                "protocol": "Tcp",
+                "frontendPort": 9300,
+                "backendPort": 9300,
+                "enableFloatingIP": false,
+                "idleTimeoutInMinutes": 5
+              }
+            }
+          ],
+          "probes": [
+            {
+              "name": "es-tcp-probe",
+              "properties": {
+                "protocol": "Tcp",
+                "port": 9200,
+                "intervalInSeconds": 30,
+                "numberOfProbes": 3
+              }
+            }
+          ]
+        }
+      }
+    ],
+    "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+  }
+}

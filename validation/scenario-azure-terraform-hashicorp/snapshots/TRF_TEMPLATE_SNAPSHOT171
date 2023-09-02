@@ -1,0 +1,122 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "main",
+  "contentType": "json",
+  "source": "gitConnectorAzureTerraHashicorp",
+  "paths": [
+    "/examples/virtual-networks/virtual-network-peering/variables.tf",
+    "/examples/virtual-networks/virtual-network-peering/main.tf"
+  ],
+  "timestamp": 1642943280208,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "TRF_TEMPLATE_SNAPSHOT",
+    "type": "terraform",
+    "collection": "terraformtemplate",
+    "paths": [
+      "/examples/virtual-networks/virtual-network-peering/variables.tf",
+      "/examples/virtual-networks/virtual-network-peering/main.tf"
+    ],
+    "snapshotId": "TRF_TEMPLATE_SNAPSHOT171",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "azurerm_virtual_network",
+      "azurerm_resource_group",
+      "azurerm_virtual_network_peering"
+    ]
+  },
+  "snapshotId": "TRF_TEMPLATE_SNAPSHOT171",
+  "collection": "terraformtemplate",
+  "json": {
+    "provider": [
+      {
+        "azurerm": {
+          "features": [
+            {}
+          ]
+        }
+      }
+    ],
+    "resources": [
+      {
+        "type": "azurerm_resource_group",
+        "name": "example",
+        "properties": {
+          "name": "${var.prefix}-resources",
+          "location": "${var.location}",
+          "compiletime_identity": "azurerm_resource_group.example"
+        }
+      },
+      {
+        "type": "azurerm_virtual_network",
+        "name": "first",
+        "properties": {
+          "name": "${var.prefix}-network1",
+          "resource_group_name": "${azurerm_resource_group.example.name}",
+          "location": "${azurerm_resource_group.example.location}",
+          "address_space": [
+            "10.0.0.0/24"
+          ],
+          "subnet": [
+            {
+              "name": "subnet1",
+              "address_prefix": "10.0.0.0/24"
+            }
+          ],
+          "compiletime_identity": "azurerm_virtual_network.first"
+        }
+      },
+      {
+        "type": "azurerm_virtual_network",
+        "name": "second",
+        "properties": {
+          "name": "${var.prefix}-network2",
+          "resource_group_name": "${azurerm_resource_group.example.name}",
+          "location": "${azurerm_resource_group.example.location}",
+          "address_space": [
+            "192.168.0.0/24"
+          ],
+          "subnet": [
+            {
+              "name": "subnet1",
+              "address_prefix": "192.168.0.0/24"
+            }
+          ],
+          "compiletime_identity": "azurerm_virtual_network.second"
+        }
+      },
+      {
+        "type": "azurerm_virtual_network_peering",
+        "name": "first-to-second",
+        "properties": {
+          "name": "first-to-second",
+          "resource_group_name": "${azurerm_resource_group.example.name}",
+          "virtual_network_name": "${azurerm_virtual_network.first.name}",
+          "remote_virtual_network_id": "${azurerm_virtual_network.second.id}",
+          "allow_virtual_network_access": true,
+          "allow_forwarded_traffic": false,
+          "allow_gateway_transit": false,
+          "compiletime_identity": "azurerm_virtual_network_peering.first-to-second"
+        }
+      },
+      {
+        "type": "azurerm_virtual_network_peering",
+        "name": "second-to-first",
+        "properties": {
+          "name": "second-to-first",
+          "resource_group_name": "${azurerm_resource_group.example.name}",
+          "virtual_network_name": "${azurerm_virtual_network.second.name}",
+          "remote_virtual_network_id": "${azurerm_virtual_network.first.id}",
+          "allow_virtual_network_access": true,
+          "allow_forwarded_traffic": false,
+          "allow_gateway_transit": false,
+          "use_remote_gateways": false,
+          "compiletime_identity": "azurerm_virtual_network_peering.second-to-first"
+        }
+      }
+    ]
+  }
+}

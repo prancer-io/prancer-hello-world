@@ -2,12 +2,12 @@
   "structure": "filesystem",
   "error": null,
   "reference": "master",
-  "contentType": "yaml",
+  "contentType": "json",
   "source": "gitConnectorGoogleKcc",
   "paths": [
-    "/samples/resources/computerouternat/router-nat-for-list-of-subnets/compute_v1beta1_computesubnetwork.yaml"
+    "/samples/resources/computepacketmirroring/compute_v1beta1_computeforwardingrule.yaml"
   ],
-  "timestamp": 1628765142740,
+  "timestamp": 1642973302992,
   "queryuser": null,
   "checksum": "99914b932bd37a50b983c5e7c90ae93b",
   "node": {
@@ -15,30 +15,39 @@
     "type": "kcc",
     "collection": "kcctemplate",
     "paths": [
-      "/samples/resources/computerouternat/router-nat-for-list-of-subnets/compute_v1beta1_computesubnetwork.yaml"
+      "/samples/resources/computepacketmirroring/compute_v1beta1_computeforwardingrule.yaml"
     ],
     "snapshotId": "KCC_TEMPLATE_SNAPSHOT212",
     "status": "active",
-    "validate": true
+    "validate": true,
+    "resourceTypes": [
+      "computeforwardingrule"
+    ]
   },
   "snapshotId": "KCC_TEMPLATE_SNAPSHOT212",
   "collection": "kcctemplate",
   "json": {
     "apiVersion": "compute.cnrm.cloud.google.com/v1beta1",
-    "kind": "ComputeSubnetwork",
+    "kind": "ComputeForwardingRule",
     "metadata": {
-      "labels": {
-        "label-one": "value-one"
-      },
-      "name": "computerouternat-dep-forlistofsubnets"
+      "name": "computepacketmirroring-dep"
     },
     "spec": {
-      "description": "My subnet",
-      "ipCidrRange": "10.1.0.0/16",
-      "region": "us-west1",
+      "location": "us-west2",
       "networkRef": {
-        "name": "computerouternat-dep-forlistofsubnets"
-      }
+        "name": "computepacketmirroring-dep"
+      },
+      "subnetworkRef": {
+        "name": "computepacketmirroring-dep"
+      },
+      "description": "A test mirror collector forwarding rule with internal load balancing scheme",
+      "loadBalancingScheme": "INTERNAL",
+      "backendServiceRef": {
+        "name": "computepacketmirroring-dep"
+      },
+      "networkTier": "PREMIUM",
+      "allPorts": true,
+      "isMirroringCollector": true
     }
   }
 }

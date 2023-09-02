@@ -2,12 +2,12 @@
   "structure": "filesystem",
   "error": null,
   "reference": "master",
-  "contentType": "yaml",
+  "contentType": "json",
   "source": "gitConnectorGoogleKcc",
   "paths": [
-    "/samples/resources/computeresourcepolicy/daily-resource-policy-schedule/compute_v1alpha3_computeresourcepolicy.yaml"
+    "/samples/resources/computeinstancegroupmanager/zonal-compute-instance-group-manager/compute_v1beta1_computesubnetwork.yaml"
   ],
-  "timestamp": 1628765142245,
+  "timestamp": 1642973302900,
   "queryuser": null,
   "checksum": "99914b932bd37a50b983c5e7c90ae93b",
   "node": {
@@ -15,43 +15,29 @@
     "type": "kcc",
     "collection": "kcctemplate",
     "paths": [
-      "/samples/resources/computeresourcepolicy/daily-resource-policy-schedule/compute_v1alpha3_computeresourcepolicy.yaml"
+      "/samples/resources/computeinstancegroupmanager/zonal-compute-instance-group-manager/compute_v1beta1_computesubnetwork.yaml"
     ],
     "snapshotId": "KCC_TEMPLATE_SNAPSHOT189",
     "status": "active",
-    "validate": true
+    "validate": true,
+    "resourceTypes": [
+      "computesubnetwork"
+    ]
   },
   "snapshotId": "KCC_TEMPLATE_SNAPSHOT189",
   "collection": "kcctemplate",
   "json": {
     "apiVersion": "compute.cnrm.cloud.google.com/v1beta1",
-    "kind": "ComputeResourcePolicy",
+    "kind": "ComputeSubnetwork",
     "metadata": {
-      "name": "computeresourcepolicy-sample-dailyschedule"
+      "name": "computeinstancegroupmanager-dep-zonal"
     },
     "spec": {
+      "ipCidrRange": "10.2.0.0/16",
       "region": "us-central1",
-      "snapshotSchedulePolicy": {
-        "schedule": {
-          "dailySchedule": {
-            "daysInCycle": 1,
-            "startTime": "00:00"
-          }
-        },
-        "retentionPolicy": {
-          "maxRetentionDays": 8,
-          "onSourceDiskDelete": "KEEP_AUTO_SNAPSHOTS"
-        },
-        "snapshotProperties": {
-          "storageLocations": [
-            "us-central1"
-          ],
-          "guestFlush": true,
-          "labels": {
-            "autodeleted": "false",
-            "interval": "daily"
-          }
-        }
+      "privateIpGoogleAccess": false,
+      "networkRef": {
+        "name": "computeinstancegroupmanager-dep-zonal"
       }
     }
   }

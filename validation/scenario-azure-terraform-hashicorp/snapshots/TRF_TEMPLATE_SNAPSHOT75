@@ -1,0 +1,76 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "main",
+  "contentType": "json",
+  "source": "gitConnectorAzureTerraHashicorp",
+  "paths": [
+    "/examples/netapp/account/variables.tf",
+    "/examples/netapp/account/main.tf"
+  ],
+  "timestamp": 1642943279821,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "TRF_TEMPLATE_SNAPSHOT",
+    "type": "terraform",
+    "collection": "terraformtemplate",
+    "paths": [
+      "/examples/netapp/account/variables.tf",
+      "/examples/netapp/account/main.tf"
+    ],
+    "snapshotId": "TRF_TEMPLATE_SNAPSHOT75",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "azurerm_netapp_account",
+      "azurerm_resource_group"
+    ]
+  },
+  "snapshotId": "TRF_TEMPLATE_SNAPSHOT75",
+  "collection": "terraformtemplate",
+  "json": {
+    "provider": [
+      {
+        "azurerm": {
+          "features": [
+            {}
+          ]
+        }
+      }
+    ],
+    "resources": [
+      {
+        "type": "azurerm_resource_group",
+        "name": "example",
+        "properties": {
+          "name": "${var.prefix}-resources",
+          "location": "${var.location}",
+          "compiletime_identity": "azurerm_resource_group.example"
+        }
+      },
+      {
+        "type": "azurerm_netapp_account",
+        "name": "example",
+        "properties": {
+          "name": "${var.prefix}-netappaccount",
+          "location": "${azurerm_resource_group.example.location}",
+          "resource_group_name": "${azurerm_resource_group.example.name}",
+          "active_directory": [
+            {
+              "username": "aduser",
+              "password": "aduserpwd",
+              "smb_server_name": "SMBSERVER",
+              "dns_servers": [
+                "1.2.3.4"
+              ],
+              "domain": "westcentralus.com",
+              "organizational_unit": "OU=FirstLevel"
+            }
+          ],
+          "compiletime_identity": "azurerm_netapp_account.example"
+        }
+      }
+    ]
+  }
+}

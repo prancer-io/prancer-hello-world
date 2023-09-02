@@ -2,12 +2,12 @@
   "structure": "filesystem",
   "error": null,
   "reference": "master",
-  "contentType": "yaml",
+  "contentType": "json",
   "source": "gitConnectorGoogleKcc",
   "paths": [
-    "/samples/resources/gkehubfeaturemembership/gkehub_v1beta1_gkehubfeature.yaml"
+    "/samples/resources/dataprocworkflowtemplate/dataproc_v1beta1_dataprocautoscalingpolicy.yaml"
   ],
-  "timestamp": 1628765147032,
+  "timestamp": 1642973303910,
   "queryuser": null,
   "checksum": "99914b932bd37a50b983c5e7c90ae93b",
   "node": {
@@ -15,26 +15,38 @@
     "type": "kcc",
     "collection": "kcctemplate",
     "paths": [
-      "/samples/resources/gkehubfeaturemembership/gkehub_v1beta1_gkehubfeature.yaml"
+      "/samples/resources/dataprocworkflowtemplate/dataproc_v1beta1_dataprocautoscalingpolicy.yaml"
     ],
     "snapshotId": "KCC_TEMPLATE_SNAPSHOT374",
     "status": "active",
-    "validate": true
+    "validate": true,
+    "resourceTypes": [
+      "dataprocautoscalingpolicy"
+    ]
   },
   "snapshotId": "KCC_TEMPLATE_SNAPSHOT374",
   "collection": "kcctemplate",
   "json": {
-    "apiVersion": "gkehub.cnrm.cloud.google.com/v1beta1",
-    "kind": "GKEHubFeature",
+    "apiVersion": "dataproc.cnrm.cloud.google.com/v1beta1",
+    "kind": "DataprocAutoscalingPolicy",
     "metadata": {
-      "name": "gkehubfeaturemembership-dep"
+      "name": "dataprocworkflowtemplate-dep"
     },
     "spec": {
-      "projectRef": {
-        "name": "gkehubfeaturemembership-dep"
+      "location": "us-central1",
+      "workerConfig": {
+        "maxInstances": 5
       },
-      "location": "global",
-      "resourceID": "configmanagement"
+      "secondaryWorkerConfig": {
+        "maxInstances": 2
+      },
+      "basicAlgorithm": {
+        "yarnConfig": {
+          "gracefulDecommissionTimeout": "30s",
+          "scaleDownFactor": 0.5,
+          "scaleUpFactor": 1
+        }
+      }
     }
   }
 }

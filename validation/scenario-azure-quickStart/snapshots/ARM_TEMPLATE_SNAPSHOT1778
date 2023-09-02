@@ -1,0 +1,123 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAzureQuickStart",
+  "paths": [
+    "/quickstarts/microsoft.web/web-app-asp-app-on-ase-create/azuredeploy.json",
+    "/quickstarts/microsoft.web/web-app-asp-app-on-ase-create/azuredeploy.parameters.json"
+  ],
+  "timestamp": 1642962911193,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/quickstarts/microsoft.web/web-app-asp-app-on-ase-create/azuredeploy.json",
+      "/quickstarts/microsoft.web/web-app-asp-app-on-ase-create/azuredeploy.parameters.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT1778",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "microsoft.web/sites",
+      "microsoft.web/serverfarms"
+    ]
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT1778",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "siteName": {
+        "type": "string",
+        "metadata": {
+          "description": "The name of the web app that you wish to create."
+        },
+        "value": "GEN-UNIQUE-10"
+      },
+      "appServicePlanName": {
+        "type": "string",
+        "metadata": {
+          "description": "The name of the App Service plan to use for hosting the web app."
+        },
+        "value": "GEN-UNIQUE-11"
+      },
+      "appServiceEnvironmentName": {
+        "type": "string",
+        "metadata": {
+          "description": "The name of the App Service Environment where the app service plan will be created."
+        },
+        "value": "GET-PREREQ-appServiceEnvironmentName"
+      },
+      "existingAseLocation": {
+        "type": "string",
+        "metadata": {
+          "description": "Set this to the same location as the App Service Environment"
+        },
+        "value": "GET-PREREQ-location"
+      },
+      "workerPool": {
+        "type": "string",
+        "allowedValues": [
+          "1",
+          "2",
+          "3"
+        ],
+        "defaultValue": 0,
+        "metadata": {
+          "description": "Defines which worker pool's (WP1, WP2 or WP3) resources will be used for the app service plan."
+        },
+        "value": "1"
+      },
+      "numberOfWorkersFromWorkerPool": {
+        "type": "int",
+        "defaultValue": 1,
+        "metadata": {
+          "description": "Defines the number of workers from the worker pool that will be used by the app service plan."
+        }
+      }
+    },
+    "resources": [
+      {
+        "apiVersion": "2020-12-01",
+        "name": "GEN-UNIQUE-11",
+        "type": "Microsoft.Web/serverfarms",
+        "location": "GET-PREREQ-location",
+        "properties": {
+          "name": "GEN-UNIQUE-11",
+          "hostingEnvironmentProfile": {
+            "id": "Microsoft.Web/hostingEnvironments/GET-PREREQ-appServiceEnvironmentName"
+          }
+        },
+        "sku": {
+          "name": "P1",
+          "tier": "Premium",
+          "size": "P1",
+          "family": "P",
+          "capacity": 1
+        }
+      },
+      {
+        "apiVersion": "2020-12-01",
+        "name": "GEN-UNIQUE-10",
+        "type": "Microsoft.Web/sites",
+        "location": "GET-PREREQ-location",
+        "properties": {
+          "name": "GEN-UNIQUE-10",
+          "serverFarmId": "Microsoft.Web/serverFarms/GEN-UNIQUE-11",
+          "hostingEnvironmentProfile": {
+            "id": "Microsoft.Web/hostingEnvironments/GET-PREREQ-appServiceEnvironmentName"
+          }
+        },
+        "dependsOn": [
+          "Microsoft.Web/serverFarms//GEN-UNIQUE-11"
+        ]
+      }
+    ],
+    "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+  }
+}

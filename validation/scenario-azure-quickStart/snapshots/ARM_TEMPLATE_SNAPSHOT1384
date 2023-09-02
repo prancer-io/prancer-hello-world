@@ -1,0 +1,211 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAzureQuickStart",
+  "paths": [
+    "/quickstarts/microsoft.keyvault/key-vault-with-logging-create/azuredeploy.json",
+    "/quickstarts/microsoft.keyvault/key-vault-with-logging-create/azuredeploy.parameters.json"
+  ],
+  "timestamp": 1642962907338,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/quickstarts/microsoft.keyvault/key-vault-with-logging-create/azuredeploy.json",
+      "/quickstarts/microsoft.keyvault/key-vault-with-logging-create/azuredeploy.parameters.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT1384",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "microsoft.storage/storageaccounts",
+      "microsoft.keyvault/vaults",
+      "microsoft.authorization/locks",
+      "microsoft.insights/diagnosticsettings"
+    ]
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT1384",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.0.0.0",
+    "metadata": {
+      "_generator": {
+        "name": "bicep",
+        "version": "0.4.1008.15138",
+        "templateHash": "14128899252285887828"
+      }
+    },
+    "parameters": {
+      "keyVaultName": {
+        "type": "string",
+        "defaultValue": "[format('kv-{0}', uniqueString(resourceGroup().id))]",
+        "metadata": {
+          "description": "Specifies the name of the key vault."
+        }
+      },
+      "location": {
+        "type": "string",
+        "defaultValue": "[resourceGroup().location]",
+        "metadata": {
+          "description": "Specifies the location for all resources."
+        }
+      },
+      "objectId": {
+        "type": "string",
+        "metadata": {
+          "description": "Specifies the object ID of a user, service principal or security group in the Azure Active Directory tenant for the vault. The object ID must be unique for the list of access policies. Get it by using Get-AzADUser or Get-AzADServicePrincipal cmdlets."
+        },
+        "value": "GEN-AZUREAD-OBJECTID"
+      },
+      "keysPermissions": {
+        "type": "array",
+        "defaultValue": [
+          "all"
+        ],
+        "metadata": {
+          "description": "Specifies the permissions to keys in the vault. Valid values are: all, encrypt, decrypt, wrapKey, unwrapKey, sign, verify, get, list, create, update, import, delete, backup, restore, recover, and purge."
+        }
+      },
+      "secretsPermissions": {
+        "type": "array",
+        "defaultValue": [
+          "all"
+        ],
+        "metadata": {
+          "description": "Specifies the permissions to secrets in the vault. Valid values are: all, get, list, set, delete, backup, restore, recover, and purge."
+        }
+      },
+      "vaultSku": {
+        "type": "string",
+        "defaultValue": "standard",
+        "allowedValues": [
+          "standard",
+          "premium"
+        ],
+        "metadata": {
+          "description": "Specifies the SKU for the key vault"
+        }
+      },
+      "logsRetentionInDays": {
+        "type": "int",
+        "defaultValue": 0,
+        "maxValue": 365,
+        "minValue": 0,
+        "metadata": {
+          "description": "Specifies the number of days that logs are gonna be kept. If you do not want to apply any retention policy and retain data forever, set value to 0."
+        }
+      },
+      "protectWithLocks": {
+        "type": "bool",
+        "defaultValue": true,
+        "metadata": {
+          "description": "Determines if the resources should be locked to prevent deletion."
+        }
+      }
+    },
+    "functions": [],
+    "variables": {
+      "diagnosticStorageAccountName": "[format('diagst{0}', uniqueString(subscription().id, resourceGroup().id))]"
+    },
+    "resources": [
+      {
+        "type": "Microsoft.KeyVault/vaults",
+        "apiVersion": "2021-04-01-preview",
+        "name": "[format('kv-{0}', uniqueString(resourceGroup().id))]",
+        "location": "[resourceGroup().location]",
+        "tags": {
+          "displayName": "Key Vault with logging"
+        },
+        "properties": {
+          "sku": {
+            "name": "standard",
+            "family": "A"
+          },
+          "tenantId": "[subscription().tenantId]",
+          "accessPolicies": [
+            {
+              "objectId": "GEN-AZUREAD-OBJECTID",
+              "tenantId": "[subscription().tenantId]",
+              "permissions": {
+                "keys": [
+                  "all"
+                ],
+                "secrets": [
+                  "all"
+                ]
+              }
+            }
+          ]
+        }
+      },
+      {
+        "type": "Microsoft.Storage/storageAccounts",
+        "apiVersion": "2021-06-01",
+        "name": "[format('diagst{0}', uniqueString(subscription().id, resourceGroup().id))]",
+        "location": "[resourceGroup().location]",
+        "sku": {
+          "name": "Standard_LRS"
+        },
+        "kind": "StorageV2",
+        "tags": {
+          "displayName": "[format('Key Vault {0} diagnostics storage account', parameters('keyVaultName'))]"
+        }
+      },
+      {
+        "type": "Microsoft.Insights/diagnosticSettings",
+        "apiVersion": "2021-05-01-preview",
+        "scope": "[format('Microsoft.KeyVault/vaults/{0}', parameters('keyVaultName'))]",
+        "name": "service",
+        "properties": {
+          "storageAccountId": "Microsoft.Storage/storageAccounts/[format('diagst{0}', uniqueString(subscription().id, resourceGroup().id))]",
+          "logs": [
+            {
+              "category": "AuditEvent",
+              "enabled": true,
+              "retentionPolicy": {
+                "enabled": true,
+                "days": 0
+              }
+            }
+          ]
+        },
+        "dependsOn": [
+          "Microsoft.KeyVault/vaults/[format('kv-{0}', uniqueString(resourceGroup().id))]",
+          "Microsoft.Storage/storageAccounts/[format('diagst{0}', uniqueString(subscription().id, resourceGroup().id))]"
+        ]
+      },
+      {
+        "condition": true,
+        "type": "Microsoft.Authorization/locks",
+        "apiVersion": "2017-04-01",
+        "scope": "[format('Microsoft.KeyVault/vaults/{0}', parameters('keyVaultName'))]",
+        "name": "keyVaultDoNotDelete",
+        "properties": {
+          "level": "CanNotDelete"
+        },
+        "dependsOn": [
+          "Microsoft.KeyVault/vaults/[format('kv-{0}', uniqueString(resourceGroup().id))]"
+        ]
+      },
+      {
+        "condition": true,
+        "type": "Microsoft.Authorization/locks",
+        "apiVersion": "2017-04-01",
+        "scope": "[format('Microsoft.Storage/storageAccounts/{0}', variables('diagnosticStorageAccountName'))]",
+        "name": "storageDoNotDelete",
+        "properties": {
+          "level": "CanNotDelete"
+        },
+        "dependsOn": [
+          "Microsoft.Storage/storageAccounts/[format('diagst{0}', uniqueString(subscription().id, resourceGroup().id))]"
+        ]
+      }
+    ],
+    "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+  }
+}

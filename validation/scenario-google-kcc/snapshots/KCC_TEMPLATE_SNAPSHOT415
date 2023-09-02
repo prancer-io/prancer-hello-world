@@ -2,12 +2,12 @@
   "structure": "filesystem",
   "error": null,
   "reference": "master",
-  "contentType": "yaml",
+  "contentType": "json",
   "source": "gitConnectorGoogleKcc",
   "paths": [
-    "/samples/resources/iampolicymember/kms-policy-member-with-condition/iam_v1beta1_iampolicymember.yaml"
+    "/samples/resources/gkehubfeature/multi-cluster-ingress-feature/container_v1beta1_containercluster.yaml"
   ],
-  "timestamp": 1628765148068,
+  "timestamp": 1642973304121,
   "queryuser": null,
   "checksum": "99914b932bd37a50b983c5e7c90ae93b",
   "node": {
@@ -15,32 +15,31 @@
     "type": "kcc",
     "collection": "kcctemplate",
     "paths": [
-      "/samples/resources/iampolicymember/kms-policy-member-with-condition/iam_v1beta1_iampolicymember.yaml"
+      "/samples/resources/gkehubfeature/multi-cluster-ingress-feature/container_v1beta1_containercluster.yaml"
     ],
     "snapshotId": "KCC_TEMPLATE_SNAPSHOT415",
     "status": "active",
-    "validate": true
+    "validate": true,
+    "resourceTypes": [
+      "containercluster"
+    ]
   },
   "snapshotId": "KCC_TEMPLATE_SNAPSHOT415",
   "collection": "kcctemplate",
   "json": {
-    "apiVersion": "iam.cnrm.cloud.google.com/v1beta1",
-    "kind": "IAMPolicyMember",
+    "apiVersion": "container.cnrm.cloud.google.com/v1beta1",
+    "kind": "ContainerCluster",
     "metadata": {
-      "name": "iampolicymember-sample-condition"
+      "annotations": {
+        "cnrm.cloud.google.com/project-id": "gkehubfeature-dep-mcifeature"
+      },
+      "name": "gkehubfeature-dep-mcifeature"
     },
     "spec": {
-      "member": "serviceAccount:iampolicymember-dep-condition@${PROJECT_ID?}.iam.gserviceaccount.com",
-      "role": "roles/cloudkms.admin",
-      "condition": {
-        "title": "expires_after_2019_12_31",
-        "description": "Expires at midnight of 2019-12-31",
-        "expression": "request.time < timestamp(\"2020-01-01T00:00:00Z\")"
-      },
-      "resourceRef": {
-        "apiVersion": "kms.cnrm.cloud.google.com/v1beta1",
-        "kind": "KMSKeyRing",
-        "name": "iampolicymember-dep-condition"
+      "location": "us-central1-a",
+      "initialNodeCount": 1,
+      "workloadIdentityConfig": {
+        "workloadPool": "gkehubfeature-dep-mcifeature.svc.id.goog"
       }
     }
   }

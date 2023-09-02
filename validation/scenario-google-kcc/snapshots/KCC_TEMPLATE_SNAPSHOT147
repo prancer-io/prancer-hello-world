@@ -2,12 +2,12 @@
   "structure": "filesystem",
   "error": null,
   "reference": "master",
-  "contentType": "yaml",
+  "contentType": "json",
   "source": "gitConnectorGoogleKcc",
   "paths": [
-    "/samples/resources/computeinstance/network-worker-instance/compute_v1beta1_computesubnetwork.yaml"
+    "/samples/resources/computeforwardingrule/regional-forwarding-rule/compute_v1beta1_computeforwardingrule.yaml"
   ],
-  "timestamp": 1628765141306,
+  "timestamp": 1642973302650,
   "queryuser": null,
   "checksum": "99914b932bd37a50b983c5e7c90ae93b",
   "node": {
@@ -15,32 +15,39 @@
     "type": "kcc",
     "collection": "kcctemplate",
     "paths": [
-      "/samples/resources/computeinstance/network-worker-instance/compute_v1beta1_computesubnetwork.yaml"
+      "/samples/resources/computeforwardingrule/regional-forwarding-rule/compute_v1beta1_computeforwardingrule.yaml"
     ],
     "snapshotId": "KCC_TEMPLATE_SNAPSHOT147",
     "status": "active",
-    "validate": true
+    "validate": true,
+    "resourceTypes": [
+      "computeforwardingrule"
+    ]
   },
   "snapshotId": "KCC_TEMPLATE_SNAPSHOT147",
   "collection": "kcctemplate",
   "json": {
     "apiVersion": "compute.cnrm.cloud.google.com/v1beta1",
-    "kind": "ComputeSubnetwork",
+    "kind": "ComputeForwardingRule",
     "metadata": {
-      "name": "computeinstance-dep-networkworker"
+      "labels": {
+        "label-one": "value-one"
+      },
+      "name": "computeforwardingrule-sample-regional"
     },
     "spec": {
-      "ipCidrRange": "10.2.0.0/16",
-      "region": "us-west2",
-      "description": "a sample subnetwork",
-      "privateIpGoogleAccess": false,
-      "networkRef": {
-        "name": "computeinstance-dep-networkworker"
+      "description": "A regional forwarding rule",
+      "target": {
+        "targetVPNGatewayRef": {
+          "name": "computeforwardingrule-dep-regional"
+        }
       },
-      "logConfig": {
-        "aggregationInterval": "INTERVAL_10_MIN",
-        "flowSampling": 0.5,
-        "metadata": "INCLUDE_ALL_METADATA"
+      "ipProtocol": "ESP",
+      "location": "us-central1",
+      "ipAddress": {
+        "addressRef": {
+          "name": "computeforwardingrule-dep-regional"
+        }
       }
     }
   }

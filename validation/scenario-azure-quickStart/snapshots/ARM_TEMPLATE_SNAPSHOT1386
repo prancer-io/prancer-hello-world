@@ -1,0 +1,87 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAzureQuickStart",
+  "paths": [
+    "/quickstarts/microsoft.keyvault/keyvault-add-access-policy/azuredeploy.json",
+    "/quickstarts/microsoft.keyvault/keyvault-add-access-policy/azuredeploy.parameters.json"
+  ],
+  "timestamp": 1642962907353,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/quickstarts/microsoft.keyvault/keyvault-add-access-policy/azuredeploy.json",
+      "/quickstarts/microsoft.keyvault/keyvault-add-access-policy/azuredeploy.parameters.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT1386",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "microsoft.keyvault/vaults/accesspolicies"
+    ]
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT1386",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "keyVaultName": {
+        "type": "string",
+        "metadata": {
+          "description": "Specifies the name of the key vault."
+        },
+        "value": "GET-PREREQ-keyVaultName"
+      },
+      "tenantId": {
+        "type": "string",
+        "defaultValue": "[subscription().tenantId]",
+        "metadata": {
+          "description": "Specifies the Azure Active Directory tenant ID that should be used for authenticating requests to the key vault. Get it by using Get-AzSubscription cmdlet."
+        }
+      },
+      "objectId": {
+        "type": "string",
+        "metadata": {
+          "description": "Specifies the object ID of a user, service principal or security group in the Azure Active Directory tenant for the vault. The object ID must be unique for the list of access policies. Get it by using Get-AzADUser or Get-AzADServicePrincipal cmdlets."
+        },
+        "value": "GEN-AZUREAD-OBJECTID"
+      },
+      "secretsPermissions": {
+        "type": "array",
+        "defaultValue": [
+          "list"
+        ],
+        "metadata": {
+          "description": "Specifies the permissions to secrets in the vault. Valid values are: all, get, list, set, delete, backup, restore, recover, and purge."
+        }
+      }
+    },
+    "resources": [
+      {
+        "type": "Microsoft.KeyVault/vaults/accessPolicies",
+        "name": "GET-PREREQ-keyVaultName/add",
+        "apiVersion": "2019-09-01",
+        "properties": {
+          "accessPolicies": [
+            {
+              "tenantId": "[subscription().tenantId]",
+              "objectId": "GEN-AZUREAD-OBJECTID",
+              "permissions": {
+                "secrets": [
+                  "list"
+                ]
+              }
+            }
+          ]
+        }
+      }
+    ],
+    "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+  }
+}

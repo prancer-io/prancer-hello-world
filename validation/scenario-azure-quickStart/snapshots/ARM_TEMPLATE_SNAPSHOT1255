@@ -1,0 +1,580 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAzureQuickStart",
+  "paths": [
+    "/quickstarts/microsoft.datamigration/azure-database-migration-service/azuredeploy.json",
+    "/quickstarts/microsoft.datamigration/azure-database-migration-service/azuredeploy.parameters.json"
+  ],
+  "timestamp": 1642962906135,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/quickstarts/microsoft.datamigration/azure-database-migration-service/azuredeploy.json",
+      "/quickstarts/microsoft.datamigration/azure-database-migration-service/azuredeploy.parameters.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT1255",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "microsoft.network/publicipaddresses",
+      "microsoft.network/virtualnetworks",
+      "microsoft.datamigration/services",
+      "microsoft.network/networkinterfaces",
+      "microsoft.sql/servers",
+      "microsoft.compute/virtualmachines",
+      "microsoft.network/networksecuritygroups",
+      "microsoft.storage/storageaccounts"
+    ]
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT1255",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "location": {
+        "defaultValue": "[resourceGroup().location]",
+        "type": "string",
+        "metadata": {
+          "description": "Location where the resources will be deployed."
+        }
+      },
+      "createPublicIP": {
+        "defaultValue": true,
+        "type": "bool",
+        "metadata": {
+          "description": "Do you want to create a public IP address for the source server?"
+        }
+      },
+      "sourceWindowsAdminUserName": {
+        "type": "string",
+        "metadata": {
+          "description": "Windows Authentication user name for the source server"
+        },
+        "value": "GEN-UNIQUE"
+      },
+      "sourceWindowsAdminPassword": {
+        "type": "securestring",
+        "metadata": {
+          "description": "Windows Authentication password for the source server"
+        },
+        "value": "GEN-PASSWORD"
+      },
+      "sourceSqlAuthenticationPassword": {
+        "type": "securestring",
+        "metadata": {
+          "description": "Sql Authentication password for the source server (User name will be same as Windows Auth)"
+        },
+        "value": "GEN-PASSWORD"
+      },
+      "vmSize": {
+        "type": "string",
+        "metadata": {
+          "description": "Source VM size"
+        },
+        "defaultValue": "Standard_D8s_v3"
+      },
+      "targetSqlDbAdministratorLogin": {
+        "type": "string",
+        "metadata": {
+          "description": "Administrator User name for the Target Azure SQL DB Server."
+        },
+        "value": "GEN-UNIQUE"
+      },
+      "targetSqlDbAdministratorPassword": {
+        "type": "securestring",
+        "metadata": {
+          "description": "Administrator Password for the Target Azure SQL DB Server."
+        },
+        "value": "GEN-PASSWORD"
+      },
+      "_artifactsLocation": {
+        "type": "string",
+        "metadata": {
+          "description": "The base URI where artifacts required by this template are located including a trailing '/'"
+        },
+        "defaultValue": "[deployment().properties.templateLink.uri]"
+      },
+      "_artifactsLocationSasToken": {
+        "type": "securestring",
+        "metadata": {
+          "description": "The sasToken required to access _artifactsLocation.  When the template is deployed using the accompanying scripts, a sasToken will be automatically generated. Use the defaultValue if the staging location is not secured."
+        },
+        "defaultValue": ""
+      }
+    },
+    "variables": {
+      "DMSServiceName": "[concat('DMS', uniqueString(resourceGroup().id))]",
+      "sourceServerName": "[take(concat('Source', uniqueString(resourceGroup().id)), 15)]",
+      "targetServerName": "[concat('targetservername', uniqueString(resourceGroup().id))]",
+      "scriptLocation": "AddDatabaseToSqlServer.ps1",
+      "bakFileLocation": "AdventureWorks2016.bak",
+      "scriptFiles": [
+        "[uri(parameters('_artifactsLocation'), concat(variables('scriptLocation'), parameters('_artifactsLocationSasToken')))]",
+        "[uri(parameters('_artifactsLocation'), concat(variables('bakFileLocation'), parameters('_artifactsLocationSasToken')))]"
+      ],
+      "scriptParameters": "-userName GEN-UNIQUE -password \"GEN-PASSWORD",
+      "storageAccountNamePrefix": "storage",
+      "storageAccountName": "[toLower(concat(variables('storageAccountNamePrefix'), uniqueString(resourceGroup().id)))]",
+      "sourceNicName": "SourceNIC-1",
+      "publicIPSourceServer": "SourceServer1-ip",
+      "sourceServerNSG": "SourceServer1-nsg",
+      "adVNet": "AzureDataMigrationServiceTemplateRG-vnet",
+      "defaultSubnetName": "default",
+      "databaseName": "TargetDatabaseName1",
+      "publicIpAddressId": {
+        "id": "Microsoft.Network/publicIPAddresses/SourceServer1-ip"
+      }
+    },
+    "resources": [
+      {
+        "type": "Microsoft.Compute/virtualMachines",
+        "name": "[take(concat('Source', uniqueString(resourceGroup().id)), 15)]",
+        "apiVersion": "2019-12-01",
+        "location": "[resourceGroup().location]",
+        "dependsOn": [
+          "Microsoft.Network/networkInterfaces/SourceNIC-1"
+        ],
+        "properties": {
+          "hardwareProfile": {
+            "vmSize": "Standard_D8s_v3"
+          },
+          "storageProfile": {
+            "imageReference": {
+              "publisher": "MicrosoftSQLServer",
+              "offer": "SQL2016SP1-WS2016",
+              "sku": "Standard",
+              "version": "latest"
+            },
+            "osDisk": {
+              "osType": "Windows",
+              "createOption": "FromImage",
+              "caching": "ReadWrite",
+              "managedDisk": {
+                "storageAccountType": "Premium_LRS"
+              },
+              "diskSizeGB": 127
+            },
+            "dataDisks": [
+              {
+                "lun": 0,
+                "name": "[take(concat('Source', uniqueString(resourceGroup().id)), 15)]_disk-1",
+                "createOption": "Empty",
+                "caching": "ReadOnly",
+                "managedDisk": {
+                  "storageAccountType": "Premium_LRS"
+                },
+                "diskSizeGB": 1023
+              }
+            ]
+          },
+          "osProfile": {
+            "computerName": "[take(concat('Source', uniqueString(resourceGroup().id)), 15)]",
+            "adminUsername": "GEN-UNIQUE",
+            "adminPassword": "GEN-PASSWORD",
+            "windowsConfiguration": {
+              "provisionVMAgent": true,
+              "enableAutomaticUpdates": true
+            }
+          },
+          "networkProfile": {
+            "networkInterfaces": [
+              {
+                "id": "Microsoft.Network/networkInterfaces/SourceNIC-1"
+              }
+            ]
+          },
+          "diagnosticsProfile": {
+            "bootDiagnostics": {
+              "enabled": true,
+              "storageUri": "[reference(variables('storageAccountName'), '2019-06-01').primaryEndpoints['blob']]"
+            }
+          }
+        },
+        "resources": [
+          {
+            "apiVersion": "2019-12-01",
+            "type": "extensions",
+            "name": "SqlIaasExtension",
+            "location": "[resourceGroup().location]",
+            "dependsOn": [
+              "Microsoft.Compute/virtualMachines//[take(concat('Source', uniqueString(resourceGroup().id)), 15)]"
+            ],
+            "properties": {
+              "type": "SqlIaaSAgent",
+              "publisher": "Microsoft.SqlServer.Management",
+              "typeHandlerVersion": "1.2",
+              "autoUpgradeMinorVersion": "true",
+              "settings": {
+                "AutoTelemetrySettings": {
+                  "Region": "[resourceGroup().location]"
+                },
+                "AutoPatchingSettings": {
+                  "PatchCategory": "WindowsMandatoryUpdates",
+                  "Enable": false,
+                  "DayOfWeek": "Sunday",
+                  "MaintenanceWindowStartingHour": "2",
+                  "MaintenanceWindowDuration": "60"
+                },
+                "KeyVaultCredentialSettings": {
+                  "Enable": false
+                },
+                "ServerConfigurationsManagementSettings": {
+                  "SQLConnectivityUpdateSettings": {
+                    "ConnectivityType": "Private",
+                    "Port": "1433"
+                  },
+                  "SQLWorkloadTypeUpdateSettings": {
+                    "SQLWorkloadType": "OLTP"
+                  },
+                  "SQLStorageUpdateSettings": {
+                    "DiskCount": "1",
+                    "NumberOfColumns": "8",
+                    "StartingDeviceID": "2",
+                    "DiskConfigurationType": "NEW"
+                  },
+                  "AdditionalFeaturesServerConfigurations": {
+                    "IsRServicesEnabled": "false"
+                  }
+                }
+              },
+              "protectedSettings": {
+                "SQLAuthUpdateUserName": "GEN-UNIQUE",
+                "SQLAuthUpdatePassword": "GEN-PASSWORD"
+              }
+            }
+          },
+          {
+            "apiVersion": "2019-12-01",
+            "type": "extensions",
+            "name": "CustomScriptExtension",
+            "location": "[resourceGroup().location]",
+            "dependsOn": [
+              "Microsoft.Compute/virtualMachines//[take(concat('Source', uniqueString(resourceGroup().id)), 15)]",
+              "Microsoft.Compute/virtualMachines/extensions/[take(concat('Source', uniqueString(resourceGroup().id)), 15)]/SqlIaasExtension"
+            ],
+            "properties": {
+              "publisher": "Microsoft.Compute",
+              "type": "CustomScriptExtension",
+              "typeHandlerVersion": "1.9",
+              "autoUpgradeMinorVersion": true,
+              "settings": {
+                "fileUris": [
+                  "[uri(parameters('_artifactsLocation'), concat(variables('scriptLocation'), parameters('_artifactsLocationSasToken')))]",
+                  "[uri(parameters('_artifactsLocation'), concat(variables('bakFileLocation'), parameters('_artifactsLocationSasToken')))]"
+                ]
+              },
+              "protectedSettings": {
+                "commandToExecute": "powershell -ExecutionPolicy Unrestricted -File ./AddDatabaseToSqlServer.ps1 -userName GEN-UNIQUE -password \"GEN-PASSWORD"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "type": "Microsoft.DataMigration/services",
+        "sku": {
+          "name": "Standard_4vCores",
+          "tier": "Standard",
+          "size": "4 vCores"
+        },
+        "name": "[variables('DMSServiceName')]",
+        "apiVersion": "2018-07-15-preview",
+        "location": "[resourceGroup().location]",
+        "properties": {
+          "virtualSubnetId": "Microsoft.Network/virtualNetworks/subnets/AzureDataMigrationServiceTemplateRG-vnet/default"
+        },
+        "resources": [
+          {
+            "type": "projects",
+            "name": "SqlToSqlDbMigrationProject",
+            "apiVersion": "2018-07-15-preview",
+            "location": "[resourceGroup().location]",
+            "properties": {
+              "sourcePlatform": "SQL",
+              "targetPlatform": "SQLDB"
+            },
+            "dependsOn": [
+              "[resourceId('Microsoft.DataMigration/services', variables('DMSServiceName'))]"
+            ]
+          }
+        ],
+        "dependsOn": [
+          "Microsoft.Network/virtualNetworks/subnets/AzureDataMigrationServiceTemplateRG-vnet/default"
+        ]
+      },
+      {
+        "type": "Microsoft.Network/networkInterfaces",
+        "name": "SourceNIC-1",
+        "apiVersion": "2020-05-01",
+        "location": "[resourceGroup().location]",
+        "dependsOn": [
+          "Microsoft.Network/virtualNetworks/subnets/AzureDataMigrationServiceTemplateRG-vnet/default",
+          "Microsoft.Network/publicIpAddresses/SourceServer1-ip"
+        ],
+        "properties": {
+          "ipConfigurations": [
+            {
+              "name": "ipconfig",
+              "properties": {
+                "privateIPAllocationMethod": "Dynamic",
+                "subnet": {
+                  "id": "Microsoft.Network/virtualNetworks/subnets/AzureDataMigrationServiceTemplateRG-vnet/default"
+                },
+                "publicIPAddress": "[if(parameters('createPublicIP'), variables('publicIpAddressId'), json('null'))]",
+                "primary": true,
+                "privateIPAddressVersion": "IPv4"
+              }
+            }
+          ],
+          "enableAcceleratedNetworking": false,
+          "enableIPForwarding": false
+        }
+      },
+      {
+        "type": "Microsoft.Network/networkSecurityGroups",
+        "name": "SourceServer1-nsg",
+        "apiVersion": "2020-05-01",
+        "location": "[resourceGroup().location]",
+        "properties": {
+          "defaultSecurityRules": [
+            {
+              "name": "AllowVnetInBound",
+              "properties": {
+                "description": "Allow inbound traffic from all VMs in VNET",
+                "protocol": "*",
+                "sourcePortRange": "*",
+                "destinationPortRange": "*",
+                "sourceAddressPrefix": "VirtualNetwork",
+                "destinationAddressPrefix": "VirtualNetwork",
+                "access": "Allow",
+                "priority": 65000,
+                "direction": "Inbound"
+              }
+            },
+            {
+              "name": "AllowAzureLoadBalancerInBound",
+              "properties": {
+                "description": "Allow inbound traffic from azure load balancer",
+                "protocol": "*",
+                "sourcePortRange": "*",
+                "destinationPortRange": "*",
+                "sourceAddressPrefix": "AzureLoadBalancer",
+                "destinationAddressPrefix": "*",
+                "access": "Allow",
+                "priority": 65001,
+                "direction": "Inbound"
+              }
+            },
+            {
+              "name": "DenyAllInBound",
+              "properties": {
+                "description": "Deny all inbound traffic",
+                "protocol": "*",
+                "sourcePortRange": "*",
+                "destinationPortRange": "*",
+                "sourceAddressPrefix": "*",
+                "destinationAddressPrefix": "*",
+                "access": "Deny",
+                "priority": 65500,
+                "direction": "Inbound"
+              }
+            },
+            {
+              "name": "AllowVnetOutBound",
+              "properties": {
+                "description": "Allow outbound traffic from all VMs to all VMs in VNET",
+                "protocol": "*",
+                "sourcePortRange": "*",
+                "destinationPortRange": "*",
+                "sourceAddressPrefix": "VirtualNetwork",
+                "destinationAddressPrefix": "VirtualNetwork",
+                "access": "Allow",
+                "priority": 65000,
+                "direction": "Outbound"
+              }
+            },
+            {
+              "name": "AllowInternetOutBound",
+              "properties": {
+                "description": "Allow outbound traffic from all VMs to Internet",
+                "protocol": "*",
+                "sourcePortRange": "*",
+                "destinationPortRange": "*",
+                "sourceAddressPrefix": "*",
+                "destinationAddressPrefix": "Internet",
+                "access": "Allow",
+                "priority": 65001,
+                "direction": "Outbound"
+              }
+            },
+            {
+              "name": "DenyAllOutBound",
+              "properties": {
+                "description": "Deny all outbound traffic",
+                "protocol": "*",
+                "sourcePortRange": "*",
+                "destinationPortRange": "*",
+                "sourceAddressPrefix": "*",
+                "destinationAddressPrefix": "*",
+                "access": "Deny",
+                "priority": 65500,
+                "direction": "Outbound"
+              }
+            }
+          ]
+        }
+      },
+      {
+        "condition": true,
+        "type": "Microsoft.Network/publicIPAddresses",
+        "sku": {
+          "name": "Basic",
+          "tier": "Regional"
+        },
+        "name": "SourceServer1-ip",
+        "apiVersion": "2020-05-01",
+        "location": "[resourceGroup().location]",
+        "properties": {
+          "publicIPAddressVersion": "IPv4",
+          "publicIPAllocationMethod": "Dynamic",
+          "idleTimeoutInMinutes": 4
+        }
+      },
+      {
+        "type": "Microsoft.Network/virtualNetworks",
+        "name": "AzureDataMigrationServiceTemplateRG-vnet",
+        "apiVersion": "2020-05-01",
+        "location": "[resourceGroup().location]",
+        "properties": {
+          "addressSpace": {
+            "addressPrefixes": [
+              "10.2.0.0/24"
+            ]
+          },
+          "subnets": [
+            {
+              "name": "default",
+              "properties": {
+                "addressPrefix": "10.2.0.0/24"
+              }
+            }
+          ],
+          "enableDdosProtection": false,
+          "enableVmProtection": false
+        },
+        "resources": [
+          {
+            "type": "subnets",
+            "name": "default",
+            "apiVersion": "2020-05-01",
+            "dependsOn": [
+              "Microsoft.Network/virtualNetworks/AzureDataMigrationServiceTemplateRG-vnet"
+            ],
+            "properties": {
+              "addressPrefix": "10.2.0.0/24"
+            }
+          }
+        ]
+      },
+      {
+        "type": "Microsoft.Storage/storageAccounts",
+        "sku": {
+          "name": "Standard_LRS",
+          "tier": "Standard"
+        },
+        "kind": "StorageV2",
+        "name": "[toLower(concat(variables('storageAccountNamePrefix'), uniqueString(resourceGroup().id)))]",
+        "apiVersion": "2019-06-01",
+        "location": "[resourceGroup().location]",
+        "properties": {
+          "networkAcls": {
+            "bypass": "AzureServices",
+            "defaultAction": "Allow"
+          },
+          "supportsHttpsTrafficOnly": false,
+          "encryption": {
+            "services": {
+              "file": {
+                "enabled": true
+              },
+              "blob": {
+                "enabled": true
+              }
+            },
+            "keySource": "Microsoft.Storage"
+          }
+        }
+      },
+      {
+        "type": "Microsoft.Sql/servers",
+        "name": "[concat(variables('targetServerName'))]",
+        "apiVersion": "2020-02-02-preview",
+        "location": "[resourceGroup().location]",
+        "properties": {
+          "administratorLogin": "GEN-UNIQUE",
+          "administratorLoginPassword": "GEN-PASSWORD",
+          "version": "12.0"
+        },
+        "resources": [
+          {
+            "type": "databases",
+            "sku": {
+              "name": "S3",
+              "tier": "Standard"
+            },
+            "name": "TargetDatabaseName1",
+            "apiVersion": "2020-02-02-preview",
+            "location": "[resourceGroup().location]",
+            "dependsOn": [
+              "[resourceId('Microsoft.Sql/servers', concat(variables('targetServerName')))]"
+            ],
+            "properties": {
+              "collation": "SQL_Latin1_General_CP1_CI_AS",
+              "maxSizeBytes": 2147483648,
+              "zoneRedundant": false
+            },
+            "resources": [
+              {
+                "name": "Import",
+                "type": "extensions",
+                "apiVersion": "2014-04-01",
+                "dependsOn": [
+                  "[resourceId('Microsoft.Sql/servers/databases', variables('targetServerName'), variables('databaseName'))]"
+                ],
+                "properties": {
+                  "storageKey": "",
+                  "storageKeyType": "SharedAccessKey",
+                  "storageUri": "[uri(parameters('_artifactsLocation'), 'templatefiles/AdventureWorks2016.bacpac')]",
+                  "administratorLogin": "GEN-UNIQUE",
+                  "administratorLoginPassword": "GEN-PASSWORD",
+                  "operationMode": "Import"
+                }
+              }
+            ]
+          },
+          {
+            "type": "firewallrules",
+            "name": "AllowAllWindowsAzureIps",
+            "apiVersion": "2020-02-02-preview",
+            "location": "[resourceGroup().location]",
+            "dependsOn": [
+              "[resourceId('Microsoft.Sql/servers', concat(variables('targetServerName')))]"
+            ],
+            "properties": {
+              "endIpAddress": "0.0.0.0",
+              "startIpAddress": "0.0.0.0"
+            }
+          }
+        ]
+      }
+    ],
+    "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+  }
+}

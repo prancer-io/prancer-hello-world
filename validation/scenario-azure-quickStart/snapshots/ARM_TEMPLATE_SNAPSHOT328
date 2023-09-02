@@ -1,0 +1,177 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAzureQuickStart",
+  "paths": [
+    "/application-workloads/netapp/netapp-ontap-sql/nested/sql-vm.json"
+  ],
+  "timestamp": 1642962892384,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/application-workloads/netapp/netapp-ontap-sql/nested/sql-vm.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT328",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "microsoft.network/networkinterfaces",
+      "microsoft.compute/virtualmachines"
+    ]
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT328",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "sqlVmName": {
+        "type": "string"
+      },
+      "sqlVmNicName": {
+        "type": "string"
+      },
+      "adminUsername": {
+        "type": "string"
+      },
+      "adminPassword": {
+        "type": "securestring"
+      },
+      "vNetId": {
+        "type": "string"
+      },
+      "dataSubnetName": {
+        "type": "string"
+      },
+      "sqlVmSize": {
+        "type": "string"
+      },
+      "NetAppTags": {
+        "type": "object"
+      },
+      "quickstartTags": {
+        "type": "object"
+      },
+      "_artifactsLocation": {
+        "type": "string"
+      },
+      "_artifactsLocationSasToken": {
+        "type": "string"
+      },
+      "location": {
+        "type": "string",
+        "defaultValue": "[resourceGroup().location]",
+        "metadata": {
+          "description": "Location for all resources."
+        }
+      }
+    },
+    "variables": {
+      "psToolkitScriptName": "InstallNetAppPS.ps1"
+    },
+    "resources": [
+      {
+        "apiVersion": "2016-03-30",
+        "type": "Microsoft.Network/networkInterfaces",
+        "name": "sqlVmNicName",
+        "location": "[resourceGroup().location]",
+        "comments": "SQL Server nic ",
+        "tags": {
+          "quickstartName": "quickstartTags",
+          "provider": "NetAppTags"
+        },
+        "properties": {
+          "ipConfigurations": [
+            {
+              "name": "ipconfig1",
+              "properties": {
+                "privateIPAllocationMethod": "Dynamic",
+                "subnet": {
+                  "id": "vnetID/subnets/dataSubnetName"
+                }
+              }
+            }
+          ]
+        }
+      },
+      {
+        "apiVersion": "2017-03-30",
+        "type": "Microsoft.Compute/virtualMachines",
+        "name": "sqlVmName",
+        "location": "[resourceGroup().location]",
+        "comments": "SQL Sever VM",
+        "tags": {
+          "quickstartName": "quickstartTags",
+          "provider": "NetAppTags"
+        },
+        "dependsOn": [
+          "Microsoft.Network/networkInterfaces/sqlVmNicName"
+        ],
+        "properties": {
+          "hardwareProfile": {
+            "vmSize": "sqlVmSize"
+          },
+          "osProfile": {
+            "computerName": "sqlVmName",
+            "adminUsername": "adminUsername",
+            "adminPassword": "adminPassword"
+          },
+          "storageProfile": {
+            "imageReference": {
+              "publisher": "MicrosoftSQLServer",
+              "offer": "SQL2014SP2-WS2012R2",
+              "sku": "Enterprise",
+              "version": "latest"
+            },
+            "osDisk": {
+              "name": "sqlVmName_OSDisk",
+              "caching": "ReadWrite",
+              "createOption": "FromImage"
+            },
+            "dataDisks": []
+          },
+          "networkProfile": {
+            "networkInterfaces": [
+              {
+                "id": "Microsoft.Network/networkInterfaces/sqlVmNicName"
+              }
+            ]
+          }
+        },
+        "resources": [
+          {
+            "type": "Microsoft.Compute/virtualMachines/extensions",
+            "name": "sqlVmName/sqlNetAppOTCConnect",
+            "apiVersion": "2017-03-30",
+            "location": "[resourceGroup().location]",
+            "dependsOn": [
+              "Microsoft.Compute/virtualMachines/sqlVmName"
+            ],
+            "tags": {
+              "quickstartName": "quickstartTags",
+              "provider": "NetAppTags"
+            },
+            "properties": {
+              "publisher": "Microsoft.Compute",
+              "type": "CustomScriptExtension",
+              "typeHandlerVersion": "1.8",
+              "autoUpgradeMinorVersion": true,
+              "settings": {
+                "fileUris": [
+                  "_artifactsLocation/scripts/InstallNetAppPS.ps1_artifactsLocationSasToken"
+                ],
+                "commandToExecute": "powershell -ExecutionPolicy Unrestricted -File InstallNetAppPS.ps1"
+              }
+            }
+          }
+        ]
+      }
+    ],
+    "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+  }
+}

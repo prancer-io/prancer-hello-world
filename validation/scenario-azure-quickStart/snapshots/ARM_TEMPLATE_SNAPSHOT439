@@ -1,0 +1,579 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAzureQuickStart",
+  "paths": [
+    "/application-workloads/sap/sap-2-tier-user-image-md/azuredeploy.json",
+    "/application-workloads/sap/sap-2-tier-user-image-md/azuredeploy.parameters.json"
+  ],
+  "timestamp": 1642962894881,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/application-workloads/sap/sap-2-tier-user-image-md/azuredeploy.json",
+      "/application-workloads/sap/sap-2-tier-user-image-md/azuredeploy.parameters.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT439",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "microsoft.resources/deployments",
+      "microsoft.network/networkinterfaces"
+    ]
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT439",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "sapSystemId": {
+        "type": "string",
+        "maxLength": 3,
+        "minLength": 3,
+        "metadata": {
+          "description": "SAP System ID."
+        },
+        "value": "DEV"
+      },
+      "osType": {
+        "type": "string",
+        "allowedValues": [
+          "Windows",
+          "Linux"
+        ],
+        "metadata": {
+          "description": "The type of the operating system you want to deploy."
+        },
+        "value": "Windows"
+      },
+      "sapSystemSize": {
+        "type": "string",
+        "allowedValues": [
+          "Small < 2.000 SAPS",
+          "Medium < 9.000 SAPS",
+          "Large < 18.000 SAPS",
+          "X-Large < 40.000 SAPS"
+        ],
+        "defaultValue": "Small < 2.000 SAPS",
+        "metadata": {
+          "description": "The size of the SAP System you want to deploy."
+        }
+      },
+      "storageType": {
+        "type": "string",
+        "allowedValues": [
+          "Premium",
+          "Standard"
+        ],
+        "defaultValue": "Standard",
+        "metadata": {
+          "description": "The storage type that should be used for the virtual machine."
+        }
+      },
+      "userImageId": {
+        "type": "string",
+        "metadata": {
+          "description": "Id of the user image."
+        },
+        "value": "<userImageId>"
+      },
+      "adminUsername": {
+        "type": "string",
+        "metadata": {
+          "description": "Username for the Virtual Machine."
+        },
+        "value": "sapuser1"
+      },
+      "adminPassword": {
+        "type": "securestring",
+        "metadata": {
+          "description": "Password for the Virtual Machine."
+        },
+        "value": "GEN-PASSWORD"
+      },
+      "newOrExistingSubnet": {
+        "type": "string",
+        "defaultValue": "new",
+        "allowedValues": [
+          "new",
+          "existing"
+        ],
+        "metadata": {
+          "description": "Determines whether a new virtual network and subnet should be created or an existing subnet should be used."
+        }
+      },
+      "subnetId": {
+        "type": "string",
+        "defaultValue": "",
+        "metadata": {
+          "description": "The id of the subnet you want to use."
+        }
+      },
+      "location": {
+        "type": "string",
+        "defaultValue": "[resourceGroup().location]",
+        "metadata": {
+          "description": "Location for all resources."
+        }
+      }
+    },
+    "variables": {
+      "github": "https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/sap-2-tier-marketplace-image/shared/",
+      "csExtension": {
+        "Windows": {
+          "script": "https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/sap-2-tier-marketplace-image/shared/configureSAPVM.ps1",
+          "scriptCall": "powershell.exe -File configureSAPVM.ps1"
+        },
+        "Linux": {
+          "script": "https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/sap-2-tier-marketplace-image/shared/configureSAPVM.sh",
+          "scriptCall": "sh configureSAPVM.sh"
+        }
+      },
+      "vmSizes": {
+        "Small < 2.000 SAPS": {
+          "Premium": {
+            "size": "Standard_D4s_v3",
+            "disks": [
+              {
+                "size": 512
+              },
+              {
+                "size": 512
+              },
+              {
+                "size": 128
+              }
+            ],
+            "scriptArgs": " -DBDataLUNS '0,1' -DBLogLUNS '2'"
+          },
+          "Standard": {
+            "size": "Standard_D4_v3",
+            "disks": [
+              {
+                "size": 1023
+              },
+              {
+                "size": 1023
+              },
+              {
+                "size": 1023
+              },
+              {
+                "size": 1023
+              }
+            ],
+            "scriptArgs": " -DBDataLUNS '0,1,2' -DBLogLUNS '3'"
+          }
+        },
+        "Medium < 9.000 SAPS": {
+          "Premium": {
+            "size": "Standard_D8s_v3",
+            "disks": [
+              {
+                "size": 512
+              },
+              {
+                "size": 512
+              },
+              {
+                "size": 512
+              },
+              {
+                "size": 128
+              }
+            ],
+            "scriptArgs": " -DBDataLUNS '0,1,2' -DBLogLUNS '3'"
+          },
+          "Standard": {
+            "size": "Standard_D8_v3",
+            "disks": [
+              {
+                "size": 1023
+              },
+              {
+                "size": 1023
+              },
+              {
+                "size": 1023
+              },
+              {
+                "size": 1023
+              },
+              {
+                "size": 1023
+              },
+              {
+                "size": 1023
+              }
+            ],
+            "scriptArgs": " -DBDataLUNS '0,1,2,3' -DBLogLUNS '4,5'"
+          }
+        },
+        "Large < 18.000 SAPS": {
+          "Premium": {
+            "size": "Standard_D16s_v3",
+            "disks": [
+              {
+                "size": 1023
+              },
+              {
+                "size": 1023
+              },
+              {
+                "size": 1023
+              },
+              {
+                "size": 512
+              }
+            ],
+            "scriptArgs": " -DBDataLUNS '0,1,2' -DBLogLUNS '3'"
+          },
+          "Standard": {
+            "size": "Standard_D16_v3",
+            "disks": [
+              {
+                "size": 1023
+              },
+              {
+                "size": 1023
+              },
+              {
+                "size": 1023
+              },
+              {
+                "size": 1023
+              },
+              {
+                "size": 1023
+              },
+              {
+                "size": 1023
+              }
+            ],
+            "scriptArgs": " -DBDataLUNS '0,1,2,3' -DBLogLUNS '4,5'"
+          }
+        },
+        "X-Large < 40.000 SAPS": {
+          "Premium": {
+            "size": "Standard_GS5",
+            "disks": [
+              {
+                "size": 1023
+              },
+              {
+                "size": 1023
+              },
+              {
+                "size": 1023
+              },
+              {
+                "size": 1023
+              },
+              {
+                "size": 512
+              }
+            ],
+            "scriptArgs": " -DBDataLUNS '0,1,2,3' -DBLogLUNS '4'"
+          },
+          "Standard": {
+            "size": "Standard_D16_v3",
+            "disks": [
+              {
+                "size": 1023
+              },
+              {
+                "size": 1023
+              },
+              {
+                "size": 1023
+              },
+              {
+                "size": 1023
+              },
+              {
+                "size": 1023
+              },
+              {
+                "size": 1023
+              }
+            ],
+            "scriptArgs": " -DBDataLUNS '0,1,2,3' -DBLogLUNS '4,5'"
+          }
+        }
+      },
+      "vmSize": "(vmSizes)[parameters(sapSystemSize)][parameters(storageType)].size",
+      "dataDiskSizes": "(vmSizes)[parameters(sapSystemSize)][parameters(storageType)].disks",
+      "internalOsType": "Windows",
+      "internalExtensionScript": "(csExtension)[parameters(osType)].script",
+      "internalExtensionScriptCall": "(csExtension)[parameters(osType)].scriptCall",
+      "internalExtensionScriptCallArgs": "(vmSizes)[parameters(sapSystemSize)][parameters(storageType)].scriptArgs",
+      "sidlower": "[toLower(parameters('sapSystemId'))]",
+      "vmName": "[toLower(parameters('sapSystemId'))]-servercs",
+      "vnetName": "[toLower(parameters('sapSystemId'))]-vnet",
+      "publicIpName": "[toLower(parameters('sapSystemId'))]-pip",
+      "nicName": "[toLower(parameters('sapSystemId'))]-nic",
+      "nsgName": "[toLower(parameters('sapSystemId'))]-nsg-cs",
+      "storageTypes": {
+        "Premium": "Premium_LRS",
+        "Standard": "Standard_LRS"
+      },
+      "internalStorageType": "(storageTypes)[parameters(storageType)]",
+      "publicIPAddressType": "Dynamic",
+      "addressPrefix": "10.0.0.0/16",
+      "subnetName": "Subnet",
+      "subnetPrefix": "10.0.0.0/24",
+      "nestedDeploymentName": "nestedTemplate",
+      "nestedDeploymentNameProf": "nestedTemplateprof",
+      "nestedDeploymentNameVnet": "nestedTemplatevnet",
+      "nestedDeploymentNameNSG": "nestedTemplatensg",
+      "nestedDeploymentNameNIC": "nestedTemplatenic",
+      "nestedDeploymentNamePIP": "nestedTemplatepip",
+      "osDiskType": "userImage"
+    },
+    "resources": [
+      {
+        "apiVersion": "2015-01-01",
+        "name": "nestedTemplatevnet",
+        "type": "Microsoft.Resources/deployments",
+        "properties": {
+          "mode": "Incremental",
+          "templateLink": {
+            "uri": "https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/sap-2-tier-marketplace-image/shared/newvnet.json",
+            "contentVersion": "1.0.0.0"
+          },
+          "parameters": {
+            "vnetName": {
+              "value": "[toLower(parameters('sapSystemId'))]-vnet"
+            },
+            "addressPrefix": {
+              "value": "10.0.0.0/16"
+            },
+            "subnetName": {
+              "value": "Subnet"
+            },
+            "subnetPrefix": {
+              "value": "10.0.0.0/24"
+            }
+          }
+        }
+      },
+      {
+        "apiVersion": "2015-01-01",
+        "name": "nestedTemplatenic",
+        "type": "Microsoft.Resources/deployments",
+        "properties": {
+          "mode": "Incremental",
+          "templateLink": {
+            "uri": "https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/sap-2-tier-marketplace-image/shared/nic-config.json",
+            "contentVersion": "1.0.0.0"
+          },
+          "parameters": {
+            "vnetName": {
+              "value": "[toLower(parameters('sapSystemId'))]-vnet"
+            },
+            "subnetName": {
+              "value": "Subnet"
+            },
+            "publicIpName": {
+              "value": "[toLower(parameters('sapSystemId'))]-pip"
+            },
+            "nsgName": {
+              "value": "[toLower(parameters('sapSystemId'))]-nsg-cs"
+            },
+            "newOrExistingSubnet": {
+              "value": "new"
+            },
+            "subnetId": {
+              "value": ""
+            }
+          }
+        }
+      },
+      {
+        "apiVersion": "2015-01-01",
+        "name": "nestedTemplateprof",
+        "type": "Microsoft.Resources/deployments",
+        "properties": {
+          "mode": "Incremental",
+          "templateLink": {
+            "uri": "https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/sap-2-tier-marketplace-image/shared/os-disk-parts-md.json",
+            "contentVersion": "1.0.0.0"
+          },
+          "parameters": {
+            "imageSku": {
+              "value": ""
+            },
+            "imagePublisher": {
+              "value": ""
+            },
+            "imageOffer": {
+              "value": ""
+            },
+            "osDiskType": {
+              "value": "userImage"
+            },
+            "osType": {
+              "value": "internalOSType"
+            },
+            "sidlower": {
+              "value": "[toLower(parameters('sapSystemId'))]"
+            },
+            "vmName": {
+              "value": "[toLower(parameters('sapSystemId'))]-servercs"
+            },
+            "storageType": {
+              "value": "(storageTypes)[parameters(storageType)]"
+            },
+            "managedDiskId": {
+              "value": "<userImageId>"
+            }
+          }
+        }
+      },
+      {
+        "apiVersion": "2015-01-01",
+        "name": "nestedTemplatepip",
+        "type": "Microsoft.Resources/deployments",
+        "properties": {
+          "mode": "Incremental",
+          "templateLink": {
+            "uri": "https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/sap-2-tier-marketplace-image/shared/newpip.json",
+            "contentVersion": "1.0.0.0"
+          },
+          "parameters": {
+            "publicIpName": {
+              "value": "[toLower(parameters('sapSystemId'))]-pip"
+            },
+            "publicIPAddressType": {
+              "value": "Dynamic"
+            }
+          }
+        }
+      },
+      {
+        "apiVersion": "2015-01-01",
+        "name": "nestedTemplatensg",
+        "type": "Microsoft.Resources/deployments",
+        "properties": {
+          "mode": "Incremental",
+          "templateLink": {
+            "uri": "https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/sap-2-tier-marketplace-image/shared/newnsg.json",
+            "contentVersion": "1.0.0.0"
+          },
+          "parameters": {
+            "nsgName": {
+              "value": "[toLower(parameters('sapSystemId'))]-nsg-cs"
+            },
+            "osType": {
+              "value": "internalOSType"
+            }
+          }
+        }
+      },
+      {
+        "type": "Microsoft.Network/networkInterfaces",
+        "name": "[toLower(parameters('sapSystemId'))]-nic",
+        "apiVersion": "2017-06-01",
+        "location": "[resourceGroup().location]",
+        "dependsOn": [
+          "Microsoft.Resources/deployments/nestedTemplatevnet",
+          "Microsoft.Resources/deployments/nestedTemplatenic",
+          "Microsoft.Resources/deployments/nestedTemplatepip",
+          "Microsoft.Resources/deployments/nestedTemplatensg"
+        ],
+        "properties": {
+          "networkSecurityGroup": "[reference(variables('nestedDeploymentNameNIC')).outputs.selectedConfiguration.value.networkSecurityGroup]",
+          "ipConfigurations": [
+            {
+              "name": "ipconfig1",
+              "properties": {
+                "privateIPAllocationMethod": "Dynamic",
+                "publicIPAddress": "[reference(variables('nestedDeploymentNameNIC')).outputs.selectedConfiguration.value.publicIPAddress]",
+                "subnet": "[reference(variables('nestedDeploymentNameNIC')).outputs.selectedConfiguration.value.subnet]"
+              }
+            }
+          ]
+        }
+      },
+      {
+        "apiVersion": "2015-01-01",
+        "name": "nestedTemplate",
+        "type": "Microsoft.Resources/deployments",
+        "dependsOn": [
+          "Microsoft.Resources/deployments/nestedTemplateprof",
+          "Microsoft.Network/networkInterfaces/[toLower(parameters('sapSystemId'))]-nic"
+        ],
+        "properties": {
+          "mode": "Incremental",
+          "templateLink": {
+            "uri": "https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/sap-2-tier-marketplace-image/shared/server-md.json",
+            "contentVersion": "1.0.0.0"
+          },
+          "parameters": {
+            "imageReference": {
+              "value": "[reference(variables('nestedDeploymentNameProf')).outputs.imageReference.value]"
+            },
+            "osDisk": {
+              "value": "[reference(variables('nestedDeploymentNameProf')).outputs.osDisk.value]"
+            },
+            "osDiskType": {
+              "value": "userImage"
+            },
+            "vmName": {
+              "value": "[toLower(parameters('sapSystemId'))]-servercs"
+            },
+            "vmSize": {
+              "value": "(vmSizes)[parameters(sapSystemSize)][parameters(storageType)].size"
+            },
+            "adminUsername": {
+              "value": "sapuser1"
+            },
+            "adminPassword": {
+              "value": "GEN-PASSWORD"
+            },
+            "csExtensionScript": {
+              "value": "(csExtension)[parameters(osType)].script"
+            },
+            "csExtensionscriptCall": {
+              "value": "(csExtension)[parameters(osType)].scriptCall"
+            },
+            "csExtensionscriptArgs": {
+              "value": "(vmSizes)[parameters(sapSystemSize)][parameters(storageType)].scriptArgs"
+            },
+            "avSetObj": {
+              "value": {}
+            },
+            "nicName": {
+              "value": "[toLower(parameters('sapSystemId'))]-nic"
+            },
+            "dataDisksObj": {
+              "value": {
+                "copy": [
+                  {
+                    "name": "dataDisks",
+                    "count": 26,
+                    "input": {
+                      "lun": "[copyIndex('dataDisks')]",
+                      "createOption": "Empty",
+                      "diskSizeGB": "(dataDiskSizes)[copyIndex(dataDisks)].size"
+                    }
+                  }
+                ]
+              }
+            },
+            "osType": {
+              "value": "internalOSType"
+            }
+          }
+        }
+      }
+    ],
+    "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+  }
+}

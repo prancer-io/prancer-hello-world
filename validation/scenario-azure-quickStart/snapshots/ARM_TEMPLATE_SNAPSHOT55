@@ -1,0 +1,238 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAzureQuickStart",
+  "paths": [
+    "/application-workloads/chef/chef-automate-ha/nested/networkSecurityGroupsResource.json"
+  ],
+  "timestamp": 1642962884333,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/application-workloads/chef/chef-automate-ha/nested/networkSecurityGroupsResource.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT55",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "microsoft.network/networksecuritygroups"
+    ]
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT55",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "networkSettings": {
+        "type": "object"
+      }
+    },
+    "variables": {
+      "provider": "[toUpper('33194f91-eb5f-4110-827a-e95f640a9e46')]"
+    },
+    "resources": [
+      {
+        "type": "Microsoft.Network/networkSecurityGroups",
+        "name": "networkSettings",
+        "apiVersion": "networkSettings",
+        "location": "networkSettings",
+        "properties": {
+          "securityRules": [
+            {
+              "name": "no-other-inbound",
+              "properties": {
+                "protocol": "*",
+                "sourcePortRange": "*",
+                "destinationPortRange": "*",
+                "sourceAddressPrefix": "VirtualNetwork",
+                "destinationAddressPrefix": "VirtualNetwork",
+                "access": "Deny",
+                "priority": 4096,
+                "direction": "Inbound"
+              }
+            },
+            {
+              "name": "allow-internet-ssh-admin",
+              "properties": {
+                "protocol": "Tcp",
+                "sourcePortRange": "*",
+                "destinationPortRange": "22",
+                "sourceAddressPrefix": "Internet",
+                "destinationAddressPrefix": "*",
+                "access": "Allow",
+                "priority": 100,
+                "direction": "Inbound"
+              }
+            },
+            {
+              "name": "allow-internet-to-fe-http",
+              "properties": {
+                "protocol": "Tcp",
+                "sourcePortRange": "*",
+                "destinationPortRange": "80",
+                "sourceAddressPrefix": "Internet",
+                "destinationAddressPrefix": "*",
+                "access": "Allow",
+                "priority": 110,
+                "direction": "Inbound"
+              }
+            },
+            {
+              "name": "allow-internet-to-fe-https",
+              "properties": {
+                "protocol": "Tcp",
+                "sourcePortRange": "*",
+                "destinationPortRange": "443",
+                "sourceAddressPrefix": "*",
+                "destinationAddressPrefix": "*",
+                "access": "Allow",
+                "priority": 120,
+                "direction": "Inbound"
+              }
+            },
+            {
+              "name": "allow-ssh-admin",
+              "properties": {
+                "protocol": "Tcp",
+                "sourcePortRange": "*",
+                "destinationPortRange": "22",
+                "sourceAddressPrefix": "VirtualNetwork",
+                "destinationAddressPrefix": "VirtualNetwork",
+                "access": "Allow",
+                "priority": 999,
+                "direction": "Inbound"
+              }
+            }
+          ]
+        },
+        "tags": {
+          "provider": "[toUpper('33194f91-eb5f-4110-827a-e95f640a9e46')]"
+        }
+      },
+      {
+        "type": "Microsoft.Network/networkSecurityGroups",
+        "name": "networkSettings",
+        "apiVersion": "networkSettings",
+        "location": "networkSettings",
+        "properties": {
+          "securityRules": [
+            {
+              "name": "no-other-inbound",
+              "properties": {
+                "protocol": "*",
+                "sourcePortRange": "*",
+                "destinationPortRange": "*",
+                "sourceAddressPrefix": "VirtualNetwork",
+                "destinationAddressPrefix": "VirtualNetwork",
+                "access": "Deny",
+                "priority": 4096,
+                "direction": "Inbound"
+              }
+            },
+            {
+              "name": "allow-ssh-admin",
+              "properties": {
+                "protocol": "Tcp",
+                "sourcePortRange": "*",
+                "destinationPortRange": "22",
+                "sourceAddressPrefix": "VirtualNetwork",
+                "destinationAddressPrefix": "VirtualNetwork",
+                "access": "Allow",
+                "priority": 999,
+                "direction": "Inbound"
+              }
+            },
+            {
+              "name": "allow-etcd",
+              "properties": {
+                "protocol": "Tcp",
+                "sourcePortRange": "*",
+                "destinationPortRange": "2379",
+                "sourceAddressPrefix": "VirtualNetwork",
+                "destinationAddressPrefix": "VirtualNetwork",
+                "access": "Allow",
+                "priority": 110,
+                "direction": "Inbound"
+              }
+            },
+            {
+              "name": "allow-postgresql",
+              "properties": {
+                "protocol": "Tcp",
+                "sourcePortRange": "*",
+                "destinationPortRange": "5432",
+                "sourceAddressPrefix": "VirtualNetwork",
+                "destinationAddressPrefix": "VirtualNetwork",
+                "access": "Allow",
+                "priority": 120,
+                "direction": "Inbound"
+              }
+            },
+            {
+              "name": "allow-leaderl",
+              "properties": {
+                "protocol": "Tcp",
+                "sourcePortRange": "*",
+                "destinationPortRange": "7331",
+                "sourceAddressPrefix": "VirtualNetwork",
+                "destinationAddressPrefix": "VirtualNetwork",
+                "access": "Allow",
+                "priority": 130,
+                "direction": "Inbound"
+              }
+            },
+            {
+              "name": "allow-elasticsearch",
+              "properties": {
+                "protocol": "Tcp",
+                "sourcePortRange": "*",
+                "destinationPortRange": "9200",
+                "sourceAddressPrefix": "VirtualNetwork",
+                "destinationAddressPrefix": "VirtualNetwork",
+                "access": "Allow",
+                "priority": 140,
+                "direction": "Inbound"
+              }
+            },
+            {
+              "name": "allow-elasticsearch-peer",
+              "properties": {
+                "protocol": "Tcp",
+                "sourcePortRange": "*",
+                "destinationPortRange": "9300",
+                "sourceAddressPrefix": "networkSettings",
+                "destinationAddressPrefix": "networkSettings",
+                "access": "Allow",
+                "priority": 141,
+                "direction": "Inbound"
+              }
+            },
+            {
+              "name": "allow-etcd-peer",
+              "properties": {
+                "protocol": "Tcp",
+                "sourcePortRange": "*",
+                "destinationPortRange": "2380",
+                "sourceAddressPrefix": "networkSettings",
+                "destinationAddressPrefix": "networkSettings",
+                "access": "Allow",
+                "priority": 111,
+                "direction": "Inbound"
+              }
+            }
+          ]
+        },
+        "tags": {
+          "provider": "[toUpper('33194f91-eb5f-4110-827a-e95f640a9e46')]"
+        }
+      }
+    ],
+    "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+  }
+}

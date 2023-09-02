@@ -1,0 +1,117 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAzureQuickStart",
+  "paths": [
+    "/demos/sql-alwayson-md-ilb-zones/prereqs/prereq.azuredeploy.json",
+    "/demos/sql-alwayson-md-ilb-zones/prereqs/prereq.azuredeploy.parameters.us.json"
+  ],
+  "timestamp": 1642962901663,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/demos/sql-alwayson-md-ilb-zones/prereqs/prereq.azuredeploy.json",
+      "/demos/sql-alwayson-md-ilb-zones/prereqs/prereq.azuredeploy.parameters.us.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT798",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "microsoft.resources/deployments"
+    ]
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT798",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "adminUsername": {
+        "type": "string",
+        "value": "quickstarts"
+      },
+      "adminPassword": {
+        "type": "secureString"
+      },
+      "domainName": {
+        "type": "string",
+        "value": "corp.mydomain.com"
+      },
+      "dnsPrefix": {
+        "type": "string",
+        "value": "GEN-UNIQUE"
+      },
+      "location": {
+        "type": "string",
+        "value": "usgovvirginia"
+      }
+    },
+    "resources": [
+      {
+        "name": "createADController",
+        "type": "Microsoft.Resources/deployments",
+        "apiVersion": "2020-06-01",
+        "properties": {
+          "mode": "Incremental",
+          "templateLink": {
+            "uri": "https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/modules/active-directory-new-domain/0.9/azuredeploy.json",
+            "contentVersion": "1.0.0.0"
+          },
+          "parameters": {
+            "adminUsername": {
+              "value": "quickstarts"
+            },
+            "adminPassword": {
+              "value": "adminPassword"
+            },
+            "domainName": {
+              "value": "corp.mydomain.com"
+            },
+            "dnsPrefix": {
+              "value": "GEN-UNIQUE"
+            },
+            "location": {
+              "value": "usgovvirginia"
+            }
+          }
+        }
+      }
+    ],
+    "outputs": {
+      "dnsIpAddress": {
+        "type": "string",
+        "value": "[reference('createADController').outputs.dnsIpAddress.value]"
+      },
+      "domainName": {
+        "type": "string",
+        "value": "[reference('createADController').outputs.domainName.value]"
+      },
+      "virtualNetworkSubscriptionId": {
+        "type": "string",
+        "value": "[reference('createADController').outputs.virtualNetworkSubscriptionId.value]"
+      },
+      "virtualNetworkResourceGroupName": {
+        "type": "string",
+        "value": "[reference('createADController').outputs.virtualNetworkResourceGroupName.value]"
+      },
+      "virtualNetworkName": {
+        "type": "string",
+        "value": "[reference('createADController').outputs.virtualNetworkName.value]"
+      },
+      "virtualNetworkSubnetName": {
+        "type": "string",
+        "value": "[reference('createADController').outputs.virtualNetworkSubnetName.value]"
+      },
+      "location": {
+        "type": "string",
+        "value": "[parameters('location')]"
+      }
+    },
+    "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+  }
+}

@@ -2,12 +2,12 @@
   "structure": "filesystem",
   "error": null,
   "reference": "master",
-  "contentType": "yaml",
+  "contentType": "json",
   "source": "gitConnectorGoogleKcc",
   "paths": [
-    "/samples/resources/bigtableappprofile/multicluster-bigtable-app-profile/bigtable_v1beta1_bigtableappprofile.yaml"
+    "/samples/resources/bigquerytable/bigquery_v1beta1_bigquerytable.yaml"
   ],
-  "timestamp": 1628765138977,
+  "timestamp": 1642973301831,
   "queryuser": null,
   "checksum": "99914b932bd37a50b983c5e7c90ae93b",
   "node": {
@@ -15,29 +15,44 @@
     "type": "kcc",
     "collection": "kcctemplate",
     "paths": [
-      "/samples/resources/bigtableappprofile/multicluster-bigtable-app-profile/bigtable_v1beta1_bigtableappprofile.yaml"
+      "/samples/resources/bigquerytable/bigquery_v1beta1_bigquerytable.yaml"
     ],
     "snapshotId": "KCC_TEMPLATE_SNAPSHOT34",
     "status": "active",
-    "validate": true
+    "validate": true,
+    "resourceTypes": [
+      "bigquerytable"
+    ]
   },
   "snapshotId": "KCC_TEMPLATE_SNAPSHOT34",
   "collection": "kcctemplate",
   "json": {
-    "apiVersion": "bigtable.cnrm.cloud.google.com/v1beta1",
-    "kind": "BigtableAppProfile",
+    "apiVersion": "bigquery.cnrm.cloud.google.com/v1beta1",
+    "kind": "BigQueryTable",
     "metadata": {
-      "name": "bigtableappprofile-sample-multicluster",
-      "annotations": {
-        "cnrm.cloud.google.com/ignore-warnings": "true"
+      "name": "bigquerytablesample",
+      "labels": {
+        "data-source": "external",
+        "schema-type": "auto-junk"
       }
     },
     "spec": {
-      "description": "Automatically routes requests to the nearest available cluster in an instance.",
-      "instanceRef": {
-        "name": "bigtableappprofile-dep-multi"
+      "description": "BigQuery Sample Table",
+      "datasetRef": {
+        "name": "bigquerytabledep"
       },
-      "multiClusterRoutingUseAny": true
+      "friendlyName": "bigquerytable-sample",
+      "externalDataConfiguration": {
+        "autodetect": true,
+        "compression": "NONE",
+        "ignoreUnknownValues": false,
+        "maxBadRecords": 10,
+        "sourceFormat": "CSV",
+        "sourceUris": [
+          "gs://gcp-public-data-landsat/LC08/01/044/034/LC08_L1GT_044034_20130330_20170310_01_T2/LC08_L1GT_044034_20130330_20170310_01_T2_ANG.txt",
+          "gs://gcp-public-data-landsat/LC08/01/044/034/LC08_L1GT_044034_20130330_20180201_01_T2/LC08_L1GT_044034_20130330_20180201_01_T2_ANG.txt"
+        ]
+      }
     }
   }
 }

@@ -1,0 +1,197 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAzureQuickStart",
+  "paths": [
+    "/demos/subnet-driven-deployment/LabSubnet.json",
+    "/demos/subnet-driven-deployment/azuredeploy.parameters.json"
+  ],
+  "timestamp": 1642962902028,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/demos/subnet-driven-deployment/LabSubnet.json",
+      "/demos/subnet-driven-deployment/azuredeploy.parameters.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT829",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "microsoft.network/publicipaddresses",
+      "microsoft.network/virtualnetworks",
+      "microsoft.network/loadbalancers"
+    ]
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT829",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.1.0.0",
+    "parameters": {
+      "labVNetPrefix": {
+        "type": "string",
+        "metadata": {
+          "description": "VNet prefix (CIDR)"
+        }
+      },
+      "subnets": {
+        "type": "array",
+        "metadata": {
+          "description": "Array of subnets to be created"
+        }
+      },
+      "dnsLabel": {
+        "type": "string",
+        "metadata": {
+          "description": "Unique public DNS label for the deployment. The fqdn will look something like '<dnsname>.<region>.cloudapp.azure.com'. Up to 62 chars, digits or dashes, lowercase, should start with a letter: must conform to '^[a-z][a-z0-9-]{1,61}[a-z0-9]$'."
+        }
+      },
+      "vnetName": {
+        "type": "string",
+        "defaultValue": "labVNet",
+        "metadata": {
+          "description": "Virtual Network name"
+        }
+      },
+      "publicIPAddressName": {
+        "type": "string",
+        "defaultValue": "PublicIP",
+        "metadata": {
+          "description": "Public address name, for lb configuration."
+        }
+      },
+      "addedSubnetName": {
+        "type": "string",
+        "metadata": {
+          "description": "Name of the subnet to add"
+        }
+      },
+      "addedSubnetPrefix": {
+        "type": "string",
+        "metadata": {
+          "description": "CIDR prefix of the subnet to add"
+        }
+      },
+      "location": {
+        "type": "string",
+        "metadata": {
+          "description": "Location for all resources."
+        }
+      },
+      "dnsLabelPrefix": {
+        "value": "GEN-UNIQUE-8"
+      },
+      "adminUsername": {
+        "value": "zeAdmin"
+      },
+      "adminPassword": {
+        "value": "GEN-PASSWORD"
+      },
+      "storageCategory": {
+        "value": "Premium"
+      },
+      "numberOfSubnets": {
+        "value": 4
+      },
+      "memberServersPerSubnet": {
+        "value": 1
+      }
+    },
+    "variables": {
+      "publicIPAddressName": "[uniqueString(resourceGroup().id, 'PublicIP')]",
+      "lbName": "[uniqueString(resourceGroup().id, 'labLB')]",
+      "sbn": [
+        {
+          "name": "addedSubnetName",
+          "properties": {
+            "addressPrefix": "addedSubnetPrefix"
+          }
+        }
+      ]
+    },
+    "resources": [
+      {
+        "apiVersion": "2020-11-01",
+        "name": "[uniqueString(resourceGroup().id, 'labLB')]",
+        "type": "Microsoft.Network/loadBalancers",
+        "location": "location",
+        "dependsOn": [
+          "Microsoft.Network/publicIPAddresses//PublicIP"
+        ],
+        "properties": {
+          "frontendIPConfigurations": [
+            {
+              "name": "LoadBalancerFrontend",
+              "properties": {
+                "publicIPAddress": {
+                  "id": "Microsoft.Network/publicIPAddresses/PublicIP"
+                }
+              }
+            }
+          ],
+          "backendAddressPools": [
+            {
+              "name": "LoadBalancerBackend"
+            }
+          ]
+        }
+      },
+      {
+        "apiVersion": "2020-11-01",
+        "type": "Microsoft.Network/publicIPAddresses",
+        "name": "PublicIP",
+        "location": "location",
+        "properties": {
+          "publicIPAllocationMethod": "Dynamic",
+          "dnsSettings": {
+            "domainNameLabel": "dnsLabel"
+          }
+        }
+      },
+      {
+        "name": "labVNet",
+        "type": "Microsoft.Network/virtualNetworks",
+        "location": "location",
+        "apiVersion": "2020-11-01",
+        "dependsOn": [
+          "Microsoft.Network/publicIPAddresses//PublicIP"
+        ],
+        "tags": {
+          "displayName": "labVNet"
+        },
+        "properties": {
+          "addressSpace": {
+            "addressPrefixes": [
+              "labVNetPrefix"
+            ]
+          },
+          "subnets": "subnets[{'name': 'addedSubnetName', 'properties': {'addressPrefix': 'addedSubnetPrefix'}}]"
+        }
+      }
+    ],
+    "outputs": {
+      "vnetSubnets": {
+        "type": "array",
+        "value": "[reference(parameters('vnetName')).subnets]"
+      },
+      "vnetLength": {
+        "type": "int",
+        "value": "[length(reference(parameters('vnetName')).subnets)]"
+      },
+      "publicIPAddressName": {
+        "type": "string",
+        "value": "[variables('publicIPAddressName')]"
+      },
+      "lbName": {
+        "type": "string",
+        "value": "[variables('lbName')]"
+      }
+    },
+    "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+  }
+}

@@ -2,12 +2,12 @@
   "structure": "filesystem",
   "error": null,
   "reference": "master",
-  "contentType": "yaml",
+  "contentType": "json",
   "source": "gitConnectorGoogleKcc",
   "paths": [
-    "/samples/resources/datafusioninstance/compute_v1beta1_computenetwork.yaml"
+    "/samples/resources/computeurlmap/global-compute-url-map/compute_v1beta1_computebackendservice_multiple_yaml_0.yaml"
   ],
-  "timestamp": 1628765145578,
+  "timestamp": 1642973303433,
   "queryuser": null,
   "checksum": "99914b932bd37a50b983c5e7c90ae93b",
   "node": {
@@ -15,23 +15,32 @@
     "type": "kcc",
     "collection": "kcctemplate",
     "paths": [
-      "/samples/resources/datafusioninstance/compute_v1beta1_computenetwork.yaml"
+      "/samples/resources/computeurlmap/global-compute-url-map/compute_v1beta1_computebackendservice_multiple_yaml_0.yaml"
     ],
     "snapshotId": "KCC_TEMPLATE_SNAPSHOT318",
     "status": "active",
-    "validate": true
+    "validate": true,
+    "resourceTypes": [
+      "computebackendservice"
+    ]
   },
   "snapshotId": "KCC_TEMPLATE_SNAPSHOT318",
   "collection": "kcctemplate",
   "json": {
     "apiVersion": "compute.cnrm.cloud.google.com/v1beta1",
-    "kind": "ComputeNetwork",
+    "kind": "ComputeBackendService",
     "metadata": {
-      "name": "datafusioninstance-dep"
+      "name": "computeurlmap-dep1"
     },
     "spec": {
-      "routingMode": "GLOBAL",
-      "autoCreateSubnetworks": false
+      "healthChecks": [
+        {
+          "healthCheckRef": {
+            "name": "computeurlmap-dep"
+          }
+        }
+      ],
+      "location": "global"
     }
   }
 }

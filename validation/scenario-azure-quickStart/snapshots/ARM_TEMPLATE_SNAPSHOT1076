@@ -1,0 +1,295 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAzureQuickStart",
+  "paths": [
+    "/quickstarts/microsoft.compute/vm-dynamic-data-disks-selection/azuredeploy.json",
+    "/quickstarts/microsoft.compute/vm-dynamic-data-disks-selection/azuredeploy.parameters.json"
+  ],
+  "timestamp": 1642962904205,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/quickstarts/microsoft.compute/vm-dynamic-data-disks-selection/azuredeploy.json",
+      "/quickstarts/microsoft.compute/vm-dynamic-data-disks-selection/azuredeploy.parameters.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT1076",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "microsoft.network/publicipaddresses",
+      "microsoft.network/virtualnetworks",
+      "microsoft.network/networkinterfaces",
+      "microsoft.compute/virtualmachines",
+      "microsoft.storage/storageaccounts"
+    ]
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT1076",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "adminUsername": {
+        "type": "string",
+        "metadata": {
+          "description": "Username for the Virtual Machine."
+        },
+        "value": "GEN-UNIQUE"
+      },
+      "adminPassword": {
+        "type": "securestring",
+        "metadata": {
+          "description": "Password for the Virtual Machine."
+        },
+        "value": "GEN-PASSWORD"
+      },
+      "dnsLabelPrefix": {
+        "type": "string",
+        "defaultValue": "[concat('vm-', uniqueString(resourceGroup().id))]",
+        "metadata": {
+          "description": "Unique DNS Name for the Public IP used to access the Virtual Machine."
+        }
+      },
+      "windowsOSVersion": {
+        "type": "string",
+        "defaultValue": "2019-Datacenter",
+        "allowedValues": [
+          "2008-R2-SP1",
+          "2008-R2-SP1-smalldisk",
+          "2008-R2-SP1-zhcn",
+          "2012-Datacenter",
+          "2012-datacenter-gensecond",
+          "2012-Datacenter-smalldisk",
+          "2012-Datacenter-zhcn",
+          "2012-R2-Datacenter",
+          "2012-r2-datacenter-gensecond",
+          "2012-R2-Datacenter-smalldisk",
+          "2012-R2-Datacenter-zhcn",
+          "2016-Datacenter",
+          "2016-datacenter-gensecond",
+          "2016-Datacenter-Server-Core",
+          "2016-Datacenter-Server-Core-smalldisk",
+          "2016-Datacenter-smalldisk",
+          "2016-Datacenter-with-Containers",
+          "2016-Datacenter-with-RDSH",
+          "2016-Datacenter-zhcn",
+          "2019-Datacenter",
+          "2019-Datacenter-Core",
+          "2019-Datacenter-Core-smalldisk",
+          "2019-Datacenter-Core-with-Containers",
+          "2019-Datacenter-Core-with-Containers-smalldisk",
+          "2019-datacenter-gensecond",
+          "2019-Datacenter-smalldisk",
+          "2019-Datacenter-with-Containers",
+          "2019-Datacenter-with-Containers-smalldisk",
+          "2019-Datacenter-zhcn"
+        ],
+        "metadata": {
+          "description": "The Windows version for the VM. This will pick a fully patched image of this given Windows version. Allowed values: 2008-R2-SP1, 2012-Datacenter, 2012-R2-Datacenter."
+        }
+      },
+      "vmSize": {
+        "type": "string",
+        "defaultValue": "Standard_D2_v3",
+        "metadata": {
+          "description": "VM Size, note the VM Size determnines the max number of disks available, use 'az vm list-sizes' or 'Get-AzVmSize' for details."
+        }
+      },
+      "numberOfVms": {
+        "type": "int",
+        "defaultValue": 2,
+        "minValue": 1,
+        "maxValue": 10,
+        "metadata": {
+          "description": "The number of VMs to create."
+        }
+      },
+      "numDataDisks": {
+        "type": "int",
+        "defaultValue": 4,
+        "minValue": 1,
+        "maxValue": 64,
+        "metadata": {
+          "description": "This parameter allows the user to select the number of disks they want"
+        }
+      },
+      "sizeOfDataDisksInGB": {
+        "type": "int",
+        "defaultValue": 100,
+        "minValue": 16,
+        "maxValue": 4096,
+        "metadata": {
+          "description": "Size of the data disks"
+        }
+      },
+      "location": {
+        "type": "string",
+        "defaultValue": "[resourceGroup().location]",
+        "metadata": {
+          "description": "Location for all resources."
+        }
+      }
+    },
+    "variables": {
+      "storageAccountName": "[concat('diags', uniquestring(resourceGroup().id))]",
+      "nicName": "dynamicDisksVMNic",
+      "addressPrefix": "10.0.0.0/16",
+      "subnetName": "Subnet",
+      "subnetPrefix": "10.0.0.0/24",
+      "publicIPAddressName": "dynamicDisksPublicIP",
+      "vmName": "dynamicDisksVM",
+      "virtualNetworkName": "dynamicDisksVNET",
+      "subnetRef": "Microsoft.Network/virtualNetworks/subnets/dynamicDisksVNET/Subnet"
+    },
+    "resources": [
+      {
+        "type": "Microsoft.Storage/storageAccounts",
+        "apiVersion": "2019-04-01",
+        "name": "[variables('storageAccountName')]",
+        "location": "[resourceGroup().location]",
+        "sku": {
+          "name": "Standard_LRS"
+        },
+        "kind": "Storage",
+        "properties": {}
+      },
+      {
+        "type": "Microsoft.Network/publicIPAddresses",
+        "apiVersion": "2019-06-01",
+        "name": "dynamicDisksPublicIPcopyIndex()",
+        "location": "[resourceGroup().location]",
+        "copy": {
+          "name": "ipLoop",
+          "count": 2
+        },
+        "properties": {
+          "publicIPAllocationMethod": "Dynamic",
+          "dnsSettings": {
+            "domainNameLabel": "[concat('vm-', uniqueString(resourceGroup().id))]copyIndex()"
+          }
+        }
+      },
+      {
+        "apiVersion": "2019-06-01",
+        "type": "Microsoft.Network/virtualNetworks",
+        "name": "dynamicDisksVNET",
+        "location": "[resourceGroup().location]",
+        "properties": {
+          "addressSpace": {
+            "addressPrefixes": [
+              "10.0.0.0/16"
+            ]
+          },
+          "subnets": [
+            {
+              "name": "Subnet",
+              "properties": {
+                "addressPrefix": "10.0.0.0/24"
+              }
+            }
+          ]
+        }
+      },
+      {
+        "apiVersion": "2019-06-01",
+        "type": "Microsoft.Network/networkInterfaces",
+        "name": "dynamicDisksVMNiccopyIndex()",
+        "location": "[resourceGroup().location]",
+        "copy": {
+          "name": "nicLoop",
+          "count": 2
+        },
+        "dependsOn": [
+          "ipLoop",
+          "dynamicDisksVNET"
+        ],
+        "properties": {
+          "ipConfigurations": [
+            {
+              "name": "ipconfig1",
+              "properties": {
+                "privateIPAllocationMethod": "Dynamic",
+                "publicIPAddress": {
+                  "id": "Microsoft.Network/publicIPAddresses/dynamicDisksPublicIPcopyIndex()"
+                },
+                "subnet": {
+                  "id": "Microsoft.Network/virtualNetworks/subnets/dynamicDisksVNET/Subnet"
+                }
+              }
+            }
+          ]
+        }
+      },
+      {
+        "apiVersion": "2019-03-01",
+        "type": "Microsoft.Compute/virtualMachines",
+        "name": "dynamicDisksVMcopyIndex()",
+        "location": "[resourceGroup().location]",
+        "copy": {
+          "name": "vmLoop",
+          "count": 2
+        },
+        "dependsOn": [
+          "[variables('storageAccountName')]",
+          "nicLoop"
+        ],
+        "properties": {
+          "hardwareProfile": {
+            "vmSize": "Standard_D2_v3"
+          },
+          "osProfile": {
+            "computerName": "dynamicDisksVMcopyIndex()",
+            "adminUsername": "GEN-UNIQUE",
+            "adminPassword": "GEN-PASSWORD"
+          },
+          "storageProfile": {
+            "imageReference": {
+              "publisher": "MicrosoftWindowsServer",
+              "offer": "WindowsServer",
+              "sku": "2019-Datacenter",
+              "version": "latest"
+            },
+            "osDisk": {
+              "name": "dynamicDisksVMcopyIndex()_OSDisk",
+              "caching": "ReadWrite",
+              "createOption": "FromImage"
+            },
+            "copy": [
+              {
+                "name": "dataDisks",
+                "count": 4,
+                "input": {
+                  "caching": "ReadWrite",
+                  "diskSizeGB": 100,
+                  "lun": "[copyIndex('dataDisks')]",
+                  "name": "[concat(variables('vmName'), '-datadisk',copyIndex(), copyIndex('dataDisks'))]",
+                  "createOption": "Empty"
+                }
+              }
+            ]
+          },
+          "networkProfile": {
+            "networkInterfaces": [
+              {
+                "id": "Microsoft.Network/networkInterfaces/dynamicDisksVMNiccopyIndex()"
+              }
+            ]
+          },
+          "diagnosticsProfile": {
+            "bootDiagnostics": {
+              "enabled": true,
+              "storageUri": "[reference(variables('storageAccountName')).primaryEndpoints.blob]"
+            }
+          }
+        }
+      }
+    ],
+    "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+  }
+}

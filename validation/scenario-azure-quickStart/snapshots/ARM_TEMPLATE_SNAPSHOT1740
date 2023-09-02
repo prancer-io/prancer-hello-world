@@ -1,0 +1,125 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAzureQuickStart",
+  "paths": [
+    "/quickstarts/microsoft.web/app-service-docs-linux/azuredeploy.json",
+    "/quickstarts/microsoft.web/app-service-docs-linux/azuredeploy.parameters.json"
+  ],
+  "timestamp": 1642962910780,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/quickstarts/microsoft.web/app-service-docs-linux/azuredeploy.json",
+      "/quickstarts/microsoft.web/app-service-docs-linux/azuredeploy.parameters.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT1740",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "microsoft.web/sites",
+      "microsoft.web/serverfarms"
+    ]
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT1740",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "webAppName": {
+        "type": "string",
+        "defaultValue": "[concat('webApp-', uniqueString(resourceGroup().id))]",
+        "minLength": 2,
+        "metadata": {
+          "description": "Web app name."
+        },
+        "value": "GEN-UNIQUE"
+      },
+      "location": {
+        "type": "string",
+        "defaultValue": "[resourceGroup().location]",
+        "metadata": {
+          "description": "Location for all resources."
+        }
+      },
+      "sku": {
+        "type": "string",
+        "defaultValue": "F1",
+        "metadata": {
+          "description": "The SKU of App Service Plan."
+        }
+      },
+      "linuxFxVersion": {
+        "type": "string",
+        "defaultValue": "DOTNETCORE|3.0",
+        "metadata": {
+          "description": "The Runtime stack of current web app"
+        }
+      },
+      "repoUrl": {
+        "type": "string",
+        "defaultValue": " ",
+        "metadata": {
+          "description": "Optional Git Repo URL"
+        }
+      }
+    },
+    "variables": {
+      "appServicePlanPortalName": "AppServicePlan-GEN-UNIQUE"
+    },
+    "resources": [
+      {
+        "type": "Microsoft.Web/serverfarms",
+        "apiVersion": "2020-06-01",
+        "name": "AppServicePlan-GEN-UNIQUE",
+        "location": "[resourceGroup().location]",
+        "sku": {
+          "name": "F1"
+        },
+        "kind": "linux",
+        "properties": {
+          "reserved": true
+        }
+      },
+      {
+        "type": "Microsoft.Web/sites",
+        "apiVersion": "2020-06-01",
+        "name": "GEN-UNIQUE",
+        "location": "[resourceGroup().location]",
+        "dependsOn": [
+          "Microsoft.Web/serverfarms/AppServicePlan-GEN-UNIQUE"
+        ],
+        "properties": {
+          "serverFarmId": "Microsoft.Web/serverfarms/AppServicePlan-GEN-UNIQUE",
+          "siteConfig": {
+            "linuxFxVersion": "DOTNETCORE|3.0"
+          },
+          "resources": [
+            {
+              "condition": "[contains(parameters('repoUrl'),'http')]",
+              "type": "sourcecontrols",
+              "apiVersion": "2020-06-01",
+              "name": "web",
+              "location": "[resourceGroup().location]",
+              "dependsOn": [
+                "Microsoft.Web/sites/GEN-UNIQUE"
+              ],
+              "properties": {
+                "repoUrl": " ",
+                "branch": "master",
+                "isManualIntegration": true
+              }
+            }
+          ]
+        }
+      }
+    ],
+    "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+  }
+}

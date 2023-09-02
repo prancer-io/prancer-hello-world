@@ -2,12 +2,12 @@
   "structure": "filesystem",
   "error": null,
   "reference": "master",
-  "contentType": "yaml",
+  "contentType": "json",
   "source": "gitConnectorGoogleKcc",
   "paths": [
-    "/samples/resources/computebackendservice/external-load-balancing-backend-service/compute_v1beta1_computesubnetwork.yaml"
+    "/samples/resources/cloudschedulerjob/scheduler-job-http/cloudscheduler_v1beta1_cloudschedulerjob.yaml"
   ],
-  "timestamp": 1628765140068,
+  "timestamp": 1642973302192,
   "queryuser": null,
   "checksum": "99914b932bd37a50b983c5e7c90ae93b",
   "node": {
@@ -15,25 +15,43 @@
     "type": "kcc",
     "collection": "kcctemplate",
     "paths": [
-      "/samples/resources/computebackendservice/external-load-balancing-backend-service/compute_v1beta1_computesubnetwork.yaml"
+      "/samples/resources/cloudschedulerjob/scheduler-job-http/cloudscheduler_v1beta1_cloudschedulerjob.yaml"
     ],
     "snapshotId": "KCC_TEMPLATE_SNAPSHOT87",
     "status": "active",
-    "validate": true
+    "validate": true,
+    "resourceTypes": [
+      "cloudschedulerjob"
+    ]
   },
   "snapshotId": "KCC_TEMPLATE_SNAPSHOT87",
   "collection": "kcctemplate",
   "json": {
-    "apiVersion": "compute.cnrm.cloud.google.com/v1beta1",
-    "kind": "ComputeSubnetwork",
+    "apiVersion": "cloudscheduler.cnrm.cloud.google.com/v1beta1",
+    "kind": "CloudSchedulerJob",
     "metadata": {
-      "name": "computebackendservice-dep-externalloadbalancing"
+      "name": "cloudscheduler-sample-http"
     },
     "spec": {
-      "ipCidrRange": "10.2.0.0/16",
-      "region": "us-west1",
-      "networkRef": {
-        "name": "computebackendservice-dep-externalloadbalancing"
+      "description": "scheduler-http-target-job",
+      "schedule": "*/5 * * * *",
+      "location": "us-west2",
+      "timeZone": "EST",
+      "attemptDeadline": "600s",
+      "retryConfig": {
+        "retryCount": 3,
+        "maxRetryDuration": "60s",
+        "maxDoublings": 2
+      },
+      "httpTarget": {
+        "headers": {
+          "app": "test",
+          "Content-Type": "application/octet-stream",
+          "User-Agent": "Google-Cloud-Scheduler"
+        },
+        "httpMethod": "POST",
+        "uri": "https://example.com/ping",
+        "body": "eyJmb28iOiJiYXIifQo="
       }
     }
   }

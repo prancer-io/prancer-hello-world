@@ -1,0 +1,418 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAwsLabs",
+  "paths": [
+    "/aws/solutions/Elasticache-snapshot.template"
+  ],
+  "timestamp": 1642972590695,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "CFR_TEMPLATE_SNAPSHOT",
+    "type": "cloudformation",
+    "collection": "cloudformationtemplate",
+    "paths": [
+      "/aws/solutions/Elasticache-snapshot.template"
+    ],
+    "snapshotId": "CFR_TEMPLATE_SNAPSHOT99",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "aws::ec2::vpc",
+      "aws::ec2::subnet",
+      "aws::ec2::routetable",
+      "aws::ec2::securitygroup",
+      "aws::iam::role",
+      "aws::ec2::route",
+      "aws::ec2::internetgateway",
+      "aws::elasticache::replicationgroup",
+      "aws::lambda::permission",
+      "aws::lambda::function",
+      "aws::elasticache::parametergroup",
+      "aws::ec2::subnetroutetableassociation",
+      "aws::ec2::vpcgatewayattachment",
+      "custom::region",
+      "aws::elasticache::subnetgroup"
+    ]
+  },
+  "snapshotId": "CFR_TEMPLATE_SNAPSHOT99",
+  "collection": "cloudformationtemplate",
+  "json": {
+    "AWSTemplateFormatVersion": "2010-09-09",
+    "Description": "Create a VPC containing two subnets and an auto scaling group containing instances with Internet access.",
+    "Parameters": {
+      "RedisNodeType": {
+        "Description": "elasticache Redis Node Instance Type",
+        "Type": "String",
+        "Default": "cache.m3.medium",
+        "AllowedValues": [
+          "cache.m3.medium"
+        ],
+        "ConstraintDescription": "must be an m3.medium - the least costly machine that can use a Replication Group."
+      },
+      "CacheClusters": {
+        "Description": "elasticache nodes",
+        "Type": "String",
+        "Default": "2"
+      },
+      "EnableSnapshotting": {
+        "Description": "elasticache snapshot enable",
+        "Type": "String",
+        "Default": "True",
+        "AllowedValues": [
+          "True",
+          "False"
+        ]
+      },
+      "SnapshotRetentionLimit": {
+        "Description": "elasticache Snapshot Retention Limit",
+        "Type": "String",
+        "Default": "28"
+      },
+      "SnapshotWindow": {
+        "Description": "Snapshot Window",
+        "Type": "String",
+        "Default": "02:00-03:00"
+      }
+    },
+    "Conditions": {
+      "EnableBackups": {
+        "Fn::Equals": [
+          {
+            "Ref": "EnableSnapshotting"
+          },
+          "True"
+        ]
+      }
+    },
+    "Mappings": {
+      "AWSRegion2AZ": {
+        "us-east-1": {
+          "A": "us-east-1b",
+          "B": "us-east-1c",
+          "C": "us-east-1c",
+          "D": "us-east-1d"
+        },
+        "us-west-1": {
+          "A": "us-west-1b",
+          "B": "us-west-1c"
+        },
+        "us-west-2": {
+          "A": "us-west-2a",
+          "B": "us-west-2b",
+          "C": "us-west-2c"
+        }
+      }
+    },
+    "Resources": [
+      {
+        "Type": "AWS::EC2::VPC",
+        "Properties": {
+          "CidrBlock": "10.0.0.0/24"
+        },
+        "Name": "VPC"
+      },
+      {
+        "Type": "AWS::EC2::InternetGateway",
+        "Name": "InternetGateway"
+      },
+      {
+        "Type": "AWS::EC2::Route",
+        "DependsOn": [
+          "InternetGateway",
+          "PublicInternetRouteTable"
+        ],
+        "Properties": {
+          "DestinationCidrBlock": "0.0.0.0/0",
+          "GatewayId": {
+            "Ref": "InternetGateway"
+          },
+          "RouteTableId": {
+            "Ref": "PublicInternetRouteTable"
+          }
+        },
+        "Name": "PublicInternetRoute"
+      },
+      {
+        "Type": "AWS::EC2::VPCGatewayAttachment",
+        "Properties": {
+          "InternetGatewayId": {
+            "Ref": "InternetGateway"
+          },
+          "VpcId": {
+            "Ref": "VPC"
+          }
+        },
+        "Name": "VPCGatewayAttachment"
+      },
+      {
+        "Type": "AWS::EC2::RouteTable",
+        "Properties": {
+          "VpcId": {
+            "Ref": "VPC"
+          }
+        },
+        "Name": "PublicInternetRouteTable"
+      },
+      {
+        "Type": "AWS::EC2::Subnet",
+        "Properties": {
+          "AvailabilityZone": {
+            "Fn::FindInMap": [
+              "AWSRegion2AZ",
+              {
+                "Ref": "AWS::Region"
+              },
+              "A"
+            ]
+          },
+          "CidrBlock": "10.0.0.0/25",
+          "VpcId": {
+            "Ref": "VPC"
+          }
+        },
+        "Name": "PublicSubnetA"
+      },
+      {
+        "Type": "AWS::EC2::Subnet",
+        "Properties": {
+          "AvailabilityZone": {
+            "Fn::FindInMap": [
+              "AWSRegion2AZ",
+              {
+                "Ref": "AWS::Region"
+              },
+              "B"
+            ]
+          },
+          "CidrBlock": "10.0.0.128/25",
+          "VpcId": {
+            "Ref": "VPC"
+          }
+        },
+        "Name": "PublicSubnetB"
+      },
+      {
+        "Type": "AWS::EC2::SubnetRouteTableAssociation",
+        "Properties": {
+          "RouteTableId": {
+            "Ref": "PublicInternetRouteTable"
+          },
+          "SubnetId": {
+            "Ref": "PublicSubnetA"
+          }
+        },
+        "Name": "PublicSubnetARouteTableAssociation"
+      },
+      {
+        "Type": "AWS::EC2::SubnetRouteTableAssociation",
+        "Properties": {
+          "RouteTableId": {
+            "Ref": "PublicInternetRouteTable"
+          },
+          "SubnetId": {
+            "Ref": "PublicSubnetB"
+          }
+        },
+        "Name": "PublicSubnetBRouteTableAssociation"
+      },
+      {
+        "Type": "AWS::ElastiCache::ParameterGroup",
+        "Properties": {
+          "CacheParameterGroupFamily": "redis2.8",
+          "Description": "RedisParameterGroup"
+        },
+        "Name": "RedisParameterGroup"
+      },
+      {
+        "Type": "AWS::ElastiCache::SubnetGroup",
+        "Properties": {
+          "Description": "RedisSubnetGroup",
+          "SubnetIds": [
+            {
+              "Ref": "PublicSubnetA"
+            },
+            {
+              "Ref": "PublicSubnetB"
+            }
+          ]
+        },
+        "Name": "RedisSubnetGroup"
+      },
+      {
+        "Type": "AWS::EC2::SecurityGroup",
+        "Properties": {
+          "GroupDescription": "RedisSecurityGroup",
+          "VpcId": {
+            "Ref": "VPC"
+          },
+          "SecurityGroupIngress": [
+            {
+              "IpProtocol": "tcp",
+              "FromPort": "6379",
+              "ToPort": "6379"
+            }
+          ]
+        },
+        "Name": "RedisSecurityGroup"
+      },
+      {
+        "Type": "AWS::ElastiCache::ReplicationGroup",
+        "Properties": {
+          "AutomaticFailoverEnabled": "true",
+          "CacheNodeType": "cache.m3.medium",
+          "CacheParameterGroupName": {
+            "Ref": "RedisParameterGroup"
+          },
+          "CacheSubnetGroupName": {
+            "Ref": "RedisSubnetGroup"
+          },
+          "Engine": "redis",
+          "EngineVersion": "2.8.24",
+          "NumCacheClusters": "2",
+          "PreferredCacheClusterAZs": [
+            {
+              "Fn::FindInMap": [
+                "AWSRegion2AZ",
+                {
+                  "Ref": "AWS::Region"
+                },
+                "A"
+              ]
+            },
+            {
+              "Fn::FindInMap": [
+                "AWSRegion2AZ",
+                {
+                  "Ref": "AWS::Region"
+                },
+                "B"
+              ]
+            }
+          ],
+          "ReplicationGroupDescription": "RedisReplicationGroup",
+          "SecurityGroupIds": [
+            {
+              "Ref": "RedisSecurityGroup"
+            }
+          ]
+        },
+        "Name": "RedisReplicationGroup"
+      },
+      {
+        "Condition": "EnableBackups",
+        "Type": "AWS::IAM::Role",
+        "Properties": {
+          "AssumeRolePolicyDocument": {
+            "Version": "2012-10-17",
+            "Statement": [
+              {
+                "Effect": "Allow",
+                "Principal": {
+                  "Service": [
+                    "lambda.amazonaws.com"
+                  ]
+                },
+                "Action": [
+                  "sts:AssumeRole"
+                ]
+              }
+            ]
+          },
+          "Path": "/",
+          "Policies": [
+            {
+              "PolicyName": "root",
+              "PolicyDocument": {
+                "Version": "2012-10-17",
+                "Statement": [
+                  {
+                    "Effect": "Allow",
+                    "Action": [
+                      "*"
+                    ],
+                    "Resource": "*"
+                  },
+                  {
+                    "Effect": "Allow",
+                    "Action": [
+                      "*"
+                    ],
+                    "Resource": "*"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        "Name": "IamRoleLambda"
+      },
+      {
+        "Condition": "EnableBackups",
+        "Type": "AWS::Lambda::Permission",
+        "Properties": {
+          "Action": "lambda:InvokeFunction",
+          "FunctionName": {
+            "Fn::GetAtt": [
+              "EnableShapshot",
+              "Arn"
+            ]
+          },
+          "Principal": "*"
+        },
+        "Name": "LambdaExecutePermission"
+      },
+      {
+        "Condition": "EnableBackups",
+        "DependsOn": [
+          "EnableShapshot",
+          "LambdaExecutePermission",
+          "RedisReplicationGroup"
+        ],
+        "Type": "Custom::Region",
+        "Properties": {
+          "ServiceToken": {
+            "Fn::GetAtt": [
+              "EnableShapshot",
+              "Arn"
+            ]
+          },
+          "SSClusterId": {
+            "Ref": "RedisReplicationGroup"
+          },
+          "SSWindow": "02:00-03:00",
+          "SSRetentionLimit": "28"
+        },
+        "Name": "EnableShapshotTrigger"
+      },
+      {
+        "Condition": "EnableBackups",
+        "Type": "AWS::Lambda::Function",
+        "DeletionPolicy": "Delete",
+        "DependsOn": [
+          "IamRoleLambda"
+        ],
+        "Properties": {
+          "Code": {
+            "ZipFile": "var response = require('cfn-response');\nexports.handler = function(event, context) {\n    console.log('REQUEST RECEIVED:\\n', JSON.stringify(event));\n    if (event.RequestType == 'Delete') {\n        response.send(event, context, response.SUCCESS);\n        return;\n    }\n    var ssClusterId = event.ResourceProperties.SSClusterId;\n    var ssWindow = event.ResourceProperties.SSWindow;\n    var ssRetentionLimit = event.ResourceProperties.SSRetentionLimit;\n    var responseData = {};\n    var params = {\n        ReplicationGroupId: ssClusterId,\n        SnapshottingClusterId: ssClusterId + '-002',\n        SnapshotWindow: ssWindow,\n        SnapshotRetentionLimit: ssRetentionLimit\n                     };\n    if (ssClusterId && ssWindow && ssRetentionLimit) {\n        var aws = require('aws-sdk');\n        var elasticache = new aws.ElastiCache({apiVersion: '2015-02-02'});\n    elasticache.modifyReplicationGroup(params, function(err, data) {\n                    if (err) {\n                               responseData = {Error: 'Issue with creating backup'};\n                               console.log(responseData.Error + ':\\n', err);\n                               response.send(event, context, response.FAILED, responseData);\n                               }\n                     else     {\n                               console.log('backup:', JSON.stringify(data, null, 2));\n                               responseData = data;\n                               console.log(data);\n                               response.send(event, context, response.SUCCESS, responseData);\n                               };\n                          });\n        } else {\n        responseData = {Error: 'Not all parameters specified'};\n        console.log(responseData.Error);\n        response.send(event, context, response.FAILED, responseData);\n            }\n};"
+          },
+          "Handler": "index.handler",
+          "MemorySize": 128,
+          "Role": {
+            "Fn::GetAtt": [
+              "IamRoleLambda",
+              "Arn"
+            ]
+          },
+          "Runtime": "nodejs",
+          "Timeout": 30
+        },
+        "Name": "EnableShapshot"
+      }
+    ],
+    "Outputs": {}
+  }
+}

@@ -1,0 +1,818 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "master",
+  "contentType": "json",
+  "source": "gitConnectorAzureQuickStart",
+  "paths": [
+    "/quickstarts/microsoft.web/asev2-appservice-sql-vpngw/azuredeploy.json",
+    "/quickstarts/microsoft.web/asev2-appservice-sql-vpngw/azuredeploy.parameters.json"
+  ],
+  "timestamp": 1642962910827,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ARM_TEMPLATE_SNAPSHOT",
+    "type": "arm",
+    "collection": "armtemplate",
+    "paths": [
+      "/quickstarts/microsoft.web/asev2-appservice-sql-vpngw/azuredeploy.json",
+      "/quickstarts/microsoft.web/asev2-appservice-sql-vpngw/azuredeploy.parameters.json"
+    ],
+    "snapshotId": "ARM_TEMPLATE_SNAPSHOT1745",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "microsoft.network/privatednszones",
+      "microsoft.network/virtualnetworks",
+      "microsoft.web/sites",
+      "microsoft.network/networkinterfaces",
+      "microsoft.network/publicipaddresses",
+      "microsoft.network/privatednszones/virtualnetworklinks",
+      "microsoft.network/virtualnetworkgateways",
+      "microsoft.sql/servers",
+      "microsoft.web/sites/config",
+      "microsoft.compute/virtualmachines",
+      "microsoft.web/hostingenvironments",
+      "microsoft.network/privateendpoints",
+      "microsoft.network/privateendpoints/privatednszonegroups",
+      "microsoft.storage/storageaccounts",
+      "microsoft.insights/components",
+      "microsoft.keyvault/vaults",
+      "microsoft.web/serverfarms",
+      "microsoft.network/virtualnetworks/subnets"
+    ]
+  },
+  "snapshotId": "ARM_TEMPLATE_SNAPSHOT1745",
+  "collection": "armtemplate",
+  "json": {
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "stackName": {
+        "type": "String",
+        "metadata": {
+          "description": "A generic name for all your resources created with this ARM Template."
+        },
+        "value": "GEN-UNIQUE"
+      },
+      "aadUserObjectId": {
+        "type": "string",
+        "metadata": {
+          "description": "Object Id of your AAD user or whoever needs access to resources such as KeyVault."
+        },
+        "value": "GEN-GUID"
+      },
+      "aadUsername": {
+        "type": "string",
+        "metadata": {
+          "description": "Name of your AAD user or whoever needs access to resources such as Azure SQL."
+        },
+        "value": "GEN-GUID"
+      },
+      "loginUser": {
+        "type": "string",
+        "metadata": {
+          "description": "The administrator password of the VM and SQL Server."
+        }
+      },
+      "p2sRootCert": {
+        "type": "string",
+        "metadata": {
+          "description": "Certificate used for the P2S VPN."
+        },
+        "value": "GEN-SELFSIGNED-CERT-CERDATA"
+      },
+      "loginPassword": {
+        "type": "securestring",
+        "metadata": {
+          "description": "The administrator password of the VM and SQL Server."
+        },
+        "value": "GEN-PASSWORD"
+      },
+      "privateDbDnsZoneName": {
+        "type": "string",
+        "defaultValue": "[concat('privatelink', environment().suffixes.sqlServerHostname)]",
+        "metadata": {
+          "description": "Private DNS zone name for database."
+        }
+      },
+      "location": {
+        "type": "string",
+        "defaultValue": "[resourceGroup().location]",
+        "metadata": {
+          "description": "Location for all the resources created."
+        }
+      },
+      "workerPool": {
+        "type": "int",
+        "defaultValue": 1,
+        "minValue": 1,
+        "maxValue": 10,
+        "metadata": {
+          "description": "Number of worker pool for App Service."
+        }
+      },
+      "vmSize": {
+        "type": "string",
+        "defaultValue": "Standard_B2ms",
+        "metadata": {
+          "description": "Size of the Virtual Machine."
+        }
+      },
+      "frontendSubnet": {
+        "type": "string",
+        "defaultValue": "frontend",
+        "metadata": {
+          "description": "Name of frontend subnet."
+        }
+      },
+      "backendSubnet": {
+        "type": "string",
+        "defaultValue": "backend",
+        "metadata": {
+          "description": "Name of backend subnet."
+        }
+      },
+      "gatewaySubnet": {
+        "type": "string",
+        "defaultValue": "GatewaySubnet",
+        "metadata": {
+          "description": "Name of gateway subnet."
+        }
+      },
+      "LoginUser": {
+        "value": "GEN-GUID"
+      }
+    },
+    "variables": {
+      "location": "[resourceGroup().location]",
+      "vnetName": "GEN-UNIQUE-vnet",
+      "databaseName": "appdb",
+      "databaseEdition": "Basic",
+      "databaseCollation": "SQL_Latin1_General_CP1_CI_AS",
+      "databaseServiceObjectiveName": "Basic",
+      "workerPool": 1,
+      "numberOfWorkersFromWorkerPool": 1,
+      "nicName": "GEN-UNIQUEvmnic",
+      "privateDbEndpointName": "GEN-UNIQUEpvenp",
+      "privateDbDnsZoneName": "[concat('privatelink', environment().suffixes.sqlServerHostname)]",
+      "privateDbDnsGroupName": "GEN-UNIQUEpvenp/mydnsgroupname",
+      "privateHost1DnsZoneName": "(parameters(stackName),.appserviceenvironment.net)",
+      "gatewayPublicIPName": "GEN-UNIQUEgwpip",
+      "gatewayName": "GEN-UNIQUEgw",
+      "vpnClientAddressPoolPrefix": "172.15.0.0/24",
+      "vmName": "[substring(parameters('stackName'),0,10)]",
+      "loginUser": "[substring(parameters('loginUser'),0,8)]"
+    },
+    "resources": [
+      {
+        "type": "Microsoft.Network/virtualNetworks",
+        "apiVersion": "2020-06-01",
+        "name": "GEN-UNIQUE-vnet",
+        "location": "[resourceGroup().location]",
+        "properties": {
+          "addressSpace": {
+            "addressPrefixes": [
+              "172.16.0.0/16"
+            ]
+          },
+          "enableDdosProtection": false,
+          "enableVmProtection": false,
+          "subnets": [
+            {
+              "name": "frontend",
+              "properties": {
+                "addressPrefix": "172.16.0.0/24",
+                "serviceEndpoints": [
+                  {
+                    "service": "Microsoft.Sql"
+                  }
+                ],
+                "privateEndpointNetworkPolicies": "Disabled",
+                "privateLinkServiceNetworkPolicies": "Disabled"
+              }
+            },
+            {
+              "name": "backend",
+              "properties": {
+                "addressPrefix": "172.16.1.0/24",
+                "privateEndpointNetworkPolicies": "Disabled",
+                "privateLinkServiceNetworkPolicies": "Disabled"
+              }
+            },
+            {
+              "name": "GatewaySubnet",
+              "properties": {
+                "addressPrefix": "172.16.255.0/27",
+                "privateEndpointNetworkPolicies": "Disabled",
+                "privateLinkServiceNetworkPolicies": "Disabled"
+              }
+            }
+          ]
+        }
+      },
+      {
+        "type": "Microsoft.Network/virtualNetworks/subnets",
+        "apiVersion": "2020-06-01",
+        "name": "GEN-UNIQUE-vnet/frontend",
+        "dependsOn": [
+          "Microsoft.Network/virtualNetworks/GEN-UNIQUE-vnet"
+        ],
+        "properties": {
+          "addressPrefix": "172.16.0.0/24",
+          "serviceEndpoints": [
+            {
+              "service": "Microsoft.Sql"
+            }
+          ],
+          "privateEndpointNetworkPolicies": "Disabled",
+          "privateLinkServiceNetworkPolicies": "Disabled"
+        }
+      },
+      {
+        "type": "Microsoft.Network/virtualNetworks/subnets",
+        "apiVersion": "2020-06-01",
+        "name": "GEN-UNIQUE-vnet/backend",
+        "dependsOn": [
+          "Microsoft.Network/virtualNetworks/GEN-UNIQUE-vnet"
+        ],
+        "properties": {
+          "addressPrefix": "172.16.1.0/24",
+          "privateEndpointNetworkPolicies": "Disabled",
+          "privateLinkServiceNetworkPolicies": "Disabled"
+        }
+      },
+      {
+        "type": "Microsoft.Network/virtualNetworks/subnets",
+        "apiVersion": "2020-06-01",
+        "name": "GEN-UNIQUE-vnet/GatewaySubnet",
+        "dependsOn": [
+          "Microsoft.Network/virtualNetworks/GEN-UNIQUE-vnet"
+        ],
+        "properties": {
+          "addressPrefix": "172.16.255.0/27",
+          "privateEndpointNetworkPolicies": "Disabled",
+          "privateLinkServiceNetworkPolicies": "Disabled"
+        }
+      },
+      {
+        "apiVersion": "2020-06-01",
+        "type": "Microsoft.Web/hostingEnvironments",
+        "name": "GEN-UNIQUE",
+        "kind": "ASEV2",
+        "location": "[resourceGroup().location]",
+        "dependsOn": [
+          "Microsoft.Network/virtualNetworks/GEN-UNIQUE-vnet",
+          "Microsoft.Network/virtualNetworks/subnets/GEN-UNIQUE-vnet/frontend"
+        ],
+        "properties": {
+          "internalLoadBalancingMode": 3,
+          "virtualNetwork": {
+            "id": "Microsoft.Network/virtualNetworks/subnets/GEN-UNIQUE-vnet/frontend"
+          }
+        }
+      },
+      {
+        "name": "GEN-UNIQUE",
+        "type": "Microsoft.Sql/servers",
+        "apiVersion": "2020-08-01-preview",
+        "location": "[resourceGroup().location]",
+        "dependsOn": [
+          "Microsoft.Network/virtualNetworks/GEN-UNIQUE-vnet",
+          "Microsoft.Network/virtualNetworks/subnets/GEN-UNIQUE-vnet/frontend"
+        ],
+        "tags": {
+          "displayName": "SqlServer"
+        },
+        "properties": {
+          "administratorLogin": "[substring(parameters('loginUser'),0,8)]",
+          "administratorLoginPassword": "GEN-PASSWORD",
+          "version": "12.0",
+          "publicNetworkAccess": "Enabled"
+        },
+        "resources": [
+          {
+            "name": "appdb",
+            "type": "databases",
+            "apiVersion": "2020-08-01-preview",
+            "location": "[resourceGroup().location]",
+            "tags": {
+              "displayName": "Database"
+            },
+            "sku": {
+              "name": "Basic",
+              "tier": "Basic",
+              "capacity": 5
+            },
+            "dependsOn": [
+              "GEN-UNIQUE"
+            ],
+            "properties": {
+              "edition": "Basic",
+              "collation": "SQL_Latin1_General_CP1_CI_AS",
+              "requestedServiceObjectiveName": "Basic"
+            },
+            "resources": [
+              {
+                "comments": "Transparent Data Encryption",
+                "name": "current",
+                "type": "transparentDataEncryption",
+                "apiVersion": "2017-03-01-preview",
+                "dependsOn": [
+                  "appdb"
+                ],
+                "properties": {
+                  "status": "Enabled"
+                }
+              }
+            ]
+          },
+          {
+            "name": "AllowAllMicrosoftAzureIps",
+            "type": "firewallrules",
+            "apiVersion": "2020-08-01-preview",
+            "location": "[resourceGroup().location]",
+            "dependsOn": [
+              "GEN-UNIQUE"
+            ],
+            "properties": {
+              "endIpAddress": "0.0.0.0",
+              "startIpAddress": "0.0.0.0"
+            }
+          },
+          {
+            "type": "Microsoft.Sql/servers/virtualNetworkRules",
+            "apiVersion": "2020-08-01-preview",
+            "name": "GEN-UNIQUE/allow-frontend",
+            "dependsOn": [
+              "Microsoft.Sql/servers/GEN-UNIQUE"
+            ],
+            "properties": {
+              "virtualNetworkSubnetId": "Microsoft.Network/virtualNetworks/subnets/GEN-UNIQUE-vnet/frontend",
+              "ignoreMissingVnetServiceEndpoint": false
+            }
+          },
+          {
+            "type": "administrators",
+            "name": "activeDirectory",
+            "apiVersion": "2020-08-01-preview",
+            "location": "[resourceGroup().location]",
+            "dependsOn": [
+              "Microsoft.Sql/servers//GEN-UNIQUE"
+            ],
+            "properties": {
+              "administratorType": "ActiveDirectory",
+              "login": "GEN-GUID",
+              "sid": "GEN-GUID",
+              "tenantId": "[subscription().tenantId]"
+            }
+          }
+        ]
+      },
+      {
+        "type": "Microsoft.KeyVault/vaults",
+        "apiVersion": "2019-09-01",
+        "name": "GEN-UNIQUE",
+        "location": "[resourceGroup().location]",
+        "dependsOn": [
+          "Microsoft.Web/sites/GEN-UNIQUE"
+        ],
+        "properties": {
+          "enableRbacAuthorization": false,
+          "enableSoftDelete": false,
+          "enabledForDeployment": false,
+          "enabledForDiskEncryption": false,
+          "enabledForTemplateDeployment": false,
+          "tenantId": "[subscription().tenantId]",
+          "accessPolicies": [
+            {
+              "tenantId": "[subscription().tenantId]",
+              "objectId": "GEN-GUID",
+              "permissions": {
+                "secrets": [
+                  "list",
+                  "get",
+                  "set"
+                ]
+              }
+            },
+            {
+              "tenantId": "[reference(resourceId('Microsoft.Web/sites', parameters('stackName')), '2018-02-01', 'Full').identity.tenantId]",
+              "objectId": "[reference(resourceId('Microsoft.Web/sites', parameters('stackName')), '2018-02-01', 'Full').identity.principalId]",
+              "permissions": {
+                "secrets": [
+                  "list",
+                  "get",
+                  "set"
+                ]
+              }
+            }
+          ],
+          "sku": {
+            "name": "Standard",
+            "family": "A"
+          },
+          "networkAcls": {
+            "defaultAction": "Allow",
+            "bypass": "AzureServices"
+          }
+        }
+      },
+      {
+        "apiVersion": "2020-06-01",
+        "name": "GEN-UNIQUE",
+        "type": "Microsoft.Web/serverfarms",
+        "location": "[resourceGroup().location]",
+        "dependsOn": [
+          "Microsoft.Web/hostingEnvironments/GEN-UNIQUE"
+        ],
+        "properties": {
+          "name": "GEN-UNIQUE",
+          "hostingEnvironmentProfile": {
+            "id": "Microsoft.Web/hostingEnvironments/GEN-UNIQUE"
+          }
+        },
+        "sku": {
+          "name": "I1",
+          "tier": "Isolated",
+          "size": "I1",
+          "family": "I",
+          "capacity": 1
+        }
+      },
+      {
+        "apiVersion": "2020-06-01",
+        "name": "GEN-UNIQUE",
+        "type": "Microsoft.Web/sites",
+        "location": "[resourceGroup().location]",
+        "identity": {
+          "type": "SystemAssigned"
+        },
+        "dependsOn": [
+          "Microsoft.Web/serverFarms//GEN-UNIQUE",
+          "Microsoft.Insights/components//GEN-UNIQUE"
+        ],
+        "properties": {
+          "name": "GEN-UNIQUE",
+          "serverFarmId": "Microsoft.Web/serverFarms/GEN-UNIQUE",
+          "hostingEnvironmentProfile": {
+            "id": "Microsoft.Web/hostingEnvironments/GEN-UNIQUE"
+          },
+          "siteConfig": {
+            "appSettings": [
+              {
+                "name": "APPINSIGHTS_INSTRUMENTATIONKEY",
+                "value": "[reference(resourceId('microsoft.insights/components/', parameters('stackName')), '2018-05-01-preview').InstrumentationKey]"
+              },
+              {
+                "name": "ApplicationInsightsAgent_EXTENSION_VERSION",
+                "value": "~2"
+              },
+              {
+                "name": "XDT_MicrosoftApplicationInsights_Mode",
+                "value": "default"
+              },
+              {
+                "name": "DiagnosticServices_EXTENSION_VERSION",
+                "value": "disabled"
+              },
+              {
+                "name": "APPINSIGHTS_PROFILERFEATURE_VERSION",
+                "value": "disabled"
+              },
+              {
+                "name": "APPINSIGHTS_SNAPSHOTFEATURE_VERSION",
+                "value": "disabled"
+              },
+              {
+                "name": "InstrumentationEngine_EXTENSION_VERSION",
+                "value": "disabled"
+              },
+              {
+                "name": "SnapshotDebugger_EXTENSION_VERSION",
+                "value": "disabled"
+              },
+              {
+                "name": "XDT_MicrosoftApplicationInsights_BaseExtensions",
+                "value": "disabled"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "type": "Microsoft.Web/sites/config",
+        "apiVersion": "2020-06-01",
+        "name": "GEN-UNIQUE/web",
+        "location": "[resourceGroup().location]",
+        "dependsOn": [
+          "Microsoft.Web/sites/GEN-UNIQUE"
+        ],
+        "properties": {
+          "netFrameworkVersion": "v5.0"
+        }
+      },
+      {
+        "type": "Microsoft.Network/networkInterfaces",
+        "apiVersion": "2020-06-01",
+        "name": "GEN-UNIQUEvmnic",
+        "location": "[resourceGroup().location]",
+        "dependsOn": [
+          "Microsoft.Network/virtualNetworks/GEN-UNIQUE-vnet"
+        ],
+        "properties": {
+          "ipConfigurations": [
+            {
+              "name": "GEN-UNIQUEvmip",
+              "properties": {
+                "privateIPAllocationMethod": "Dynamic",
+                "subnet": {
+                  "id": "Microsoft.Network/virtualNetworks/subnets/GEN-UNIQUE-vnet/backend"
+                }
+              }
+            }
+          ]
+        }
+      },
+      {
+        "type": "Microsoft.Compute/virtualMachines",
+        "apiVersion": "2020-06-01",
+        "name": "[substring(parameters('stackName'),0,10)]",
+        "location": "[resourceGroup().location]",
+        "dependsOn": [
+          "Microsoft.Network/networkInterfaces/GEN-UNIQUEvmnic"
+        ],
+        "properties": {
+          "hardwareProfile": {
+            "vmSize": "Standard_B2ms"
+          },
+          "osProfile": {
+            "computerName": "[substring(parameters('stackName'),0,10)]vm",
+            "adminUsername": "[substring(parameters('loginUser'),0,8)]",
+            "adminPassword": "GEN-PASSWORD"
+          },
+          "storageProfile": {
+            "imageReference": {
+              "publisher": "MicrosoftWindowsServer",
+              "offer": "WindowsServer",
+              "sku": "2019-Datacenter-Core-smalldisk",
+              "version": "latest"
+            },
+            "osDisk": {
+              "name": "(parameters(stackName),vmdisk)",
+              "createOption": "FromImage",
+              "managedDisk": {
+                "storageAccountType": "StandardSSD_LRS"
+              }
+            }
+          },
+          "networkProfile": {
+            "networkInterfaces": [
+              {
+                "id": "Microsoft.Network/networkInterfaces/GEN-UNIQUEvmnic"
+              }
+            ]
+          }
+        },
+        "resources": [
+          {
+            "type": "Microsoft.Compute/virtualMachines/extensions",
+            "name": "[substring(parameters('stackName'),0,10)]/Antimalware",
+            "apiVersion": "2019-07-01",
+            "location": "[resourceGroup().location]",
+            "dependsOn": [
+              "Microsoft.Compute/virtualMachines//[substring(parameters('stackName'),0,10)]"
+            ],
+            "properties": {
+              "publisher": "Microsoft.Azure.Security",
+              "type": "IaaSAntimalware",
+              "typeHandlerVersion": "1.3",
+              "autoUpgradeMinorVersion": true,
+              "settings": {
+                "AntimalwareEnabled": "true",
+                "Exclusions": {
+                  "Extensions": ".log;.ldf",
+                  "Paths": "D:\\IISlogs;D:\\DatabaseLogs",
+                  "Processes": "mssence.svc"
+                },
+                "RealtimeProtectionEnabled": "true",
+                "ScheduledScanSettings": {
+                  "isEnabled": "true",
+                  "scanType": "Quick",
+                  "day": 7,
+                  "time": 120
+                }
+              }
+            }
+          }
+        ]
+      },
+      {
+        "type": "Microsoft.Network/privateEndpoints",
+        "apiVersion": "2019-04-01",
+        "name": "GEN-UNIQUEpvenp",
+        "location": "[resourceGroup().location]",
+        "dependsOn": [
+          "Microsoft.Network/virtualNetworks/GEN-UNIQUE-vnet",
+          "Microsoft.Sql/servers/GEN-UNIQUE"
+        ],
+        "properties": {
+          "subnet": {
+            "id": "Microsoft.Network/virtualNetworks/subnets/GEN-UNIQUE-vnet/backend"
+          },
+          "privateLinkServiceConnections": [
+            {
+              "name": "GEN-UNIQUEpvenp",
+              "properties": {
+                "privateLinkServiceId": "Microsoft.Sql/servers/GEN-UNIQUE",
+                "groupIds": [
+                  "sqlServer"
+                ]
+              }
+            }
+          ]
+        }
+      },
+      {
+        "type": "Microsoft.Network/privateDnsZones",
+        "apiVersion": "2020-06-01",
+        "name": "[variables('privateDbDnsZoneName')]",
+        "location": "global",
+        "dependsOn": [
+          "Microsoft.Network/virtualNetworks/GEN-UNIQUE-vnet"
+        ]
+      },
+      {
+        "type": "Microsoft.Network/privateDnsZones/virtualNetworkLinks",
+        "apiVersion": "2020-06-01",
+        "name": "[concat(variables('privateDbDnsZoneName'), '/', variables('privateDbDnsZoneName'), '-link')]",
+        "location": "global",
+        "dependsOn": [
+          "[resourceId('Microsoft.Network/privateDnsZones', variables('privateDbDnsZoneName'))]",
+          "[resourceId('Microsoft.Network/virtualNetworks', variables('vnetName'))]"
+        ],
+        "properties": {
+          "registrationEnabled": false,
+          "virtualNetwork": {
+            "id": "Microsoft.Network/virtualNetworks/GEN-UNIQUE-vnet"
+          }
+        }
+      },
+      {
+        "type": "Microsoft.Network/privateEndpoints/privateDnsZoneGroups",
+        "apiVersion": "2020-03-01",
+        "name": "GEN-UNIQUEpvenp/mydnsgroupname",
+        "location": "[resourceGroup().location]",
+        "dependsOn": [
+          "[resourceId('Microsoft.Network/privateDnsZones', variables('privateDbDnsZoneName'))]",
+          "[variables('privateDbEndpointName')]"
+        ],
+        "properties": {
+          "privateDnsZoneConfigs": [
+            {
+              "name": "config1",
+              "properties": {
+                "privateDnsZoneId": "[resourceId('Microsoft.Network/privateDnsZones', variables('privateDbDnsZoneName'))]"
+              }
+            }
+          ]
+        }
+      },
+      {
+        "apiVersion": "2020-06-01",
+        "type": "Microsoft.Network/publicIPAddresses",
+        "name": "GEN-UNIQUEgwpip",
+        "location": "[resourceGroup().location]",
+        "properties": {
+          "publicIPAllocationMethod": "Dynamic"
+        }
+      },
+      {
+        "apiVersion": "2019-04-01",
+        "type": "Microsoft.Network/virtualNetworkGateways",
+        "name": "GEN-UNIQUEgw",
+        "location": "[resourceGroup().location]",
+        "dependsOn": [
+          "Microsoft.Network/publicIPAddresses//GEN-UNIQUEgwpip",
+          "Microsoft.Network/virtualNetworks//GEN-UNIQUE-vnet"
+        ],
+        "properties": {
+          "ipConfigurations": [
+            {
+              "properties": {
+                "privateIPAllocationMethod": "Dynamic",
+                "subnet": {
+                  "id": "Microsoft.Network/virtualNetworks/subnets/GEN-UNIQUE-vnet/GatewaySubnet"
+                },
+                "publicIPAddress": {
+                  "id": "Microsoft.Network/publicIPAddresses/GEN-UNIQUEgwpip"
+                }
+              },
+              "name": "vnetGatewayConfig"
+            }
+          ],
+          "sku": {
+            "name": "Basic",
+            "tier": "Basic"
+          },
+          "gatewayType": "Vpn",
+          "vpnType": "RouteBased",
+          "enableBgp": "false",
+          "vpnClientConfiguration": {
+            "vpnClientAddressPool": {
+              "addressPrefixes": [
+                "172.15.0.0/24"
+              ]
+            },
+            "vpnClientRootCertificates": [
+              {
+                "name": "P2SRootCert",
+                "properties": {
+                  "publicCertData": "GEN-SELFSIGNED-CERT-CERDATA"
+                }
+              }
+            ]
+          }
+        }
+      },
+      {
+        "type": "Microsoft.Storage/storageAccounts",
+        "apiVersion": "2020-08-01-preview",
+        "name": "GEN-UNIQUE",
+        "location": "[resourceGroup().location]",
+        "sku": {
+          "name": "Standard_LRS"
+        },
+        "kind": "StorageV2",
+        "properties": {
+          "minimumTlsVersion": "TLS1_2",
+          "allowBlobPublicAccess": true,
+          "networkAcls": {
+            "bypass": "AzureServices",
+            "defaultAction": "Allow"
+          },
+          "supportsHttpsTrafficOnly": true,
+          "encryption": {
+            "services": {
+              "file": {
+                "keyType": "Account",
+                "enabled": true
+              },
+              "blob": {
+                "keyType": "Account",
+                "enabled": true
+              }
+            },
+            "keySource": "Microsoft.Storage"
+          },
+          "accessTier": "Hot"
+        },
+        "resources": [
+          {
+            "type": "blobServices/containers",
+            "apiVersion": "2019-06-01",
+            "name": "default/scripts",
+            "dependsOn": [
+              "GEN-UNIQUE"
+            ]
+          }
+        ]
+      },
+      {
+        "type": "Microsoft.Network/privateDnsZones",
+        "apiVersion": "2020-06-01",
+        "name": "(parameters(stackName),.appserviceenvironment.net)",
+        "location": "global",
+        "dependsOn": [
+          "Microsoft.Network/virtualNetworks/GEN-UNIQUE-vnet"
+        ]
+      },
+      {
+        "type": "Microsoft.Network/privateDnsZones/virtualNetworkLinks",
+        "apiVersion": "2020-06-01",
+        "name": "(parameters(stackName),.appserviceenvironment.net)/(parameters(stackName),.appserviceenvironment.net)-link",
+        "location": "global",
+        "dependsOn": [
+          "Microsoft.Network/privateDnsZones/(parameters(stackName),.appserviceenvironment.net)",
+          "Microsoft.Network/virtualNetworks/GEN-UNIQUE-vnet"
+        ],
+        "properties": {
+          "registrationEnabled": false,
+          "virtualNetwork": {
+            "id": "Microsoft.Network/virtualNetworks/GEN-UNIQUE-vnet"
+          }
+        }
+      },
+      {
+        "apiVersion": "2020-02-02-preview",
+        "name": "GEN-UNIQUE",
+        "type": "microsoft.insights/components",
+        "location": "[resourceGroup().location]",
+        "properties": {
+          "ApplicationId": "GEN-UNIQUE"
+        }
+      }
+    ],
+    "\uff04schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
+  }
+}
