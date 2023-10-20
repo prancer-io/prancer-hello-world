@@ -1,0 +1,52 @@
+{
+  "structure": "filesystem",
+  "error": null,
+  "reference": "main",
+  "contentType": "json",
+  "source": "gitConnectorAwsAck",
+  "paths": [
+    "/rds-cluster.yaml"
+  ],
+  "timestamp": 1633941783012,
+  "queryuser": null,
+  "checksum": "99914b932bd37a50b983c5e7c90ae93b",
+  "node": {
+    "masterSnapshotId": "ACK_TEMPLATE_SNAPSHOT",
+    "type": "ack",
+    "collection": "acktemplate",
+    "paths": [
+      "/rds-cluster.yaml"
+    ],
+    "snapshotId": "ACK_TEMPLATE_SNAPSHOT4",
+    "status": "active",
+    "validate": true,
+    "resourceTypes": [
+      "dbcluster"
+    ]
+  },
+  "snapshotId": "ACK_TEMPLATE_SNAPSHOT4",
+  "collection": "acktemplate",
+  "json": {
+    "apiVersion": "rds.services.k8s.aws/v1alpha1",
+    "kind": "DBCluster",
+    "metadata": {
+      "name": "$DB_CLUSTER_ID"
+    },
+    "spec": {
+      "copyTagsToSnapshot": "$COPY_TAGS_TO_SNAPSHOT",
+      "dbClusterIdentifier": "$DB_CLUSTER_ID",
+      "databaseName": "$DB_NAME",
+      "engine": "aurora-mysql",
+      "engineMode": "serverless",
+      "masterUsername": "root",
+      "masterUserPassword": {
+        "namespace": "$MASTER_USER_PASS_SECRET_NAMESPACE",
+        "name": "$MASTER_USER_PASS_SECRET_NAME",
+        "key": "$MASTER_USER_PASS_SECRET_KEY"
+      }
+    }
+  },
+  "resourceTypes": [
+    "dbcluster"
+  ]
+}
